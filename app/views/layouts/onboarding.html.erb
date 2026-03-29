@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Season - Onboarding</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="bg-season-cream min-h-screen text-season-charcoal flex flex-col">
+    <div class="flex-1 flex flex-col justify-center px-6 py-12">
+      <div class="w-full max-w-sm mx-auto">
+        <div class="text-center mb-8">
+          <span class="font-serif text-2xl tracking-widest text-season-terra font-semibold">SEASON</span>
+        </div>
+        
+        <%= yield %>
+      </div>
+    </div>
+
+    <script>
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("/service-worker");
+      }
+    </script>
+  </body>
+</html>

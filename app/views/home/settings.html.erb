@@ -1,0 +1,75 @@
+<% user = @user || current_user %>
+
+<div class="mb-6">
+  <h1 class="font-serif text-3xl text-season-charcoal">Settings</h1>
+</div>
+
+<div class="space-y-6">
+  <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+    <div class="px-6 py-4 border-b border-gray-100">
+      <h2 class="font-medium text-season-charcoal">My Profile</h2>
+    </div>
+    <div class="divide-y divide-gray-50">
+      <div class="px-6 py-4 flex items-center justify-between">
+        <span class="text-gray-600">Email</span>
+        <span class="text-season-charcoal"><%= user.email %></span>
+      </div>
+      <div class="px-6 py-4 flex items-center justify-between">
+        <span class="text-gray-600">Birthday</span>
+        <span class="text-season-charcoal"><%= user.birthday&.strftime("%B %d, %Y") || "Not set" %></span>
+      </div>
+      <div class="px-6 py-4 flex items-center justify-between">
+        <span class="text-gray-600">Cycle Length</span>
+        <span class="text-season-charcoal"><%= user.cycle_length || 28 %> days</span>
+      </div>
+      <div class="px-6 py-4 flex items-center justify-between">
+        <span class="text-gray-600">Period Length</span>
+        <span class="text-season-charcoal"><%= user.period_length || 5 %> days</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+    <div class="px-6 py-4 border-b border-gray-100">
+      <h2 class="font-medium text-season-charcoal">App Settings</h2>
+    </div>
+    <div class="divide-y divide-gray-50">
+      <div class="px-6 py-4 flex items-center justify-between">
+        <span class="text-gray-600">Notifications</span>
+        <label class="relative inline-flex items-center cursor-pointer">
+          <input type="checkbox" class="sr-only peer" checked>
+          <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-season-terra"></div>
+        </label>
+      </div>
+      <div class="px-6 py-4 flex items-center justify-between">
+        <span class="text-gray-600">Period Reminders</span>
+        <label class="relative inline-flex items-center cursor-pointer">
+          <input type="checkbox" class="sr-only peer" checked>
+          <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-season-terra"></div>
+        </label>
+      </div>
+      <div class="px-6 py-4 flex items-center justify-between">
+        <span class="text-gray-600">Dark Mode</span>
+        <label class="relative inline-flex items-center cursor-pointer">
+          <input type="checkbox" class="sr-only peer">
+          <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-season-terra"></div>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <% if user_signed_in? %>
+  <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+    <div class="px-6 py-4 border-b border-gray-100">
+      <h2 class="font-medium text-season-charcoal">Account</h2>
+    </div>
+    <div class="divide-y divide-gray-50">
+      <%= link_to "Edit Profile", "#", class: "block px-6 py-4 text-season-terra font-medium" %>
+      <%= link_to "Change Password", "#", class: "block px-6 py-4 text-season-terra font-medium" %>
+      <%= button_to "Sign Out", destroy_user_session_path, method: :delete, class: "block w-full text-left px-6 py-4 text-red-600 font-medium" %>
+    </div>
+  </div>
+  <% end %>
+
+  <p class="text-center text-gray-400 text-sm">Season v2.0.0</p>
+</div>

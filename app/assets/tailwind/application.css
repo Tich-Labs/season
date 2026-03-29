@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+@theme {
+  --color-season-terra: #8E3E36;
+  --color-season-terra-light: #A85248;
+  --color-season-terra-dark: #6F312A;
+  --color-season-cream: #FCF9F7;
+  --color-season-gold: #D4AF37;
+  --color-season-charcoal: #2D2D2D;
+  
+  --font-family-serif: "Playfair Display", "Libre Baskerville", Georgia, serif;
+  --font-family-sans: "Inter", "Geist", system-ui, sans-serif;
+}
+
+@layer base {
+  body {
+    font-family: var(--font-family-sans);
+    background-color: var(--color-season-cream);
+    color: var(--color-season-charcoal);
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-family-serif);
+    letter-spacing: 0.02em;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-season-terra text-white font-semibold py-4 px-8 rounded-full text-center inline-block transition-colors duration-200;
+  }
+  
+  .btn-primary:hover {
+    @apply bg-season-terra-dark;
+  }
+  
+  .btn-secondary {
+    @apply border-2 border-season-terra text-season-terra font-semibold py-4 px-8 rounded-full text-center inline-block transition-colors duration-200;
+  }
+  
+  .btn-secondary:hover {
+    @apply bg-season-terra text-white;
+  }
+  
+  .form-input {
+    @apply w-full px-4 py-3 border-b-2 border-gray-200 bg-transparent focus:border-season-terra focus:outline-none transition-colors duration-200 text-lg min-h-[48px];
+  }
+  
+  .form-input::placeholder {
+    @apply text-gray-400;
+  }
+  
+  .card {
+    @apply bg-white rounded-2xl shadow-sm p-6;
+  }
+  
+  .divider {
+    @apply border-b border-gray-100;
+  }
+}
