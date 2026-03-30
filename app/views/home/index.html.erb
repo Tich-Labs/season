@@ -8,26 +8,26 @@
             <p class="mt-8 text-lg font-medium text-pretty text-gray-500 sm:text-xl/8">Current user: <%= current_user.id %></p>
             <% end %>
             <div class="mt-10 flex items-center justify-center">
-                <div class="text-center" id="countdown">
+                <div class="text-center" id="countdown" style="background-color: #ede1d5; border-radius: 1.875rem; padding: 2.5rem;">
                     <div class="flex gap-20 justify-center items-baseline">
                         <div class="flex flex-col items-center px-6">
-                            <span class="text-8xl font-light" style="color: #5a2423;" id="days">0</span>
-                            <span class="text-sm mt-6 font-medium" style="color: #333333;">Days</span>
+                            <span class="text-9xl font-light" style="color: #5a2423;" id="days">0</span>
+                            <span class="text-base mt-6 font-medium" style="color: #333333;">Days</span>
                         </div>
-                        <span class="text-6xl font-light" style="color: #333333;">:</span>
+                        <span class="text-7xl font-light" style="color: #333333;">:</span>
                         <div class="flex flex-col items-center px-6">
-                            <span class="text-8xl font-light" style="color: #5a2423;" id="hours">0</span>
-                            <span class="text-sm mt-6 font-medium" style="color: #333333;">Hours</span>
+                            <span class="text-9xl font-light" style="color: #5a2423;" id="hours">0</span>
+                            <span class="text-base mt-6 font-medium" style="color: #333333;">Hours</span>
                         </div>
-                        <span class="text-6xl font-light" style="color: #333333;">:</span>
+                        <span class="text-7xl font-light" style="color: #333333;">:</span>
                         <div class="flex flex-col items-center px-6">
-                            <span class="text-8xl font-light" style="color: #5a2423;" id="minutes">0</span>
-                            <span class="text-sm mt-6 font-medium" style="color: #333333;">Mins</span>
+                            <span class="text-9xl font-light" style="color: #5a2423;" id="minutes">0</span>
+                            <span class="text-base mt-6 font-medium" style="color: #333333;">Mins</span>
                         </div>
-                        <span class="text-6xl font-light" style="color: #333333;">:</span>
+                        <span class="text-7xl font-light" style="color: #333333;">:</span>
                         <div class="flex flex-col items-center px-6">
-                            <span class="text-8xl font-light" style="color: #5a2423;" id="seconds">0</span>
-                            <span class="text-sm mt-6 font-medium" style="color: #333333;">Secs</span>
+                            <span class="text-9xl font-light" style="color: #5a2423;" id="seconds">0</span>
+                            <span class="text-base mt-6 font-medium" style="color: #333333;">Secs</span>
                         </div>
                     </div>
                 </div>
@@ -35,7 +35,7 @@
             <script>
                 function updateCountdown() {
                     // Set target date (e.g., end of month or specific launch date)
-                    const targetDate = new Date("2026-04-30T00:00:00").getTime();
+                    const targetDate = new Date("2026-04-07T00:00:00").getTime();
                     const now = new Date().getTime();
                     const distance = targetDate - now;
 
