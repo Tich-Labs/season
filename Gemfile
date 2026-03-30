@@ -22,7 +22,7 @@ gem "solid_cache"
 gem "solid_queue"
 gem "sqlite3", ">= 2.1"
 # Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
-gem "tailwindcss-rails"
+gem "tailwindcss-rails", "~> 3.3.1"
 gem "turbo-rails"
 
 # Reduces boot times through caching; required in config/boot.rb
