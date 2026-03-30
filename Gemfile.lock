@@ -256,7 +256,8 @@ GEM
       net-ssh (>= 2.6.5, < 8.0.0)
     net-sftp (4.0.0)
       net-ssh (>= 5.0.0, < 8.0.0)
-    net-smtp (0.5.0)
+    net-smtp (0.5.1)
+      net-protocol
     net-ssh (7.3.0)
     nio4r (2.7.4)
     nokogiri (1.18.2-aarch64-linux-gnu)
@@ -582,7 +583,7 @@ DEPENDENCIES
   web-console
 
 RUBY VERSION
-   ruby 3.4.1p0
+   ruby 3.4.7p58
 
 BUNDLED WITH
    2.6.3
