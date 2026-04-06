@@ -46,7 +46,7 @@ gem "solid_cache"
 gem "solid_queue"
 
 # Database
-gem "sqlite3", ">= 2.1"
+gem "pg", "~> 1.5"
 
 gem "tzinfo-data", platforms: %i[ windows jruby ]
 gem "bootsnap", require: false
