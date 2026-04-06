@@ -1,31 +1,51 @@
-# Files in the config/locales directory are used for internationalization and
-# are automatically loaded by Rails. If you want to use locales other than
-# English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t "hello"
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t("hello") %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# To learn more about the API, please read the Rails Internationalization guide
-# at https://guides.rubyonrails.org/i18n.html.
-#
-# Be aware that YAML interprets the following case-insensitive strings as
-# booleans: `true`, `false`, `on`, `off`, `yes`, `no`. Therefore, these strings
-# must be quoted to be interpreted as strings. For example:
-#
-#     en:
-#       "yes": yup
-#       enabled: "ON"
-
 en:
-  hello: "Hello world"
+  nav:
+    calendar: "Calendar"
+    today: "Today"
+    track: "Track"
+    streaks: "Streaks"
+    settings: "Settings"
+  devise:
+    registrations:
+      new:
+        title: "Sign Up"
+        name_placeholder: "Name..."
+        email_placeholder: "E-mail..."
+        password_placeholder: "Password..."
+        terms: "I accept the terms and privacy policy"
+        submit: "Create account"
+        have_account: "I already have an account"
+    sessions:
+      new:
+        title: "Log In"
+        fast_lane: "Use the fast lane:"
+        or_email: "... or login with your E-mail"
+        email_placeholder: "E-mail..."
+        password_placeholder: "Password..."
+        forgot_password: "I forgot my password..."
+        submit: "Log In"
+        no_account: "I am new... Sign up!"
+  home:
+    welcome_title: "Welcome to Season!"
+    welcome_subtitle: "Maximize your productivity with the help of your cycle."
+    lets_go: "Let's go"
+    have_account: "I already have an account"
+    logo_alt: "Season wordmark"
+    wordmark_alt: "Season title"
+    countdown_label: "Launch countdown"
+    countdown_to: "Until 7 April 2026"
+    days: "Days"
+    hours: "Hours"
+    minutes: "Minutes"
+    seconds: "Seconds"
+  onboarding:
+    welcome: "Welcome to Season!"
+    name_prompt: "How would you like to be called?"
+    cycle_prompt: "How long is your average cycle?"
+    cycle_note: "This helps us predict your cycle"
+    period_prompt: "How long is your period?"
+    submit: "Continue"
+  calendar:
+    header: "Hello %{name} — This is your month"
+    greeting: "Hello %{name} — This is your month"
+    subheading: "Track your cycle"

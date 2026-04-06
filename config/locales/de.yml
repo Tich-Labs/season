@@ -1,0 +1,51 @@
+de:
+  nav:
+    calendar: "Kalender"
+    today: "Heute"
+    track: "Tracking"
+    streaks: "Streaks"
+    settings: "Einstellungen"
+  devise:
+    registrations:
+      new:
+        title: "Registrieren"
+        name_placeholder: "Name..."
+        email_placeholder: "E-Mail..."
+        password_placeholder: "Passwort..."
+        terms: "Ich akzeptiere die Allgemeinen Geschäftsbedingungen und Datenschutzrichtlinie"
+        submit: "Konto erstellen"
+        have_account: "Ich habe bereits ein Konto"
+    sessions:
+      new:
+        title: "Anmelden"
+        fast_lane: "Verwende die Schnellspur:"
+        or_email: "... oder melde dich mit deiner E-Mail an"
+        email_placeholder: "E-Mail..."
+        password_placeholder: "Passwort..."
+        forgot_password: "Ich habe mein Passwort vergessen..."
+        submit: "Anmelden"
+        no_account: "Ich bin neu... Registriere dich!"
+  home:
+    welcome_title: "Willkommen bei Season!"
+    welcome_subtitle: "Maximiere deine Produktivität mit Hilfe deines Zyklus."
+    lets_go: "Los geht's"
+    have_account: "Ich habe bereits ein Konto"
+    logo_alt: "Season Wortmarke"
+    wordmark_alt: "Season Titel"
+    countdown_label: "Start-Countdown"
+    countdown_to: "Bis zum 7. April 2026"
+    days: "Tage"
+    hours: "Stunden"
+    minutes: "Minuten"
+    seconds: "Sekunden"
+  onboarding:
+    welcome: "Willkommen bei Season!"
+    name_prompt: "Wie möchtest du genannt werden?"
+    cycle_prompt: "Wie lange ist dein durchschnittlicher Zyklus?"
+    cycle_note: "Damit wir deinen Zyklus vorhersagen können"
+    period_prompt: "Wie lange ist deine Periode?"
+    submit: "Weiter"
+  calendar:
+    header: "Hallo %{name} — Das ist dein Monat"
+    greeting: "Hallo %{name} — Das ist dein Monat"
+    subheading: "Verfolge deinen Zyklus"

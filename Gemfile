@@ -3,39 +3,55 @@ source "https://rubygems.org"
 ruby "3.4.7"
 
 gem "rails", "~> 8.0.1"
-# The modern asset pipeline for Rails [https://github.com/rails/propshaft]
-gem "bcrypt", "~> 3.1.7
-"
+gem "bcrypt", "~> 3.1.7"
 
-# Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
-gem "importmap-rails"
-# Build JSON APIs with ease [https://github.com/rails/jbuilder]
-gem "jbuilder"
-
+# Asset pipeline
 gem "propshaft"
-gem "puma", ">= 5.0"
-# Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
+
+# Use JavaScript with ESM import maps
+gem "importmap-rails"
+
+# Hotwire
+gem "turbo-rails"
 gem "stimulus-rails"
-# Use the database-backed adapters for Rails.cache, Active Job, and Action Cable
+
+# CSS
+gem "tailwindcss-rails", "~> 3.3.1"
+
+# Server
+gem "puma", ">= 5.0"
+
+# Auth & Permissions
+gem "devise"
+gem "omniauth-google-oauth2"
+gem "omniauth-facebook"
+gem "omniauth-apple"
+
+# UI
+gem "pagy"
+
+# Data & Logic
+gem "ransack"
+gem "groupdate"
+gem "dotenv-rails", groups: [ :development, :test ]
+
+# Infrastructure
+gem "sentry-ruby"
+gem "sentry-rails"
+gem "stripe"
+
+# Background jobs & caching
 gem "solid_cable"
 gem "solid_cache"
 gem "solid_queue"
+
+# Database
 gem "sqlite3", ">= 2.1"
-# Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
-gem "tailwindcss-rails", "~> 3.3.1"
-gem "turbo-rails"
 
-# Reduces boot times through caching; required in config/boot.rb
+gem "tzinfo-data", platforms: %i[ windows jruby ]
 gem "bootsnap", require: false
-
-# Deploy this application anywhere as a Docker container [https://kamal-deploy.org]
 gem "kamal", require: false
-
-# Add HTTP asset caching/compression and X-Sendfile acceleration to Puma [https://github.com/basecamp/thruster/]
 gem "thruster", require: false
-
-# Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
-# gem "image_processing", "~> 1.2"
 
 group :development, :test do
   gem "better_errors"

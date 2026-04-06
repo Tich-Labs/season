@@ -1,61 +1,42 @@
-<div class="bg-white">
-    <div class="px-6 py-16 lg:px-8 lg:py-24">
-        <div class="mx-auto max-w-2xl text-center">
-            <%= image_tag "screen1logo.png", alt: "Season", class: "mx-auto h-6 w-auto sm:h-10" %>
-            <%= image_tag "Season-Wortmarke 1.svg", alt: "Season", class: "mx-auto h-6 w-auto sm:h-10 mt-4" %>
-            <p class="mt-8 text-lg font-medium text-pretty text-gray-500 sm:text-xl/8">Track your cycle, understand your power</p>
-            <% if authenticated? %>
-            <p class="mt-8 text-lg font-medium text-pretty text-gray-500 sm:text-xl/8">Current user: <%= current_user.id %></p>
-            <% end %>
-            <div class="mt-10 flex items-center justify-center">
-                <div class="text-center" id="countdown" style="background-color: #ede1d5; border-radius: 1.875rem; padding: 2.5rem;">
-                    <div class="flex gap-20 justify-center items-baseline">
-                        <div class="flex flex-col items-center px-6">
-                            <span class="text-9xl font-light" style="color: #5a2423;" id="days">0</span>
-                            <span class="text-base mt-6 font-medium" style="color: #333333;">Days</span>
-                        </div>
-                        <span class="text-7xl font-light" style="color: #333333;">:</span>
-                        <div class="flex flex-col items-center px-6">
-                            <span class="text-9xl font-light" style="color: #5a2423;" id="hours">0</span>
-                            <span class="text-base mt-6 font-medium" style="color: #333333;">Hours</span>
-                        </div>
-                        <span class="text-7xl font-light" style="color: #333333;">:</span>
-                        <div class="flex flex-col items-center px-6">
-                            <span class="text-9xl font-light" style="color: #5a2423;" id="minutes">0</span>
-                            <span class="text-base mt-6 font-medium" style="color: #333333;">Mins</span>
-                        </div>
-                        <span class="text-7xl font-light" style="color: #333333;">:</span>
-                        <div class="flex flex-col items-center px-6">
-                            <span class="text-9xl font-light" style="color: #5a2423;" id="seconds">0</span>
-                            <span class="text-base mt-6 font-medium" style="color: #333333;">Secs</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <script>
-                function updateCountdown() {
-                    // Set target date (e.g., end of month or specific launch date)
-                    const targetDate = new Date("2026-04-07T00:00:00").getTime();
-                    const now = new Date().getTime();
-                    const distance = targetDate - now;
-
-                    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-                    document.getElementById("days").textContent = String(days).padStart(2, '0');
-                    document.getElementById("hours").textContent = String(hours).padStart(2, '0');
-                    document.getElementById("minutes").textContent = String(minutes).padStart(2, '0');
-                    document.getElementById("seconds").textContent = String(seconds).padStart(2, '0');
-
-                    if (distance < 0) {
-                        document.getElementById("countdown").innerHTML = "<p class='text-lg' style='color: #50715c;'>Coming soon</p>";
-                    }
-                }
-                updateCountdown();
-                setInterval(updateCountdown, 1000);
-            </script>
-        </div>
+<div class="min-h-screen bg-white flex flex-col items-center justify-between px-8 py-12">
+  <!-- Logo & Content Section -->
+  <div class="flex-1 flex flex-col items-center justify-center w-full">
+    <!-- Element Image (above logo) -->
+    <div class="mb-8">
+      <img 
+        src="<%= image_path('Element 1 2.svg') rescue image_path('screen1logo.png') %>" 
+        alt="Season element"
+        class="w-48 h-auto object-contain"
+      >
     </div>
+    
+    <!-- Season Logo -->
+    <img 
+      src="<%= image_path('Season-Wortmarke 1.svg') %>" 
+      alt="<%= t('home.logo_alt') %>"
+      class="h-60 object-contain mb-12"
+    >
+    
+    <!-- Heading -->
+    <h1 class="text-2xl font-medium text-[#933a35] text-center">
+      <%= t('home.welcome_title') %>
+    </h1>
+    
+    <!-- Subtitle -->
+    <p class="text-base text-[#933a35] text-center mt-3 px-6 leading-relaxed">
+      <%= t('home.welcome_subtitle') %>
+    </p>
+  </div>
+
+  <!-- Button Section (bottom) -->
+  <div class="w-full space-y-4 pb-4">
+    <!-- CTA Button -->
+    <%= link_to t('home.lets_go'), new_user_registration_path, 
+        class: "w-full bg-[#933a35] text-white rounded-lg min-h-[52px] font-medium flex items-center justify-center text-center no-underline text-xl" %>
+    
+    <!-- Sign In Link -->
+    <%= link_to t('home.have_account'), new_user_session_path,
+        class: "text-[#933a35] font-medium text-center block mt-4 text-xl" %>
+  </div>
 </div>
+
