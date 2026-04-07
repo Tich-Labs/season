@@ -1,13 +1,19 @@
-import { Controller } from '@hotwired/stimulus'
+import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ['menu']
+  static targets = ["slider", "panel"]
 
   open() {
-    this.menuTarget.classList.remove('hidden')
+    this.sliderTarget.classList.remove("hidden")
+    requestAnimationFrame(() => {
+      this.panelTarget.style.transform = "translateX(0%)"
+    })
   }
 
   close() {
-    this.menuTarget.classList.add('hidden')
+    this.panelTarget.style.transform = "translateX(100%)"
+    setTimeout(() => {
+      this.sliderTarget.classList.add("hidden")
+    }, 300)
   }
 }

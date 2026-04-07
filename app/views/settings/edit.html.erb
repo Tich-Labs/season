@@ -1,188 +1,197 @@
-<%# Settings screen — matches Figma node 12048-15697 %>
-<div class="bg-white min-h-screen">
+<%# Settings screen with Burger Menu slider %>
+<div class="bg-white min-h-screen" data-controller="menu">
+
+  <%# Burger Menu Slider (hidden by default) %>
+  <div id="burger-menu" class="fixed inset-0 z-50 hidden" data-menu-target="slider">
+    <%# Backdrop %>
+    <div class="absolute inset-0 bg-black/30" data-action="click->menu#close"></div>
+    
+    <%# Slider panel (slides from right) %>
+    <div class="absolute right-0 top-0 bottom-0 w-[300px] bg-[#FAF7F4] shadow-xl transform transition-transform duration-300"
+         data-menu-target="panel"
+         style="transform: translateX(100%);">
+      
+      <%# Close button %>
+      <button class="absolute top-4 right-4 text-[#933a35]" data-action="menu#close">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+      
+      <%# Logo & Title %>
+      <div class="pt-10 pb-6 px-5 border-b border-[#EDE1D5]">
+        <%= image_tag "Season-Wortmarke 1.svg", style: "width: 140px;", alt: "Season" %>
+      </div>
+      
+      <%# Menu items %>
+      <div class="py-4">
+        <a href="<%= user_root_path %>" class="flex items-center gap-4 px-5 py-3 text-[#933a35] hover:bg-[#EDE1D5]">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M7 2a1 1 0 0 1 1 1v1h8V3a1 1 0 1 1 2 0v1h2a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h2V3a1 1 0 0 1 1-1z"/>
+          </svg>
+          <span class="font-medium">Calendar</span>
+        </a>
+        
+        <a href="<%= tracking_index_path %>" class="flex items-center gap-4 px-5 py-3 text-[#933a35] hover:bg-[#EDE1D5]">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2a1 1 0 0 1 1 1v1h8V3a1 1 0 1 1 2 0v1h2a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h2V3a1 1 0 0 1 1-1z"/>
+          </svg>
+          <span class="font-medium">Track / Log</span>
+        </a>
+        
+        <a href="<%= symptoms_path %>" class="flex items-center gap-4 px-5 py-3 text-[#933a35] hover:bg-[#EDE1D5]">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2a1 1 0 0 1 1 1v1h8V3a1 1 0 1 1 2 0v1h2a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h2V3a1 1 0 0 1 1-1z"/>
+          </svg>
+          <span class="font-medium">Symptoms</span>
+        </a>
+        
+        <a href="<%= superpowers_path %>" class="flex items-center gap-4 px-5 py-3 text-[#933a35] hover:bg-[#EDE1D5]">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2a1 1 0 0 1 1 1v1h8V3a1 1 0 1 1 2 0v1h2a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h2V3a1 1 0 0 1 1-1z"/>
+          </svg>
+          <span class="font-medium">Superpowers</span>
+        </a>
+        
+        <a href="<%= streaks_path %>" class="flex items-center gap-4 px-5 py-3 text-[#933a35] hover:bg-[#EDE1D5]">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2a1 1 0 0 1 1 1v1h8V3a1 1 0 1 1 2 0v1h2a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h2V3a1 1 0 0 1 1-1z"/>
+          </svg>
+          <span class="font-medium">Streaks</span>
+        </a>
+        
+        <div class="my-2 mx-5 border-t border-[#EDE1D5]"></div>
+        
+        <a href="<%= terms_path %>" class="flex items-center gap-4 px-5 py-3 text-[#6B6B6B] hover:bg-[#EDE1D5]">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+          </svg>
+          <span class="font-medium">Terms of Service</span>
+        </a>
+        
+        <a href="<%= privacy_path %>" class="flex items-center gap-4 px-5 py-3 text-[#6B6B6B] hover:bg-[#EDE1D5]">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+          <span class="font-medium">Privacy Policy</span>
+        </a>
+      </div>
+      
+      <%# Footer %>
+      <div class="absolute bottom-4 left-0 right-0 text-center text-[#6B6B6B] text-sm">
+        Made with <span class="text-red-500">♥</span> in Zurich
+      </div>
+    </div>
+  </div>
 
   <%# ── Header ── %>
-  <div class="bg-[#933a35] px-5 py-4 flex items-center">
-    <button class="text-white w-6 flex-none">
-      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24">
-        <line x1="2" y1="6"  x2="22" y2="6"/>
-        <line x1="2" y1="12" x2="22" y2="12"/>
-        <line x1="2" y1="18" x2="22" y2="18"/>
+  <div class="bg-[#FAF7F4] px-5 py-4 flex items-center justify-between border-b border-[#EDE1D5]">
+    <a href="<%= user_root_path %>" class="text-[#933a35]">
+      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <polyline points="15 18 9 12 15 6"/>
+      </svg>
+    </a>
+    <h1 class="text-[#933a35] font-bold text-lg tracking-wide">SETTINGS</h1>
+    <button class="text-[#933a35]" data-action="menu#open">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <line x1="3" y1="12" x2="21" y2="12"/>
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <line x1="3" y1="18" x2="21" y2="18"/>
       </svg>
     </button>
-    <div class="flex-1 flex items-center justify-center gap-2 text-white">
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
-        <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l1.72-1.34c.15-.12.19-.34.1-.51l-1.63-2.83c-.12-.22-.37-.29-.59-.22l-2.03.81c-.42-.32-.86-.58-1.35-.78l-.3-2.15C14.73 3.18 14.52 3 14.26 3h-3.26c-.26 0-.47.18-.49.42l-.3 2.15c-.48.2-.93.47-1.35.78l-2.03-.81c-.22-.09-.47 0-.59.22L4.61 8.59c-.12.16-.08.39.1.51l1.72 1.34c-.05.3-.07.62-.07.94s.02.64.07.94L4.71 13.66c-.15.12-.19.34-.1.51l1.63 2.83c.12.22.37.29.59.22l2.03-.81c.42.32.86.58 1.35.78l.3 2.15c.02.24.23.42.49.42h3.26c.26 0 .47-.18.49-.42l.3-2.15c.48-.2.93-.47 1.35-.78l2.03.81c.22.09.47 0 .59-.22l1.63-2.83c.12-.22.07-.39-.1-.51l-1.72-1.34zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
-      </svg>
-      <span class="font-semibold text-lg">Settings</span>
-    </div>
-    <div class="w-6 flex-none"></div>
   </div>
 
-  <%# ── Personal Settings ── %>
-  <div class="px-5 pt-5 pb-2">
-    <h2 class="text-[#933a35] font-bold text-base">Personal Settings</h2>
-  </div>
-  <div class="border-b border-[#DDD0CB]"></div>
+  <div class="px-5 pt-5 pb-20">
 
-  <a href="#" class="flex items-center gap-4 px-5 py-4 border-b border-[#EFE5DF]">
-    <span class="text-[#933a35] flex-none">
-      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-        <circle cx="12" cy="7" r="4"/>
-      </svg>
-    </span>
-    <span class="flex-1 text-[#933a35] font-medium text-base">My Profile</span>
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="#933a35" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-      <polyline points="9 18 15 12 9 6"/>
-    </svg>
-  </a>
-
-  <a href="#" class="flex items-center gap-4 px-5 py-4 border-b border-[#EFE5DF]">
-    <span class="text-[#933a35] flex-none">
-      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
-        <line x1="3" y1="6" x2="21" y2="6"/>
-        <path d="M16 10a4 4 0 0 1-8 0"/>
-      </svg>
-    </span>
-    <span class="flex-1 text-[#933a35] font-medium text-base">My Abonnements</span>
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="#933a35" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-      <polyline points="9 18 15 12 9 6"/>
-    </svg>
-  </a>
-
-  <a href="#" class="flex items-center gap-4 px-5 py-4">
-    <span class="text-[#933a35] flex-none">
-      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-        <rect x="3" y="4" width="18" height="18" rx="2"/>
-        <line x1="16" y1="2" x2="16" y2="6"/>
-        <line x1="8"  y1="2" x2="8"  y2="6"/>
-        <line x1="3"  y1="10" x2="21" y2="10"/>
-        <rect x="7"  y="13" width="2" height="2" rx="0.5" fill="currentColor" stroke="none"/>
-        <rect x="11" y="13" width="2" height="2" rx="0.5" fill="currentColor" stroke="none"/>
-        <rect x="15" y="13" width="2" height="2" rx="0.5" fill="currentColor" stroke="none"/>
-      </svg>
-    </span>
-    <span class="flex-1 text-[#933a35] font-medium text-base">My Calender</span>
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="#933a35" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-      <polyline points="9 18 15 12 9 6"/>
-    </svg>
-  </a>
-
-  <%# ── App Settings ── %>
-  <div class="px-5 pt-5 pb-2">
-    <h2 class="text-[#933a35] font-bold text-base">App Settings</h2>
-  </div>
-  <div class="border-b border-[#DDD0CB]"></div>
-
-  <a href="#" class="flex items-center gap-4 px-5 py-4 border-b border-[#EFE5DF]">
-    <span class="text-[#933a35] flex-none">
-      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
-      </svg>
-    </span>
-    <span class="flex-1 text-[#933a35] font-medium text-base">Notifications & reminder</span>
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="#933a35" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-      <polyline points="9 18 15 12 9 6"/>
-    </svg>
-  </a>
-
-  <a href="#" class="flex items-center gap-4 px-5 py-4 border-b border-[#EFE5DF]">
-    <span class="text-[#933a35] flex-none">
-      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-        <rect x="3" y="3" width="18" height="18" rx="2"/>
-        <line x1="3"  y1="9" x2="21" y2="9"/>
-        <line x1="9"  y1="3" x2="9"  y2="9"/>
-      </svg>
-    </span>
-    <div class="flex-1">
-      <div class="flex items-center gap-1">
-        <span class="text-[#933a35] font-medium text-base">Language</span>
-        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="#933a35" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+    <%# ── Profile ── %>
+    <div class="bg-white rounded-xl p-5 mb-4">
+      <h2 class="text-[#933a35] font-bold text-base uppercase tracking-wider mb-4">Profile</h2>
+      <div class="flex items-center gap-4">
+        <div class="w-14 h-14 bg-[#F5EDE8] rounded-full flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" stroke="#933a35" stroke-width="1.5" viewBox="0 0 24 24">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+        </div>
+        <div class="flex-1">
+          <p class="text-[#933a35] text-lg font-semibold"><%= @user.name %></p>
+          <p class="text-[#6B6B6B] text-sm"><%= @user.email %></p>
+        </div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="#6B6B6B" stroke-width="2" viewBox="0 0 24 24">
           <polyline points="9 18 15 12 9 6"/>
         </svg>
       </div>
-      <span class="text-[#933a35] text-sm opacity-60">Englisch</span>
     </div>
-  </a>
 
-  <div class="flex items-center gap-4 px-5 py-4">
-    <span class="text-[#933a35] flex-none">
-      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-      </svg>
-    </span>
-    <span class="flex-1 text-[#933a35] font-medium text-base">Darkmode</span>
-    <label class="relative inline-flex items-center cursor-pointer">
-      <input type="checkbox" class="sr-only peer" checked>
-      <div class="relative w-11 h-6 rounded-full bg-gray-200 peer-checked:bg-[#933a35] transition-colors after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-5"></div>
-    </label>
-  </div>
-
-  <%# ── Mehr zu Season ── %>
-  <div class="px-5 pt-5 pb-2">
-    <h2 class="text-[#933a35] font-bold text-base">Mehr zu Season</h2>
-  </div>
-  <div class="border-b border-[#DDD0CB]"></div>
-
-  <div class="px-5 pt-4 space-y-3">
-
-    <%# Support %>
-    <div class="relative bg-[#4D6B58] rounded-2xl px-5 py-5 flex items-center gap-4">
-      <span class="absolute top-3 right-3 bg-[#FDF0EE] text-[#933a35] text-xs font-medium px-2.5 py-0.5 rounded-full">Coming soon</span>
-      <span class="text-white flex-none">
-        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-          <circle cx="12" cy="12" r="10"/>
-          <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
-          <circle cx="12" cy="17" r="0.5" fill="currentColor" stroke="none"/>
-        </svg>
-      </span>
-      <div>
-        <p class="text-white font-bold text-base">Support</p>
-        <p class="text-white/70 text-sm">Contact us!</p>
+    <%# ── My Calendar ── %>
+    <a href="#" class="block bg-white rounded-xl p-5 mb-4">
+      <h2 class="text-[#933a35] font-bold text-base uppercase tracking-wider mb-4">My Calendar</h2>
+      <div class="flex justify-between">
+        <div class="flex flex-col">
+          <span class="text-[#6B6B6B] text-xs font-bold uppercase">Cycle length</span>
+          <span class="text-[#933a35] text-2xl font-bold"><%= @user.cycle_length %> <span class="text-sm font-normal">days</span></span>
+        </div>
+        <div class="flex flex-col text-right">
+          <span class="text-[#6B6B6B] text-xs font-bold uppercase">Period length</span>
+          <span class="text-[#933a35] text-2xl font-bold"><%= @user.period_length %> <span class="text-sm font-normal">days</span></span>
+        </div>
       </div>
-    </div>
+    </a>
 
-    <%# Rate in the App Store %>
-    <div class="relative bg-[#4D6B58] rounded-2xl px-5 py-5 flex items-center gap-4">
-      <span class="absolute top-3 right-3 bg-[#FDF0EE] text-[#933a35] text-xs font-medium px-2.5 py-0.5 rounded-full">Coming soon</span>
-      <span class="text-white flex-none">
-        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-        </svg>
-      </span>
-      <div>
-        <p class="text-white font-bold text-base">Rate in the App Store</p>
-        <p class="text-white/70 text-sm">for even more benefits!</p>
+    <%# ── My Subscription ── %>
+    <a href="#" class="block bg-white rounded-xl p-5 mb-4">
+      <div class="flex justify-between items-center">
+        <h2 class="text-[#933a35] font-bold text-base uppercase tracking-wider">My Subscription</h2>
+        <span class="bg-[#933a35] text-white text-xs font-bold px-3 py-1 rounded-full">FREE</span>
       </div>
-    </div>
+    </a>
 
-    <%# Share Season with friends %>
-    <div class="relative bg-[#4D6B58] rounded-2xl px-5 py-5 flex items-center gap-4">
-      <span class="absolute top-3 right-3 bg-[#FDF0EE] text-[#933a35] text-xs font-medium px-2.5 py-0.5 rounded-full">Coming soon</span>
-      <span class="text-white flex-none">
-        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-          <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
-          <polyline points="16 6 12 2 8 6"/>
-          <line x1="12" y1="2" x2="12" y2="15"/>
+    <%# ── Notifications ── %>
+    <a href="#" class="block bg-white rounded-xl p-5 mb-4">
+      <div class="flex justify-between items-center">
+        <h2 class="text-[#933a35] font-bold text-base uppercase tracking-wider">Notifications & Reminders</h2>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="#6B6B6B" stroke-width="2" viewBox="0 0 24 24">
+          <polyline points="9 18 15 12 9 6"/>
         </svg>
-      </span>
-      <div>
-        <p class="text-white font-bold text-base">Share Season with friends</p>
-        <p class="text-white/70 text-sm">for even more benefits!</p>
       </div>
-    </div>
+    </a>
 
-  </div>
+    <div class="my-3 border-t border-[#EDE1D5]"></div>
 
-  <%# ── Log out ── %>
-  <div class="px-5 pt-6 pb-8">
+    <%# ── Terms ── %>
+    <a href="<%= terms_path %>" class="block bg-white rounded-xl p-5 mb-4">
+      <div class="flex justify-between items-center">
+        <span class="text-[#933a35] font-semibold">Terms of Service</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="#6B6B6B" stroke-width="2" viewBox="0 0 24 24">
+          <polyline points="9 18 15 12 9 6"/>
+        </svg>
+      </div>
+    </a>
+
+    <%# ── Privacy ── %>
+    <a href="<%= privacy_path %>" class="block bg-white rounded-xl p-5 mb-4">
+      <div class="flex justify-between items-center">
+        <span class="text-[#933a35] font-semibold">Privacy Policy</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="#6B6B6B" stroke-width="2" viewBox="0 0 24 24">
+          <polyline points="9 18 15 12 9 6"/>
+        </svg>
+      </div>
+    </a>
+
+    <div class="my-3 border-t border-[#EDE1D5]"></div>
+
+    <%# ── Log out ── %>
     <%= button_to "Log out",
         session_path,
         method: :delete,
-        class: "w-full bg-transparent border-2 border-[#933a35] text-[#933a35] font-semibold py-3.5 rounded-2xl text-base cursor-pointer" %>
+        class: "w-full bg-transparent text-[#933a35] text-center py-4 rounded-xl font-semibold border-2 border-[#933a35]" %>
+
+    <%# Footer ─%>
+    <p class="text-center mt-6 text-[#6B6B6B] text-sm">
+      Made with <span class="text-red-500">♥</span> in Zurich
+    </p>
   </div>
 
 </div>
