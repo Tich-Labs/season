@@ -1,0 +1,52 @@
+<div style="background:#FAF7F4; min-height:100%; padding-bottom:16px;">
+
+  <!-- Header -->
+  <div style="background:#ffffff; padding:20px 24px 16px; border-bottom:1px solid #EDE1D5;">
+    <div style="display:flex; align-items:center; max-width:430px; margin:0 auto; gap:12px;">
+      <a href="<%= superpowers_path %>" style="color:#933a35;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+      </a>
+      <h1 style="color:#933a35; font-size:20px; font-weight:700;"><%= @superpower_log.date.strftime("%A, %d %B") %></h1>
+    </div>
+  </div>
+
+  <div style="max-width:430px; margin:0 auto; padding:16px;">
+
+    <% emoji_map = {"creativity" => "🎨", "intuition" => "🔮", "communication" => "💬",
+                    "focus" => "🎯", "empathy" => "❤️", "leadership" => "👑",
+                    "productivity" => "⚡", "sensuality" => "🌸"} %>
+
+    <% if @superpower_log.ratings.present? %>
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <% @superpower_log.ratings.each do |name, rating| %>
+          <div style="background:#ffffff; border-radius:12px; padding:16px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span style="font-size:18px;"><%= emoji_map[name] || "✨" %></span>
+                <span style="color:#933a35; font-size:15px; font-weight:600;"><%= name.capitalize %></span>
+              </div>
+              <span style="color:#933a35; font-size:18px; font-weight:700;"><%= rating %>/5</span>
+            </div>
+            <div style="display:flex; gap:6px;">
+              <% 5.times do |i| %>
+                <div style="flex:1; height:8px; border-radius:4px; background:<%= i < rating.to_i ? '#933a35' : '#EDE1D5' %>;"></div>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div style="background:#ffffff; border-radius:12px; padding:20px; text-align:center;">
+        <p style="color:#6B6B6B; font-size:15px;">No superpowers logged for this day.</p>
+      </div>
+    <% end %>
+
+    <a href="<%= daily_view_path(date: @superpower_log.date.to_s) %>"
+       style="display:block; width:100%; background:#933a35; color:#ffffff; text-align:center; padding:16px; border-radius:12px; font-size:16px; font-weight:500; text-decoration:none; margin-top:16px;">
+      View day
+    </a>
+
+  </div>
+</div>

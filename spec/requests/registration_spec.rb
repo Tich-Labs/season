@@ -8,23 +8,21 @@ RSpec.describe "Registrations", type: :request do
   end
 
   describe "POST create" do
-    let(:user) { build(:user) }
     let(:params) do
       {
         user: {
-          email: user.email,
-          password: user.password,
-          password_confirmation: user.password_confirmation
+          email: "new#{Time.now.to_i}@test.com",
+          password: "password123",
+          password_confirmation: "password123"
         }
       }
     end
 
-    before { post registration_path, params: params }
-
-    it "returns successful response" do
-      expect(User.last.email).to eq(user.email)
-      expect(response).to redirect_to(root_path)
-      expect(response.cookies["user_id"]).to be_present
+    it "creates account" do
+      expect {
+        post registration_path, params: params
+      }.to change(User, :count).by(1)
+      expect(response).to redirect_to(onboarding_path(1))
     end
   end
 end

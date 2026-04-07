@@ -1,0 +1,75 @@
+<div style="background:#FAF7F4; min-height:100vh; padding:20px;">
+
+  <div style="max-width:430px; margin:0 auto;">
+    <!-- Back -->
+    <a href="<%= admin_users_path %>" style="color:#933a35; font-size:14px; text-decoration:none;">← Back to Users</a>
+
+    <!-- User profile -->
+    <div style="background:#ffffff; border-radius:12px; padding:20px; margin-top:16px;">
+      <h1 style="color:#933a35; font-size:24px; font-weight:700;"><%= @user.name || 'Unnamed User' %></h1>
+      <p style="color:#6B6B6B; font-size:14px; margin-top:4px;"><%= @user.email %></p>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:20px;">
+        <div style="background:#FAF7F4; padding:12px; border-radius:8px;">
+          <p style="color:#6B6B6B; font-size:12px;">Language</p>
+          <p style="color:#933a35; font-size:16px; font-weight:500;"><%= @user.language || 'en' %></p>
+        </div>
+        <div style="background:#FAF7F4; padding:12px; border-radius:8px;">
+          <p style="color:#6B6B6B; font-size:12px;">Onboarding</p>
+          <p style="color:#933a35; font-size:16px; font-weight:500;"><%= @user.onboarding_completed? ? 'Complete' : 'Pending' %></p>
+        </div>
+        <div style="background:#FAF7F4; padding:12px; border-radius:8px;">
+          <p style="color:#6B6B6B; font-size:12px;">Joined</p>
+          <p style="color:#933a35; font-size:16px; font-weight:500;"><%= @user.created_at.strftime('%Y-%m-%d') %></p>
+        </div>
+        <div style="background:#FAF7F4; padding:12px; border-radius:8px;">
+          <p style="color:#6B6B6B; font-size:12px;">Current Streak</p>
+          <p style="color:#933a35; font-size:16px; font-weight:500;"><%= @user.streak&.current_streak || 0 %> 🔥</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cycle data -->
+    <div style="background:#ffffff; border-radius:12px; padding:20px; margin-top:16px;">
+      <h2 style="color:#933a35; font-size:18px; font-weight:700; margin-bottom:12px;">Cycle Data</h2>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+        <div>
+          <p style="color:#6B6B6B; font-size:12px;">Cycle Length</p>
+          <p style="color:#933a35; font-size:16px;"><%= @user.cycle_length || '—' %> days</p>
+        </div>
+        <div>
+          <p style="color:#6B6B6B; font-size:12px;">Period Length</p>
+          <p style="color:#933a35; font-size:16px;"><%= @user.period_length || '—' %> days</p>
+        </div>
+        <div>
+          <p style="color:#6B6B6B; font-size:12px;">Last Period</p>
+          <p style="color:#933a35; font-size:16px;"><%= @user.last_period_start || 'Not set' %></p>
+        </div>
+        <div>
+          <p style="color:#6B6B6B; font-size:12px;">Current Phase</p>
+          <p style="color:#933a35; font-size:16px;"><%= @user.current_phase || 'Unknown' %></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div style="background:#ffffff; border-radius:12px; padding:20px; margin-top:16px;">
+      <h2 style="color:#933a35; font-size:18px; font-weight:700; margin-bottom:12px;">Stats</h2>
+      <div style="display:flex; justify-content:space-around;">
+        <div style="text-align:center;">
+          <p style="color:#933a35; font-size:24px; font-weight:700;"><%= @user.cycle_entries.count %></p>
+          <p style="color:#6B6B6B; font-size:12px;">Entries</p>
+        </div>
+        <div style="text-align:center;">
+          <p style="color:#933a35; font-size:24px; font-weight:700;"><%= @user.symptom_logs.count %></p>
+          <p style="color:#6B6B6B; font-size:12px;">Symptoms</p>
+        </div>
+        <div style="text-align:center;">
+          <p style="color:#933a35; font-size:24px; font-weight:700;"><%= @user.calendar_events.count %></p>
+          <p style="color:#6B6B6B; font-size:12px;">Events</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

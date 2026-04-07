@@ -1,28 +1,52 @@
 en:
+  oauth:
+    errors:
+      authentication_failed: "Authentication failed. Please try again."
+      email_required: "Unable to get email from %{provider}. Please sign up with email."
+      creation_failed: "Unable to create account. Please try again."
   nav:
     calendar: "Calendar"
     today: "Today"
     track: "Track"
     streaks: "Streaks"
     settings: "Settings"
+    registrations:
+      new:
+        subtitle: "Create an account, so we can save your tracked data and app settings."
+        email_placeholder: "E-mail..."
+        password_placeholder: "Password..."
+        confirm_password_placeholder: "Repeat password..."
+        fast_lane: "Use the fast lane:"
+        or_email: "...or sign in with your E-Mail adress:"
+        submit: "Sign in"
+        have_account: "I already have an account"
+        terms_html: "I'll accept the %{terms} and the %{privacy}"
+        terms_link: "Nutzungsbedingungen"
+        privacy_link: "Datenschutzrecht betimmungen"
+        password_error: "Your password must be at least 6 digits long."
   devise:
     registrations:
       new:
         title: "Sign Up"
+        subtitle: "Create an account to track your cycle"
         name_placeholder: "Name..."
         email_placeholder: "E-mail..."
         password_placeholder: "Password..."
-        terms: "I accept the terms and privacy policy"
+        confirm_password_placeholder: "Repeat password..."
+        fast_lane: "Use the fast lane:"
+        or_email: "...or sign up with your E-mail:"
         submit: "Create account"
         have_account: "I already have an account"
     sessions:
       new:
         title: "Log In"
-        fast_lane: "Use the fast lane:"
-        or_email: "... or login with your E-mail"
+        subtitle: "Welcome back"
+        name_placeholder: "Name..."
         email_placeholder: "E-mail..."
         password_placeholder: "Password..."
-        forgot_password: "I forgot my password..."
+        confirm_password_placeholder: "Repeat password..."
+        fast_lane: "Use the fast lane:"
+        or_email: "... or login with your E-mail"
         submit: "Log In"
         no_account: "I am new... Sign up!"
   home:

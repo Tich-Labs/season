@@ -1,0 +1,31 @@
+<div style="background:#ffffff; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:60px 32px 48px; max-width:430px; margin:0 auto;">
+
+  <!-- Logo centered upper half -->
+  <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+    <%= image_tag "screen1logo.png",
+        class: "w-[234px] h-[255px] object-contain",
+        alt: "Season" %>
+    <%= image_tag "Season-Wortmarke 1.svg",
+        style: "width:280px; height:auto; display:block; margin:0 auto;",
+        alt: "Season" %>
+  </div>
+
+  <!-- Invite text and buttons -->
+  <div style="width:100%; text-align:center;">
+    <p style="color:#933a35; font-size:22px; font-weight:500; margin-bottom:6px; letter-spacing:1.32px;">
+      Welcome to Season!
+    </p>
+    <p style="color:#933a35; font-size:16px; font-weight:400; margin-bottom:40px; line-height:1.5;">
+      You've been invited to join our exclusive early access program.
+    </p>
+
+    <%= link_to "CREATE ACCOUNT",
+        new_registration_path(invite_token: @token),
+        style: "display:block; background:#933a35; color:#ffffff; text-align:center; padding:18px; border-radius:8px; font-weight:500; font-size:16px; text-decoration:none; letter-spacing:1.32px; margin-bottom:20px;" %>
+
+    <%= link_to "I ALREADY HAVE AN ACCOUNT",
+        new_session_path,
+        style: "display:block; color:#933a35; text-align:center; padding:18px; border-radius:8px; font-weight:500; font-size:16px; text-decoration:none; letter-spacing:1.32px; border:2px solid #933a35;" %>
+  </div>
+
+</div>

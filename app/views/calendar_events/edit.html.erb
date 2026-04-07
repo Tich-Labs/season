@@ -1,0 +1,46 @@
+<div style="background:#FAF7F4; min-height:100vh; padding:20px; max-width:430px; margin:0 auto;">
+
+  <div style="background:#ffffff; border-radius:16px; padding:24px;">
+    <h2 style="color:#933a35; font-size:20px; font-weight:700; margin-bottom:24px;">
+      Edit Event
+    </h2>
+
+    <%= form_with model: @event, url: calendar_event_path(@event), local: true do |f| %>
+      <div style="margin-bottom:16px;">
+        <label style="color:#6B6B6B; font-size:14px; display:block; margin-bottom:8px;">Title</label>
+        <%= f.text_field :title, required: true,
+            style: "width:100%; background:#EDE1D5; border-radius:8px; padding:12px; border:none; font-size:16px; color:#933a35;" %>
+      </div>
+
+      <div style="margin-bottom:16px;">
+        <label style="color:#6B6B6B; font-size:14px; display:block; margin-bottom:8px;">Date</label>
+        <%= f.date_field :date, required: true,
+            style: "width:100%; background:#EDE1D5; border-radius:8px; padding:12px; border:none; font-size:16px; color:#933a35;" %>
+      </div>
+
+      <div style="display:flex; gap:16px; margin-bottom:16px;">
+        <div style="flex:1;">
+          <label style="color:#6B6B6B; font-size:14px; display:block; margin-bottom:8px;">Start</label>
+          <%= f.time_field :start_time,
+              style: "width:100%; background:#EDE1D5; border-radius:8px; padding:12px; border:none; font-size:16px; color:#933a35;" %>
+        </div>
+        <div style="flex:1;">
+          <label style="color:#6B6B6B; font-size:14px; display:block; margin-bottom:8px;">End</label>
+          <%= f.time_field :end_time,
+              style: "width:100%; background:#EDE1D5; border-radius:8px; padding:12px; border:none; font-size:16px; color:#933a35;" %>
+        </div>
+      </div>
+
+      <div style="margin-bottom:24px;">
+        <%= f.submit "Update", 
+            style: "width:100%; background:#933a35; color:#ffffff; padding:14px; border-radius:8px; border:none; font-size:16px; font-weight:500; cursor:pointer;" %>
+      </div>
+
+      <div style="text-align:center;">
+        <%= button_to "Delete", calendar_event_path(@event), method: :delete, 
+              style: "color:#933a35; font-size:14px; background:none; border:none; cursor:pointer; text-decoration:underline;" %>
+      </div>
+    <% end %>
+  </div>
+
+</div>

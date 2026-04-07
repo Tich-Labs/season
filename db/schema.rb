@@ -10,9 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_06_073657) do
+ActiveRecord::Schema[8.0].define(version: 2026_04_07_045533) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "calendar_events", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "title"
+    t.date "date"
+    t.time "start_time"
+    t.time "end_time"
+    t.string "category"
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_calendar_events_on_user_id"
+  end
 
   create_table "cycle_entries", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -27,6 +40,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_06_073657) do
     t.index ["date"], name: "index_cycle_entries_on_date"
     t.index ["user_id", "date"], name: "index_cycle_entries_on_user_id_and_date"
     t.index ["user_id"], name: "index_cycle_entries_on_user_id"
+  end
+
+  create_table "cycle_phase_contents", force: :cascade do |t|
+    t.string "phase"
+    t.string "locale"
+    t.string "season_name"
+    t.text "superpower_text"
+    t.text "mood_text"
+    t.text "take_care_text"
+    t.text "sport_text"
+    t.text "nutrition_text"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "reminders", force: :cascade do |t|
@@ -106,7 +132,21 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_06_073657) do
     t.datetime "reset_password_sent_at"
     t.string "reset_password_token"
     t.datetime "updated_at", null: false
+    t.string "google_uid"
+    t.string "facebook_uid"
+    t.string "apple_uid"
+    t.string "locale"
+    t.boolean "admin", default: false, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["invite_token"], name: "index_users_on_invite_token"
+    t.index ["language"], name: "index_users_on_language"
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
-end
 
+  add_foreign_key "calendar_events", "users"
+  add_foreign_key "cycle_entries", "users"
+  add_foreign_key "reminders", "users"
+  add_foreign_key "streaks", "users"
+  add_foreign_key "superpower_logs", "users"
+  add_foreign_key "symptom_logs", "users"
+end

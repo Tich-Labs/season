@@ -23,9 +23,11 @@
   </head>
 
   <% # Determine if this is an auth/unauthenticated screen or authenticated screen %>
-  <% # 'home' covers loader + welcome; 'launch' covers fallback launch screen %>
-  <% is_auth_screen = ['devise', 'home', 'launch'].include?(controller_name) %>
-  <% show_bottom_nav = user_signed_in? && !is_auth_screen %>
+  <% show_bottom_nav = false %>
+  <% if authenticated? && current_user&.onboarding_completed? %>
+    <% auth_controllers = %w[home launch sessions registrations onboarding] %>
+    <% show_bottom_nav = !auth_controllers.include?(controller_name) %>
+  <% end %>
 
   <body class="bg-[#FAF7F4] overflow-hidden flex flex-col h-screen">
     <%# Flash messages %>

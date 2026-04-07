@@ -1,0 +1,78 @@
+<div style="background:#FAF7F4; min-height:100%; padding-bottom:16px;">
+
+  <!-- Header -->
+  <div style="background:#ffffff; padding:20px 24px 16px; border-bottom:1px solid #EDE1D5;">
+    <div style="max-width:430px; margin:0 auto;">
+      <h1 style="color:#933a35; font-size:24px; font-weight:700; letter-spacing:1px; text-align:center;">SUPERPOWERS</h1>
+      <p style="color:#6B6B6B; font-size:14px; text-align:center; margin-top:4px;">Rate your strengths today</p>
+    </div>
+  </div>
+
+  <div style="max-width:430px; margin:0 auto; padding:16px;">
+
+    <!-- Log today's superpowers -->
+    <div style="background:#ffffff; border-radius:12px; padding:20px; margin-bottom:12px;">
+      <h2 style="color:#933a35; font-size:18px; font-weight:700; margin-bottom:20px;">Today's superpowers</h2>
+
+      <%= form_with url: superpowers_path, method: :post, local: true do |f| %>
+        <% superpowers = [
+          ["creativity",    "Creativity",    "🎨"],
+          ["intuition",     "Intuition",     "🔮"],
+          ["communication", "Communication", "💬"],
+          ["focus",         "Focus",         "🎯"],
+          ["empathy",       "Empathy",       "❤️"],
+          ["leadership",    "Leadership",    "👑"],
+          ["productivity",  "Productivity",  "⚡"],
+          ["sensuality",    "Sensuality",    "🌸"]
+        ] %>
+
+        <div style="display:flex; flex-direction:column; gap:20px;">
+          <% superpowers.each do |field, label, emoji| %>
+            <div>
+              <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
+                <span style="font-size:18px;"><%= emoji %></span>
+                <label style="color:#933a35; font-size:15px; font-weight:600;"><%= label %></label>
+              </div>
+              <div style="display:flex; gap:8px;">
+                <% 5.times do |i| %>
+                  <label style="flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; cursor:pointer;">
+                    <input type="radio" name="ratings[<%= field %>]" value="<%= i+1 %>"
+                           style="accent-color:#933a35; width:20px; height:20px;">
+                    <span style="color:#6B6B6B; font-size:12px;"><%= i+1 %></span>
+                  </label>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+
+        <button type="submit"
+                style="display:block; width:100%; background:#933a35; color:#ffffff; text-align:center; padding:16px; border-radius:12px; font-size:16px; font-weight:500; border:none; cursor:pointer; margin-top:24px;">
+          Save Superpowers
+        </button>
+      <% end %>
+    </div>
+
+    <!-- Recent logs -->
+    <% if @superpower_logs.any? %>
+      <div style="background:#ffffff; border-radius:12px; padding:20px;">
+        <h2 style="color:#933a35; font-size:18px; font-weight:700; margin-bottom:16px;">Recent logs</h2>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <% @superpower_logs.last(7).reverse.each do |log| %>
+            <a href="<%= superpower_path(log) %>"
+               style="display:flex; justify-content:space-between; align-items:center; padding:12px; background:#FAF7F4; border-radius:8px; text-decoration:none;">
+              <span style="color:#933a35; font-size:14px; font-weight:500;"><%= log.date.strftime("%d %b") %></span>
+              <% if log.ratings.present? %>
+                <span style="color:#6B6B6B; font-size:13px;"><%= log.ratings.size %> rated</span>
+              <% end %>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
+                <polyline points="9 18 15 12 9 6"/>
+              </svg>
+            </a>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+  </div>
+</div>

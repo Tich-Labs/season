@@ -1,10 +1,11 @@
-<div class="bg-white flex items-center justify-center mx-auto"
-     style="width: 428px; height: 926px;"
+<div class="bg-white flex items-center justify-center"
+     style="min-height: 100vh; width: 100%;"
      data-controller="loader"
-     data-loader-signed-in-value="<%= user_signed_in? %>"
+     data-loader-signed-in-value="<%= authenticated? %>"
      data-loader-calendar-url-value="<%= user_root_path %>"
-     data-loader-welcome-url-value="<%= welcome_path %>">
-  <div class="flex flex-col items-center" style="width: 428px;">
+     data-loader-welcome-url-value="<%= welcome_path %>"
+     data-loader-app-url-value="<%= app_landing_path %>">
+  <div class="flex flex-col items-center" style="width: 100%; max-width: 428px;">
     <%= image_tag "screen1logo.png",
         class: "w-[234px] h-[255px] object-contain",
         alt: "Season" %>

@@ -1,0 +1,111 @@
+<div style="background:#FAF7F4; min-height:100%; padding-bottom:16px;">
+
+  <!-- Header -->
+  <div style="background:#ffffff; padding:20px 24px 16px; border-bottom:1px solid #EDE1D5;">
+    <div style="display:flex; align-items:center; justify-content:space-between; max-width:430px; margin:0 auto;">
+      <a href="<%= daily_view_path(date: (@date - 1.day).to_s) %>"
+         style="width:40px; height:40px; display:flex; align-items:center; justify-content:center; color:#933a35;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+      </a>
+      <div style="text-align:center;">
+        <h1 style="color:#933a35; font-size:18px; font-weight:700;">
+          <%= @date == Date.today ? "Today" : @date.strftime("%A") %>
+        </h1>
+        <p style="color:#6B6B6B; font-size:13px; margin-top:2px;">
+          <%= @date.strftime("%d %B %Y") %>
+        </p>
+      </div>
+      <a href="<%= daily_view_path(date: (@date + 1.day).to_s) %>"
+         style="width:40px; height:40px; display:flex; align-items:center; justify-content:center; color:#933a35;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <polyline points="9 18 15 12 9 6"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+
+  <div style="max-width:430px; margin:0 auto; padding:16px;">
+
+    <!-- Greeting -->
+    <p style="color:#933a35; font-size:16px; font-style:italic; margin-bottom:8px;">
+      Hello <%= current_user.first_name || 'there' %>
+    </p>
+
+    <% if @phase %>
+      <!-- Phase indicator -->
+      <div style="background:#ffffff; border-radius:12px; padding:20px; margin-bottom:16px; text-align:center;">
+        <p style="color:#6B6B6B; font-size:14px;">You are in your</p>
+        <p style="color:#933a35; font-size:24px; font-weight:700;"><%= @season %></p>
+        <% if @cycle_day %>
+          <p style="color:#6B6B6B; font-size:14px; margin-top:8px;">Day <%= @cycle_day %></p>
+        <% end %>
+      </div>
+
+      <!-- Phase content cards -->
+      <% if @content %>
+        <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:16px;">
+          <!-- Superpower -->
+          <div style="background:#ffffff; border-radius:12px; padding:16px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+            <h3 style="color:#933a35; font-size:14px; font-weight:700; margin-bottom:8px;">Superpower</h3>
+            <p style="color:#6B6B6B; font-size:15px;"><%= @content.superpower_text %></p>
+          </div>
+
+          <!-- Mood -->
+          <div style="background:#ffffff; border-radius:12px; padding:16px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+            <h3 style="color:#933a35; font-size:14px; font-weight:700; margin-bottom:8px;">Mood</h3>
+            <p style="color:#6B6B6B; font-size:15px;"><%= @content.mood_text %></p>
+          </div>
+
+          <!-- Take care -->
+          <div style="background:#ffffff; border-radius:12px; padding:16px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+            <h3 style="color:#933a35; font-size:14px; font-weight:700; margin-bottom:8px;">Take care of</h3>
+            <p style="color:#6B6B6B; font-size:15px;"><%= @content.take_care_text %></p>
+          </div>
+
+          <!-- Sport -->
+          <div style="background:#ffffff; border-radius:12px; padding:16px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+            <h3 style="color:#933a35; font-size:14px; font-weight:700; margin-bottom:8px;">Sport</h3>
+            <p style="color:#6B6B6B; font-size:15px;"><%= @content.sport_text %></p>
+          </div>
+
+          <!-- Nutrition -->
+          <div style="background:#ffffff; border-radius:12px; padding:16px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+            <h3 style="color:#933a35; font-size:14px; font-weight:700; margin-bottom:8px;">Nutrition</h3>
+            <p style="color:#6B6B6B; font-size:15px;"><%= @content.nutrition_text %></p>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+      <!-- No cycle set up -->
+      <div style="background:#FDF0EE; border-radius:12px; padding:20px; margin-bottom:16px; text-align:center;">
+        <p style="color:#933a35; font-size:16px; font-weight:500;">Set up your cycle in onboarding to see your daily tips</p>
+      </div>
+    <% end %>
+
+    <!-- Events for today -->
+    <% if @events.any? %>
+      <div style="background:#ffffff; border-radius:12px; padding:16px; margin-bottom:16px;">
+        <h3 style="color:#933a35; font-size:16px; font-weight:700; margin-bottom:12px;">Today's Events</h3>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <% @events.each do |event| %>
+            <div style="background:#FAF7F4; border-radius:8px; padding:12px;">
+              <p style="color:#933a35; font-size:14px; font-weight:500;"><%= event.title %></p>
+              <% if event.start_time %>
+                <p style="color:#6B6B6B; font-size:12px;"><%= event.start_time.strftime("%H:%M") %><%= " - #{event.end_time.strftime("%H:%M")}" if event.end_time %></p>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Back to calendar -->
+    <a href="<%= user_root_path %>"
+       style="display:block; width:100%; background:#ffffff; color:#933a35; text-align:center; padding:16px; border-radius:12px; font-size:16px; font-weight:500; text-decoration:none; border:1px solid #EDE1D5;">
+      Back to Calendar
+    </a>
+
+  </div>
+</div>

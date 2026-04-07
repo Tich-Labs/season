@@ -1,5 +1,7 @@
 class SettingsController < ApplicationController
-  before_action :authenticate_user!
+  include Authentication
+
+  before_action :require_onboarding_completed
 
   def edit
     @user = current_user
@@ -8,9 +10,9 @@ class SettingsController < ApplicationController
   def update
     @user = current_user
     if @user.update(user_params)
-      redirect_to @user, notice: "Settings updated successfully."
+      redirect_to edit_settings_path, notice: "Settings saved"
     else
-      render :edit
+      render :edit, status: :unprocessable_entity
     end
   end
 

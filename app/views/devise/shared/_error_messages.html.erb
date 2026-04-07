@@ -1,7 +1,0 @@
-<% if resource.errors.any? %>
-  <div class="bg-[#FDF0EE] rounded-xl px-4 py-3 mb-4 text-sm text-[#933a35]">
-    <% resource.errors.full_messages.each do |msg| %>
-      <p class="mb-1 last:mb-0">⚠ <%= msg %></p>
-    <% end %>
-  </div>
-<% end %>

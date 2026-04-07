@@ -1,0 +1,248 @@
+<div style="background:#ffffff; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:60px 32px 48px; max-width:430px; margin:0 auto;">
+
+  <!-- Progress indicator -->
+  <div style="width:100%; display:flex; justify-content:center; gap:8px; margin-bottom:40px;">
+    <% (1..5).each do |i| %>
+      <div style="width:40px; height:4px; border-radius:2px; background:<%= i <= @step ? '#933a35' : '#EDE1D5' %>;"></div>
+    <% end %>
+  </div>
+
+  <% if @error %>
+    <div style="background:#FDF0EE; border-radius:8px; padding:12px 16px; margin-bottom:16px; width:100%;">
+      <p style="color:#933a35; font-size:16px; font-weight:500;"><%= @error %></p>
+    </div>
+  <% end %>
+
+  <% case @step %>
+  <% when 1 %>
+    <!-- Step 1: Name -->
+    <div style="width:100%; flex:1; display:flex; flex-direction:column; justify-content:center;">
+      <h2 style="color:#933a35; font-size:22px; font-weight:500; text-align:center; margin-bottom:12px; letter-spacing:1.32px;">
+        What's your name?
+      </h2>
+      <p style="color:#6B6B6B; font-size:16px; font-weight:400; text-align:center; margin-bottom:40px;">
+        We want to get to know you better.
+      </p>
+
+      <form action="<%= onboarding_path(@step) %>" method="post" id="step1-form">
+        <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+        <input type="hidden" name="_method" value="patch">
+        <input type="text" name="user[name]" id="user_name" placeholder="Your name..." required
+               style="width:100%; background:#EDE1D5; border-radius:8px; padding:14px 21px; height:52px; border:none; font-size:22px; font-weight:500; color:#933a35; outline:none; box-sizing:border-box; text-align:center;">
+      </form>
+    </div>
+
+    <div style="width:100%;">
+      <a href="#" onclick="document.getElementById('step1-form').submit(); return false;" style="display:block; background:#933a35; color:#ffffff; text-align:center; padding:18px; border-radius:8px; font-weight:500; font-size:16px; text-decoration:none; letter-spacing:1.32px;">
+        CONTINUE
+      </a>
+    </div>
+
+  <% when 2 %>
+    <!-- Step 2: Cycle & Period Length -->
+    <div style="width:100%; flex:1; display:flex; flex-direction:column; justify-content:center;">
+      <h2 style="color:#933a35; font-size:22px; font-weight:500; text-align:center; margin-bottom:12px; letter-spacing:1.32px;">
+        Your cycle details
+      </h2>
+      <p style="color:#6B6B6B; font-size:16px; font-weight:400; text-align:center; margin-bottom:40px;">
+        This helps us predict your cycle accurately.
+      </p>
+
+      <form action="<%= onboarding_path(@step) %>" method="post" id="step2-form">
+        <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+        <input type="hidden" name="_method" value="patch">
+        <input type="hidden" name="cycle_length" id="cycle_length" value="28">
+        <input type="hidden" name="period_length" id="period_length" value="5">
+
+        <div style="margin-bottom:24px;">
+          <label style="color:#933a35; font-size:16px; font-weight:500; display:block; margin-bottom:8px;">Cycle length (days)</label>
+          <div style="display:flex; justify-content:center; gap:8px; flex-wrap:wrap;">
+            <% (21..35).each do |day| %>
+              <button type="button" class="cycle-btn" data-value="<%= day %>"
+                      style="width:44px; height:44px; border-radius:8px; border:none; background:#EDE1D5; color:#933a35; font-size:14px; font-weight:500; cursor:pointer;">
+                <%= day %>
+              </button>
+            <% end %>
+          </div>
+        </div>
+
+        <div>
+          <label style="color:#933a35; font-size:16px; font-weight:500; display:block; margin-bottom:8px;">Period length (days)</label>
+          <div style="display:flex; justify-content:center; gap:8px; flex-wrap:wrap;">
+            <% (1..10).each do |day| %>
+              <button type="button" class="period-btn" data-value="<%= day %>"
+                      style="width:44px; height:44px; border-radius:8px; border:none; background:#EDE1D5; color:#933a35; font-size:14px; font-weight:500; cursor:pointer;">
+                <%= day %>
+              </button>
+            <% end %>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div style="width:100%;">
+      <a href="#" onclick="document.getElementById('step2-form').submit(); return false;" style="display:block; background:#933a35; color:#ffffff; text-align:center; padding:18px; border-radius:8px; font-weight:500; font-size:16px; text-decoration:none; letter-spacing:1.32px;">
+        CONTINUE
+      </a>
+    </div>
+
+  <% when 3 %>
+    <!-- Step 3: Contraception -->
+    <div style="width:100%; flex:1; display:flex; flex-direction:column; justify-content:center;">
+      <h2 style="color:#933a35; font-size:22px; font-weight:500; text-align:center; margin-bottom:12px; letter-spacing:1.32px;">
+        Contraception type
+      </h2>
+      <p style="color:#6B6B6B; font-size:16px; font-weight:400; text-align:center; margin-bottom:40px;">
+        Select your current method.
+      </p>
+
+      <form action="<%= onboarding_path(@step) %>" method="post" id="step3-form">
+        <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+        <input type="hidden" name="_method" value="patch">
+        <input type="hidden" name="contraception" id="contraception" value="None">
+
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <% ["None", "Condoms", "Birth control pill", "IUD", "Implant", "Patch", "Ring", "Other"].each do |method| %>
+            <button type="button" class="contraception-btn" data-value="<%= method %>"
+                    style="width:100%; padding:16px; border-radius:8px; border:2px solid #EDE1D5; background:#ffffff; color:#933a35; font-size:16px; font-weight:500; cursor:pointer; text-align:left;">
+              <%= method %>
+            </button>
+          <% end %>
+        </div>
+      </form>
+    </div>
+
+    <div style="width:100%;">
+      <a href="#" onclick="document.getElementById('step3-form').submit(); return false;" style="display:block; background:#933a35; color:#ffffff; text-align:center; padding:18px; border-radius:8px; font-weight:500; font-size:16px; text-decoration:none; letter-spacing:1.32px;">
+        CONTINUE
+      </a>
+    </div>
+
+  <% when 4 %>
+    <!-- Step 4: Last Period Start Date -->
+    <div style="width:100%; flex:1; display:flex; flex-direction:column; justify-content:center;">
+      <h2 style="color:#933a35; font-size:22px; font-weight:500; text-align:center; margin-bottom:12px; letter-spacing:1.32px;">
+        When did your last period start?
+      </h2>
+      <p style="color:#6B6B6B; font-size:16px; font-weight:400; text-align:center; margin-bottom:40px;">
+        Select the first day of your most recent period.
+      </p>
+
+      <form action="<%= onboarding_path(@step) %>" method="post" id="step4-form">
+        <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+        <input type="hidden" name="_method" value="patch">
+        <input type="date" name="last_period_date" id="last_period_date" required
+               style="width:100%; background:#EDE1D5; border-radius:8px; padding:14px 21px; height:52px; border:none; font-size:18px; font-weight:500; color:#933a35; outline:none; box-sizing:border-box; text-align:center;">
+      </form>
+    </div>
+
+    <div style="width:100%;">
+      <a href="#" onclick="document.getElementById('step4-form').submit(); return false;" style="display:block; background:#933a35; color:#ffffff; text-align:center; padding:18px; border-radius:8px; font-weight:500; font-size:16px; text-decoration:none; letter-spacing:1.32px;">
+        CONTINUE
+      </a>
+    </div>
+
+  <% when 5 %>
+    <!-- Step 5: Language Preference -->
+    <div style="width:100%; flex:1; display:flex; flex-direction:column; justify-content:center;">
+      <h2 style="color:#933a35; font-size:22px; font-weight:500; text-align:center; margin-bottom:12px; letter-spacing:1.32px;">
+        Language preference
+      </h2>
+      <p style="color:#6B6B6B; font-size:16px; font-weight:400; text-align:center; margin-bottom:40px;">
+        Choose your preferred language.
+      </p>
+
+      <form action="<%= onboarding_path(@step) %>" method="post" id="step5-form">
+        <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+        <input type="hidden" name="_method" value="patch">
+        <input type="hidden" name="locale" id="locale" value="en">
+
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <button type="button" class="lang-btn" data-lang="en"
+                  style="width:100%; padding:16px; border-radius:8px; border:2px solid #EDE1D5; background:#ffffff; color:#933a35; font-size:16px; font-weight:500; cursor:pointer; text-align:left;">
+            English
+          </button>
+          <button type="button" class="lang-btn" data-lang="de"
+                  style="width:100%; padding:16px; border-radius:8px; border:2px solid #EDE1D5; background:#ffffff; color:#933a35; font-size:16px; font-weight:500; cursor:pointer; text-align:left;">
+            Deutsch
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div style="width:100%;">
+      <a href="#" onclick="document.getElementById('step5-form').submit(); return false;" style="display:block; background:#933a35; color:#ffffff; text-align:center; padding:18px; border-radius:8px; font-weight:500; font-size:16px; text-decoration:none; letter-spacing:1.32px;">
+        FINISH
+      </a>
+    </div>
+
+  <% end %>
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Step 2: Cycle length buttons
+  document.querySelectorAll('.cycle-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.cycle-btn').forEach(function(b) {
+        b.style.background = '#EDE1D5';
+      });
+      this.style.background = '#933a35';
+      this.style.color = '#ffffff';
+      document.getElementById('cycle_length').value = this.dataset.value;
+    });
+  });
+
+  // Step 2: Period length buttons
+  document.querySelectorAll('.period-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.period-btn').forEach(function(b) {
+        b.style.background = '#EDE1D5';
+      });
+      this.style.background = '#933a35';
+      this.style.color = '#ffffff';
+      document.getElementById('period_length').value = this.dataset.value;
+    });
+  });
+
+  // Step 3: Contraception buttons
+  document.querySelectorAll('.contraception-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.contraception-btn').forEach(function(b) {
+        b.style.borderColor = '#EDE1D5';
+        b.style.background = '#ffffff';
+      });
+      this.style.borderColor = '#933a35';
+      this.style.background = '#FDF0EE';
+      document.getElementById('contraception').value = this.dataset.value;
+    });
+  });
+
+  // Step 5: Language buttons
+  document.querySelectorAll('.lang-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.lang-btn').forEach(function(b) {
+        b.style.borderColor = '#EDE1D5';
+        b.style.background = '#ffffff';
+      });
+      this.style.borderColor = '#933a35';
+      this.style.background = '#FDF0EE';
+      document.getElementById('locale').value = this.dataset.lang;
+    });
+  });
+
+  // Set default selections
+  var cycle28 = document.querySelector('.cycle-btn[data-value="28"]');
+  if (cycle28) { cycle28.style.background = '#933a35'; cycle28.style.color = '#ffffff'; }
+  
+  var period5 = document.querySelector('.period-btn[data-value="5"]');
+  if (period5) { period5.style.background = '#933a35'; period5.style.color = '#ffffff'; }
+  
+  var noneBtn = document.querySelector('.contraception-btn[data-value="None"]');
+  if (noneBtn) { noneBtn.style.borderColor = '#933a35'; noneBtn.style.background = '#FDF0EE'; }
+  
+  var enBtn = document.querySelector('.lang-btn[data-lang="en"]');
+  if (enBtn) { enBtn.style.borderColor = '#933a35'; enBtn.style.background = '#FDF0EE'; }
+});
+</script>

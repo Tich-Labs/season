@@ -3,7 +3,8 @@ export default class extends Controller {
   static values = {
     signedIn: Boolean,
     calendarUrl: String,
-    welcomeUrl: String
+    welcomeUrl: String,
+    appUrl: String
   }
   connect() {
     setTimeout(() => {

@@ -1,0 +1,101 @@
+<div style="background:#FAF7F4; min-height:100%; padding:0 0 16px 0;">
+
+  <!-- Header with streak -->
+  <div style="background:#ffffff; padding:20px 24px 16px; border-bottom:1px solid #EDE1D5;">
+    <div style="display:flex; align-items:center; justify-content:space-between; max-width:430px; margin:0 auto;">
+      <a href="<%= user_root_path(date: @prev_month.to_s) %>"
+         style="width:40px; height:40px; display:flex; align-items:center; justify-content:center; color:#933a35;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+      </a>
+      <h1 style="color:#933a35; font-size:20px; font-weight:700; letter-spacing:1px;">
+        <%= @date.strftime("%B %Y") %>
+      </h1>
+      <a href="<%= user_root_path(date: @next_month.to_s) %>"
+         style="width:40px; height:40px; display:flex; align-items:center; justify-content:center; color:#933a35;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <polyline points="9 18 15 12 9 6"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+
+  <div style="max-width:430px; margin:0 auto; padding:16px 16px 0;">
+
+    <!-- Greeting -->
+    <div style="margin-bottom:16px;">
+      <p style="color:#933a35; font-size:16px; font-style:italic;">
+        Hello <%= current_user.first_name || 'there' %>
+      </p>
+      <% if @current_season %>
+        <p style="color:#933a35; font-size:18px; font-weight:700;">
+          You are in <%= @current_season %>
+        </p>
+      <% end %>
+    </div>
+
+    <!-- Streak indicator -->
+    <% if @streak > 0 %>
+      <div style="display:flex; align-items:center; gap:8px; background:#ffffff; padding:12px; border-radius:8px; margin-bottom:16px;">
+        <span style="font-size:20px;">🔥</span>
+        <span style="color:#933a35; font-size:14px; font-weight:500;">
+          <%= @streak %> day streak
+        </span>
+      </div>
+    <% end %>
+
+    <!-- Day-of-week headers -->
+    <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:4px; margin-bottom:8px;">
+      <% %w[Mo Tu We Th Fr Sa Su].each do |d| %>
+        <div style="text-align:center; color:#6B6B6B; font-size:12px; font-weight:500; padding:4px 0;">
+          <%= d %>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Calendar grid -->
+    <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:4px;">
+      <% first_weekday = @date.beginning_of_month.wday == 0 ? 6 : @date.beginning_of_month.wday - 1 %>
+      <% first_weekday.times do %>
+        <div></div>
+      <% end %>
+
+      <% (1..@date.end_of_month.day).each do |day| %>
+        <% date = Date.new(@year, @month, day) %>
+        <% day_data = @month_data[date] %>
+        <% is_today = date == Date.today %>
+        <% is_tracked = @tracked_days.include?(date) %>
+        <% day_events = @events.select { |e| e.date == date }.take(2) %>
+        
+        <% phase_colour = day_data&.dig(:colour) || '#EDE1D5' %>
+        <% bg = is_today ? "#933a35" : (is_tracked ? "#FDF0EE" : "#ffffff") %>
+        <% text_color = is_today ? "#ffffff" : "#933a35" %>
+
+        <a href="<%= daily_view_path(date: date.to_s) %>"
+           style="aspect-ratio:1; display:flex; flex-direction:column; align-items:center; justify-content:center; border-radius:8px; background:<%= bg %>; text-decoration:none; border:1px solid <%= is_today ? '#933a35' : '#EDE1D5' %>; position:relative;">
+          <span style="font-size:14px; font-weight:<%= is_today ? '700' : '500' %>; color:<%= text_color %>;">
+            <%= day %>
+          </span>
+          <!-- Phase colour bar -->
+          <% if day_data %>
+            <div style="width:80%; height:3px; background:<%= phase_colour %>; border-radius:2px; margin-top:2px;"></div>
+          <% end %>
+          <!-- Tracked checkmark -->
+          <% if is_tracked %>
+            <span style="position:absolute; top:2px; right:2px; color:#2E6B3E; font-size:10px;">✓</span>
+          <% end %>
+        </a>
+      <% end %>
+    </div>
+
+    <!-- Add event button -->
+    <div style="position:fixed; bottom:80px; right:24px; z-index:40;">
+      <a href="<%= new_calendar_event_path %>" 
+         style="width:56px; height:56px; border-radius:28px; background:#933a35; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(147,58,53,0.3);">
+        <span style="color:#ffffff; font-size:28px; font-weight:300;">+</span>
+      </a>
+    </div>
+
+  </div>
+</div>

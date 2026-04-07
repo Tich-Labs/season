@@ -1,0 +1,76 @@
+<div style="background:#FAF7F4; min-height:100%; padding-bottom:16px;">
+
+  <!-- Header -->
+  <div style="background:#ffffff; padding:20px 24px 16px; border-bottom:1px solid #EDE1D5;">
+    <div style="max-width:430px; margin:0 auto;">
+      <h1 style="color:#933a35; font-size:24px; font-weight:700; letter-spacing:1px; text-align:center;">STREAKS</h1>
+    </div>
+  </div>
+
+  <div style="max-width:430px; margin:0 auto; padding:16px;">
+
+    <!-- Main streak card -->
+    <div style="background:#933a35; border-radius:16px; padding:28px 24px; margin-bottom:12px; text-align:center;">
+      <p style="color:rgba(255,255,255,0.7); font-size:14px; font-weight:500; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px;">Current Streak</p>
+      <div style="display:flex; align-items:center; justify-content:center; gap:12px;">
+        <span style="font-size:64px; font-weight:700; color:#ffffff; line-height:1;">
+          <%= @streak.current_streak || 0 %>
+        </span>
+        <span style="font-size:40px;">🔥</span>
+      </div>
+      <p style="color:rgba(255,255,255,0.8); font-size:16px; margin-top:8px;">
+        <%= @streak.current_streak.to_i == 1 ? "day" : "days" %> in a row
+      </p>
+    </div>
+
+    <!-- Stats row -->
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;">
+      <div style="background:#ffffff; border-radius:12px; padding:18px; text-align:center;">
+        <p style="color:#6B6B6B; font-size:12px; font-weight:500; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px;">Best streak</p>
+        <p style="color:#933a35; font-size:32px; font-weight:700; line-height:1;">
+          <%= @streak.longest_streak || 0 %>
+        </p>
+        <p style="color:#6B6B6B; font-size:13px; margin-top:4px;">days</p>
+      </div>
+      <div style="background:#ffffff; border-radius:12px; padding:18px; text-align:center;">
+        <p style="color:#6B6B6B; font-size:12px; font-weight:500; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px;">Total flames</p>
+        <p style="color:#933a35; font-size:32px; font-weight:700; line-height:1;">
+          <%= @streak.total_flames || 0 %>
+        </p>
+        <p style="color:#6B6B6B; font-size:13px; margin-top:4px;">🔥</p>
+      </div>
+    </div>
+
+    <!-- Milestones -->
+    <div style="background:#ffffff; border-radius:12px; padding:20px; margin-bottom:12px;">
+      <h2 style="color:#933a35; font-size:18px; font-weight:700; margin-bottom:16px;">Milestones</h2>
+      <div style="display:grid; grid-template-columns:repeat(5, 1fr); gap:8px;">
+        <% @milestones.each do |milestone| %>
+          <% unlocked = @streak.current_streak.to_i >= milestone %>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:4px;">
+            <div style="width:40px; height:40px; border-radius:50%; background:<%= unlocked ? '#2E6B3E' : '#EDE1D5' %>; display:flex; align-items:center; justify-content:center;">
+              <% if unlocked %>
+                <span style="color:#ffffff; font-size:16px;">✓</span>
+              <% else %>
+                <span style="color:#6B6B6B; font-size:12px;"><%= milestone %></span>
+              <% end %>
+            </div>
+            <span style="color:<%= unlocked ? '#2E6B3E' : '#6B6B6B' %>; font-size:10px; font-weight:500;"><%= milestone %>d</span>
+          </div>
+        <% end %>
+      </div>
+      <% if @next_milestone && @days_to_next %>
+        <p style="color:#6B6B6B; font-size:14px; text-align:center; margin-top:12px;">
+          <%= @days_to_next %> more days to <%= @next_milestone %>
+        </p>
+      <% end %>
+    </div>
+
+    <!-- CTA -->
+    <a href="<%= tracking_path %>"
+       style="display:block; width:100%; background:#933a35; color:#ffffff; text-align:center; padding:16px; border-radius:12px; font-size:16px; font-weight:500; text-decoration:none;">
+      Track today to keep streak
+    </a>
+
+  </div>
+</div>

@@ -1,4 +1,6 @@
 class PwaController < ApplicationController
+  allow_unauthenticated_access
+
   def manifest
     respond_to do |format|
       format.json { render "manifest" }

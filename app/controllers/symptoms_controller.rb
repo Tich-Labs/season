@@ -1,11 +1,39 @@
 class SymptomsController < ApplicationController
-  before_action :authenticate_user!
+  include Authentication
+
+  before_action :require_onboarding_completed
 
   def index
-    @symptom_logs = current_user.symptom_logs.includes(:user)
+    @date = params[:date] ? Date.parse(params[:date]) : Date.today
+    @log = current_user.symptom_logs.find_or_initialize_by(date: @date)
+    @phase = current_user.current_phase
+    @season = CycleCalculatorService::SEASON_NAMES[@phase] if @phase
   end
 
-  def show
-    @symptom_log = current_user.symptom_logs.find(params[:id])
+  def create
+    @log = current_user.symptom_logs.find_or_initialize_by(
+      date: symptom_params[:date] || Date.today
+    )
+
+    if @log.update(symptom_params)
+      update_streak!
+      redirect_to tracking_path, notice: "Saved"
+    else
+      redirect_to tracking_path, alert: @log.errors.full_messages.join(", ")
+    end
+  end
+
+  private
+
+  def symptom_params
+    params.require(:symptom_log).permit(
+      :date, :mood, :energy, :sleep, :physical,
+      :mental, :pain, :cravings, :discharge, :notes
+    )
+  end
+
+  def update_streak!
+    streak = current_user.streak || current_user.create_streak
+    streak.increment_streak!
   end
 end

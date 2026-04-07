@@ -1,38 +1,120 @@
-<div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8 w-120">
-    <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-        <img class="mx-auto h-10 w-auto" src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company">
-        <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">Sign in</h2>
+<div style="background:#ffffff; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:60px 32px 48px; max-width:430px; margin:0 auto;">
+
+  <script>
+    function togglePassword(inputId, iconId) {
+      const input = document.getElementById(inputId);
+      const icon = document.getElementById(iconId);
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(147,58,53,0.5)" stroke-width="1.5"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
+      } else {
+        input.type = 'password';
+        icon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(147,58,53,0.5)" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+      }
+    }
+  </script>
+
+  <!-- Title -->
+  <div style="width:100%; text-align:center;">
+    <h1 style="color:#933a35; font-size:36px; font-weight:700; text-transform:uppercase; letter-spacing:3.24px; text-align:center;">
+      LOG IN
+    </h1>
+  </div>
+
+  <!-- Social Login -->
+  <div style="width:100%; margin-top:62px;">
+    <p style="color:#933a35; font-size:16px; font-weight:400; margin-bottom:21px; text-align:center;">
+      <%= t('devise.sessions.new.fast_lane', default: 'Use the fast lane:') %>
+    </p>
+
+    <div style="display:flex; justify-content:center; gap:19px;">
+      <%= link_to "/auth/apple", style: "width:59px; height:52px; background:#000000; border-radius:8px; display:flex; align-items:center; justify-content:center;" do %>
+        <%= image_tag "Apple Logo.png", alt: "Sign in with Apple", style: "width:35px; height:35px; object-fit:contain;" %>
+      <% end %>
+
+      <%= link_to "/auth/facebook", style: "width:59px; height:52px; background:#448AFF; border-radius:8px; display:flex; align-items:center; justify-content:center;" do %>
+        <%= image_tag "Facebook.png", alt: "Sign in with Facebook", style: "width:45px; height:45px; object-fit:contain;" %>
+      <% end %>
+
+      <%= link_to "/auth/google_oauth2", style: "width:59px; height:52px; background:#ffffff; border:1px solid #000000; border-radius:8px; display:flex; align-items:center; justify-content:center;" do %>
+        <%= image_tag "Google.png", alt: "Sign in with Google", style: "width:34px; height:34px; object-fit:contain;" %>
+      <% end %>
     </div>
+  </div>
 
-    <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <%= form_for @user, url: session_path, method: :post, class: "space-y-6" do |f| %>
-            <div>
-                <%= f.label :email, "Email address", class: "block text-sm/6 font-medium text-gray-900" %>
-                <div class="mt-2">
-                    <%= f.email_field :email, autocomplete: "email", required: true, class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
-                </div>
-            </div>
+  <!-- Email divider -->
+  <div style="width:100%; margin-top:62px; text-align:center;">
+    <span style="color:#933a35; font-size:16px; font-weight:400;">
+      <%= t('devise.sessions.new.or_email', default: '... or login with your E-mail') %>
+    </span>
+  </div>
 
-            <div>
-                <div class="flex items-center justify-between mt-2">
-                    <%= f.label :password, "Password", class: "block text-sm/6 font-medium text-gray-900" %>
-                    <div class="text-sm">
-                        <%= link_to "Forgot password?", "#", class: "font-semibold text-indigo-600 hover:text-indigo-500" %>
-                    </div>
-                </div>
-                <div class="mt-2">
-                    <%= f.password_field :password, autocomplete: "current-password", required: true, class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
-                </div>
-            </div>
+  <!-- Form -->
+  <div style="width:100%;">
+    <%= form_with url: session_path, method: :post, local: true do |f| %>
+      <!-- Email -->
+      <div style="margin-top:29px;">
+        <%= f.email_field :email,
+            autofocus: true,
+            placeholder: t('devise.sessions.new.email_placeholder', default: 'E-mail...'),
+            style: "width:100%; background:#EDE1D5; border-radius:8px; padding:14px 21px; height:52px; border:#{@error_type == :wrong_email ? '2px solid #933a35' : 'none'}; font-size:22px; font-weight:500; color:#933a35; outline:none; box-sizing:border-box;" %>
+      </div>
 
-            <div>
-                <%= f.submit "Sign in", class: "flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" %>
-            </div>
-        <% end %>
+      <!-- Password — shows border + ! icon on wrong_password error -->
+      <div style="margin-top:15px; position:relative;">
+        <%= f.password_field :password,
+            id: 'password_field',
+            placeholder: t('devise.sessions.new.password_placeholder', default: 'Password...'),
+            style: "width:100%; background:#EDE1D5; border-radius:8px; padding:14px 50px 14px 21px; height:52px; border:#{@error_type == :wrong_password ? '2px solid #933a35' : 'none'}; font-size:22px; font-weight:500; color:#933a35; outline:none; box-sizing:border-box;" %>
+        <span id="toggle_password" onclick="togglePassword('password_field', 'toggle_password')" style="position:absolute; right:16px; top:50%; transform:translateY(-50%); cursor:pointer; display:inline-block;">
+          <% if @error_type == :wrong_password %>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#933a35" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <% else %>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(147,58,53,0.5)" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          <% end %>
+        </span>
+      </div>
 
-        <p class="mt-10 text-center text-sm/6 text-gray-500">
-            Not a member?
-            <a href="<%= new_registration_path %>" class="font-semibold text-indigo-600 hover:text-indigo-500">Sign up!</a>
-        </p>
-    </div>
+      <!-- Forgot password -->
+      <div style="margin-top:15px; text-align:right;">
+        <%= link_to t('devise.sessions.new.forgot_password', default: 'I forgot my password...'),
+            new_user_password_path,
+            style: "color:#933a35; font-size:16px; font-weight:400; text-decoration:none;" %>
+      </div>
+
+      <!-- Inline error message (matches Login Error.png) -->
+      <% if @error_type == :wrong_password || @error_type == :wrong_email %>
+        <div style="display:flex; align-items:flex-start; gap:10px; background:#FDF0EE; border-radius:8px; padding:12px 14px; margin-top:16px;">
+          <span style="color:#933a35; font-size:20px; font-weight:700; line-height:1; flex-shrink:0;">!</span>
+          <div>
+            <% if @error_type == :wrong_password %>
+              <p style="color:#933a35; font-size:15px; font-weight:500;">Wrong E-mail or password.</p>
+              <p style="color:#933a35; font-size:15px; font-weight:400;">Please try again.</p>
+            <% else %>
+              <p style="color:#933a35; font-size:15px; font-weight:500;">Hmm... we don't recognize this email.</p>
+              <p style="color:#933a35; font-size:15px; font-weight:400;">Check again or sign up.</p>
+            <% end %>
+          </div>
+        </div>
+      <% elsif alert.present? %>
+        <div style="background:#FDF0EE; border-radius:8px; padding:12px 14px; margin-top:16px;">
+          <p style="color:#933a35; font-size:15px; font-weight:400;"><%= alert %></p>
+        </div>
+      <% end %>
+
+      <!-- Submit -->
+      <div style="display:flex; justify-content:center; margin-top:32px;">
+        <%= f.submit t('devise.sessions.new.submit', default: 'Log In'),
+            style: "width:322px; height:52px; background:#933a35; color:#ffffff; font-size:22px; font-weight:500; letter-spacing:0.66px; border-radius:8px; border:none; cursor:pointer;" %>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Sign Up link -->
+  <div style="width:100%; text-align:center; margin-top:22px;">
+    <%= link_to t('devise.sessions.new.no_account', default: 'I am new... Sign up!'),
+        new_registration_path,
+        style: "color:#933a35; font-size:16px; font-weight:400; text-decoration:none;" %>
+  </div>
+
 </div>

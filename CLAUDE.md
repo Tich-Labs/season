@@ -1,3 +1,7 @@
+# AGENT INSTRUCTIONS — READ BEFORE DOING ANYTHING
+# This file applies to ALL AI agents: Claude Code, OpenCode, Cursor, Copilot
+# Follow every instruction in this file exactly.
+
 # 1. Install
 npm install -g @anthropic-ai/claude-code
 npx skills add julianrubisch/skills

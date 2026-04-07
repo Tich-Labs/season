@@ -1,0 +1,82 @@
+<div style="background:#FAF7F4; min-height:100%; padding-bottom:16px;">
+
+  <!-- Header -->
+  <div style="background:#ffffff; padding:20px 24px 16px; border-bottom:1px solid #EDE1D5;">
+    <div style="max-width:430px; margin:0 auto;">
+      <h1 style="color:#933a35; font-size:24px; font-weight:700; letter-spacing:1px; text-align:center;">TRACK</h1>
+      <p style="color:#6B6B6B; font-size:14px; text-align:center; margin-top:4px;">
+        <%= Date.today.strftime("%A, %d %B %Y") %>
+      </p>
+    </div>
+  </div>
+
+  <div style="max-width:430px; margin:0 auto; padding:16px;">
+
+    <!-- Streak indicator -->
+    <% if @streak > 0 %>
+      <div style="display:flex; align-items:center; gap:8px; background:#ffffff; padding:16px; border-radius:12px; margin-bottom:16px;">
+        <span style="font-size:24px;">🔥</span>
+        <div>
+          <p style="color:#933a35; font-size:18px; font-weight:700;"><%= @streak %> days</p>
+          <p style="color:#6B6B6B; font-size:12px;">Keep going!</p>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Phase indicator -->
+    <% if @phase %>
+      <div style="background:#ffffff; border-radius:12px; padding:20px; margin-bottom:16px; text-align:center;">
+        <p style="color:#6B6B6B; font-size:14px;">You are in</p>
+        <p style="color:#933a35; font-size:22px; font-weight:700;"><%= @phase.titleize %></p>
+        <% if @season %>
+          <p style="color:#933a35; font-size:16px; font-weight:500; margin-top:4px;"><%= @season %></p>
+        <% end %>
+        <% if @cycle_day %>
+          <p style="color:#6B6B6B; font-size:14px; margin-top:8px;">Day <%= @cycle_day %> of your cycle</p>
+        <% end %>
+      </div>
+    <% else %>
+      <div style="background:#FDF0EE; border-radius:12px; padding:20px; margin-bottom:16px; text-align:center;">
+        <p style="color:#933a35; font-size:16px; font-weight:500;">Set up your cycle in onboarding to see your phase</p>
+      </div>
+    <% end %>
+
+    <!-- Period entry card -->
+    <div style="background:#ffffff; border-radius:12px; padding:20px; margin-bottom:12px;">
+      <h2 style="color:#933a35; font-size:18px; font-weight:700; margin-bottom:16px;">Period</h2>
+
+      <%= form_with url: tracking_path, method: :post, local: true do |f| %>
+        <label style="display:flex; align-items:center; gap:12px; cursor:pointer; padding:12px; background:#FDF0EE; border-radius:8px;">
+          <input type="checkbox" name="period_start" value="1"
+                 style="width:24px; height:24px; accent-color:#933a35; border-radius:4px; flex-shrink:0;">
+          <span style="color:#933a35; font-size:16px; font-weight:500;">Period started today</span>
+        </label>
+
+        <button type="submit"
+                style="display:block; width:100%; background:#933a35; color:#ffffff; text-align:center; padding:14px; border-radius:8px; font-size:16px; font-weight:500; border:none; cursor:pointer; margin-top:16px;">
+          Save
+        </button>
+      <% end %>
+    </div>
+
+    <!-- Quick links -->
+    <div style="display:flex; flex-direction:column; gap:12px;">
+      <a href="<%= symptoms_path %>" 
+         style="display:flex; justify-content:space-between; align-items:center; background:#ffffff; padding:16px; border-radius:12px; text-decoration:none;">
+        <span style="color:#933a35; font-size:16px; font-weight:500;">My Symptoms</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
+          <polyline points="9 18 15 12 9 6"/>
+        </svg>
+      </a>
+
+      <a href="<%= superpowers_path %>" 
+         style="display:flex; justify-content:space-between; align-items:center; background:#ffffff; padding:16px; border-radius:12px; text-decoration:none;">
+        <span style="color:#933a35; font-size:16px; font-weight:500;">My Superpower</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
+          <polyline points="9 18 15 12 9 6"/>
+        </svg>
+      </a>
+    </div>
+
+  </div>
+</div>

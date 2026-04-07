@@ -1,11 +1,70 @@
 class SuperpowersController < ApplicationController
-  before_action :authenticate_user!
+  include Authentication
+
+  before_action :require_onboarding_completed
+
+  SUPERPOWERS = {
+    "menstrual" => [
+      "Deep intuition", "Inner clarity",
+      "Rest and restore", "Dreaming",
+      "Introspection"
+    ],
+    "follicular" => [
+      "Creativity", "Planning",
+      "Starting new projects", "Learning",
+      "Fresh ideas", "Optimism"
+    ],
+    "ovulation" => [
+      "Communication", "Confidence",
+      "Leadership", "Social energy",
+      "Problem solving", "Magnetism"
+    ],
+    "luteal" => [
+      "Rizz Game", "Spatial thinking",
+      "Develop projects", "Execute projects",
+      "Idea-rich", "Creativity",
+      "Comprehension", "Eloquent",
+      "Drive", "Talkative",
+      "Self-confidence", "Positivity"
+    ]
+  }.freeze
 
   def index
-    @superpower_logs = current_user.superpower_logs.includes(:user)
+    @date = params[:date] ? Date.parse(params[:date]) : Date.today
+    @phase = current_user.current_phase || "follicular"
+    @superpowers = SUPERPOWERS[@phase]
+    @log = current_user.superpower_logs.find_or_initialize_by(date: @date)
+    @ratings = @log.ratings || {}
   end
 
-  def show
-    @superpower_log = current_user.superpower_logs.find(params[:id])
+  def create
+    @log = current_user.superpower_logs.find_or_initialize_by(
+      date: params[:date] || Date.today
+    )
+    current_ratings = @log.ratings || {}
+    new_ratings = current_ratings.merge(
+      params[:attribute] => params[:rating].to_i
+    )
+    if @log.update(ratings: new_ratings)
+      update_streak!
+      head :ok
+    else
+      head :unprocessable_entity
+    end
+  end
+
+  private
+
+  def superpower_params
+    params.require(:superpower_log).permit(:date, :ratings, :notes)
+  end
+
+  def update_streak!
+    streak = current_user.streak || current_user.create_streak(
+      current_streak: 0,
+      longest_streak: 0,
+      total_flames: 0
+    )
+    streak.increment_streak!
   end
 end

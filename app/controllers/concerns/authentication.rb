@@ -1,44 +1,53 @@
 module Authentication
   extend ActiveSupport::Concern
 
-  VALID_SESSION_DAYS = 2
+  VALID_SESSION_DAYS = 7
 
   included do
-    helper_method :current_user, :authenticated?
-
-    before_action :authenticate!
+    helper_method :authenticated?
+    before_action :authenticate_user, unless: :devise_controller?
   end
 
   class_methods do
     def allow_unauthenticated_access(**options)
-      skip_before_action :authenticate!, **options
+      skip_before_action :authenticate_user, **options
+    end
+
+    def devise_controller?
+      false
     end
   end
 
   private
 
-  def authenticate!
+  def authenticate_user
     return if authenticated?
 
+    store_location_for(:user, request.fullpath) if request.get?
     redirect_to new_session_path
   end
 
   def login(user)
+    reset_session
+    session[:user_id] = user.id
     cookies.encrypted[:user_id] = {
       value: user.id,
-      expires: VALID_SESSION_DAYS.days.from_now
+      expires: VALID_SESSION_DAYS.days.from_now,
+      httponly: true,
+      secure: Rails.env.production?,
+      same_site: :lax
     }
-
     Current.user = user
   end
 
   def logout
+    reset_session
     cookies.delete(:user_id)
     Current.user = nil
   end
 
   def current_user
-    Current.user ||= User.find_by(id: cookies.encrypted[:user_id])
+    Current.user ||= User.find_by(id: session[:user_id] || cookies.encrypted[:user_id])
   end
 
   def authenticated?
@@ -48,10 +57,22 @@ module Authentication
   def redirect_if_authenticated
     return unless authenticated?
 
-    redirect_to root_path
+    redirect_to user_root_path
   end
 
   def after_sign_in_path
-    session.delete(:after_sign_in_path).presence || root_path
+    if current_user.onboarding_completed?
+      user_root_path
+    else
+      onboarding_path(1)
+    end
+  end
+
+  def require_onboarding_completed
+    redirect_to onboarding_path(1) if authenticated? && !current_user.onboarding_completed?
+  end
+
+  def store_location_for(resource, location)
+    session["#{resource}_return_to"] = location if location.present?
   end
 end

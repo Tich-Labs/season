@@ -5,24 +5,42 @@ de:
     track: "Tracking"
     streaks: "Streaks"
     settings: "Einstellungen"
+  registrations:
+    new:
+      subtitle: "Erstelle ein Konto, damit wir deine Daten und Einstellungen speichern können."
+      email_placeholder: "E-Mail..."
+      password_placeholder: "Passwort..."
+      confirm_password_placeholder: "Passwort wiederholen..."
+      fast_lane: "Verwende die Schnellspur:"
+      or_email: "...oder melde dich mit deiner E-Mail-Adresse an:"
+      submit: "Registrieren"
+      have_account: "Ich habe bereits ein Konto"
+      terms_html: "Ich akzeptiere die %{terms} und die %{privacy}"
+      terms_link: "Nutzungsbedingungen"
+      privacy_link: "Datenschutzbestimmungen"
   devise:
     registrations:
       new:
         title: "Registrieren"
+        subtitle: "Erstelle ein Konto, damit wir deine Daten speichern können"
         name_placeholder: "Name..."
         email_placeholder: "E-Mail..."
         password_placeholder: "Passwort..."
-        terms: "Ich akzeptiere die Allgemeinen Geschäftsbedingungen und Datenschutzrichtlinie"
+        confirm_password_placeholder: "Passwort wiederholen..."
+        fast_lane: "Verwende die Schnellspur:"
+        or_email: "...oder melde dich mit deiner E-Mail an:"
         submit: "Konto erstellen"
         have_account: "Ich habe bereits ein Konto"
     sessions:
       new:
         title: "Anmelden"
-        fast_lane: "Verwende die Schnellspur:"
-        or_email: "... oder melde dich mit deiner E-Mail an"
+        subtitle: "Willkommen zurück"
+        name_placeholder: "Name..."
         email_placeholder: "E-Mail..."
         password_placeholder: "Passwort..."
-        forgot_password: "Ich habe mein Passwort vergessen..."
+        confirm_password_placeholder: "Passwort wiederholen..."
+        fast_lane: "Verwende die Schnellspur:"
+        or_email: "... oder melde dich mit deiner E-Mail an"
         submit: "Anmelden"
         no_account: "Ich bin neu... Registriere dich!"
   home:
