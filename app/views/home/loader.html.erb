@@ -1,16 +1,17 @@
-<div class="bg-white flex items-center justify-center"
-     style="min-height: 100vh; width: 100%;"
+<div class="bg-white flex flex-col items-center justify-center"
+     style="min-height: 100vh;"
      data-controller="loader"
      data-loader-signed-in-value="<%= authenticated? %>"
      data-loader-calendar-url-value="<%= user_root_path %>"
      data-loader-welcome-url-value="<%= welcome_path %>"
      data-loader-app-url-value="<%= app_landing_path %>">
-  <div class="flex flex-col items-center" style="width: 100%; max-width: 428px;">
-    <%= image_tag "screen1logo.png",
-        class: "w-[234px] h-[255px] object-contain",
+
+  <%= image_tag "screen1logo.png",
+      class: "w-[234px] h-[255px] object-contain",
+      alt: "Season" %>
+
+  <%= image_tag "Season-Wortmarke 1.svg",
+        style: "width:280px; height:auto; display:block; margin:0 auto;",
         alt: "Season" %>
-    <%= image_tag "Season-Wortmarke 1.svg",
-        class: "w-[412px] h-[147px] object-contain -mt-10",
-        alt: "Season" %>
-  </div>
+
 </div>

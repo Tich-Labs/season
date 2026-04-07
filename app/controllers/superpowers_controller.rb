@@ -1,7 +1,6 @@
 class SuperpowersController < ApplicationController
-  include Authentication
-
-  before_action :require_onboarding_completed
+  # include Authentication # TEMP: disabled
+  # before_action :require_onboarding_completed
 
   SUPERPOWERS = {
     "menstrual" => [
@@ -31,20 +30,22 @@ class SuperpowersController < ApplicationController
 
   def index
     @date = params[:date] ? Date.parse(params[:date]) : Date.today
-    @phase = current_user.current_phase || "follicular"
-    @superpowers = SUPERPOWERS[@phase]
-    @log = current_user.superpower_logs.find_or_initialize_by(date: @date)
-    @ratings = @log.ratings || {}
+    @phase = current_user&.current_phase || "follicular"
+    @superpowers = SUPERPOWERS[@phase] || SUPERPOWERS["follicular"]
+    @superpower_logs = current_user&.superpower_logs&.order(date: :desc)&.limit(10) || []
+    @log = current_user&.superpower_logs&.find_or_initialize_by(date: @date)
+    @ratings = @log&.ratings || {}
   end
 
   def create
+    return head :unauthorized unless current_user
+
+    ratings_params = params[:ratings] || {}
     @log = current_user.superpower_logs.find_or_initialize_by(
       date: params[:date] || Date.today
     )
     current_ratings = @log.ratings || {}
-    new_ratings = current_ratings.merge(
-      params[:attribute] => params[:rating].to_i
-    )
+    new_ratings = current_ratings.merge(ratings_params.transform_values(&:to_i))
     if @log.update(ratings: new_ratings)
       update_streak!
       head :ok

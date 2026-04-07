@@ -56,5 +56,5 @@ Rails.application.routes.draw do
   get "/terms", to: "legal#terms", as: :terms
   get "/privacy", to: "legal#privacy", as: :privacy
 
-  root "home#app"
+  root "home#loader"
 end

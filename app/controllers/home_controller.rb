@@ -1,18 +1,18 @@
 class HomeController < ApplicationController
-  allow_unauthenticated_access
+  # allow_unauthenticated_access # TEMP: disabled - auth handled in ApplicationController
   layout "launch", only: [:loader, :app]
 
   def app
-    if authenticated? && !current_user.onboarding_completed?
-      redirect_to onboarding_path(1)
-    end
+    return if !authenticated? || current_user.nil?
+    redirect_to onboarding_path(1) unless current_user.onboarding_completed?
   end
 
   def loader
   end
 
   def welcome
-    redirect_to user_root_path if authenticated? && current_user.onboarding_completed?
-    redirect_to onboarding_path(1) if authenticated? && !current_user.onboarding_completed?
+    return if !authenticated? || current_user.nil?
+    redirect_to user_root_path if current_user.onboarding_completed?
+    redirect_to onboarding_path(1) unless current_user.onboarding_completed?
   end
 end

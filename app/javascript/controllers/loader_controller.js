@@ -8,9 +8,7 @@ export default class extends Controller {
   }
   connect() {
     setTimeout(() => {
-      window.location.href = this.signedInValue
-        ? this.calendarUrlValue
-        : this.welcomeUrlValue
+      window.location.href = this.welcomeUrlValue
     }, 2000)
   }
 }

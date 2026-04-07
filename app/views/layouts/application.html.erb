@@ -19,7 +19,6 @@
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
-    <%= javascript_importmap_tags %>
   </head>
 
   <% # Determine if this is an auth/unauthenticated screen or authenticated screen %>
@@ -58,7 +57,7 @@
       <nav class="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-[#E8E0D8] w-full" style="padding-bottom: max(0px, env(safe-area-inset-bottom));">
         <div class="flex justify-around max-w-sm mx-auto">
           <%# Calendar %>
-          <a href="<%= user_root_path %>" class="flex-1 flex flex-col items-center justify-center min-h-[56px] gap-1 transition-colors <%= controller_name == 'calendar' ? 'text-[#933a35]' : 'text-[#6B6B6B]' %>">
+          <a href="<%= user_root_path %>" class="flex-1 flex flex-col items-center justify-center min-h-14 gap-1 transition-colors <%= controller_name == 'calendar' ? 'text-[#933a35]' : 'text-[#6B6B6B]' %>">
             <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
               <path d="M7 2a1 1 0 0 1 1 1v1h8V3a1 1 0 1 1 2 0v1h2a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h2V3a1 1 0 0 1 1-1zm-3 7v9h14V9H4zm0-2h14V6H4v2z"/>
             </svg>
@@ -66,15 +65,15 @@
           </a>
 
           <%# Today %>
-          <a href="<%= daily_view_path(date: Date.today) %>" class="flex-1 flex flex-col items-center justify-center min-h-[56px] gap-1 transition-colors <%= controller_name == 'daily_view' ? 'text-[#933a35]' : 'text-[#6B6B6B]' %>">
+          <a href="<%= daily_view_path(date: Date.today) %>" class="flex-1 flex flex-col items-center justify-center min-h-14 gap-1 transition-colors <%= controller_name == 'daily_view' ? 'text-[#933a35]' : 'text-[#6B6B6B]' %>">
             <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
               <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
             </svg>
             <span class="text-xs font-medium"><%= t('nav.today') %></span>
           </a>
 
-          <%# Track -->
-          <a href="<%= tracking_path %>" class="flex-1 flex flex-col items-center justify-center min-h-[56px] gap-1 transition-colors <%= controller_name == 'tracking' ? 'text-[#933a35]' : 'text-[#6B6B6B]' %>">
+          <%# Track %>
+          <a href="<%= tracking_index_path %>" class="flex-1 flex flex-col items-center justify-center min-h-14 gap-1 transition-colors <%= controller_name == 'tracking' ? 'text-[#933a35]' : 'text-[#6B6B6B]' %>">
             <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
               <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
             </svg>
@@ -82,7 +81,7 @@
           </a>
 
           <%# Streaks %>
-          <a href="<%= streaks_path %>" class="flex-1 flex flex-col items-center justify-center min-h-[56px] gap-1 transition-colors <%= controller_name == 'streaks' ? 'text-[#933a35]' : 'text-[#6B6B6B]' %>">
+          <a href="<%= streaks_path %>" class="flex-1 flex flex-col items-center justify-center min-h-14 gap-1 transition-colors <%= controller_name == 'streaks' ? 'text-[#933a35]' : 'text-[#6B6B6B]' %>">
             <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
               <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
             </svg>
@@ -90,7 +89,7 @@
           </a>
 
           <%# Settings %>
-          <a href="<%= edit_settings_path %>" class="flex-1 flex flex-col items-center justify-center min-h-[56px] gap-1 transition-colors <%= controller_name == 'settings' ? 'text-[#933a35]' : 'text-[#6B6B6B]' %>">
+          <a href="<%= edit_settings_path %>" class="flex-1 flex flex-col items-center justify-center min-h-14 gap-1 transition-colors <%= controller_name == 'settings' ? 'text-[#933a35]' : 'text-[#6B6B6B]' %>">
             <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
               <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l1.72-1.34c.15-.12.19-.34.1-.51l-1.63-2.83c-.12-.22-.37-.29-.59-.22l-2.03.81c-.42-.32-.86-.58-1.35-.78l-.3-2.15c-.03-.24-.24-.42-.5-.42h-3.26c-.26 0-.47.18-.49.42l-.3 2.15c-.48.2-.93.47-1.35.78l-2.03-.81c-.22-.09-.47 0-.59.22L2.74 8.87c-.12.16-.08.39.1.51l1.72 1.34c-.05.3-.07.62-.07.94s.02.64.07.94l-1.72 1.34c-.15.12-.19.34-.1.51l1.63 2.83c.12.22.37.29.59.22l2.03-.81c.42.32.86.58 1.35.78l.3 2.15c.02.24.23.42.49.42h3.26c.26 0 .47-.18.49-.42l.3-2.15c.48-.2.93-.47 1.35-.78l2.03.81c.22.09.47 0 .59-.22l1.63-2.83c.12-.22.07-.39-.1-.51l-1.72-1.34zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
             </svg>

@@ -54,7 +54,7 @@
     </div>
 
     <!-- Recent logs -->
-    <% if @superpower_logs.any? %>
+    <% if @superpower_logs&.any? %>
       <div style="background:#ffffff; border-radius:12px; padding:20px;">
         <h2 style="color:#933a35; font-size:18px; font-weight:700; margin-bottom:16px;">Recent logs</h2>
         <div style="display:flex; flex-direction:column; gap:8px;">
