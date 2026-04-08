@@ -1,0 +1,87 @@
+<%#
+  Locals:
+    date            — the Date for this cell
+    current_month   — Integer month of the displayed grid
+    events_by_date  — Hash<Date, Array<CalendarEvent>>
+    tracked_days_set— Set<Date>
+    cycle_by_date   — Hash<Date, Hash> with keys :colour, :phase, etc.
+    mode            — String "all"|"events"|"tracking"|"cycle"
+
+  Layout (matches Figma node 12055:13821):
+    1. Full-bleed 11px phase band at the very top (no padding)
+    2. Day number below — coloured by cycle phase, or white pill for today
+    3. Event label pills (named, truncated) below the number
+    4. Tracking dot at bottom if tracked
+    Column gap on parent grid MUST be 0 so adjacent phase bands merge.
+%>
+
+<% is_today     = date == Date.today %>
+<% in_month     = date.month == current_month %>
+<% has_event    = events_by_date.key?(date) %>
+<% events_today = events_by_date[date] || [] %>
+<% is_tracked   = tracked_days_set.include?(date) %>
+<% cycle_data   = cycle_by_date[date] %>
+<% phase_colour = cycle_data&.dig(:colour) %>
+
+<%# ── Phase band colour (full-bleed top strip) ── %>
+<% band_colour =
+     case mode
+     when "cycle"    then phase_colour
+     when "tracking" then is_tracked ? "#2E6B3E" : nil
+     when "events"   then nil
+     else                 phase_colour   # "all": show cycle phase
+     end %>
+
+<%# ── Day number colour ── %>
+<% num_colour = if !in_month     then "#C4B8B8"
+                elsif phase_colour then phase_colour
+                else                    "#1A1A1A"
+                end %>
+<% num_weight = in_month ? "600" : "400" %>
+
+<% show_events   = mode == "all" || mode == "events" %>
+<% show_tracking = mode == "all" || mode == "tracking" %>
+
+<a href="<%= daily_view_path(date: date.to_s) %>"
+   style="display:flex; flex-direction:column; text-decoration:none; height:100%; overflow:hidden;<%= in_month ? '' : ' opacity:0.45;' %>">
+
+  <%# ── Phase band: full-bleed, 11px, no padding ── %>
+  <div style="height:11px; flex-shrink:0;<%= band_colour ? " background:#{band_colour};" : "" %>"></div>
+
+  <%# ── Cell content ── %>
+  <div style="flex:1; padding:4px 4px 3px; display:flex; flex-direction:column; gap:2px; overflow:hidden;">
+
+    <%# Day number — today gets a circular pill %>
+    <% if is_today %>
+      <span style="display:inline-flex; align-items:center; justify-content:center; min-width:24px; height:24px; padding:0 4px; border-radius:12px; background:<%= phase_colour || '#933a35' %>; color:#FFFFFF; font-size:12px; font-weight:700; line-height:1; align-self:flex-start; box-sizing:border-box; flex-shrink:0;">
+        <%= date.day %>
+      </span>
+    <% else %>
+      <span style="font-size:13px; font-weight:<%= num_weight %>; color:<%= num_colour %>; line-height:1; flex-shrink:0;">
+        <%= date.day %>
+      </span>
+    <% end %>
+
+    <%# Event labels — up to 2, rest collapsed to +N %>
+    <% if show_events && has_event %>
+      <div style="display:flex; flex-direction:column; gap:2px; margin-top:1px;">
+        <% events_today.first(2).each do |evt| %>
+          <div style="background:#933a35; border-radius:2px; padding:1px 3px; overflow:hidden;">
+            <span style="color:#FFF; font-size:7px; font-weight:500; white-space:nowrap; display:block; overflow:hidden; text-overflow:ellipsis; line-height:9px;"><%= evt.title %></span>
+          </div>
+        <% end %>
+        <% if events_today.size > 2 %>
+          <span style="color:#933a35; font-size:7px; font-weight:600; line-height:1;">+<%= events_today.size - 2 %></span>
+        <% end %>
+      </div>
+    <% end %>
+
+    <%# Tracking dot — small green dot at bottom when tracked %>
+    <% if show_tracking && is_tracked %>
+      <div style="width:5px; height:5px; border-radius:50%; background:#2E6B3E; margin-top:auto; flex-shrink:0;"></div>
+    <% end %>
+
+  </div>
+
+</a>
+

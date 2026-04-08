@@ -3,32 +3,65 @@ class CalendarController < ApplicationController
 
   before_action :require_onboarding_completed
 
-  def index
-    @date = params[:date] ? Date.parse(params[:date]) : Date.today
-    @year = @date.year
+  VALID_MODES = %w[all events tracking cycle].freeze
+
+  def appointments
+    @date  = params[:date] ? Date.parse(params[:date]) : Date.today
+    @year  = @date.year
     @month = @date.month
+
+    month_range = Date.new(@year, @month, 1)..Date.new(@year, @month, -1)
+
+    @events_by_date = current_user.calendar_events
+      .where(date: month_range)
+      .order(:date, :start_time)
+      .group_by(&:date)
 
     if current_user.last_period_start
       calculator = CycleCalculatorService.new(current_user)
-      @month_data = calculator.month_data(@year, @month).index_by { |d| d[:date] }
+      @cycle_by_date = calculator.month_data(@year, @month).index_by { |d| d[:date] }
     else
-      @month_data = {}
+      @cycle_by_date = {}
     end
 
-    @events = current_user.calendar_events
-      .where(date: Date.new(@year, @month, 1)..Date.new(@year, @month, -1))
-      .order(:date, :start_time)
+    @prev_month = @date - 1.month
+    @next_month = @date + 1.month
+  end
 
-    @tracked_days = current_user.symptom_logs
-      .where(date: Date.new(@year, @month, 1)..Date.new(@year, @month, -1))
-      .pluck(:date).to_set
+  def index
+    @date  = params[:date] ? Date.parse(params[:date]) : Date.today
+    @year  = @date.year
+    @month = @date.month
+    @mode  = VALID_MODES.include?(params[:mode]) ? params[:mode] : "all"
+
+    month_range = Date.new(@year, @month, 1)..Date.new(@year, @month, -1)
+
+    # Cycle phase data — keyed by date, O(1) lookup
+    if current_user.last_period_start
+      calculator  = CycleCalculatorService.new(current_user)
+      @cycle_by_date = calculator.month_data(@year, @month).index_by { |d| d[:date] }
+    else
+      @cycle_by_date = {}
+    end
+
+    # Events — keyed by date as Set for O(1) presence check, list for detail
+    @events_by_date = current_user.calendar_events
+      .where(date: month_range)
+      .order(:date, :start_time)
+      .group_by(&:date)
+
+    # Tracked days — Set for O(1) lookup
+    @tracked_days_set = current_user.symptom_logs
+      .where(date: month_range)
+      .pluck(:date)
+      .to_set
 
     @prev_month = @date - 1.month
     @next_month = @date + 1.month
 
-    @current_phase = current_user.current_phase
-    @current_season = current_user.current_phase ?
-      CycleCalculatorService::SEASON_NAMES[current_user.current_phase] : nil
+    @current_phase  = current_user.current_phase
+    @current_season = @current_phase ?
+      CycleCalculatorService::SEASON_NAMES[@current_phase] : nil
     @streak = current_user.streak&.current_streak || 0
   end
 end

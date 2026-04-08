@@ -18,7 +18,7 @@ Rails.application.configure do
   end
 
   # Generate session nonces for importmap and inline scripts.
-  config.content_security_policy_nonce_generator = ->(request) { request.session.id.to_s }
+  config.content_security_policy_nonce_generator = ->(_request) { SecureRandom.base64(16) }
   config.content_security_policy_nonce_directives = %w[script-src]
 
   # Report-only mode initially — change to enforcement after verifying no violations.

@@ -1,98 +1,96 @@
-<% content_for(:page_title) { @date.strftime("%B") } %>
+<% content_for(:page_title) { @date.strftime("%B %Y") } %>
 <% content_for(:header_right) do %>
   <div class="flex items-center gap-1">
-    <a href="<%= user_root_path(date: @prev_month.to_s) %>"
-       class="w-10 h-10 flex items-center justify-center text-[#933a35]">
+    <%= link_to user_root_path(date: @prev_month.to_s, mode: @mode),
+          class: "w-10 h-10 flex items-center justify-center text-[#933a35]" do %>
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    <% end %>
+    <%= link_to user_root_path(date: @next_month.to_s, mode: @mode),
+          class: "w-10 h-10 flex items-center justify-center text-[#933a35]" do %>
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+    <% end %>
+    <%# Toggle to list/appointments view %>
+    <%= link_to calendar_appointments_path(date: @date.to_s),
+          class: "w-10 h-10 flex items-center justify-center text-[#933a35]" do %>
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-        <polyline points="15 18 9 12 15 6"/>
+        <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/>
+        <line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>
       </svg>
-    </a>
-    <a href="<%= user_root_path(date: @next_month.to_s) %>"
-       class="w-10 h-10 flex items-center justify-center text-[#933a35]">
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-        <polyline points="9 18 15 12 9 6"/>
-      </svg>
-    </a>
+    <% end %>
   </div>
 <% end %>
 
-<div style="background:#FAF7F4; min-height:100%; padding:0 0 16px 0;">
+<div style="background:#FAF7F4; min-height:100vh; padding-bottom:80px;">
+  <div style="max-width:430px; width:100%; margin:0 auto; padding:12px 16px 0;">
 
-  <div style="max-width:430px; margin:0 auto; padding:16px 16px 0;">
-
-    <!-- Greeting -->
-    <div style="margin-bottom:16px;">
-      <p style="color:#933a35; font-size:16px; font-style:italic;">
-        Hello <%= current_user.first_name || 'there' %>
+    <%# ── Greeting ── %>
+    <div style="margin-bottom:14px;">
+      <p style="color:#933a35; font-size:32px; font-style:italic; font-weight:500; letter-spacing:-0.5px; margin:0 0 2px; line-height:1.1; font-family:'Montserrat',sans-serif;">
+        Hello <%= current_user.first_name || "there" %>
       </p>
-      <% if @current_season %>
-        <p style="color:#933a35; font-size:18px; font-weight:700;">
-          You are in <%= @current_season %>
-        </p>
-      <% end %>
+      <p style="color:#933a35; font-size:20px; font-weight:300; margin:0; line-height:1.3; font-family:'Montserrat',sans-serif;">
+        <% if @current_season %>You are in <%= @current_season %><% else %>This is your month<% end %>
+      </p>
     </div>
 
-    <!-- Streak indicator -->
+    <%# ── Streak ── %>
     <% if @streak > 0 %>
-      <div style="display:flex; align-items:center; gap:8px; background:#ffffff; padding:12px; border-radius:8px; margin-bottom:16px;">
-        <span style="font-size:20px;">🔥</span>
-        <span style="color:#933a35; font-size:14px; font-weight:500;">
-          <%= @streak %> day streak
-        </span>
+      <div style="display:flex; align-items:center; gap:8px; background:#ffffff; padding:10px 12px; border-radius:8px; margin-bottom:14px;">
+        <span style="font-size:18px;">🔥</span>
+        <span style="color:#933a35; font-size:14px; font-weight:500;"><%= @streak %> day streak</span>
       </div>
     <% end %>
 
-    <!-- Day-of-week headers -->
-    <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:4px; margin-bottom:8px;">
+    <%# ── Filter chips (no JS — plain GET links) ── %>
+    <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px;">
+      <% [["all", "All"], ["events", "Events"], ["tracking", "Tracked"], ["cycle", "Cycle"]].each do |value, label| %>
+        <% active = @mode == value %>
+        <%= link_to label,
+              user_root_path(date: @date.to_s, mode: value),
+              style: "padding:5px 14px; border-radius:20px; font-size:12px; font-weight:600; text-decoration:none; " \
+                     "background:#{active ? '#933a35' : '#FFFFFF'}; " \
+                     "color:#{active ? '#FFFFFF' : '#933a35'}; " \
+                     "border:1px solid #933a35;" %>
+      <% end %>
+    </div>
+
+    <%# ── Day-of-week headers ── %>
+    <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:0; margin-bottom:6px;">
       <% %w[Mo Tu We Th Fr Sa Su].each do |d| %>
-        <div style="text-align:center; color:#6B6B6B; font-size:12px; font-weight:500; padding:4px 0;">
+        <div style="text-align:center; color:#6B6B6B; font-size:11px; font-weight:600; letter-spacing:0.04em; padding:4px 0;">
           <%= d %>
         </div>
       <% end %>
     </div>
 
-    <!-- Calendar grid -->
-    <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:4px;">
+    <%# ── Calendar grid: 85px rows, 0 column-gap so phase bands merge ── %>
+    <div style="display:grid; grid-template-columns:repeat(7,1fr); grid-auto-rows:85px; gap:8px 0;">
+
+      <%# Leading blank cells so day 1 lands on the right weekday (Mon=0) %>
       <% first_weekday = @date.beginning_of_month.wday == 0 ? 6 : @date.beginning_of_month.wday - 1 %>
-      <% first_weekday.times do %>
-        <div></div>
-      <% end %>
+      <% first_weekday.times { concat(tag.div) } %>
 
-      <% (1..@date.end_of_month.day).each do |day| %>
-        <% date = Date.new(@year, @month, day) %>
-        <% day_data = @month_data[date] %>
-        <% is_today = date == Date.today %>
-        <% is_tracked = @tracked_days.include?(date) %>
-        <% day_events = @events.select { |e| e.date == date }.take(2) %>
-        
-        <% phase_colour = day_data&.dig(:colour) || '#EDE1D5' %>
-        <% bg = is_today ? "#933a35" : (is_tracked ? "#FDF0EE" : "#ffffff") %>
-        <% text_color = is_today ? "#ffffff" : "#933a35" %>
-
-        <a href="<%= daily_view_path(date: date.to_s) %>"
-           style="aspect-ratio:1; display:flex; flex-direction:column; align-items:center; justify-content:center; border-radius:8px; background:<%= bg %>; text-decoration:none; border:1px solid <%= is_today ? '#933a35' : '#EDE1D5' %>; position:relative;">
-          <span style="font-size:14px; font-weight:<%= is_today ? '700' : '500' %>; color:<%= text_color %>;">
-            <%= day %>
-          </span>
-          <!-- Phase colour bar -->
-          <% if day_data %>
-            <div style="width:80%; height:3px; background:<%= phase_colour %>; border-radius:2px; margin-top:2px;"></div>
-          <% end %>
-          <!-- Tracked checkmark -->
-          <% if is_tracked %>
-            <span style="position:absolute; top:2px; right:2px; color:#2E6B3E; font-size:10px;">✓</span>
-          <% end %>
-        </a>
+      <%# Day cells — all data lookups are O(1) via pre-built hashes/sets %>
+      <% (@date.beginning_of_month..@date.end_of_month).each do |date| %>
+        <%= render "calendar/day_cell",
+              date:             date,
+              current_month:    @month,
+              events_by_date:   @events_by_date,
+              tracked_days_set: @tracked_days_set,
+              cycle_by_date:    @cycle_by_date,
+              mode:             @mode %>
       <% end %>
     </div>
 
-    <!-- Add event button -->
-    <div style="position:fixed; bottom:80px; left:50%; transform:translateX(-50%); z-index:40;">
-      <a href="<%= new_calendar_event_path %>" 
-         style="width:56px; height:56px; border-radius:28px; background:#933a35; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(147,58,53,0.3);">
-        <span style="color:#ffffff; font-size:28px; font-weight:300;">+</span>
-      </a>
-    </div>
+
 
   </div>
+</div>
+
+<%# ── FAB: add event ── %>
+<div style="position:fixed; bottom:80px; left:50%; transform:translateX(-50%); z-index:40;">
+  <%= link_to new_calendar_event_path,
+        style: "width:56px; height:56px; border-radius:28px; background:#933a35; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(147,58,53,0.3); text-decoration:none;" do %>
+    <span style="color:#ffffff; font-size:28px; font-weight:300; line-height:1;">+</span>
+  <% end %>
 </div>

@@ -1,0 +1,126 @@
+<% content_for(:page_title) { @date.strftime("%B") } %>
+<% content_for(:header_right) do %>
+  <div class="flex items-center gap-1">
+    <%= link_to calendar_appointments_path(date: @prev_month.to_s),
+          class: "w-10 h-10 flex items-center justify-center text-[#933a35]" do %>
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    <% end %>
+    <%= link_to calendar_appointments_path(date: @next_month.to_s),
+          class: "w-10 h-10 flex items-center justify-center text-[#933a35]" do %>
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+    <% end %>
+    <%# Toggle to grid view %>
+    <%= link_to user_root_path(date: @date.to_s),
+          class: "w-10 h-10 flex items-center justify-center text-[#933a35]" do %>
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+        <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+      </svg>
+    <% end %>
+  </div>
+<% end %>
+
+<%#
+  Category icon SVG paths (viewBox 0 0 24 24).
+  Returns raw SVG string coloured via "fill:currentColor".
+%>
+<% category_icon = ->(cat) {
+  case cat&.downcase
+  when /gym|exercise|sport|run|fitness|train|workout/
+    # running person
+    '<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M13.49 5.48a2 2 0 100-4 2 2 0 000 4zm-3.6 13.9 1-4.4 2.1 2v6h2v-7.5l-2.1-2 .6-3c1.3 1.5 3.3 2.5 5.5 2.5v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.6-1-1-1.7-1-.3 0-.5.1-.8.1l-5.2 2.2v4.7h2v-3.4l1.8-.7-1.6 8.1-4.9-1-.4 2 7 1.4z"/></svg>'
+  when /date|love|romantic|partner|couple|night|sex|intimate/
+    # heart
+    '<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09A5.99 5.99 0 0 1 16.5 3C19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>'
+  when /food|lunch|dinner|eat|restaurant|cafe|brunch|meal/
+    # fork & knife
+    '<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M11 9H9V2H7v7H5V2H3v7c0 2.12 1.66 3.84 3.75 3.97V22h2.5v-9.03C11.34 12.84 13 11.12 13 9V2h-2v7zm5-3v8h2.5v8H21V2c-2.76 0-5 2.24-5 4z"/></svg>'
+  when /call|phone|meeting|video/
+    # phone
+    '<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57A1 1 0 0121 16.5v3.49A1 1 0 0120 21 17 17 0 013 4a1 1 0 011-.99h3.5A1 1 0 018.5 4c0 1.25.2 2.45.57 3.57.11.35.03.74-.24 1.02l-2.21 2.2z"/></svg>'
+  when /affirm|meditat|reflect|journal|mind/
+    # sparkle / star
+    '<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>'
+  else
+    # generic person / event
+    '<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 12a5 5 0 100-10 5 5 0 000 10zm0 2c-5.33 0-8 2.67-8 4v2h16v-2c0-1.33-2.67-4-8-4z"/></svg>'
+  end
+} %>
+
+<div style="background:#FAF7F4; min-height:100vh; padding:16px 16px 100px;">
+  <div style="max-width:430px; width:100%; margin:0 auto;">
+
+    <% if @events_by_date.empty? %>
+      <div style="display:flex; flex-direction:column; align-items:center; padding:60px 0; gap:12px;">
+        <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#EDE1D5" stroke-width="1.5" xmlns="http://www.w3.org/2000/svg">
+          <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+        </svg>
+        <p style="color:#C4B8B8; font-size:15px; font-weight:500; font-family:'Montserrat',sans-serif; margin:0;">
+          No appointments this month
+        </p>
+        <%= link_to new_calendar_event_path,
+              style: "margin-top:8px; color:#933a35; font-size:13px; font-weight:600; font-family:'Montserrat',sans-serif; text-decoration:none;" do %>
+          + Add one
+        <% end %>
+      </div>
+    <% else %>
+      <% @events_by_date.each do |date, events| %>
+        <% cycle_data   = @cycle_by_date[date] %>
+        <% phase_colour = cycle_data&.dig(:colour) || "#933a35" %>
+
+        <div style="margin-bottom:24px;">
+
+          <%# ── Date heading ── %>
+          <p style="color:<%= phase_colour %>; font-size:20px; font-weight:600; font-family:'Montserrat',sans-serif; margin:0 0 12px; line-height:1.2;">
+            <%= date.strftime("%A, %-d. %B") %>
+          </p>
+
+          <%# ── Event rows with left bar ── %>
+          <div style="display:flex; gap:0; align-items:stretch;">
+
+            <%# Vertical phase bar %>
+            <div style="width:3px; border-radius:2px; background:<%= phase_colour %>; flex-shrink:0; margin-right:18px;"></div>
+
+            <%# Events list %>
+            <div style="flex:1; min-width:0;">
+              <% events.each_with_index do |event, idx| %>
+                <div style="display:flex; align-items:center; gap:12px; padding:9px 0;<%= idx < events.size - 1 ? ' border-bottom:1px solid rgba(0,0,0,0.08);' : '' %>">
+
+                  <%# Category icon %>
+                  <div style="width:20px; height:20px; flex-shrink:0; color:<%= phase_colour %>;">
+                    <%= raw category_icon.(event.category) %>
+                  </div>
+
+                  <%# Title %>
+                  <span style="flex:1; min-width:0; color:<%= phase_colour %>; font-size:15px; font-weight:500; font-family:'Montserrat',sans-serif; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+                    <%= event.title %>
+                  </span>
+
+                  <%# Time %>
+                  <span style="flex-shrink:0; color:<%= phase_colour %>; font-size:13px; font-weight:500; font-family:'Montserrat',sans-serif; text-align:right; min-width:80px;">
+                    <% if event.start_time %>
+                      <%= event.start_time.strftime("%-H:%M") %><% if event.end_time %>&nbsp;-&nbsp;<%= event.end_time.strftime("%-H:%M") %><% end %>
+                    <% else %>
+                      <span style="color:#B0A3A3;">All day</span>
+                    <% end %>
+                  </span>
+
+                </div>
+              <% end %>
+            </div>
+
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+
+  </div>
+</div>
+
+<%# ── FAB: add event ── %>
+<div style="position:fixed; bottom:80px; left:50%; transform:translateX(-50%); z-index:40;">
+  <%= link_to new_calendar_event_path(date: Date.today.to_s),
+        style: "width:56px; height:56px; border-radius:28px; background:#EDE1D5; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 14px rgba(147,58,53,0.18); text-decoration:none;" do %>
+    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="#933a35" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+  <% end %>
+</div>
