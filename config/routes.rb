@@ -3,11 +3,11 @@ Rails.application.routes.draw do
   get "/loader", to: "home#loader", as: :loader
   get "/welcome", to: "home#welcome", as: :welcome
 
-  resource :registration, only: [:new, :create]
-  resource :session, only: [:new, :create, :destroy]
+  resource :registration, only: [ :new, :create ]
+  resource :session, only: [ :new, :create, :destroy ]
 
   # Devise for password recovery
-  devise_for :users, only: [:password], controllers: {passwords: "passwords"}
+  devise_for :users, only: [ :password ], controllers: { passwords: "passwords" }
 
   # Custom password routes at /password/*
   get "password/new", to: redirect("/users/password/new")
@@ -21,40 +21,41 @@ Rails.application.routes.draw do
 
   # OmniAuth routes
   get "/auth/failure", to: "omniauth#failure"
-  match "/auth/:provider/callback", to: "omniauth#callback", via: [:get, :post]
+  match "/auth/:provider/callback", to: "omniauth#callback", via: [ :get, :post ]
 
   get "manifest.json", to: "pwa#manifest", format: :json, as: :pwa_manifest
   get "service-worker.js", to: "pwa#service_worker", format: :js
 
   get "invite/:token", to: "invites#show", as: :invite
   patch "invite/:token", to: "invites#update"
-  resources :onboarding, only: [:show, :update] do
+  resources :onboarding, only: [ :show, :update ] do
     collection do
       get :finish
     end
   end
 
   get "calendar", to: "calendar#index", as: :user_root
-  resources :calendar_events, except: [:index, :show]
-  resources :tracking, only: [:index, :create]
+  resources :calendar_events, except: [ :index, :show ]
+  resources :tracking, only: [ :index, :create ]
   get "daily/:date", to: "daily_view#show", as: :daily_view
-  resources :streaks, only: [:index]
-  resources :symptoms, only: [:index, :show, :create, :update]
-  resources :superpowers, only: [:index, :show, :create, :update]
-  resource :settings, only: [:edit, :update] do
+  resources :streaks, only: [ :index ]
+  resources :symptoms, only: [ :index, :show, :create, :update ]
+  resources :superpowers, only: [ :index, :show, :create, :update ]
+  resource :settings, only: [ :edit, :update ] do
     get :profile, on: :collection
     get :subscriptions, on: :collection
     get :calendar, on: :collection
   end
 
   namespace :admin do
-    resources :users, only: [:index, :show]
+    resources :users, only: [ :index, :show ]
     root to: "users#index"
   end
 
   get "up" => "rails/health#show", :as => :rails_health_check
 
   get "/launch", to: "launch#index", as: :launch
+  get "/countdown", to: "home#countdown", as: :countdown_page
 
   # Legal pages (to be built)
   get "/terms", to: "legal#terms", as: :terms

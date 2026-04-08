@@ -1,0 +1,140 @@
+<%# Season V2 countdown page — public, no auth required.
+    Uses launch layout (no app bar / burger menu).
+    Countdown Stimulus controller: data-countdown-target-date-value %>
+
+<div class="min-h-screen font-['Montserrat'] antialiased" style="background:#FAF7F4;">
+
+  <%# ── Soft radial top glow (brand warmth) ── %>
+  <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[480px] h-[300px] rounded-full opacity-30 pointer-events-none blur-3xl"
+       style="background:radial-gradient(circle, #F5EDE8, transparent 70%);"></div>
+
+  <div class="relative max-w-md mx-auto px-6 pb-16 flex flex-col items-center">
+
+    <%# ── Logo block ── %>
+    <div class="pt-16 pb-6 flex flex-col items-center gap-3">
+      <%= image_tag "screen1logo.png", class: "w-14 h-auto object-contain", alt: "Season tulip" %>
+      <%= image_tag "Season-Wortmarke 1.svg", class: "w-36 h-auto object-contain mt-1", alt: "Season" %>
+    </div>
+
+    <%# ── Phase dots — visual metaphor for the 4 cycle phases ── %>
+    <div class="flex items-center gap-2 mb-8">
+      <span class="w-2.5 h-2.5 rounded-full inline-block" style="background:#933a35;" title="Menstruation"></span>
+      <span class="w-2.5 h-2.5 rounded-full inline-block" style="background:#D18D83;" title="Follicular"></span>
+      <span class="w-2.5 h-2.5 rounded-full inline-block" style="background:#F5C6AD;" title="Ovulation"></span>
+      <span class="w-2.5 h-2.5 rounded-full inline-block" style="background:#EDE1D5;" title="Luteal"></span>
+    </div>
+
+    <%# ── Hero headline ── %>
+    <div class="text-center mb-2">
+      <h1 class="text-3xl font-bold tracking-tight leading-tight" style="color:#933a35;">
+        Season V2 is almost here.
+      </h1>
+      <p class="mt-3 text-base font-normal leading-relaxed" style="color:#6B6B6B;">
+        We heard you. Smart reminders, a polished calendar,<br>
+        and your Superpower — all reimagined.
+      </p>
+    </div>
+
+    <%# ── Countdown timer ── %>
+    <div class="mt-10 w-full rounded-2xl px-6 py-7 flex justify-center gap-4"
+         style="background:#FFFFFF; box-shadow: 0 2px 20px rgba(147,58,53,0.08);"
+         data-controller="countdown"
+         data-countdown-target-date-value="2026-05-01T00:00:00+02:00">
+      <% [["days", "Days"], ["hours", "Hrs"], ["minutes", "Min"], ["seconds", "Sec"]].each do |target, label| %>
+        <div class="flex flex-col items-center w-14">
+          <div class="w-14 h-14 rounded-xl flex items-center justify-center text-2xl font-black tabular-nums"
+               style="background:#F5EDE8; color:#933a35;"
+               data-countdown-target="<%= target %>">00</div>
+          <span class="mt-1.5 text-[9px] font-bold uppercase tracking-widest" style="color:#6B6B6B;"><%= label %></span>
+        </div>
+      <% end %>
+    </div>
+    <p class="mt-3 text-xs font-medium" style="color:#D18D83;">Launching May 1, 2026</p>
+
+    <%# ── Feature preview cards (3 pillars from season.vision) ── %>
+    <div class="mt-10 w-full space-y-3">
+      <p class="text-xs font-bold uppercase tracking-widest mb-4" style="color:#933a35;">What's new in V2</p>
+
+      <%# Calendar %>
+      <div class="rounded-2xl px-5 py-4 flex items-start gap-4" style="background:#FFFFFF; box-shadow: 0 1px 8px rgba(147,58,53,0.06);">
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:#F5EDE8;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="#933a35" stroke-width="1.5" viewBox="0 0 24 24">
+            <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+        </div>
+        <div>
+          <p class="text-sm font-semibold" style="color:#933a35;">Der Kalender</p>
+          <p class="text-xs mt-0.5 leading-relaxed" style="color:#6B6B6B;">Your cycle, your appointments — always one glance ahead.</p>
+        </div>
+      </div>
+
+      <%# Forecast %>
+      <div class="rounded-2xl px-5 py-4 flex items-start gap-4" style="background:#FFFFFF; box-shadow: 0 1px 8px rgba(147,58,53,0.06);">
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:#F5EDE8;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="#933a35" stroke-width="1.5" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+            <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+        </div>
+        <div>
+          <p class="text-sm font-semibold" style="color:#933a35;">Die Vorausschau</p>
+          <p class="text-xs mt-0.5 leading-relaxed" style="color:#6B6B6B;">Know how you'll feel — physically and emotionally — before the day begins.</p>
+        </div>
+      </div>
+
+      <%# Smart Reminders (new M5 feature) %>
+      <div class="rounded-2xl px-5 py-4 flex items-start gap-4 relative overflow-hidden" style="background:#933a35;">
+        <div class="absolute top-2 right-3">
+          <span class="text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full" style="background:rgba(255,255,255,0.2); color:#fff;">New in V2</span>
+        </div>
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(255,255,255,0.15);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="white" stroke-width="1.5" viewBox="0 0 24 24">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+          </svg>
+        </div>
+        <div>
+          <p class="text-sm font-semibold text-white">Smart Reminders</p>
+          <p class="text-xs mt-0.5 leading-relaxed" style="color:rgba(255,255,255,0.8);">Pill, supplement & cycle reminders — timed to your phase.</p>
+        </div>
+      </div>
+    </div>
+
+    <%# ── Next steps ── %>
+    <div class="mt-8 w-full rounded-2xl px-5 py-5" style="background:#FFFFFF; box-shadow: 0 1px 8px rgba(147,58,53,0.06);">
+      <p class="text-xs font-bold uppercase tracking-widest mb-4" style="color:#933a35;">What happens next</p>
+      <ul class="space-y-3">
+        <li class="flex items-start gap-3">
+          <span class="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0 mt-0.5" style="background:#F5EDE8; color:#933a35;">1</span>
+          <p class="text-xs leading-relaxed" style="color:#6B6B6B;"><strong style="color:#933a35;">M5 Features go live</strong> — Smart reminders for pills, supplements &amp; your cycle.</p>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0 mt-0.5" style="background:#F5EDE8; color:#933a35;">2</span>
+          <p class="text-xs leading-relaxed" style="color:#6B6B6B;"><strong style="color:#933a35;">UI polish</strong> — Tracking and calendar screens aligned with your feedback.</p>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0 mt-0.5" style="background:#F5EDE8; color:#933a35;">3</span>
+          <p class="text-xs leading-relaxed" style="color:#6B6B6B;"><strong style="color:#933a35;">Check your inbox</strong> — A personal invite link to the improved app is on its way.</p>
+        </li>
+      </ul>
+    </div>
+
+    <%# ── Support footer ── %>
+    <div class="mt-10 flex flex-col items-center gap-1 text-center">
+      <p class="text-[10px] font-bold uppercase tracking-widest" style="color:#D18D83;">Questions?</p>
+      <a href="mailto:support@season.vision" class="text-sm font-medium" style="color:#933a35;">support@season.vision</a>
+    </div>
+
+    <%# ── Phase dots footer (mirror top) ── %>
+    <div class="flex items-center gap-2 mt-10">
+      <span class="w-1.5 h-1.5 rounded-full inline-block" style="background:#933a35;"></span>
+      <span class="w-1.5 h-1.5 rounded-full inline-block" style="background:#D18D83;"></span>
+      <span class="w-1.5 h-1.5 rounded-full inline-block" style="background:#F5C6AD;"></span>
+      <span class="w-1.5 h-1.5 rounded-full inline-block" style="background:#EDE1D5;"></span>
+    </div>
+
+  </div>
+</div>
