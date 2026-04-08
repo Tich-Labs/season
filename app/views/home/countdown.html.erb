@@ -1,72 +1,88 @@
 <%# Season V2 countdown page — public, no auth required.
     Uses launch layout (no app bar / burger menu).
-    Spacing mirrors welcome.html.erb: max-width 430px, padding 60px 32px 48px.
-    Countdown Stimulus controller: data-countdown-target-date-value %>
+    Countdown Stimulus controller: data-countdown-target-date-value
+    Launch signup form for email collection %>
 
 <div style="background:#FAF7F4; min-height:100vh; display:flex; flex-direction:column; align-items:center; padding:48px 32px 48px; max-width:430px; margin:0 auto;">
 
   <%# ── Logo block — larger, more prominent ── %>
-    <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+  <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;">
     <%= image_tag "screen1logo.png",
         class: "w-[234px] h-[255px] object-contain",
         alt: "Season" %>
-    <%= image_tag "Season-Wortmarke-1.svg",
+    <%= image_tag "Season-Wortmarke 1.svg",
         style: "width:280px; height:auto; display:block; margin:0 auto;",
         alt: "Season" %>
   </div>
 
-  <%# ── Install / CTA Button ── %>
-  <div data-controller="install" style="width:100%; display:flex; flex-direction:column; align-items:center; margin-bottom:28px;">
-    <button type="button"
-            data-install-target="button"
-            data-action="click->install#install"
-            style="display:block; width:100%; max-width:280px; padding:16px 24px; background:#933a35; color:#FFFFFF; font-size:16px; font-weight:600; text-align:center; border:none; border-radius:12px; box-shadow:0 4px 12px rgba(147,58,53,0.25); cursor:pointer;">
-      Experience Season V2
-    </button>
+  <%# ── What is Season? ── %>
+  <div style="width:100%; background:#FFFFFF; border-radius:16px; padding:20px; margin-bottom:20px; box-shadow:0 1px 8px rgba(147,58,53,0.06);">
+    <h2 style="color:#933a35; font-size:18px; font-weight:700; margin:0 0 12px;">What is Season?</h2>
+    <p style="color:#6B6B6B; font-size:14px; line-height:1.6; margin:0 0 12px;">
+      Season is your personal cycle companion — tracking your period, predicting your phases, and helping you understand your body.
+    </p>
+    <p style="color:#6B6B6B; font-size:14px; line-height:1.6; margin:0;">
+      Whether you're trying to conceive, avoiding pregnancy, or just want to understand your body's rhythms — Season adapts to you.
+    </p>
+  </div>
 
-    <%# iOS manual install hint — hidden until button tapped ── %>
-    <div data-install-target="iosHint"
-         style="display:none; margin-top:16px; background:#FFFFFF; border-radius:12px; padding:16px 20px; max-width:280px; box-shadow:0 2px 16px rgba(147,58,53,0.10); text-align:center;">
-      <p style="color:#933a35; font-size:14px; font-weight:600; margin:0 0 8px;">Add Season to your Home Screen</p>
-      <p style="color:#6B6B6B; font-size:13px; line-height:1.5; margin:0;">
-        Tap <strong>Share</strong> <span style="font-size:16px;">⬆</span> at the bottom of Safari,
-        then choose <strong>"Add to Home Screen"</strong>.
-      </p>
+  <%# ── Notify Me Section ── %>
+  <div style="width:100%; background:#933a35; border-radius:16px; padding:20px; margin-bottom:20px;">
+    <h2 style="color:#FFFFFF; font-size:16px; font-weight:600; margin:0 0 8px;">Get notified when we launch</h2>
+    <p style="color:rgba(255,255,255,0.8); font-size:13px; margin:0 0 16px;">Be the first to know on April 14th</p>
+    
+    <div data-controller="launch-signup">
+      <form action="/launch-signup" method="POST" data-launch-signup-target="form" style="display:flex; gap:8px;">
+        <input type="email" 
+               name="email" 
+               placeholder="your@email.com"
+               required
+               style="flex:1; padding:12px 16px; border:none; border-radius:8px; font-size:14px; outline:none;"
+               data-launch-signup-target="email">
+        <button type="submit" 
+                data-action="click->launch-signup#submit"
+                style="padding:12px 20px; background:#FFFFFF; color:#933a35; border:none; border-radius:8px; font-size:14px; font-weight:600; cursor:pointer;">
+          Notify Me
+        </button>
+      </form>
+      
+      <div data-launch-signup-target="success" style="display:none; margin-top:12px;">
+        <p style="color:#FFFFFF; font-size:14px; margin:0;">✓ You're on the list! We'll email you on April 14th.</p>
+      </div>
+      
+      <div data-launch-signup-target="error" style="display:none; margin-top:12px;">
+        <p style="color:#FFCCCC; font-size:13px; margin:0;" data-launch-signup-target="errorMessage"></p>
+      </div>
     </div>
   </div>
 
+  <%# ── Experience V2 CTA ── %>
+  <a href="/welcome"
+     style="display:block; width:100%; max-width:280px; padding:16px 24px; background:#933a35; color:#FFFFFF; font-size:16px; font-weight:600; text-align:center; text-decoration:none; border-radius:12px; margin-bottom:28px; box-shadow:0 4px 12px rgba(147,58,53,0.25);">
+    Experience Season V2 Now
+  </a>
+
   <%# ── Phase dots ── %>
-  <div style="display:flex; align-items:center; gap:8px; margin-bottom:32px;">
+  <div style="display:flex; align-items:center; gap:8px; margin-bottom:24px;">
     <span style="width:10px; height:10px; border-radius:50%; background:#933a35; display:inline-block;"></span>
     <span style="width:10px; height:10px; border-radius:50%; background:#D18D83; display:inline-block;"></span>
     <span style="width:10px; height:10px; border-radius:50%; background:#F5C6AD; display:inline-block;"></span>
     <span style="width:10px; height:10px; border-radius:50%; background:#EDE1D5; display:inline-block;"></span>
   </div>
 
-  <%# ── Hero headline ── %>
-  <div style="text-align:center; margin-bottom:32px;">
-    <h1 style="color:#933a35; font-size:24px; font-weight:700; line-height:1.3; margin:0 0 10px;">
-      Season V2 is almost here.
-    </h1>
-    <p style="color:#6B6B6B; font-size:14px; font-weight:400; line-height:1.6; margin:0;">
-      We heard you. Smart reminders, a polished calendar,
-      and your Superpower — all reimagined.
-    </p>
-  </div>
-
   <%# ── Countdown timer ── %>
-  <div style="background:#FFFFFF; border-radius:16px; padding:24px 20px; width:100%; display:flex; justify-content:center; gap:12px; box-shadow:0 2px 20px rgba(147,58,53,0.08); margin-bottom:10px;"
+  <div style="background:#FFFFFF; border-radius:16px; padding:20px 16px; width:100%; display:flex; justify-content:center; gap:8px; box-shadow:0 2px 20px rgba(147,58,53,0.08); margin-bottom:10px;"
        data-controller="countdown"
        data-countdown-target-date-value="2026-04-14T00:00:00+02:00">
     <% [["days", "Days"], ["hours", "Hours"], ["minutes", "Min"], ["seconds", "Sec"]].each do |target, label| %>
-      <div style="display:flex; flex-direction:column; align-items:center; width:64px;">
-        <div style="width:64px; height:64px; border-radius:12px; background:#F5EDE8; color:#933a35; display:flex; align-items:center; justify-content:center; font-size:28px; font-weight:900; font-variant-numeric:tabular-nums;"
+      <div style="display:flex; flex-direction:column; align-items:center; width:60px;">
+        <div style="width:56px; height:56px; border-radius:10px; background:#F5EDE8; color:#933a35; display:flex; align-items:center; justify-content:center; font-size:24px; font-weight:900; font-variant-numeric:tabular-nums;"
              data-countdown-target="<%= target %>">00</div>
-        <span style="margin-top:6px; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.08em; color:#6B6B6B;"><%= label %></span>
+        <span style="margin-top:4px; font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.08em; color:#6B6B6B;"><%= label %></span>
       </div>
     <% end %>
   </div>
-  <p style="color:#D18D83; font-size:13px; font-weight:500; margin:0 0 36px; text-align:center;">Launching April 14, 2026</p>
+  <p style="color:#D18D83; font-size:13px; font-weight:500; margin:0 0 32px; text-align:center;">Launching April 14, 2026</p>
 
   <%# ── Feature preview cards ── %>
   <div style="width:100%; margin-bottom:8px;">
@@ -82,24 +98,7 @@
       </div>
       <div>
         <p style="color:#933a35; font-size:15px; font-weight:600; margin:0 0 4px;">Calendar</p>
-        <p style="color:#6B6B6B; font-size:13px; font-weight:400; line-height:1.5; margin:0;">Your cycle, your appointments — always one glance ahead.</p>
-      </div>
-    </div>
-
-    <%# Forecast %>
-    <div style="background:#FFFFFF; border-radius:12px; padding:18px 20px; display:flex; align-items:flex-start; gap:16px; box-shadow:0 1px 8px rgba(147,58,53,0.06); margin-bottom:10px;">
-      <div style="width:44px; height:44px; border-radius:10px; background:#F5EDE8; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="#933a35" stroke-width="1.5" viewBox="0 0 24 24">
-          <circle cx="12" cy="12" r="5"/>
-          <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
-          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-          <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
-          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-        </svg>
-      </div>
-      <div>
-        <p style="color:#933a35; font-size:15px; font-weight:600; margin:0 0 4px;">Forecast</p>
-        <p style="color:#6B6B6B; font-size:13px; font-weight:400; line-height:1.5; margin:0;">Know how you'll feel — physically and emotionally — before the day begins.</p>
+        <p style="color:#6B6B6B; font-size:13px; font-weight:400; line-height:1.5; margin:0;">Your cycle, appointments — always one glance ahead.</p>
       </div>
     </div>
 
@@ -116,28 +115,9 @@
       </div>
       <div>
         <p style="color:#FFFFFF; font-size:15px; font-weight:600; margin:0 0 4px;">Smart Reminders</p>
-        <p style="color:rgba(255,255,255,0.85); font-size:13px; font-weight:400; line-height:1.5; margin:0;">Pill, supplement &amp; cycle reminders — timed to your phase.</p>
+        <p style="color:rgba(255,255,255,0.85); font-size:13px; font-weight:400; line-height:1.5; margin:0;">Pill &amp; supplement reminders — timed to your phase.</p>
       </div>
     </div>
-  </div>
-
-  <%# ── What happens next ── %>
-  <div style="background:#FFFFFF; border-radius:12px; padding:20px; width:100%; box-shadow:0 1px 8px rgba(147,58,53,0.06); margin-top:24px;">
-    <p style="color:#933a35; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; margin:0 0 16px;">What happens next</p>
-    <ul style="list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:14px;">
-      <li style="display:flex; align-items:flex-start; gap:12px;">
-        <span style="width:22px; height:22px; border-radius:50%; background:#F5EDE8; color:#933a35; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px;">1</span>
-        <p style="color:#6B6B6B; font-size:13px; line-height:1.5; margin:0;"><strong style="color:#933a35;">Season V2 goes live April 14</strong> — Smart reminders, polished calendar &amp; your Superpower.</p>
-      </li>
-      <li style="display:flex; align-items:flex-start; gap:12px;">
-        <span style="width:22px; height:22px; border-radius:50%; background:#F5EDE8; color:#933a35; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px;">2</span>
-        <p style="color:#6B6B6B; font-size:13px; line-height:1.5; margin:0;"><strong style="color:#933a35;">UI polish</strong> — Tracking and calendar screens aligned with your feedback.</p>
-      </li>
-      <li style="display:flex; align-items:flex-start; gap:12px;">
-        <span style="width:22px; height:22px; border-radius:50%; background:#F5EDE8; color:#933a35; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px;">3</span>
-        <p style="color:#6B6B6B; font-size:13px; line-height:1.5; margin:0;"><strong style="color:#933a35;">Check your inbox</strong> — A personal invite link to the improved app is on its way.</p>
-      </li>
-    </ul>
   </div>
 
   <%# ── Support footer ── %>

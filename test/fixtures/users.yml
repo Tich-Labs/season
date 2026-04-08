@@ -1,0 +1,42 @@
+alice:
+  email: alice@example.com
+  encrypted_password: "<%= BCrypt::Password.create('password123', cost: BCrypt::Engine::MIN_COST) %>"
+  name: Alice Smith
+  onboarding_completed: true
+  cycle_length: 28
+  period_length: 5
+  last_period_start: "<%= 14.days.ago.to_date %>"
+  language: en
+
+bob:
+  email: bob@example.com
+  encrypted_password: "<%= BCrypt::Password.create('password123', cost: BCrypt::Engine::MIN_COST) %>"
+  name: Bob Jones
+  onboarding_completed: true
+  cycle_length: 28
+  period_length: 5
+  language: en
+
+carol:
+  email: carol@example.com
+  encrypted_password: "<%= BCrypt::Password.create('password123', cost: BCrypt::Engine::MIN_COST) %>"
+  name: Carol White
+  onboarding_completed: false
+  language: en
+
+invited_user:
+  email: invited@example.com
+  encrypted_password: ""
+  name: Invited User
+  onboarding_completed: false
+  invite_token: valid_invite_token_abc123
+  language: en
+
+used_invite_user:
+  email: used@example.com
+  encrypted_password: "<%= BCrypt::Password.create('password123', cost: BCrypt::Engine::MIN_COST) %>"
+  name: Used Invite
+  onboarding_completed: false
+  invite_token: used_invite_token_xyz789
+  invite_accepted_at: "<%= 1.day.ago %>"
+  language: en

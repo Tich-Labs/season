@@ -1,0 +1,10 @@
+alice_yesterday:
+  user: alice
+  date: "<%= Date.yesterday %>"
+  mood: 3
+  energy: 4
+
+bob_yesterday:
+  user: bob
+  date: "<%= Date.yesterday %>"
+  mood: 2

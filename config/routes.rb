@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   get "/app", to: "home#app", as: :app_landing
   get "/loader", to: "home#loader", as: :loader
   get "/welcome", to: "home#welcome", as: :welcome
+  post "/launch-signup", to: "launch_signups#create"
 
   resource :registration, only: [:new, :create]
   resource :session, only: [:new, :create, :destroy]

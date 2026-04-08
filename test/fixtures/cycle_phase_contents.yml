@@ -1,0 +1,29 @@
+menstrual_en:
+  phase: menstrual
+  locale: en
+  season_name: Winter
+  superpower_text: Rest and reflect
+  mood_text: You may feel introspective
+  take_care_text: Be gentle with yourself
+  sport_text: Light yoga
+  nutrition_text: Iron-rich foods
+
+menstrual_de:
+  phase: menstrual
+  locale: de
+  season_name: Winter
+  superpower_text: Ruhe und Reflexion
+  mood_text: Du kannst dich zurueckziehen
+  take_care_text: Sei sanft zu dir
+  sport_text: Leichtes Yoga
+  nutrition_text: Eisenreiche Lebensmittel
+
+follicular_en:
+  phase: follicular
+  locale: en
+  season_name: Spring
+  superpower_text: New beginnings and energy
+  mood_text: Feeling optimistic
+  take_care_text: Start new projects
+  sport_text: Cardio workouts
+  nutrition_text: Fresh vegetables
