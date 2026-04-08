@@ -1,11 +1,14 @@
 require "csv"
 
 class Admin::UsersController < Admin::BaseController
-  include Pagy::Backend
+  ITEMS_PER_PAGE = 20
 
   def index
     @q = User.ransack(params[:q])
-    @pagy, @users = pagy(@q.result.order(created_at: :desc))
+    @users = @q.result.order(created_at: :desc)
+    @page = (params[:page] || 1).to_i
+    @total_count = @users.count
+    @users = @users.offset((@page - 1) * ITEMS_PER_PAGE).limit(ITEMS_PER_PAGE)
 
     respond_to do |format|
       format.html
