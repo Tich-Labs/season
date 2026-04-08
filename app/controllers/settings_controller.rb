@@ -14,6 +14,36 @@ class SettingsController < ApplicationController
     )
   end
 
+  def profile
+    @user = current_user || OpenStruct.new(
+      first_name: "Charlotte",
+      email: "Email@Musterfrau.de",
+      age: 22,
+      cycle_days: 28,
+      last_menstruation: "02.07.2025"
+    )
+  end
+
+  def subscriptions
+    @subscription = OpenStruct.new(
+      plan: "Freemium",
+      payment_method: "none"
+    )
+  end
+
+  def calendar
+    @settings = OpenStruct.new(
+      appointments: true,
+      cycledays: false,
+      tracking_reminder: true,
+      moonphases: true,
+      holidays: true,
+      kalenderwochen: false,
+      day_of_week: "monday",
+      keep_timezone: true
+    )
+  end
+
   def update
     @user = current_user
     if @user&.update(user_params)

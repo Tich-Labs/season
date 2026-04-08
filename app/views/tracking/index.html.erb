@@ -2,11 +2,21 @@
 
   <!-- Header -->
   <div style="background:#ffffff; padding:20px 24px 16px; border-bottom:1px solid #EDE1D5;">
-    <div style="max-width:430px; margin:0 auto;">
-      <h1 style="color:#933a35; font-size:24px; font-weight:700; letter-spacing:1px; text-align:center;">TRACK</h1>
-      <p style="color:#6B6B6B; font-size:14px; text-align:center; margin-top:4px;">
-        <%= Date.today.strftime("%A, %d %B %Y") %>
-      </p>
+    <div style="max-width:430px; margin:0 auto; display:flex; align-items:center; justify-content:space-between;">
+      <button style="background:none; border:none; cursor:pointer; width:40px; height:40px; display:flex; align-items:center; justify-content:center;" data-action="click->menu#open">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+      <div style="text-align:center;">
+        <h1 style="color:#933a35; font-size:24px; font-weight:700; letter-spacing:1px;">TRACK</h1>
+        <p style="color:#6B6B6B; font-size:14px; margin-top:4px;">
+          <%= Date.today.strftime("%A, %d %B %Y") %>
+        </p>
+      </div>
+      <div style="width:40px;"></div>
     </div>
   </div>
 
@@ -45,7 +55,7 @@
     <div style="background:#ffffff; border-radius:12px; padding:20px; margin-bottom:12px;">
       <h2 style="color:#933a35; font-size:18px; font-weight:700; margin-bottom:16px;">Period</h2>
 
-      <%= form_with url: tracking_path, method: :post, local: true do |f| %>
+      <%= form_with url: "/tracking", method: :post, local: true do |f| %>
         <label style="display:flex; align-items:center; gap:12px; cursor:pointer; padding:12px; background:#FDF0EE; border-radius:8px;">
           <input type="checkbox" name="period_start" value="1"
                  style="width:24px; height:24px; accent-color:#933a35; border-radius:4px; flex-shrink:0;">
@@ -75,6 +85,20 @@
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
           <polyline points="9 18 15 12 9 6"/>
         </svg>
+      </a>
+
+      <a href="#" 
+         style="display:flex; 
+         justify-content:space-between;
+         align-items:center; padding:18px 20px;
+         border-bottom:1px solid #E8E0D8;
+         text-decoration:none; color:#933a35;
+         font-size:16px;">
+        <span>
+          <%= t('tracking.feedback',
+              default: 'Feedback geben') %>
+        </span>
+        <span style="font-size:20px;">›</span>
       </a>
     </div>
 

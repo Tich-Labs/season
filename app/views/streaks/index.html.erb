@@ -2,8 +2,16 @@
 
   <!-- Header -->
   <div style="background:#ffffff; padding:20px 24px 16px; border-bottom:1px solid #EDE1D5;">
-    <div style="max-width:430px; margin:0 auto;">
-      <h1 style="color:#933a35; font-size:24px; font-weight:700; letter-spacing:1px; text-align:center;">STREAKS</h1>
+    <div style="max-width:430px; margin:0 auto; display:flex; align-items:center; justify-content:space-between;">
+      <button style="background:none; border:none; cursor:pointer; width:40px; height:40px; display:flex; align-items:center; justify-content:center;" data-action="click->menu#open">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+      <h1 style="color:#933a35; font-size:24px; font-weight:700; letter-spacing:1px;">STREAKS</h1>
+      <div style="width:40px;"></div>
     </div>
   </div>
 
@@ -67,7 +75,7 @@
     </div>
 
     <!-- CTA -->
-    <a href="<%= tracking_path %>"
+    <a href="<%= tracking_index_path %>"
        style="display:block; width:100%; background:#933a35; color:#ffffff; text-align:center; padding:16px; border-radius:12px; font-size:16px; font-weight:500; text-decoration:none;">
       Track today to keep streak
     </a>

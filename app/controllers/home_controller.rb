@@ -1,5 +1,5 @@
 class HomeController < ApplicationController
-  # allow_unauthenticated_access # TEMP: disabled - auth handled in ApplicationController
+  allow_unauthenticated_access
   layout "launch", only: [:loader, :app]
 
   def app

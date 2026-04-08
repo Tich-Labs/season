@@ -1,0 +1,111 @@
+<%# My Subscriptions screen - matches Figma node 12048-37893 %>
+<%# Dark header auto-applied by layout; only back arrow override needed %>
+<% content_for(:header_left) do %>
+  <%= link_to edit_settings_path, class: "p-2 flex items-center" do %>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
+      <line x1="19" y1="12" x2="5" y2="12"/>
+      <polyline points="12 19 5 12 12 5"/>
+    </svg>
+  <% end %>
+<% end %>
+
+<div style="background:#ffffff; min-height:100%;">
+
+  <%# Content - max-width 430px centered %>
+  <div style="max-width:430px; margin:0 auto; padding:0 16px 80px;">
+
+    <%# ── My Subscription ── %>
+    <div style="padding:20px 0 8px;">
+      <h2 style="color:#933a35; font-size:16px; font-weight:700;">My Subscription</h2>
+    </div>
+    <div style="border-bottom:1px solid #DDD0CB;"></div>
+
+    <%# My Plan %>
+    <div style="display:flex; align-items:center; gap:16px; padding:16px 0;">
+      <%= image_tag "icons/vuesax/linear/note-2.svg", style: "width:24px; height:24px;" %>
+      <span style="flex:1; color:#933a35; font-size:16px; font-weight:500;">MyPlan</span>
+      <span style="color:#D18D83; font-size:14px;"><%= @subscription.plan %></span>
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
+        <polyline points="9 18 15 12 9 6"/>
+      </svg>
+    </div>
+
+    <%# View invoices %>
+    <div style="display:flex; align-items:center; gap:16px; padding:16px 0;">
+      <%= image_tag "icons/vuesax/linear/receipt-item.svg", style: "width:24px; height:24px;" %>
+      <span style="flex:1; color:#933a35; font-size:16px; font-weight:500;">View invoices</span>
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
+        <polyline points="9 18 15 12 9 6"/>
+      </svg>
+    </div>
+
+    <%# Payment method %>
+    <div style="display:flex; align-items:center; gap:16px; padding:16px 0;">
+      <%= image_tag "icons/vuesax/linear/card-pos.svg", style: "width:24px; height:24px;" %>
+      <span style="flex:1; color:#933a35; font-size:16px; font-weight:500;">Payment method</span>
+      <span style="color:#D18D83; font-size:14px;"><%= @subscription.payment_method %></span>
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
+        <polyline points="9 18 15 12 9 6"/>
+      </svg>
+    </div>
+
+    <%# Premium Box - positioned at x:59, y:412 %>
+    <div style="margin-top:32px; padding-left:59px;">
+      <div style="background:#50715B; border-radius:8px; padding:20px; width:309px;">
+        <span style="color:white; font-size:14px;">Change to</span>
+        <div style="margin-top:8px;">
+          <span style="color:white; font-size:20px; font-weight:700; letter-spacing:1px;">Season Premium</span>
+        </div>
+        <div style="border-bottom:1px solid rgba(255,255,255,0.5); margin-top:8px;"></div>
+
+        <%# Yearly option - selectable %>
+        <div onclick="selectPlan('yearly')" id="plan-yearly" style="display:flex; align-items:center; gap:12px; margin-top:16px; cursor:pointer;">
+          <div id="radio-yearly" style="width:20px; height:20px; background:#A8A29E; border-radius:50%; border:2px solid white; display:flex; align-items:center; justify-content:center;">
+            <div id="dot-yearly" style="width:10px; height:10px; background:white; border-radius:50%; display:none;"></div>
+          </div>
+          <div>
+            <span style="color:white; font-size:16px; font-weight:700;">Yearly · 59,95€</span>
+            <span style="display:block; color:white; font-size:14px;">4,99€ / month</span>
+          </div>
+        </div>
+
+        <%# Monthly option - selectable %>
+        <div onclick="selectPlan('monthly')" id="plan-monthly" style="display:flex; align-items:center; gap:12px; margin-top:12px; cursor:pointer;">
+          <div id="radio-monthly" style="width:20px; height:20px; background:#A8A29E; border-radius:50%; border:2px solid white; display:flex; align-items:center; justify-content:center;">
+            <div id="dot-monthly" style="width:10px; height:10px; background:white; border-radius:50%; display:none;"></div>
+          </div>
+          <div>
+            <span style="color:white; font-size:16px; font-weight:700;">Monthly · 9,95€</span>
+            <span style="display:block; color:white; font-size:14px;">119,40€ / year</span>
+          </div>
+        </div>
+
+        <%# Upgrade button %>
+        <div onclick="alert('Upgrade clicked!'); return false;" style="background:white; border-radius:8px; padding:12px; margin-top:16px; text-align:center; cursor:pointer;">
+          <span style="color:#6B6B6B; font-size:16px; font-weight:500;">Upgrade</span>
+        </div>
+
+        <%# Student discount - inside card below upgrade %>
+        <div style="text-align:center; margin-top:16px; padding:8px;">
+          <a href="#" onclick="alert('Student discount - coming soon!'); return false;" style="text-decoration:none; color:white; cursor:pointer; display:inline-block;">
+            I am a student <span style="font-weight:700;">-50%</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function selectPlan(plan) {
+        document.getElementById('dot-yearly').style.display = 'none';
+        document.getElementById('dot-monthly').style.display = 'none';
+        
+        if (plan === 'yearly') {
+          document.getElementById('dot-yearly').style.display = 'block';
+        } else if (plan === 'monthly') {
+          document.getElementById('dot-monthly').style.display = 'block';
+        }
+      }
+    </script>
+
+  </div>
+</div>

@@ -1,25 +1,22 @@
-<div style="background:#FAF7F4; min-height:100%; padding:0 0 16px 0;">
-
-  <!-- Header with streak -->
-  <div style="background:#ffffff; padding:20px 24px 16px; border-bottom:1px solid #EDE1D5;">
-    <div style="display:flex; align-items:center; justify-content:space-between; max-width:430px; margin:0 auto;">
-      <a href="<%= user_root_path(date: @prev_month.to_s) %>"
-         style="width:40px; height:40px; display:flex; align-items:center; justify-content:center; color:#933a35;">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <polyline points="15 18 9 12 15 6"/>
-        </svg>
-      </a>
-      <h1 style="color:#933a35; font-size:20px; font-weight:700; letter-spacing:1px;">
-        <%= @date.strftime("%B %Y") %>
-      </h1>
-      <a href="<%= user_root_path(date: @next_month.to_s) %>"
-         style="width:40px; height:40px; display:flex; align-items:center; justify-content:center; color:#933a35;">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <polyline points="9 18 15 12 9 6"/>
-        </svg>
-      </a>
-    </div>
+<% content_for(:page_title) { @date.strftime("%B") } %>
+<% content_for(:header_right) do %>
+  <div class="flex items-center gap-1">
+    <a href="<%= user_root_path(date: @prev_month.to_s) %>"
+       class="w-10 h-10 flex items-center justify-center text-[#933a35]">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <polyline points="15 18 9 12 15 6"/>
+      </svg>
+    </a>
+    <a href="<%= user_root_path(date: @next_month.to_s) %>"
+       class="w-10 h-10 flex items-center justify-center text-[#933a35]">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <polyline points="9 18 15 12 9 6"/>
+      </svg>
+    </a>
   </div>
+<% end %>
+
+<div style="background:#FAF7F4; min-height:100%; padding:0 0 16px 0;">
 
   <div style="max-width:430px; margin:0 auto; padding:16px 16px 0;">
 

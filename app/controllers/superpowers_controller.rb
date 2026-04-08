@@ -1,6 +1,6 @@
 class SuperpowersController < ApplicationController
-  # include Authentication # TEMP: disabled
-  # before_action :require_onboarding_completed
+  before_action :authenticate_user
+  before_action :require_onboarding_completed
 
   SUPERPOWERS = {
     "menstrual" => [
@@ -38,8 +38,6 @@ class SuperpowersController < ApplicationController
   end
 
   def create
-    return head :unauthorized unless current_user
-
     ratings_params = params[:ratings] || {}
     @log = current_user.superpower_logs.find_or_initialize_by(
       date: params[:date] || Date.today

@@ -1,9 +1,7 @@
 class SessionsController < ApplicationController
-  include Authentication
-
-  allow_unauthenticated_access only: [ :new, :create ]
-  before_action :redirect_if_authenticated, only: [ :new, :create ]
-  before_action :rate_limit_login, only: [ :create ]
+  allow_unauthenticated_access only: [:new, :create]
+  before_action :redirect_if_authenticated, only: [:new, :create]
+  before_action :rate_limit_login, only: [:create]
 
   LOGIN_RATE_LIMIT = 5
   LOGIN_RATE_WINDOW = 15.minutes
@@ -35,24 +33,7 @@ class SessionsController < ApplicationController
     redirect_to root_path
   end
 
-  def form_session_params
-    params.fetch(:user, {}).permit(:email, :password)
-  end
-
   private
-
-  def determine_error_type
-    email = form_session_params[:email]
-    form_session_params[:password]
-
-    if email.blank?
-      :wrong_email
-    elsif User.exists?(email: email.downcase)
-      :wrong_password
-    else
-      :wrong_email
-    end
-  end
 
   def rate_limit_login
     return unless too_many_login_attempts?

@@ -73,3 +73,18 @@ en:
     header: "Hello %{name} — This is your month"
     greeting: "Hello %{name} — This is your month"
     subheading: "Track your cycle"
+  tracking:
+    feedback: "Give feedback"
+  menu:
+    coming_soon: "Coming soon"
+    premium_title: "Get Season Premium now"
+    premium_subtitle: "for even more benefits!"
+    schedule_overview: "Schedule Overview"
+    day_view: "Day-View"
+    weekly_view: "Weekly-View"
+    monthly_view: "Monthly-View"
+    email_partner: "E-Mail to your partner"
+    settings: "Settings"
+    feedback: "Feedback"
+    bugreport: "Bugreport"
+    log_out: "Log out"

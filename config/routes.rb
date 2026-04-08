@@ -41,7 +41,11 @@ Rails.application.routes.draw do
   resources :streaks, only: [:index]
   resources :symptoms, only: [:index, :show, :create, :update]
   resources :superpowers, only: [:index, :show, :create, :update]
-  resource :settings, only: [:edit, :update]
+  resource :settings, only: [:edit, :update] do
+    get :profile, on: :collection
+    get :subscriptions, on: :collection
+    get :calendar, on: :collection
+  end
 
   namespace :admin do
     resources :users, only: [:index, :show]

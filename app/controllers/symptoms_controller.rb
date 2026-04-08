@@ -17,9 +17,9 @@ class SymptomsController < ApplicationController
 
     if @log.update(symptom_params)
       update_streak!
-      redirect_to tracking_path, notice: "Saved"
+      render json: {status: "ok"}
     else
-      redirect_to tracking_path, alert: @log.errors.full_messages.join(", ")
+      render json: {errors: @log.errors.full_messages}, status: :unprocessable_entity
     end
   end
 
@@ -28,7 +28,8 @@ class SymptomsController < ApplicationController
   def symptom_params
     params.require(:symptom_log).permit(
       :date, :mood, :energy, :sleep, :physical,
-      :mental, :pain, :cravings, :discharge, :notes
+      :mental, :pain, :cravings, :discharge, :notes,
+      :sexual_intercourse
     )
   end
 

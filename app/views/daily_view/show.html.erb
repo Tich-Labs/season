@@ -43,6 +43,10 @@
         <% end %>
       </div>
 
+      <p style="font-size:14px; color:#6B6B6B; margin-bottom:24px;">
+        These are your tips for today:
+      </p>
+
       <!-- Phase content cards -->
       <% if @content %>
         <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:16px;">
@@ -91,7 +95,7 @@
         <div style="display:flex; flex-direction:column; gap:8px;">
           <% @events.each do |event| %>
             <div style="background:#FAF7F4; border-radius:8px; padding:12px;">
-              <p style="color:#933a35; font-size:14px; font-weight:500;"><%= event.title %></p>
+              <p style="color:#933a35; font-size:14px; font-weight:500;"><%= event.category&.capitalize %> - <%= event.title %></p>
               <% if event.start_time %>
                 <p style="color:#6B6B6B; font-size:12px;"><%= event.start_time.strftime("%H:%M") %><%= " - #{event.end_time.strftime("%H:%M")}" if event.end_time %></p>
               <% end %>

@@ -1,31 +1,57 @@
-<div style="background:#ffffff; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:60px 32px 48px; max-width:430px; margin:0 auto;">
+<div style="background:#ffffff; 
+  min-height:100vh; display:flex; 
+  flex-direction:column; 
+  align-items:center; 
+  padding:60px 24px 48px;
+  max-width:430px; margin:0 auto;">
 
-  <!-- Logo centered upper half -->
-  <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;">
-    <%= image_tag "screen1logo.png",
-        class: "w-[234px] h-[255px] object-contain",
-        alt: "Season" %>
-    <%= image_tag "Season-Wortmarke 1.svg",
-        style: "width:280px; height:auto; display:block; margin:0 auto;",
-        alt: "Season" %>
-  </div>
+  <img src="/assets/season-logo.svg"
+    style="width:120px; height:auto; 
+    margin-bottom:48px;"
+    alt="Season">
 
-  <!-- Invite text and buttons -->
-  <div style="width:100%; text-align:center;">
-    <p style="color:#933a35; font-size:22px; font-weight:500; margin-bottom:6px; letter-spacing:1.32px;">
-      Welcome to Season!
-    </p>
-    <p style="color:#933a35; font-size:16px; font-weight:400; margin-bottom:40px; line-height:1.5;">
-      You've been invited to join our exclusive early access program.
-    </p>
+  <h1 style="font-size:24px; 
+    font-weight:700; color:#933a35;
+    text-align:center; margin-bottom:8px;">
+    <%= "Welcome back, #{@user.name}!" %>
+  </h1>
 
-    <%= link_to "CREATE ACCOUNT",
-        new_registration_path(invite_token: @token),
-        style: "display:block; background:#933a35; color:#ffffff; text-align:center; padding:18px; border-radius:8px; font-weight:500; font-size:16px; text-decoration:none; letter-spacing:1.32px; margin-bottom:20px;" %>
+  <p style="font-size:14px; 
+    color:#933a35; text-align:center;
+    margin-bottom:40px;">
+    Your Season V2 account is ready.
+  </p>
 
-    <%= link_to "I ALREADY HAVE AN ACCOUNT",
-        new_session_path,
-        style: "display:block; color:#933a35; text-align:center; padding:18px; border-radius:8px; font-weight:500; font-size:16px; text-decoration:none; letter-spacing:1.32px; border:2px solid #933a35;" %>
-  </div>
+  <%= form_with url: invite_path(params[:token]),
+      method: :patch do |f| %>
 
+    <!-- Email pre-filled read-only -->
+    <input type="email"
+      value="<%= @user.email %>"
+      readonly
+      style="width:100%; 
+      background:#F5EDE8; 
+      border-radius:12px; padding:16px;
+      border:none; font-size:16px;
+      color:#933a35; opacity:0.7;
+      margin-bottom:12px; 
+      box-sizing:border-box;">
+
+    <!-- Password field -->
+    <%= f.password_field :password,
+        placeholder: 'Set your password...',
+        style: "width:100%; 
+        background:#F5EDE8;
+        border-radius:12px; padding:16px;
+        border:none; font-size:16px;
+        margin-bottom:32px;
+        box-sizing:border-box;" %>
+
+    <%= f.submit 'Get started',
+        style: "width:100%; 
+        background:#933a35; color:white;
+        border:none; border-radius:12px;
+        padding:18px; font-size:16px;
+        font-weight:600; cursor:pointer;" %>
+  <% end %>
 </div>

@@ -67,3 +67,18 @@ de:
     header: "Hallo %{name} — Das ist dein Monat"
     greeting: "Hallo %{name} — Das ist dein Monat"
     subheading: "Verfolge deinen Zyklus"
+  tracking:
+    feedback: "Feedback geben"
+  menu:
+    coming_soon: "Demnächst"
+    premium_title: "Hol' dir jetzt Season Premium"
+    premium_subtitle: "für noch mehr Vorteile!"
+    schedule_overview: "Übersicht"
+    day_view: "Tagesansicht"
+    weekly_view: "Wochenansicht"
+    monthly_view: "Monatsansicht"
+    email_partner: "E-Mail an deinen Partner"
+    settings: "Einstellungen"
+    feedback: "Feedback"
+    bugreport: "Fehlerbericht"
+    log_out: "Abmelden"

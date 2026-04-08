@@ -31,6 +31,7 @@ gem "omniauth-apple"
 gem "pagy"
 
 # Data & Logic
+gem "csv"
 gem "ransack"
 gem "groupdate"
 gem "dotenv-rails", groups: [ :development, :test ]

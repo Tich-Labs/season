@@ -1,7 +1,5 @@
 class OnboardingController < ApplicationController
-  include Authentication
-
-  before_action :authenticate_user, except: [:invite]
+  allow_unauthenticated_access only: [:invite]
 
   def invite
     @token = params[:token]

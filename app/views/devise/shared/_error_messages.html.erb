@@ -1,0 +1,11 @@
+<% if resource.errors.any? %>
+  <div style="background:#FDF0EE;
+    border-radius:12px; padding:12px 16px;
+    margin-bottom:16px;">
+    <% resource.errors.full_messages.each do |msg| %>
+      <p style="color:#933a35; font-size:14px; margin:0 0 4px;">
+        ⚠ <%= msg %>
+      </p>
+    <% end %>
+  </div>
+<% end %>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_04_07_045533) do
+ActiveRecord::Schema[8.0].define(version: 2026_04_07_192241) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -137,6 +137,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_07_045533) do
     t.string "apple_uid"
     t.string "locale"
     t.boolean "admin", default: false, null: false
+    t.integer "age"
+    t.integer "cycle_days"
+    t.string "last_menstruation"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["invite_token"], name: "index_users_on_invite_token"
     t.index ["language"], name: "index_users_on_language"

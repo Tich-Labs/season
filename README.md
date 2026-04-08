@@ -41,7 +41,10 @@ A Rails 8 PWA for tracking menstrual cycles, symptoms, and productivity based on
 | `/symptoms` | `symptoms/index.html.erb` | ✅ Symptom log |
 | `/superpowers` | `superpowers/index.html.erb` | ✅ Fixed |
 | `/streaks` | `streaks/index.html.erb` | ✅ Streaks |
-| `/settings/edit` | `settings/edit.html.erb` | ⚠️ Save broken |
+| `/settings/edit` | `settings/edit.html.erb` | ✅ Settings |
+| `/settings/profile` | `settings/profile.html.erb` | ✅ My Profile |
+| `/settings/calendar` | `settings/calendar.html.erb` | ✅ My Calendar |
+| `/settings/subscriptions` | `settings/subscriptions.html.erb` | ✅ Subscriptions |
 
 ## Routes
 
@@ -73,6 +76,9 @@ A Rails 8 PWA for tracking menstrual cycles, symptoms, and productivity based on
 | `/superpowers` | superpowers#create | ✅ |
 | `/streaks` | streaks#index | ✅ |
 | `/settings/edit` | settings#edit | ✅ |
+| `/settings/profile` | settings#profile | ✅ |
+| `/settings/calendar` | settings#calendar | ✅ |
+| `/settings/subscriptions` | settings#subscriptions | ✅ |
 
 ## CycleCalculatorService
 
@@ -89,19 +95,46 @@ SEASON_NAMES = {
 
 Key methods: `current_phase`, `phase_for_date(date)`, `month_data(year, month)`, `colour_for_date(date)`
 
-## Known Issues
+## Deployment (Render)
 
-| # | Issue | File |
-|---|-------|------|
-| C4 | Settings save redirects to undefined route | `settings_controller.rb` |
+### Prerequisites
 
-## Auth Suspended (dev mode)
+- GitHub repository with your code
+- Render account
 
-Currently disabled in `ApplicationController` for preview. Re-enable:
+### Deploy Steps
 
-```ruby
-# app/controllers/application_controller.rb
-include Authentication
+1. Push all changes to GitHub
+2. In Render Dashboard, go to **Blueprints**
+3. Click **New Blueprint Instance**
+4. Select your GitHub repo
+5. For `RAILS_MASTER_KEY`, provide the value from `config/master.key`
+6. Click **Approve**
+
+The blueprint will create:
+- PostgreSQL database (`season-db`)
+- Web service (`season`)
+
+### Environment Variables (auto-configured via render.yaml)
+
+| Key | Source |
+|-----|--------|
+| DATABASE_URL | From season-db |
+| RAILS_ENV | production |
+| RAILS_LOG_TO_STDOUT | true |
+| RAILS_SERVE_STATIC_FILES | true |
+| SECRET_KEY_BASE | auto-generated |
+| RAILS_MASTER_KEY | from config/master.key |
+| WEB_CONCURRENCY | 2 |
+
+### Build Script
+
+`bin/render-build.sh` runs on each deploy:
+```bash
+bundle install
+bundle exec rails assets:precompile
+bundle exec rails assets:clean
+bundle exec rails db:prepare
 ```
 
 ## Getting Started
@@ -112,4 +145,13 @@ bundle install
 RBENV_VERSION=3.4.7 bundle exec rails db:create db:schema:load
 cp .env.template .env
 bin/dev
+```
+
+## Auth Suspended (dev mode)
+
+Currently disabled in `ApplicationController` for preview. Re-enable:
+
+```ruby
+# app/controllers/application_controller.rb
+include Authentication
 ```
