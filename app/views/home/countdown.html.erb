@@ -15,11 +15,25 @@
         alt: "Season" %>
   </div>
 
-  <%# ── CTA Button ── %>
-  <a href="/welcome"
-     style="display:block; width:100%; max-width:280px; padding:16px 24px; background:#933a35; color:#FFFFFF; font-size:16px; font-weight:600; text-align:center; text-decoration:none; border-radius:12px; margin-bottom:28px; box-shadow:0 4px 12px rgba(147,58,53,0.25);">
-    Experience Season V2
-  </a>
+  <%# ── Install / CTA Button ── %>
+  <div data-controller="install" style="width:100%; display:flex; flex-direction:column; align-items:center; margin-bottom:28px;">
+    <button type="button"
+            data-install-target="button"
+            data-action="click->install#install"
+            style="display:block; width:100%; max-width:280px; padding:16px 24px; background:#933a35; color:#FFFFFF; font-size:16px; font-weight:600; text-align:center; border:none; border-radius:12px; box-shadow:0 4px 12px rgba(147,58,53,0.25); cursor:pointer;">
+      Experience Season V2
+    </button>
+
+    <%# iOS manual install hint — hidden until button tapped ── %>
+    <div data-install-target="iosHint"
+         style="display:none; margin-top:16px; background:#FFFFFF; border-radius:12px; padding:16px 20px; max-width:280px; box-shadow:0 2px 16px rgba(147,58,53,0.10); text-align:center;">
+      <p style="color:#933a35; font-size:14px; font-weight:600; margin:0 0 8px;">Add Season to your Home Screen</p>
+      <p style="color:#6B6B6B; font-size:13px; line-height:1.5; margin:0;">
+        Tap <strong>Share</strong> <span style="font-size:16px;">⬆</span> at the bottom of Safari,
+        then choose <strong>"Add to Home Screen"</strong>.
+      </p>
+    </div>
+  </div>
 
   <%# ── Phase dots ── %>
   <div style="display:flex; align-items:center; gap:8px; margin-bottom:32px;">
