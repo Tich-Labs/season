@@ -19,12 +19,19 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/service-worker.js')
+          .then((registration) => console.log('SW registered:', registration.scope))
+          .catch((err) => console.log('SW registration failed:', err));
+      }
+    </script>
   </head>
 
   <%# Logic check: Only show App Bar/Menu if user is logged in and past the splash/auth screens %>
   <% is_authenticated_view = user_signed_in? && !controller_name.in?(%w[sessions registrations home onboarding]) %>
 
-  <body class="bg-[#FCF9F7] font-['Montserrat'] antialiased h-full overflow-x-hidden">
+  <body class="bg-[#FCF9F7] font-['Montserrat'] antialiased h-full overflow-x-hidden" data-controller="update-prompt">
     
     <% if is_authenticated_view %>
     <div data-controller="menu">
