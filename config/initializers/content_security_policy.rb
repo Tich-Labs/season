@@ -12,7 +12,7 @@ Rails.application.configure do
     policy.object_src  :none
     # Allow importmap-rails inline scripts and Hotwire
     policy.script_src  :self
-    policy.style_src   :self, :unsafe_inline  # Tailwind JIT generates inline styles
+    policy.style_src   :self, :unsafe_inline, "https://fonts.googleapis.com"  # Tailwind inline styles + Google Fonts
     policy.connect_src :self, "https://sentry.io", "https://*.sentry.io"
     policy.frame_ancestors :none
   end
