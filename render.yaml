@@ -19,6 +19,8 @@ services:
           property: connectionString
       - key: RAILS_ENV
         value: production
+      - key: RACK_ENV
+        value: production
       - key: RAILS_LOG_TO_STDOUT
         value: "true"
       - key: RAILS_SERVE_STATIC_FILES
