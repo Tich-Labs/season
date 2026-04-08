@@ -1,4 +1,5 @@
 class InvitesController < ApplicationController
+  layout "launch"
   allow_unauthenticated_access
 
   def show

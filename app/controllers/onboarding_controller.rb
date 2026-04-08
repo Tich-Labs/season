@@ -1,4 +1,5 @@
 class OnboardingController < ApplicationController
+  layout "launch", except: [:invite]
   allow_unauthenticated_access only: [:invite]
 
   def invite
