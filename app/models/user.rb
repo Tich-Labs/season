@@ -1,7 +1,7 @@
 class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
     :recoverable, :rememberable, :validatable,
-    :omniauthable, omniauth_providers: [ :google_oauth2, :facebook, :apple ]
+    :omniauthable, omniauth_providers: [:google_oauth2, :facebook, :apple]
 
   validates :name, presence: true, if: :onboarding_completed?
 
@@ -41,9 +41,8 @@ class User < ApplicationRecord
   def self.from_omniauth(provider, auth)
     find_or_initialize_by(email: auth.info.email.downcase).tap do |user|
       user.assign_attributes(
-        name: auth.info.name,
-        provider: provider,
-        uid: auth.uid
+        :name => auth.info.name,
+        "#{provider}_uid" => auth.uid
       )
       user.save! if user.new_record?
     end

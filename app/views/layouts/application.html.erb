@@ -3,7 +3,6 @@
   <head>
     <title><%= content_for(:title) || "Season" %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -19,7 +18,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
-    <script>
+    <script nonce="<%= content_security_policy_nonce %>">
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('/service-worker.js')
           .then((registration) => console.log('SW registered:', registration.scope))
@@ -29,7 +28,7 @@
   </head>
 
   <%# Logic check: Only show App Bar/Menu if user is logged in and past the splash/auth screens %>
-  <% is_authenticated_view = user_signed_in? && !controller_name.in?(%w[sessions registrations home onboarding]) %>
+  <% is_authenticated_view = authenticated? && !controller_name.in?(%w[sessions registrations home onboarding]) %>
 
   <body class="bg-[#FCF9F7] font-['Montserrat'] antialiased h-full overflow-x-hidden" data-controller="update-prompt">
     
