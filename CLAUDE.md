@@ -88,6 +88,24 @@ All references must use this colour exactly.
 - General 404
 - General 500
 
+## Asset naming conventions
+
+All image and asset files placed in `app/assets/images/` must follow these rules:
+
+- **Lowercase only** — no uppercase letters
+- **Hyphens instead of spaces** — `season-logo.svg` not `season logo.svg`
+- **No special characters** — no parentheses, dots (except extension), or punctuation
+- **Descriptive, short names** — `errorscreen-wrong-email.png` not `Errorscreen - wrong email.png`
+
+Examples:
+- `Season-Wortmarke-1.svg` ✅ (was `Season-Wortmarke 1.svg` ❌)
+- `Apple-Logo.png` ✅ (was `Apple Logo.png` ❌)
+- `errorscreen-wrong-email.png` ✅ (was `Errorscreen - wrong email.png` ❌)
+
+**Why**: Propshaft fails to digest and serve asset filenames containing spaces during production `assets:precompile` on Render, causing 404s in production.
+
+Always use `image_tag` (never hardcoded `<img src="...">`) so Propshaft handles digest fingerprinting.
+
 ## Error screen requirements
 
 All error states must:
