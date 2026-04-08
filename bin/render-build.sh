@@ -2,7 +2,6 @@
 set -o errexit
 
 bundle install
-bundle exec rails tailwindcss:build
-bundle exec rails assets:precompile
-bundle exec rails assets:clean
-bundle exec rails db:prepare
+RAILS_ENV=production bundle exec rails tailwindcss:build
+RAILS_ENV=production bundle exec rails assets:precompile
+RAILS_ENV=production bundle exec rails db:prepare
