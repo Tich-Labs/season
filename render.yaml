@@ -29,3 +29,5 @@ services:
         sync: false
       - key: WEB_CONCURRENCY
         value: 2
+      - key: RUBY_VERSION
+        value: "3.4.7"
