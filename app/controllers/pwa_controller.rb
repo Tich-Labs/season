@@ -1,11 +1,12 @@
 class PwaController < ApplicationController
+  skip_before_action :verify_authenticity_token
   allow_unauthenticated_access
 
   def manifest
-    render layout: false, file: "manifest", content_type: "application/json"
+    render "pwa/manifest", format: :json, layout: false
   end
 
   def service_worker
-    render layout: false, file: "service-worker", content_type: "application/javascript"
+    render "pwa/service-worker", format: :js, layout: false
   end
 end
