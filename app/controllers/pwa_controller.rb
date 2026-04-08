@@ -2,14 +2,10 @@ class PwaController < ApplicationController
   allow_unauthenticated_access
 
   def manifest
-    respond_to do |format|
-      format.json { render "manifest" }
-    end
+    render layout: false, file: "manifest", content_type: "application/json"
   end
 
   def service_worker
-    respond_to do |format|
-      format.js { render "service_worker", content_type: "application/javascript" }
-    end
+    render layout: false, file: "service-worker", content_type: "application/javascript"
   end
 end
