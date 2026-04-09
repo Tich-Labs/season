@@ -10,14 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_04_08_142345) do
+ActiveRecord::Schema[8.0].define(version: 2026_04_09_055450) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
   create_table "calendar_events", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.string "title"
-    t.date "date"
+    t.string "title", null: false
+    t.date "date", null: false
     t.time "start_time"
     t.time "end_time"
     t.string "category"
@@ -30,21 +30,20 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_08_142345) do
   create_table "cycle_entries", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "cycle_day"
-    t.date "date"
-    t.boolean "period_end"
-    t.boolean "period_start"
+    t.date "date", null: false
+    t.boolean "period_end", default: false, null: false
+    t.boolean "period_start", default: false, null: false
     t.string "phase"
     t.string "season_name"
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.index ["date"], name: "index_cycle_entries_on_date"
     t.index ["user_id", "date"], name: "index_cycle_entries_on_user_id_and_date"
-    t.index ["user_id"], name: "index_cycle_entries_on_user_id"
   end
 
   create_table "cycle_phase_contents", force: :cascade do |t|
-    t.string "phase"
-    t.string "locale"
+    t.string "phase", null: false
+    t.string "locale", null: false
     t.string "season_name"
     t.text "superpower_text"
     t.text "mood_text"
@@ -53,6 +52,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_08_142345) do
     t.text "nutrition_text"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["phase", "locale"], name: "index_cycle_phase_contents_on_phase_and_locale", unique: true
   end
 
   create_table "launch_signups", force: :cascade do |t|
@@ -62,7 +62,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_08_142345) do
   end
 
   create_table "reminders", force: :cascade do |t|
-    t.boolean "active"
+    t.boolean "active", default: false, null: false
     t.integer "break_days"
     t.datetime "created_at", null: false
     t.text "message"
@@ -83,23 +83,22 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_08_142345) do
     t.integer "total_flames", default: 0
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
-    t.index ["user_id"], name: "index_streaks_on_user_id"
+    t.index ["user_id"], name: "index_streaks_on_user_id", unique: true
   end
 
   create_table "superpower_logs", force: :cascade do |t|
     t.datetime "created_at", null: false
-    t.date "date"
+    t.date "date", null: false
     t.jsonb "ratings"
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
-    t.index ["date"], name: "index_superpower_logs_on_date"
-    t.index ["user_id"], name: "index_superpower_logs_on_user_id"
+    t.index ["user_id", "date"], name: "index_superpower_logs_on_user_id_and_date", unique: true
   end
 
   create_table "symptom_logs", force: :cascade do |t|
     t.integer "cravings"
     t.datetime "created_at", null: false
-    t.date "date"
+    t.date "date", null: false
     t.integer "discharge"
     t.integer "energy"
     t.integer "mental"
@@ -107,7 +106,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_08_142345) do
     t.text "notes"
     t.integer "pain"
     t.integer "physical"
-    t.boolean "sexual_intercourse", default: false
+    t.boolean "sexual_intercourse", default: false, null: false
     t.integer "sleep"
     t.decimal "temperature"
     t.datetime "updated_at", null: false
@@ -115,7 +114,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_08_142345) do
     t.decimal "weight"
     t.index ["date"], name: "index_symptom_logs_on_date"
     t.index ["user_id", "date"], name: "index_symptom_logs_on_user_id_and_date", unique: true
-    t.index ["user_id"], name: "index_symptom_logs_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -131,7 +129,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_08_142345) do
     t.date "last_period_start"
     t.string "life_stage", default: "menstrual"
     t.string "name"
-    t.boolean "onboarding_completed"
+    t.boolean "onboarding_completed", default: false, null: false
     t.integer "period_length"
     t.string "plan", default: "free"
     t.datetime "remember_created_at"
