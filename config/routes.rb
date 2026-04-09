@@ -56,6 +56,7 @@ Rails.application.routes.draw do
   end
 
   get "up" => "rails/health#show", :as => :rails_health_check
+  get "test" => proc { [200, {"Content-Type" => "text/plain"}, ["OK"]] }
 
   get "/launch", to: "launch#index", as: :launch
   get "/countdown", to: "home#countdown", as: :countdown_page
