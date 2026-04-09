@@ -37,8 +37,7 @@ class CycleCalculatorService
 
   def phase_for_date(date)
     return nil unless @last_period_start
-    cycle_day = ((date - @last_period_start.to_date).to_i %
-                  @cycle_length) + 1
+    cycle_day = ((date - @last_period_start.to_date).to_i % @cycle_length) + 1
     if cycle_day <= @period_length
       "menstrual"
     elsif cycle_day <= @cycle_length - 14

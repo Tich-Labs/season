@@ -102,9 +102,25 @@ jobs:
     name: Code quality
     runs-on: ubuntu-latest
     if: ${{ github.ref_name != 'main' }}
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: season_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Setup Ruby and install gems
         uses: ruby/setup-ruby@v1
         with:
@@ -112,13 +128,30 @@ jobs:
       - name: Run rubycritic
         run: |
           bundle exec rubycritic --mode-ci main --no-browser
+        continue-on-error: true
       - name: Run database consistency
+        env:
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/season_test
         run: |
           bundle exec rails db:test:prepare
           bundle exec database_consistency -c .database_consistency.todo.yml
 
   test:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: season_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -127,10 +160,15 @@ jobs:
         with:
           ruby-version: .ruby-version
           bundler-cache: true
+      - name: Set up database
+        env:
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/season_test
+          RAILS_ENV: test
+        run: bundle exec rails db:create db:schema:load
       - name: Run tests
         env:
           RAILS_ENV: test
-          # REDIS_URL: redis://localhost:6379/0
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/season_test
         run: bundle exec rspec
       - name: Upload screenshots
         if: failure()

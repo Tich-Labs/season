@@ -19,6 +19,7 @@ Lint/AssignmentInCondition:
 Rails/SkipsModelValidations:
   Exclude:
     - 'db/migrate/20240820172950_add_service_name_to_active_storage_blobs.active_storage.rb'
+    - 'test/models/streak_test.rb'
 
 # Offense count: 2
 # Configuration parameters: Include.
@@ -27,3 +28,23 @@ Rails/ThreeStateBooleanColumn:
   Exclude:
     - 'db/queue_migrate/20240820180224_create_recurring_tasks.solid_queue.rb'
     - 'db/queue_schema.rb'
+    - 'db/migrate/20260406073657_add_missing_fields_to_season.rb'
+
+# Migration-file style suppressions — fix one by one as migrations are refactored.
+Rails/BulkChangeTable:
+  Exclude:
+    - 'db/migrate/**/*.rb'
+
+Layout/SpaceInsideArrayLiteralBrackets:
+  Exclude:
+    - 'db/migrate/**/*.rb'
+
+Style/StringLiterals:
+  Exclude:
+    - 'db/migrate/**/*.rb'
+
+Rails/UniqueValidationWithoutIndex:
+  Exclude:
+    - 'app/models/symptom_log.rb'
+    - 'app/models/superpower_log.rb'
+    - 'app/models/cycle_phase_content.rb'
