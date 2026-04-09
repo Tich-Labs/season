@@ -24,7 +24,7 @@ class InvitesController < ApplicationController
       login(@user)
       redirect_to onboarding_path(1), notice: "Welcome to Season!"
     else
-      render template: "onboarding/invite", status: :unprocessable_entity
+      render template: "onboarding/invite", status: :unprocessable_content
     end
   rescue ActiveRecord::RecordNotFound
     redirect_to root_path, alert: "Invalid invite link."

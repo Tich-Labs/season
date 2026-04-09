@@ -7,12 +7,12 @@
 Rails.application.configure do
   config.content_security_policy do |policy|
     policy.default_src :self
-    policy.font_src    :self, :https, :data
-    policy.img_src     :self, :https, :data, "blob:"
-    policy.object_src  :none
+    policy.font_src :self, :https, :data
+    policy.img_src :self, :https, :data, "blob:"
+    policy.object_src :none
     # Allow importmap-rails inline scripts and Hotwire
-    policy.script_src  :self
-    policy.style_src   :self, :unsafe_inline, "https://fonts.googleapis.com"  # Tailwind inline styles + Google Fonts
+    policy.script_src :self
+    policy.style_src :self, :unsafe_inline, "https://fonts.googleapis.com"  # Tailwind inline styles + Google Fonts
     policy.connect_src :self, "https://sentry.io", "https://*.sentry.io"
     policy.frame_ancestors :none
   end

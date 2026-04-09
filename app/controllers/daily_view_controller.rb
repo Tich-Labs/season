@@ -5,9 +5,9 @@ class DailyViewController < ApplicationController
 
   def show
     @date = if params[:date] == "today"
-      Date.today
+      Time.zone.today
     else
-      (params[:date] ? Date.parse(params[:date]) : Date.today)
+      (params[:date] ? Date.parse(params[:date]) : Time.zone.today)
     end
 
     if current_user.last_period_start
@@ -30,9 +30,9 @@ class DailyViewController < ApplicationController
     end
     @symptom_log = current_user.symptom_logs.find_by(date: @date)
 
-    @week_dates      = (0..6).map { |i| @date.beginning_of_week(:monday) + i.days }
-    @all_day_events  = @events.select { |e| e.start_time.nil? }
-    @timed_events    = @events.select { |e| e.start_time.present? }
-    @phase_colour    = @phase ? CycleCalculatorService::PHASE_COLOURS[@phase] : "#933a35"
+    @week_dates = (0..6).map { |i| @date.beginning_of_week(:monday) + i.days }
+    @all_day_events = @events.select { |e| e.start_time.nil? }
+    @timed_events = @events.select { |e| e.start_time.present? }
+    @phase_colour = @phase ? CycleCalculatorService::PHASE_COLOURS[@phase] : "#933a35"
   end
 end

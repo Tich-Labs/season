@@ -3,7 +3,7 @@ class Streak < ApplicationRecord
   MILESTONES = [30, 50, 75, 100, 125].freeze
 
   def increment_streak!
-    today = Date.today
+    today = Time.zone.today
     if last_tracked_date == today - 1.day
       self.current_streak = current_streak.to_i + 1
     elsif last_tracked_date == today

@@ -6,8 +6,8 @@ class CalendarController < ApplicationController
   VALID_MODES = %w[all events tracking cycle].freeze
 
   def appointments
-    @date  = params[:date] ? Date.parse(params[:date]) : Date.today
-    @year  = @date.year
+    @date = params[:date] ? Date.parse(params[:date]) : Time.zone.today
+    @year = @date.year
     @month = @date.month
 
     month_range = Date.new(@year, @month, 1)..Date.new(@year, @month, -1)
@@ -29,16 +29,16 @@ class CalendarController < ApplicationController
   end
 
   def index
-    @date  = params[:date] ? Date.parse(params[:date]) : Date.today
-    @year  = @date.year
+    @date = params[:date] ? Date.parse(params[:date]) : Time.zone.today
+    @year = @date.year
     @month = @date.month
-    @mode  = VALID_MODES.include?(params[:mode]) ? params[:mode] : "all"
+    @mode = VALID_MODES.include?(params[:mode]) ? params[:mode] : "all"
 
     month_range = Date.new(@year, @month, 1)..Date.new(@year, @month, -1)
 
     # Cycle phase data — keyed by date, O(1) lookup
     if current_user.last_period_start
-      calculator  = CycleCalculatorService.new(current_user)
+      calculator = CycleCalculatorService.new(current_user)
       @cycle_by_date = calculator.month_data(@year, @month).index_by { |d| d[:date] }
     else
       @cycle_by_date = {}
@@ -59,7 +59,7 @@ class CalendarController < ApplicationController
     @prev_month = @date - 1.month
     @next_month = @date + 1.month
 
-    @current_phase  = current_user.current_phase
+    @current_phase = current_user.current_phase
     @current_season = @current_phase ?
       CycleCalculatorService::SEASON_NAMES[@current_phase] : nil
     @streak = current_user.streak&.current_streak || 0

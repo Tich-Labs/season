@@ -23,7 +23,7 @@ class OnboardingController < ApplicationController
       name = params.dig(:user, :name)
       if name.blank?
         @error = "Please enter your name"
-        render :show, status: :unprocessable_entity
+        render :show, status: :unprocessable_content
         return
       end
       current_user.update!(name: name)
@@ -33,7 +33,7 @@ class OnboardingController < ApplicationController
       period_length = params[:period_length].to_i
       if cycle_length < 21 || cycle_length > 35 || period_length < 1 || period_length > 10
         @error = "Please select valid values"
-        render :show, status: :unprocessable_entity
+        render :show, status: :unprocessable_content
         return
       end
       current_user.update!(
@@ -45,7 +45,7 @@ class OnboardingController < ApplicationController
       contraception = params[:contraception]
       if contraception.blank?
         @error = "Please select an option"
-        render :show, status: :unprocessable_entity
+        render :show, status: :unprocessable_content
         return
       end
       current_user.update!(contraception_type: contraception)
@@ -54,7 +54,7 @@ class OnboardingController < ApplicationController
       last_period_date = params[:last_period_date]
       if last_period_date.blank?
         @error = "Please select a date"
-        render :show, status: :unprocessable_entity
+        render :show, status: :unprocessable_content
         return
       end
       current_user.update!(last_period_start: last_period_date)
@@ -63,7 +63,7 @@ class OnboardingController < ApplicationController
       locale = params[:locale]
       if locale.blank?
         @error = "Please select a language"
-        render :show, status: :unprocessable_entity
+        render :show, status: :unprocessable_content
         return
       end
       current_user.update!(
@@ -79,7 +79,7 @@ class OnboardingController < ApplicationController
     end
   rescue ActiveRecord::RecordInvalid => e
     @error = e.message
-    render :show, status: :unprocessable_entity
+    render :show, status: :unprocessable_content
   end
 
   def finish

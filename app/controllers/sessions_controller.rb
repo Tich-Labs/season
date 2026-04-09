@@ -25,7 +25,7 @@ class SessionsController < ApplicationController
       increment_login_attempts
       @error_type = email.present? ? :wrong_password : :wrong_email
       @user = User.new
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 

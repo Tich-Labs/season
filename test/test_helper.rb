@@ -8,7 +8,7 @@ module ActiveSupport
 
     # Sign in via the session endpoint (works for integration tests)
     def sign_in_as(user, password: "password123")
-      post session_path, params: { email: user.email, password: password }
+      post session_path, params: {email: user.email, password: password}
     end
   end
 end

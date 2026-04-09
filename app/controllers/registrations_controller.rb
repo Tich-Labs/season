@@ -1,5 +1,6 @@
 class RegistrationsController < ApplicationController
   include Authentication
+
   layout "launch"
 
   allow_unauthenticated_access only: [:new, :create]

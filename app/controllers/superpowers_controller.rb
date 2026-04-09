@@ -29,7 +29,7 @@ class SuperpowersController < ApplicationController
   }.freeze
 
   def index
-    @date = params[:date] ? Date.parse(params[:date]) : Date.today
+    @date = params[:date] ? Date.parse(params[:date]) : Time.zone.today
     @phase = current_user&.current_phase || "follicular"
     @superpowers = SUPERPOWERS[@phase] || SUPERPOWERS["follicular"]
     @superpower_logs = current_user&.superpower_logs&.order(date: :desc)&.limit(10) || []
@@ -40,7 +40,7 @@ class SuperpowersController < ApplicationController
   def create
     ratings_params = params[:ratings] || {}
     @log = current_user.superpower_logs.find_or_initialize_by(
-      date: params[:date] || Date.today
+      date: params[:date] || Time.zone.today
     )
     current_ratings = @log.ratings || {}
     new_ratings = current_ratings.merge(ratings_params.transform_values(&:to_i))
@@ -48,14 +48,14 @@ class SuperpowersController < ApplicationController
       update_streak!
       head :ok
     else
-      head :unprocessable_entity
+      head :unprocessable_content
     end
   end
 
   private
 
   def superpower_params
-    params.require(:superpower_log).permit(:date, :ratings, :notes)
+    params.expect(superpower_log: [:date, :ratings, :notes])
   end
 
   def update_streak!

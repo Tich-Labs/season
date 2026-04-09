@@ -67,7 +67,7 @@ class UserTest < ActiveSupport::TestCase
       password: "password123",
       name: "Cascade Test"
     )
-    SymptomLog.create!(user: user, date: Date.today)
+    SymptomLog.create!(user: user, date: Time.zone.today)
     assert_difference "SymptomLog.count", -1 do
       user.destroy
     end
@@ -91,7 +91,7 @@ class UserTest < ActiveSupport::TestCase
       password: "password123",
       name: "Cascade Events"
     )
-    CalendarEvent.create!(user: user, title: "Test event", date: Date.today)
+    CalendarEvent.create!(user: user, title: "Test event", date: Time.zone.today)
     assert_difference "CalendarEvent.count", -1 do
       user.destroy
     end

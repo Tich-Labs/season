@@ -7,3 +7,13 @@ ActiveStorage::Blob:
   enabled: false
 ActiveStorage::VariantRecord:
   enabled: false
+
+# Devise manages these internally
+User:
+  columns:
+    email:
+      ColumnPresenceChecker:
+        enabled: false
+    reset_password_token:
+      UniqueIndexChecker:
+        enabled: false

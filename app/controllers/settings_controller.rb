@@ -49,13 +49,13 @@ class SettingsController < ApplicationController
     if @user&.update(user_params)
       redirect_to edit_settings_path, notice: "Settings saved"
     else
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 
   private
 
   def user_params
-    params.require(:user).permit(:name, :language, :cycle_length, :period_length, :contraception_type, :life_stage)
+    params.expect(user: [:name, :language, :cycle_length, :period_length, :contraception_type, :life_stage])
   end
 end
