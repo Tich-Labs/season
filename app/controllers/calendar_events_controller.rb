@@ -13,7 +13,7 @@ class CalendarEventsController < ApplicationController
   def create
     @event = current_user.calendar_events.build(event_params)
     if @event.save
-      redirect_to calendar_path, notice: "Event created"
+      redirect_to calendar_path, notice: t(".created")
     else
       render :new, status: :unprocessable_content
     end
@@ -21,7 +21,7 @@ class CalendarEventsController < ApplicationController
 
   def update
     if @event.update(event_params)
-      redirect_to calendar_path, notice: "Event updated"
+      redirect_to calendar_path, notice: t(".updated")
     else
       render :edit, status: :unprocessable_content
     end
@@ -29,7 +29,7 @@ class CalendarEventsController < ApplicationController
 
   def destroy
     @event.destroy
-    redirect_to calendar_path, notice: "Event deleted"
+    redirect_to calendar_path, notice: t(".deleted")
   end
 
   private

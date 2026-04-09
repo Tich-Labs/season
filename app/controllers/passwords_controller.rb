@@ -20,7 +20,7 @@ class PasswordsController < ApplicationController
   def update
     @user = User.find_by_token_for(:password_reset, params[:token])
     if @user&.update(password: params[:password])
-      redirect_to new_session_path, notice: "Password updated"
+      redirect_to new_session_path, notice: t(".password_updated")
     else
       render :edit, status: :unprocessable_content
     end

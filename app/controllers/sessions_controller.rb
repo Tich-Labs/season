@@ -39,7 +39,7 @@ class SessionsController < ApplicationController
   def rate_limit_login
     return unless too_many_login_attempts?
 
-    flash.now[:alert] = "Too many login attempts. Please try again later."
+    flash.now[:alert] = t(".too_many_attempts")
     render :new, status: :too_many_requests
   end
 

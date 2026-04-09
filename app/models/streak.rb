@@ -1,7 +1,7 @@
 class Streak < ApplicationRecord
   belongs_to :user
   validates :user_id, uniqueness: true
-  MILESTONES = [ 30, 50, 75, 100, 125 ].freeze
+  MILESTONES = [30, 50, 75, 100, 125].freeze
 
   def increment_streak!
     today = Time.zone.today
@@ -12,8 +12,8 @@ class Streak < ApplicationRecord
     else
       self.current_streak = 1
     end
-    self.longest_streak = [ longest_streak.to_i,
-      current_streak ].max
+    self.longest_streak = [longest_streak.to_i,
+      current_streak].max
     self.total_flames = total_flames.to_i + 1
     self.last_tracked_date = today
     save!

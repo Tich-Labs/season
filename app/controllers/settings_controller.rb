@@ -47,7 +47,7 @@ class SettingsController < ApplicationController
   def update
     @user = current_user
     if @user&.update(user_params)
-      redirect_to edit_settings_path, notice: "Settings saved"
+      redirect_to edit_settings_path, notice: t(".saved")
     else
       render :edit, status: :unprocessable_content
     end

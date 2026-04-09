@@ -5,12 +5,12 @@ class InvitesController < ApplicationController
   def show
     @user = User.find_by!(invite_token: params[:token])
     if @user.invite_accepted_at.present?
-      redirect_to new_session_path, alert: "This invite has already been used."
+      redirect_to new_session_path, alert: t(".already_used")
       return
     end
     render template: "onboarding/invite"
   rescue ActiveRecord::RecordNotFound
-    redirect_to root_path, alert: "Invalid invite link."
+    redirect_to root_path, alert: t(".invalid_link")
   end
 
   def update
@@ -22,11 +22,11 @@ class InvitesController < ApplicationController
       invite_token: nil
     )
       login(@user)
-      redirect_to onboarding_path(1), notice: "Welcome to Season!"
+      redirect_to onboarding_path(1), notice: t(".welcome")
     else
       render template: "onboarding/invite", status: :unprocessable_content
     end
   rescue ActiveRecord::RecordNotFound
-    redirect_to root_path, alert: "Invalid invite link."
+    redirect_to root_path, alert: t(".invalid_link")
   end
 end

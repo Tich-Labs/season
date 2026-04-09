@@ -30,11 +30,11 @@ class SuperpowersController < ApplicationController
 
   def index
     @date = params[:date] ? Date.parse(params[:date]) : Time.zone.today
-    @phase = current_user&.current_phase || "follicular"
+    @phase = current_user.current_phase || "follicular"
     @superpowers = SUPERPOWERS[@phase] || SUPERPOWERS["follicular"]
-    @superpower_logs = current_user&.superpower_logs&.order(date: :desc)&.limit(10) || []
-    @log = current_user&.superpower_logs&.find_or_initialize_by(date: @date)
-    @ratings = @log&.ratings || {}
+    @superpower_logs = current_user.superpower_logs.order(date: :desc).limit(10)
+    @log = current_user.superpower_logs.find_or_initialize_by(date: @date)
+    @ratings = @log.ratings || {}
   end
 
   def create

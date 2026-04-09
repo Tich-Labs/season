@@ -69,6 +69,32 @@ de:
     subheading: "Verfolge deinen Zyklus"
   tracking:
     feedback: "Feedback geben"
+  calendar_events:
+    create:
+      created: "Termin erstellt"
+    update:
+      updated: "Termin aktualisiert"
+    destroy:
+      deleted: "Termin gelöscht"
+  invites:
+    show:
+      already_used: "Diese Einladung wurde bereits verwendet."
+      invalid_link: "Ungültiger Einladungslink."
+    update:
+      welcome: "Willkommen bei Season!"
+      invalid_link: "Ungültiger Einladungslink."
+  passwords:
+    update:
+      password_updated: "Passwort aktualisiert"
+  sessions:
+    rate_limit_login:
+      too_many_attempts: "Zu viele Anmeldeversuche. Bitte versuche es später erneut."
+  settings:
+    update:
+      saved: "Einstellungen gespeichert"
+  onboarding:
+    require_user:
+      sign_in_first: "Bitte melde dich zuerst an"
   menu:
     coming_soon: "Demnächst"
     premium_title: "Hol' dir jetzt Season Premium"

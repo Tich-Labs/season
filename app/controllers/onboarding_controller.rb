@@ -94,6 +94,6 @@ class OnboardingController < ApplicationController
 
   def require_user!
     return if current_user
-    redirect_to new_session_path, alert: "Please sign in first"
+    redirect_to new_session_path, alert: t(".sign_in_first")
   end
 end

@@ -75,6 +75,32 @@ en:
     subheading: "Track your cycle"
   tracking:
     feedback: "Give feedback"
+  calendar_events:
+    create:
+      created: "Event created"
+    update:
+      updated: "Event updated"
+    destroy:
+      deleted: "Event deleted"
+  invites:
+    show:
+      already_used: "This invite has already been used."
+      invalid_link: "Invalid invite link."
+    update:
+      welcome: "Welcome to Season!"
+      invalid_link: "Invalid invite link."
+  passwords:
+    update:
+      password_updated: "Password updated"
+  sessions:
+    rate_limit_login:
+      too_many_attempts: "Too many login attempts. Please try again later."
+  settings:
+    update:
+      saved: "Settings saved"
+  onboarding:
+    require_user:
+      sign_in_first: "Please sign in first"
   menu:
     coming_soon: "Coming soon"
     premium_title: "Get Season Premium now"
