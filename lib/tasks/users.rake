@@ -22,9 +22,9 @@ namespace :users do
           count += 1
         end
       end
-      puts "Seeded #{count} invite users"
+      Rails.logger.info "Seeded #{count} invite users"
     else
-      puts "File #{file} not found. Create a CSV with columns: name,email"
+      Rails.logger.warn "File #{file} not found. Create a CSV with columns: name,email"
     end
   end
 end

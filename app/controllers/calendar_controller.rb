@@ -6,8 +6,8 @@ class CalendarController < ApplicationController
   VALID_MODES = %w[all events tracking cycle].freeze
 
   def appointments
-    @date  = params[:date] ? Date.parse(params[:date]) : Date.today
-    @year  = @date.year
+    @date = params[:date] ? Date.parse(params[:date]) : Time.zone.today
+    @year = @date.year
     @month = @date.month
 
     month_range = Date.new(@year, @month, 1)..Date.new(@year, @month, -1)
@@ -29,10 +29,10 @@ class CalendarController < ApplicationController
   end
 
   def index
-    @date  = params[:date] ? Date.parse(params[:date]) : Date.today
-    @year  = @date.year
+    @date = params[:date] ? Date.parse(params[:date]) : Time.zone.today
+    @year = @date.year
     @month = @date.month
-    @mode  = VALID_MODES.include?(params[:mode]) ? params[:mode] : "all"
+    @mode = VALID_MODES.include?(params[:mode]) ? params[:mode] : "all"
 
     month_range = Date.new(@year, @month, 1)..Date.new(@year, @month, -1)
 

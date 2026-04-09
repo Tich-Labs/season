@@ -12,7 +12,7 @@ class Admin::UsersController < Admin::BaseController
 
     respond_to do |format|
       format.html
-      format.csv { send_data generate_csv(@q.result), filename: "season-users-#{Date.today}.csv" }
+      format.csv { send_data generate_csv(@q.result), filename: "season-users-#{Time.zone.today}.csv" }
     end
   end
 

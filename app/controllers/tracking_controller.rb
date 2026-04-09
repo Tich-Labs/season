@@ -4,7 +4,7 @@ class TrackingController < ApplicationController
   before_action :require_onboarding_completed
 
   def index
-    @date = Date.today
+    @date = Time.zone.today
     @phase = current_user.current_phase
     @season = CycleCalculatorService::SEASON_NAMES[@phase] if @phase
     @cycle_day = current_user.current_cycle_day
@@ -14,12 +14,12 @@ class TrackingController < ApplicationController
 
   def create
     if params[:period_start]
-      current_user.update!(last_period_start: Date.today)
+      current_user.update!(last_period_start: Time.zone.today)
 
       cycle_day = current_user.current_cycle_day || 1
 
       current_user.cycle_entries.create!(
-        date: Date.today,
+        date: Time.zone.today,
         phase: "menstrual",
         season_name: "Winter",
         cycle_day: cycle_day,

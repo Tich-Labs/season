@@ -2,7 +2,7 @@ require "test_helper"
 
 class CycleCalculatorServiceTest < ActiveSupport::TestCase
   # Lightweight stub — service only duck-types these three attributes
-  UserStub = Struct.new(:cycle_length, :period_length, :last_period_start, keyword_init: true)
+  UserStub = Struct.new(:cycle_length, :period_length, :last_period_start)
 
   # Fixed reference date: 1 Jan 2026 (Thursday)
   PERIOD_START = Date.new(2026, 1, 1)

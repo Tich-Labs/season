@@ -4,7 +4,7 @@ class SymptomsController < ApplicationController
   before_action :require_onboarding_completed
 
   def index
-    @date = params[:date] ? Date.parse(params[:date]) : Date.today
+    @date = params[:date] ? Date.parse(params[:date]) : Time.zone.today
     @log = current_user.symptom_logs.find_or_initialize_by(date: @date)
     @phase = current_user.current_phase
     @season = CycleCalculatorService::SEASON_NAMES[@phase] if @phase
@@ -12,7 +12,7 @@ class SymptomsController < ApplicationController
 
   def create
     @log = current_user.symptom_logs.find_or_initialize_by(
-      date: symptom_params[:date] || Date.today
+      date: symptom_params[:date] || Time.zone.today
     )
 
     if @log.update(symptom_params)

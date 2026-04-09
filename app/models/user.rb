@@ -31,7 +31,7 @@ class User < ApplicationRecord
 
   def current_cycle_day
     return nil unless last_period_start
-    (Date.today - last_period_start.to_date).to_i + 1
+    (Time.zone.today - last_period_start.to_date).to_i + 1
   end
 
   def first_name

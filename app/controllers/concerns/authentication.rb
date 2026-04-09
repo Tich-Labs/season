@@ -23,7 +23,7 @@ module Authentication
   def authenticate_user
     return if authenticated?
 
-    store_location_for(:user, request.fullpath) if request.get?
+    store_location_for(:user, request.fullpath) if request.get? || request.head?
     redirect_to new_session_path
   end
 

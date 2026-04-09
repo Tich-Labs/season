@@ -18,41 +18,41 @@ class StreakTest < ActiveSupport::TestCase
     assert_nil @streak.last_tracked_date
     @streak.increment_streak!
     assert_equal 1, @streak.current_streak
-    assert_equal Date.today, @streak.last_tracked_date
+    assert_equal Time.zone.today, @streak.last_tracked_date
   end
 
   test "increments streak on consecutive days" do
-    @streak.update_columns(current_streak: 3, last_tracked_date: Date.today - 1)
+    @streak.update_columns(current_streak: 3, last_tracked_date: Time.zone.today - 1)
     @streak.increment_streak!
     assert_equal 4, @streak.current_streak
   end
 
   test "resets to 1 after a missed day" do
-    @streak.update_columns(current_streak: 10, last_tracked_date: Date.today - 3)
+    @streak.update_columns(current_streak: 10, last_tracked_date: Time.zone.today - 3)
     @streak.increment_streak!
     assert_equal 1, @streak.current_streak
   end
 
   test "does not double-increment when called twice on same day" do
-    @streak.update_columns(current_streak: 5, last_tracked_date: Date.today)
+    @streak.update_columns(current_streak: 5, last_tracked_date: Time.zone.today)
     @streak.increment_streak!
     assert_equal 5, @streak.current_streak
   end
 
   test "updates longest_streak when current exceeds it" do
-    @streak.update_columns(current_streak: 9, longest_streak: 9, last_tracked_date: Date.today - 1)
+    @streak.update_columns(current_streak: 9, longest_streak: 9, last_tracked_date: Time.zone.today - 1)
     @streak.increment_streak!
     assert_equal 10, @streak.longest_streak
   end
 
   test "increments total_flames on each new tracking day" do
-    @streak.update_columns(total_flames: 7, last_tracked_date: Date.today - 1)
+    @streak.update_columns(total_flames: 7, last_tracked_date: Time.zone.today - 1)
     @streak.increment_streak!
     assert_equal 8, @streak.total_flames
   end
 
   test "does not increment total_flames when same-day double call" do
-    @streak.update_columns(total_flames: 7, last_tracked_date: Date.today)
+    @streak.update_columns(total_flames: 7, last_tracked_date: Time.zone.today)
     @streak.increment_streak!
     assert_equal 7, @streak.total_flames
   end

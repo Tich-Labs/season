@@ -5,9 +5,9 @@ class DailyViewController < ApplicationController
 
   def show
     @date = if params[:date] == "today"
-      Date.today
+      Time.zone.today
     else
-      (params[:date] ? Date.parse(params[:date]) : Date.today)
+      (params[:date] ? Date.parse(params[:date]) : Time.zone.today)
     end
 
     if current_user.last_period_start

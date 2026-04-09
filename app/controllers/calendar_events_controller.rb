@@ -3,7 +3,7 @@ class CalendarEventsController < ApplicationController
 
   def new
     @event = current_user.calendar_events.build(
-      date: params[:date] || Date.today
+      date: params[:date] || Time.zone.today
     )
   end
 
