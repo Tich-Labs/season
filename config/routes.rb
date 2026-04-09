@@ -58,6 +58,14 @@ Rails.application.routes.draw do
   get "up" => "rails/health#show", :as => :rails_health_check
   get "ping" => ->(env) { [200, {"Content-Type" => "text/plain"}, ["OK"]] }
   get "test" => "debug#test"
+  get "model-test", to: ->(env) {
+    begin
+      user_count = User.count
+      [200, {"Content-Type" => "text/plain"}, ["User count: #{user_count}"]]
+    rescue => e
+      [500, {"Content-Type" => "text/plain"}, ["Error: #{e.message}"]]
+    end
+  }
   get "i18n-test", to: ->(env) {
     # Test if I18n works
     I18n.locale = I18n.default_locale
