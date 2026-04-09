@@ -10,7 +10,7 @@ services:
     runtime: ruby
     plan: free
     buildCommand: "./bin/render-build.sh"
-    startCommand: "bundle exec puma -C config/puma.rb"
+    startCommand: "bin/rails server"
     healthCheckPath: /up
     envVars:
       - key: DATABASE_URL
