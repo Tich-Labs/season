@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get "test-db", to: proc { |env| [200, {"Content-Type" => "text/plain"}, ["OK - Rails #{Rails.env}"]] }
+
   get "/app", to: "home#app", as: :app_landing
   get "/loader", to: "home#loader", as: :loader
   get "/welcome", to: "home#welcome", as: :welcome
