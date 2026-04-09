@@ -11,7 +11,6 @@ Rails.application.configure do
 
   # Full error reports are disabled.
   config.consider_all_requests_local = false
-  config.action_dispatch.show_exceptions = :rescuable
 
   # Turn on fragment caching in view templates.
   config.action_controller.perform_caching = true

@@ -38,7 +38,7 @@ class User < ApplicationRecord
     name&.split&.first || name
   end
 
-  def self.from_omniauth(provider, auth)
+  def self.find_or_create_from_oauth(provider, auth)
     find_or_initialize_by(email: auth.info.email.downcase).tap do |user|
       user.assign_attributes(
         :name => auth.info.name,
