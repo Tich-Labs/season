@@ -13,24 +13,21 @@ class RegistrationsController < ApplicationController
   end
 
   def create
-    email = params[:email]
+    attributes = user_params.to_h.symbolize_keys
+    email = attributes[:email].to_s.downcase
 
-    if User.exists?(email: email.downcase)
+    if User.exists?(email: email)
       @error_type = :already_registered
-      @user = User.new
-      render :new
+      @user = User.new(attributes)
+      render :new, status: :unprocessable_content
     else
-      @user = User.new(
-        email: params[:email],
-        password: params[:password],
-        password_confirmation: params[:password_confirmation]
-      )
+      @user = User.new(attributes.merge(email: email))
 
       if @user.save
         login @user
         redirect_to onboarding_path(1)
       else
-        render :new
+        render :new, status: :unprocessable_content
       end
     end
   end
@@ -38,6 +35,10 @@ class RegistrationsController < ApplicationController
   private
 
   def user_params
-    params.permit(:email, :password, :password_confirmation)
+    if params[:user].present?
+      params.expect(user: [:email, :password, :password_confirmation])
+    else
+      params.permit(:email, :password, :password_confirmation)
+    end
   end
 end
