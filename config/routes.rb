@@ -56,7 +56,14 @@ Rails.application.routes.draw do
   end
 
   get "up" => "rails/health#show", :as => :rails_health_check
-  get "test" => proc { [200, {"Content-Type" => "text/plain"}, ["OK"]] }
+  get "test" => "debug#test"
+  get "env" => proc { |env|
+    body = "Rails: #{Rails.env}\nEager: #{Rails.application.config.eager_load?}\n"
+    body += "SECRET_KEY_BASE: #{ENV["SECRET_KEY_BASE"]&.present? ? "set" : "missing"}\n"
+    body += "DATABASE_URL: #{ENV["DATABASE_URL"]&.present? ? "set" : "missing"}\n"
+    body += "RAILS_MASTER_KEY: #{ENV["RAILS_MASTER_KEY"]&.present? ? "set" : "missing"}\n"
+    [200, {"Content-Type" => "text/plain"}, [body]]
+  }
 
   get "/launch", to: "launch#index", as: :launch
   get "/countdown", to: "home#countdown", as: :countdown_page
