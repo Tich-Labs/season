@@ -1,5 +1,14 @@
 Rails.application.routes.draw do
   get "test-db", to: proc { |env| [200, {"Content-Type" => "text/plain"}, ["OK - Rails #{Rails.env}"]] }
+  get "test-load", to: proc { |env|
+    begin
+      require "registrations_controller"
+      klass = RegistrationsController
+      [200, {"Content-Type" => "text/plain"}, ["Controller loads OK: #{klass}"]]
+    rescue => e
+      [500, {"Content-Type" => "text/plain"}, ["Error: #{e.class}: #{e.message}\n#{e.backtrace.first(3).join("\n")}"]]
+    end
+  }
 
   get "/app", to: "home#app", as: :app_landing
   get "/loader", to: "home#loader", as: :loader
