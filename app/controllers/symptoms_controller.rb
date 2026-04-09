@@ -19,17 +19,17 @@ class SymptomsController < ApplicationController
       update_streak!
       render json: {status: "ok"}
     else
-      render json: {errors: @log.errors.full_messages}, status: :unprocessable_entity
+      render json: {errors: @log.errors.full_messages}, status: :unprocessable_content
     end
   end
 
   private
 
   def symptom_params
-    params.require(:symptom_log).permit(
-      :date, :mood, :energy, :sleep, :physical,
-      :mental, :pain, :cravings, :discharge, :notes,
-      :sexual_intercourse
+    params.expect(
+      symptom_log: [:date, :mood, :energy, :sleep, :physical,
+        :mental, :pain, :cravings, :discharge, :notes,
+        :sexual_intercourse]
     )
   end
 

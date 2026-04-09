@@ -48,14 +48,14 @@ class SuperpowersController < ApplicationController
       update_streak!
       head :ok
     else
-      head :unprocessable_entity
+      head :unprocessable_content
     end
   end
 
   private
 
   def superpower_params
-    params.require(:superpower_log).permit(:date, :ratings, :notes)
+    params.expect(superpower_log: [:date, :ratings, :notes])
   end
 
   def update_streak!

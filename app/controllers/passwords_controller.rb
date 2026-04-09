@@ -5,18 +5,16 @@ class PasswordsController < ApplicationController
   def new
   end
 
-  def create
-    @user = User.find_by(email: params[:email])
-    if @user
-      @user.generate_token_for(:password_reset)
-      # PasswordMailer.reset(@user, token).deliver_later
-    end
-    redirect_to password_done_path
-  end
-
   def edit
     @user = User.find_by_token_for(:password_reset, params[:token])
     redirect_to new_session_path unless @user
+  end
+
+  def create
+    @user = User.find_by(email: params[:email])
+    # PasswordMailer.reset(@user, token).deliver_later
+    @user&.generate_token_for(:password_reset)
+    redirect_to password_done_path
   end
 
   def update
@@ -24,7 +22,7 @@ class PasswordsController < ApplicationController
     if @user&.update(password: params[:password])
       redirect_to new_session_path, notice: "Password updated"
     else
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 

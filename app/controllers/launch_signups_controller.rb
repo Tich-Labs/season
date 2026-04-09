@@ -5,12 +5,12 @@ class LaunchSignupsController < ApplicationController
     email = params[:email]&.downcase&.strip
 
     if email.blank?
-      render json: {error: "Email is required"}, status: :unprocessable_entity
+      render json: {error: "Email is required"}, status: :unprocessable_content
       return
     end
 
     unless /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i.match?(email)
-      render json: {error: "Please enter a valid email"}, status: :unprocessable_entity
+      render json: {error: "Please enter a valid email"}, status: :unprocessable_content
       return
     end
 

@@ -7,23 +7,23 @@ class CalendarEventsController < ApplicationController
     )
   end
 
+  def edit
+  end
+
   def create
     @event = current_user.calendar_events.build(event_params)
     if @event.save
       redirect_to calendar_path, notice: "Event created"
     else
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
-  end
-
-  def edit
   end
 
   def update
     if @event.update(event_params)
       redirect_to calendar_path, notice: "Event updated"
     else
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 
@@ -39,8 +39,8 @@ class CalendarEventsController < ApplicationController
   end
 
   def event_params
-    params.require(:calendar_event).permit(
-      :title, :date, :start_time, :end_time, :category, :notes
+    params.expect(
+      calendar_event: [:title, :date, :start_time, :end_time, :category, :notes]
     )
   end
 end

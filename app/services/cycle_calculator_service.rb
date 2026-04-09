@@ -31,7 +31,8 @@ class CycleCalculatorService
 
   def current_cycle_day
     return nil unless @last_period_start
-    ((Time.zone.today - @last_period_start.to_date).to_i % @cycle_length) + 1
+    ((Time.zone.today - @last_period_start.to_date).to_i %
+      @cycle_length) + 1
   end
 
   def phase_for_date(date)
@@ -63,7 +64,8 @@ class CycleCalculatorService
         phase: phase,
         season: SEASON_NAMES[phase],
         colour: PHASE_COLOURS[phase],
-        cycle_day: ((date - @last_period_start.to_date).to_i % @cycle_length) + 1
+        cycle_day: ((date - @last_period_start.to_date)
+          .to_i % @cycle_length) + 1
       }
     end
   end

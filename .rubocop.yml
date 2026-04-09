@@ -1,18 +1,17 @@
 inherit_from: .rubocop_todo.yml
 
-require:
+plugins:
   - rubocop-capybara
   - rubocop-performance
   - rubocop-rails
   - rubocop-rspec
   - rubocop-rspec_rails
-  - standard
 
 inherit_gem:
   standard: config/base.yml
 
 AllCops:
-  TargetRubyVersion: 3.3.3
+  TargetRubyVersion: 3.4
   NewCops: enable
   Exclude:
     - "bin/**"
@@ -29,8 +28,6 @@ RSpec/MultipleMemoizedHelpers:
   Enabled: false
 RSpecRails/InferredSpecType:
   Enabled: false
-Bundler/OrderedGems:
-  Enabled: true
 Rails/HasAndBelongsToMany:
   Enabled: false
 Rails/UnknownEnv:

@@ -81,4 +81,4 @@
   end
 end
 
-Rails.logger.info "Seeded #{CyclePhaseContent.count} phase content records"
+Rails.logger.debug { "Seeded #{CyclePhaseContent.count} phase content records" }

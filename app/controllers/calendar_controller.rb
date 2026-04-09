@@ -38,7 +38,7 @@ class CalendarController < ApplicationController
 
     # Cycle phase data — keyed by date, O(1) lookup
     if current_user.last_period_start
-      calculator  = CycleCalculatorService.new(current_user)
+      calculator = CycleCalculatorService.new(current_user)
       @cycle_by_date = calculator.month_data(@year, @month).index_by { |d| d[:date] }
     else
       @cycle_by_date = {}
@@ -59,7 +59,7 @@ class CalendarController < ApplicationController
     @prev_month = @date - 1.month
     @next_month = @date + 1.month
 
-    @current_phase  = current_user.current_phase
+    @current_phase = current_user.current_phase
     @current_season = @current_phase ?
       CycleCalculatorService::SEASON_NAMES[@current_phase] : nil
     @streak = current_user.streak&.current_streak || 0

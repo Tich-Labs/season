@@ -34,7 +34,7 @@ gem "pagy"
 gem "csv"
 gem "ransack"
 gem "groupdate"
-gem "dotenv-rails", groups: [ :development, :test ]
+gem "dotenv-rails", groups: [:development, :test]
 
 # Infrastructure
 gem "sentry-ruby"
@@ -49,7 +49,7 @@ gem "solid_queue"
 # Database
 gem "pg", "~> 1.5"
 
-gem "tzinfo-data", platforms: %i[ windows jruby ]
+gem "tzinfo-data", platforms: %i[windows jruby]
 gem "bootsnap", require: false
 gem "kamal", require: false
 gem "thruster", require: false
