@@ -13,6 +13,10 @@ bundle exec rails db:prepare
 # db:prepare only migrates the primary database when all databases share
 # the same DATABASE_URL, so the solid_cache/queue/cable tables never get
 # created otherwise — causing 500s on any request that touches Rails.cache.
-bundle exec rails db:cache:schema:load
-bundle exec rails db:queue:schema:load
-bundle exec rails db:cable:schema:load
+echo "Loading solid_cache schema..."
+bundle exec rails db:cache:schema:load || { echo "ERROR: solid_cache schema load failed"; exit 1; }
+echo "Loading solid_queue schema..."
+bundle exec rails db:queue:schema:load || { echo "ERROR: solid_queue schema load failed"; exit 1; }
+echo "Loading solid_cable schema..."
+bundle exec rails db:cable:schema:load || { echo "ERROR: solid_cable schema load failed"; exit 1; }
+echo "All solid schemas loaded successfully."

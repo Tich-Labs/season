@@ -58,6 +58,12 @@ Rails.application.routes.draw do
   get "up" => "rails/health#show", :as => :rails_health_check
   get "ping" => ->(env) { [200, {"Content-Type" => "text/plain"}, ["OK"]] }
   get "test" => "debug#test"
+  get "i18n-test", to: ->(env) {
+    # Test if I18n works
+    I18n.locale = I18n.default_locale
+    test = I18n.t("devise.registrations.new.subtitle", default: "NOT FOUND")
+    [200, {"Content-Type" => "text/plain"}, ["I18n test: #{test}"]]
+  }
   get "env", to: ->(env) {
     body = "Rails: #{Rails.env}\nEager: #{Rails.application.config.eager_load?}\n"
     body += "SECRET_KEY_BASE: #{ENV["SECRET_KEY_BASE"]&.present? ? "set" : "missing"}\n"
