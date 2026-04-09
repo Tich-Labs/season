@@ -1,6 +1,6 @@
 class PasswordsController < ApplicationController
   layout "launch"
-  allow_unauthenticated_access only: [:new, :create, :edit, :update]
+  allow_unauthenticated_access
 
   def new
   end

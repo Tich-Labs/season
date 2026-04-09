@@ -1,4 +1,5 @@
 class DebugController < ApplicationController
+  allow_unauthenticated_access
   skip_before_action :verify_authenticity_token, if: :json_request?
 
   def test

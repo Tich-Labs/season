@@ -1,32 +1,19 @@
 require "ostruct"
 
 class SettingsController < ApplicationController
-  # include Authentication # TEMP: disabled for dev
-  # before_action :require_onboarding_completed
+  before_action :require_onboarding_completed
 
   def edit
-    @user = current_user || OpenStruct.new(
-      name: "Demo User",
-      email: "demo@season.app",
-      cycle_length: 28,
-      period_length: 5,
-      contraception_type: nil
-    )
+    @user = current_user
   end
 
   def profile
-    @user = current_user || OpenStruct.new(
-      first_name: "Charlotte",
-      email: "Email@Musterfrau.de",
-      age: 22,
-      cycle_days: 28,
-      last_menstruation: "02.07.2025"
-    )
+    @user = current_user
   end
 
   def subscriptions
     @subscription = OpenStruct.new(
-      plan: "Freemium",
+      plan: current_user.plan || "Freemium",
       payment_method: "none"
     )
   end
@@ -56,6 +43,6 @@ class SettingsController < ApplicationController
   private
 
   def user_params
-    params.expect(user: [:name, :language, :cycle_length, :period_length, :contraception_type, :life_stage])
+    params.expect(user: [ :name, :language, :cycle_length, :period_length, :contraception_type, :life_stage ])
   end
 end
