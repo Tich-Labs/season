@@ -69,4 +69,20 @@ class CycleCalculatorService
       }
     end
   end
+
+  def week_data(week_start)
+    return [] unless @last_period_start
+    week_end = week_start + 6
+    (week_start..week_end).map do |date|
+      phase = phase_for_date(date)
+      {
+        date: date,
+        phase: phase,
+        season: SEASON_NAMES[phase],
+        colour: PHASE_COLOURS[phase],
+        cycle_day: ((date - @last_period_start.to_date)
+          .to_i % @cycle_length) + 1
+      }
+    end
+  end
 end

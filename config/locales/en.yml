@@ -92,12 +92,23 @@ en:
   passwords:
     update:
       password_updated: "Password updated"
+      password_updated_notice: "Password updated successfully"
+      unable_to_update: "Unable to update password"
   sessions:
     rate_limit_login:
       too_many_attempts: "Too many login attempts. Please try again later."
   settings:
     update:
       saved: "Settings saved"
+    update_profile:
+      confirmation_sent: "Confirmation email sent. Please check your inbox."
+      saved: "Saved"
+  bug_reports:
+    create:
+      thank_you: "Thank you for reporting this bug!"
+  feedback:
+    create:
+      thank_you: "Thank you for your feedback!"
   onboarding:
     require_user:
       sign_in_first: "Please sign in first"

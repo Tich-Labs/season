@@ -41,6 +41,7 @@ gem "sentry-ruby"
 gem "sentry-rails"
 gem "stripe"
 gem "httparty"
+gem "resend"
 
 # Background jobs & caching
 gem "solid_cable"

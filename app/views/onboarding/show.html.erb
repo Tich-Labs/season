@@ -1,4 +1,4 @@
-<div class="min-h-screen bg-white flex flex-col max-w-[430px] mx-auto px-8 pt-16 pb-12">
+<div class="min-h-screen bg-white flex flex-col max-w-[430px] mx-auto px-8 pt-[60px] pb-12">
 
   <% if @error %>
     <div class="bg-[#FDF0EE] rounded-xl px-4 py-3 text-sm text-[#933a35] mb-4">
@@ -6,86 +6,85 @@
     </div>
   <% end %>
 
-  <% case @step %>
-
   <%# ── Step 1: Name ──────────────────────────────────────────────── %>
-  <% when 1 %>
-    <div class="flex-1 flex flex-col justify-center">
-      <h2 class="text-[#933a35] text-[26px] font-medium leading-tight mb-10">
+  <% case @step when 1 %>
+    <div class="mt-[113px]">
+      <h2 class="text-[#933a35] text-xl font-medium leading-7 tracking-wider mb-[41px]">
         How would you like to be called?
       </h2>
 
       <%= form_with url: onboarding_path(1), method: :patch, id: "step1-form", local: true do |f| %>
+        <label for="onboarding_name" class="sr-only">Name</label>
         <%= f.text_field :name,
+            id: "onboarding_name",
             name: "user[name]",
             placeholder: "Name...",
             autocomplete: "name",
-            class: "w-full bg-[#F5EDE8] rounded-xl px-5 py-4 text-[#933a35] text-xl font-medium placeholder-[#C8A49A] focus:outline-none" %>
+            class: "w-80 h-12 bg-[#EDE1D5] opacity-50 rounded-lg px-4 text-[#933a35] text-xl font-medium placeholder-[#933a35]/50 tracking-wide" %>
       <% end %>
-    </div>
 
-    <div class="w-full">
       <%= button_tag "Submit",
           form: "step1-form", type: "submit",
-          class: "w-full bg-[#933a35] text-white rounded-xl py-5 text-base font-medium tracking-wide" %>
+          class: "w-80 h-12 bg-[#933a35] text-white rounded-lg text-xl font-medium tracking-wide mt-[81px]" %>
     </div>
+    <div class="flex-1"></div>
 
   <%# ── Step 2: Birthday ──────────────────────────────────────────── %>
   <% when 2 %>
-    <div class="flex-1 flex flex-col justify-center">
-      <h2 class="text-[#933a35] text-[26px] font-medium leading-tight mb-10">
+    <div class="mt-[113px]">
+      <h2 class="text-[#933a35] text-[22px] font-medium leading-[27px] tracking-[1.32px] mb-[43px]">
         Hello <%= current_user.first_name %>,<br>
         When were you born?
       </h2>
 
       <%= form_with url: onboarding_path(2), method: :patch, id: "step2-form", local: true do |f| %>
         <div class="flex gap-3">
-          <div class="flex flex-col items-start gap-1">
-            <label class="text-[#933a35] text-xs font-medium tracking-wide">Day</label>
-            <input type="number" name="birthday_day" min="1" max="31" placeholder="DD" autocomplete="bday-day"
-                   class="w-[70px] bg-[#F5EDE8] rounded-xl px-3 py-4 text-[#933a35] text-xl font-medium text-center placeholder-[#C8A49A] focus:outline-none">
+          <div class="flex flex-col items-start gap-2">
+            <label for="birthday_day" class="text-[#933a35] text-xs font-normal tracking-wide">Day</label>
+            <input type="number" name="birthday_day" id="birthday_day" min="1" max="31" placeholder="DD" autocomplete="bday-day"
+                   class="w-16 h-[52px] bg-[#ede1d5] opacity-50 rounded-lg px-3 text-[#933a35] text-[22px] font-medium text-center placeholder-[#933a35]/50 tracking-[0.66px]">
           </div>
-          <div class="flex flex-col items-start gap-1">
-            <label class="text-[#933a35] text-xs font-medium tracking-wide">Month</label>
-            <input type="number" name="birthday_month" min="1" max="12" placeholder="MM" autocomplete="bday-month"
-                   class="w-[70px] bg-[#F5EDE8] rounded-xl px-3 py-4 text-[#933a35] text-xl font-medium text-center placeholder-[#C8A49A] focus:outline-none">
+          <div class="flex flex-col items-start gap-2">
+            <label for="birthday_month" class="text-[#933a35] text-xs font-normal tracking-wide">Month</label>
+            <input type="number" name="birthday_month" id="birthday_month" min="1" max="12" placeholder="MM" autocomplete="bday-month"
+                   class="w-16 h-[52px] bg-[#ede1d5] opacity-50 rounded-lg px-3 text-[#933a35] text-[22px] font-medium text-center placeholder-[#933a35]/50 tracking-[0.66px]">
           </div>
-          <div class="flex flex-col items-start gap-1">
-            <label class="text-[#933a35] text-xs font-medium tracking-wide">Jahr</label>
-            <input type="number" name="birthday_year" min="1900" max="<%= Date.today.year %>" placeholder="JJJJ" autocomplete="bday-year"
-                   class="w-[110px] bg-[#F5EDE8] rounded-xl px-3 py-4 text-[#933a35] text-xl font-medium text-center placeholder-[#C8A49A] focus:outline-none">
+          <div class="flex flex-col items-start gap-2">
+            <label for="birthday_year" class="text-[#933a35] text-xs font-normal tracking-wide">Jahr</label>
+            <input type="number" name="birthday_year" id="birthday_year" min="1900" max="<%= Date.today.year %>" placeholder="JJJJ" autocomplete="bday-year"
+                   class="w-24 h-[52px] bg-[#ede1d5] opacity-50 rounded-lg px-3 text-[#933a35] text-[22px] font-medium text-center placeholder-[#933a35]/50 tracking-[0.66px]">
           </div>
         </div>
       <% end %>
-    </div>
 
-    <div class="w-full">
       <%= button_tag "Submit",
           form: "step2-form", type: "submit",
-          class: "w-full bg-[#933a35] text-white rounded-xl py-5 text-base font-medium tracking-wide" %>
+          class: "w-[322px] h-[52px] bg-[#933a35] text-white rounded-lg text-[22px] font-medium tracking-[0.66px] mt-[77px]" %>
     </div>
+    <div class="flex-1"></div>
 
   <%# ── Step 3: Regular cycle? ────────────────────────────────────── %>
   <% when 3 %>
-    <div class="flex-1 flex flex-col justify-center">
-      <h2 class="text-[#933a35] text-[26px] font-medium leading-tight mb-16">
+    <div class="mt-[113px]">
+      <h2 class="text-[#933a35] text-[22px] font-medium leading-[27px] tracking-[1.32px] mb-[43px]">
         Do you have a regular cycle?
       </h2>
 
-      <div class="flex flex-col gap-3">
+      <div class="flex flex-col gap-3 items-center">
         <%= form_with url: onboarding_path(3), method: :patch, local: true do |f| %>
           <%= f.hidden_field :has_regular_cycle, value: "true" %>
           <%= f.submit "Yes",
-              class: "w-full bg-[#933a35] text-white rounded-xl py-5 text-base font-medium cursor-pointer" %>
+              class: "w-[322px] h-[52px] bg-[#933a35] text-white rounded-lg text-[22px] font-medium tracking-[0.66px] cursor-pointer" %>
         <% end %>
 
         <%= form_with url: onboarding_path(3), method: :patch, local: true do |f| %>
           <%= f.hidden_field :has_regular_cycle, value: "false" %>
           <%= f.submit "No",
-              class: "w-full bg-transparent text-[#933a35] py-4 text-base font-medium cursor-pointer border-none" %>
+              class: "w-[322px] bg-transparent text-[#933a35] py-4 text-[22px] font-medium tracking-[0.66px] cursor-pointer border-none" %>
         <% end %>
       </div>
     </div>
+    <div class="flex-1"></div>
 
   <%# ── Step 4: Cycle length (scroll picker) ──────────────────────── %>
   <% when 4 %>
@@ -97,15 +96,15 @@
             We'll help you get your cycle back on track with exercise and nutrition tips
           </p>
           <button onclick="document.getElementById('no-problem-modal').remove()"
-                  class="w-full bg-[#933a35] text-white rounded-xl py-5 text-base font-medium">
+                  class="w-full h-12 bg-[#933a35] text-white rounded-lg text-xl font-medium">
             Okay, next
           </button>
         </div>
       </div>
     <% end %>
 
-    <div class="flex-1 flex flex-col justify-center">
-      <h2 class="text-[#933a35] text-[26px] font-medium leading-tight mb-1">
+    <div class="mt-[113px]">
+      <h2 class="text-[#933a35] text-[22px] font-medium leading-[27px] tracking-[1.32px] mb-1">
         How long is your average cycle?
       </h2>
       <p class="text-[#6B6B6B] text-sm mb-10">Small note: Cycles usually last 24-38 days.</p>
@@ -114,11 +113,11 @@
         <%= f.hidden_field :cycle_length, id: "cycle_length_value", value: "28" %>
 
         <div class="relative flex justify-center overflow-hidden" style="height:210px;">
-          <div class="absolute left-0 right-0 bg-[#F5EDE8] rounded-xl pointer-events-none"
+          <div class="absolute left-0 right-0 bg-[#F5EDE8] rounded-lg pointer-events-none"
                style="top:84px; height:42px;"></div>
 
           <div id="cycle-picker"
-               class="overflow-y-scroll flex flex-col items-center"
+               class="relative overflow-y-scroll flex flex-col items-center"
                style="height:210px; scroll-snap-type:y mandatory; -webkit-overflow-scrolling:touch; scrollbar-width:none;">
             <div style="min-height:84px; flex-shrink:0;"></div>
             <% (20..45).each do |d| %>
@@ -134,55 +133,62 @@
       <% end %>
     </div>
 
-    <div class="w-full flex flex-col gap-3">
+    <div class="flex-1"></div>
+
+    <div class="w-full flex flex-col gap-3 items-center">
       <%= button_tag "Submit", form: "step4-form", type: "submit",
-          class: "w-full bg-[#933a35] text-white rounded-xl py-5 text-base font-medium" %>
+          class: "w-[322px] h-[52px] bg-[#933a35] text-white rounded-lg text-[22px] font-medium tracking-[0.66px]" %>
 
       <%= form_with url: onboarding_path(4), method: :patch, local: true do |f| %>
         <%= f.hidden_field :skip_cycle_length, value: "1" %>
         <%= f.submit "Not sure",
-            class: "w-full bg-transparent text-[#933a35] py-3 text-base font-medium cursor-pointer border-none" %>
+            class: "w-[322px] bg-transparent text-[#933a35] py-3 text-[22px] font-medium tracking-[0.66px] cursor-pointer border-none" %>
       <% end %>
     </div>
 
   <%# ── Step 5: Hormonal birth control? ───────────────────────────── %>
   <% when 5 %>
-    <div class="flex-1 flex flex-col justify-center">
-      <h2 class="text-[#933a35] text-[26px] font-medium leading-tight mb-10">
+    <div class="mt-[113px]">
+      <h2 class="text-[#933a35] text-[22px] font-medium leading-[27px] tracking-[1.32px] mb-[43px]">
         Are you using hormonal birth control?
       </h2>
-      <p class="text-[#933a35] text-sm leading-relaxed">
-        Hormonal birth control alters your natural cycle. Season currently aligns with your natural cycle, but by tracking your symptoms and Superpower Moments, we create a personalized forecast for you.
-      </p>
 
-      <div class="flex flex-col gap-3 mt-12">
+      <div class="flex flex-col gap-3 items-center">
         <%= form_with url: onboarding_path(5), method: :patch, local: true do |f| %>
           <%= f.hidden_field :uses_hormonal_birth_control, value: "true" %>
           <%= f.submit "Yes",
-              class: "w-full bg-[#933a35] text-white rounded-xl py-5 text-base font-medium cursor-pointer" %>
+              class: "w-[322px] h-[52px] bg-[#933a35] text-white rounded-lg text-[22px] font-medium tracking-[0.66px] cursor-pointer" %>
         <% end %>
 
         <%= form_with url: onboarding_path(5), method: :patch, local: true do |f| %>
           <%= f.hidden_field :uses_hormonal_birth_control, value: "false" %>
           <%= f.submit "No",
-              class: "w-full bg-transparent text-[#933a35] py-4 text-base font-medium cursor-pointer border-none" %>
+              class: "w-[322px] bg-transparent text-[#933a35] py-4 text-[22px] font-medium tracking-[0.66px] cursor-pointer border-none" %>
         <% end %>
       </div>
+
+    </div>
+    <div class="flex-1"></div>
+
+    <div class="w-full max-w-80">
+      <p class="text-[#933a35] text-sm leading-relaxed">
+        Hormonal birth control alters your natural cycle. Season currently aligns with your natural cycle, but by tracking your symptoms and Superpower Moments, we create a personalized forecast for you.
+      </p>
     </div>
 
   <%# ── Step 6: Birth control method ─────────────────────────────── %>
   <% when 6 %>
-    <div class="flex-1 flex flex-col justify-center">
-      <h2 class="text-[#933a35] text-[26px] font-medium leading-tight mb-8">
+    <div class="mt-[113px]">
+      <h2 class="text-[#933a35] text-[22px] font-medium leading-[27px] tracking-[1.32px] mb-[43px]">
         What method of birth control do you use?
       </h2>
 
       <%= form_with url: onboarding_path(6), method: :patch, id: "step6-form", local: true do |f| %>
         <%= f.hidden_field :birth_control_method, id: "bc_method_value", value: "" %>
-        <div class="flex flex-col gap-3">
+        <div class="flex flex-col gap-3 items-center">
           <% ["Birth control pill", "Hormonering", "Hormoneplaster", "Hormone injection", "IUD", "Hormonal implant"].each do |method| %>
             <button type="button" data-method="<%= method %>"
-                    class="bc-method-btn w-full bg-[#F5EDE8] text-[#933a35] rounded-xl py-4 text-base font-medium text-center">
+                    class="bc-method-btn w-[322px] h-[52px] bg-[#ede1d5] opacity-50 text-[#933a35] rounded-lg text-[22px] font-medium tracking-[0.66px] text-center">
               <%= method %>
             </button>
           <% end %>
@@ -190,47 +196,51 @@
       <% end %>
     </div>
 
-    <div class="w-full mt-6">
+    <div class="flex-1"></div>
+
+    <div class="w-full flex justify-center">
       <%= button_tag "Submit", form: "step6-form", type: "submit",
-          class: "w-full bg-[#933a35] text-white rounded-xl py-5 text-base font-medium" %>
+          class: "w-[322px] h-[52px] bg-[#933a35] text-white rounded-lg text-[22px] font-medium tracking-[0.66px]" %>
     </div>
 
   <%# ── Step 7: Birth control reminder ────────────────────────────── %>
   <% when 7 %>
-    <div class="flex-1 flex flex-col justify-center">
-      <h2 class="text-[#933a35] text-[26px] font-medium leading-tight mb-16">
+    <div class="mt-[113px]">
+      <h2 class="text-[#933a35] text-[22px] font-medium leading-[27px] tracking-[1.32px] mb-[43px]">
         Would you like to set up a reminder for your birth control?
       </h2>
 
-      <div class="flex flex-col gap-3">
+      <div class="flex flex-col gap-3 items-center">
         <%= form_with url: onboarding_path(7), method: :patch, local: true do |f| %>
           <%= f.hidden_field :birth_control_reminder, value: "true" %>
           <%= f.submit "Yes",
-              class: "w-full bg-[#933a35] text-white rounded-xl py-5 text-base font-medium cursor-pointer" %>
+              class: "w-[322px] h-[52px] bg-[#933a35] text-white rounded-lg text-[22px] font-medium tracking-[0.66px] cursor-pointer" %>
         <% end %>
 
         <%= form_with url: onboarding_path(7), method: :patch, local: true do |f| %>
           <%= f.hidden_field :birth_control_reminder, value: "false" %>
           <%= f.submit "No",
-              class: "w-full bg-transparent text-[#933a35] py-4 text-base font-medium cursor-pointer border-none" %>
+              class: "w-[322px] bg-transparent text-[#933a35] py-4 text-[22px] font-medium tracking-[0.66px] cursor-pointer border-none" %>
         <% end %>
       </div>
     </div>
+    <div class="flex-1"></div>
 
   <%# ── Step 8: Are you taking any contraception? ─────────────────── %>
   <% when 8 %>
-    <div class="flex-1 flex flex-col justify-center">
-      <h2 class="text-[#933a35] text-[26px] font-medium leading-tight mb-8">
+    <div class="mt-[113px]">
+      <h2 class="text-[#933a35] text-[22px] font-medium leading-[27px] tracking-[1.32px] mb-[43px]">
         Hello <%= current_user.first_name %>,<br>
         Are you taking any contraception?
       </h2>
 
       <%= form_with url: onboarding_path(8), method: :patch, id: "step8-form", local: true do |f| %>
         <%= f.hidden_field :contraception, id: "contraception_value", value: "None" %>
-        <div class="flex flex-col gap-3">
+        <div class="flex flex-col gap-3 items-center">
           <% ["None", "Birth control pill", "Hormonering", "Hormoneplaster", "Hormone injection", "IUD", "Hormonal implant", "Condoms", "Other"].each do |c| %>
             <button type="button" data-contraception="<%= c %>"
-                    class="contraception-btn w-full bg-[#F5EDE8] text-[#933a35] rounded-xl py-4 text-base font-medium text-center">
+                    class="contraception-btn w-[322px] h-[52px] bg-[#ede1d5] text-[#933a35] rounded-lg text-[22px] font-medium tracking-[0.66px] text-center"
+                    style="opacity:<%= c == 'None' ? '1' : '0.45' %>;">
               <%= c %>
             </button>
           <% end %>
@@ -238,25 +248,28 @@
       <% end %>
     </div>
 
-    <div class="w-full mt-6">
+    <div class="flex-1"></div>
+
+    <div class="w-full flex justify-center">
       <%= button_tag "Submit", form: "step8-form", type: "submit",
-          class: "w-full bg-[#933a35] text-white rounded-xl py-5 text-base font-medium" %>
+          class: "w-[322px] h-[52px] bg-[#933a35] text-white rounded-lg text-[22px] font-medium tracking-[0.66px]" %>
     </div>
 
   <%# ── Step 9: Food preferences ───────────────────────────────────── %>
   <% when 9 %>
-    <div class="flex-1 flex flex-col justify-center">
-      <h2 class="text-[#933a35] text-[26px] font-medium leading-tight mb-8">
+    <div class="mt-[113px]">
+      <h2 class="text-[#933a35] text-[22px] font-medium leading-[27px] tracking-[1.32px] mb-[43px]">
         Hello <%= current_user.first_name %>,<br>
         Do you have any food preferences?
       </h2>
 
       <%= form_with url: onboarding_path(9), method: :patch, id: "step9-form", local: true do |f| %>
         <%= f.hidden_field :food_preference, id: "food_pref_value", value: "None" %>
-        <div class="flex flex-col gap-3">
+        <div class="flex flex-col gap-3 items-center">
           <% ["None", "Vegetarian", "Vegan", "Pollotaric", "Pescetarian"].each do |pref| %>
             <button type="button" data-food="<%= pref %>"
-                    class="food-btn w-full bg-[#F5EDE8] text-[#933a35] rounded-xl py-4 text-base font-medium text-center">
+                    class="food-btn w-[322px] h-[52px] bg-[#ede1d5] text-[#933a35] rounded-lg text-[22px] font-medium tracking-[0.66px] text-center"
+                    style="opacity:<%= pref == 'None' ? '1' : '0.45' %>;">
               <%= pref %>
             </button>
           <% end %>
@@ -264,9 +277,11 @@
       <% end %>
     </div>
 
-    <div class="w-full mt-6">
+    <div class="flex-1"></div>
+
+    <div class="w-full flex justify-center">
       <%= button_tag "Submit", form: "step9-form", type: "submit",
-          class: "w-full bg-[#933a35] text-white rounded-xl py-5 text-base font-medium" %>
+          class: "w-[322px] h-[52px] bg-[#933a35] text-white rounded-lg text-[22px] font-medium tracking-[0.66px]" %>
     </div>
 
   <%# ── Step 10: Last period calendar ─────────────────────────────── %>
@@ -302,30 +317,33 @@
              class="text-[#933a35] text-sm font-medium px-1">&gt;</a>
         </div>
 
-        <div class="border-b border-[#EDE1D5] mb-1"></div>
-
-        <div class="grid grid-cols-7" id="cal-grid" data-period-length="<%= current_user.period_length || 5 %>">
-          <% cal_days.each do |day| %>
-            <%
-              in_month = day.month == cal_start.month
-              is_today = day == today
-            %>
-            <div class="cal-day flex flex-col items-center py-3 cursor-pointer select-none"
-                 data-date="<%= day.iso8601 %>"
-                 data-in-month="<%= in_month %>">
-              <span class="text-sm w-8 h-8 flex items-center justify-center rounded-sm cal-day-label
-                           <%= is_today ? 'bg-[#933a35] text-white font-semibold' : (in_month ? 'text-[#933a35]' : 'text-[#C8A49A]') %>">
-                <%= day.day %>
-              </span>
+        <div id="cal-grid" data-period-length="<%= current_user.period_length || 5 %>">
+          <% cal_days.each_slice(7).with_index do |week, week_idx| %>
+            <div class="border-t border-[#EDE1D5]"></div>
+            <div class="cal-row grid grid-cols-7">
+              <% week.each do |day| %>
+                <%
+                  in_month = day.month == cal_start.month
+                  is_today = day == today
+                %>
+                <div class="cal-day flex flex-col items-center py-3 cursor-pointer select-none"
+                     data-date="<%= day.iso8601 %>"
+                     data-in-month="<%= in_month %>"
+                     data-today="<%= is_today %>">
+                  <span class="text-sm w-8 h-8 flex items-center justify-center cal-day-label
+                               <%= is_today ? 'bg-[#933a35] text-white font-semibold rounded-sm' : (in_month ? 'text-[#933a35]' : 'text-[#C8A49A]') %>">
+                    <%= day.day %>
+                  </span>
+                </div>
+              <% end %>
             </div>
           <% end %>
+          <div class="border-t border-[#EDE1D5]"></div>
         </div>
-
-        <div class="border-t border-[#EDE1D5] mt-1"></div>
       <% end %>
     </div>
 
-    <div class="w-full flex flex-col gap-2 mt-4">
+    <div class="w-full flex flex-col gap-2 mt-4 items-center">
       <a href="#" id="cal-clear" class="text-center text-[#933a35] text-sm hidden">clear</a>
 
       <%= form_with url: onboarding_path(10), method: :patch, id: "skip-period-form", local: true do |f| %>
@@ -334,25 +352,27 @@
 
       <button id="cal-submit-btn"
               onclick="document.getElementById('step10-form').submit()"
-              class="w-full bg-[#933a35] text-white rounded-xl py-5 text-base font-medium hidden">
+              class="w-[322px] h-[52px] bg-[#933a35] text-white rounded-lg text-[22px] font-medium tracking-[0.66px] hidden">
         Submit
       </button>
       <button id="cal-unsure-btn"
               onclick="document.getElementById('skip-period-form').submit()"
-              class="w-full bg-[#933a35] text-white rounded-xl py-5 text-base font-medium">
+              class="w-[322px] h-[52px] bg-[#933a35] text-white rounded-lg text-[22px] font-medium tracking-[0.66px]">
         Unsure...
       </button>
     </div>
 
   <%# ── Step 11: Cycle stage reminder ─────────────────────────────── %>
   <% when 11 %>
-    <div class="flex-1 flex flex-col justify-center items-center text-center">
-      <svg class="w-14 h-14 text-[#933a35] mb-6" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round"
-              d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
-      </svg>
+    <div class="mt-[113px]">
+      <div class="flex justify-center mb-6">
+        <svg class="w-14 h-14 text-[#933a35]" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round"
+                d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
+        </svg>
+      </div>
 
-      <h2 class="text-[#933a35] text-[26px] font-medium leading-tight mb-6">
+      <h2 class="text-[#933a35] text-[22px] font-medium leading-[27px] tracking-[1.32px] mb-[43px]">
         Would you like a reminder of your cycle stages to be more prepared?
       </h2>
       <p class="text-[#933a35] text-sm leading-relaxed">
@@ -360,16 +380,18 @@
       </p>
     </div>
 
-    <div class="w-full flex flex-col gap-3">
+    <div class="flex-1"></div>
+
+    <div class="w-full flex flex-col gap-3 items-center">
       <%= form_with url: onboarding_path(11), method: :patch, local: true do |f| %>
         <%= f.submit "Submit",
-            class: "w-full bg-[#933a35] text-white rounded-xl py-5 text-base font-medium cursor-pointer" %>
+            class: "w-[322px] h-[52px] bg-[#933a35] text-white rounded-lg text-[22px] font-medium tracking-[0.66px] cursor-pointer" %>
       <% end %>
 
       <%= form_with url: onboarding_path(11), method: :patch, local: true do |f| %>
         <%= f.hidden_field :skip_reminder, value: "1" %>
         <%= f.submit "Maybe later",
-            class: "w-full bg-transparent text-[#933a35] py-3 text-base font-medium cursor-pointer border-none" %>
+            class: "w-[322px] bg-transparent text-[#933a35] py-3 text-[22px] font-medium tracking-[0.66px] cursor-pointer border-none" %>
       <% end %>
     </div>
 
@@ -377,7 +399,7 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('turbo:load', function () {
 
   // ── Step 4: Cycle length drum picker ──────────────────────────────
   var picker = document.getElementById('cycle-picker');
@@ -408,30 +430,25 @@ document.addEventListener('DOMContentLoaded', function () {
   document.querySelectorAll('.bc-method-btn').forEach(function (btn) {
     btn.addEventListener('click', function () {
       document.querySelectorAll('.bc-method-btn').forEach(function (b) {
-        b.style.background = '#F5EDE8';
-        b.style.color      = '#933a35';
+        b.style.opacity    = '0.45';
+        b.style.fontWeight = '';
       });
-      this.style.background = '#933a35';
-      this.style.color      = '#ffffff';
+      this.style.opacity    = '1';
+      this.style.fontWeight = '600';
       document.getElementById('bc_method_value').value = this.dataset.method;
     });
   });
 
   // ── Step 8: Contraception ─────────────────────────────────────────
   (function () {
-    var noneBtn = document.querySelector('.contraception-btn[data-contraception="None"]');
-    if (noneBtn) {
-      noneBtn.style.background = '#933a35';
-      noneBtn.style.color      = '#ffffff';
-    }
     document.querySelectorAll('.contraception-btn').forEach(function (btn) {
       btn.addEventListener('click', function () {
         document.querySelectorAll('.contraception-btn').forEach(function (b) {
-          b.style.background = '#F5EDE8';
-          b.style.color      = '#933a35';
+          b.style.opacity    = '0.45';
+          b.style.fontWeight = '';
         });
-        this.style.background = '#933a35';
-        this.style.color      = '#ffffff';
+        this.style.opacity    = '1';
+        this.style.fontWeight = '600';
         document.getElementById('contraception_value').value = this.dataset.contraception;
       });
     });
@@ -439,19 +456,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // ── Step 9: Food preferences ──────────────────────────────────────
   (function () {
-    var noneFood = document.querySelector('.food-btn[data-food="None"]');
-    if (noneFood) {
-      noneFood.style.background = '#933a35';
-      noneFood.style.color      = '#ffffff';
-    }
     document.querySelectorAll('.food-btn').forEach(function (btn) {
       btn.addEventListener('click', function () {
         document.querySelectorAll('.food-btn').forEach(function (b) {
-          b.style.background = '#F5EDE8';
-          b.style.color      = '#933a35';
+          b.style.opacity    = '0.45';
+          b.style.fontWeight = '';
         });
-        this.style.background = '#933a35';
-        this.style.color      = '#ffffff';
+        this.style.opacity    = '1';
+        this.style.fontWeight = '600';
         document.getElementById('food_pref_value').value = this.dataset.food;
       });
     });
@@ -459,69 +471,79 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // ── Step 10: Calendar ─────────────────────────────────────────────
   var calGrid = document.getElementById('cal-grid');
-  if (!calGrid) return;
+  if (calGrid) {
+    var periodLength  = parseInt(calGrid.dataset.periodLength || '5', 10);
+    var selectedStart = null;
+    var clearLink     = document.getElementById('cal-clear');
+    var submitBtn     = document.getElementById('cal-submit-btn');
+    var unsureBtn     = document.getElementById('cal-unsure-btn');
+    var periodInput   = document.getElementById('last_period_value');
 
-  var periodLength  = parseInt(calGrid.dataset.periodLength || '5', 10);
-  var selectedStart = null;
-  var clearLink     = document.getElementById('cal-clear');
-  var submitBtn     = document.getElementById('cal-submit-btn');
-  var unsureBtn     = document.getElementById('cal-unsure-btn');
-  var periodInput   = document.getElementById('last_period_value');
+    function isoToDate(str) {
+      var parts = str.split('-');
+      return new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+    }
 
-  function isoToDate(str) {
-    var parts = str.split('-');
-    return new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
-  }
+    function renderSelection() {
+      var startD = selectedStart ? isoToDate(selectedStart) : null;
 
-  function renderSelection() {
-    var startD = selectedStart ? isoToDate(selectedStart) : null;
-
-    document.querySelectorAll('.cal-day').forEach(function (cell) {
-      var label    = cell.querySelector('.cal-day-label');
-      var d        = isoToDate(cell.dataset.date);
-      var isToday  = label.classList.contains('bg-\\[#933a35\\]') && label.classList.contains('font-semibold');
-      var inMonth  = cell.dataset.inMonth === 'true';
-      var selected = false;
+      // Reset all rows
+      calGrid.querySelectorAll('.cal-row').forEach(function (row) {
+        row.style.background = '';
+      });
+      // Reset all day labels
+      calGrid.querySelectorAll('.cal-day').forEach(function (cell) {
+        var label   = cell.querySelector('.cal-day-label');
+        var inMonth = cell.dataset.inMonth === 'true';
+        var isToday = cell.dataset.today === 'true';
+        if (!isToday) {
+          label.style.color      = inMonth ? '#933a35' : '#C8A49A';
+          label.style.background = '';
+        }
+      });
 
       if (startD) {
         var endD = new Date(startD);
         endD.setDate(endD.getDate() + periodLength - 1);
-        selected = (d >= startD && d <= endD);
+
+        // Highlight entire rows that overlap the period range
+        calGrid.querySelectorAll('.cal-row').forEach(function (row) {
+          var cells     = Array.from(row.querySelectorAll('.cal-day'));
+          var firstDate = isoToDate(cells[0].dataset.date);
+          var lastDate  = isoToDate(cells[cells.length - 1].dataset.date);
+
+          if (firstDate <= endD && lastDate >= startD) {
+            row.style.background = '#933a35';
+            cells.forEach(function (cell) {
+              var label = cell.querySelector('.cal-day-label');
+              label.style.color      = '#ffffff';
+              label.style.background = '';
+            });
+          }
+        });
       }
 
-      if (selected) {
-        cell.style.background    = '#933a35';
-        cell.style.borderRadius  = '4px';
-        label.style.color        = '#ffffff';
-        label.style.background   = 'transparent';
-      } else {
-        cell.style.background   = '';
-        cell.style.borderRadius = '';
-        label.style.background  = isToday ? '#933a35' : '';
-        label.style.color       = isToday ? '#ffffff' : (inMonth ? '#933a35' : '#C8A49A');
-      }
+      clearLink.classList.toggle('hidden', !selectedStart);
+      submitBtn.classList.toggle('hidden', !selectedStart);
+      unsureBtn.classList.toggle('hidden', !!selectedStart);
+
+      if (selectedStart) periodInput.value = selectedStart;
+    }
+
+    calGrid.querySelectorAll('.cal-day').forEach(function (cell) {
+      cell.addEventListener('click', function () {
+        selectedStart = this.dataset.date;
+        renderSelection();
+      });
     });
 
-    clearLink.classList.toggle('hidden',  !selectedStart);
-    submitBtn.classList.toggle('hidden',  !selectedStart);
-    unsureBtn.classList.toggle('hidden',  !!selectedStart);
-
-    if (selectedStart) periodInput.value = selectedStart;
-  }
-
-  document.querySelectorAll('.cal-day').forEach(function (cell) {
-    cell.addEventListener('click', function () {
-      selectedStart = this.dataset.date;
+    clearLink.addEventListener('click', function (e) {
+      e.preventDefault();
+      selectedStart = null;
       renderSelection();
     });
-  });
 
-  clearLink.addEventListener('click', function (e) {
-    e.preventDefault();
-    selectedStart = null;
     renderSelection();
-  });
-
-  renderSelection();
+  }
 });
 </script>

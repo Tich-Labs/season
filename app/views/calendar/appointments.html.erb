@@ -2,20 +2,14 @@
 <% content_for(:header_right) do %>
   <div class="flex items-center gap-1">
     <%= link_to calendar_appointments_path(date: @prev_month.to_s),
+          aria: { label: "Previous month" },
           class: "w-10 h-10 flex items-center justify-center text-[#933a35]" do %>
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6" /></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><polyline points="15 18 9 12 15 6" /></svg>
     <% end %>
     <%= link_to calendar_appointments_path(date: @next_month.to_s),
+          aria: { label: "Next month" },
           class: "w-10 h-10 flex items-center justify-center text-[#933a35]" do %>
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6" /></svg>
-    <% end %>
-    <%# Toggle to grid view %>
-    <%= link_to user_root_path(date: @date.to_s),
-          class: "w-10 h-10 flex items-center justify-center text-[#933a35]" do %>
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-        <rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" />
-        <rect x="3" y="14" width="7" height="7" /><rect x="14" y="14" width="7" height="7" />
-      </svg>
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 18 15 12 9 6" /></svg>
     <% end %>
   </div>
 <% end %>
@@ -88,7 +82,7 @@
 
                   <%# Category icon %>
                   <div style="width:20px; height:20px; flex-shrink:0; color:<%= phase_colour %>;">
-                    <%= category_icon.(event.category) %>
+                    <%= sanitize category_icon.(event.category) %>
                   </div>
 
                   <%# Title %>
@@ -120,7 +114,8 @@
 <%# ── FAB: add event ── %>
 <div style="position:fixed; bottom:80px; left:50%; transform:translateX(-50%); z-index:40;">
   <%= link_to new_calendar_event_path(date: Date.today.to_s),
+        aria: { label: "Add event" },
         style: "width:56px; height:56px; border-radius:28px; background:#EDE1D5; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 14px rgba(147,58,53,0.18); text-decoration:none;" do %>
-    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="#933a35" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" /></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="#933a35" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" /></svg>
   <% end %>
 </div>

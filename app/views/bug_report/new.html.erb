@@ -1,0 +1,22 @@
+<% content_for(:page_title) { "Bug Report" } %>
+
+<div style="background:#FAF7F4; min-height:100vh; padding:24px 16px 100px; font-family:'Montserrat',sans-serif;">
+  <div style="max-width:430px; margin:0 auto;">
+    
+    <p style="color:#6B6B6B; font-size:14px; margin-bottom:24px;">Found something not working? Let us know what happened.</p>
+
+    <form action="/bug_report" method="post" style="display:flex; flex-direction:column; gap:16px;">
+      <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+      
+      <textarea name="message" rows="8" 
+                style="width:100%; padding:16px; border:1px solid #ede1d5; border-radius:12px; font-family:'Montserrat',sans-serif; font-size:14px; resize:none; background:#FFFFFF;"
+                placeholder="Describe what happened..."></textarea>
+      
+      <button type="submit" 
+              style="width:100%; padding:14px; background:#933a35; color:white; border:none; border-radius:12px; font-family:'Montserrat',sans-serif; font-size:16px; font-weight:500; cursor:pointer;">
+        Submit Report
+      </button>
+    </form>
+
+  </div>
+</div>

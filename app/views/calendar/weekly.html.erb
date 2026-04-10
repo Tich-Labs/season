@@ -1,0 +1,130 @@
+<% content_for(:page_title) { "Week" } %>
+<% content_for(:header_right) do %>
+  <div class="flex items-center gap-1">
+    <%= link_to calendar_weekly_path(date: @prev_week.to_s),
+          class: "w-10 h-10 flex items-center justify-center text-[#933a35]" do %>
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6" /></svg>
+    <% end %>
+    <span class="text-[#933a35] text-sm font-medium px-2"><%= @week_start.strftime("%b %d") %> - <%= @week_end.strftime("%b %d") %></span>
+    <%= link_to calendar_weekly_path(date: @next_week.to_s),
+          class: "w-10 h-10 flex items-center justify-center text-[#933a35]" do %>
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6" /></svg>
+    <% end %>
+  </div>
+<% end %>
+
+<%
+  phase_colours = {
+    "menstrual" => "#933a35",
+    "follicular" => "#D18D83",
+    "ovulation" => "#F5C6AD",
+    "luteal" => "#EDE1D5"
+  }
+  hour_px = 48
+  timeline_hours = (6..22).to_a
+%>
+
+<div style="background:#FAF7F4; min-height:100vh; padding-bottom:80px;">
+  <div style="max-width:430px; width:100%; margin:0 auto;">
+
+    <%# ── Week header ── %>
+    <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:0; padding:12px 8px 8px; border-bottom:1px solid #EDE1D5; background:#FFFFFF;">
+      <% week_days = %w[Mo Di Mi Do Fr Sa So] %>
+      <% @week_dates.each_with_index do |day, i| %>
+        <% is_today = day == Date.today %>
+        <% phase = @cycle_by_date[day]&.dig(:phase) %>
+        <% colour = phase_colours[phase] || "#933a35" %>
+        <% is_weekend = i >= 5 %>
+        <div style="text-align:center;">
+          <div style="font-size:11px; color:#6B6B6B; font-weight:500; margin-bottom:4px;"><%= week_days[i] %></div>
+          <% if is_today %>
+            <div style="width:28px; height:28px; border-radius:50%; background:<%= colour %>; color:#FFFFFF; font-size:14px; font-weight:600; display:inline-flex; align-items:center; justify-content:center;">
+              <%= day.day %>
+            </div>
+          <% else %>
+            <div style="font-size:14px; color:<%= is_weekend ? '#D18D83' : '#933a35' %>; font-weight:500;">
+              <%= day.day %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+
+    <%# ── Week legend ── %>
+    <% if current_user.last_period_start %>
+      <div style="padding:8px 16px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+        <% phase_colours.each do |phase, colour| %>
+          <div style="display:flex; align-items:center; gap:4px;">
+            <span style="width:8px; height:8px; border-radius:50%; background:<%= colour %>;"></span>
+            <span style="font-size:10px; color:#6B6B6B; text-transform:capitalize;"><%= phase %></span>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+
+    <%# ── Timeline grid ── %>
+    <div style="position:relative; overflow-y:auto; max-height:60vh;">
+      <div style="display:grid; grid-template-columns:40px 1fr; gap:0;">
+
+        <%# Time column %>
+        <div style="border-right:1px solid #EDE1D5;">
+          <% timeline_hours.each do |hour| %>
+            <div style="height:<%= hour_px %>px; border-bottom:1px solid #F5EDE8;">
+              <span style="font-size:10px; color:#6B6B6B; padding:2px 4px; display:block;">
+                <%= format("%02d:00", hour) %>
+              </span>
+            </div>
+          <% end %>
+        </div>
+
+        <%# Days columns %>
+        <div style="display:grid; grid-template-columns:repeat(7,1fr);">
+          <% @week_dates.each_with_index do |day, day_idx| %>
+            <% phase = @cycle_by_date[day]&.dig(:phase) %>
+            <% colour = phase_colours[phase] || "#FAF7F4" %>
+            <% events = @events_by_date[day] || [] %>
+            <% is_weekend = day_idx >= 5 %>
+
+            <div style="border-right:<%= is_weekend ? '2px' : '1px' %> solid <%= is_weekend ? '#F5C6AD' : '#EDE1D5' %>; position:relative;">
+              <%# Hour grid lines %>
+              <% timeline_hours.each do |hour| %>
+                <div style="height:<%= hour_px %>px; border-bottom:1px solid #F5EDE8;"></div>
+              <% end %>
+
+              <%# Phase background band (24h) %>
+              <div style="position:absolute; top:0; left:0; right:0; bottom:0; background:<%= colour %>; opacity:0.15; pointer-events:none;"></div>
+
+              <%# Events positioned on timeline %>
+              <% events.each do |event| %>
+                <% start_hour = event.start_time&.hour || 9 %>
+                <% end_hour = event.end_time&.hour || 10 %>
+                <% top_px = (start_hour - 6) * hour_px + (event.start_time&.min || 0) * hour_px / 60 %>
+                <% height_px = [(end_hour - start_hour) * hour_px, hour_px].max %>
+                <%= link_to calendar_event_path(event),
+                      style: "position:absolute; left:2px; right:2px; top:#{top_px}px; height:#{height_px}px; background:#FFFFFF; border-left:3px solid #{colour}; border-radius:4px; padding:4px 6px; font-size:11px; color:#933a35; text-decoration:none; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,0.1);" do %>
+                  <span style="font-weight:600; display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+                    <%= event.title %>
+                  </span>
+                  <% if event.start_time %>
+                    <span style="font-size:10px; color:#6B6B6B;">
+                      <%= event.start_time.strftime("%H:%M") %>
+                    </span>
+                  <% end %>
+                <% end %>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<%# ── FAB: add event ── %>
+<div style="position:fixed; bottom:80px; left:50%; transform:translateX(-50%); z-index:40;">
+  <%= link_to new_calendar_event_path(date: Date.today.to_s),
+        style: "width:56px; height:56px; border-radius:28px; background:#933a35; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(147,58,53,0.3); text-decoration:none;" do %>
+    <span style="color:#ffffff; font-size:28px; font-weight:300; line-height:1;">+</span>
+  <% end %>
+</div>

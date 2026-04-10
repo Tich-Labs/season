@@ -18,8 +18,9 @@ Rails.application.routes.draw do
   resource :registration, only: [:new, :create]
   resource :session, only: [:new, :create, :destroy]
 
-  # Devise for password recovery
-  devise_for :users, only: [:password], controllers: {passwords: "passwords"}
+  # Devise for password recovery + OmniAuth
+  devise_for :users,
+    omniauth_providers: [:google_oauth2, :facebook, :apple]
 
   # Custom password routes at /password/*
   get "password/new", to: redirect("/users/password/new")
@@ -40,14 +41,12 @@ Rails.application.routes.draw do
 
   get "invite/:token", to: "invites#show", as: :invite
   patch "invite/:token", to: "invites#update"
-  resources :onboarding, only: [:show, :update] do
-    collection do
-      get :finish
-    end
-  end
+  get "onboarding/finish", to: "onboarding#finish", as: :onboarding_finish
+  resources :onboarding, only: [:show, :update]
 
   get "calendar", to: "calendar#index", as: :user_root
   get "calendar", to: "calendar#index", as: :calendar
+  get "calendar/weekly", to: "calendar#weekly", as: :calendar_weekly
   get "calendar/appointments", to: "calendar#appointments", as: :calendar_appointments
   resources :calendar_events, except: [:index, :show]
   resources :tracking, only: [:index, :create]
@@ -59,7 +58,14 @@ Rails.application.routes.draw do
     get :profile, on: :collection
     get :subscriptions, on: :collection
     get :calendar, on: :collection
+    get :notifications, on: :collection
+    patch :update_avatar, on: :collection
+    patch :update_profile, on: :collection
   end
+  get "feedback", to: "feedback#new", as: :feedback
+  post "feedback", to: "feedback#create"
+  get "bug_report", to: "bug_report#new", as: :bug_report
+  post "bug_report", to: "bug_report#create"
 
   namespace :admin do
     resources :users, only: [:index, :show]

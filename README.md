@@ -204,11 +204,41 @@ Reference: [Rails Migrations Best Practices](https://www.visuality.pl/posts/rail
 
 | # | Severity | Issue | File |
 |---|----------|-------|------|
-| 1 | CRITICAL | `SettingsController` authentication commented out -- settings routes publicly accessible | `settings_controller.rb:4` |
-| 2 | CRITICAL | PWA manifest has `name: "MasterTemplate"` and `theme_color: "red"` | `pwa/manifest.json.erb` |
-| 3 | CRITICAL | `OmniauthController` calls `User.find_or_create_from_oauth` but User model only defines `User.from_omniauth` -- OAuth login crashes | `omniauth_controller.rb:40` |
-| 4 | MEDIUM | `theme-color` meta tag is `#8E3E36` not `#933a35` | `layouts/application.html.erb:14` |
+| 1 | ~~CRITICAL~~ DONE | `SettingsController` authentication commented out -- settings routes publicly accessible | `settings_controller.rb:4` |
+| 2 | ~~CRITICAL~~ DONE | PWA manifest has `name: "MasterTemplate"` and `theme_color: "red"` | `pwa/manifest.json.erb` |
+| 3 | ~~CRITICAL~~ DONE | `OmniauthController` calls `User.find_or_create_from_oauth` but User model only defines `User.from_omniauth` -- OAuth login crashes | `omniauth_controller.rb:40` |
+| 4 | ~~MEDIUM~~ DONE | `theme-color` meta tag is `#8E3E36` not `#933a35` | `layouts/application.html.erb:14` |
 | 5 | MEDIUM | Burger menu text labels hardcoded English -- not using `t()` helpers | `layouts/_burger_menu.html.erb` |
 | 6 | MEDIUM | Duplicate columns on users table: `locale`+`language`, `birthday`+`age`, `last_period_start`+`last_menstruation`, `cycle_length`+`cycle_days` | `db/schema.rb` |
-| 7 | MEDIUM | `update_streak!` duplicated in `SymptomsController` and `SuperpowersController` | Both controllers |
-| 8 | MEDIUM | `user_signed_in?` (Devise helper) mixed with `authenticated?` (custom) in layout | `layouts/application.html.erb:20` |
+| 7 | ~~MEDIUM~~ DONE | `update_streak!` duplicated in `SymptomsController` and `SuperpowersController` | Both controllers |
+| 8 | ~~MEDIUM~~ DONE | `user_signed_in?` (Devise helper) mixed with `authenticated?` (custom) in layout | `layouts/application.html.erb:20` |
+
+---
+
+## 🚀 Post-Launch / Backlog
+
+### Social Login Setup (OAuth)
+
+OAuth routes are wired but credentials not yet configured. To enable Google/FB/Apple login:
+
+1. **Google OAuth** (Google Cloud Console)
+   - Create OAuth 2.0 credentials
+   - Authorized redirect URI: `https://season-v2.onrender.com/users/auth/google_oauth2/callback`
+   - Add to `.env`: `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`
+
+2. **Facebook OAuth** (Facebook Developer Portal)
+   - Create Facebook Login app
+   - Valid OAuth Redirect URI: `https://season-v2.onrender.com/users/auth/facebook/callback`
+   - Add to `.env`: `FACEBOOK_APP_ID`, `FACEBOOK_APP_SECRET`
+
+3. **Apple OAuth** (Apple Developer Portal)
+   - Configure Sign in with Apple
+   - Return URL: `https://season-v2.onrender.com/users/auth/apple/callback`
+   - Add to `.env`: `APPLE_CLIENT_ID`, `APPLE_CLIENT_SECRET`
+
+### Other Backlog Items
+
+- [ ] Implement calendar sync (Settings → Links & Syncs)
+- [ ] Dark mode toggle
+- [ ] Notifications & Reminders UI
+- [ ] Apple App Store / Google Play links

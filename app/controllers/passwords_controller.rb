@@ -1,28 +1,34 @@
 class PasswordsController < ApplicationController
   layout "launch"
   allow_unauthenticated_access
+  skip_before_action :require_onboarding_completed
 
   def new
   end
 
   def edit
     @user = User.find_by_token_for(:password_reset, params[:token])
-    redirect_to new_session_path unless @user
+    if @user.nil?
+      redirect_to password_error_already_reset_path
+    end
   end
 
   def create
     @user = User.find_by(email: params[:email])
-    # PasswordMailer.reset(@user, token).deliver_later
-    @user&.generate_token_for(:password_reset)
-    redirect_to password_done_path
+    if @user.present?
+      @user.generate_token_for(:password_reset)
+      redirect_to password_done_path
+    else
+      redirect_to password_error_wrong_email_path
+    end
   end
 
   def update
     @user = User.find_by_token_for(:password_reset, params[:token])
     if @user&.update(password: params[:password])
-      redirect_to new_session_path, notice: t(".password_updated")
+      redirect_to new_session_path, notice: t(".password_updated_notice")
     else
-      render :edit, status: :unprocessable_content
+      redirect_to password_error_contact_path, alert: t(".unable_to_update")
     end
   end
 
@@ -32,10 +38,10 @@ class PasswordsController < ApplicationController
   def error_already_reset
   end
 
-  def error_inbox_full
+  def error_wrong_email
   end
 
-  def error_wrong_email
+  def error_inbox_full
   end
 
   def error_contact

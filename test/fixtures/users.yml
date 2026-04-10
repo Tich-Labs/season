@@ -7,6 +7,10 @@ alice:
   period_length: 5
   last_period_start: "<%= 14.days.ago.to_date %>"
   language: en
+  birthday: "<%= 25.years.ago.to_date %>"
+  has_regular_cycle: true
+  uses_hormonal_birth_control: false
+  food_preference: None
 
 bob:
   email: bob@example.com

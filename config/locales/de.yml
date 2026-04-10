@@ -86,12 +86,23 @@ de:
   passwords:
     update:
       password_updated: "Passwort aktualisiert"
+      password_updated_notice: "Passwort erfolgreich aktualisiert"
+      unable_to_update: "Passwort konnte nicht aktualisiert werden"
   sessions:
     rate_limit_login:
       too_many_attempts: "Zu viele Anmeldeversuche. Bitte versuche es später erneut."
   settings:
     update:
       saved: "Einstellungen gespeichert"
+    update_profile:
+      confirmation_sent: "Bestätigungsmail gesendet. Bitte überprüfe deinen Posteingang."
+      saved: "Gespeichert"
+  bug_reports:
+    create:
+      thank_you: "Vielen Dank für deine Fehlermeldung!"
+  feedback:
+    create:
+      thank_you: "Vielen Dank für dein Feedback!"
   onboarding:
     require_user:
       sign_in_first: "Bitte melde dich zuerst an"

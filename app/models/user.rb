@@ -1,10 +1,12 @@
 class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
     :recoverable, :rememberable, :validatable,
+    :confirmable,
     :omniauthable, omniauth_providers: [:google_oauth2, :facebook, :apple]
 
   validates :name, presence: true, if: :onboarding_completed?
 
+  has_one_attached :avatar
   has_many :cycle_entries, dependent: :destroy
   has_many :calendar_events, dependent: :destroy
   has_many :symptom_logs, dependent: :destroy

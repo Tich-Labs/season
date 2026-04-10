@@ -28,6 +28,38 @@ class CalendarController < ApplicationController
     @next_month = @date + 1.month
   end
 
+  def weekly
+    @date = params[:date] ? Date.parse(params[:date]) : Time.zone.today
+    @week_start = @date.beginning_of_week
+    @week_end = @date.end_of_week
+
+    # Get week dates
+    @week_dates = (@week_start..@week_end).to_a
+
+    # Calculate previous/next week
+    @prev_week = @week_start - 1.week
+    @next_week = @week_start + 1.week
+
+    # Get events for this week
+    week_range = @week_start..@week_end
+    @events_by_date = current_user.calendar_events
+      .where(date: week_range)
+      .order(:date, :start_time)
+      .group_by(&:date)
+
+    # Cycle data for the week
+    if current_user.last_period_start
+      calculator = CycleCalculatorService.new(current_user)
+      @cycle_by_date = calculator.week_data(@week_start).index_by { |d| d[:date] }
+    else
+      @cycle_by_date = {}
+    end
+
+    @current_phase = current_user.current_phase
+    @current_season = @current_phase ?
+      CycleCalculatorService::SEASON_NAMES[@current_phase] : nil
+  end
+
   def index
     @date = params[:date] ? Date.parse(params[:date]) : Time.zone.today
     @year = @date.year

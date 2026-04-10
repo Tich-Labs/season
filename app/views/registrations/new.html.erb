@@ -20,33 +20,33 @@
       <%= t('devise.registrations.new.fast_lane', default: 'Use the fast lane:') %>
     </p>
 
-    <div style="display:flex; justify-content:center; gap:19px;" data-controller="coming-soon">
-      <%# Apple — coming soon %>
-      <button type="button"
-              data-action="click->coming-soon#show"
-              style="width:59px; height:52px; background:#000000; border-radius:8px; display:flex; align-items:center; justify-content:center; cursor:not-allowed; opacity:0.5; border:none;">
+    <div style="display:flex; justify-content:center; gap:19px;">
+      <%# Apple %>
+      <%= button_to omniauth_authorize_path(:user, :apple),
+            method: :post,
+            data: { turbo: false },
+            aria: { label: "Sign up with Apple" },
+            style: "width:59px; height:52px; background:#000000; border-radius:8px; display:flex; align-items:center; justify-content:center; border:none; padding:0;" do %>
         <%= image_tag "apple-logo.png", alt: "Apple", style: "width:35px; height:35px; object-fit:contain;" %>
-      </button>
+      <% end %>
 
-      <%# Facebook — coming soon %>
-      <button type="button"
-              data-action="click->coming-soon#show"
-              style="width:59px; height:52px; background:#448AFF; border-radius:8px; display:flex; align-items:center; justify-content:center; cursor:not-allowed; opacity:0.5; border:none;">
+      <%# Facebook %>
+      <%= button_to omniauth_authorize_path(:user, :facebook),
+            method: :post,
+            data: { turbo: false },
+            aria: { label: "Sign up with Facebook" },
+            style: "width:59px; height:52px; background:#448AFF; border-radius:8px; display:flex; align-items:center; justify-content:center; border:none; padding:0;" do %>
         <%= image_tag "facebook.png", alt: "Facebook", style: "width:45px; height:45px; object-fit:contain;" %>
-      </button>
+      <% end %>
 
-      <%# Google — coming soon %>
-      <button type="button"
-              data-action="click->coming-soon#show"
-              style="width:59px; height:52px; background:#ffffff; border:1px solid #dddddd; border-radius:8px; display:flex; align-items:center; justify-content:center; cursor:not-allowed; opacity:0.5;">
+      <%# Google %>
+      <%= button_to omniauth_authorize_path(:user, :google_oauth2),
+            method: :post,
+            data: { turbo: false },
+            aria: { label: "Sign up with Google" },
+            style: "width:59px; height:52px; background:#ffffff; border:1px solid #dddddd; border-radius:8px; display:flex; align-items:center; justify-content:center; border:none; padding:0;" do %>
         <%= image_tag "google.png", alt: "Google", style: "width:34px; height:34px; object-fit:contain;" %>
-      </button>
-    </div>
-
-    <%# Coming soon toast %>
-    <div data-coming-soon-target="toast"
-         style="display:none; margin-top:14px; background:#FDF0EE; border-radius:8px; padding:10px 14px; text-align:center;">
-      <p style="color:#933a35; font-size:14px; font-weight:500; margin:0;">Social login is coming soon! Use email for now.</p>
+      <% end %>
     </div>
   </div>
   <div style="width:100%; margin-top:62px; text-align:center;">
@@ -80,7 +80,9 @@
 
       <!-- Email -->
       <div style="margin-top:29px;">
+        <label for="email" class="sr-only">Email</label>
         <%= f.email_field :email,
+            id: "email",
             autofocus: true,
             placeholder: t('devise.registrations.new.email_placeholder', default: 'E-mail...'),
             value: @user&.email,
@@ -89,28 +91,30 @@
 
       <!-- Password -->
       <div style="margin-top:15px; position:relative;" data-controller="password-visibility">
+        <label for="password_field" class="sr-only">Password</label>
         <%= f.password_field :password,
             id: 'password_field',
             data: { "password-visibility-target": "input" },
             placeholder: t('devise.registrations.new.password_placeholder', default: 'Password...'),
             style: "width:100%; background:#EDE1D5; opacity:0.5; border-radius:8px; padding:14px 50px 14px 21px; height:52px; border:none; font-size:22px; font-weight:500; color:#933a35; outline:none; box-sizing:border-box;" %>
-        <span data-action="click->password-visibility#toggle" style="position:absolute; right:16px; top:50%; transform:translateY(-50%); cursor:pointer; display:inline-block;">
+        <button type="button" aria-label="Toggle password visibility" data-action="click->password-visibility#toggle" style="position:absolute; right:16px; top:50%; transform:translateY(-50%); cursor:pointer; display:inline-block; background:none; border:none; padding:0;">
           <svg data-password-visibility-target="eyeOpen" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(147,58,53,0.5)" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
           <svg data-password-visibility-target="eyeClosed" class="hidden" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(147,58,53,0.5)" stroke-width="1.5"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" /><line x1="1" y1="1" x2="23" y2="23" /></svg>
-        </span>
+        </button>
       </div>
 
       <!-- Confirm Password - shows error state if password has errors -->
       <div style="margin-top:15px; position:relative;" data-controller="password-visibility">
+        <label for="password_confirmation_field" class="sr-only">Repeat password</label>
         <%= f.password_field :password_confirmation,
             id: 'password_confirmation_field',
             data: { "password-visibility-target": "input" },
             placeholder: t('devise.registrations.new.confirm_password_placeholder', default: 'Repeat password...'),
             style: "width:100%; background:#{has_errors ? '#F6F0EA' : '#EDE1D5'}; opacity:1; border-radius:8px; padding:14px 50px 14px 21px; height:52px; border:#{has_errors ? '2px solid #933a35' : 'none'}; font-size:22px; font-weight:500; color:#933a35; outline:none; box-sizing:border-box;" %>
-        <span data-action="click->password-visibility#toggle" style="position:absolute; right:16px; top:50%; transform:translateY(-50%); cursor:pointer; display:inline-block;">
+        <button type="button" aria-label="Toggle password visibility" data-action="click->password-visibility#toggle" style="position:absolute; right:16px; top:50%; transform:translateY(-50%); cursor:pointer; display:inline-block; background:none; border:none; padding:0;">
           <svg data-password-visibility-target="eyeOpen" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#{has_errors ? '#933a35' : 'rgba(147,58,53,0.5)'}" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
           <svg data-password-visibility-target="eyeClosed" class="hidden" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#{has_errors ? '#933a35' : 'rgba(147,58,53,0.5)'}" stroke-width="1.5"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" /><line x1="1" y1="1" x2="23" y2="23" /></svg>
-        </span>
+        </button>
       </div>
 
       <!-- Terms -->

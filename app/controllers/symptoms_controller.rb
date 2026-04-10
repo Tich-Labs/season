@@ -1,5 +1,6 @@
 class SymptomsController < ApplicationController
   include Authentication
+  include Streakable
 
   before_action :require_onboarding_completed
 
@@ -31,10 +32,5 @@ class SymptomsController < ApplicationController
         :mental, :pain, :cravings, :discharge, :notes,
         :sexual_intercourse]
     )
-  end
-
-  def update_streak!
-    streak = current_user.streak || current_user.create_streak
-    streak.increment_streak!
   end
 end

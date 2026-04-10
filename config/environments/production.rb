@@ -10,7 +10,7 @@ Rails.application.configure do
   config.eager_load = true
 
   # Full error reports are disabled.
-  config.consider_all_requests_local = true  # DEBUG - show real errors
+  config.consider_all_requests_local = false
 
   # Turn on fragment caching in view templates.
   config.action_controller.perform_caching = true
@@ -64,12 +64,13 @@ Rails.application.configure do
   # Set host to be used by links generated in mailer templates.
   config.action_mailer.default_url_options = {host: "season-v2.onrender.com"}
 
-  # Mailchimp Transactional (Mandrill) SMTP
+  # Resend SMTP
+  config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    address: "smtp.mandrillapp.com",
+    address: "smtp.resend.com",
     port: 587,
-    user_name: ENV.fetch("MANDRILL_USER", ENV.fetch("SMTP_USER", nil)),
-    password: ENV.fetch("MANDRILL_API_KEY", ENV.fetch("SMTP_PASSWORD", nil)),
+    user_name: "resend",
+    password: ENV["RESEND_API_KEY"],
     authentication: :plain,
     enable_starttls_auto: true
   }

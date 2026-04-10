@@ -1,16 +1,19 @@
-<div class="min-h-screen bg-[#FAF7F4] flex flex-col items-center justify-center max-w-[430px] mx-auto px-8 py-16 text-center">
+<div class="min-h-screen bg-white flex flex-col items-center justify-center max-w-[430px] mx-auto px-8 text-center">
 
-  <%= image_tag "screen1logo.png",
-      class: "w-[180px] h-auto object-contain mb-10",
-      alt: "Season" %>
+  <div class="w-full bg-[#EAECF5] rounded-3xl overflow-hidden mb-8">
+    <%= image_tag "ef5a97eb1ce5997f5ce9b1a64aeafe4e00026251.gif",
+        class: "w-full h-auto object-contain",
+        alt: "Season" %>
+  </div>
 
-  <p class="text-[#933a35] text-[22px] font-medium leading-snug mb-10 px-4">
+  <p class="w-60 text-center text-[#933a35] text-xl font-medium leading-7 tracking-wider">
     Everything is getting set up for you to start your SEASON Journey.
   </p>
 
-  <a href="<%= user_root_path %>"
-     class="w-full bg-[#933a35] text-white rounded-xl py-5 text-base font-medium tracking-wide block">
-    Get started
-  </a>
-
 </div>
+
+<script>
+  setTimeout(function () {
+    window.location.href = <%= user_root_path.to_json %>;
+  }, 10000);
+</script>

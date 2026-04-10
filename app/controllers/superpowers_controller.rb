@@ -1,4 +1,7 @@
 class SuperpowersController < ApplicationController
+  include Authentication
+  include Streakable
+
   before_action :authenticate_user
   before_action :require_onboarding_completed
 
@@ -56,14 +59,5 @@ class SuperpowersController < ApplicationController
 
   def superpower_params
     params.expect(superpower_log: [:date, :ratings, :notes])
-  end
-
-  def update_streak!
-    streak = current_user.streak || current_user.create_streak(
-      current_streak: 0,
-      longest_streak: 0,
-      total_flames: 0
-    )
-    streak.increment_streak!
   end
 end

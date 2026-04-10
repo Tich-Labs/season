@@ -3,9 +3,9 @@ require "test_helper"
 class StreakTest < ActiveSupport::TestCase
   def setup
     @user = users(:alice)
-    # Use a fresh streak (not the fixture) so tests are independent
-    @streak = Streak.new(user: @user, current_streak: 0, longest_streak: 0, total_flames: 0)
-    @streak.save!(validate: false)
+    # Remove fixture streak so tests start clean
+    @user.streak&.destroy
+    @streak = Streak.create!(user: @user, current_streak: 0, longest_streak: 0, total_flames: 0)
   end
 
   def teardown

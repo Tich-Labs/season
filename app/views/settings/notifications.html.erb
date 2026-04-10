@@ -1,0 +1,116 @@
+<%# Notifications & Reminders screen - matches Figma node %>
+<%# Dark header auto-applied by layout; only back arrow override needed %>
+<% content_for(:header_left) do %>
+  <%= link_to edit_settings_path, class: "p-2 flex items-center" do %>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
+      <line x1="19" y1="12" x2="5" y2="12" />
+      <polyline points="12 19 5 12 12 5" />
+    </svg>
+  <% end %>
+<% end %>
+
+<div style="background:#ffffff; min-height:100%;">
+
+  <%# Content - max-width 430px centered %>
+  <div style="max-width:430px; margin:0 auto; padding:0 16px 80px;">
+
+    <%# ── Cycle Notifications ── %>
+    <div style="padding:20px 0 8px;">
+      <h2 style="color:#933a35; font-size:16px; font-weight:700;">Cycle Notifications</h2>
+    </div>
+    <div style="border-bottom:1px solid #DDD0CB;"></div>
+
+    <%# Cycle reminder %>
+    <div style="display:flex; align-items:center; justify-content:space-between; padding:16px 0;">
+      <div style="flex:1;">
+        <span style="color:#933a35; font-size:16px; font-weight:500;">Cycle reminder</span>
+        <p style="color:#D18D83; font-size:12px; margin:4px 0 0;">Get notified when your cycle starts</p>
+      </div>
+      <label style="position:relative; width:40px; height:20px; background:#933a35; border-radius:20px; cursor:pointer;">
+        <input type="checkbox" <%= @notifications.cycle_reminder ? 'checked' : '' %> style="opacity:0; width:0; height:0;">
+        <span style="position:absolute; top:2px; left:20px; width:16px; height:16px; background:white; border-radius:50%; transition:0.2s;"></span>
+      </label>
+    </div>
+
+    <%# Period prediction %>
+    <div style="display:flex; align-items:center; justify-content:space-between; padding:16px 0;">
+      <div style="flex:1;">
+        <span style="color:#933a35; font-size:16px; font-weight:500;">Period prediction</span>
+        <p style="color:#D18D83; font-size:12px; margin:4px 0 0;">2 days before expected period</p>
+      </div>
+      <label style="position:relative; width:40px; height:20px; background:#933a35; border-radius:20px; cursor:pointer;">
+        <input type="checkbox" <%= @notifications.period_prediction ? 'checked' : '' %> style="opacity:0; width:0; height:0;">
+        <span style="position:absolute; top:2px; left:20px; width:16px; height:16px; background:white; border-radius:50%; transition:0.2s;"></span>
+      </label>
+    </div>
+
+    <%# Ovulation alert %>
+    <div style="display:flex; align-items:center; justify-content:space-between; padding:16px 0;">
+      <div style="flex:1;">
+        <span style="color:#933a35; font-size:16px; font-weight:500;">Ovulation alert</span>
+        <p style="color:#D18D83; font-size:12px; margin:4px 0 0;">Get notified when you're ovulating</p>
+      </div>
+      <label style="position:relative; width:40px; height:20px; background:#933a35; border-radius:20px; cursor:pointer;">
+        <input type="checkbox" <%= @notifications.ovulation_alert ? 'checked' : '' %> style="opacity:0; width:0; height:0;">
+        <span style="position:absolute; top:2px; left:20px; width:16px; height:16px; background:white; border-radius:50%; transition:0.2s;"></span>
+      </label>
+    </div>
+
+    <%# ── Reminder Settings ── %>
+    <div style="padding:24px 0 8px;">
+      <h2 style="color:#933a35; font-size:16px; font-weight:700;">Reminder Settings</h2>
+    </div>
+    <div style="border-bottom:1px solid #DDD0CB;"></div>
+
+    <%# Reminder time %>
+    <div style="display:flex; align-items:center; justify-content:space-between; padding:16px 0;">
+      <span style="color:#933a35; font-size:16px; font-weight:500;">Reminder time</span>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <span style="color:#D18D83; font-size:14px;"><%= @notifications.reminder_time %></span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
+          <polyline points="9 18 15 12 9 6" />
+        </svg>
+      </div>
+    </div>
+
+    <%# ── App Notifications ── %>
+    <div style="padding:24px 0 8px;">
+      <h2 style="color:#933a35; font-size:16px; font-weight:700;">App Notifications</h2>
+    </div>
+    <div style="border-bottom:1px solid #DDD0CB;"></div>
+
+    <%# Push notifications %>
+    <div style="display:flex; align-items:center; justify-content:space-between; padding:16px 0;">
+      <span style="color:#933a35; font-size:16px; font-weight:500;">Push notifications</span>
+      <label style="position:relative; width:40px; height:20px; background:#933a35; border-radius:20px; cursor:pointer;">
+        <input type="checkbox" <%= @notifications.push_notifications ? 'checked' : '' %> style="opacity:0; width:0; height:0;">
+        <span style="position:absolute; top:2px; left:20px; width:16px; height:16px; background:white; border-radius:50%; transition:0.2s;"></span>
+      </label>
+    </div>
+
+    <%# Email notifications %>
+    <div style="display:flex; align-items:center; justify-content:space-between; padding:16px 0;">
+      <span style="color:#933a35; font-size:16px; font-weight:500;">E-Mail notifications</span>
+      <label style="position:relative; width:40px; height:20px; background:#933a35; border-radius:20px; cursor:pointer;">
+        <input type="checkbox" <%= @notifications.email_notifications ? 'checked' : '' %> style="opacity:0; width:0; height:0;">
+        <span style="position:absolute; top:2px; left:20px; width:16px; height:16px; background:white; border-radius:50%; transition:0.2s;"></span>
+      </label>
+    </div>
+
+    <%# ── Other ── %>
+    <div style="padding:24px 0 8px;">
+      <h2 style="color:#933a35; font-size:16px; font-weight:700;">Other</h2>
+    </div>
+    <div style="border-bottom:1px solid #DDD0CB;"></div>
+
+    <%# Newsletter %>
+    <div style="display:flex; align-items:center; justify-content:space-between; padding:16px 0;">
+      <span style="color:#933a35; font-size:16px; font-weight:500;">Newsletter</span>
+      <label style="position:relative; width:40px; height:20px; background:#933a35; border-radius:20px; cursor:pointer;">
+        <input type="checkbox" <%= @notifications.newsletter ? 'checked' : '' %> style="opacity:0; width:0; height:0;">
+        <span style="position:absolute; top:2px; left:20px; width:16px; height:16px; background:white; border-radius:50%; transition:0.2s;"></span>
+      </label>
+    </div>
+
+  </div>
+</div>

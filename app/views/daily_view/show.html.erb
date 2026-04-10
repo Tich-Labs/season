@@ -125,3 +125,67 @@
     <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#933a35" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
   <% end %>
 </div>
+
+<%# Season Info Modal %>
+<%
+  phase = @cycle_data&.dig(:phase)
+  season = @cycle_data&.dig(:season) || CycleCalculatorService::SEASON_NAMES[phase]
+  cycle_day = @cycle_data&.dig(:cycle_day)
+
+  season_info = case season
+  when "Winter"
+    { title: "Winter", colour: "#933a35", emoji: "❄️",
+      description: "This is your menstruation phase — a time for rest and reflection.",
+      tips: ["Rest and prioritize sleep", "Gentle movement like yoga", "Stay hydrated"] }
+  when "Spring"
+    { title: "Spring", colour: "#D18D83", emoji: "🌸",
+      description: "You're in the follicular phase — energy and creativity are rising!",
+      tips: ["Start new projects", "High energy workouts", "Social activities"] }
+  when "Summer"
+    { title: "Summer", colour: "#F5C6AD", emoji: "☀️",
+      description: "You're ovulating — peak energy and confidence!",
+      tips: ["Network and collaborate", "Creative brainstorming", "Focus on relationships"] }
+  when "Autumn"
+    { title: "Autumn", colour: "#EDE1D5", emoji: "🍂",
+      description: "You're in the luteal phase — time for introspection and planning.",
+      tips: ["Organize and plan", "Self-care routines", "Reflect on goals"] }
+  else
+    { title: "Your Cycle", colour: "#933a35", emoji: "🌙",
+      description: "Track your cycle to see your phase.",
+      tips: [] }
+  end
+%>
+
+<div id="season-info-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:100; align-items:center; justify-content:center;">
+  <div style="background:#FAF7F4; border-radius:16px; padding:24px; width:90%; max-width:340px; margin:16px;">
+    <div style="text-align:center; margin-bottom:16px;">
+      <div style="width:60px; height:60px; border-radius:50%; background:<%= season_info[:colour] %>; display:inline-flex; align-items:center; justify-content:center; font-size:28px; margin-bottom:12px;">
+        <%= season_info[:emoji] %>
+      </div>
+      <h3 style="color:#933a35; font-size:20px; font-weight:600; margin:0;"><%= season_info[:title] %></h3>
+      <% if cycle_day %>
+        <p style="color:#D18D83; font-size:14px; margin:4px 0 0;">Day <%= cycle_day %> of your cycle</p>
+      <% end %>
+    </div>
+
+    <p style="color:#933a35; font-size:14px; line-height:1.5; margin:0 0 16px; text-align:center;">
+      <%= season_info[:description] %>
+    </p>
+
+    <% if season_info[:tips].any? %>
+      <div style="background:#FFFFFF; border-radius:12px; padding:12px; margin-bottom:16px;">
+        <p style="color:#933a35; font-size:12px; font-weight:600; margin:0 0 8px;">Tips for this phase</p>
+        <ul style="margin:0; padding-left:16px;">
+          <% season_info[:tips].each do |tip| %>
+            <li style="color:#6B6B6B; font-size:13px; margin-bottom:4px;"><%= tip %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <button onclick="document.getElementById('season-info-modal').style.display='none'"
+            style="width:100%; background:#933a35; color:white; border:none; border-radius:12px; padding:14px; font-size:16px; font-weight:500; cursor:pointer;">
+      Got it
+    </button>
+  </div>
+</div>

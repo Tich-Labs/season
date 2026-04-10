@@ -47,7 +47,7 @@
         </div>
 
         <%# Schedule Overview — Figma: top-[299px] %>
-        <%= link_to "#", class: "absolute left-0 top-[299px] w-full h-[40px] flex items-center hover:bg-stone-50" do %>
+        <%= link_to calendar_appointments_path, class: "absolute left-0 top-[299px] w-full h-[40px] flex items-center hover:bg-stone-50", "data-turbo-action": "replace" do %>
           <div class="absolute left-[30px] top-[8px] w-[20px] flex flex-col gap-[1.5px]">
             <div class="flex gap-[1px] items-center"><div class="w-[3px] h-[4px] bg-[#933a35] rounded-[0.8px]"></div><div class="w-[15px] h-[4px] bg-[#933a35] rounded-[0.8px]"></div></div>
             <div class="flex gap-[1px] items-center"><div class="w-[3px] h-[4.5px] bg-[#933a35] rounded-[0.8px]"></div><div class="w-[15px] h-[4.5px] bg-[#933a35] rounded-[0.8px]"></div></div>
@@ -57,7 +57,7 @@
         <% end %>
 
         <%# Day-View — Figma: top-[339px] %>
-        <%= link_to "#", class: "absolute left-0 top-[339px] w-full h-[40px] flex items-center hover:bg-stone-50" do %>
+        <%= link_to daily_view_path(Date.today), class: "absolute left-0 top-[339px] w-full h-[40px] flex items-center hover:bg-stone-50", "data-turbo-action": "replace" do %>
           <div class="absolute left-[30px] top-[8px] w-[20px] flex flex-col gap-[1px]">
             <div class="w-[19px] h-[2.5px] bg-[#933a35] rounded-[0.8px]"></div>
             <div class="w-[19px] h-[8px] bg-[#933a35] rounded-[0.8px]"></div>
@@ -67,7 +67,7 @@
         <% end %>
 
         <%# Weekly-View — Figma: top-[380px] %>
-        <%= link_to "#", class: "absolute left-0 top-[380px] w-full h-[40px] flex items-center hover:bg-stone-50" do %>
+        <%= link_to calendar_weekly_path, class: "absolute left-0 top-[380px] w-full h-[40px] flex items-center hover:bg-stone-50", "data-turbo-action": "replace" do %>
           <div class="absolute left-[30px] top-[7px] w-[20px] flex gap-[1.4px]">
             <div class="w-[5.5px] h-[16px] bg-[#933a35] rounded-[0.8px]"></div>
             <div class="w-[5.5px] h-[16px] bg-[#933a35] rounded-[0.8px]"></div>
@@ -77,7 +77,7 @@
         <% end %>
 
         <%# Monthly-View — Figma: top-[420px] %>
-        <%= link_to "#", class: "absolute left-0 top-[420px] w-full h-[40px] flex items-center hover:bg-stone-50" do %>
+        <%= link_to user_root_path, class: "absolute left-0 top-[420px] w-full h-[40px] flex items-center hover:bg-stone-50", "data-turbo-action": "replace" do %>
           <div class="absolute left-[30px] top-[7px] w-[19px] h-[16px] grid grid-cols-2 gap-[2px]">
             <div class="border border-[#933a35] rounded-[0.8px]"></div>
             <div class="border border-[#933a35] rounded-[0.8px]"></div>
@@ -117,7 +117,7 @@
         <% end %>
 
         <%# Feedback — Figma: top-[573px] %>
-        <%= link_to "#", class: "absolute left-0 top-[573px] w-full h-[49px] flex items-center hover:bg-stone-50" do %>
+        <%= link_to feedback_path, class: "absolute left-0 top-[573px] w-full h-[49px] flex items-center hover:bg-stone-50", "data-turbo-action": "replace" do %>
           <svg class="absolute left-[31px] top-[10px]" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#933a35" stroke-width="1.2">
             <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" />
             <polyline points="14 3 14 8 19 8" />
@@ -128,7 +128,7 @@
         <% end %>
 
         <%# Bugreport — Figma: top-[621px] %>
-        <%= link_to "#", class: "absolute left-0 top-[621px] w-full h-[49px] flex items-center hover:bg-stone-50" do %>
+        <%= link_to bug_report_path, class: "absolute left-0 top-[621px] w-full h-[49px] flex items-center hover:bg-stone-50", "data-turbo-action": "replace" do %>
           <svg class="absolute left-[31px] top-[10px]" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#933a35" stroke-width="1.2">
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
             <line x1="9" y1="10" x2="15" y2="10" />

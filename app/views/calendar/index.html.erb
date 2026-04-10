@@ -9,14 +9,6 @@
           class: "w-10 h-10 flex items-center justify-center text-[#933a35]" do %>
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6" /></svg>
     <% end %>
-    <%# Toggle to list/appointments view %>
-    <%= link_to calendar_appointments_path(date: @date.to_s),
-          class: "w-10 h-10 flex items-center justify-center text-[#933a35]" do %>
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-        <line x1="8" y1="6" x2="21" y2="6" /><line x1="8" y1="12" x2="21" y2="12" /><line x1="8" y1="18" x2="21" y2="18" />
-        <line x1="3" y1="6" x2="3.01" y2="6" /><line x1="3" y1="12" x2="3.01" y2="12" /><line x1="3" y1="18" x2="3.01" y2="18" />
-      </svg>
-    <% end %>
   </div>
 <% end %>
 
@@ -63,6 +55,34 @@
       <% end %>
     </div>
 
+    <%# ── Phase Legend ── %>
+    <% if @cycle_by_date.present? %>
+      <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-bottom:12px;">
+        <div style="display:flex; align-items:center; gap:4px;">
+          <span style="width:10px; height:10px; border-radius:50%; background:#933a35;"></span>
+          <span style="font-size:11px; color:#6B6B6B;">Menstrual</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:4px;">
+          <span style="width:10px; height:10px; border-radius:50%; background:#D18D83;"></span>
+          <span style="font-size:11px; color:#6B6B6B;">Follicular</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:4px;">
+          <span style="width:10px; height:10px; border-radius:50%; background:#F5C6AD;"></span>
+          <span style="font-size:11px; color:#6B6B6B;">Ovulation</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:4px;">
+          <span style="width:10px; height:10px; border-radius:50%; background:#EDE1D5;"></span>
+          <span style="font-size:11px; color:#6B6B6B;">Luteal</span>
+        </div>
+        <button onclick="document.getElementById('season-info-modal').style.display='flex'"
+                style="background:none; border:none; cursor:pointer; padding:0 4px;">
+          <svg width="16" height="16" fill="none" stroke="#6B6B6B" stroke-width="2" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" /><line x1="12" y1="16" x2="12" y2="12" /><line x1="12" y1="8" x2="12.01" y2="8" />
+          </svg>
+        </button>
+      </div>
+    <% end %>
+
     <%# ── Calendar grid: 85px rows, 0 column-gap so phase bands merge ── %>
     <div style="display:grid; grid-template-columns:repeat(7,1fr); grid-auto-rows:85px; gap:8px 0;">
 
@@ -88,7 +108,70 @@
 <%# ── FAB: add event ── %>
 <div style="position:fixed; bottom:80px; left:50%; transform:translateX(-50%); z-index:40;">
   <%= link_to new_calendar_event_path,
+        aria: { label: "Add event" },
         style: "width:56px; height:56px; border-radius:28px; background:#933a35; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(147,58,53,0.3); text-decoration:none;" do %>
     <span style="color:#ffffff; font-size:28px; font-weight:300; line-height:1;">+</span>
   <% end %>
+</div>
+
+<%# Season Info Modal %>
+<%
+  phase = @current_phase
+  season = @current_season || CycleCalculatorService::SEASON_NAMES[phase]
+  cycle_day = current_user.streak&.current_streak
+
+  season_info = case season
+  when "Winter"
+    { title: "Winter", colour: "#933a35", emoji: "❄️",
+      description: "This is your menstruation phase — a time for rest and reflection.",
+      tips: ["Rest and prioritize sleep", "Gentle movement like yoga", "Stay hydrated"] }
+  when "Spring"
+    { title: "Spring", colour: "#D18D83", emoji: "🌸",
+      description: "You're in the follicular phase — energy and creativity are rising!",
+      tips: ["Start new projects", "High energy workouts", "Social activities"] }
+  when "Summer"
+    { title: "Summer", colour: "#F5C6AD", emoji: "☀️",
+      description: "You're ovulating — peak energy and confidence!",
+      tips: ["Network and collaborate", "Creative brainstorming", "Focus on relationships"] }
+  when "Autumn"
+    { title: "Autumn", colour: "#EDE1D5", emoji: "🍂",
+      description: "You're in the luteal phase — time for introspection and planning.",
+      tips: ["Organize and plan", "Self-care routines", "Reflect on goals"] }
+  else
+    { title: "Your Cycle", colour: "#933a35", emoji: "🌙",
+      description: "Track your cycle to see your phase.",
+      tips: [] }
+  end
+%>
+
+<div id="season-info-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:100; align-items:center; justify-content:center;">
+  <div style="background:#FAF7F4; border-radius:16px; padding:24px; width:90%; max-width:340px; margin:16px;">
+    <div style="text-align:center; margin-bottom:16px;">
+      <div style="width:60px; height:60px; border-radius:50%; background:<%= season_info[:colour] %>; display:inline-flex; align-items:center; justify-content:center; font-size:28px; margin-bottom:12px;">
+        <%= season_info[:emoji] %>
+      </div>
+      <h3 style="color:#933a35; font-size:20px; font-weight:600; margin:0;"><%= season_info[:title] %></h3>
+      <p style="color:#D18D83; font-size:14px; margin:4px 0 0;">You're in <%= season_info[:title].downcase %> phase</p>
+    </div>
+
+    <p style="color:#933a35; font-size:14px; line-height:1.5; margin:0 0 16px; text-align:center;">
+      <%= season_info[:description] %>
+    </p>
+
+    <% if season_info[:tips].any? %>
+      <div style="background:#FFFFFF; border-radius:12px; padding:12px; margin-bottom:16px;">
+        <p style="color:#933a35; font-size:12px; font-weight:600; margin:0 0 8px;">Tips for this phase</p>
+        <ul style="margin:0; padding-left:16px;">
+          <% season_info[:tips].each do |tip| %>
+            <li style="color:#6B6B6B; font-size:13px; margin-bottom:4px;"><%= tip %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <button onclick="document.getElementById('season-info-modal').style.display='none'"
+            style="width:100%; background:#933a35; color:white; border:none; border-radius:12px; padding:14px; font-size:16px; font-weight:500; cursor:pointer;">
+      Got it
+    </button>
+  </div>
 </div>
