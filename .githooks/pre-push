@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# Pre-push hook: Run RuboCop and ERB Lint before allowing push
+# Install: cp .githooks/pre-push .git/hooks/pre-push && chmod +x .git/hooks/pre-push
+
+set -e
+
+echo "🔍 Running RuboCop..."
+if ! bundle exec rubocop; then
+  echo "❌ RuboCop failed. Fix violations before pushing."
+  exit 1
+fi
+
+echo ""
+echo "🔍 Running ERB Lint..."
+if ! bundle exec erb_lint --lint-all; then
+  echo "❌ ERB Lint failed. Fix violations before pushing."
+  exit 1
+fi
+
+echo ""
+echo "✅ All linters passed! Proceeding with push..."
+exit 0

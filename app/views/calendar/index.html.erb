@@ -3,18 +3,18 @@
   <div class="flex items-center gap-1">
     <%= link_to user_root_path(date: @prev_month.to_s, mode: @mode),
           class: "w-10 h-10 flex items-center justify-center text-[#933a35]" do %>
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6" /></svg>
     <% end %>
     <%= link_to user_root_path(date: @next_month.to_s, mode: @mode),
           class: "w-10 h-10 flex items-center justify-center text-[#933a35]" do %>
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6" /></svg>
     <% end %>
     <%# Toggle to list/appointments view %>
     <%= link_to calendar_appointments_path(date: @date.to_s),
           class: "w-10 h-10 flex items-center justify-center text-[#933a35]" do %>
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-        <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/>
-        <line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>
+        <line x1="8" y1="6" x2="21" y2="6" /><line x1="8" y1="12" x2="21" y2="12" /><line x1="8" y1="18" x2="21" y2="18" />
+        <line x1="3" y1="6" x2="3.01" y2="6" /><line x1="3" y1="12" x2="3.01" y2="12" /><line x1="3" y1="18" x2="3.01" y2="18" />
       </svg>
     <% end %>
   </div>
@@ -81,8 +81,6 @@
               mode:             @mode %>
       <% end %>
     </div>
-
-
 
   </div>
 </div>

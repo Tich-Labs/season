@@ -1,19 +1,19 @@
-<div style="background:#ffffff; 
-  min-height:100vh; display:flex; 
-  flex-direction:column; 
-  align-items:center; 
+<div style="background:#ffffff;
+  min-height:100vh; display:flex;
+  flex-direction:column;
+  align-items:center;
   padding:60px 24px 48px;
   max-width:430px; margin:0 auto;">
 
   <%= image_tag "season-logo.svg", style: "width:120px; height:auto; margin-bottom:48px;", alt: "Season" %>
 
-  <h1 style="font-size:24px; 
+  <h1 style="font-size:24px;
     font-weight:700; color:#933a35;
     text-align:center; margin-bottom:8px;">
     <%= "Welcome back, #{@user.name}!" %>
   </h1>
 
-  <p style="font-size:14px; 
+  <p style="font-size:14px;
     color:#933a35; text-align:center;
     margin-bottom:40px;">
     Your Season V2 account is ready.
@@ -25,19 +25,20 @@
     <!-- Email pre-filled read-only -->
     <input type="email"
       value="<%= @user.email %>"
+      autocomplete="email"
       readonly
-      style="width:100%; 
-      background:#F5EDE8; 
+      style="width:100%;
+      background:#F5EDE8;
       border-radius:12px; padding:16px;
       border:none; font-size:16px;
       color:#933a35; opacity:0.7;
-      margin-bottom:12px; 
+      margin-bottom:12px;
       box-sizing:border-box;">
 
     <!-- Password field -->
     <%= f.password_field :password,
         placeholder: 'Set your password...',
-        style: "width:100%; 
+        style: "width:100%;
         background:#F5EDE8;
         border-radius:12px; padding:16px;
         border:none; font-size:16px;
@@ -45,7 +46,7 @@
         box-sizing:border-box;" %>
 
     <%= f.submit 'Get started',
-        style: "width:100%; 
+        style: "width:100%;
         background:#933a35; color:white;
         border:none; border-radius:12px;
         padding:18px; font-size:16px;

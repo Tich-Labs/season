@@ -27,7 +27,7 @@
       <form action="<%= onboarding_path(@step) %>" method="post" id="step1-form">
         <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
         <input type="hidden" name="_method" value="patch">
-        <input type="text" name="user[name]" id="user_name" placeholder="Your name..." required
+        <input type="text" name="user[name]" id="user_name" placeholder="Your name..." autocomplete="name" required
                style="width:100%; background:#EDE1D5; border-radius:8px; padding:14px 21px; height:52px; border:none; font-size:22px; font-weight:500; color:#933a35; outline:none; box-sizing:border-box; text-align:center;">
       </form>
     </div>
@@ -131,7 +131,7 @@
       <form action="<%= onboarding_path(@step) %>" method="post" id="step4-form">
         <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
         <input type="hidden" name="_method" value="patch">
-        <input type="date" name="last_period_date" id="last_period_date" required
+        <input type="date" name="last_period_date" id="last_period_date" autocomplete="off" required
                style="width:100%; background:#EDE1D5; border-radius:8px; padding:14px 21px; height:52px; border:none; font-size:18px; font-weight:500; color:#933a35; outline:none; box-sizing:border-box; text-align:center;">
       </form>
     </div>
@@ -235,13 +235,13 @@ document.addEventListener('DOMContentLoaded', function() {
   // Set default selections
   var cycle28 = document.querySelector('.cycle-btn[data-value="28"]');
   if (cycle28) { cycle28.style.background = '#933a35'; cycle28.style.color = '#ffffff'; }
-  
+
   var period5 = document.querySelector('.period-btn[data-value="5"]');
   if (period5) { period5.style.background = '#933a35'; period5.style.color = '#ffffff'; }
-  
+
   var noneBtn = document.querySelector('.contraception-btn[data-value="None"]');
   if (noneBtn) { noneBtn.style.borderColor = '#933a35'; noneBtn.style.background = '#FDF0EE'; }
-  
+
   var enBtn = document.querySelector('.lang-btn[data-lang="en"]');
   if (enBtn) { enBtn.style.borderColor = '#933a35'; enBtn.style.background = '#FDF0EE'; }
 });

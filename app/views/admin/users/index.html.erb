@@ -6,23 +6,23 @@
   <div style="background:#ffffff; padding:16px; border-radius:12px; margin-bottom:16px;">
     <%= search_form_for @q, url: admin_users_path do |f| %>
       <div style="display:flex; gap:8px;">
-        <%= f.search_field :name_or_email_cont, 
+        <%= f.search_field :name_or_email_cont,
             placeholder: "Search name or email...",
             style: "flex:1; background:#EDE1D5; border-radius:8px; padding:12px; border:none; font-size:14px; color:#933a35;" %>
-        <%= f.submit "Search", 
+        <%= f.submit "Search",
             style: "background:#933a35; color:#ffffff; padding:12px 20px; border-radius:8px; border:none; font-size:14px; font-weight:500; cursor:pointer;" %>
       </div>
     <% end %>
-    
+
     <!-- Filters -->
     <div style="display:flex; gap:8px; margin-top:12px;">
-      <%= link_to "All", admin_users_path, 
+      <%= link_to "All", admin_users_path,
           style: "padding:8px 16px; border-radius:20px; font-size:12px; background:#EDE1D5; color:#933a35; text-decoration:none;" %>
-      <%= link_to "English", admin_users_path(q: { language_eq: 'en' }), 
+      <%= link_to "English", admin_users_path(q: { language_eq: 'en' }),
           style: "padding:8px 16px; border-radius:20px; font-size:12px; background:#EDE1D5; color:#933a35; text-decoration:none;" %>
-      <%= link_to "German", admin_users_path(q: { language_eq: 'de' }), 
+      <%= link_to "German", admin_users_path(q: { language_eq: 'de' }),
           style: "padding:8px 16px; border-radius:20px; font-size:12px; background:#EDE1D5; color:#933a35; text-decoration:none;" %>
-      <%= link_to "CSV", admin_users_path(format: :csv), 
+      <%= link_to "CSV", admin_users_path(format: :csv),
           style: "padding:8px 16px; border-radius:20px; font-size:12px; background:#2E6B3E; color:#ffffff; text-decoration:none;" %>
     </div>
   </div>
@@ -67,12 +67,12 @@
   <% if @pagy %>
     <div style="display:flex; justify-content:center; gap:8px; margin-top:16px;">
       <% if @pagy.prev %>
-        <%= link_to "← Prev", admin_users_path(page: @pagy.prev), 
+        <%= link_to "← Prev", admin_users_path(page: @pagy.prev),
             style: "padding:8px 16px; background:#ffffff; color:#933a35; border-radius:8px; text-decoration:none;" %>
       <% end %>
       <span style="padding:8px 16px; color:#6B6B6B; font-size:14px;">Page <%= @pagy.page %> of <%= @pagy.pages %></span>
       <% if @pagy.next %>
-        <%= link_to "Next →", admin_users_path(page: @pagy.next), 
+        <%= link_to "Next →", admin_users_path(page: @pagy.next),
             style: "padding:8px 16px; background:#ffffff; color:#933a35; border-radius:8px; text-decoration:none;" %>
       <% end %>
     </div>

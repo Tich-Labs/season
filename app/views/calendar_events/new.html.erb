@@ -34,8 +34,8 @@
       <div style="margin-bottom:16px;">
         <label style="color:#6B6B6B; font-size:14px; display:block; margin-bottom:8px;">Category</label>
         <%= f.select :category, options_for_select([
-          ['Health', 'health'], 
-          ['Social', 'social'], 
+          ['Health', 'health'],
+          ['Social', 'social'],
           ['Work', 'work'],
           ['Personal', 'personal'],
           ['Family', 'family']
@@ -50,9 +50,9 @@
       </div>
 
       <div style="display:flex; gap:12px;">
-        <%= f.submit "Save", 
+        <%= f.submit "Save",
             style: "flex:1; background:#933a35; color:#ffffff; padding:14px; border-radius:8px; border:none; font-size:16px; font-weight:500; cursor:pointer;" %>
-        <a href="<%= user_root_path %>" 
+        <a href="<%= user_root_path %>"
            style="flex:1; background:#EDE1D5; color:#933a35; text-align:center; padding:14px; border-radius:8px; font-size:16px; font-weight:500; text-decoration:none;">
           Cancel
         </a>
