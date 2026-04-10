@@ -56,7 +56,7 @@
 
         <%# Centre: custom title OR settings default (gear + "Settings") OR app name %>
         <div class="flex-1 flex items-center justify-center gap-2">
-          <% if content_for?(:page_title) %>
+    <% if content_for?(:page_title) %>
             <span class="<%= hdr_fg %> text-2xl font-medium font-['Montserrat']"><%= yield(:page_title) %></span>
           <% elsif is_settings %>
             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">

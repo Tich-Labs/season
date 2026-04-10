@@ -1,21 +1,17 @@
+<% content_for(:page_title) { "Symptoms" } %>
+<% content_for(:header_left) do %>
+  <%= link_to tracking_index_path, style: "color:#933a35; font-size:15px; font-weight:500; text-decoration:none; padding:8px 4px; font-family:'Montserrat',sans-serif;" do %>
+    &lt; back
+  <% end %>
+<% end %>
+
 <div style="background:#FAF7F4; min-height:100%; padding-bottom:16px;"
      data-controller="symptom"
      data-symptom-url-value="<%= symptoms_path %>"
      data-date="<%= @date %>">
 
-  <!-- Header -->
-  <div style="background:#ffffff; padding:20px 24px 16px; border-bottom:1px solid #EDE1D5;">
-    <div style="max-width:430px; margin:0 auto;">
-      <div style="display:flex; align-items:center; justify-content:space-between;">
-        <a href="<%= tracking_index_path %>" style="color:#933a35; font-size:18px;">&lt; back</a>
-        <h1 style="color:#933a35; font-size:20px; font-weight:700;">SYMPTOMS</h1>
-        <div style="width:40px;"></div>
-      </div>
-      <p style="color:#6B6B6B; font-size:14px; text-align:center; margin-top:8px;"><%= @date.strftime("%d %B %Y") %></p>
-    </div>
-  </div>
-
   <div style="max-width:430px; margin:0 auto; padding:16px;">
+    <p style="color:#6B6B6B; font-size:14px; margin-bottom:16px;"><%= @date.strftime("%d %B %Y") %></p>
 
     <!-- Phase indicator -->
     <% if @phase %>

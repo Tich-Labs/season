@@ -1,12 +1,11 @@
-<div style="background:#FAF7F4; min-height:100%; padding-bottom:16px;">
+<% content_for(:page_title) { "Superpowers" } %>
+<% content_for(:header_left) do %>
+  <%= link_to tracking_index_path, style: "color:#933a35; font-size:15px; font-weight:500; text-decoration:none; padding:8px 4px; font-family:'Montserrat',sans-serif;" do %>
+    &lt; back
+  <% end %>
+<% end %>
 
-  <!-- Header -->
-  <div style="background:#ffffff; padding:20px 24px 16px; border-bottom:1px solid #EDE1D5;">
-    <div style="max-width:430px; margin:0 auto;">
-      <h1 style="color:#933a35; font-size:24px; font-weight:700; letter-spacing:1px; text-align:center;">SUPERPOWERS</h1>
-      <p style="color:#6B6B6B; font-size:14px; text-align:center; margin-top:4px;">Rate your strengths today</p>
-    </div>
-  </div>
+<div style="background:#FAF7F4; min-height:100%; padding-bottom:16px;">
 
   <div style="max-width:430px; margin:0 auto; padding:16px;">
 
