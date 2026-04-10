@@ -1,7 +1,18 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["form", "email", "success", "error", "errorMessage"]
+  static targets = ["form", "email", "success", "error", "errorMessage", "modal"]
+
+  closeModal() {
+    this.modalTarget.style.display = 'none'
+  }
+
+  // Close when clicking the backdrop (not the inner card)
+  modalTargetConnected(el) {
+    el.addEventListener('click', (e) => {
+      if (e.target === el) this.closeModal()
+    })
+  }
 
   submit(event) {
     event.preventDefault()

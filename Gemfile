@@ -40,6 +40,7 @@ gem "dotenv-rails", groups: [:development, :test]
 gem "sentry-ruby"
 gem "sentry-rails"
 gem "stripe"
+gem "httparty"
 
 # Background jobs & caching
 gem "solid_cable"

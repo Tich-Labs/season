@@ -5,6 +5,9 @@ export default class extends Controller {
   static values = { current: { type: Number, default: 0 }, autoplay: { type: Boolean, default: true } }
 
   connect() {
+    this._boundResize = () => this._sizeSlides()
+    window.addEventListener('resize', this._boundResize)
+    this._sizeSlides()
     this._show(0, false)
     if (this.autoplayValue) {
       this._timer = setInterval(() => this.next(), 4000)
@@ -13,6 +16,14 @@ export default class extends Controller {
 
   disconnect() {
     clearInterval(this._timer)
+    window.removeEventListener('resize', this._boundResize)
+  }
+
+  _sizeSlides() {
+    const w = this.trackTarget.parentElement.clientWidth
+    Array.from(this.trackTarget.children).forEach(slide => {
+      slide.style.width = w + 'px'
+    })
   }
 
   next() {
@@ -46,8 +57,9 @@ export default class extends Controller {
 
   _show(idx, animate = true) {
     this.currentValue = idx
+    const slideW = this.trackTarget.parentElement.clientWidth
     this.trackTarget.style.transition = animate ? "transform 0.35s ease" : "none"
-    this.trackTarget.style.transform = `translateX(-${idx * 100}%)`
+    this.trackTarget.style.transform = `translateX(-${idx * slideW}px)`
     this.dotTargets.forEach((dot, i) => {
       if (i === idx) {
         dot.classList.remove("opacity-30", "w-3")
