@@ -42,17 +42,17 @@
         <div class="flex gap-3">
           <div class="flex flex-col items-start gap-1">
             <label class="text-[#933a35] text-xs font-medium tracking-wide">Day</label>
-            <input type="number" name="birthday_day" min="1" max="31" placeholder="DD"
+            <input type="number" name="birthday_day" min="1" max="31" placeholder="DD" autocomplete="bday-day"
                    class="w-[70px] bg-[#F5EDE8] rounded-xl px-3 py-4 text-[#933a35] text-xl font-medium text-center placeholder-[#C8A49A] focus:outline-none">
           </div>
           <div class="flex flex-col items-start gap-1">
             <label class="text-[#933a35] text-xs font-medium tracking-wide">Month</label>
-            <input type="number" name="birthday_month" min="1" max="12" placeholder="MM"
+            <input type="number" name="birthday_month" min="1" max="12" placeholder="MM" autocomplete="bday-month"
                    class="w-[70px] bg-[#F5EDE8] rounded-xl px-3 py-4 text-[#933a35] text-xl font-medium text-center placeholder-[#C8A49A] focus:outline-none">
           </div>
           <div class="flex flex-col items-start gap-1">
             <label class="text-[#933a35] text-xs font-medium tracking-wide">Jahr</label>
-            <input type="number" name="birthday_year" min="1900" max="<%= Date.today.year %>" placeholder="JJJJ"
+            <input type="number" name="birthday_year" min="1900" max="<%= Date.today.year %>" placeholder="JJJJ" autocomplete="bday-year"
                    class="w-[110px] bg-[#F5EDE8] rounded-xl px-3 py-4 text-[#933a35] text-xl font-medium text-center placeholder-[#C8A49A] focus:outline-none">
           </div>
         </div>
