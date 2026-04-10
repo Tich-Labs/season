@@ -43,6 +43,6 @@ class SettingsController < ApplicationController
   private
 
   def user_params
-    params.expect(user: [ :name, :language, :cycle_length, :period_length, :contraception_type, :life_stage ])
+    params.expect(user: [:name, :language, :cycle_length, :period_length, :contraception_type, :life_stage])
   end
 end
