@@ -10,7 +10,7 @@ services:
     runtime: ruby
     plan: free
     buildCommand: "./bin/render-build.sh"
-    startCommand: "bin/rails server"
+    startCommand: "bundle exec puma"
     healthCheckPath: /up
     envVars:
       - key: DATABASE_URL
@@ -30,7 +30,7 @@ services:
       - key: RAILS_MASTER_KEY
         sync: false
       - key: WEB_CONCURRENCY
-        value: 2
+        value: 1
       - key: SOLID_QUEUE_IN_PUMA
         value: "true"
       - key: RUBY_VERSION
