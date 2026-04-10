@@ -3,7 +3,15 @@ class HomeController < ApplicationController
   layout "launch", only: [:loader, :app, :countdown, :welcome]
 
   def app
-    redirect_to onboarding_path(1) if authenticated? && !current_user&.onboarding_completed?
+    if authenticated?
+      if current_user.onboarding_completed?
+        redirect_to user_root_path
+      else
+        redirect_to onboarding_path(1)
+      end
+    else
+      redirect_to welcome_path
+    end
   end
 
   def loader
