@@ -23,5 +23,6 @@ export default class extends Controller {
     if (this.hasPanelTarget) {
       this.panelTarget.style.transform = "translateX(-100%)"
     }
+    this.element.addEventListener("close-menu", () => this.close())
   }
 }

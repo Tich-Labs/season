@@ -103,6 +103,7 @@ de:
   feedback:
     create:
       thank_you: "Vielen Dank für dein Feedback!"
+      enter_message: "Bitte gib eine Nachricht ein."
   onboarding:
     require_user:
       sign_in_first: "Bitte melde dich zuerst an"

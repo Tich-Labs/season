@@ -95,5 +95,9 @@
       </div>
     </main>
 
+    <% if is_authenticated_view %>
+      <%= render "shared/feedback_modal" %>
+    <% end %>
+
   </body>
 </html>

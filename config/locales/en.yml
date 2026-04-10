@@ -109,6 +109,7 @@ en:
   feedback:
     create:
       thank_you: "Thank you for your feedback!"
+      enter_message: "Please enter a message."
   onboarding:
     require_user:
       sign_in_first: "Please sign in first"

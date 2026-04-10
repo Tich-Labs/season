@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_10_190208) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_10_202659) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -83,6 +83,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_10_190208) do
     t.text "take_care_text"
     t.datetime "updated_at", null: false
     t.index ["phase", "locale"], name: "index_cycle_phase_contents_on_phase_and_locale", unique: true
+  end
+
+  create_table "feedbacks", force: :cascade do |t|
+    t.boolean "active", default: true, null: false
+    t.string "attachment"
+    t.datetime "created_at", null: false
+    t.text "message", null: false
+    t.string "screenshot_url"
+    t.string "type", default: "feedback", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["user_id"], name: "index_feedbacks_on_user_id"
   end
 
   create_table "launch_signups", force: :cascade do |t|
@@ -195,6 +207,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_10_190208) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "calendar_events", "users"
   add_foreign_key "cycle_entries", "users"
+  add_foreign_key "feedbacks", "users"
   add_foreign_key "reminders", "users"
   add_foreign_key "streaks", "users"
   add_foreign_key "superpower_logs", "users"

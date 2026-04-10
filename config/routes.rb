@@ -54,6 +54,7 @@ Rails.application.routes.draw do
   resources :streaks, only: [:index]
   resources :symptoms, only: [:index, :show, :create, :update]
   resources :superpowers, only: [:index, :show, :create, :update]
+  resources :feedbacks, only: [:create]
   resource :settings, only: [:edit, :update] do
     get :profile, on: :collection
     get :subscriptions, on: :collection
@@ -62,13 +63,12 @@ Rails.application.routes.draw do
     patch :update_avatar, on: :collection
     patch :update_profile, on: :collection
   end
-  get "feedback", to: "feedback#new", as: :feedback
-  post "feedback", to: "feedback#create"
-  get "bug_report", to: "bug_report#new", as: :bug_report
-  post "bug_report", to: "bug_report#create"
 
   namespace :admin do
     resources :users, only: [:index, :show]
+    resources :feedbacks, only: [:index] do
+      get :export_csv, on: :collection
+    end
     root to: "users#index"
   end
 

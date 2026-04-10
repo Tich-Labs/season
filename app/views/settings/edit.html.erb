@@ -112,22 +112,19 @@
     </div>
 
     <%# Support %>
-    <div style="position:relative;">
-      <a href="#" style="display:flex; align-items:center; gap:16px; padding:16px; background:#899884; border-radius:8px; margin-top:8px; text-decoration:none;">
-        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
-          <circle cx="12" cy="12" r="10" />
-          <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-          <line x1="12" y1="17" x2="12.01" y2="17" />
-        </svg>
-        <div style="flex:1;">
-          <span style="display:block; color:white; font-size:16px; font-weight:700;">Support</span>
-          <span style="color:white; font-size:14px;">Contact us!</span>
-        </div>
-      </a>
-      <div style="position:absolute; right:8px; top:8px; background:#EDE1D5; border-radius:9999px; padding:4px 10px;">
-        <span style="color:#933a35; font-size:12px;">Coming soon</span>
+    <button type="button"
+            onclick="openFeedbackModal('support')"
+            style="display:flex; align-items:center; gap:16px; padding:16px; background:#899884; border-radius:8px; margin-top:8px; width:100%; border:none; cursor:pointer; text-align:left;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="10" />
+        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+        <line x1="12" y1="17" x2="12.01" y2="17" />
+      </svg>
+      <div style="flex:1;">
+        <span style="display:block; color:white; font-size:16px; font-weight:700;">Support</span>
+        <span style="color:white; font-size:14px;">Contact us!</span>
       </div>
-    </div>
+    </button>
 
     <%# Share Season with friends %>
     <div style="position:relative;">

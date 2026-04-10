@@ -12,6 +12,7 @@ class User < ApplicationRecord
   has_many :symptom_logs, dependent: :destroy
   has_many :superpower_logs, dependent: :destroy
   has_many :reminders, dependent: :destroy
+  has_many :feedbacks, dependent: :destroy
   has_one :streak, dependent: :destroy
 
   def self.ransackable_attributes(auth_object = nil)
