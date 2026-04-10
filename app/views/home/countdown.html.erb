@@ -21,10 +21,10 @@
        data-action="touchstart->feature-slides#touchStart touchend->feature-slides#touchEnd">
 
     <%# Viewport: clips to one slide width %>
-    <div class="overflow-hidden rounded-2xl" style="box-shadow:0 2px 16px rgba(147,58,53,0.10);">
+    <div class="overflow-hidden rounded-3xl bg-white p-4" style="box-shadow:0 2px 16px rgba(147,58,53,0.10);">
 
-      <%# Track: all slides laid out horizontally %>
-      <div class="flex will-change-transform" data-feature-slides-target="track">
+      <%# Track: all slides laid out horizontally, inner slides also rounded %>
+      <div class="flex will-change-transform rounded-2xl overflow-hidden" data-feature-slides-target="track">
 
         <%# ── Slide 1: Introduction (no phone, mascot illustration) ── %>
         <div class="w-full flex-shrink-0 bg-[#ede1d5] flex flex-col items-center pt-8 pb-8 px-6">
