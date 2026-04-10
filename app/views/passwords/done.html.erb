@@ -1,20 +1,19 @@
-<div style="background:#ffffff; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:60px 32px 48px; max-width:430px; margin:0 auto;">
+<div class="bg-white min-h-screen flex flex-col items-center justify-center px-8 py-16 max-w-[430px] mx-auto">
 
-  <!-- Logo -->
-  <div style="display:flex; justify-content:center; margin-bottom:48px;">
-    <%= image_tag "screen1logo.png", alt: "Season", style: "width:200px; height:auto;" %>
+  <%# Logo %>
+  <div class="flex justify-center mb-12">
+    <%= image_tag "screen1logo.png", alt: "Season", class: "w-[234px] h-auto" %>
   </div>
 
-  <!-- Message -->
-  <h1 style="color:#933a35; font-size:30px; font-weight:700; text-align:center; line-height:1.3; margin-bottom:48px;">
+  <%# Message %>
+  <h1 class="text-[#933a35] text-[36px] font-bold text-center tracking-[3.24px] leading-snug mb-12">
     Check your<br>E-Mail inbox
   </h1>
 
-  <!-- Back to login button -->
-  <div style="width:100%;">
-    <a href="<%= new_session_path %>" style="display:block; width:100%; height:52px; background:#933a35; color:#ffffff; text-align:center; line-height:52px; font-size:18px; font-weight:500; text-decoration:none; border-radius:8px;">
-      Back to LogIn
-    </a>
+  <%# Button %>
+  <div class="w-full">
+    <%= link_to "Back to LogIn", new_session_path,
+        class: "block w-full h-[52px] bg-[#933a35] text-white text-center leading-[52px] text-[22px] font-medium tracking-[0.66px] no-underline rounded-lg hover:bg-[#7a2f2a] transition-colors" %>
   </div>
 
 </div>

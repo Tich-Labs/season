@@ -1,81 +1,101 @@
-<div style="background:#FAF7F4; min-height:100vh; padding:20px;">
+<% content_for :page_title, "Users" %>
 
-  <h1 style="color:#933a35; font-size:24px; font-weight:700; margin-bottom:20px;">Users</h1>
+<div class="space-y-4">
 
-  <!-- Search -->
-  <div style="background:#ffffff; padding:16px; border-radius:12px; margin-bottom:16px;">
-    <%= search_form_for @q, url: admin_users_path do |f| %>
-      <div style="display:flex; gap:8px;">
+  <%# ── Toolbar ── %>
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+    <div class="flex items-center gap-3 flex-wrap">
+      <%= search_form_for @q, url: admin_users_path, html: { class: "flex gap-2 flex-1 min-w-[260px]" } do |f| %>
         <%= f.search_field :name_or_email_cont,
-            placeholder: "Search name or email...",
-            style: "flex:1; background:#EDE1D5; border-radius:8px; padding:12px; border:none; font-size:14px; color:#933a35;" %>
+            placeholder: "Search name or email…",
+            class: "flex-1 bg-gray-100 rounded-lg px-3 py-2 text-sm border-0 focus:ring-2 focus:ring-[#933a35] focus:outline-none" %>
         <%= f.submit "Search",
-            style: "background:#933a35; color:#ffffff; padding:12px 20px; border-radius:8px; border:none; font-size:14px; font-weight:500; cursor:pointer;" %>
-      </div>
-    <% end %>
+            class: "bg-[#933a35] text-white px-4 py-2 rounded-lg text-sm font-medium cursor-pointer hover:bg-[#7a2f2a] transition-colors" %>
+      <% end %>
 
-    <!-- Filters -->
-    <div style="display:flex; gap:8px; margin-top:12px;">
-      <%= link_to "All", admin_users_path,
-          style: "padding:8px 16px; border-radius:20px; font-size:12px; background:#EDE1D5; color:#933a35; text-decoration:none;" %>
-      <%= link_to "English", admin_users_path(q: { language_eq: 'en' }),
-          style: "padding:8px 16px; border-radius:20px; font-size:12px; background:#EDE1D5; color:#933a35; text-decoration:none;" %>
-      <%= link_to "German", admin_users_path(q: { language_eq: 'de' }),
-          style: "padding:8px 16px; border-radius:20px; font-size:12px; background:#EDE1D5; color:#933a35; text-decoration:none;" %>
-      <%= link_to "CSV", admin_users_path(format: :csv),
-          style: "padding:8px 16px; border-radius:20px; font-size:12px; background:#2E6B3E; color:#ffffff; text-decoration:none;" %>
+      <div class="flex items-center gap-2 flex-wrap">
+        <%= link_to "All", admin_users_path,
+            class: "px-3 py-1.5 rounded-full text-xs font-medium bg-[#f5ede8] text-[#933a35] hover:bg-[#ede1d5] transition-colors" %>
+        <%= link_to "English", admin_users_path(q: { language_eq: "en" }),
+            class: "px-3 py-1.5 rounded-full text-xs font-medium bg-[#f5ede8] text-[#933a35] hover:bg-[#ede1d5] transition-colors" %>
+        <%= link_to "German", admin_users_path(q: { language_eq: "de" }),
+            class: "px-3 py-1.5 rounded-full text-xs font-medium bg-[#f5ede8] text-[#933a35] hover:bg-[#ede1d5] transition-colors" %>
+        <%= link_to "↓ CSV", admin_users_path(format: :csv),
+            class: "px-3 py-1.5 rounded-full text-xs font-medium bg-green-700 text-white hover:bg-green-800 transition-colors" %>
+      </div>
     </div>
   </div>
 
-  <!-- Users table -->
-  <div style="background:#ffffff; border-radius:12px; overflow:hidden;">
-    <table style="width:100%; border-collapse:collapse;">
+  <%# ── Stats bar ── %>
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 px-5 py-4">
+      <p class="text-xs text-gray-500 uppercase tracking-wide">Total Users</p>
+      <p class="text-2xl font-bold text-[#933a35] mt-1"><%= @total_count %></p>
+    </div>
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 px-5 py-4">
+      <p class="text-xs text-gray-500 uppercase tracking-wide">Onboarded</p>
+      <p class="text-2xl font-bold text-green-700 mt-1"><%= User.where(onboarding_completed: true).count %></p>
+    </div>
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 px-5 py-4">
+      <p class="text-xs text-gray-500 uppercase tracking-wide">English</p>
+      <p class="text-2xl font-bold text-gray-700 mt-1"><%= User.where(language: "en").count %></p>
+    </div>
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 px-5 py-4">
+      <p class="text-xs text-gray-500 uppercase tracking-wide">German</p>
+      <p class="text-2xl font-bold text-gray-700 mt-1"><%= User.where(language: "de").count %></p>
+    </div>
+  </div>
+
+  <%# ── Users table ── %>
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+    <table class="w-full text-sm">
       <thead>
-        <tr style="background:#EDE1D5;">
-          <th style="padding:12px; text-align:left; font-size:12px; color:#933a35; font-weight:600;">Name</th>
-          <th style="padding:12px; text-align:left; font-size:12px; color:#933a35; font-weight:600;">Email</th>
-          <th style="padding:12px; text-align:left; font-size:12px; color:#933a35; font-weight:600;">Language</th>
-          <th style="padding:12px; text-align:left; font-size:12px; color:#933a35; font-weight:600;">Onboarding</th>
-          <th style="padding:12px; text-align:left; font-size:12px; color:#933a35; font-weight:600;">Signed Up</th>
-          <th style="padding:12px; text-align:left; font-size:12px; color:#933a35; font-weight:600;">Streak</th>
+        <tr class="bg-[#f5ede8] text-left">
+          <th class="px-4 py-3 text-xs font-semibold text-[#933a35] uppercase tracking-wide">Name</th>
+          <th class="px-4 py-3 text-xs font-semibold text-[#933a35] uppercase tracking-wide">Email</th>
+          <th class="px-4 py-3 text-xs font-semibold text-[#933a35] uppercase tracking-wide">Language</th>
+          <th class="px-4 py-3 text-xs font-semibold text-[#933a35] uppercase tracking-wide">Onboarding</th>
+          <th class="px-4 py-3 text-xs font-semibold text-[#933a35] uppercase tracking-wide">Signed Up</th>
+          <th class="px-4 py-3 text-xs font-semibold text-[#933a35] uppercase tracking-wide">Streak</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody class="divide-y divide-gray-100">
         <% @users.each do |user| %>
-          <tr style="border-bottom:1px solid #EDE1D5;">
-            <td style="padding:12px; font-size:14px; color:#933a35;">
-              <%= link_to user.name || '—', admin_user_path(user), style: "color:#933a35; text-decoration:none;" %>
+          <tr class="hover:bg-gray-50 transition-colors">
+            <td class="px-4 py-3 font-medium text-[#933a35]">
+              <%= link_to user.name.presence || "—", admin_user_path(user), class: "hover:underline" %>
             </td>
-            <td style="padding:12px; font-size:14px; color:#6B6B6B;"><%= user.email %></td>
-            <td style="padding:12px; font-size:14px; color:#6B6B6B;"><%= user.language || 'en' %></td>
-            <td style="padding:12px;">
-              <span style="padding:4px 8px; border-radius:4px; font-size:12px; background:<%= user.onboarding_completed? ? '#DFE7DD' : '#FDF0EE' %>; color:<%= user.onboarding_completed? ? '#2E6B3E' : '#933a35' %>;">
-                <%= user.onboarding_completed? ? 'Complete' : 'Pending' %>
-              </span>
+            <td class="px-4 py-3 text-gray-600"><%= user.email %></td>
+            <td class="px-4 py-3 text-gray-600 uppercase text-xs"><%= user.language || "en" %></td>
+            <td class="px-4 py-3">
+              <% if user.onboarding_completed? %>
+                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">Complete</span>
+              <% else %>
+                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-50 text-[#933a35]">Pending</span>
+              <% end %>
             </td>
-            <td style="padding:12px; font-size:14px; color:#6B6B6B;"><%= user.created_at.strftime('%Y-%m-%d') %></td>
-            <td style="padding:12px; font-size:14px; color:#933a35; font-weight:500;">
-              <%= user.streak&.current_streak || 0 %> 🔥
-            </td>
+            <td class="px-4 py-3 text-gray-600"><%= user.created_at.strftime("%Y-%m-%d") %></td>
+            <td class="px-4 py-3 text-[#933a35] font-medium"><%= user.streak&.current_streak || 0 %> 🔥</td>
           </tr>
         <% end %>
       </tbody>
     </table>
-  </div>
 
-  <!-- Pagination -->
-  <% if @pagy %>
-    <div style="display:flex; justify-content:center; gap:8px; margin-top:16px;">
-      <% if @pagy.prev %>
-        <%= link_to "← Prev", admin_users_path(page: @pagy.prev),
-            style: "padding:8px 16px; background:#ffffff; color:#933a35; border-radius:8px; text-decoration:none;" %>
-      <% end %>
-      <span style="padding:8px 16px; color:#6B6B6B; font-size:14px;">Page <%= @pagy.page %> of <%= @pagy.pages %></span>
-      <% if @pagy.next %>
-        <%= link_to "Next →", admin_users_path(page: @pagy.next),
-            style: "padding:8px 16px; background:#ffffff; color:#933a35; border-radius:8px; text-decoration:none;" %>
-      <% end %>
+    <%# Simple pagination (controller uses offset/limit, no pagy gem) %>
+    <div class="px-4 py-3 flex items-center justify-between border-t border-gray-100 text-sm text-gray-500">
+      <span>Showing <%= @users.length %> of <%= @total_count %> users</span>
+      <div class="flex gap-2">
+        <% if @page > 1 %>
+          <%= link_to "← Prev", admin_users_path(page: @page - 1),
+              class: "px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-[#933a35] hover:bg-gray-50 transition-colors" %>
+        <% end %>
+        <span class="px-3 py-1.5">Page <%= @page %></span>
+        <% if @users.length == 20 %>
+          <%= link_to "Next →", admin_users_path(page: @page + 1),
+              class: "px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-[#933a35] hover:bg-gray-50 transition-colors" %>
+        <% end %>
+      </div>
     </div>
-  <% end %>
+  </div>
 
 </div>

@@ -1,50 +1,39 @@
-<div style="background:#ffffff; min-height:100vh; display:flex; flex-direction:column; padding:60px 32px 48px; max-width:430px; margin:0 auto;">
+<div class="bg-white min-h-screen flex flex-col px-8 pt-16 pb-12 max-w-[430px] mx-auto">
 
-  <!-- Back -->
-  <div style="width:100%;">
-    <a href="<%= new_session_path %>" style="color:#933a35; text-decoration:none; font-size:16px; font-weight:400;">
-      &lt; back
-    </a>
-  </div>
+  <%# Back %>
+  <%= link_to "< back", new_session_path,
+      class: "text-[#933a35] text-base font-normal no-underline" %>
 
-  <!-- Title -->
-  <div style="width:100%; text-align:center; margin-top:32px;">
-    <h1 style="color:#933a35; font-size:36px; font-weight:700; text-transform:uppercase; letter-spacing:3px; line-height:1.15;">
-      NEW<br>PASSWORD
-    </h1>
-  </div>
+  <%# Title %>
+  <h1 class="text-[#933a35] text-[36px] font-bold uppercase tracking-[3.24px] text-center leading-tight mt-8">
+    NEW<br>PASSWORD
+  </h1>
 
-  <!-- Form -->
-  <div style="width:100%; margin-top:80px;">
-    <%= form_for(resource, as: resource_name, url: user_password_path, html: { method: :put }) do |f| %>
-      <%= f.hidden_field :reset_password_token %>
+  <%# Form %>
+  <div class="mt-20 w-full">
+    <%= form_with url: user_password_path, method: :patch do |f| %>
 
-      <% if resource.errors.any? %>
-        <div style="background:#FDF0EE; border-radius:8px; padding:12px 16px; margin-bottom:16px;">
-          <p style="color:#933a35; font-size:28px; font-weight:700; margin-bottom:8px;">OOPS!</p>
-          <p style="color:#933a35; font-size:16px; font-weight:400;"><%= resource.errors.full_messages.join(", ") %></p>
+      <%= hidden_field_tag :token, params[:token] %>
+
+      <% if @user&.errors&.any? %>
+        <div class="bg-[#FDF0EE] rounded-xl px-4 py-3 text-sm text-[#933a35] mb-4">
+          <%= @user.errors.full_messages.join(", ") %>
         </div>
       <% end %>
 
-      <!-- New Password -->
-      <div style="margin-bottom:16px;">
+      <%# New password %>
+      <div class="mb-4">
         <%= f.password_field :password,
+            name: "password",
             autofocus: true,
             placeholder: "New password...",
-            style: "width:100%; background:#EDE1D5; border-radius:8px; padding:14px 21px; height:52px; border:none; font-size:22px; font-weight:500; color:#933a35; outline:none; box-sizing:border-box;" %>
+            class: "w-full bg-[rgba(237,225,213,0.5)] rounded-lg px-5 h-[52px] text-[22px] font-medium text-[#933a35] border-0 outline-none" %>
       </div>
 
-      <!-- Confirm Password -->
-      <div style="margin-bottom:16px;">
-        <%= f.password_field :password_confirmation,
-            placeholder: "Confirm new password...",
-            style: "width:100%; background:#EDE1D5; border-radius:8px; padding:14px 21px; height:52px; border:none; font-size:22px; font-weight:500; color:#933a35; outline:none; box-sizing:border-box;" %>
-      </div>
-
-      <!-- Submit -->
-      <div style="margin-top:16px;">
+      <%# Submit %>
+      <div class="mt-4">
         <%= f.submit "Save new password",
-            style: "width:100%; height:52px; background:#933a35; color:#ffffff; font-size:18px; font-weight:500; letter-spacing:0.5px; border-radius:8px; border:none; cursor:pointer;" %>
+            class: "w-full h-[52px] bg-[#933a35] text-white text-[22px] font-medium tracking-[0.66px] rounded-lg border-0 cursor-pointer hover:bg-[#7a2f2a] transition-colors" %>
       </div>
 
     <% end %>

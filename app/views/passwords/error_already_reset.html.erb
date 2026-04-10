@@ -1,23 +1,21 @@
-<div style="background:#ffffff; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:60px 32px 48px; max-width:430px; margin:0 auto; text-align:center;">
+<div class="bg-white min-h-screen flex flex-col items-center justify-center px-8 py-16 max-w-[430px] mx-auto text-center">
 
-  <!-- Illustration -->
-  <div style="width:200px; height:200px; border-radius:50%; background:#F5EDE8; display:flex; align-items:center; justify-content:center; margin-bottom:40px; overflow:hidden;">
+  <%# Illustration %>
+  <div class="w-[220px] h-[220px] rounded-full bg-[#ede1d5] overflow-hidden mb-10 flex-shrink-0">
     <%= image_tag "error_screens_login/errorscreen-already-reset.png",
         alt: "Already reset",
-        style: "width:100%; height:100%; object-fit:cover;" %>
+        class: "w-full h-full object-cover" %>
   </div>
 
-  <!-- Message -->
-  <p style="color:#933a35; font-size:16px; font-weight:400; line-height:1.6; max-width:300px; margin-bottom:48px;">
+  <%# Message %>
+  <p class="text-[#933a35] text-[18px] font-normal tracking-[1.62px] leading-snug max-w-[290px] mb-12">
     We already sent you an email an hour ago to help you reset your password; you'll need to wait an hour before you can try again
   </p>
 
-  <!-- Button -->
-  <div style="width:100%;">
-    <a href="<%= new_session_path %>"
-       style="display:block; width:100%; height:52px; background:#933a35; color:#ffffff; text-align:center; line-height:52px; font-size:18px; font-weight:500; text-decoration:none; border-radius:8px;">
-      Go back to login
-    </a>
+  <%# Button %>
+  <div class="w-full">
+    <%= link_to "Go back to login", new_session_path,
+        class: "block w-full h-[52px] bg-[#933a35] text-white text-center leading-[52px] text-[22px] font-medium tracking-[0.66px] no-underline rounded-lg hover:bg-[#7a2f2a] transition-colors" %>
   </div>
 
 </div>
