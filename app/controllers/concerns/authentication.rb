@@ -61,15 +61,15 @@ module Authentication
   end
 
   def after_sign_in_path
-    if current_user.onboarding_completed?
-      user_root_path
-    else
-      onboarding_path(1)
-    end
+    step = current_user.first_incomplete_onboarding_step
+    step ? onboarding_path(step) : user_root_path
   end
 
   def require_onboarding_completed
-    redirect_to onboarding_path(1) if authenticated? && !current_user.onboarding_completed?
+    return unless authenticated?
+
+    step = current_user.first_incomplete_onboarding_step
+    redirect_to onboarding_path(step) if step
   end
 
   def store_location_for(resource, location)

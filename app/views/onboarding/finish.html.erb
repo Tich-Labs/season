@@ -1,27 +1,16 @@
-<div style="background:#ffffff; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:60px 32px 48px; max-width:430px; margin:0 auto;">
+<div class="min-h-screen bg-[#FAF7F4] flex flex-col items-center justify-center max-w-[430px] mx-auto px-8 py-16 text-center">
 
-  <!-- Logo centered upper half -->
-  <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;">
-    <%= image_tag "screen1logo.png",
-        class: "w-[234px] h-[255px] object-contain",
-        alt: "Season" %>
-    <%= image_tag "season-wortmarke-1.svg",
-        style: "width:280px; height:auto; display:block; margin:0 auto;",
-        alt: "Season" %>
-  </div>
+  <%= image_tag "screen1logo.png",
+      class: "w-[180px] h-auto object-contain mb-10",
+      alt: "Season" %>
 
-  <!-- Welcome text -->
-  <div style="width:100%; text-align:center;">
-    <p style="color:#933a35; font-size:22px; font-weight:500; margin-bottom:6px; letter-spacing:1.32px;">
-      You're all set!
-    </p>
-    <p style="color:#6B6B6B; font-size:16px; font-weight:400; margin-bottom:40px; line-height:1.5;">
-      Welcome to Season. Let's start tracking your cycle.
-    </p>
+  <p class="text-[#933a35] text-[22px] font-medium leading-snug mb-10 px-4">
+    Everything is getting set up for you to start your SEASON Journey.
+  </p>
 
-    <a href="<%= user_root_path %>" style="display:block; background:#933a35; color:#ffffff; text-align:center; padding:18px; border-radius:8px; font-weight:500; font-size:16px; text-decoration:none; letter-spacing:1.32px;">
-      GO TO CALENDAR
-    </a>
-  </div>
+  <a href="<%= user_root_path %>"
+     class="w-full bg-[#933a35] text-white rounded-xl py-5 text-base font-medium tracking-wide block">
+    Get started
+  </a>
 
 </div>

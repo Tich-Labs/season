@@ -186,6 +186,20 @@ bundle exec rails db:prepare
 
 ---
 
+## 🛠 Database Engineering Standards
+
+We follow high-integrity migration patterns to ensure 100% uptime and data safety for our users.
+Reference: [Rails Migrations Best Practices](https://www.visuality.pl/posts/rails-migrations-best-practices)
+
+### Core Rules
+
+1. **Reversibility:** Every migration must be reversible (`change` or `up/down`).
+2. **Schema Integrity:** Use null constraints and appropriate defaults at the DB level, not just in Rails models.
+3. **No Downtime:** Avoid destructive actions (like removing columns) without a two-step deployment.
+4. **Data vs Schema:** Keep data manipulation in Rake tasks, not migrations.
+
+---
+
 ## Known Issues (pre-deploy)
 
 | # | Severity | Issue | File |

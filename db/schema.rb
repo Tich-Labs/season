@@ -10,20 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_04_09_055450) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_10_120926) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
   create_table "calendar_events", force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.string "title", null: false
-    t.date "date", null: false
-    t.time "start_time"
-    t.time "end_time"
     t.string "category"
-    t.text "notes"
     t.datetime "created_at", null: false
+    t.date "date", null: false
+    t.time "end_time"
+    t.text "notes"
+    t.time "start_time"
+    t.string "title", null: false
     t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["user_id", "date"], name: "index_calendar_events_on_user_id_and_date"
     t.index ["user_id"], name: "index_calendar_events_on_user_id"
   end
 
@@ -33,31 +34,32 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_09_055450) do
     t.date "date", null: false
     t.boolean "period_end", default: false, null: false
     t.boolean "period_start", default: false, null: false
-    t.string "phase"
+    t.string "phase", null: false
     t.string "season_name"
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.index ["date"], name: "index_cycle_entries_on_date"
     t.index ["user_id", "date"], name: "index_cycle_entries_on_user_id_and_date"
+    t.index ["user_id", "date"], name: "index_cycle_entries_on_user_id_and_date_unique", unique: true
   end
 
   create_table "cycle_phase_contents", force: :cascade do |t|
-    t.string "phase", null: false
-    t.string "locale", null: false
-    t.string "season_name"
-    t.text "superpower_text"
-    t.text "mood_text"
-    t.text "take_care_text"
-    t.text "sport_text"
-    t.text "nutrition_text"
     t.datetime "created_at", null: false
+    t.string "locale", null: false
+    t.text "mood_text"
+    t.text "nutrition_text"
+    t.string "phase", null: false
+    t.string "season_name"
+    t.text "sport_text"
+    t.text "superpower_text"
+    t.text "take_care_text"
     t.datetime "updated_at", null: false
     t.index ["phase", "locale"], name: "index_cycle_phase_contents_on_phase_and_locale", unique: true
   end
 
   create_table "launch_signups", force: :cascade do |t|
-    t.string "email"
     t.datetime "created_at", null: false
+    t.string "email"
     t.datetime "updated_at", null: false
   end
 
@@ -72,6 +74,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_09_055450) do
     t.time "time"
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
+    t.index ["user_id", "active"], name: "index_reminders_on_user_id_and_active"
     t.index ["user_id"], name: "index_reminders_on_user_id"
   end
 
@@ -117,18 +120,30 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_09_055450) do
   end
 
   create_table "users", force: :cascade do |t|
+    t.boolean "admin", default: false, null: false
+    t.integer "age"
+    t.string "apple_uid"
+    t.boolean "birth_control_reminder"
     t.date "birthday"
     t.string "contraception_type", default: "none"
     t.datetime "created_at", null: false
+    t.integer "cycle_days"
     t.integer "cycle_length"
+    t.boolean "cycle_stage_reminder"
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
+    t.string "facebook_uid"
+    t.string "food_preference"
+    t.string "google_uid"
+    t.boolean "has_regular_cycle"
     t.datetime "invite_accepted_at"
     t.string "invite_token"
-    t.string "language", default: "en"
+    t.string "language", default: "en", null: false
+    t.string "last_menstruation"
     t.date "last_period_start"
     t.string "life_stage", default: "menstrual"
-    t.string "name"
+    t.string "locale"
+    t.string "name", null: false
     t.boolean "onboarding_completed", default: false, null: false
     t.integer "period_length"
     t.string "plan", default: "free"
@@ -136,14 +151,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_09_055450) do
     t.datetime "reset_password_sent_at"
     t.string "reset_password_token"
     t.datetime "updated_at", null: false
-    t.string "google_uid"
-    t.string "facebook_uid"
-    t.string "apple_uid"
-    t.string "locale"
-    t.boolean "admin", default: false, null: false
-    t.integer "age"
-    t.integer "cycle_days"
-    t.string "last_menstruation"
+    t.boolean "uses_hormonal_birth_control"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["invite_token"], name: "index_users_on_invite_token"
     t.index ["language"], name: "index_users_on_language"

@@ -1,248 +1,527 @@
-<div style="background:#ffffff; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:60px 32px 48px; max-width:430px; margin:0 auto;">
-
-  <!-- Progress indicator -->
-  <div style="width:100%; display:flex; justify-content:center; gap:8px; margin-bottom:40px;">
-    <% (1..5).each do |i| %>
-      <div style="width:40px; height:4px; border-radius:2px; background:<%= i <= @step ? '#933a35' : '#EDE1D5' %>;"></div>
-    <% end %>
-  </div>
+<div class="min-h-screen bg-white flex flex-col max-w-[430px] mx-auto px-8 pt-16 pb-12">
 
   <% if @error %>
-    <div style="background:#FDF0EE; border-radius:8px; padding:12px 16px; margin-bottom:16px; width:100%;">
-      <p style="color:#933a35; font-size:16px; font-weight:500;"><%= @error %></p>
+    <div class="bg-[#FDF0EE] rounded-xl px-4 py-3 text-sm text-[#933a35] mb-4">
+      <%= @error %>
     </div>
   <% end %>
 
   <% case @step %>
+
+  <%# ── Step 1: Name ──────────────────────────────────────────────── %>
   <% when 1 %>
-    <!-- Step 1: Name -->
-    <div style="width:100%; flex:1; display:flex; flex-direction:column; justify-content:center;">
-      <h2 style="color:#933a35; font-size:22px; font-weight:500; text-align:center; margin-bottom:12px; letter-spacing:1.32px;">
-        What's your name?
+    <div class="flex-1 flex flex-col justify-center">
+      <h2 class="text-[#933a35] text-[26px] font-medium leading-tight mb-10">
+        How would you like to be called?
       </h2>
-      <p style="color:#6B6B6B; font-size:16px; font-weight:400; text-align:center; margin-bottom:40px;">
-        We want to get to know you better.
-      </p>
 
-      <form action="<%= onboarding_path(@step) %>" method="post" id="step1-form">
-        <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
-        <input type="hidden" name="_method" value="patch">
-        <input type="text" name="user[name]" id="user_name" placeholder="Your name..." autocomplete="name" required
-               style="width:100%; background:#EDE1D5; border-radius:8px; padding:14px 21px; height:52px; border:none; font-size:22px; font-weight:500; color:#933a35; outline:none; box-sizing:border-box; text-align:center;">
-      </form>
+      <%= form_with url: onboarding_path(1), method: :patch, id: "step1-form", local: true do |f| %>
+        <%= f.text_field :name,
+            name: "user[name]",
+            placeholder: "Name...",
+            autocomplete: "name",
+            class: "w-full bg-[#F5EDE8] rounded-xl px-5 py-4 text-[#933a35] text-xl font-medium placeholder-[#C8A49A] focus:outline-none" %>
+      <% end %>
     </div>
 
-    <div style="width:100%;">
-      <a href="#" onclick="document.getElementById('step1-form').submit(); return false;" style="display:block; background:#933a35; color:#ffffff; text-align:center; padding:18px; border-radius:8px; font-weight:500; font-size:16px; text-decoration:none; letter-spacing:1.32px;">
-        CONTINUE
-      </a>
+    <div class="w-full">
+      <%= button_tag "Submit",
+          form: "step1-form", type: "submit",
+          class: "w-full bg-[#933a35] text-white rounded-xl py-5 text-base font-medium tracking-wide" %>
     </div>
 
+  <%# ── Step 2: Birthday ──────────────────────────────────────────── %>
   <% when 2 %>
-    <!-- Step 2: Cycle & Period Length -->
-    <div style="width:100%; flex:1; display:flex; flex-direction:column; justify-content:center;">
-      <h2 style="color:#933a35; font-size:22px; font-weight:500; text-align:center; margin-bottom:12px; letter-spacing:1.32px;">
-        Your cycle details
+    <div class="flex-1 flex flex-col justify-center">
+      <h2 class="text-[#933a35] text-[26px] font-medium leading-tight mb-10">
+        Hello <%= current_user.first_name %>,<br>
+        When were you born?
       </h2>
-      <p style="color:#6B6B6B; font-size:16px; font-weight:400; text-align:center; margin-bottom:40px;">
-        This helps us predict your cycle accurately.
-      </p>
 
-      <form action="<%= onboarding_path(@step) %>" method="post" id="step2-form">
-        <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
-        <input type="hidden" name="_method" value="patch">
-        <input type="hidden" name="cycle_length" id="cycle_length" value="28">
-        <input type="hidden" name="period_length" id="period_length" value="5">
-
-        <div style="margin-bottom:24px;">
-          <label style="color:#933a35; font-size:16px; font-weight:500; display:block; margin-bottom:8px;">Cycle length (days)</label>
-          <div style="display:flex; justify-content:center; gap:8px; flex-wrap:wrap;">
-            <% (21..35).each do |day| %>
-              <button type="button" class="cycle-btn" data-value="<%= day %>"
-                      style="width:44px; height:44px; border-radius:8px; border:none; background:#EDE1D5; color:#933a35; font-size:14px; font-weight:500; cursor:pointer;">
-                <%= day %>
-              </button>
-            <% end %>
+      <%= form_with url: onboarding_path(2), method: :patch, id: "step2-form", local: true do |f| %>
+        <div class="flex gap-3">
+          <div class="flex flex-col items-start gap-1">
+            <label class="text-[#933a35] text-xs font-medium tracking-wide">Day</label>
+            <input type="number" name="birthday_day" min="1" max="31" placeholder="DD"
+                   class="w-[70px] bg-[#F5EDE8] rounded-xl px-3 py-4 text-[#933a35] text-xl font-medium text-center placeholder-[#C8A49A] focus:outline-none">
+          </div>
+          <div class="flex flex-col items-start gap-1">
+            <label class="text-[#933a35] text-xs font-medium tracking-wide">Month</label>
+            <input type="number" name="birthday_month" min="1" max="12" placeholder="MM"
+                   class="w-[70px] bg-[#F5EDE8] rounded-xl px-3 py-4 text-[#933a35] text-xl font-medium text-center placeholder-[#C8A49A] focus:outline-none">
+          </div>
+          <div class="flex flex-col items-start gap-1">
+            <label class="text-[#933a35] text-xs font-medium tracking-wide">Jahr</label>
+            <input type="number" name="birthday_year" min="1900" max="<%= Date.today.year %>" placeholder="JJJJ"
+                   class="w-[110px] bg-[#F5EDE8] rounded-xl px-3 py-4 text-[#933a35] text-xl font-medium text-center placeholder-[#C8A49A] focus:outline-none">
           </div>
         </div>
-
-        <div>
-          <label style="color:#933a35; font-size:16px; font-weight:500; display:block; margin-bottom:8px;">Period length (days)</label>
-          <div style="display:flex; justify-content:center; gap:8px; flex-wrap:wrap;">
-            <% (1..10).each do |day| %>
-              <button type="button" class="period-btn" data-value="<%= day %>"
-                      style="width:44px; height:44px; border-radius:8px; border:none; background:#EDE1D5; color:#933a35; font-size:14px; font-weight:500; cursor:pointer;">
-                <%= day %>
-              </button>
-            <% end %>
-          </div>
-        </div>
-      </form>
+      <% end %>
     </div>
 
-    <div style="width:100%;">
-      <a href="#" onclick="document.getElementById('step2-form').submit(); return false;" style="display:block; background:#933a35; color:#ffffff; text-align:center; padding:18px; border-radius:8px; font-weight:500; font-size:16px; text-decoration:none; letter-spacing:1.32px;">
-        CONTINUE
-      </a>
+    <div class="w-full">
+      <%= button_tag "Submit",
+          form: "step2-form", type: "submit",
+          class: "w-full bg-[#933a35] text-white rounded-xl py-5 text-base font-medium tracking-wide" %>
     </div>
 
+  <%# ── Step 3: Regular cycle? ────────────────────────────────────── %>
   <% when 3 %>
-    <!-- Step 3: Contraception -->
-    <div style="width:100%; flex:1; display:flex; flex-direction:column; justify-content:center;">
-      <h2 style="color:#933a35; font-size:22px; font-weight:500; text-align:center; margin-bottom:12px; letter-spacing:1.32px;">
-        Contraception type
+    <div class="flex-1 flex flex-col justify-center">
+      <h2 class="text-[#933a35] text-[26px] font-medium leading-tight mb-16">
+        Do you have a regular cycle?
       </h2>
-      <p style="color:#6B6B6B; font-size:16px; font-weight:400; text-align:center; margin-bottom:40px;">
-        Select your current method.
+
+      <div class="flex flex-col gap-3">
+        <%= form_with url: onboarding_path(3), method: :patch, local: true do |f| %>
+          <%= f.hidden_field :has_regular_cycle, value: "true" %>
+          <%= f.submit "Yes",
+              class: "w-full bg-[#933a35] text-white rounded-xl py-5 text-base font-medium cursor-pointer" %>
+        <% end %>
+
+        <%= form_with url: onboarding_path(3), method: :patch, local: true do |f| %>
+          <%= f.hidden_field :has_regular_cycle, value: "false" %>
+          <%= f.submit "No",
+              class: "w-full bg-transparent text-[#933a35] py-4 text-base font-medium cursor-pointer border-none" %>
+        <% end %>
+      </div>
+    </div>
+
+  <%# ── Step 4: Cycle length (scroll picker) ──────────────────────── %>
+  <% when 4 %>
+    <% if @no_regular_cycle %>
+      <div id="no-problem-modal" class="fixed inset-0 bg-black/40 flex items-center justify-center z-50 px-8">
+        <div class="bg-[#FAF7F4] rounded-2xl px-8 py-10 text-center max-w-[340px] w-full">
+          <h3 class="text-[#933a35] text-2xl font-medium mb-4">No Problem</h3>
+          <p class="text-[#933a35] text-sm leading-relaxed mb-8">
+            We'll help you get your cycle back on track with exercise and nutrition tips
+          </p>
+          <button onclick="document.getElementById('no-problem-modal').remove()"
+                  class="w-full bg-[#933a35] text-white rounded-xl py-5 text-base font-medium">
+            Okay, next
+          </button>
+        </div>
+      </div>
+    <% end %>
+
+    <div class="flex-1 flex flex-col justify-center">
+      <h2 class="text-[#933a35] text-[26px] font-medium leading-tight mb-1">
+        How long is your average cycle?
+      </h2>
+      <p class="text-[#6B6B6B] text-sm mb-10">Small note: Cycles usually last 24-38 days.</p>
+
+      <%= form_with url: onboarding_path(4), method: :patch, id: "step4-form", local: true do |f| %>
+        <%= f.hidden_field :cycle_length, id: "cycle_length_value", value: "28" %>
+
+        <div class="relative flex justify-center overflow-hidden" style="height:210px;">
+          <div class="absolute left-0 right-0 bg-[#F5EDE8] rounded-xl pointer-events-none"
+               style="top:84px; height:42px;"></div>
+
+          <div id="cycle-picker"
+               class="overflow-y-scroll flex flex-col items-center"
+               style="height:210px; scroll-snap-type:y mandatory; -webkit-overflow-scrolling:touch; scrollbar-width:none;">
+            <div style="min-height:84px; flex-shrink:0;"></div>
+            <% (20..45).each do |d| %>
+              <div data-days="<%= d %>"
+                   class="cycle-day-item flex items-center justify-center text-[#933a35] font-medium cursor-pointer flex-shrink-0"
+                   style="height:42px; min-height:42px; scroll-snap-align:center; font-size:16px; opacity:0.45;">
+                <%= d %> Days
+              </div>
+            <% end %>
+            <div style="min-height:84px; flex-shrink:0;"></div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="w-full flex flex-col gap-3">
+      <%= button_tag "Submit", form: "step4-form", type: "submit",
+          class: "w-full bg-[#933a35] text-white rounded-xl py-5 text-base font-medium" %>
+
+      <%= form_with url: onboarding_path(4), method: :patch, local: true do |f| %>
+        <%= f.hidden_field :skip_cycle_length, value: "1" %>
+        <%= f.submit "Not sure",
+            class: "w-full bg-transparent text-[#933a35] py-3 text-base font-medium cursor-pointer border-none" %>
+      <% end %>
+    </div>
+
+  <%# ── Step 5: Hormonal birth control? ───────────────────────────── %>
+  <% when 5 %>
+    <div class="flex-1 flex flex-col justify-center">
+      <h2 class="text-[#933a35] text-[26px] font-medium leading-tight mb-10">
+        Are you using hormonal birth control?
+      </h2>
+      <p class="text-[#933a35] text-sm leading-relaxed">
+        Hormonal birth control alters your natural cycle. Season currently aligns with your natural cycle, but by tracking your symptoms and Superpower Moments, we create a personalized forecast for you.
       </p>
 
-      <form action="<%= onboarding_path(@step) %>" method="post" id="step3-form">
-        <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
-        <input type="hidden" name="_method" value="patch">
-        <input type="hidden" name="contraception" id="contraception" value="None">
+      <div class="flex flex-col gap-3 mt-12">
+        <%= form_with url: onboarding_path(5), method: :patch, local: true do |f| %>
+          <%= f.hidden_field :uses_hormonal_birth_control, value: "true" %>
+          <%= f.submit "Yes",
+              class: "w-full bg-[#933a35] text-white rounded-xl py-5 text-base font-medium cursor-pointer" %>
+        <% end %>
 
-        <div style="display:flex; flex-direction:column; gap:12px;">
-          <% ["None", "Condoms", "Birth control pill", "IUD", "Implant", "Patch", "Ring", "Other"].each do |method| %>
-            <button type="button" class="contraception-btn" data-value="<%= method %>"
-                    style="width:100%; padding:16px; border-radius:8px; border:2px solid #EDE1D5; background:#ffffff; color:#933a35; font-size:16px; font-weight:500; cursor:pointer; text-align:left;">
+        <%= form_with url: onboarding_path(5), method: :patch, local: true do |f| %>
+          <%= f.hidden_field :uses_hormonal_birth_control, value: "false" %>
+          <%= f.submit "No",
+              class: "w-full bg-transparent text-[#933a35] py-4 text-base font-medium cursor-pointer border-none" %>
+        <% end %>
+      </div>
+    </div>
+
+  <%# ── Step 6: Birth control method ─────────────────────────────── %>
+  <% when 6 %>
+    <div class="flex-1 flex flex-col justify-center">
+      <h2 class="text-[#933a35] text-[26px] font-medium leading-tight mb-8">
+        What method of birth control do you use?
+      </h2>
+
+      <%= form_with url: onboarding_path(6), method: :patch, id: "step6-form", local: true do |f| %>
+        <%= f.hidden_field :birth_control_method, id: "bc_method_value", value: "" %>
+        <div class="flex flex-col gap-3">
+          <% ["Birth control pill", "Hormonering", "Hormoneplaster", "Hormone injection", "IUD", "Hormonal implant"].each do |method| %>
+            <button type="button" data-method="<%= method %>"
+                    class="bc-method-btn w-full bg-[#F5EDE8] text-[#933a35] rounded-xl py-4 text-base font-medium text-center">
               <%= method %>
             </button>
           <% end %>
         </div>
-      </form>
+      <% end %>
     </div>
 
-    <div style="width:100%;">
-      <a href="#" onclick="document.getElementById('step3-form').submit(); return false;" style="display:block; background:#933a35; color:#ffffff; text-align:center; padding:18px; border-radius:8px; font-weight:500; font-size:16px; text-decoration:none; letter-spacing:1.32px;">
-        CONTINUE
-      </a>
+    <div class="w-full mt-6">
+      <%= button_tag "Submit", form: "step6-form", type: "submit",
+          class: "w-full bg-[#933a35] text-white rounded-xl py-5 text-base font-medium" %>
     </div>
 
-  <% when 4 %>
-    <!-- Step 4: Last Period Start Date -->
-    <div style="width:100%; flex:1; display:flex; flex-direction:column; justify-content:center;">
-      <h2 style="color:#933a35; font-size:22px; font-weight:500; text-align:center; margin-bottom:12px; letter-spacing:1.32px;">
-        When did your last period start?
+  <%# ── Step 7: Birth control reminder ────────────────────────────── %>
+  <% when 7 %>
+    <div class="flex-1 flex flex-col justify-center">
+      <h2 class="text-[#933a35] text-[26px] font-medium leading-tight mb-16">
+        Would you like to set up a reminder for your birth control?
       </h2>
-      <p style="color:#6B6B6B; font-size:16px; font-weight:400; text-align:center; margin-bottom:40px;">
-        Select the first day of your most recent period.
-      </p>
 
-      <form action="<%= onboarding_path(@step) %>" method="post" id="step4-form">
-        <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
-        <input type="hidden" name="_method" value="patch">
-        <input type="date" name="last_period_date" id="last_period_date" autocomplete="off" required
-               style="width:100%; background:#EDE1D5; border-radius:8px; padding:14px 21px; height:52px; border:none; font-size:18px; font-weight:500; color:#933a35; outline:none; box-sizing:border-box; text-align:center;">
-      </form>
+      <div class="flex flex-col gap-3">
+        <%= form_with url: onboarding_path(7), method: :patch, local: true do |f| %>
+          <%= f.hidden_field :birth_control_reminder, value: "true" %>
+          <%= f.submit "Yes",
+              class: "w-full bg-[#933a35] text-white rounded-xl py-5 text-base font-medium cursor-pointer" %>
+        <% end %>
+
+        <%= form_with url: onboarding_path(7), method: :patch, local: true do |f| %>
+          <%= f.hidden_field :birth_control_reminder, value: "false" %>
+          <%= f.submit "No",
+              class: "w-full bg-transparent text-[#933a35] py-4 text-base font-medium cursor-pointer border-none" %>
+        <% end %>
+      </div>
     </div>
 
-    <div style="width:100%;">
-      <a href="#" onclick="document.getElementById('step4-form').submit(); return false;" style="display:block; background:#933a35; color:#ffffff; text-align:center; padding:18px; border-radius:8px; font-weight:500; font-size:16px; text-decoration:none; letter-spacing:1.32px;">
-        CONTINUE
-      </a>
-    </div>
-
-  <% when 5 %>
-    <!-- Step 5: Language Preference -->
-    <div style="width:100%; flex:1; display:flex; flex-direction:column; justify-content:center;">
-      <h2 style="color:#933a35; font-size:22px; font-weight:500; text-align:center; margin-bottom:12px; letter-spacing:1.32px;">
-        Language preference
+  <%# ── Step 8: Are you taking any contraception? ─────────────────── %>
+  <% when 8 %>
+    <div class="flex-1 flex flex-col justify-center">
+      <h2 class="text-[#933a35] text-[26px] font-medium leading-tight mb-8">
+        Hello <%= current_user.first_name %>,<br>
+        Are you taking any contraception?
       </h2>
-      <p style="color:#6B6B6B; font-size:16px; font-weight:400; text-align:center; margin-bottom:40px;">
-        Choose your preferred language.
-      </p>
 
-      <form action="<%= onboarding_path(@step) %>" method="post" id="step5-form">
-        <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
-        <input type="hidden" name="_method" value="patch">
-        <input type="hidden" name="locale" id="locale" value="en">
-
-        <div style="display:flex; flex-direction:column; gap:12px;">
-          <button type="button" class="lang-btn" data-lang="en"
-                  style="width:100%; padding:16px; border-radius:8px; border:2px solid #EDE1D5; background:#ffffff; color:#933a35; font-size:16px; font-weight:500; cursor:pointer; text-align:left;">
-            English
-          </button>
-          <button type="button" class="lang-btn" data-lang="de"
-                  style="width:100%; padding:16px; border-radius:8px; border:2px solid #EDE1D5; background:#ffffff; color:#933a35; font-size:16px; font-weight:500; cursor:pointer; text-align:left;">
-            Deutsch
-          </button>
+      <%= form_with url: onboarding_path(8), method: :patch, id: "step8-form", local: true do |f| %>
+        <%= f.hidden_field :contraception, id: "contraception_value", value: "None" %>
+        <div class="flex flex-col gap-3">
+          <% ["None", "Birth control pill", "Hormonering", "Hormoneplaster", "Hormone injection", "IUD", "Hormonal implant", "Condoms", "Other"].each do |c| %>
+            <button type="button" data-contraception="<%= c %>"
+                    class="contraception-btn w-full bg-[#F5EDE8] text-[#933a35] rounded-xl py-4 text-base font-medium text-center">
+              <%= c %>
+            </button>
+          <% end %>
         </div>
-      </form>
+      <% end %>
     </div>
 
-    <div style="width:100%;">
-      <a href="#" onclick="document.getElementById('step5-form').submit(); return false;" style="display:block; background:#933a35; color:#ffffff; text-align:center; padding:18px; border-radius:8px; font-weight:500; font-size:16px; text-decoration:none; letter-spacing:1.32px;">
-        FINISH
-      </a>
+    <div class="w-full mt-6">
+      <%= button_tag "Submit", form: "step8-form", type: "submit",
+          class: "w-full bg-[#933a35] text-white rounded-xl py-5 text-base font-medium" %>
+    </div>
+
+  <%# ── Step 9: Food preferences ───────────────────────────────────── %>
+  <% when 9 %>
+    <div class="flex-1 flex flex-col justify-center">
+      <h2 class="text-[#933a35] text-[26px] font-medium leading-tight mb-8">
+        Hello <%= current_user.first_name %>,<br>
+        Do you have any food preferences?
+      </h2>
+
+      <%= form_with url: onboarding_path(9), method: :patch, id: "step9-form", local: true do |f| %>
+        <%= f.hidden_field :food_preference, id: "food_pref_value", value: "None" %>
+        <div class="flex flex-col gap-3">
+          <% ["None", "Vegetarian", "Vegan", "Pollotaric", "Pescetarian"].each do |pref| %>
+            <button type="button" data-food="<%= pref %>"
+                    class="food-btn w-full bg-[#F5EDE8] text-[#933a35] rounded-xl py-4 text-base font-medium text-center">
+              <%= pref %>
+            </button>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="w-full mt-6">
+      <%= button_tag "Submit", form: "step9-form", type: "submit",
+          class: "w-full bg-[#933a35] text-white rounded-xl py-5 text-base font-medium" %>
+    </div>
+
+  <%# ── Step 10: Last period calendar ─────────────────────────────── %>
+  <% when 10 %>
+    <%
+      today      = Date.today
+      cal_year   = (params[:cal_year] || today.year).to_i
+      cal_month_num = (params[:cal_month] || today.month).to_i
+      cal_start  = Date.new(cal_year, cal_month_num, 1)
+      cal_end    = cal_start.end_of_month
+      start_pad  = (cal_start.wday - 1) % 7
+      end_pad    = (7 - cal_end.wday) % 7
+      cal_days   = (cal_start - start_pad)..(cal_end + end_pad)
+    %>
+
+    <div class="pt-4">
+      <h2 class="text-[#933a35] text-[22px] font-medium leading-tight mb-6">
+        <%= current_user.first_name %>, when was the first day of your last menstruation?
+      </h2>
+    </div>
+
+    <div class="flex-1">
+      <%= form_with url: onboarding_path(10), method: :patch, id: "step10-form", local: true do |f| %>
+        <%= f.hidden_field :last_period_date, id: "last_period_value", value: "" %>
+
+        <div class="flex items-center justify-between mb-2">
+          <a href="<%= onboarding_path(10, cal_year: (cal_start - 1.month).year, cal_month: (cal_start - 1.month).month) %>"
+             class="text-[#933a35] text-sm font-medium px-1">&lt;</a>
+          <span class="text-[#933a35] text-sm font-medium">
+            <%= cal_start.strftime("%B") %>
+          </span>
+          <a href="<%= onboarding_path(10, cal_year: (cal_start + 1.month).year, cal_month: (cal_start + 1.month).month) %>"
+             class="text-[#933a35] text-sm font-medium px-1">&gt;</a>
+        </div>
+
+        <div class="border-b border-[#EDE1D5] mb-1"></div>
+
+        <div class="grid grid-cols-7" id="cal-grid" data-period-length="<%= current_user.period_length || 5 %>">
+          <% cal_days.each do |day| %>
+            <%
+              in_month = day.month == cal_start.month
+              is_today = day == today
+            %>
+            <div class="cal-day flex flex-col items-center py-3 cursor-pointer select-none"
+                 data-date="<%= day.iso8601 %>"
+                 data-in-month="<%= in_month %>">
+              <span class="text-sm w-8 h-8 flex items-center justify-center rounded-sm cal-day-label
+                           <%= is_today ? 'bg-[#933a35] text-white font-semibold' : (in_month ? 'text-[#933a35]' : 'text-[#C8A49A]') %>">
+                <%= day.day %>
+              </span>
+            </div>
+          <% end %>
+        </div>
+
+        <div class="border-t border-[#EDE1D5] mt-1"></div>
+      <% end %>
+    </div>
+
+    <div class="w-full flex flex-col gap-2 mt-4">
+      <a href="#" id="cal-clear" class="text-center text-[#933a35] text-sm hidden">clear</a>
+
+      <%= form_with url: onboarding_path(10), method: :patch, id: "skip-period-form", local: true do |f| %>
+        <%= f.hidden_field :skip_last_period, value: "1" %>
+      <% end %>
+
+      <button id="cal-submit-btn"
+              onclick="document.getElementById('step10-form').submit()"
+              class="w-full bg-[#933a35] text-white rounded-xl py-5 text-base font-medium hidden">
+        Submit
+      </button>
+      <button id="cal-unsure-btn"
+              onclick="document.getElementById('skip-period-form').submit()"
+              class="w-full bg-[#933a35] text-white rounded-xl py-5 text-base font-medium">
+        Unsure...
+      </button>
+    </div>
+
+  <%# ── Step 11: Cycle stage reminder ─────────────────────────────── %>
+  <% when 11 %>
+    <div class="flex-1 flex flex-col justify-center items-center text-center">
+      <svg class="w-14 h-14 text-[#933a35] mb-6" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round"
+              d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
+      </svg>
+
+      <h2 class="text-[#933a35] text-[26px] font-medium leading-tight mb-6">
+        Would you like a reminder of your cycle stages to be more prepared?
+      </h2>
+      <p class="text-[#933a35] text-sm leading-relaxed">
+        You will receive it two days before the predicted start date of your cycle phase. You can change these later.
+      </p>
+    </div>
+
+    <div class="w-full flex flex-col gap-3">
+      <%= form_with url: onboarding_path(11), method: :patch, local: true do |f| %>
+        <%= f.submit "Submit",
+            class: "w-full bg-[#933a35] text-white rounded-xl py-5 text-base font-medium cursor-pointer" %>
+      <% end %>
+
+      <%= form_with url: onboarding_path(11), method: :patch, local: true do |f| %>
+        <%= f.hidden_field :skip_reminder, value: "1" %>
+        <%= f.submit "Maybe later",
+            class: "w-full bg-transparent text-[#933a35] py-3 text-base font-medium cursor-pointer border-none" %>
+      <% end %>
     </div>
 
   <% end %>
-
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  // Step 2: Cycle length buttons
-  document.querySelectorAll('.cycle-btn').forEach(function(btn) {
-    btn.addEventListener('click', function() {
-      document.querySelectorAll('.cycle-btn').forEach(function(b) {
-        b.style.background = '#EDE1D5';
+document.addEventListener('DOMContentLoaded', function () {
+
+  // ── Step 4: Cycle length drum picker ──────────────────────────────
+  var picker = document.getElementById('cycle-picker');
+  if (picker) {
+    var items  = Array.from(picker.querySelectorAll('.cycle-day-item'));
+    var itemH  = 42;
+
+    function applyHighlight() {
+      var idx = Math.round(picker.scrollTop / itemH);
+      idx = Math.max(0, Math.min(idx, items.length - 1));
+      items.forEach(function (el, i) {
+        var active = (i === idx);
+        el.style.opacity  = active ? '1'    : '0.45';
+        el.style.fontSize = active ? '22px' : '16px';
+        if (active) {
+          document.getElementById('cycle_length_value').value = el.dataset.days;
+        }
+      });
+    }
+
+    var defaultIdx   = 28 - 20;
+    picker.scrollTop = defaultIdx * itemH;
+    applyHighlight();
+    picker.addEventListener('scroll', applyHighlight, { passive: true });
+  }
+
+  // ── Step 6: Birth control method ─────────────────────────────────
+  document.querySelectorAll('.bc-method-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      document.querySelectorAll('.bc-method-btn').forEach(function (b) {
+        b.style.background = '#F5EDE8';
+        b.style.color      = '#933a35';
       });
       this.style.background = '#933a35';
-      this.style.color = '#ffffff';
-      document.getElementById('cycle_length').value = this.dataset.value;
+      this.style.color      = '#ffffff';
+      document.getElementById('bc_method_value').value = this.dataset.method;
     });
   });
 
-  // Step 2: Period length buttons
-  document.querySelectorAll('.period-btn').forEach(function(btn) {
-    btn.addEventListener('click', function() {
-      document.querySelectorAll('.period-btn').forEach(function(b) {
-        b.style.background = '#EDE1D5';
+  // ── Step 8: Contraception ─────────────────────────────────────────
+  (function () {
+    var noneBtn = document.querySelector('.contraception-btn[data-contraception="None"]');
+    if (noneBtn) {
+      noneBtn.style.background = '#933a35';
+      noneBtn.style.color      = '#ffffff';
+    }
+    document.querySelectorAll('.contraception-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        document.querySelectorAll('.contraception-btn').forEach(function (b) {
+          b.style.background = '#F5EDE8';
+          b.style.color      = '#933a35';
+        });
+        this.style.background = '#933a35';
+        this.style.color      = '#ffffff';
+        document.getElementById('contraception_value').value = this.dataset.contraception;
       });
-      this.style.background = '#933a35';
-      this.style.color = '#ffffff';
-      document.getElementById('period_length').value = this.dataset.value;
     });
-  });
+  })();
 
-  // Step 3: Contraception buttons
-  document.querySelectorAll('.contraception-btn').forEach(function(btn) {
-    btn.addEventListener('click', function() {
-      document.querySelectorAll('.contraception-btn').forEach(function(b) {
-        b.style.borderColor = '#EDE1D5';
-        b.style.background = '#ffffff';
+  // ── Step 9: Food preferences ──────────────────────────────────────
+  (function () {
+    var noneFood = document.querySelector('.food-btn[data-food="None"]');
+    if (noneFood) {
+      noneFood.style.background = '#933a35';
+      noneFood.style.color      = '#ffffff';
+    }
+    document.querySelectorAll('.food-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        document.querySelectorAll('.food-btn').forEach(function (b) {
+          b.style.background = '#F5EDE8';
+          b.style.color      = '#933a35';
+        });
+        this.style.background = '#933a35';
+        this.style.color      = '#ffffff';
+        document.getElementById('food_pref_value').value = this.dataset.food;
       });
-      this.style.borderColor = '#933a35';
-      this.style.background = '#FDF0EE';
-      document.getElementById('contraception').value = this.dataset.value;
+    });
+  })();
+
+  // ── Step 10: Calendar ─────────────────────────────────────────────
+  var calGrid = document.getElementById('cal-grid');
+  if (!calGrid) return;
+
+  var periodLength  = parseInt(calGrid.dataset.periodLength || '5', 10);
+  var selectedStart = null;
+  var clearLink     = document.getElementById('cal-clear');
+  var submitBtn     = document.getElementById('cal-submit-btn');
+  var unsureBtn     = document.getElementById('cal-unsure-btn');
+  var periodInput   = document.getElementById('last_period_value');
+
+  function isoToDate(str) {
+    var parts = str.split('-');
+    return new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+  }
+
+  function renderSelection() {
+    var startD = selectedStart ? isoToDate(selectedStart) : null;
+
+    document.querySelectorAll('.cal-day').forEach(function (cell) {
+      var label    = cell.querySelector('.cal-day-label');
+      var d        = isoToDate(cell.dataset.date);
+      var isToday  = label.classList.contains('bg-\\[#933a35\\]') && label.classList.contains('font-semibold');
+      var inMonth  = cell.dataset.inMonth === 'true';
+      var selected = false;
+
+      if (startD) {
+        var endD = new Date(startD);
+        endD.setDate(endD.getDate() + periodLength - 1);
+        selected = (d >= startD && d <= endD);
+      }
+
+      if (selected) {
+        cell.style.background    = '#933a35';
+        cell.style.borderRadius  = '4px';
+        label.style.color        = '#ffffff';
+        label.style.background   = 'transparent';
+      } else {
+        cell.style.background   = '';
+        cell.style.borderRadius = '';
+        label.style.background  = isToday ? '#933a35' : '';
+        label.style.color       = isToday ? '#ffffff' : (inMonth ? '#933a35' : '#C8A49A');
+      }
+    });
+
+    clearLink.classList.toggle('hidden',  !selectedStart);
+    submitBtn.classList.toggle('hidden',  !selectedStart);
+    unsureBtn.classList.toggle('hidden',  !!selectedStart);
+
+    if (selectedStart) periodInput.value = selectedStart;
+  }
+
+  document.querySelectorAll('.cal-day').forEach(function (cell) {
+    cell.addEventListener('click', function () {
+      selectedStart = this.dataset.date;
+      renderSelection();
     });
   });
 
-  // Step 5: Language buttons
-  document.querySelectorAll('.lang-btn').forEach(function(btn) {
-    btn.addEventListener('click', function() {
-      document.querySelectorAll('.lang-btn').forEach(function(b) {
-        b.style.borderColor = '#EDE1D5';
-        b.style.background = '#ffffff';
-      });
-      this.style.borderColor = '#933a35';
-      this.style.background = '#FDF0EE';
-      document.getElementById('locale').value = this.dataset.lang;
-    });
+  clearLink.addEventListener('click', function (e) {
+    e.preventDefault();
+    selectedStart = null;
+    renderSelection();
   });
 
-  // Set default selections
-  var cycle28 = document.querySelector('.cycle-btn[data-value="28"]');
-  if (cycle28) { cycle28.style.background = '#933a35'; cycle28.style.color = '#ffffff'; }
-
-  var period5 = document.querySelector('.period-btn[data-value="5"]');
-  if (period5) { period5.style.background = '#933a35'; period5.style.color = '#ffffff'; }
-
-  var noneBtn = document.querySelector('.contraception-btn[data-value="None"]');
-  if (noneBtn) { noneBtn.style.borderColor = '#933a35'; noneBtn.style.background = '#FDF0EE'; }
-
-  var enBtn = document.querySelector('.lang-btn[data-lang="en"]');
-  if (enBtn) { enBtn.style.borderColor = '#933a35'; enBtn.style.background = '#FDF0EE'; }
+  renderSelection();
 });
 </script>

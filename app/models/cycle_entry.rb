@@ -3,7 +3,7 @@ class CycleEntry < ApplicationRecord
   PHASES = %w[menstrual follicular ovulation luteal].freeze
   SEASONS = %w[winter spring summer autumn].freeze
   validates :date, presence: true
-  validates :phase, inclusion: {in: PHASES}, allow_nil: true
+  validates :phase, presence: true, inclusion: {in: PHASES}
   scope :for_month, ->(year, month) {
     where(date: Date.new(year, month, 1)..Date.new(year, month, -1))
   }

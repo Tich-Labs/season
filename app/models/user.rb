@@ -20,6 +20,28 @@ class User < ApplicationRecord
     []
   end
 
+  # Required fields per onboarding step. Steps with a "skip" option (4, 10, 11)
+  # are intentionally omitted — users may legitimately leave those nil.
+  REQUIRED_ONBOARDING_STEPS = {
+    1 => ->(u) { u.name.present? },
+    2 => ->(u) { u.birthday.present? },
+    3 => ->(u) { !u.has_regular_cycle.nil? },
+    5 => ->(u) { !u.uses_hormonal_birth_control.nil? },
+    9 => ->(u) { u.food_preference.present? }
+  }.freeze
+
+  # Returns the first step number where required data is missing, or nil when
+  # all required fields are present. Used to resume or nudge profile completion.
+  def first_incomplete_onboarding_step
+    return 1 unless onboarding_completed?
+
+    REQUIRED_ONBOARDING_STEPS.find { |_step, check| !check.call(self) }&.first
+  end
+
+  def profile_complete?
+    first_incomplete_onboarding_step.nil?
+  end
+
   def onboarding_completed?
     onboarding_completed == true
   end
