@@ -15,16 +15,224 @@
         alt: "Season" %>
   </div>
 
-  <%# ── What is Season? ── %>
-  <div style="width:100%; background:#FFFFFF; border-radius:16px; padding:20px; margin-bottom:20px; box-shadow:0 1px 8px rgba(147,58,53,0.06);">
-    <h2 style="color:#933a35; font-size:18px; font-weight:700; margin:0 0 12px;">Find your superpower with SEASON</h2>
-    <p style="color:#6B6B6B; font-size:14px; line-height:1.6; margin:0 0 12px;">
-      Your cycle is more than just your period. With SEASON you can design your everyday life in harmony with your hormonal cycle.
-    </p>
-    <p style="color:#933a35; font-size:14px; font-weight:600; line-height:1.6; margin:0;">
-      Plan, work, love and live according to your cycle — with SEASON.
-    </p>
-  </div>
+  <%# ── Feature slideshow ── %>
+  <div class="w-full mb-5"
+       data-controller="feature-slides"
+       data-action="touchstart->feature-slides#touchStart touchend->feature-slides#touchEnd">
+
+    <%# Slide container %>
+    <div class="relative overflow-hidden rounded-2xl"
+         style="box-shadow:0 1px 8px rgba(147,58,53,0.06);">
+
+      <%# ── Slide 1: Introduction ── %>
+      <div data-feature-slides-target="slide" class="hidden bg-[#ede1d5] rounded-2xl px-6 pt-8 pb-6 flex flex-col items-center text-center">
+        <div class="w-24 h-24 mb-4 flex items-center justify-center">
+          <svg viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
+            <ellipse cx="48" cy="58" rx="22" ry="26" fill="#933a35" fill-opacity="0.15" stroke="#933a35" stroke-width="2"/>
+            <path d="M36 58 C36 46 60 46 60 58" stroke="#933a35" stroke-width="2" fill="none"/>
+            <circle cx="42" cy="52" r="3" fill="#933a35"/>
+            <circle cx="54" cy="52" r="3" fill="#933a35"/>
+            <path d="M48 32 C44 24 38 22 38 30 C38 36 44 38 48 44 C52 38 58 36 58 30 C58 22 52 24 48 32Z" fill="#933a35" fill-opacity="0.6" stroke="#933a35" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <h2 class="font-['Montserrat'] font-semibold text-2xl text-[#933a35] mb-3 leading-tight">
+          Find Your Superpower with SEASON
+        </h2>
+        <p class="font-['Montserrat'] text-base text-[#933a35] leading-relaxed mb-2">
+          Your cycle is more than your period. Design your everyday life in harmony with your hormonal cycle.
+        </p>
+        <p class="font-['Montserrat'] text-sm text-[#933a35] font-semibold leading-relaxed">
+          Plan, work, love and live according to your cycle.
+        </p>
+      </div>
+
+      <%# ── Slide 2: The Calendar ── %>
+      <div data-feature-slides-target="slide" class="hidden bg-white rounded-2xl px-6 pt-8 pb-6 flex flex-col items-center text-center">
+        <div class="mb-4 relative" style="width:140px; height:280px;">
+          <div class="absolute inset-0 rounded-[28px] border-4 border-gray-800 bg-white overflow-hidden shadow-lg">
+            <div class="w-full h-full bg-[#FAF7F4] flex flex-col">
+              <div class="bg-[#ede1d5] px-3 py-2 flex items-center justify-between">
+                <span class="text-[#933a35] text-[9px] font-semibold font-['Montserrat']">SEASON</span>
+                <span class="text-[#933a35] text-[9px] font-['Montserrat']">April 2026</span>
+              </div>
+              <div class="grid grid-cols-7 gap-px px-1 mt-1">
+                <% %w[M T W T F S S].each do |d| %>
+                  <div class="text-[7px] text-center text-[#6B6B6B] font-semibold"><%= d %></div>
+                <% end %>
+                <% (1..28).each do |n| %>
+                  <div class="text-[7px] text-center py-px rounded-full <%= n == 14 ? 'bg-[#933a35] text-white' : 'text-[#333]' %>"><%= n %></div>
+                <% end %>
+              </div>
+            </div>
+          </div>
+          <div class="absolute top-1 left-1/2 -translate-x-1/2 w-10 h-1.5 bg-gray-800 rounded-full"></div>
+        </div>
+        <h2 class="font-['Montserrat'] font-semibold text-2xl text-[#933a35] mb-3 leading-tight">The Calendar</h2>
+        <p class="font-['Montserrat'] text-base text-[#933a35] leading-relaxed">
+          Your home base. See your cycle, appointments and forecast — tap any day or add new events.
+        </p>
+      </div>
+
+      <%# ── Slide 3: Cycle Colors ── %>
+      <div data-feature-slides-target="slide" class="hidden bg-white rounded-2xl px-6 pt-8 pb-6 flex flex-col items-center text-center">
+        <div class="mb-4 relative" style="width:140px; height:280px;">
+          <div class="absolute inset-0 rounded-[28px] border-4 border-gray-800 bg-white overflow-hidden shadow-lg">
+            <div class="w-full h-full bg-[#FAF7F4] flex flex-col">
+              <div class="bg-[#ede1d5] px-3 py-2">
+                <span class="text-[#933a35] text-[9px] font-semibold font-['Montserrat']">SEASON</span>
+              </div>
+              <div class="grid grid-cols-7 gap-px px-1 mt-1">
+                <% (1..28).each do |n| %>
+                  <% color = if n <= 5 then '#933a35' elsif n <= 14 then '#7fa38a' elsif n <= 18 then '#b8d5c2' else '#e8c5d0' end %>
+                  <div class="text-[7px] text-center py-px rounded-sm text-white font-bold" style="background-color:<%= color %>"><%= n %></div>
+                <% end %>
+              </div>
+              <div class="mt-2 px-2 space-y-1">
+                <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-sm flex-shrink-0" style="background:#933a35;"></span><span class="text-[7px] text-[#333]">Menstruation</span></div>
+                <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-sm flex-shrink-0" style="background:#50715b;"></span><span class="text-[7px] text-[#333]">Ovulation</span></div>
+                <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-sm flex-shrink-0" style="background:#7fa38a;"></span><span class="text-[7px] text-[#333]">Follicular</span></div>
+                <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-sm flex-shrink-0" style="background:#e8c5d0;"></span><span class="text-[7px] text-[#333]">Luteal</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="absolute top-1 left-1/2 -translate-x-1/2 w-10 h-1.5 bg-gray-800 rounded-full"></div>
+        </div>
+        <h2 class="font-['Montserrat'] font-semibold text-2xl text-[#933a35] mb-3 leading-tight">Your Cycle Colors</h2>
+        <p class="font-['Montserrat'] text-base text-[#933a35] leading-relaxed">
+          Each color represents a cycle phase — Menstruation, Ovulation, Follicular, and Luteal.
+        </p>
+      </div>
+
+      <%# ── Slide 4: Track Your Day ── %>
+      <div data-feature-slides-target="slide" class="hidden bg-white rounded-2xl px-6 pt-8 pb-6 flex flex-col items-center text-center">
+        <div class="mb-4 relative" style="width:140px; height:280px;">
+          <div class="absolute inset-0 rounded-[28px] border-4 border-gray-800 bg-white overflow-hidden shadow-lg">
+            <div class="w-full h-full bg-[#FAF7F4] flex flex-col gap-1 p-2">
+              <div class="bg-[#ede1d5] rounded-lg px-2 py-1.5 flex items-center gap-1">
+                <span class="text-[8px] font-semibold text-[#933a35] font-['Montserrat']">Today</span>
+                <span class="text-[7px] text-[#6B6B6B] font-['Montserrat']">Day 12</span>
+              </div>
+              <% [["😊","Mood","Great"],["⚡","Energy","High"],["😴","Sleep","7h"],["💪","Superpower","Focus"]].each do |icon, label, val| %>
+                <div class="bg-white rounded-lg px-2 py-1 flex items-center justify-between">
+                  <div class="flex items-center gap-1">
+                    <span class="text-[10px]"><%= icon %></span>
+                    <span class="text-[7px] text-[#333] font-['Montserrat']"><%= label %></span>
+                  </div>
+                  <span class="text-[7px] text-[#933a35] font-semibold font-['Montserrat']"><%= val %></span>
+                </div>
+              <% end %>
+            </div>
+          </div>
+          <div class="absolute top-1 left-1/2 -translate-x-1/2 w-10 h-1.5 bg-gray-800 rounded-full"></div>
+        </div>
+        <h2 class="font-['Montserrat'] font-semibold text-2xl text-[#933a35] mb-3 leading-tight">Track Your Day</h2>
+        <p class="font-['Montserrat'] text-base text-[#933a35] leading-relaxed">
+          Log mood, energy, symptoms and superpowers. Feed the app data to get the most accurate forecast.
+        </p>
+      </div>
+
+      <%# ── Slide 5: Create Appointments ── %>
+      <div data-feature-slides-target="slide" class="hidden bg-white rounded-2xl px-6 pt-8 pb-6 flex flex-col items-center text-center">
+        <div class="mb-4 relative" style="width:140px; height:280px;">
+          <div class="absolute inset-0 rounded-[28px] border-4 border-gray-800 bg-white overflow-hidden shadow-lg">
+            <div class="w-full h-full bg-[#FAF7F4] flex flex-col gap-1 p-2">
+              <div class="bg-[#ede1d5] rounded-lg px-2 py-1.5">
+                <span class="text-[8px] font-semibold text-[#933a35] font-['Montserrat']">New Appointment</span>
+              </div>
+              <% [["📋","Title","Dr. Check-up"],["📅","Date","Apr 14"],["🏷️","Icon","🏥"],["📝","Notes","Bring report"]].each do |icon, label, val| %>
+                <div class="bg-white rounded-lg px-2 py-1.5">
+                  <div class="text-[6px] text-[#6B6B6B] font-['Montserrat'] mb-0.5"><%= label %></div>
+                  <div class="text-[7px] text-[#333] font-['Montserrat']"><%= val %></div>
+                </div>
+              <% end %>
+              <div class="mt-auto bg-[#933a35] rounded-lg py-1.5 text-center">
+                <span class="text-[8px] font-semibold text-white font-['Montserrat']">Save</span>
+              </div>
+            </div>
+          </div>
+          <div class="absolute top-1 left-1/2 -translate-x-1/2 w-10 h-1.5 bg-gray-800 rounded-full"></div>
+        </div>
+        <h2 class="font-['Montserrat'] font-semibold text-2xl text-[#933a35] mb-3 leading-tight">Create Appointments</h2>
+        <p class="font-['Montserrat'] text-base text-[#933a35] leading-relaxed">
+          Tap + in the calendar to add appointments with icons and details. Sync your calendar in settings.
+        </p>
+      </div>
+
+      <%# ── Slide 6: Your Forecast ── %>
+      <div data-feature-slides-target="slide" class="hidden bg-white rounded-2xl px-6 pt-8 pb-6 flex flex-col items-center text-center">
+        <div class="mb-4 relative" style="width:140px; height:280px;">
+          <div class="absolute inset-0 rounded-[28px] border-4 border-gray-800 bg-white overflow-hidden shadow-lg">
+            <div class="w-full h-full bg-[#FAF7F4] flex flex-col gap-1 p-2">
+              <div class="bg-[#ede1d5] rounded-lg px-2 py-1.5">
+                <span class="text-[8px] font-semibold text-[#933a35] font-['Montserrat']">Forecast · Apr 14</span>
+              </div>
+              <% [["🌟","Superpower","Creative"],["⚡","Energy","High"],["🧠","Focus","Strong"],["💬","Social","Outgoing"],["💖","Mood","Optimistic"]].each do |icon, label, val| %>
+                <div class="bg-white rounded-lg px-2 py-1 flex items-center justify-between">
+                  <div class="flex items-center gap-1">
+                    <span class="text-[10px]"><%= icon %></span>
+                    <span class="text-[7px] text-[#333] font-['Montserrat']"><%= label %></span>
+                  </div>
+                  <span class="text-[7px] text-[#933a35] font-semibold font-['Montserrat']"><%= val %></span>
+                </div>
+              <% end %>
+            </div>
+          </div>
+          <div class="absolute top-1 left-1/2 -translate-x-1/2 w-10 h-1.5 bg-gray-800 rounded-full"></div>
+        </div>
+        <h2 class="font-['Montserrat'] font-semibold text-2xl text-[#933a35] mb-3 leading-tight">Your Forecast</h2>
+        <p class="font-['Montserrat'] text-base text-[#933a35] leading-relaxed">
+          Tap a day in your calendar then swipe left for a deep-dive into your forecast. Tap any tile for more detail.
+        </p>
+      </div>
+
+      <%# ── Slide 7: You're All Set ── %>
+      <div data-feature-slides-target="slide" class="hidden bg-[#ede1d5] rounded-2xl px-6 pt-8 pb-6 flex flex-col items-center text-center">
+        <div class="w-24 h-24 mb-4 flex items-center justify-center">
+          <svg viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
+            <circle cx="48" cy="48" r="36" fill="#933a35" fill-opacity="0.12" stroke="#933a35" stroke-width="2"/>
+            <path d="M30 48 L42 60 L66 36" stroke="#933a35" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h2 class="font-['Montserrat'] font-semibold text-2xl text-[#933a35] mb-3 leading-tight">
+          You're All Set!
+        </h2>
+        <p class="font-['Montserrat'] text-base text-[#933a35] leading-relaxed mb-2">
+          Explore the app, track your cycle, and let us know what you think.
+        </p>
+        <p class="font-['Montserrat'] text-sm text-[#933a35] font-semibold leading-relaxed">
+          We're so excited to have you here — welcome to SEASON.
+        </p>
+      </div>
+
+    </div><%# end slide container %>
+
+    <%# Progress dots %>
+    <div class="flex items-center justify-center gap-[10px] mt-4">
+      <% 7.times do |i| %>
+        <button type="button"
+                data-feature-slides-target="dot"
+                data-feature-slides-index="<%= i %>"
+                data-action="click->feature-slides#goTo"
+                class="h-3 rounded-full bg-[#50715b] transition-all duration-300 <%= i == 0 ? 'w-[52px]' : 'w-3 opacity-30' %>">
+        </button>
+      <% end %>
+    </div>
+
+    <%# Prev / Next arrows (hidden on small) %>
+    <div class="flex justify-between items-center mt-3 px-1">
+      <button type="button"
+              data-action="click->feature-slides#prev"
+              class="text-[#933a35] text-sm font-semibold font-['Montserrat'] opacity-60 px-2 py-1">
+        &#8592;
+      </button>
+      <button type="button"
+              data-action="click->feature-slides#next"
+              class="text-[#933a35] text-sm font-semibold font-['Montserrat'] opacity-60 px-2 py-1">
+        &#8594;
+      </button>
+    </div>
+
+  </div><%# end feature-slides controller %>
 
   <%# ── Notify Me Section ── %>
   <div style="width:100%; background:#933a35; border-radius:16px; padding:20px; margin-bottom:20px;">
