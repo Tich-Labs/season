@@ -82,6 +82,16 @@ class SettingsController < ApplicationController
     end
   end
 
+  def update_notifications
+    notification_keys = [:cycle_reminder, :period_prediction, :ovulation_alert, :push_notifications, :email_notifications, :newsletter]
+    updates = {}
+    notification_keys.each do |key|
+      updates[key] = params[key] == "true" || params[key] == true
+    end
+    current_user.notification_settings&.update(updates)
+    render json: {success: true}
+  end
+
   private
 
   def user_params

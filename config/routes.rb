@@ -62,10 +62,14 @@ Rails.application.routes.draw do
     get :notifications, on: :collection
     patch :update_avatar, on: :collection
     patch :update_profile, on: :collection
+    patch :update_notifications, on: :collection
   end
 
   namespace :admin do
     resources :users, only: [:index, :show]
+    get "feedback", to: "feedbacks#index"
+    get "bugreport", to: "feedbacks#index", type: "bug_report"
+    get "support", to: "feedbacks#index", type: "support"
     resources :feedbacks, only: [:index] do
       get :export_csv, on: :collection
     end

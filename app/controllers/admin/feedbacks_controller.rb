@@ -1,13 +1,10 @@
-class Admin::FeedbacksController < ApplicationController
-  before_action :authenticate_user!
-  before_action :require_admin
-
+class Admin::FeedbacksController < Admin::BaseController
   def index
     @feedbacks = Feedback.order(created_at: :desc)
     @feedbacks = @feedbacks.feedback_type_feedback if params[:type] == "feedback"
     @feedbacks = @feedbacks.feedback_type_bug_report if params[:type] == "bug_report"
     @feedbacks = @feedbacks.feedback_type_support if params[:type] == "support"
-    @feedbacks = @feedbacks.page(params[:page]).per(20)
+    @feedbacks = @feedbacks.limit(50) # Remove pagination for now
   end
 
   def export_csv
@@ -23,12 +20,5 @@ class Admin::FeedbacksController < ApplicationController
     respond_to do |format|
       format.csv { send_data csv_data, filename: "feedbacks_#{Time.zone.today}.csv" }
     end
-  end
-
-  private
-
-  def require_admin
-    # TODO: Add admin role check when user roles are implemented
-    # For now, allow any logged-in user (replace with actual admin check)
   end
 end

@@ -35,6 +35,33 @@
             <span class="w-4 h-4 flex-shrink-0 text-current" aria-hidden="true">&#128100;</span>
             Users
           <% end %>
+
+          <% feedback_active = controller_name == "feedbacks" && !params[:type] %>
+          <%= link_to admin_feedback_path,
+              class: class_names("group flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                                 "bg-[#7a2f2a] text-white" => feedback_active,
+                                 "text-[#f5ede8] hover:bg-[#7a2f2a] hover:text-white" => feedback_active == false) do %>
+            <span class="w-4 h-4 flex-shrink-0 text-current" aria-hidden="true">&#128172;</span>
+            Feedback
+          <% end %>
+
+          <% bug_active = params[:type] == "bug_report" %>
+          <%= link_to admin_bugreport_path,
+              class: class_names("group flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                                 "bg-[#7a2f2a] text-white" => bug_active,
+                                 "text-[#f5ede8] hover:bg-[#7a2f2a] hover:text-white" => !bug_active) do %>
+            <span class="w-4 h-4 flex-shrink-0 text-current" aria-hidden="true">&#128745;</span>
+            Bugs
+          <% end %>
+
+          <% support_active = params[:type] == "support" %>
+          <%= link_to admin_support_path,
+              class: class_names("group flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                                 "bg-[#7a2f2a] text-white" => support_active,
+                                 "text-[#f5ede8] hover:bg-[#7a2f2a] hover:text-white" => !support_active) do %>
+            <span class="w-4 h-4 flex-shrink-0 text-current" aria-hidden="true">&#128222;</span>
+            Support
+          <% end %>
         </nav>
 
         <%# Footer: current user + sign out %>
