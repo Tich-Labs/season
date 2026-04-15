@@ -1,0 +1,58 @@
+<% content_for(:page_title) { "Informations" } %>
+
+<div style="background:#FAF7F4; min-height:100vh; padding-bottom:80px; font-family:'Montserrat',sans-serif;">
+  <div style="max-width:430px; width:100%; margin:0 auto; padding:24px 16px 0;">
+
+    <%# Header %>
+    <h1 style="color:#933a35; font-size:28px; font-weight:600; margin:0 0 6px; line-height:1.2;">Informations</h1>
+    <p style="color:#6B6B6B; font-size:14px; font-weight:400; margin:0 0 24px; line-height:1.5;">
+      Learn about each phase of your cycle and how it affects your body and mind.
+    </p>
+
+    <%# Phase cards %>
+    <div style="display:flex; flex-direction:column; gap:16px;">
+      <% @phases.each do |item| %>
+        <% meta    = item[:meta] %>
+        <% content = item[:content] %>
+        <%= link_to informations_phase_path(item[:phase]),
+              style: "display:block; border-radius:16px; overflow:hidden; text-decoration:none; box-shadow:0 2px 12px rgba(0,0,0,0.08);" do %>
+
+          <%# Coloured header band %>
+          <div style="background:<%= meta[:colour] %>; padding:20px 20px 16px;">
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+              <div>
+                <p style="color:<%= meta[:text_colour] %>; font-size:11px; font-weight:500; letter-spacing:0.08em; text-transform:uppercase; margin:0 0 4px; opacity:0.85;">
+                  <%= meta[:days] %>
+                </p>
+                <h2 style="color:<%= meta[:text_colour] %>; font-size:22px; font-weight:700; margin:0; line-height:1.1;">
+                  <%= meta[:season] %>
+                </h2>
+                <p style="color:<%= meta[:text_colour] %>; font-size:13px; font-weight:400; margin:4px 0 0; opacity:0.9; text-transform:capitalize;">
+                  <%= item[:phase] %> phase
+                </p>
+              </div>
+              <span style="font-size:40px; line-height:1;"><%= meta[:emoji] %></span>
+            </div>
+          </div>
+
+          <%# White body %>
+          <div style="background:#FFFFFF; padding:16px 20px;">
+            <% if content %>
+              <p style="color:#6B6B6B; font-size:13px; line-height:1.55; margin:0 0 8px;">
+                <span style="color:#933a35; font-weight:600;">Superpower: </span><%= content.superpower_text %>
+              </p>
+              <p style="color:#6B6B6B; font-size:13px; line-height:1.55; margin:0;">
+                <span style="color:#933a35; font-weight:600;">Mood: </span><%= content.mood_text %>
+              </p>
+            <% end %>
+            <div style="display:flex; align-items:center; justify-content:flex-end; margin-top:12px;">
+              <span style="color:<%= meta[:colour] %>; font-size:12px; font-weight:600; letter-spacing:0.04em;">Read more →</span>
+            </div>
+          </div>
+
+        <% end %>
+      <% end %>
+    </div>
+
+  </div>
+</div>

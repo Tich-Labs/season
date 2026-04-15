@@ -22,6 +22,7 @@
 <% is_tracked   = tracked_days_set.include?(date) %>
 <% cycle_data   = cycle_by_date[date] %>
 <% phase_colour = cycle_data&.dig(:colour) %>
+<% lunar        = moon_phase(date) %>
 
 <%# ── Phase band colour (full-bleed top strip) ── %>
 <% band_colour =
@@ -76,10 +77,19 @@
       </div>
     <% end %>
 
-    <%# Tracking dot — small green dot at bottom when tracked %>
-    <% if show_tracking && is_tracked %>
-      <div style="width:5px; height:5px; border-radius:50%; background:#2E6B3E; margin-top:auto; flex-shrink:0;"></div>
-    <% end %>
+    <%# Moon phase + tracking row at bottom %>
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-top:auto; flex-shrink:0;">
+      <% if lunar == :full_moon %>
+        <span style="width:7px; height:7px; border-radius:50%; background:#fff2ca; border:1px solid #d4c27a; display:inline-block;"></span>
+      <% elsif lunar == :new_moon %>
+        <span style="width:7px; height:7px; border-radius:50%; background:#4d4d4c; display:inline-block;"></span>
+      <% else %>
+        <span style="width:7px; height:7px; display:inline-block;"></span>
+      <% end %>
+      <% if show_tracking && is_tracked %>
+        <div style="width:5px; height:5px; border-radius:50%; background:#2E6B3E;"></div>
+      <% end %>
+    </div>
 
   </div>
 

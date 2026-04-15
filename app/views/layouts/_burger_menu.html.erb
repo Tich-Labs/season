@@ -14,7 +14,7 @@
     <div class="absolute left-0 top-0 bottom-0 w-80 bg-white shadow-2xl transform transition-transform duration-300 overflow-y-auto overflow-x-hidden"
          data-menu-target="panel">
 
-      <div class="relative w-80 min-h-[720px]">
+      <div class="relative w-80 min-h-[760px]">
 
         <%# Close button — Figma: left-[250px] top-[27px] %>
         <button class="absolute left-[250px] top-[27px] size-11 bg-[#ede1d5] rounded-full flex items-center justify-center z-10"
@@ -87,16 +87,26 @@
           <span class="absolute left-[71px] top-[10px] text-[#933a35] text-base font-medium tracking-wide">Monthly-View</span>
         <% end %>
 
-        <%# Divider Line 20 — Figma: top-[461px] %>
-        <div class="absolute left-0 top-[461px] w-80 h-px bg-[#ede1d5]"></div>
+        <%# Informations %>
+        <%= link_to informations_path, class: "absolute left-0 top-[461px] w-full h-[40px] flex items-center hover:bg-stone-50", "data-turbo-action": "replace" do %>
+          <svg class="absolute left-[30px] top-[8px]" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#933a35" stroke-width="1.3">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="16" x2="12" y2="12" />
+            <line x1="12" y1="8" x2="12.01" y2="8" />
+          </svg>
+          <span class="absolute left-[71px] top-[10px] text-[#933a35] text-base font-medium tracking-wide">Informations</span>
+        <% end %>
 
-        <%# "Coming soon" badge 2 — Figma: left-[214px] top-[468px] %>
-        <div class="absolute left-[214px] top-[468px] w-24 h-4 bg-[#ede1d5] rounded-lg flex items-center justify-center z-10">
+        <%# Divider Line 20 %>
+        <div class="absolute left-0 top-[501px] w-80 h-px bg-[#ede1d5]"></div>
+
+        <%# "Coming soon" badge 2 %>
+        <div class="absolute left-[214px] top-[508px] w-24 h-4 bg-[#ede1d5] rounded-lg flex items-center justify-center z-10">
           <span class="text-[#933a35] text-xs font-normal tracking-wide">Coming soon</span>
         </div>
 
-        <%# E-Mail to partner — Figma: top-[471px] %>
-        <a href="#" class="absolute left-0 top-[471px] w-full h-[38px] flex items-center hover:bg-stone-50">
+        <%# E-Mail to partner %>
+        <a href="#" class="absolute left-0 top-[511px] w-full h-[38px] flex items-center hover:bg-stone-50">
           <svg class="absolute left-[30px] top-[7px]" width="20" height="17" viewBox="0 0 20 17" fill="none" stroke="#933a35" stroke-width="1.42">
             <rect x="1" y="1" width="18" height="14.5" rx="1.5" />
             <path d="M1.5 1.5L10 9.5L18.5 1.5" />
@@ -104,11 +114,11 @@
           <span class="absolute left-[71px] top-[10px] text-[#933a35] text-base font-medium tracking-wide">E-Mail to your partner</span>
         </a>
 
-        <%# Divider Line 23 — Figma: top-[509px] %>
-        <div class="absolute left-0 top-[509px] w-80 h-px bg-[#ede1d5]"></div>
+        <%# Divider Line 23 %>
+        <div class="absolute left-0 top-[549px] w-80 h-px bg-[#ede1d5]"></div>
 
-        <%# Settings — Figma: top-[524px] %>
-        <%= link_to edit_settings_path, class: "absolute left-0 top-[524px] w-full h-[49px] flex items-center hover:bg-stone-50", "data-turbo-action": "replace" do %>
+        <%# Settings %>
+        <%= link_to edit_settings_path, class: "absolute left-0 top-[564px] w-full h-[49px] flex items-center hover:bg-stone-50", "data-turbo-action": "replace" do %>
           <svg class="absolute left-[30px] top-[10px]" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#933a35" stroke-width="1.2">
             <circle cx="12" cy="12" r="3" />
             <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
@@ -116,11 +126,11 @@
           <span class="absolute left-[71px] top-[15px] text-[#933a35] text-base font-medium tracking-wide">Settings</span>
         <% end %>
 
-        <%# Feedback — Figma: top-[573px] %>
+        <%# Feedback %>
         <button type="button"
                 data-type="feedback"
                 onclick="document.querySelector('[data-controller=\u0027menu\u0027]').dispatchEvent(new CustomEvent('close-menu')); setTimeout(() => window.openFeedbackModal?.('feedback'), 350)"
-                class="absolute left-0 top-[573px] w-full h-[49px] flex items-center hover:bg-stone-50 cursor-pointer">
+                class="absolute left-0 top-[613px] w-full h-[49px] flex items-center hover:bg-stone-50 cursor-pointer">
           <svg class="absolute left-[31px] top-[10px]" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#933a35" stroke-width="1.2">
             <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" />
             <polyline points="14 3 14 8 19 8" />
@@ -130,11 +140,11 @@
           <span class="absolute left-[71px] top-[15px] text-[#933a35] text-base font-medium tracking-wide">Feedback</span>
         </button>
 
-        <%# Bugreport — Figma: top-[621px] %>
+        <%# Bugreport %>
         <button type="button"
                 data-type="bug_report"
                 onclick="document.querySelector('[data-controller=\u0027menu\u0027]').dispatchEvent(new CustomEvent('close-menu')); setTimeout(() => window.openFeedbackModal?.('bug_report'), 350)"
-                class="absolute left-0 top-[621px] w-full h-[49px] flex items-center hover:bg-stone-50 cursor-pointer">
+                class="absolute left-0 top-[661px] w-full h-[49px] flex items-center hover:bg-stone-50 cursor-pointer">
           <svg class="absolute left-[31px] top-[10px]" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#933a35" stroke-width="1.2">
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
             <line x1="9" y1="10" x2="15" y2="10" />
@@ -143,10 +153,10 @@
           <span class="absolute left-[71px] top-[15px] text-[#933a35] text-base font-medium tracking-wide">Bug Report</span>
         </button>
 
-        <%# Log out — Figma: top-[666px] %>
+        <%# Log out %>
         <%= link_to session_path,
                     data: { turbo_method: :delete },
-                    class: "absolute left-0 top-[666px] w-full h-[45px] flex items-center hover:bg-stone-50" do %>
+                    class: "absolute left-0 top-[706px] w-full h-[45px] flex items-center hover:bg-stone-50" do %>
           <svg class="absolute left-[30px] top-[9px]" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#933a35" stroke-width="1.5">
             <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
             <polyline points="16 17 21 12 16 7" />

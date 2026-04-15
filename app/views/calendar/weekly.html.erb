@@ -29,7 +29,7 @@
 
     <%# ── Week header ── %>
     <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:0; padding:12px 8px 8px; border-bottom:1px solid #EDE1D5; background:#FFFFFF;">
-      <% week_days = %w[Mo Di Mi Do Fr Sa So] %>
+      <% week_days = %w[Mo Tu We Th Fr Sa Su] %>
       <% @week_dates.each_with_index do |day, i| %>
         <% is_today = day == Date.today %>
         <% phase = @cycle_by_date[day]&.dig(:phase) %>

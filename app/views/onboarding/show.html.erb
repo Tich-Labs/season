@@ -343,7 +343,7 @@
                      data-date="<%= day.iso8601 %>"
                      data-in-month="<%= in_month %>"
                      data-today="<%= is_today %>"
-                     onclick="selectDate('<%= day.iso8601 %>', this)">
+                     onclick="selectDate(<%= day.iso8601.to_json %>, this)">
                   <span class="text-sm w-8 h-8 flex items-center justify-center cal-day-label
                                <%= is_today ? 'bg-[#933a35] text-white font-semibold rounded-sm' : (in_month ? 'text-[#933a35]' : 'text-[#C8A49A]') %>">
                     <%= day.day %>

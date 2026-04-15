@@ -102,6 +102,9 @@ Rails.application.routes.draw do
     [200, {"Content-Type" => "text/plain"}, [body]]
   }
 
+  get "informations", to: "informations#index", as: :informations
+  get "informations/:phase", to: "informations#show", as: :informations_phase
+
   get "/launch", to: "launch#index", as: :launch
   get "/countdown", to: "home#countdown", as: :countdown_page
 
