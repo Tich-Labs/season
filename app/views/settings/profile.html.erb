@@ -1,5 +1,35 @@
 <%# My Profile screen - matches Figma node 12048-37877 %>
 <%# Dark header auto-applied by layout; only back arrow override needed %>
+<script>
+  (function() {
+    function openAvatarModal() {
+      var modal = document.getElementById('avatar-modal');
+      modal.style.display = 'flex';
+      var focusable = modal.querySelectorAll('button, input, a[href], [tabindex]:not([tabindex="-1"])');
+      if (focusable.length) focusable[0].focus();
+      modal._opener = document.activeElement;
+      modal.addEventListener('keydown', trapFocus);
+    }
+    function closeAvatarModal() {
+      var modal = document.getElementById('avatar-modal');
+      modal.style.display = 'none';
+      modal.removeEventListener('keydown', trapFocus);
+      if (modal._opener) modal._opener.focus();
+    }
+    function trapFocus(e) {
+      var modal = document.getElementById('avatar-modal');
+      var focusable = Array.from(modal.querySelectorAll('button, input, a[href], [tabindex]:not([tabindex="-1"])'));
+      if (!focusable.length) return;
+      if (e.key === 'Escape') { closeAvatarModal(); return; }
+      if (e.key !== 'Tab') return;
+      var first = focusable[0], last = focusable[focusable.length - 1];
+      if (e.shiftKey) { if (document.activeElement === first) { e.preventDefault(); last.focus(); } }
+      else { if (document.activeElement === last) { e.preventDefault(); first.focus(); } }
+    }
+    window.openAvatarModal = openAvatarModal;
+    window.closeAvatarModal = closeAvatarModal;
+  })();
+</script>
 <% content_for(:header_left) do %>
   <%= link_to edit_settings_path, class: "p-2 flex items-center" do %>
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
@@ -21,7 +51,7 @@
     <div style="border-bottom:1px solid #DDD0CB;"></div>
 
     <%# Profile Picture %>
-    <button onclick="document.getElementById('avatar-modal').style.display='flex'"
+    <button onclick="openAvatarModal()" aria-haspopup="dialog"
             style="display:flex; align-items:center; gap:16px; padding:16px 0; width:100%; background:none; border:none; cursor:pointer; text-align:left;">
       <% if @user.avatar.attached? %>
         <%= image_tag @user.avatar, style: "width:48px; height:48px; border-radius:50%; object-fit:cover; flex-shrink:0;", alt: "Profile" %>
@@ -42,11 +72,11 @@
     </button>
 
     <%# Avatar Modal %>
-    <div id="avatar-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:100; align-items:center; justify-content:center;">
+    <div id="avatar-modal" role="dialog" aria-modal="true" aria-labelledby="avatar-modal-title" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:100; align-items:center; justify-content:center;">
       <div style="background:#FAF7F4; border-radius:16px; padding:24px; width:90%; max-width:340px; margin:16px;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-          <h3 style="color:#933a35; font-size:18px; font-weight:600; margin:0;">Profile Picture</h3>
-          <button onclick="document.getElementById('avatar-modal').style.display='none'" style="background:none; border:none; cursor:pointer;">
+          <h3 id="avatar-modal-title" style="color:#933a35; font-size:18px; font-weight:600; margin:0;">Profile Picture</h3>
+          <button id="avatar-modal-close" onclick="closeAvatarModal()" style="background:none; border:none; cursor:pointer;">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
               <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
             </svg>
@@ -71,7 +101,8 @@
 
         <%# Option 2: Enter image URL %>
         <%= form_with url: update_avatar_settings_path, method: :patch, data: { turbo: false } do %>
-          <input type="text" name="avatar_url" placeholder="Or paste image URL..." autocomplete="url"
+          <label for="avatar-url-input" style="display:block; color:#933a35; font-size:13px; font-weight:500; margin-bottom:6px;">Or paste image URL</label>
+          <input type="text" id="avatar-url-input" name="avatar_url" placeholder="https://..." autocomplete="url"
                  style="width:100%; background:#FFFFFF; border:1px solid #DDD0CB; border-radius:12px; padding:16px; font-size:16px; color:#933a35; box-sizing:border-box; margin-bottom:12px;">
           <button type="submit" style="width:100%; background:#933a35; color:white; border:none; border-radius:12px; padding:14px; font-size:16px; font-weight:500; cursor:pointer;">
             Add Photo
@@ -79,7 +110,7 @@
         <% end %>
 
         <%# Cancel button %>
-        <button onclick="document.getElementById('avatar-modal').style.display='none'"
+        <button onclick="closeAvatarModal()"
                 style="width:100%; background:transparent; color:#933a35; border:1px solid #DDD0CB; border-radius:12px; padding:14px; font-size:16px; font-weight:500; cursor:pointer; margin-top:8px;">
           Cancel
         </button>
@@ -120,11 +151,14 @@
       </svg>
       <span style="flex:1; color:#933a35; font-size:16px; font-weight:500;">Access code</span>
       <div style="display:flex; align-items:center; gap:8px;">
-        <span style="color:#D18D83; font-size:14px;">FaceID</span>
-        <%# Toggle switch %>
-        <div style="width:40px; height:20px; background:#933a35; border-radius:25px; padding:2px;">
-          <div style="width:16px; height:16px; background:white; border-radius:50%; margin-left:auto;"></div>
-        </div>
+        <span style="color:#D18D83; font-size:14px;" id="access-code-label">FaceID</span>
+        <%# Toggle switch — keyboard accessible %>
+        <button role="switch" aria-checked="true" aria-labelledby="access-code-label"
+                tabindex="0"
+                onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();var c=this.getAttribute('aria-checked')==='true';this.setAttribute('aria-checked',String(!c));this.style.background=c?'#DDD0CB':'#933a35';this.querySelector('.toggle-thumb').style.marginLeft=c?'0':'auto';}"
+                style="width:40px; height:20px; background:#933a35; border-radius:25px; padding:2px; border:none; cursor:pointer;">
+          <div class="toggle-thumb" style="width:16px; height:16px; background:white; border-radius:50%; margin-left:auto;"></div>
+        </button>
       </div>
     </div>
 
@@ -151,15 +185,15 @@
     </button>
 
     <div style="display:flex; align-items:center; padding:8px 0 8px 32px;">
-      <span style="flex:1; color:#D18D83; font-size:14px;">Age: <%= @user.age %></span>
+      <span style="flex:1; color:#D18D83; font-size:14px;">Age: <%= @user.birthday ? ((Time.zone.today - @user.birthday).to_i / 365) : "—" %></span>
     </div>
 
     <div style="display:flex; align-items:center; padding:8px 0 8px 32px;">
-      <span style="flex:1; color:#D18D83; font-size:14px;">Cycle days: <%= @user.cycle_days %></span>
+      <span style="flex:1; color:#D18D83; font-size:14px;">Cycle days: <%= @user.cycle_length || "—" %></span>
     </div>
 
     <div style="display:flex; align-items:center; padding:8px 0 8px 32px;">
-      <span style="flex:1; color:#D18D83; font-size:14px;">Last Menstruation <%= @user.last_menstruation %></span>
+      <span style="flex:1; color:#D18D83; font-size:14px;">Last Menstruation: <%= @user.last_period_start&.strftime("%d %b %Y") || "—" %></span>
     </div>
 
     <div style="border-bottom:1px solid #DDD0CB; padding-top: 16px;"></div>

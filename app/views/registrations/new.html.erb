@@ -63,7 +63,7 @@
 
       <% if @error_type == :already_registered %>
         <!-- Already registered error state -->
-        <div style="background:#FDF0EE; border-radius:8px; padding:12px 16px; margin-top:29px;">
+        <div id="reg-error" role="alert" style="background:#FDF0EE; border-radius:8px; padding:12px 16px; margin-top:29px;">
           <p style="color:#933a35; font-size:28px; font-weight:700; margin-bottom:8px;">OOPS!</p>
           <p style="color:#933a35; font-size:16px; font-weight:400; margin-bottom:16px;">This email is already registered. Try logging in instead.</p>
           <a href="<%= new_session_path %>" style="display:block; width:100%; background:#933a35; color:#ffffff; text-align:center; padding:14px; border-radius:8px; font-size:18px; font-weight:500; text-decoration:none;">
@@ -72,7 +72,7 @@
         </div>
       <% elsif has_errors %>
         <!-- Validation error state -->
-        <div style="display:flex; align-items:center; gap:8px; margin-top:19px; color:#933a35; font-size:16px; font-weight:400;">
+        <div id="reg-error" role="alert" style="display:flex; align-items:center; gap:8px; margin-top:19px; color:#933a35; font-size:16px; font-weight:400;">
           <span style="font-size:45px; font-weight:700; line-height:1;">!</span>
           <span><%= @user.errors.full_messages.first %></span>
         </div>
@@ -86,6 +86,7 @@
             autofocus: true,
             placeholder: t('devise.registrations.new.email_placeholder', default: 'E-mail...'),
             value: @user&.email,
+            aria: { invalid: @user&.errors[:email]&.any?, describedby: has_errors ? "reg-error" : nil },
             style: "width:100%; background:#EDE1D5; opacity:0.5; border-radius:8px; padding:14px 21px; height:52px; border:#{@user&.errors[:email]&.any? ? '2px solid #933a35' : 'none'}; font-size:22px; font-weight:500; color:#933a35; outline:none; box-sizing:border-box;" %>
       </div>
 
@@ -110,6 +111,7 @@
             id: 'password_confirmation_field',
             data: { "password-visibility-target": "input" },
             placeholder: t('devise.registrations.new.confirm_password_placeholder', default: 'Repeat password...'),
+            aria: { invalid: has_errors, describedby: has_errors ? "reg-error" : nil },
             style: "width:100%; background:#{has_errors ? '#F6F0EA' : '#EDE1D5'}; opacity:1; border-radius:8px; padding:14px 50px 14px 21px; height:52px; border:#{has_errors ? '2px solid #933a35' : 'none'}; font-size:22px; font-weight:500; color:#933a35; outline:none; box-sizing:border-box;" %>
         <button type="button" aria-label="Toggle password visibility" data-action="click->password-visibility#toggle" style="position:absolute; right:16px; top:50%; transform:translateY(-50%); cursor:pointer; display:inline-block; background:none; border:none; padding:0;">
           <svg data-password-visibility-target="eyeOpen" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#{has_errors ? '#933a35' : 'rgba(147,58,53,0.5)'}" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>

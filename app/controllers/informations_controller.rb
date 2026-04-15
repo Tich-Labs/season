@@ -6,8 +6,8 @@ class InformationsController < ApplicationController
   def index
     @phases = PHASES.map do |phase|
       content = CyclePhaseContent.for(phase, I18n.locale.to_s)
-      meta    = phase_meta(phase)
-      { phase: phase, content: content, meta: meta }
+      meta = phase_meta(phase)
+      {phase: phase, content: content, meta: meta}
     end
   end
 
@@ -15,9 +15,9 @@ class InformationsController < ApplicationController
     phase = params[:phase]
     redirect_to informations_path unless PHASES.include?(phase)
 
-    @phase   = phase
+    @phase = phase
     @content = CyclePhaseContent.for(phase, I18n.locale.to_s)
-    @meta    = phase_meta(phase)
+    @meta = phase_meta(phase)
   end
 
   private

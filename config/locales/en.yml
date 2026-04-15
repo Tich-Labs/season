@@ -63,12 +63,85 @@ en:
     minutes: "Minutes"
     seconds: "Seconds"
   onboarding:
-    welcome: "Welcome to Season!"
-    name_prompt: "How would you like to be called?"
-    cycle_prompt: "How long is your average cycle?"
-    cycle_note: "This helps us predict your cycle"
-    period_prompt: "How long is your period?"
-    submit: "Continue"
+    require_user:
+      sign_in_first: "Please sign in first"
+    step1:
+      heading: "How would you like to be called?"
+      name_placeholder: "Name..."
+      submit: "Submit"
+    step2:
+      heading_html: "Hello %{name},<br>When were you born?"
+      label_day: "Day"
+      label_month: "Month"
+      label_year: "Year"
+      placeholder_day: "DD"
+      placeholder_month: "MM"
+      placeholder_year: "YYYY"
+      submit: "Submit"
+    step3:
+      heading: "Do you have a regular cycle?"
+      yes: "Yes"
+      no: "No"
+    step4:
+      no_problem_title: "No Problem"
+      no_problem_body: "We'll help you get your cycle back on track with exercise and nutrition tips"
+      no_problem_ok: "Okay, next"
+      heading: "How long is your average cycle?"
+      note: "Small note: Cycles usually last 24-38 days."
+      days_suffix: "Days"
+      submit: "Submit"
+      not_sure: "Not sure"
+    step5:
+      heading: "Are you using hormonal birth control?"
+      yes: "Yes"
+      no: "No"
+      info: "Hormonal birth control alters your natural cycle. Season currently aligns with your natural cycle, but by tracking your symptoms and Superpower Moments, we create a personalized forecast for you."
+    step6:
+      heading: "What method of birth control do you use?"
+      methods:
+        - "Birth control pill"
+        - "Hormonering"
+        - "Hormoneplaster"
+        - "Hormone injection"
+        - "IUD"
+        - "Hormonal implant"
+      submit: "Submit"
+    step7:
+      heading: "Would you like to set up a reminder for your birth control?"
+      yes: "Yes"
+      no: "No"
+    step8:
+      heading_html: "Hello %{name},<br>Are you taking any contraception?"
+      contraceptions:
+        - "None"
+        - "Birth control pill"
+        - "Hormonering"
+        - "Hormoneplaster"
+        - "Hormone injection"
+        - "IUD"
+        - "Hormonal implant"
+        - "Condoms"
+        - "Other"
+      submit: "Submit"
+    step9:
+      heading_html: "Hello %{name},<br>Do you have any food preferences?"
+      foods:
+        - "None"
+        - "Vegetarian"
+        - "Vegan"
+        - "Pollotaric"
+        - "Pescetarian"
+      submit: "Submit"
+    step10:
+      heading: "%{name}, when was the first day of your last menstruation?"
+      clear: "clear"
+      submit: "Submit"
+      unsure: "Unsure..."
+    step11:
+      heading: "Would you like a reminder of your cycle stages to be more prepared?"
+      body: "You will receive it two days before the predicted start date of your cycle phase. You can change these later."
+      submit: "Submit"
+      maybe_later: "Maybe later"
   calendar:
     header: "Hello %{name} — This is your month"
     greeting: "Hello %{name} — This is your month"
@@ -110,9 +183,6 @@ en:
     create:
       thank_you: "Thank you for your feedback!"
       enter_message: "Please enter a message."
-  onboarding:
-    require_user:
-      sign_in_first: "Please sign in first"
   menu:
     coming_soon: "Coming soon"
     premium_title: "Get Season Premium now"

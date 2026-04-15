@@ -52,7 +52,7 @@
             method: :post,
             data: { turbo: false },
             aria: { label: "Sign in with Google" },
-            style: "width:59px; height:52px; background:#ffffff; border:1px solid #dddddd; border-radius:8px; display:flex; align-items:center; justify-content:center; border:none; padding:0;" do %>
+            style: "width:59px; height:52px; background:#ffffff; border:1.5px solid #dddddd; border-radius:8px; display:flex; align-items:center; justify-content:center; padding:0;" do %>
         <%= image_tag "google.png", alt: "Google", style: "width:34px; height:34px; object-fit:contain;" %>
       <% end %>
 
@@ -76,6 +76,7 @@
             id: "email",
             autofocus: true,
             placeholder: t('devise.sessions.new.email_placeholder', default: 'E-mail...'),
+            aria: { invalid: @error_type == :wrong_email, describedby: @error_type == :wrong_email ? "auth-error" : nil },
             style: "width:100%; background:#EDE1D5; border-radius:8px; padding:14px 21px; height:52px; border:#{@error_type == :wrong_email ? '2px solid #933a35' : 'none'}; font-size:22px; font-weight:500; color:#933a35; outline:none; box-sizing:border-box;" %>
       </div>
 
@@ -85,6 +86,7 @@
         <%= f.password_field :password,
             id: 'password_field',
             placeholder: t('devise.sessions.new.password_placeholder', default: 'Password...'),
+            aria: { invalid: @error_type == :wrong_password, describedby: @error_type == :wrong_password ? "auth-error" : nil },
             style: "width:100%; background:#EDE1D5; border-radius:8px; padding:14px 50px 14px 21px; height:52px; border:#{@error_type == :wrong_password ? '2px solid #933a35' : 'none'}; font-size:22px; font-weight:500; color:#933a35; outline:none; box-sizing:border-box;" %>
         <button type="button" id="toggle_password" onclick="togglePassword('password_field', 'toggle_password')" aria-label="Toggle password visibility" style="position:absolute; right:16px; top:50%; transform:translateY(-50%); cursor:pointer; display:inline-block; background:none; border:none; padding:0;">
           <% if @error_type == :wrong_password %>
@@ -104,7 +106,7 @@
 
       <!-- Inline error message (matches Login Error.png) -->
       <% if @error_type == :wrong_password || @error_type == :wrong_email %>
-        <div style="display:flex; align-items:flex-start; gap:10px; background:#FDF0EE; border-radius:8px; padding:12px 14px; margin-top:16px;">
+        <div id="auth-error" role="alert" style="display:flex; align-items:flex-start; gap:10px; background:#FDF0EE; border-radius:8px; padding:12px 14px; margin-top:16px;">
           <span style="color:#933a35; font-size:20px; font-weight:700; line-height:1; flex-shrink:0;">!</span>
           <div>
             <% if @error_type == :wrong_password %>

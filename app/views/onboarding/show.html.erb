@@ -23,20 +23,20 @@
   <% case @step when 1 %>
     <div class="mt-[113px]">
       <h2 class="text-[#933a35] text-xl font-medium leading-7 tracking-wider mb-[41px]">
-        How would you like to be called?
+        <%= t('onboarding.step1.heading') %>
       </h2>
 
       <%= form_with url: onboarding_path(1), method: :patch, id: "step1-form", local: true do |f| %>
-        <label for="onboarding_name" class="sr-only">Name</label>
+        <label for="onboarding_name" class="sr-only"><%= t('onboarding.step1.heading') %></label>
         <%= f.text_field :name,
             id: "onboarding_name",
             name: "user[name]",
-            placeholder: "Name...",
+            placeholder: t('onboarding.step1.name_placeholder'),
             autocomplete: "name",
             class: "w-80 h-12 bg-[#EDE1D5] opacity-50 rounded-lg px-4 text-[#933a35] text-xl font-medium placeholder-[#933a35]/50 tracking-wide" %>
       <% end %>
 
-      <%= button_tag "Submit",
+      <%= button_tag t('onboarding.step1.submit'),
           form: "step1-form", type: "submit",
           class: "w-80 h-12 bg-[#933a35] text-white rounded-lg text-xl font-medium tracking-wide mt-[81px]" %>
     </div>
@@ -46,31 +46,30 @@
   <% when 2 %>
     <div class="mt-[113px]">
       <h2 class="text-[#933a35] text-[22px] font-medium leading-[27px] tracking-[1.32px] mb-[43px]">
-        Hello <%= current_user.first_name %>,<br>
-        When were you born?
+        <%= t('onboarding.step2.heading_html', name: current_user.first_name) %>
       </h2>
 
       <%= form_with url: onboarding_path(2), method: :patch, id: "step2-form", local: true do |f| %>
         <div class="flex gap-3">
           <div class="flex flex-col items-start gap-2">
-            <label for="birthday_day" class="text-[#933a35] text-xs font-normal tracking-wide">Day</label>
-            <input type="number" name="birthday_day" id="birthday_day" min="1" max="31" placeholder="DD" autocomplete="bday-day"
+            <label for="birthday_day" class="text-[#933a35] text-xs font-normal tracking-wide"><%= t('onboarding.step2.label_day') %></label>
+            <input type="number" name="birthday_day" id="birthday_day" min="1" max="31" placeholder="<%= t('onboarding.step2.placeholder_day') %>" autocomplete="bday-day"
                    class="w-16 h-[52px] bg-[#ede1d5] opacity-50 rounded-lg px-3 text-[#933a35] text-[22px] font-medium text-center placeholder-[#933a35]/50 tracking-[0.66px]">
           </div>
           <div class="flex flex-col items-start gap-2">
-            <label for="birthday_month" class="text-[#933a35] text-xs font-normal tracking-wide">Month</label>
-            <input type="number" name="birthday_month" id="birthday_month" min="1" max="12" placeholder="MM" autocomplete="bday-month"
+            <label for="birthday_month" class="text-[#933a35] text-xs font-normal tracking-wide"><%= t('onboarding.step2.label_month') %></label>
+            <input type="number" name="birthday_month" id="birthday_month" min="1" max="12" placeholder="<%= t('onboarding.step2.placeholder_month') %>" autocomplete="bday-month"
                    class="w-16 h-[52px] bg-[#ede1d5] opacity-50 rounded-lg px-3 text-[#933a35] text-[22px] font-medium text-center placeholder-[#933a35]/50 tracking-[0.66px]">
           </div>
           <div class="flex flex-col items-start gap-2">
-            <label for="birthday_year" class="text-[#933a35] text-xs font-normal tracking-wide">Jahr</label>
-            <input type="number" name="birthday_year" id="birthday_year" min="1900" max="<%= Date.today.year %>" placeholder="JJJJ" autocomplete="bday-year"
+            <label for="birthday_year" class="text-[#933a35] text-xs font-normal tracking-wide"><%= t('onboarding.step2.label_year') %></label>
+            <input type="number" name="birthday_year" id="birthday_year" min="1900" max="<%= Date.today.year %>" placeholder="<%= t('onboarding.step2.placeholder_year') %>" autocomplete="bday-year"
                    class="w-24 h-[52px] bg-[#ede1d5] opacity-50 rounded-lg px-3 text-[#933a35] text-[22px] font-medium text-center placeholder-[#933a35]/50 tracking-[0.66px]">
           </div>
         </div>
       <% end %>
 
-      <%= button_tag "Submit",
+      <%= button_tag t('onboarding.step2.submit'),
           form: "step2-form", type: "submit",
           class: "w-[322px] h-[52px] bg-[#933a35] text-white rounded-lg text-[22px] font-medium tracking-[0.66px] mt-[77px]" %>
     </div>
@@ -80,19 +79,19 @@
   <% when 3 %>
     <div class="mt-[113px]">
       <h2 class="text-[#933a35] text-[22px] font-medium leading-[27px] tracking-[1.32px] mb-[43px]">
-        Do you have a regular cycle?
+        <%= t('onboarding.step3.heading') %>
       </h2>
 
       <div class="flex flex-col gap-3 items-center">
         <%= form_with url: onboarding_path(3), method: :patch, local: true do |f| %>
           <%= f.hidden_field :has_regular_cycle, value: "true" %>
-          <%= f.submit "Yes",
+          <%= f.submit t('onboarding.step3.yes'),
               class: "w-[322px] h-[52px] bg-[#933a35] text-white rounded-lg text-[22px] font-medium tracking-[0.66px] cursor-pointer" %>
         <% end %>
 
         <%= form_with url: onboarding_path(3), method: :patch, local: true do |f| %>
           <%= f.hidden_field :has_regular_cycle, value: "false" %>
-          <%= f.submit "No",
+          <%= f.submit t('onboarding.step3.no'),
               class: "w-[322px] bg-transparent text-[#933a35] py-4 text-[22px] font-medium tracking-[0.66px] cursor-pointer border-none" %>
         <% end %>
       </div>
@@ -102,25 +101,37 @@
   <%# ── Step 4: Cycle length (scroll picker) ──────────────────────── %>
   <% when 4 %>
     <% if @no_regular_cycle %>
-      <div id="no-problem-modal" class="fixed inset-0 bg-black/40 flex items-center justify-center z-50 px-8">
+      <div id="no-problem-modal" role="dialog" aria-modal="true" aria-labelledby="no-problem-title"
+           class="fixed inset-0 bg-black/40 flex items-center justify-center z-50 px-8">
         <div class="bg-[#FAF7F4] rounded-2xl px-8 py-10 text-center max-w-[340px] w-full">
-          <h3 class="text-[#933a35] text-2xl font-medium mb-4">No Problem</h3>
+          <h3 id="no-problem-title" class="text-[#933a35] text-2xl font-medium mb-4"><%= t('onboarding.step4.no_problem_title') %></h3>
           <p class="text-[#933a35] text-sm leading-relaxed mb-8">
-            We'll help you get your cycle back on track with exercise and nutrition tips
+            <%= t('onboarding.step4.no_problem_body') %>
           </p>
-          <button onclick="document.getElementById('no-problem-modal').remove()"
+          <button id="no-problem-ok" onclick="document.getElementById('no-problem-modal').remove()"
                   class="w-full h-12 bg-[#933a35] text-white rounded-lg text-xl font-medium">
-            Okay, next
+            <%= t('onboarding.step4.no_problem_ok') %>
           </button>
         </div>
       </div>
+      <script>
+        (function() {
+          var modal = document.getElementById('no-problem-modal');
+          if (!modal) return;
+          var btn = document.getElementById('no-problem-ok');
+          if (btn) btn.focus();
+          modal.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') modal.remove();
+          });
+        })();
+      </script>
     <% end %>
 
     <div class="mt-[113px]">
       <h2 class="text-[#933a35] text-[22px] font-medium leading-[27px] tracking-[1.32px] mb-1">
-        How long is your average cycle?
+        <%= t('onboarding.step4.heading') %>
       </h2>
-      <p class="text-[#6B6B6B] text-sm mb-10">Small note: Cycles usually last 24-38 days.</p>
+      <p class="text-[#6B6B6B] text-sm mb-10"><%= t('onboarding.step4.note') %></p>
 
       <%= form_with url: onboarding_path(4), method: :patch, id: "step4-form", local: true do |f| %>
         <%= f.hidden_field :cycle_length, id: "cycle_length_value", value: "28" %>
@@ -130,14 +141,18 @@
                style="top:84px; height:42px;"></div>
 
           <div id="cycle-picker"
+               role="listbox" aria-label="Cycle length in days" aria-activedescendant="cycle-day-28"
+               tabindex="0"
                class="relative overflow-y-scroll flex flex-col items-center"
                style="height:210px; scroll-snap-type:y mandatory; -webkit-overflow-scrolling:touch; scrollbar-width:none;">
             <div style="min-height:84px; flex-shrink:0;"></div>
             <% (20..45).each do |d| %>
-              <div data-days="<%= d %>"
+              <div id="cycle-day-<%= d %>"
+                   role="option" aria-selected="<%= d == 28 ? 'true' : 'false' %>"
+                   data-days="<%= d %>"
                    class="cycle-day-item flex items-center justify-center text-[#933a35] font-medium cursor-pointer flex-shrink-0"
                    style="height:42px; min-height:42px; scroll-snap-align:center; font-size:16px; opacity:0.45;">
-                <%= d %> Days
+                <%= d %> <%= t('onboarding.step4.days_suffix') %>
               </div>
             <% end %>
             <div style="min-height:84px; flex-shrink:0;"></div>
@@ -149,12 +164,12 @@
     <div class="flex-1"></div>
 
     <div class="w-full flex flex-col gap-3 items-center">
-      <%= button_tag "Submit", form: "step4-form", type: "submit",
+      <%= button_tag t('onboarding.step4.submit'), form: "step4-form", type: "submit",
           class: "w-[322px] h-[52px] bg-[#933a35] text-white rounded-lg text-[22px] font-medium tracking-[0.66px]" %>
 
       <%= form_with url: onboarding_path(4), method: :patch, local: true do |f| %>
         <%= f.hidden_field :skip_cycle_length, value: "1" %>
-        <%= f.submit "Not sure",
+        <%= f.submit t('onboarding.step4.not_sure'),
             class: "w-[322px] bg-transparent text-[#933a35] py-3 text-[22px] font-medium tracking-[0.66px] cursor-pointer border-none" %>
       <% end %>
     </div>
@@ -163,19 +178,19 @@
   <% when 5 %>
     <div class="mt-[113px]">
       <h2 class="text-[#933a35] text-[22px] font-medium leading-[27px] tracking-[1.32px] mb-[43px]">
-        Are you using hormonal birth control?
+        <%= t('onboarding.step5.heading') %>
       </h2>
 
       <div class="flex flex-col gap-3 items-center">
         <%= form_with url: onboarding_path(5), method: :patch, local: true do |f| %>
           <%= f.hidden_field :uses_hormonal_birth_control, value: "true" %>
-          <%= f.submit "Yes",
+          <%= f.submit t('onboarding.step5.yes'),
               class: "w-[322px] h-[52px] bg-[#933a35] text-white rounded-lg text-[22px] font-medium tracking-[0.66px] cursor-pointer" %>
         <% end %>
 
         <%= form_with url: onboarding_path(5), method: :patch, local: true do |f| %>
           <%= f.hidden_field :uses_hormonal_birth_control, value: "false" %>
-          <%= f.submit "No",
+          <%= f.submit t('onboarding.step5.no'),
               class: "w-[322px] bg-transparent text-[#933a35] py-4 text-[22px] font-medium tracking-[0.66px] cursor-pointer border-none" %>
         <% end %>
       </div>
@@ -185,7 +200,7 @@
 
     <div class="w-full max-w-80">
       <p class="text-[#933a35] text-sm leading-relaxed">
-        Hormonal birth control alters your natural cycle. Season currently aligns with your natural cycle, but by tracking your symptoms and Superpower Moments, we create a personalized forecast for you.
+        <%= t('onboarding.step5.info') %>
       </p>
     </div>
 
@@ -193,13 +208,13 @@
   <% when 6 %>
     <div class="mt-[113px]">
       <h2 class="text-[#933a35] text-[22px] font-medium leading-[27px] tracking-[1.32px] mb-[43px]">
-        What method of birth control do you use?
+        <%= t('onboarding.step6.heading') %>
       </h2>
 
       <%= form_with url: onboarding_path(6), method: :patch, id: "step6-form", local: true do |f| %>
         <%= f.hidden_field :birth_control_method, id: "bc_method_value", value: "" %>
         <div class="flex flex-col gap-3 items-center">
-          <% ["Birth control pill", "Hormonering", "Hormoneplaster", "Hormone injection", "IUD", "Hormonal implant"].each do |method| %>
+          <% t('onboarding.step6.methods').each do |method| %>
             <button type="button" data-method="<%= method %>"
                     class="bc-method-btn w-[322px] h-[52px] bg-[#ede1d5] opacity-50 text-[#933a35] rounded-lg text-[22px] font-medium tracking-[0.66px] text-center">
               <%= method %>
@@ -210,7 +225,7 @@
         <div class="flex-1"></div>
 
         <div class="w-full flex justify-center mt-8">
-          <%= f.submit "Submit",
+          <%= f.submit t('onboarding.step6.submit'),
               class: "w-[322px] h-[52px] bg-[#933a35] text-white rounded-lg text-[22px] font-medium tracking-[0.66px]" %>
         </div>
       <% end %>
@@ -220,19 +235,19 @@
   <% when 7 %>
     <div class="mt-[113px]">
       <h2 class="text-[#933a35] text-[22px] font-medium leading-[27px] tracking-[1.32px] mb-[43px]">
-        Would you like to set up a reminder for your birth control?
+        <%= t('onboarding.step7.heading') %>
       </h2>
 
       <div class="flex flex-col gap-3 items-center">
         <%= form_with url: onboarding_path(7), method: :patch, local: true do |f| %>
           <%= f.hidden_field :birth_control_reminder, value: "true" %>
-          <%= f.submit "Yes",
+          <%= f.submit t('onboarding.step7.yes'),
               class: "w-[322px] h-[52px] bg-[#933a35] text-white rounded-lg text-[22px] font-medium tracking-[0.66px] cursor-pointer" %>
         <% end %>
 
         <%= form_with url: onboarding_path(7), method: :patch, local: true do |f| %>
           <%= f.hidden_field :birth_control_reminder, value: "false" %>
-          <%= f.submit "No",
+          <%= f.submit t('onboarding.step7.no'),
               class: "w-[322px] bg-transparent text-[#933a35] py-4 text-[22px] font-medium tracking-[0.66px] cursor-pointer border-none" %>
         <% end %>
       </div>
@@ -243,17 +258,17 @@
   <% when 8 %>
     <div class="mt-[113px]">
       <h2 class="text-[#933a35] text-[22px] font-medium leading-[27px] tracking-[1.32px] mb-[43px]">
-        Hello <%= current_user.first_name %>,<br>
-        Are you taking any contraception?
+        <%= t('onboarding.step8.heading_html', name: current_user.first_name) %>
       </h2>
 
       <%= form_with url: onboarding_path(8), method: :patch, id: "step8-form", local: true do |f| %>
-        <%= f.hidden_field :contraception, id: "contraception_value", value: "None" %>
+        <% step8_options = t('onboarding.step8.contraceptions') %>
+        <%= f.hidden_field :contraception, id: "contraception_value", value: step8_options.first %>
         <div class="flex flex-col gap-3 items-center">
-          <% ["None", "Birth control pill", "Hormonering", "Hormoneplaster", "Hormone injection", "IUD", "Hormonal implant", "Condoms", "Other"].each do |c| %>
+          <% step8_options.each_with_index do |c, i| %>
             <button type="button" data-contraception="<%= c %>"
                     class="contraception-btn w-[322px] h-[52px] bg-[#ede1d5] text-[#933a35] rounded-lg text-[22px] font-medium tracking-[0.66px] text-center"
-                    style="opacity:<%= c == 'None' ? '1' : '0.45' %>;">
+                    style="opacity:<%= i == 0 ? '1' : '0.45' %>;">
               <%= c %>
             </button>
           <% end %>
@@ -262,7 +277,7 @@
         <div class="flex-1"></div>
 
         <div class="w-full flex justify-center mt-8">
-          <%= f.submit "Submit",
+          <%= f.submit t('onboarding.step8.submit'),
               class: "w-[322px] h-[52px] bg-[#933a35] text-white rounded-lg text-[22px] font-medium tracking-[0.66px]" %>
         </div>
       <% end %>
@@ -272,17 +287,17 @@
   <% when 9 %>
     <div class="mt-[113px]">
       <h2 class="text-[#933a35] text-[22px] font-medium leading-[27px] tracking-[1.32px] mb-[43px]">
-        Hello <%= current_user.first_name %>,<br>
-        Do you have any food preferences?
+        <%= t('onboarding.step9.heading_html', name: current_user.first_name) %>
       </h2>
 
       <%= form_with url: onboarding_path(9), method: :patch, id: "step9-form", local: true do |f| %>
-        <%= f.hidden_field :food_preference, id: "food_pref_value", value: "None" %>
+        <% step9_options = t('onboarding.step9.foods') %>
+        <%= f.hidden_field :food_preference, id: "food_pref_value", value: step9_options.first %>
         <div class="flex flex-col gap-3 items-center">
-          <% ["None", "Vegetarian", "Vegan", "Pollotaric", "Pescetarian"].each do |pref| %>
+          <% step9_options.each_with_index do |pref, i| %>
             <button type="button" data-food="<%= pref %>"
                     class="food-btn w-[322px] h-[52px] bg-[#ede1d5] text-[#933a35] rounded-lg text-[22px] font-medium tracking-[0.66px] text-center"
-                    style="opacity:<%= pref == 'None' ? '1' : '0.45' %>;">
+                    style="opacity:<%= i == 0 ? '1' : '0.45' %>;">
               <%= pref %>
             </button>
           <% end %>
@@ -293,7 +308,7 @@
     <div class="flex-1"></div>
 
     <div class="w-full flex justify-center">
-      <%= button_tag "Submit", form: "step9-form", type: "submit",
+      <%= button_tag t('onboarding.step9.submit'), form: "step9-form", type: "submit",
           class: "w-[322px] h-[52px] bg-[#933a35] text-white rounded-lg text-[22px] font-medium tracking-[0.66px]" %>
     </div>
 
@@ -312,7 +327,7 @@
 
     <div class="pt-4">
       <h2 class="text-[#933a35] text-[22px] font-medium leading-tight mb-6">
-        <%= current_user.first_name %>, when was the first day of your last menstruation?
+        <%= t('onboarding.step10.heading', name: current_user.first_name) %>
       </h2>
     </div>
 
@@ -358,7 +373,7 @@
     </div>
 
     <div class="w-full flex flex-col gap-2 mt-4 items-center">
-      <a href="#" id="cal-clear" class="text-center text-[#933a35] text-sm hidden">clear</a>
+      <a href="#" id="cal-clear" class="text-center text-[#933a35] text-sm hidden"><%= t('onboarding.step10.clear') %></a>
 
       <%= form_with url: onboarding_path(10), method: :patch, id: "skip-period-form", local: true do |f| %>
         <%= f.hidden_field :skip_last_period, value: "1" %>
@@ -367,12 +382,12 @@
       <button id="cal-submit-btn"
               onclick="document.getElementById('step10-form').submit()"
               class="w-[322px] h-[52px] bg-[#933a35] text-white rounded-lg text-[22px] font-medium tracking-[0.66px] hidden">
-        Submit
+        <%= t('onboarding.step10.submit') %>
       </button>
       <button id="cal-unsure-btn"
               onclick="document.getElementById('skip-period-form').submit()"
               class="w-[322px] h-[52px] bg-[#933a35] text-white rounded-lg text-[22px] font-medium tracking-[0.66px]">
-        Unsure...
+        <%= t('onboarding.step10.unsure') %>
       </button>
     </div>
 
@@ -387,10 +402,10 @@
       </div>
 
       <h2 class="text-[#933a35] text-[22px] font-medium leading-[27px] tracking-[1.32px] mb-[43px]">
-        Would you like a reminder of your cycle stages to be more prepared?
+        <%= t('onboarding.step11.heading') %>
       </h2>
       <p class="text-[#933a35] text-sm leading-relaxed">
-        You will receive it two days before the predicted start date of your cycle phase. You can change these later.
+        <%= t('onboarding.step11.body') %>
       </p>
     </div>
 
@@ -398,13 +413,13 @@
 
     <div class="w-full flex flex-col gap-3 items-center">
       <%= form_with url: onboarding_path(11), method: :patch, local: true do |f| %>
-        <%= f.submit "Submit",
+        <%= f.submit t('onboarding.step11.submit'),
             class: "w-[322px] h-[52px] bg-[#933a35] text-white rounded-lg text-[22px] font-medium tracking-[0.66px] cursor-pointer" %>
       <% end %>
 
       <%= form_with url: onboarding_path(11), method: :patch, local: true do |f| %>
         <%= f.hidden_field :skip_reminder, value: "1" %>
-        <%= f.submit "Maybe later",
+        <%= f.submit t('onboarding.step11.maybe_later'),
             class: "w-[322px] bg-transparent text-[#933a35] py-3 text-[22px] font-medium tracking-[0.66px] cursor-pointer border-none" %>
       <% end %>
     </div>
@@ -428,8 +443,10 @@ document.addEventListener('turbo:load', function () {
         var active = (i === idx);
         el.style.opacity  = active ? '1'    : '0.45';
         el.style.fontSize = active ? '22px' : '16px';
+        el.setAttribute('aria-selected', active ? 'true' : 'false');
         if (active) {
           document.getElementById('cycle_length_value').value = el.dataset.days;
+          picker.setAttribute('aria-activedescendant', el.id);
         }
       });
     }

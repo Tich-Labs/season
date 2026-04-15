@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_10_202659) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_15_202103) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -161,7 +161,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_10_202659) do
 
   create_table "users", force: :cascade do |t|
     t.boolean "admin", default: false, null: false
-    t.integer "age"
     t.string "apple_uid"
     t.string "avatar_url"
     t.boolean "birth_control_reminder"
@@ -171,7 +170,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_10_202659) do
     t.datetime "confirmed_at"
     t.string "contraception_type", default: "none"
     t.datetime "created_at", null: false
-    t.integer "cycle_days"
     t.integer "cycle_length"
     t.boolean "cycle_stage_reminder"
     t.string "email", default: "", null: false
@@ -183,10 +181,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_10_202659) do
     t.datetime "invite_accepted_at"
     t.string "invite_token"
     t.string "language", default: "en", null: false
-    t.string "last_menstruation"
     t.date "last_period_start"
     t.string "life_stage", default: "menstrual"
-    t.string "locale"
     t.string "name", null: false
     t.boolean "onboarding_completed", default: false, null: false
     t.integer "period_length"

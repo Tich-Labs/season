@@ -57,12 +57,85 @@ de:
     minutes: "Minuten"
     seconds: "Sekunden"
   onboarding:
-    welcome: "Willkommen bei Season!"
-    name_prompt: "Wie möchtest du genannt werden?"
-    cycle_prompt: "Wie lange ist dein durchschnittlicher Zyklus?"
-    cycle_note: "Damit wir deinen Zyklus vorhersagen können"
-    period_prompt: "Wie lange ist deine Periode?"
-    submit: "Weiter"
+    require_user:
+      sign_in_first: "Bitte melde dich zuerst an"
+    step1:
+      heading: "Wie möchtest du genannt werden?"
+      name_placeholder: "Name..."
+      submit: "Weiter"
+    step2:
+      heading_html: "Hallo %{name},<br>Wann wurdest du geboren?"
+      label_day: "Tag"
+      label_month: "Monat"
+      label_year: "Jahr"
+      placeholder_day: "TT"
+      placeholder_month: "MM"
+      placeholder_year: "JJJJ"
+      submit: "Weiter"
+    step3:
+      heading: "Hast du einen regelmäßigen Zyklus?"
+      yes: "Ja"
+      no: "Nein"
+    step4:
+      no_problem_title: "Kein Problem"
+      no_problem_body: "Wir helfen dir, deinen Zyklus mit Sport- und Ernährungstipps wieder in den Griff zu bekommen"
+      no_problem_ok: "Okay, weiter"
+      heading: "Wie lange dauert dein durchschnittlicher Zyklus?"
+      note: "Hinweis: Zyklen dauern meist 24–38 Tage."
+      days_suffix: "Tage"
+      submit: "Weiter"
+      not_sure: "Nicht sicher"
+    step5:
+      heading: "Verwendest du hormonelle Verhütungsmittel?"
+      yes: "Ja"
+      no: "Nein"
+      info: "Hormonelle Verhütungsmittel verändern deinen natürlichen Zyklus. Season orientiert sich aktuell an deinem natürlichen Zyklus, aber durch das Verfolgen deiner Symptome und Superkraft-Momente erstellen wir eine personalisierte Vorhersage für dich."
+    step6:
+      heading: "Welche Verhütungsmethode verwendest du?"
+      methods:
+        - "Antibabypille"
+        - "Hormonspirale"
+        - "Hormonpflaster"
+        - "Hormonspritze"
+        - "Intrauterinpessar"
+        - "Hormonstäbchen"
+      submit: "Weiter"
+    step7:
+      heading: "Möchtest du eine Erinnerung für dein Verhütungsmittel einrichten?"
+      yes: "Ja"
+      no: "Nein"
+    step8:
+      heading_html: "Hallo %{name},<br>Nimmst du ein Verhütungsmittel?"
+      contraceptions:
+        - "Keine"
+        - "Antibabypille"
+        - "Hormonspirale"
+        - "Hormonpflaster"
+        - "Hormonspritze"
+        - "Intrauterinpessar"
+        - "Hormonstäbchen"
+        - "Kondome"
+        - "Andere"
+      submit: "Weiter"
+    step9:
+      heading_html: "Hallo %{name},<br>Hast du Ernährungspräferenzen?"
+      foods:
+        - "Keine"
+        - "Vegetarisch"
+        - "Vegan"
+        - "Pollotarisch"
+        - "Pescetarisch"
+      submit: "Weiter"
+    step10:
+      heading: "%{name}, wann war der erste Tag deiner letzten Menstruation?"
+      clear: "löschen"
+      submit: "Weiter"
+      unsure: "Nicht sicher..."
+    step11:
+      heading: "Möchtest du an deine Zyklusphasen erinnert werden?"
+      body: "Du erhältst sie zwei Tage vor dem voraussichtlichen Beginn deiner Zyklusphase. Du kannst diese später ändern."
+      submit: "Weiter"
+      maybe_later: "Vielleicht später"
   calendar:
     header: "Hallo %{name} — Das ist dein Monat"
     greeting: "Hallo %{name} — Das ist dein Monat"
@@ -104,9 +177,6 @@ de:
     create:
       thank_you: "Vielen Dank für dein Feedback!"
       enter_message: "Bitte gib eine Nachricht ein."
-  onboarding:
-    require_user:
-      sign_in_first: "Bitte melde dich zuerst an"
   menu:
     coming_soon: "Demnächst"
     premium_title: "Hol' dir jetzt Season Premium"
