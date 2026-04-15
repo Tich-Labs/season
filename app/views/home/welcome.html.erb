@@ -12,20 +12,17 @@
 
   <!-- Text and buttons lower half -->
   <div style="width:100%; text-align:center;">
-    <p style="color:#933a35; font-size:16px; font-weight:400; margin-bottom:6px;">
-      <%= t('home.welcome_title', default: 'Welcome to Season!') %>
-    </p>
-    <p style="color:#933a35; font-size:14px; font-weight:300; margin-bottom:40px; line-height:1.5;">
-      <%= t('home.welcome_subtitle', default: 'Maximize your productivity with the help of your cycle.') %>
+    <p style="color:#933a35; font-size:16px; font-weight:400; margin-bottom:40px; line-height:1.5;">
+      <%= t('home.welcome_text', default: 'Welcome to Season! Maximize your productivity with the help of your cycle.') %>
     </p>
 
     <%= link_to t('home.lets_go', default: 'Lets go'),
         new_registration_path,
-        style: "display:block; background:#933a35; color:#ffffff; text-align:center; padding:18px; border-radius:8px; font-weight:500; font-size:16px; text-decoration:none; margin-bottom:20px;" %>
+        style: "display:block; width:322px; height:52px; line-height:52px; background:#933a35; color:#ffffff; text-align:center; border-radius:8px; font-weight:500; font-size:22px; text-decoration:none; margin:0 auto 20px;" %>
 
     <%= link_to t('home.have_account', default: 'I already have an account'),
         new_session_path,
-        style: "display:block; color:#933a35; text-align:center; font-weight:500; font-size:15px; text-decoration:none;" %>
+        style: "display:block; color:#933a35; text-align:center; font-weight:500; font-size:22px; text-decoration:none;" %>
   </div>
 
 </div>

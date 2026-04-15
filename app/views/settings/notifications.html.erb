@@ -1,5 +1,4 @@
-<%# Notifications & Reminders screen - matches Figma node %>
-<%# Dark header auto-applied by layout; only back arrow override needed %>
+<%# Notifications & Reminders screen - matches Figma node 12048:16741 %>
 <% content_for(:header_left) do %>
   <%= link_to edit_settings_path, class: "p-2 flex items-center", aria: { label: "Back to settings" } do %>
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
@@ -10,11 +9,8 @@
 <% end %>
 
 <div style="background:#ffffff; min-height:100%;">
-
-  <%# Content - max-width 430px centered %>
   <div style="max-width:430px; margin:0 auto; padding:0 16px 80px;">
 
-    <%# JavaScript for toggle functionality %>
     <script>
       function toggleSetting(key) {
         fetch(<%= update_notifications_settings_path.to_json %>, {
@@ -28,127 +24,146 @@
       }
     </script>
 
-    <%# ── Cycle Notifications ── %>
-    <div style="padding:20px 0 8px;">
-      <h2 style="color:#933a35; font-size:16px; font-weight:700;">Cycle Notifications</h2>
+    <%# ── Section header ── %>
+    <div style="display:flex; align-items:center; gap:12px; padding:20px 0 8px;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="25" fill="none" stroke="#933a35" stroke-width="1.5" viewBox="0 0 24 24">
+        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+        <polyline points="22,6 12,13 2,6" />
+      </svg>
+      <h2 style="color:#933a35; font-size:16px; font-weight:700;">Notifications &amp; reminder</h2>
     </div>
     <div style="border-bottom:1px solid #DDD0CB;"></div>
 
-    <%# Cycle reminder %>
-    <div style="display:flex; align-items:center; justify-content:space-between; padding:16px 0;">
-      <div style="flex:1;">
-        <span style="color:#933a35; font-size:16px; font-weight:500;">Cycle reminder</span>
-        <p style="color:#D18D83; font-size:12px; margin:4px 0 0;">Get notified when your cycle starts</p>
-      </div>
-      <label style="position:relative; width:40px; height:20px; cursor:pointer;">
+    <%# Good morning set %>
+    <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 0 4px;">
+      <span style="color:#933a35; font-size:16px; font-weight:500;">Good morning set</span>
+      <label style="position:relative; width:41px; height:20px; cursor:pointer; flex-shrink:0;">
         <input type="checkbox" id="cycle_reminder" <%= @notifications.cycle_reminder ? 'checked' : '' %>
-               aria-label="Cycle reminder"
+               aria-label="Good morning set"
                onchange="toggleSetting('cycle_reminder')"
                style="opacity:0; width:0; height:0;">
-        <span style="position:absolute; top:0; left:0; width:40px; height:20px; background:<%= @notifications.cycle_reminder ? '#933a35' : '#ccc' %>; border-radius:20px; transition:0.2s;"></span>
-        <span style="position:absolute; top:2px; left:<%= @notifications.cycle_reminder ? '22px' : '2px' %>; width:16px; height:16px; background:white; border-radius:50%; transition:0.2s;"></span>
+        <span style="position:absolute; inset:0; background:<%= @notifications.cycle_reminder ? '#933a35' : '#ccc' %>; border-radius:20px; transition:0.2s;"></span>
+        <span style="position:absolute; top:1px; left:<%= @notifications.cycle_reminder ? '22px' : '2px' %>; width:18px; height:18px; background:white; border-radius:50%; transition:0.2s;"></span>
       </label>
     </div>
+    <p style="color:#d18d83; font-size:14px; font-weight:500; margin:0 0 12px;">Summary → 9:00 a.m.</p>
+    <div style="border-bottom:1px solid #DDD0CB;"></div>
 
-    <%# Period prediction %>
-    <div style="display:flex; align-items:center; justify-content:space-between; padding:16px 0;">
-      <div style="flex:1;">
-        <span style="color:#933a35; font-size:16px; font-weight:500;">Period prediction</span>
-        <p style="color:#D18D83; font-size:12px; margin:4px 0 0;">2 days before expected period</p>
-      </div>
-      <label style="position:relative; width:40px; height:20px; cursor:pointer;">
+    <%# Period reminder %>
+    <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 0 4px;">
+      <span style="color:#933a35; font-size:16px; font-weight:500;">Period reminder</span>
+      <label style="position:relative; width:41px; height:20px; cursor:pointer; flex-shrink:0;">
         <input type="checkbox" id="period_prediction" <%= @notifications.period_prediction ? 'checked' : '' %>
-               aria-label="Period prediction"
+               aria-label="Period reminder"
                onchange="toggleSetting('period_prediction')"
                style="opacity:0; width:0; height:0;">
-        <span style="position:absolute; top:0; left:0; width:40px; height:20px; background:<%= @notifications.period_prediction ? '#933a35' : '#ccc' %>; border-radius:20px; transition:0.2s;"></span>
-        <span style="position:absolute; top:2px; left:<%= @notifications.period_prediction ? '22px' : '2px' %>; width:16px; height:16px; background:white; border-radius:50%; transition:0.2s;"></span>
+        <span style="position:absolute; inset:0; background:<%= @notifications.period_prediction ? '#933a35' : '#ccc' %>; border-radius:20px; transition:0.2s;"></span>
+        <span style="position:absolute; top:1px; left:<%= @notifications.period_prediction ? '22px' : '2px' %>; width:18px; height:18px; background:white; border-radius:50%; transition:0.2s;"></span>
       </label>
     </div>
+    <div style="display:flex; gap:16px; margin-bottom:4px;">
+      <p style="color:#d18d83; font-size:14px; font-weight:500; margin:0;">Start → 12:00 a.m.</p>
+      <p style="color:#d18d83; font-size:14px; font-weight:500; margin:0;">End → 12:00 a.m.</p>
+    </div>
+    <p style="color:#d18d83; font-size:14px; font-weight:500; margin:0 0 12px;">
+      <%= link_to "edit", "#", style: "color:#d18d83; text-decoration:none;" %>
+    </p>
+    <div style="border-bottom:1px solid #DDD0CB;"></div>
 
-    <%# Ovulation alert %>
-    <div style="display:flex; align-items:center; justify-content:space-between; padding:16px 0;">
-      <div style="flex:1;">
-        <span style="color:#933a35; font-size:16px; font-weight:500;">Ovulation alert</span>
-        <p style="color:#D18D83; font-size:12px; margin:4px 0 0;">Get notified when you're ovulating</p>
-      </div>
-      <label style="position:relative; width:40px; height:20px; cursor:pointer;">
+    <%# Birth control reminder %>
+    <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 0 4px;">
+      <span style="color:#933a35; font-size:16px; font-weight:500;">Birth control reminder</span>
+      <label style="position:relative; width:41px; height:20px; cursor:pointer; flex-shrink:0;">
         <input type="checkbox" id="ovulation_alert" <%= @notifications.ovulation_alert ? 'checked' : '' %>
-               aria-label="Ovulation alert"
+               aria-label="Birth control reminder"
                onchange="toggleSetting('ovulation_alert')"
                style="opacity:0; width:0; height:0;">
-        <span style="position:absolute; top:0; left:0; width:40px; height:20px; background:<%= @notifications.ovulation_alert ? '#933a35' : '#ccc' %>; border-radius:20px; transition:0.2s;"></span>
-        <span style="position:absolute; top:2px; left:<%= @notifications.ovulation_alert ? '22px' : '2px' %>; width:16px; height:16px; background:white; border-radius:50%; transition:0.2s;"></span>
+        <span style="position:absolute; inset:0; background:<%= @notifications.ovulation_alert ? '#933a35' : '#ccc' %>; border-radius:20px; transition:0.2s;"></span>
+        <span style="position:absolute; top:1px; left:<%= @notifications.ovulation_alert ? '22px' : '2px' %>; width:18px; height:18px; background:white; border-radius:50%; transition:0.2s;"></span>
       </label>
     </div>
-
-    <%# ── Reminder Settings ── %>
-    <div style="padding:24px 0 8px;">
-      <h2 style="color:#933a35; font-size:16px; font-weight:700;">Reminder Settings</h2>
-    </div>
+    <p style="color:#d18d83; font-size:14px; font-weight:500; margin:0 0 2px;">Daily → 09:00 p.m.</p>
+    <p style="color:#933a35; font-size:10px; font-weight:500; margin:0 0 12px; line-height:1.4;">
+      Keep track of: Today is day 15 of taking the pill
+    </p>
     <div style="border-bottom:1px solid #DDD0CB;"></div>
 
-    <%# Reminder time %>
-    <div style="display:flex; align-items:center; justify-content:space-between; padding:16px 0;">
-      <span style="color:#933a35; font-size:16px; font-weight:500;">Reminder time</span>
-      <div style="display:flex; align-items:center; gap:8px;">
-        <span style="color:#D18D83; font-size:14px;"><%= @notifications.reminder_time %></span>
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
-          <polyline points="9 18 15 12 9 6" />
-        </svg>
-      </div>
-    </div>
-
-    <%# ── App Notifications ── %>
-    <div style="padding:24px 0 8px;">
-      <h2 style="color:#933a35; font-size:16px; font-weight:700;">App Notifications</h2>
-    </div>
-    <div style="border-bottom:1px solid #DDD0CB;"></div>
-
-    <%# Push notifications %>
-    <div style="display:flex; align-items:center; justify-content:space-between; padding:16px 0;">
-      <span style="color:#933a35; font-size:16px; font-weight:500;">Push notifications</span>
-      <label style="position:relative; width:40px; height:20px; cursor:pointer;">
-        <input type="checkbox" id="push_notifications" <%= @notifications.push_notifications ? 'checked' : '' %>
-               aria-label="Push notifications"
-               onchange="toggleSetting('push_notifications')"
-               style="opacity:0; width:0; height:0;">
-        <span style="position:absolute; top:0; left:0; width:40px; height:20px; background:<%= @notifications.push_notifications ? '#933a35' : '#ccc' %>; border-radius:20px; transition:0.2s;"></span>
-        <span style="position:absolute; top:2px; left:<%= @notifications.push_notifications ? '22px' : '2px' %>; width:16px; height:16px; background:white; border-radius:50%; transition:0.2s;"></span>
-      </label>
-    </div>
-
-    <%# Email notifications %>
-    <div style="display:flex; align-items:center; justify-content:space-between; padding:16px 0;">
-      <span style="color:#933a35; font-size:16px; font-weight:500;">E-Mail notifications</span>
-      <label style="position:relative; width:40px; height:20px; cursor:pointer;">
-        <input type="checkbox" id="email_notifications" <%= @notifications.email_notifications ? 'checked' : '' %>
-               aria-label="E-Mail notifications"
-               onchange="toggleSetting('email_notifications')"
-               style="opacity:0; width:0; height:0;">
-        <span style="position:absolute; top:0; left:0; width:40px; height:20px; background:<%= @notifications.email_notifications ? '#933a35' : '#ccc' %>; border-radius:20px; transition:0.2s;"></span>
-        <span style="position:absolute; top:2px; left:<%= @notifications.email_notifications ? '22px' : '2px' %>; width:16px; height:16px; background:white; border-radius:50%; transition:0.2s;"></span>
-      </label>
-    </div>
-
-    <%# ── Other ── %>
-    <div style="padding:24px 0 8px;">
-      <h2 style="color:#933a35; font-size:16px; font-weight:700;">Other</h2>
-    </div>
-    <div style="border-bottom:1px solid #DDD0CB;"></div>
-
-    <%# Newsletter %>
-    <div style="display:flex; align-items:center; justify-content:space-between; padding:16px 0;">
-      <span style="color:#933a35; font-size:16px; font-weight:500;">Newsletter</span>
-      <label style="position:relative; width:40px; height:20px; cursor:pointer;">
+    <%# Supplement reminder %>
+    <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 0 4px;">
+      <span style="color:#933a35; font-size:16px; font-weight:500;">Supplement reminder</span>
+      <label style="position:relative; width:41px; height:20px; cursor:pointer; flex-shrink:0;">
         <input type="checkbox" id="newsletter" <%= @notifications.newsletter ? 'checked' : '' %>
-               aria-label="Newsletter"
+               aria-label="Supplement reminder"
                onchange="toggleSetting('newsletter')"
                style="opacity:0; width:0; height:0;">
-        <span style="position:absolute; top:0; left:0; width:40px; height:20px; background:<%= @notifications.newsletter ? '#933a35' : '#ccc' %>; border-radius:20px; transition:0.2s;"></span>
-        <span style="position:absolute; top:2px; left:<%= @notifications.newsletter ? '22px' : '2px' %>; width:16px; height:16px; background:white; border-radius:50%; transition:0.2s;"></span>
+        <span style="position:absolute; inset:0; background:<%= @notifications.newsletter ? '#933a35' : '#ccc' %>; border-radius:20px; transition:0.2s;"></span>
+        <span style="position:absolute; top:1px; left:<%= @notifications.newsletter ? '22px' : '2px' %>; width:18px; height:18px; background:white; border-radius:50%; transition:0.2s;"></span>
       </label>
     </div>
+    <p style="color:#d18d83; font-size:14px; font-weight:500; margin:0 0 12px;">Daily → 06:00 p.m.</p>
+    <div style="border-bottom:1px solid #DDD0CB;"></div>
+
+    <%# In-App Popups %>
+    <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 0 8px;">
+      <span style="color:#933a35; font-size:16px; font-weight:500;">In-App Popups</span>
+      <label style="position:relative; width:41px; height:20px; cursor:pointer; flex-shrink:0;">
+        <input type="checkbox" id="email_notifications" <%= @notifications.email_notifications ? 'checked' : '' %>
+               aria-label="In-App Popups"
+               onchange="toggleSetting('email_notifications')"
+               style="opacity:0; width:0; height:0;">
+        <span style="position:absolute; inset:0; background:<%= @notifications.email_notifications ? '#933a35' : '#ccc' %>; border-radius:20px; transition:0.2s;"></span>
+        <span style="position:absolute; top:1px; left:<%= @notifications.email_notifications ? '22px' : '2px' %>; width:18px; height:18px; background:white; border-radius:50%; transition:0.2s;"></span>
+      </label>
+    </div>
+    <% [
+      ["new_appt_synced",    "New appointments synced"],
+      ["tracking_reminder",  "Tracking reminder"],
+      ["new_feedback",       "New Feedback available"],
+      ["app_updates",        "App-Updates"],
+      ["appointments",       "Appointments"]
+    ].each do |field, label| %>
+      <div style="display:flex; align-items:center; justify-content:space-between; padding:6px 0;">
+        <span style="color:#d18d83; font-size:14px; font-weight:500;"><%= label %></span>
+        <label style="position:relative; width:41px; height:20px; cursor:pointer; flex-shrink:0;">
+          <input type="checkbox" style="opacity:0; width:0; height:0;" aria-label="<%= label %>">
+          <span style="position:absolute; inset:0; background:#933a35; border-radius:20px;"></span>
+          <span style="position:absolute; top:1px; left:22px; width:18px; height:18px; background:white; border-radius:50%;"></span>
+        </label>
+      </div>
+    <% end %>
+    <div style="border-bottom:1px solid #DDD0CB; margin-top:8px;"></div>
+
+    <%# General Push-Notifications %>
+    <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 0 8px;">
+      <span style="color:#933a35; font-size:16px; font-weight:500;">General Push-Notifications</span>
+      <label style="position:relative; width:41px; height:20px; cursor:pointer; flex-shrink:0;">
+        <input type="checkbox" id="push_notifications" <%= @notifications.push_notifications ? 'checked' : '' %>
+               aria-label="General Push-Notifications"
+               onchange="toggleSetting('push_notifications')"
+               style="opacity:0; width:0; height:0;">
+        <span style="position:absolute; inset:0; background:<%= @notifications.push_notifications ? '#933a35' : '#ccc' %>; border-radius:20px; transition:0.2s;"></span>
+        <span style="position:absolute; top:1px; left:<%= @notifications.push_notifications ? '22px' : '2px' %>; width:18px; height:18px; background:white; border-radius:50%; transition:0.2s;"></span>
+      </label>
+    </div>
+    <% [
+      "New appointments synced",
+      "Tracking reminder",
+      "New Feedback available",
+      "App-Updates",
+      "Appointments"
+    ].each do |label| %>
+      <div style="display:flex; align-items:center; justify-content:space-between; padding:6px 0;">
+        <span style="color:#d18d83; font-size:14px; font-weight:500;"><%= label %></span>
+        <label style="position:relative; width:41px; height:20px; cursor:pointer; flex-shrink:0;">
+          <input type="checkbox" style="opacity:0; width:0; height:0;" aria-label="<%= label %>">
+          <span style="position:absolute; inset:0; background:#933a35; border-radius:20px;"></span>
+          <span style="position:absolute; top:1px; left:22px; width:18px; height:18px; background:white; border-radius:50%;"></span>
+        </label>
+      </div>
+    <% end %>
+    <p style="color:#933a35; font-size:10px; font-weight:500; margin:12px 0 0; line-height:1.5;">
+      Superpower of the day, pay attention to, mood, sport, nutrition, fertility
+    </p>
 
   </div>
 </div>
