@@ -72,6 +72,8 @@ Rails.application.routes.draw do
     get "inbox/bugs", to: "inbox#bugs"
     get "inbox/support", to: "inbox#support"
     get "inbox/export_csv", to: "inbox#export_csv"
+    get "launch_signups", to: "launch_signups#index", as: :launch_signups
+    get "launch_signups/export_csv", to: "launch_signups#export_csv", as: :launch_signups_export_csv
     root to: "users#index"
   end
 

@@ -27,11 +27,12 @@
 
         <%# Nav links %>
         <nav class="flex-1 px-3 py-4 space-y-1">
-          <% users_active   = controller_name == "users" %>
-          <% inbox_active   = controller_name == "inbox" && action_name == "overview" %>
+          <% users_active    = controller_name == "users" %>
+          <% signups_active  = controller_name == "launch_signups" %>
+          <% inbox_active    = controller_name == "inbox" && action_name == "overview" %>
           <% feedback_active = controller_name == "inbox" && action_name == "feedback" %>
-          <% bug_active     = controller_name == "inbox" && action_name == "bugs" %>
-          <% support_active = controller_name == "inbox" && action_name == "support" %>
+          <% bug_active      = controller_name == "inbox" && action_name == "bugs" %>
+          <% support_active  = controller_name == "inbox" && action_name == "support" %>
 
           <%= link_to admin_users_path,
               class: class_names("flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
@@ -39,6 +40,17 @@
                                  "text-[#f5ede8] hover:bg-[#7a2f2a] hover:text-white" => !users_active) do %>
             <span aria-hidden="true">&#128100;</span>
             Users
+          <% end %>
+
+          <%= link_to admin_launch_signups_path,
+              class: class_names("flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                                 "bg-[#7a2f2a] text-white" => signups_active,
+                                 "text-[#f5ede8] hover:bg-[#7a2f2a] hover:text-white" => !signups_active) do %>
+            <span class="flex items-center gap-3">
+              <span aria-hidden="true">&#128140;</span>
+              Launch Signups
+            </span>
+            <span class="inline-flex items-center justify-center min-w-[20px] h-5 px-2 rounded-full text-[10px] font-bold leading-none bg-[#ede1d5] text-[#933a35]"><%= LaunchSignup.count %></span>
           <% end %>
 
           <%# Inbox — clicking goes to all messages; sub-items always visible below %>
