@@ -116,7 +116,7 @@ class OnboardingController < ApplicationController
         return
       end
       current_user.update!(birth_control_reminder: reminder == "true")
-      redirect_to onboarding_path(9) and return
+      redirect_to onboarding_path(8) and return
 
     when 8
       # Contraception (taking any?)
@@ -169,6 +169,7 @@ class OnboardingController < ApplicationController
   end
 
   def finish
+    # Redirect handled in view via JS
   end
 
   private

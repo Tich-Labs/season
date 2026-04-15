@@ -1,3 +1,5 @@
+<meta name="turbo-cache-control" content="no-cache">
+
 <div class="min-h-screen bg-white flex flex-col items-center justify-center max-w-[430px] mx-auto px-8 text-center">
 
   <div class="w-full bg-[#EAECF5] rounded-3xl overflow-hidden mb-8">
@@ -10,10 +12,8 @@
     Everything is getting set up for you to start your SEASON Journey.
   </p>
 
-</div>
+  <a href="<%= calendar_path %>" class="mt-8 text-[#933a35] text-lg">
+    Continue to app →
+  </a>
 
-<script>
-  setTimeout(function () {
-    window.location.href = <%= user_root_path.to_json %>;
-  }, 10000);
-</script>
+</div>

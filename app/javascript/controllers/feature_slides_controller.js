@@ -7,11 +7,13 @@ export default class extends Controller {
   connect() {
     this._boundResize = () => this._sizeSlides()
     window.addEventListener('resize', this._boundResize)
-    this._sizeSlides()
-    this._show(0, false)
-    if (this.autoplayValue) {
-      this._timer = setInterval(() => this.next(), 4000)
-    }
+    requestAnimationFrame(() => {
+      this._sizeSlides()
+      this._show(0, false)
+      if (this.autoplayValue) {
+        this._timer = setInterval(() => this.next(), 4000)
+      }
+    })
   }
 
   disconnect() {
@@ -21,6 +23,8 @@ export default class extends Controller {
 
   _sizeSlides() {
     const w = this.trackTarget.parentElement.clientWidth
+    const count = this.trackTarget.children.length || 1
+    this.trackTarget.style.width = (w * count) + 'px'
     Array.from(this.trackTarget.children).forEach(slide => {
       slide.style.width = w + 'px'
     })

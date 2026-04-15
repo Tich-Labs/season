@@ -1,5 +1,18 @@
 <div class="min-h-screen bg-white flex flex-col max-w-[430px] mx-auto px-8 pt-[60px] pb-12">
 
+  <script>
+    function selectDate(date, btn) {
+      document.getElementById('last_period_value').value = date;
+      document.querySelectorAll('.cal-day').forEach(function(b) {
+        b.querySelector('span').classList.remove('bg-[#933a35]', 'text-white', 'font-semibold', 'rounded-sm');
+        b.querySelector('span').classList.add('text-[#933a35]');
+      });
+      btn.querySelector('span').classList.remove('text-[#933a35]');
+      btn.querySelector('span').classList.add('bg-[#933a35]', 'text-white', 'font-semibold', 'rounded-sm');
+      document.getElementById('cal-submit-btn').classList.remove('hidden');
+    }
+  </script>
+
   <% if @error %>
     <div class="bg-[#FDF0EE] rounded-xl px-4 py-3 text-sm text-[#933a35] mb-4">
       <%= @error %>
@@ -193,14 +206,14 @@
             </button>
           <% end %>
         </div>
+
+        <div class="flex-1"></div>
+
+        <div class="w-full flex justify-center mt-8">
+          <%= f.submit "Submit",
+              class: "w-[322px] h-[52px] bg-[#933a35] text-white rounded-lg text-[22px] font-medium tracking-[0.66px]" %>
+        </div>
       <% end %>
-    </div>
-
-    <div class="flex-1"></div>
-
-    <div class="w-full flex justify-center">
-      <%= button_tag "Submit", form: "step6-form", type: "submit",
-          class: "w-[322px] h-[52px] bg-[#933a35] text-white rounded-lg text-[22px] font-medium tracking-[0.66px]" %>
     </div>
 
   <%# ── Step 7: Birth control reminder ────────────────────────────── %>
@@ -245,14 +258,14 @@
             </button>
           <% end %>
         </div>
+
+        <div class="flex-1"></div>
+
+        <div class="w-full flex justify-center mt-8">
+          <%= f.submit "Submit",
+              class: "w-[322px] h-[52px] bg-[#933a35] text-white rounded-lg text-[22px] font-medium tracking-[0.66px]" %>
+        </div>
       <% end %>
-    </div>
-
-    <div class="flex-1"></div>
-
-    <div class="w-full flex justify-center">
-      <%= button_tag "Submit", form: "step8-form", type: "submit",
-          class: "w-[322px] h-[52px] bg-[#933a35] text-white rounded-lg text-[22px] font-medium tracking-[0.66px]" %>
     </div>
 
   <%# ── Step 9: Food preferences ───────────────────────────────────── %>
@@ -326,15 +339,16 @@
                   in_month = day.month == cal_start.month
                   is_today = day == today
                 %>
-                <div class="cal-day flex flex-col items-center py-3 cursor-pointer select-none"
+                <button type="button" class="cal-day flex flex-col items-center py-3 cursor-pointer select-none bg-transparent border-none p-0"
                      data-date="<%= day.iso8601 %>"
                      data-in-month="<%= in_month %>"
-                     data-today="<%= is_today %>">
+                     data-today="<%= is_today %>"
+                     onclick="selectDate('<%= day.iso8601 %>', this)">
                   <span class="text-sm w-8 h-8 flex items-center justify-center cal-day-label
                                <%= is_today ? 'bg-[#933a35] text-white font-semibold rounded-sm' : (in_month ? 'text-[#933a35]' : 'text-[#C8A49A]') %>">
                     <%= day.day %>
                   </span>
-                </div>
+                </button>
               <% end %>
             </div>
           <% end %>
