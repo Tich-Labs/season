@@ -76,7 +76,7 @@ group :development, :test do
   gem "rubocop-rspec", require: false
   gem "rubocop-rspec_rails", require: false
   gem "rubycritic"
-  gem "standard"
+  gem "standard", ">= 1.35.1"
 end
 
 group :development do

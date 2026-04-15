@@ -6,10 +6,15 @@ class TrackingController < ApplicationController
   def index
     @date = Time.zone.today
     @phase = current_user.current_phase
-    @season = CycleCalculatorService::SEASON_NAMES[@phase] if @phase
+    @meta = CycleCalculatorService::PHASE_META[@phase]
     @cycle_day = current_user.current_cycle_day
-    @symptom_log = current_user.symptom_logs.find_by(date: @date)
     @streak = current_user.streak&.current_streak || 0
+
+    if current_user.last_period_start
+      svc = CycleCalculatorService.new(current_user)
+      @strip = svc.strip_data(past_days: 6, future_days: 6)
+      @arcs = svc.wheel_arcs
+    end
   end
 
   def create

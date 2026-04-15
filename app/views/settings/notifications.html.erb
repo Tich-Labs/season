@@ -46,7 +46,11 @@
         <span style="position:absolute; top:1px; left:<%= @notifications.cycle_reminder ? '22px' : '2px' %>; width:18px; height:18px; background:white; border-radius:50%; transition:0.2s;"></span>
       </label>
     </div>
-    <p style="color:#d18d83; font-size:14px; font-weight:500; margin:0 0 12px;">Summary → 9:00 a.m.</p>
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+      <p style="color:#d18d83; font-size:14px; font-weight:500; margin:0;">Summary → 9:00 a.m.</p>
+      <%= link_to "edit", notification_morning_settings_path,
+            style: "color:#d18d83; font-size:14px; font-weight:500; text-decoration:none;" %>
+    </div>
     <div style="border-bottom:1px solid #DDD0CB;"></div>
 
     <%# Period reminder %>
@@ -61,13 +65,14 @@
         <span style="position:absolute; top:1px; left:<%= @notifications.period_prediction ? '22px' : '2px' %>; width:18px; height:18px; background:white; border-radius:50%; transition:0.2s;"></span>
       </label>
     </div>
-    <div style="display:flex; gap:16px; margin-bottom:4px;">
-      <p style="color:#d18d83; font-size:14px; font-weight:500; margin:0;">Start → 12:00 a.m.</p>
-      <p style="color:#d18d83; font-size:14px; font-weight:500; margin:0;">End → 12:00 a.m.</p>
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+      <div style="display:flex; gap:16px;">
+        <p style="color:#d18d83; font-size:14px; font-weight:500; margin:0;">Start → 12:00 a.m.</p>
+        <p style="color:#d18d83; font-size:14px; font-weight:500; margin:0;">End → 12:00 a.m.</p>
+      </div>
+      <%= link_to "edit", notification_period_settings_path,
+            style: "color:#d18d83; font-size:14px; font-weight:500; text-decoration:none;" %>
     </div>
-    <p style="color:#d18d83; font-size:14px; font-weight:500; margin:0 0 12px;">
-      <%= link_to "edit", "#", style: "color:#d18d83; text-decoration:none;" %>
-    </p>
     <div style="border-bottom:1px solid #DDD0CB;"></div>
 
     <%# Birth control reminder %>
@@ -82,10 +87,16 @@
         <span style="position:absolute; top:1px; left:<%= @notifications.ovulation_alert ? '22px' : '2px' %>; width:18px; height:18px; background:white; border-radius:50%; transition:0.2s;"></span>
       </label>
     </div>
-    <p style="color:#d18d83; font-size:14px; font-weight:500; margin:0 0 2px;">Daily → 09:00 p.m.</p>
-    <p style="color:#933a35; font-size:10px; font-weight:500; margin:0 0 12px; line-height:1.4;">
-      Keep track of: Today is day 15 of taking the pill
-    </p>
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+      <div>
+        <p style="color:#d18d83; font-size:14px; font-weight:500; margin:0 0 2px;">Daily → 09:00 p.m.</p>
+        <p style="color:#933a35; font-size:10px; font-weight:500; margin:0; line-height:1.4;">
+          Keep track of: Today is day 15 of taking the pill
+        </p>
+      </div>
+      <%= link_to "edit", notification_birth_control_settings_path,
+            style: "color:#d18d83; font-size:14px; font-weight:500; text-decoration:none; align-self:flex-start;" %>
+    </div>
     <div style="border-bottom:1px solid #DDD0CB;"></div>
 
     <%# Supplement reminder %>

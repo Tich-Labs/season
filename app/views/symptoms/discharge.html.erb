@@ -1,0 +1,122 @@
+<% content_for(:page_title) { "Discharge" } %>
+<% content_for(:header_left) do %>
+  <%= link_to symptoms_path,
+        style: "color:#933a35; font-size:15px; font-weight:500; text-decoration:none; padding:8px 4px; font-family:'Montserrat',sans-serif;" do %>
+    &lt; back
+  <% end %>
+<% end %>
+
+<%
+  phase_meta   = CycleCalculatorService::PHASE_META[@phase] || {}
+  phase_colour = phase_meta[:colour] || "#933a35"
+
+  discharge_types = [
+    {
+      value: 1,
+      name:  "Dry / None",
+      description: "No discharge visible or felt. Typical just after your period ends.",
+      colour: "#D1C5BD"
+    },
+    {
+      value: 2,
+      name:  "Sticky",
+      description: "White or yellow, thick and clumpy. Low fertility window.",
+      colour: "#C8B8A8"
+    },
+    {
+      value: 3,
+      name:  "Creamy",
+      description: "Smooth, lotion-like, white or pale yellow. Approaching fertile window.",
+      colour: "#B8A898"
+    },
+    {
+      value: 4,
+      name:  "Watery",
+      description: "Clear, thin, feels wet. You may be approaching ovulation.",
+      colour: "#899884"
+    },
+    {
+      value: 5,
+      name:  "Egg white",
+      description: "Clear, stretchy and slippery — like raw egg white. Peak fertility.",
+      colour: "#50705b"
+    }
+  ]
+
+  current_value = @log&.discharge
+%>
+
+<div class="min-h-screen pb-24" style="background:#FAF7F4;"
+     data-controller="symptom"
+     data-symptom-url-value="<%= symptoms_path %>"
+     data-date="<%= Time.zone.today %>">
+
+  <%# ── Phase banner ───────────────────────────────────────────────── %>
+  <div class="w-full py-4 px-4" style="background:<%= phase_colour %>;">
+    <div class="max-w-[430px] mx-auto">
+      <p class="text-white text-lg font-bold">Discharge</p>
+      <p class="text-white text-xs opacity-70 mt-0.5">
+        Cervical mucus tracking &mdash; <%= Time.zone.today.strftime("%-d %B %Y") %>
+      </p>
+    </div>
+  </div>
+
+  <div class="max-w-[430px] mx-auto px-4 pt-5">
+
+    <p class="text-sm mb-5 leading-relaxed" style="color:#6B6B6B;">
+      Tracking your cervical mucus helps predict your fertile window.
+      Tap the type that matches what you observe today.
+    </p>
+
+    <div class="flex flex-col gap-3">
+      <% discharge_types.each do |type| %>
+        <%
+          selected = current_value == type[:value]
+          border_style = selected ? "border:2px solid #{phase_colour};" : "border:2px solid transparent;"
+        %>
+        <button class="dot dot-group w-full text-left rounded-2xl px-5 py-4 flex items-start gap-4
+                       transition-all duration-150"
+                data-action="click->symptom#save"
+                data-field="discharge"
+                data-value="<%= type[:value] %>"
+                aria-pressed="<%= selected %>"
+                style="background:#ffffff; cursor:pointer; <%= border_style %>">
+
+          <%# Colour swatch %>
+          <div class="flex-shrink-0 w-10 h-10 rounded-full mt-0.5"
+               style="background:<%= type[:colour] %>;"></div>
+
+          <div class="flex-1">
+            <p class="font-semibold text-sm mb-0.5" style="color:#3d2b28;">
+              <%= type[:name] %>
+            </p>
+            <p class="text-xs leading-relaxed" style="color:#6B6B6B;">
+              <%= type[:description] %>
+            </p>
+          </div>
+
+          <% if selected %>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none"
+                 stroke="<%= phase_colour %>" stroke-width="2.5" viewBox="0 0 24 24"
+                 class="flex-shrink-0 mt-0.5" aria-hidden="true">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+          <% end %>
+
+        </button>
+      <% end %>
+    </div>
+
+    <%# Clear selection %>
+    <% if current_value %>
+      <button class="w-full mt-4 py-3 rounded-xl text-sm font-medium"
+              style="background:#FDF0EE; color:#933a35; border:none; cursor:pointer;"
+              data-action="click->symptom#save"
+              data-field="discharge"
+              data-value="">
+        Clear selection
+      </button>
+    <% end %>
+
+  </div>
+</div>

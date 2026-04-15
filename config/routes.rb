@@ -52,6 +52,7 @@ Rails.application.routes.draw do
   resources :tracking, only: [:index, :create]
   get "daily/:date", to: "daily_view#show", as: :daily_view
   resources :streaks, only: [:index]
+  get "symptoms/discharge", to: "symptoms#discharge", as: :symptom_discharge
   resources :symptoms, only: [:index, :show, :create, :update]
   resources :superpowers, only: [:index, :show, :create, :update]
   resources :feedbacks, only: [:create]
@@ -60,6 +61,9 @@ Rails.application.routes.draw do
     get :subscriptions, on: :collection
     get :calendar, on: :collection
     get :notifications, on: :collection
+    get :notification_morning, on: :collection
+    get :notification_period, on: :collection
+    get :notification_birth_control, on: :collection
     patch :update_avatar, on: :collection
     patch :update_profile, on: :collection
     patch :update_notifications, on: :collection

@@ -20,30 +20,16 @@ class InformationsController < ApplicationController
     @meta = phase_meta(phase)
   end
 
+  HORMONE_NOTES = {
+    "menstrual" => {note: "Estrogen is produced slowly", emoji: "❄️"},
+    "follicular" => {note: "Estrogen and testosterone levels rise", emoji: "🌱"},
+    "ovulation" => {note: "Progesterone levels rise", emoji: "☀️"},
+    "luteal" => {note: "Decline in estrogen and progesterone levels", emoji: "🍂"}
+  }.freeze
+
   private
 
   def phase_meta(phase)
-    {
-      "menstrual" => {
-        season: "Winter", colour: "#933a35", text_colour: "#FFFFFF",
-        days: "Day 1–6", hormone_note: "Estrogen is produced slowly",
-        emoji: "❄️"
-      },
-      "follicular" => {
-        season: "Spring", colour: "#899884", text_colour: "#FFFFFF",
-        days: "Day 7–14", hormone_note: "Estrogen and testosterone levels rise",
-        emoji: "🌱"
-      },
-      "ovulation" => {
-        season: "Summer", colour: "#50705b", text_colour: "#FFFFFF",
-        days: "Day 15–21", hormone_note: "Progesterone levels rise",
-        emoji: "☀️"
-      },
-      "luteal" => {
-        season: "Autumn", colour: "#D18D83", text_colour: "#FFFFFF",
-        days: "Day 22–28", hormone_note: "Decline in estrogen and progesterone levels",
-        emoji: "🍂"
-      }
-    }[phase]
+    CycleCalculatorService::PHASE_META[phase].merge(HORMONE_NOTES[phase] || {})
   end
 end

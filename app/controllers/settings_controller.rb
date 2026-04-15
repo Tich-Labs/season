@@ -82,6 +82,19 @@ class SettingsController < ApplicationController
     end
   end
 
+  def notification_morning
+    @user = current_user
+  end
+
+  def notification_period
+    @user = current_user
+  end
+
+  def notification_birth_control
+    @user = current_user
+    @contraception = @user.contraception_type.presence || "none"
+  end
+
   def update_notifications
     notification_keys = [:cycle_reminder, :period_prediction, :ovulation_alert, :push_notifications, :email_notifications, :newsletter]
     updates = {}

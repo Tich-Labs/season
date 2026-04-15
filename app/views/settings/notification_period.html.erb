@@ -1,0 +1,96 @@
+<% content_for(:page_title) { "Period Reminder" } %>
+<% content_for(:header_left) do %>
+  <%= link_to notifications_settings_path,
+        style: "color:#933a35; font-size:15px; font-weight:500; text-decoration:none; padding:8px 4px; font-family:'Montserrat',sans-serif;" do %>
+    &lt; back
+  <% end %>
+<% end %>
+
+<div style="background:#FAF7F4; min-height:100vh; padding-bottom:40px; font-family:'Montserrat',sans-serif;">
+  <div style="max-width:430px; margin:0 auto;">
+
+    <%# ── Header band ── %>
+    <div style="background:#933a35; padding:24px 20px 20px;">
+      <p style="color:#FFFFFF; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.07em; margin:0 0 6px; opacity:0.8;">
+        Notifications
+      </p>
+      <h1 style="color:#FFFFFF; font-size:22px; font-weight:700; margin:0; line-height:1.2;">
+        Period Reminder
+      </h1>
+    </div>
+
+    <%# ── Description ── %>
+    <div style="background:#FFFFFF; padding:16px 20px; border-bottom:1px solid #EDE1D5;">
+      <p style="color:#6B6B6B; font-size:14px; font-weight:400; margin:0; line-height:1.5;">
+        Get reminded when your period is about to start and when it ends. Set the exact times that work for you.
+      </p>
+    </div>
+
+    <%# ── Toggle ── %>
+    <div style="background:#FFFFFF; padding:16px 20px; border-bottom:1px solid #EDE1D5; display:flex; align-items:center; justify-content:space-between;">
+      <span style="color:#3d2b28; font-size:16px; font-weight:500;">Enable Period Reminder</span>
+      <label style="position:relative; width:44px; height:24px; cursor:pointer; flex-shrink:0;" aria-label="Enable period reminder">
+        <input type="checkbox" id="period_enabled" checked
+               style="opacity:0; width:0; height:0;">
+        <span style="position:absolute; inset:0; background:#933a35; border-radius:24px; transition:0.2s;"></span>
+        <span style="position:absolute; top:2px; left:22px; width:20px; height:20px; background:white; border-radius:50%; transition:0.2s; box-shadow:0 1px 3px rgba(0,0,0,0.2);"></span>
+      </label>
+    </div>
+
+    <%# ── Start time ── %>
+    <div style="background:#FFFFFF; padding:16px 20px; border-bottom:1px solid #EDE1D5;">
+      <p style="color:#933a35; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; margin:0 0 10px;">
+        Period start reminder
+      </p>
+      <div style="display:flex; align-items:center; gap:12px;">
+        <svg width="20" height="20" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0;">
+          <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+        </svg>
+        <input type="time" value="12:00"
+               style="background:#EDE1D5; border:none; border-radius:8px; padding:10px 14px; font-size:16px; color:#3d2b28; font-family:'Montserrat',sans-serif; outline:none; flex:1;">
+      </div>
+      <p style="color:#D18D83; font-size:13px; font-weight:500; margin:8px 0 0;">
+        Start → 12:00 a.m.
+      </p>
+    </div>
+
+    <%# ── End time ── %>
+    <div style="background:#FFFFFF; padding:16px 20px; border-bottom:1px solid #EDE1D5;">
+      <p style="color:#933a35; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; margin:0 0 10px;">
+        Period end reminder
+      </p>
+      <div style="display:flex; align-items:center; gap:12px;">
+        <svg width="20" height="20" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0;">
+          <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+        </svg>
+        <input type="time" value="12:00"
+               style="background:#EDE1D5; border:none; border-radius:8px; padding:10px 14px; font-size:16px; color:#3d2b28; font-family:'Montserrat',sans-serif; outline:none; flex:1;">
+      </div>
+      <p style="color:#D18D83; font-size:13px; font-weight:500; margin:8px 0 0;">
+        End → 12:00 a.m.
+      </p>
+    </div>
+
+    <%# ── Days before notice ── %>
+    <div style="background:#FFFFFF; padding:16px 20px; border-bottom:1px solid #EDE1D5;">
+      <p style="color:#933a35; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; margin:0 0 10px;">
+        Advance notice
+      </p>
+      <div style="display:flex; gap:10px;">
+        <% [1, 2, 3, 5].each do |days| %>
+          <button style="flex:1; padding:10px 4px; border-radius:10px; border:2px solid <%= days == 2 ? '#933a35' : '#EDE1D5' %>; background:<%= days == 2 ? '#933a35' : '#FFFFFF' %>; color:<%= days == 2 ? '#FFFFFF' : '#6B6B6B' %>; font-size:13px; font-weight:600; font-family:'Montserrat',sans-serif; cursor:pointer;">
+            <%= days %> <%= days == 1 ? "day" : "days" %>
+          </button>
+        <% end %>
+      </div>
+    </div>
+
+    <%# ── Save button ── %>
+    <div style="padding:20px 20px 0;">
+      <button style="width:100%; background:#933a35; color:#FFFFFF; padding:16px; border-radius:12px; border:none; font-size:16px; font-weight:600; font-family:'Montserrat',sans-serif; cursor:pointer; letter-spacing:0.02em;">
+        Save
+      </button>
+    </div>
+
+  </div>
+</div>

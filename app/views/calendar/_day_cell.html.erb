@@ -65,14 +65,15 @@
 
     <%# Event labels — up to 2, rest collapsed to +N %>
     <% if show_events && has_event %>
+      <% evt_colour = phase_colour || "#933a35" %>
       <div style="display:flex; flex-direction:column; gap:2px; margin-top:1px;">
         <% events_today.first(2).each do |evt| %>
-          <div style="background:#933a35; border-radius:2px; padding:1px 3px; overflow:hidden;">
+          <div style="background:<%= evt_colour %>; border-radius:2px; padding:1px 3px; overflow:hidden;">
             <span style="color:#FFF; font-size:7px; font-weight:500; white-space:nowrap; display:block; overflow:hidden; text-overflow:ellipsis; line-height:9px;"><%= evt.title %></span>
           </div>
         <% end %>
         <% if events_today.size > 2 %>
-          <span style="color:#933a35; font-size:7px; font-weight:600; line-height:1;">+<%= events_today.size - 2 %></span>
+          <span style="font-size:7px; font-weight:600; line-height:1; color:<%= evt_colour %>;">+<%= events_today.size - 2 %></span>
         <% end %>
       </div>
     <% end %>

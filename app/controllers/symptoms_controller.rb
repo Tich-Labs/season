@@ -11,6 +11,11 @@ class SymptomsController < ApplicationController
     @season = CycleCalculatorService::SEASON_NAMES[@phase] if @phase
   end
 
+  def discharge
+    @log = current_user.symptom_logs.find_or_initialize_by(date: Time.zone.today)
+    @phase = current_user.current_phase
+  end
+
   def create
     @log = current_user.symptom_logs.find_or_initialize_by(
       date: symptom_params[:date] || Time.zone.today

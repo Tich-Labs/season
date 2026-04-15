@@ -24,13 +24,34 @@
   timeline_start_h = 6
   timeline_end_h   = 22
   phase_col        = @phase_colour || "#933a35"
+  name             = current_user.first_name.presence || "there"
+
+  fertility_status = case @phase
+  when "menstrual"  then "unlikely"
+  when "follicular" then "possible"
+  when "ovulation"  then "peak fertility"
+  when "luteal"     then "unlikely"
+  else nil
+  end
 %>
 
 <div style="background:#FFFFFF; min-height:100vh; padding-bottom:100px; font-family:'Montserrat',sans-serif;">
   <div style="max-width:430px; margin:0 auto;">
 
-    <%# Week strip %>
-    <div style="padding:10px 8px 0;">
+    <%# ── Greeting banner (Figma: Kalender April — phase-coloured header) ── %>
+    <div style="background:<%= phase_col %>; padding:20px 16px 18px;">
+      <p style="color:#FFFFFF; font-size:28px; font-weight:500; margin:0 0 4px; line-height:1.15;">
+        Hello <%= name %>
+      </p>
+      <% if @phase %>
+        <p style="color:#FFFFFF; font-size:14px; font-weight:400; margin:0; opacity:0.9; line-height:1.4;">
+          You are in your <%= @season || @phase.capitalize %><br>And this is your day:
+        </p>
+      <% end %>
+    </div>
+
+    <%# ── Week strip ── %>
+    <div style="padding:10px 8px 0; background:#FFFFFF;">
       <div style="display:grid; grid-template-columns:repeat(7,1fr);">
         <% %w[M T W T F S S].each_with_index do |letter, i| %>
           <div style="text-align:center; font-size:12px; font-weight:500; color:<%= i >= 5 ? '#D18D84' : '#933a35' %>; padding:2px 0;">
@@ -53,19 +74,19 @@
       </div>
     </div>
 
-    <%# All-day events %>
+    <%# ── All-day events ── %>
     <% if @all_day_events.any? %>
       <div style="margin-top:8px;">
         <% @all_day_events.each do |evt| %>
           <div style="background:#EDE1D5; padding:6px 12px; display:flex; align-items:center; gap:12px; min-height:26px;">
-            <span style="font-size:11px; font-weight:500; color:#933a35; min-width:44px;">All day</span>
-            <span style="font-size:15px; font-weight:700; color:#933a35;"><%= evt.title %></span>
+            <span style="font-size:11px; font-weight:500; color:<%= phase_col %>; min-width:44px;">All day</span>
+            <span style="font-size:15px; font-weight:700; color:<%= phase_col %>;"><%= evt.title %></span>
           </div>
         <% end %>
       </div>
     <% end %>
 
-    <%# Timeline %>
+    <%# ── Timeline ── %>
     <div style="margin-top:10px; padding-bottom:16px;">
       <div style="position:relative; height:<%= (timeline_end_h - timeline_start_h + 1) * hour_px %>px;">
 
@@ -96,96 +117,89 @@
           <% dur = 30 if dur <= 0 %>
           <% top_px    = ((s_h - timeline_start_h) * hour_px + s_m.to_f * hour_px / 60.0).round %>
           <% height_px = [(dur * hour_px / 60.0).round, 26].max %>
-          <div style="position:absolute; left:48px; right:8px; top:<%= top_px %>px; height:<%= height_px %>px; background:<%= phase_col %>; border-radius:5px; padding:4px 8px; overflow:hidden; box-sizing:border-box; z-index:1;">
-            <div style="display:flex; align-items:flex-start; gap:5px;">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" style="flex-shrink:0; margin-top:2px;"><rect x="3" y="4" width="18" height="18" rx="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
-              <div style="overflow:hidden; flex:1;">
-                <div style="color:#FFFFFF; font-size:11px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.3;"><%= evt.title %></div>
-                <% if height_px > 40 && evt.notes.present? %>
-                  <div style="color:#FFFFFF; font-size:10px; opacity:0.9; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-decoration:underline;"><%= evt.notes %></div>
-                <% end %>
-                <% if height_px > 30 && et %>
-                  <div style="color:#FFFFFF; font-size:10px; opacity:0.8; margin-top:1px;"><%= st.strftime("%H:%M") %>–<%= et.strftime("%H:%M") %></div>
-                <% end %>
-              </div>
-            </div>
-          </div>
+          <%= link_to edit_calendar_event_path(evt),
+                style: "position:absolute; left:48px; right:8px; top:#{top_px}px; height:#{height_px}px; background:#{phase_col}; border-radius:6px; padding:5px 8px; overflow:hidden; box-sizing:border-box; z-index:1; text-decoration:none; display:block;" do %>
+            <div style="color:#FFFFFF; font-size:11px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.3;"><%= evt.title %></div>
+            <% if height_px > 30 && et %>
+              <div style="color:#FFFFFF; font-size:10px; opacity:0.8; margin-top:1px;"><%= st.strftime("%H:%M") %>&ndash;<%= et.strftime("%H:%M") %></div>
+            <% end %>
+            <% if height_px > 46 && evt.notes.present? %>
+              <div style="color:#FFFFFF; font-size:10px; opacity:0.85; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Note: <%= evt.notes %></div>
+            <% end %>
+          <% end %>
         <% end %>
 
       </div>
     </div>
 
+    <%# ── Phase tips (Figma: Verwenden) ── %>
+    <% if @phase %>
+      <div style="border-top:1px solid #EDE1D5; padding:16px 16px 8px; background:#FFFFFF;">
+        <p style="color:<%= phase_col %>; font-size:13px; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; margin:0 0 12px;">
+          Here are your tips for today:
+        </p>
+
+        <div style="display:flex; flex-direction:column; gap:8px;">
+
+          <%# Super Power %>
+          <% if @content&.superpower_text.present? %>
+            <div style="background:<%= phase_col %>; border-radius:10px; padding:12px 14px;">
+              <p style="color:#FFFFFF; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; margin:0 0 3px; opacity:0.8;">Super Power</p>
+              <p style="color:#FFFFFF; font-size:15px; font-weight:500; margin:0; line-height:1.3;"><%= @content.superpower_text %></p>
+            </div>
+          <% end %>
+
+          <%# Watch out for %>
+          <% if @content&.take_care_text.present? %>
+            <div style="background:<%= phase_col %>; border-radius:10px; padding:12px 14px;">
+              <p style="color:#FFFFFF; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; margin:0 0 3px; opacity:0.8;">Watch out for</p>
+              <p style="color:#FFFFFF; font-size:15px; font-weight:500; margin:0; line-height:1.3;"><%= @content.take_care_text %></p>
+            </div>
+          <% end %>
+
+          <%# Sport %>
+          <% if @content&.sport_text.present? %>
+            <div style="background:<%= phase_col %>; border-radius:10px; padding:12px 14px;">
+              <p style="color:#FFFFFF; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; margin:0 0 3px; opacity:0.8;">Sport</p>
+              <p style="color:#FFFFFF; font-size:15px; font-weight:500; margin:0; line-height:1.3;"><%= @content.sport_text %></p>
+            </div>
+          <% end %>
+
+          <%# Nutrition %>
+          <% if @content&.nutrition_text.present? %>
+            <div style="background:<%= phase_col %>; border-radius:10px; padding:12px 14px;">
+              <p style="color:#FFFFFF; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; margin:0 0 3px; opacity:0.8;">Nutrition</p>
+              <p style="color:#FFFFFF; font-size:15px; font-weight:500; margin:0; line-height:1.3;"><%= @content.nutrition_text %></p>
+            </div>
+          <% end %>
+
+          <%# Fertility %>
+          <% if fertility_status %>
+            <div style="background:<%= phase_col %>; border-radius:10px; padding:12px 14px;">
+              <p style="color:#FFFFFF; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; margin:0 0 3px; opacity:0.8;">Fertility</p>
+              <p style="color:#FFFFFF; font-size:15px; font-weight:500; margin:0;"><%= fertility_status %></p>
+            </div>
+          <% end %>
+
+          <%# Mood %>
+          <% if @content&.mood_text.present? %>
+            <div style="background:<%= phase_col %>; border-radius:10px; padding:12px 14px;">
+              <p style="color:#FFFFFF; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; margin:0 0 3px; opacity:0.8;">Mood</p>
+              <p style="color:#FFFFFF; font-size:15px; font-weight:500; margin:0; line-height:1.3;"><%= @content.mood_text %></p>
+            </div>
+          <% end %>
+
+        </div>
+      </div>
+    <% end %>
+
   </div>
 </div>
 
-<%# FAB %>
+<%# ── FAB: add event ── %>
 <div style="position:fixed; bottom:80px; left:50%; transform:translateX(-50%); z-index:40;">
   <%= link_to new_calendar_event_path(date: @date.to_s),
         style: "width:60px; height:60px; border-radius:30px; background:#EDE1D5; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 16px rgba(0,0,0,0.15); text-decoration:none;" do %>
     <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#933a35" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
   <% end %>
-</div>
-
-<%# Season Info Modal %>
-<%
-  phase = @cycle_data&.dig(:phase)
-  season = @cycle_data&.dig(:season) || CycleCalculatorService::SEASON_NAMES[phase]
-  cycle_day = @cycle_data&.dig(:cycle_day)
-
-  season_info = case season
-  when "Winter"
-    { title: "Winter", colour: "#933a35", emoji: "❄️",
-      description: "This is your menstruation phase — a time for rest and reflection.",
-      tips: ["Rest and prioritize sleep", "Gentle movement like yoga", "Stay hydrated"] }
-  when "Spring"
-    { title: "Spring", colour: "#D18D83", emoji: "🌸",
-      description: "You're in the follicular phase — energy and creativity are rising!",
-      tips: ["Start new projects", "High energy workouts", "Social activities"] }
-  when "Summer"
-    { title: "Summer", colour: "#F5C6AD", emoji: "☀️",
-      description: "You're ovulating — peak energy and confidence!",
-      tips: ["Network and collaborate", "Creative brainstorming", "Focus on relationships"] }
-  when "Autumn"
-    { title: "Autumn", colour: "#EDE1D5", emoji: "🍂",
-      description: "You're in the luteal phase — time for introspection and planning.",
-      tips: ["Organize and plan", "Self-care routines", "Reflect on goals"] }
-  else
-    { title: "Your Cycle", colour: "#933a35", emoji: "🌙",
-      description: "Track your cycle to see your phase.",
-      tips: [] }
-  end
-%>
-
-<div id="season-info-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:100; align-items:center; justify-content:center;">
-  <div style="background:#FAF7F4; border-radius:16px; padding:24px; width:90%; max-width:340px; margin:16px;">
-    <div style="text-align:center; margin-bottom:16px;">
-      <div style="width:60px; height:60px; border-radius:50%; background:<%= season_info[:colour] %>; display:inline-flex; align-items:center; justify-content:center; font-size:28px; margin-bottom:12px;">
-        <%= season_info[:emoji] %>
-      </div>
-      <h3 style="color:#933a35; font-size:20px; font-weight:600; margin:0;"><%= season_info[:title] %></h3>
-      <% if cycle_day %>
-        <p style="color:#D18D83; font-size:14px; margin:4px 0 0;">Day <%= cycle_day %> of your cycle</p>
-      <% end %>
-    </div>
-
-    <p style="color:#933a35; font-size:14px; line-height:1.5; margin:0 0 16px; text-align:center;">
-      <%= season_info[:description] %>
-    </p>
-
-    <% if season_info[:tips].any? %>
-      <div style="background:#FFFFFF; border-radius:12px; padding:12px; margin-bottom:16px;">
-        <p style="color:#933a35; font-size:12px; font-weight:600; margin:0 0 8px;">Tips for this phase</p>
-        <ul style="margin:0; padding-left:16px;">
-          <% season_info[:tips].each do |tip| %>
-            <li style="color:#6B6B6B; font-size:13px; margin-bottom:4px;"><%= tip %></li>
-          <% end %>
-        </ul>
-      </div>
-    <% end %>
-
-    <button onclick="document.getElementById('season-info-modal').style.display='none'"
-            style="width:100%; background:#933a35; color:white; border:none; border-radius:12px; padding:14px; font-size:16px; font-weight:500; cursor:pointer;">
-      Got it
-    </button>
-  </div>
 </div>
