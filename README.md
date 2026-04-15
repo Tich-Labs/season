@@ -2,7 +2,7 @@
 
 ## What is Season
 
-Season is a women's cycle tracking progressive web app (PWA) built on Rails 8 with Hotwire. It helps users understand their menstrual cycle through a seasonal metaphor (Winter/Spring/Summer/Autumn), track symptoms and superpowers daily, view their cycle calendar, and build tracking streaks. The app launched 7 April 2026 with an invite-only beta for 150 migrating users.
+Season is a women's cycle tracking progressive web app (PWA) built on Rails 8 with Hotwire. It helps users understand their menstrual cycle through a seasonal metaphor (Winter/Spring/Summer/Autumn), track symptoms and superpowers daily, view their cycle calendar, and build tracking streaks.
 
 ---
 
@@ -11,7 +11,7 @@ Season is a women's cycle tracking progressive web app (PWA) built on Rails 8 wi
 | Layer | Tech | Version |
 |-------|------|---------|
 | Language | Ruby | 3.4.7 |
-| Framework | Rails | 8.0.5 |
+| Framework | Rails | 8.1.3 |
 | Database | PostgreSQL | latest |
 | CSS | Tailwind CSS | ~3.3.1 (via tailwindcss-rails) |
 | JS | Hotwire (Turbo + Stimulus) | turbo-rails / stimulus-rails |
@@ -21,19 +21,19 @@ Season is a women's cycle tracking progressive web app (PWA) built on Rails 8 wi
 | WebSockets | Solid Cable | solid_cable |
 | Error tracking | Sentry | sentry-ruby / sentry-rails |
 | Payments | Stripe | stripe (wired, not active) |
-| Admin | Ransack + Pagy | ransack / pagy |
+| Admin | Ransack | ransack |
 | OmniAuth | Google, Facebook, Apple | omniauth-google-oauth2, omniauth-facebook, omniauth-apple |
 
 ---
 
 ## Architecture
 
-- **PWA mobile-first** — 390px base, max-w-md layout container throughout. Turbo Native (iOS/Android) roadmap.
+- **PWA mobile-first** — 390px base, max-w-[430px] layout container throughout. Turbo Native (iOS/Android) roadmap.
 - **Auth** — Custom cookie-based `Authentication` concern in `app/controllers/concerns/authentication.rb`. Devise is used only for password recovery emails. Sessions are encrypted cookies with 7-day expiry.
 - **Cycle logic** — `CycleCalculatorService` (`app/services/cycle_calculator_service.rb`). Single source of truth for phase, season, cycle day, and calendar colour data.
 - **Phase content** — `CyclePhaseContent` model, seeded for en/de x 4 phases. Stores superpower, mood, sport, nutrition, and care text per phase/locale.
 - **i18n** — English default, German available. All user-facing strings must go through `t()` helpers. Locales: `config/locales/en.yml` + `config/locales/de.yml`.
-- **Admin** — `admin/` namespace, gated by `User#admin?` boolean. Lists and shows users.
+- **Admin** — `admin/` namespace, gated by `User#admin?` boolean. Users, Inbox (feedback/bugs/support), Launch Signups.
 
 ---
 
@@ -41,14 +41,41 @@ Season is a women's cycle tracking progressive web app (PWA) built on Rails 8 wi
 
 | Milestone | Status | Notes |
 |-----------|--------|-------|
-| M1 Auth + Onboarding | ✅ Complete | 11-step onboarding, invite flow, custom session auth |
-| M2 Calendar | ✅ Complete | Monthly view, cycle phase colours, event creation |
-| M3 Tracking | ✅ Complete | Symptoms, superpowers, period start logging |
-| M4 Daily View | ✅ Complete | Day-detail screen at /daily/:date |
-| M5 Reminders | ⚠️ Partial | Schema exists, notifications UI at /settings/notifications |
-| M6 Streaks | ✅ Complete | Flame streak, milestones, longest streak |
-| M7 Onboarding Tour | ❌ Post-launch | No tour overlay built yet |
-| M8 Monetisation | ⚠️ Wired | Stripe gem added, paywall not wired |
+| **M1 — Foundation** | ✅ Complete | Auth, onboarding, all screens built, Figma-aligned, security clean |
+| **M2 — Reliability & Growth** | 🔄 In Progress | SMTP, mailer, OAuth, accessibility, i18n, rate limiting |
+| M3 — Monetisation | ⏳ Planned | Stripe paywall, subscription tiers |
+| M4 — Native App | ⏳ Planned | Turbo Native iOS/Android wrapper |
+
+### M1 Deliverables (Complete)
+
+| Area | Status |
+|------|--------|
+| 11-step onboarding | ✅ Pixel-perfect to Figma |
+| Auth (signup, login, OAuth shell, password reset) | ✅ Complete |
+| Calendar (monthly + weekly + appointments) | ✅ Complete |
+| Daily tracking (symptoms, superpowers, period) | ✅ Complete |
+| Daily view | ✅ Complete |
+| Streaks | ✅ Complete |
+| Settings (profile, calendar, notifications, subscriptions) | ✅ Complete |
+| Admin panel (users, inbox, launch signups) | ✅ Complete |
+| Launch page + waitlist signup | ✅ Complete |
+| Legal (terms + privacy) | ✅ Complete |
+| Security (Brakeman 0 warnings) | ✅ Clean |
+| ERB lint (0 errors) | ✅ Clean |
+| Test suite (76/76) | ✅ Passing |
+
+### M2 Targets
+
+| Item | Priority |
+|------|----------|
+| SMTP email provider (Resend recommended) | 🔴 Critical |
+| LaunchSignupMailer + NotifyLaunchSignupsJob | 🔴 Critical |
+| OAuth credentials (Google, Facebook, Apple) | 🟡 High |
+| LaunchSignup model validations | 🟠 Medium |
+| Rate-limit `/launch-signup` (Rack::Attack) | 🟠 Medium |
+| ARIA fixes — cycle picker, modal focus traps, auth error states | 🟠 Medium |
+| i18n: extract hardcoded onboarding strings | 🟠 Medium |
+| Schema cleanup: duplicate user columns | 🟢 Low |
 
 ---
 
@@ -69,8 +96,8 @@ cd season
 # Install Ruby deps
 bundle install
 
-# Copy env template and fill in values
-cp .env.template .env
+# Add master key (get from team password manager)
+echo "YOUR_MASTER_KEY" > config/master.key
 
 # Create DB, load schema, seed phase content
 bin/rails db:create db:schema:load db:seed
@@ -83,8 +110,9 @@ bin/dev
 
 | Variable | Required | Notes |
 |----------|----------|-------|
-| `RAILS_MASTER_KEY` | Yes | Decrypts config/credentials.yml.enc |
-| `DATABASE_URL` | Production only | Render PostgreSQL URL |
+| `RAILS_MASTER_KEY` | Yes | Decrypts `config/credentials.yml.enc`. Never commit this file. |
+| `DATABASE_URL` | Production only | Render PostgreSQL URL (auto-set by Render) |
+| `SECRET_KEY_BASE` | Production only | Auto-generated by Render (`generateValue: true`) |
 | `GOOGLE_CLIENT_ID` | OAuth | For Google Sign-In |
 | `GOOGLE_CLIENT_SECRET` | OAuth | For Google Sign-In |
 | `FACEBOOK_APP_ID` | OAuth | For Facebook Sign-In |
@@ -94,7 +122,9 @@ bin/dev
 | `APPLE_KEY_ID` | OAuth | For Apple Sign-In |
 | `APPLE_PRIVATE_KEY` | OAuth | PEM format |
 | `SENTRY_DSN` | Production | Error tracking |
-| `STRIPE_SECRET_KEY` | Post-launch | Payments |
+| `STRIPE_SECRET_KEY` | M3 | Payments (not yet active) |
+
+> `SECRET_KEY_BASE` and local dev: Rails reads it from `credentials.yml.enc` locally. On Render it reads `ENV['SECRET_KEY_BASE']` which takes priority. The two values do not need to match.
 
 ---
 
@@ -113,7 +143,7 @@ bin/dev
 | Password Done | `/password/done` | No |
 | Password Error States | `/password/error/*` | No |
 | Invite Landing | `/invite/:token` | No |
-| Onboarding Steps 1-11 | `/onboarding/:id` | Yes |
+| Onboarding Steps 1–11 | `/onboarding/:id` | Yes |
 | Onboarding Finish | `/onboarding/finish` | Yes |
 
 ### Main App (with top bar + burger menu)
@@ -138,11 +168,11 @@ bin/dev
 | Settings Calendar | `/settings/calendar` | Yes |
 | Settings Notifications | `/settings/notifications` | Yes |
 
-### Legal / Support
+### Public / Legal
 
 | Screen | Route | Auth Required |
 |--------|-------|---------------|
-| Launch Page | `/launch` | No |
+| Launch / Countdown | `/launch` | No |
 | Terms | `/terms` | No |
 | Privacy | `/privacy` | No |
 | Health Check | `/up` | No |
@@ -151,50 +181,54 @@ bin/dev
 
 ## App Structure
 
-### Controllers (28 total)
-- `ApplicationController` - Base controller
-- `Authentication` concern - Cookie-based auth
-- `HomeController` - Landing, loader, countdown, welcome
-- `SessionsController` - Login
-- `RegistrationsController` - Sign up
-- `OnboardingController` - 11-step onboarding flow
-- `CalendarController` - Monthly/weekly/appointments views
-- `CalendarEventsController` - CRUD for events
-- `DailyViewController` - Day detail view
-- `TrackingController` - Period entry
-- `SymptomsController` - Symptom logging
-- `SuperpowersController` - Superpower tracking
-- `StreaksController` - Tracking streaks
-- `SettingsController` - All settings routes
-- `PasswordsController` - Password recovery
-- `OmniauthController` - OAuth callbacks
-- `InvitesController` - Invite flow
-- `LaunchSignupsController` - Early access signups
-- `LaunchController` - Launch page
-- `LegalController` - Terms, privacy
-- `FeedbacksController` - User feedback
-- `PWAController` - Manifest, service worker
-- `DebugController` - Dev endpoints
-- `Admin::BaseController` - Admin base
-- `Admin::UsersController` - User admin
-- `Admin::FeedbacksController` - Feedback admin
+### Controllers (29 total)
+
+- `ApplicationController` — Base controller
+- `Authentication` concern — Cookie-based auth
+- `HomeController` — Landing, loader, countdown, welcome
+- `SessionsController` — Login
+- `RegistrationsController` — Sign up
+- `OnboardingController` — 11-step onboarding flow
+- `CalendarController` — Monthly/weekly/appointments views
+- `CalendarEventsController` — CRUD for events
+- `DailyViewController` — Day detail view
+- `TrackingController` — Period entry
+- `SymptomsController` — Symptom logging
+- `SuperpowersController` — Superpower tracking
+- `StreaksController` — Tracking streaks
+- `SettingsController` — All settings routes
+- `PasswordsController` — Password recovery
+- `OmniauthController` — OAuth callbacks
+- `InvitesController` — Invite flow
+- `LaunchSignupsController` — Waitlist signup (public)
+- `LaunchController` — Launch/countdown page
+- `LegalController` — Terms, privacy
+- `FeedbacksController` — In-app user feedback submission
+- `PWAController` — Manifest, service worker
+- `DebugController` — Dev endpoints
+- `Admin::BaseController` — Admin auth + shared stats
+- `Admin::UsersController` — User list + detail
+- `Admin::InboxController` — Feedback/bugs/support inbox
+- `Admin::LaunchSignupsController` — Waitlist signups list + CSV export
 
 ### Models (12 total)
-- `User` - User accounts
-- `CycleEntry` - Daily cycle tracking
-- `CyclePhaseContent` - Phase content (en/de)
-- `CalendarEvent` - Calendar events
-- `SymptomLog` - Daily symptom logs
-- `SuperpowerLog` - Daily superpower logs
-- `Streak` - Tracking streaks
-- `Reminder` - User reminders
-- `Feedback` - User feedback
-- `LaunchSignup` - Early access signups
-- `Current` - Single-table config
-- `ApplicationRecord` - Base model
+
+- `User` — User accounts
+- `CycleEntry` — Daily cycle tracking
+- `CyclePhaseContent` — Phase content (en/de)
+- `CalendarEvent` — Calendar events
+- `SymptomLog` — Daily symptom logs
+- `SuperpowerLog` — Daily superpower logs
+- `Streak` — Tracking streaks
+- `Reminder` — User reminders
+- `Feedback` — User feedback (type: feedback / bug_report / support)
+- `LaunchSignup` — Waitlist email signups
+- `Current` — Request-scoped current user
+- `ApplicationRecord` — Base model
 
 ### Services (1)
-- `CycleCalculatorService` - Phase/season/cycle day calculations
+
+- `CycleCalculatorService` — Phase/season/cycle day calculations
 
 ---
 
@@ -204,24 +238,24 @@ bin/dev
 - **Primary colour:** `#933a35`
 - **Secondary:** `#6B6B6B`
 - **Background:** `#FAF7F4`
-- **Field background:** `#F5EDE8`
+- **Field background:** `#EDE1D5`
 - **Error background:** `#FDF0EE`
-- **Font:** Montserrat (loaded via layout)
-- **Mobile base:** 390px, max-w-md container
+- **Muted pink:** `#D18D83`
+- **Font:** Montserrat (loaded via Google Fonts in layout)
+- **Mobile base:** 390px, max-w-[430px] container
 
 ---
 
 ## Deployment
 
-- **Platform:** Render
-- **Database:** Render PostgreSQL
-- **Build command:** `bin/render-build.sh` (bundle install -> assets:precompile -> db:prepare)
-- **Auto-deploy:** on push to `main`
+- **Platform:** Render (auto-deploys on push to `main`)
+- **Database:** Render PostgreSQL (pure PostgreSQL — no SQLite anywhere)
+- **Build command:** `bin/render-build.sh`
 - **Production cable adapter:** Solid Cable
+- **Error tracking:** Sentry
 
-### Build Script
+### Build Script (`bin/render-build.sh`)
 
-`bin/render-build.sh`:
 ```bash
 bundle install
 bundle exec rails assets:precompile
@@ -229,72 +263,43 @@ bundle exec rails assets:clean
 bundle exec rails db:prepare
 ```
 
+### Render Environment Variables to Set Manually
+
+Only `RAILS_MASTER_KEY` requires manual entry in the Render dashboard. All others are either auto-generated or set via `render.yaml`.
+
 ---
 
 ## Development Notes
 
-- `CLAUDE.md` contains full AI agent instructions -- read before making changes
-- All user-facing strings must use `t()` i18n helpers -- never hardcode English
+- `CLAUDE.md` contains full AI agent instructions — read before making changes
+- All user-facing strings must use `t()` i18n helpers — never hardcode English
 - Figma is the source of truth for all colours, spacing, and copy
-- Brand primary is `#933a35` -- no substitutions
+- Brand primary is `#933a35` — no substitutions
 - `CycleCalculatorService` is the single source of truth for all cycle calculations
-- `Authentication` concern is included once in `ApplicationController` -- do not re-include in subclasses
+- `Authentication` concern is included once in `ApplicationController` — do not re-include in subclasses
+- App is PostgreSQL only — no SQLite in any environment
 
 ---
 
-## 🛠 Database Engineering Standards
+## Database Engineering Standards
 
-We follow high-integrity migration patterns to ensure 100% uptime and data safety for our users.
-Reference: [Rails Migrations Best Practices](https://www.visuality.pl/posts/rails-migrations-best-practices)
+We follow high-integrity migration patterns to ensure 100% uptime and data safety.
 
 ### Core Rules
 
-1. **Reversibility:** Every migration must be reversible (`change` or `up/down`).
-2. **Schema Integrity:** Use null constraints and appropriate defaults at the DB level, not just in Rails models.
-3. **No Downtime:** Avoid destructive actions (like removing columns) without a two-step deployment.
-4. **Data vs Schema:** Keep data manipulation in Rake tasks, not migrations.
+1. **Reversibility** — Every migration must be reversible (`change` or `up/down`).
+2. **Schema Integrity** — Use null constraints and defaults at the DB level, not just Rails.
+3. **No Downtime** — Avoid destructive actions without a two-step deployment.
+4. **Data vs Schema** — Keep data manipulation in Rake tasks, not migrations.
 
 ---
 
-## Known Issues (pre-deploy)
+## Known Issues / Technical Debt
 
-| # | Severity | Issue | File |
-|---|----------|-------|------|
-| 1 | ~~CRITICAL~~ DONE | `SettingsController` authentication commented out -- settings routes publicly accessible | `settings_controller.rb:4` |
-| 2 | ~~CRITICAL~~ DONE | PWA manifest has `name: "MasterTemplate"` and `theme_color: "red"` | `pwa/manifest.json.erb` |
-| 3 | ~~CRITICAL~~ DONE | `OmniauthController` calls `User.find_or_create_from_oauth` but User model only defines `User.from_omniauth` -- OAuth login crashes | `omniauth_controller.rb:40` |
-| 4 | ~~MEDIUM~~ DONE | `theme-color` meta tag is `#8E3E36` not `#933a35` | `layouts/application.html.erb:14` |
-| 5 | MEDIUM | Burger menu text labels hardcoded English -- not using `t()` helpers | `layouts/_burger_menu.html.erb` |
-| 6 | MEDIUM | Duplicate columns on users table: `locale`+`language`, `birthday`+`age`, `last_period_start`+`last_menstruation`, `cycle_length`+`cycle_days` | `db/schema.rb` |
-| 7 | ~~MEDIUM~~ DONE | `update_streak!` duplicated in `SymptomsController` and `SuperpowersController` | Both controllers |
-| 8 | ~~MEDIUM~~ DONE | `user_signed_in?` (Devise helper) mixed with `authenticated?` (custom) in layout | `layouts/application.html.erb:20` |
-
----
-
-## 🚀 Post-Launch / Backlog
-
-### Social Login Setup (OAuth)
-
-OAuth routes are wired but credentials not yet configured. To enable Google/FB/Apple login:
-
-1. **Google OAuth** (Google Cloud Console)
-   - Create OAuth 2.0 credentials
-   - Authorized redirect URI: `https://season-v2.onrender.com/users/auth/google_oauth2/callback`
-   - Add to `.env`: `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`
-
-2. **Facebook OAuth** (Facebook Developer Portal)
-   - Create Facebook Login app
-   - Valid OAuth Redirect URI: `https://season-v2.onrender.com/users/auth/facebook/callback`
-   - Add to `.env`: `FACEBOOK_APP_ID`, `FACEBOOK_APP_SECRET`
-
-3. **Apple OAuth** (Apple Developer Portal)
-   - Configure Sign in with Apple
-   - Return URL: `https://season-v2.onrender.com/users/auth/apple/callback`
-   - Add to `.env`: `APPLE_CLIENT_ID`, `APPLE_CLIENT_SECRET`
-
-### Other Backlog Items
-
-- [ ] Implement calendar sync (Settings → Links & Syncs)
-- [ ] Dark mode toggle
-- [ ] Notifications & Reminders UI
-- [ ] Apple App Store / Google Play links
+| # | Severity | Issue | Target |
+|---|----------|-------|--------|
+| 1 | Medium | Duplicate columns on `users` table: `locale`/`language`, `birthday`/`age`, `last_period_start`/`last_menstruation`, `cycle_length`/`cycle_days` | M2 |
+| 2 | Medium | Burger menu text labels hardcoded English — not using `t()` | M2 |
+| 3 | Medium | Onboarding screens have hardcoded English strings | M2 |
+| 4 | Medium | SMTP not configured — emails silently fail in production | M2 Critical |
+| 5 | Low | OAuth credentials not yet set on Render | M2 |

@@ -2,28 +2,11 @@
 # This file applies to ALL AI agents: Claude Code, OpenCode, Cursor, Copilot
 # Follow every instruction in this file exactly.
 
-# 1. Install
-npm install -g @anthropic-ai/claude-code
-npx skills add julianrubisch/skills
+## Current Milestone: M2 — Reliability & Growth
 
-# 2. Create the app
-rails new season --database=postgresql \
-  --css=tailwind --skip-docker \
-  --skip-kamal --skip-jbuilder
-
-# 3. Drop CLAUDE.md in root
-cp CLAUDE.md ./season/CLAUDE.md
-
-# 4. Start Claude Code
-cd season
-claude
-
-# 5. First prompt:
-"Read CLAUDE.md then use jr-rails-new to scaffold Season.
- ERB views, Rails built-in auth, Solid Queue, AASM, Pundit,
- Tailwind mobile-first. Skip Docker, Kamal, Thruster.
- Add PWA manifest and service worker before any views.
- Wire i18n en/de before generating any ERB."
+M1 (all screens built, Figma-aligned, security clean) is complete.
+M2 priorities: SMTP/email, OAuth credentials, accessibility fixes, i18n, rate limiting.
+See README.md for full M2 target list.
 
 ## Brand Colours
 
@@ -31,8 +14,9 @@ Primary: **#933a35** (from Figma — not #7D3030)
 Secondary: #6B6B6B
 Background: #FAF7F4
 White: #FFFFFF
-Field background: #F5EDE8
+Field background: **#EDE1D5** (not #F5EDE8 — match Figma exactly)
 Error background: #FDF0EE
+Muted pink: #D18D83
 
 ## Figma source of truth
 
@@ -84,11 +68,37 @@ All references must use this colour exactly.
 - Settings calendar (`/settings/calendar`)
 - Settings notifications (`/settings/notifications`)
 
-### Error states
-- Log in error
-- Sign up error
+### Public / Launch
+- Launch / countdown (`/launch`) ✅ DONE
+- Terms (`/terms`) ✅ DONE
+- Privacy (`/privacy`) ✅ DONE
+
+### Error states ✅ ALL DONE
+- Log in error (inline, no redirect)
+- Sign up error (inline, no redirect)
 - General 404
 - General 500
+
+## Admin panel
+
+Admin lives at `/admin/*`, gated by `User#admin?`. Layout: `app/views/layouts/admin.html.erb`.
+
+### Admin routes
+- `GET /admin` → Users list (root)
+- `GET /admin/users/:id` → User detail
+- `GET /admin/inbox` → All messages (overview)
+- `GET /admin/inbox/feedback` → Feedback only
+- `GET /admin/inbox/bugs` → Bug reports only
+- `GET /admin/inbox/support` → Support only
+- `GET /admin/inbox/export_csv` → CSV download
+- `GET /admin/launch_signups` → Waitlist list
+- `GET /admin/launch_signups/export_csv` → CSV download
+
+### Admin sidebar rules
+- All active states use `bg-[#7a2f2a] text-white` — never use blue/red/purple per section
+- Inbox is a direct link (= All Messages). Sub-items Feedback/Bugs/Support always visible below it
+- Count badges use `rounded-full px-2` for breathing room
+- No JS toggles in the sidebar
 
 ## Asset naming conventions
 
@@ -99,12 +109,7 @@ All image and asset files placed in `app/assets/images/` must follow these rules
 - **No special characters** — no parentheses, dots (except extension), or punctuation
 - **Descriptive, short names** — `errorscreen-wrong-email.png` not `Errorscreen - wrong email.png`
 
-Examples:
-- `Season-Wortmarke-1.svg` ✅ (was `Season-Wortmarke 1.svg` ❌)
-- `Apple-Logo.png` ✅ (was `Apple Logo.png` ❌)
-- `errorscreen-wrong-email.png` ✅ (was `Errorscreen - wrong email.png` ❌)
-
-**Why**: Propshaft fails to digest and serve asset filenames containing spaces during production `assets:precompile` on Render, causing 404s in production.
+**Why**: Propshaft fails to digest asset filenames with spaces during `assets:precompile` on Render, causing 404s in production.
 
 Always use `image_tag` (never hardcoded `<img src="...">`) so Propshaft handles digest fingerprinting.
 
@@ -118,3 +123,33 @@ All error states must:
 - Field with error: `border border-[#933a35]` on the input (add border class conditionally)
 - Devise errors render via `devise/shared/error_messages` partial
 - Custom error partial styling must match above
+
+## i18n rules
+
+- **MVP language is English.** Do not hardcode German text in views.
+- All user-facing strings must use `t()` helpers so German translations work automatically.
+- Auth views already use `t()` — maintain this pattern in any new views.
+- Onboarding strings are hardcoded English (known debt, M2 target).
+- Locale files: `config/locales/en.yml` and `config/locales/de.yml`.
+
+## Database rules
+
+- App uses **PostgreSQL only** — no SQLite in any environment.
+- `db/development.sqlite3` and `db/test.sqlite3` are gitignored and should not exist.
+- `config/master.key` is gitignored — never commit it. Get it from the team password manager.
+- `SECRET_KEY_BASE`: Render auto-generates it. Local dev reads from `credentials.yml.enc`.
+  The two values do not need to match — this is correct and expected.
+
+## Credentials & secrets
+
+- `config/master.key` — gitignored, never committed, required locally to decrypt credentials
+- `config/credentials.yml.enc` — committed, safe (encrypted)
+- On Render: set `RAILS_MASTER_KEY` manually in the dashboard (it is `sync: false` in render.yaml)
+- `SECRET_KEY_BASE` on Render: auto-generated via `generateValue: true`, do not set manually
+
+## Known gotchas
+
+- **RuboCop / IDE warnings on ERB files**: The Ruby parser misreads `<%` and `%>` as comparison operators and reports false-positive warnings. These are not real errors — ignore them.
+- **`Admin::FeedbacksController` was deleted**: Feedback is now handled entirely by `Admin::InboxController`. Do not recreate the feedbacks controller.
+- **`User#current_phase`** — may return nil for new users with no cycle data. Always guard with `|| "Unknown"` in views.
+- **`current_user.onboarding_completed?`** — use this (not `last_period_start.present?`) to check if a user has finished onboarding.
