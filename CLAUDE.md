@@ -54,33 +54,35 @@ All references must use this colour exactly.
 
 ## Screen inventory — full list
 
-### Auth flow (no bottom nav)
-- App landing screen (before splash)
-- Splash / welcome screen ✅ DONE
-- Log in screen ✅ DONE (styled)
-- Log in error state
-- Sign up screen ✅ DONE (styled)
-- Sign up error state
-- Change password screen ✅ DONE (styled)
-- Invite landing page (for 150 migrating users)
-- Onboarding step 1 — name
-- Onboarding step 2 — cycle length + period length
-- Onboarding step 3 — contraception type
-- Onboarding step 4 — last period start date
-- Onboarding step 5 — language preference
+### Auth flow (no bottom nav) ✅ ALL DONE
+- App landing screen (`/`) - countdown/loader
+- Splash / welcome screen (`/welcome`)
+- Sign up (`/registration/new`)
+- Log in (`/session/new`)
+- Password recovery (`/users/password/new`)
+- Password reset (`/users/password/edit`)
+- Password done (`/password/done`)
+- Password error pages (`/password/error/*`)
+- Invite landing (`/invite/:token`)
+- Onboarding steps 1-11 (`/onboarding/:id`)
+- Onboarding finish (`/onboarding/finish`)
 
-### Main app (with bottom nav)
-- Calendar — monthly view (M2)
-- Calendar — event detail
-- Calendar — add event form
-- Daily tracking screen (M3)
-- Symptoms screen (M3)
-- Superpower screen (M3)
-- Period entry screen (M3)
-- Daily forecast / tips screen (M4)
-- Appointments view (M4)
-- Streaks screen (M6)
-- Settings screen
+### Main app (with top bar + burger menu) ✅ ALL DONE
+- Calendar monthly (`/calendar`)
+- Calendar weekly (`/calendar/weekly`)
+- Calendar appointments (`/calendar/appointments`)
+- Calendar event add (`/calendar_events/new`)
+- Calendar event edit (`/calendar_events/:id/edit`)
+- Daily view (`/daily/:date`)
+- Tracking/period entry (`/tracking`)
+- Symptoms list & detail (`/symptoms`, `/symptoms/:id`)
+- Superpowers list & detail (`/superpowers`, `/superpowers/:id`)
+- Streaks (`/streaks`)
+- Settings main (`/settings/edit`)
+- Settings profile (`/settings/profile`)
+- Settings subscriptions (`/settings/subscriptions`)
+- Settings calendar (`/settings/calendar`)
+- Settings notifications (`/settings/notifications`)
 
 ### Error states
 - Log in error

@@ -1,27 +1,26 @@
-<div class="bg-white min-h-screen flex flex-col items-center justify-center px-8 py-16 max-w-[430px] mx-auto text-center">
+<div style="background:#ffffff; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:60px 32px 48px; max-width:430px; margin:0 auto;">
 
-  <%# Illustration %>
-  <div class="w-[220px] h-[220px] rounded-full bg-[#ede1d5] overflow-hidden mb-10 flex-shrink-0">
-    <%= image_tag "error_screens_login/errorscreen-contact-support.png",
-        alt: "Contact support",
-        class: "w-full h-full object-cover" %>
+  <%# Empty top for spacing %>
+  <div></div>
+
+  <%# Content centered %>
+  <div style="width:100%; display:flex; flex-direction:column; align-items:center;">
+    <div style="width:220px; height:220px; border-radius:110px; background:#ede1d5; overflow:hidden; margin-bottom:40px;">
+      <img src="<%= asset_path('error_screens_login/errorscreen-contact-support.png') %>" alt="Contact support" style="width:100%; height:100%; object-fit:cover;">
+    </div>
+
+    <p style="color:#933a35; font-size:18px; font-weight:400; letter-spacing:1.62px; text-align:center; max-width:290px; margin-bottom:48px;">
+      Something seems off here—please contact our support team!
+    </p>
+
+    <div style="width:100%; margin-bottom:16px;">
+      <a href="mailto:support@season.vision" style="display:block; width:322px; height:52px; background:#933a35; color:#ffffff; text-align:center; line-height:52px; font-size:22px; font-weight:500; letter-spacing:0.66px; text-decoration:none; border-radius:8px; margin:0 auto;">contact support</a>
+    </div>
+
+    <a href="<%= new_session_path %>" style="color:#933a35; font-size:16px; font-weight:400; text-decoration:none;">Go back to LogIn</a>
   </div>
 
-  <%# Message %>
-  <p class="text-[#933a35] text-[18px] font-normal tracking-[1.62px] leading-snug max-w-[290px] mb-12">
-    Something seems off here&#8212;please contact our support team!
-  </p>
-
-  <%# Contact support button %>
-  <div class="w-full mb-4">
-    <a href="mailto:support@season.vision"
-       class="block w-full h-[52px] bg-[#933a35] text-white text-center leading-[52px] text-[22px] font-medium tracking-[0.66px] no-underline rounded-lg hover:bg-[#7a2f2a] transition-colors">
-      contact support
-    </a>
-  </div>
-
-  <%# Back link %>
-  <%= link_to "Go back to LogIn", new_session_path,
-      class: "text-[#933a35] text-base font-normal no-underline hover:underline" %>
+  <%# Empty bottom for spacing %>
+  <div></div>
 
 </div>

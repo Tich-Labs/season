@@ -14,6 +14,11 @@ class OnboardingController < ApplicationController
     @step = params[:id].to_i
     @hide_nav = true
     @no_regular_cycle = params[:no_regular].present?
+
+    if authenticated? && current_user.profile_complete?
+      redirect_to user_root_path and return
+    end
+
     render layout: "application"
   end
 
@@ -151,7 +156,8 @@ class OnboardingController < ApplicationController
         render :show, status: :unprocessable_content
         return
       end
-      current_user.update!(last_period_start: last_period_date)
+      parsed_date = Date.parse(last_period_date)
+      current_user.update!(last_period_start: parsed_date)
       redirect_to onboarding_path(11) and return
 
     when 11

@@ -67,12 +67,11 @@ Rails.application.routes.draw do
 
   namespace :admin do
     resources :users, only: [:index, :show]
-    get "feedback", to: "feedbacks#index"
-    get "bugreport", to: "feedbacks#index", type: "bug_report"
-    get "support", to: "feedbacks#index", type: "support"
-    resources :feedbacks, only: [:index] do
-      get :export_csv, on: :collection
-    end
+    get "inbox", to: "inbox#overview", as: :inbox
+    get "inbox/feedback", to: "inbox#feedback"
+    get "inbox/bugs", to: "inbox#bugs"
+    get "inbox/support", to: "inbox#support"
+    get "inbox/export_csv", to: "inbox#export_csv"
     root to: "users#index"
   end
 

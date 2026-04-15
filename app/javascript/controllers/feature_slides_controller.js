@@ -8,6 +8,7 @@ export default class extends Controller {
     this._boundResize = () => this._sizeSlides()
     window.addEventListener('resize', this._boundResize)
     requestAnimationFrame(() => {
+      console.debug('[feature-slides] connect:', { track: this.trackTarget, dots: this.dotTargets.length })
       this._sizeSlides()
       this._show(0, false)
       if (this.autoplayValue) {
@@ -60,6 +61,7 @@ export default class extends Controller {
   }
 
   _show(idx, animate = true) {
+    console.debug('[feature-slides] show', idx)
     this.currentValue = idx
     const slideW = this.trackTarget.parentElement.clientWidth
     this.trackTarget.style.transition = animate ? "transform 0.35s ease" : "none"

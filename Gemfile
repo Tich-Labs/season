@@ -16,7 +16,7 @@ gem "turbo-rails"
 gem "stimulus-rails"
 
 # CSS
-gem "tailwindcss-rails", "~> 4.4.0"
+# gem "tailwindcss-rails", "~> 4.4.0"
 
 # Server
 gem "puma", ">= 5.0"
@@ -88,3 +88,5 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
+
+gem "tailwindcss-rails", "~> 3.3.1"

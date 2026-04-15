@@ -41,14 +41,14 @@ Season is a women's cycle tracking progressive web app (PWA) built on Rails 8 wi
 
 | Milestone | Status | Notes |
 |-----------|--------|-------|
-| M1 Auth + Onboarding | Complete | 5-step onboarding, invite flow, custom session auth |
-| M2 Calendar | Complete | Monthly view, cycle phase colours, event creation |
-| M3 Tracking | Complete | Symptoms, superpowers, period start logging |
-| M4 Daily View | Complete | Day-detail screen at /daily/:date |
-| M5 Reminders | Post-launch | Schema exists (reminders table), no UI yet |
-| M6 Streaks | Complete | Flame streak, milestones, longest streak |
-| M7 Onboarding Tour | Post-launch | No tour overlay built yet |
-| M8 Monetisation | Post-launch | Stripe gem added, paywall not wired |
+| M1 Auth + Onboarding | ✅ Complete | 11-step onboarding, invite flow, custom session auth |
+| M2 Calendar | ✅ Complete | Monthly view, cycle phase colours, event creation |
+| M3 Tracking | ✅ Complete | Symptoms, superpowers, period start logging |
+| M4 Daily View | ✅ Complete | Day-detail screen at /daily/:date |
+| M5 Reminders | ⚠️ Partial | Schema exists, notifications UI at /settings/notifications |
+| M6 Streaks | ✅ Complete | Flame streak, milestones, longest streak |
+| M7 Onboarding Tour | ❌ Post-launch | No tour overlay built yet |
+| M8 Monetisation | ⚠️ Wired | Stripe gem added, paywall not wired |
 
 ---
 
@@ -111,25 +111,32 @@ bin/dev
 | Forgot Password | `/users/password/new` | No |
 | Reset Password | `/users/password/edit` | No |
 | Password Done | `/password/done` | No |
+| Password Error States | `/password/error/*` | No |
 | Invite Landing | `/invite/:token` | No |
-| Onboarding Step 1-5 | `/onboarding/:id` | Yes |
+| Onboarding Steps 1-11 | `/onboarding/:id` | Yes |
+| Onboarding Finish | `/onboarding/finish` | Yes |
 
 ### Main App (with top bar + burger menu)
 
 | Screen | Route | Auth Required |
 |--------|-------|---------------|
-| Calendar | `/calendar` | Yes |
+| Calendar (Monthly) | `/calendar` | Yes |
+| Calendar (Weekly) | `/calendar/weekly` | Yes |
+| Calendar Appointments | `/calendar/appointments` | Yes |
 | Add Calendar Event | `/calendar_events/new` | Yes |
 | Edit Calendar Event | `/calendar_events/:id/edit` | Yes |
 | Daily View | `/daily/:date` | Yes |
 | Tracking (period) | `/tracking` | Yes |
-| Symptoms | `/symptoms` | Yes |
+| Symptom Logs | `/symptoms` | Yes |
+| Symptom Detail | `/symptoms/:id` | Yes |
 | Superpowers | `/superpowers` | Yes |
+| Superpower Detail | `/superpowers/:id` | Yes |
 | Streaks | `/streaks` | Yes |
 | Settings (main) | `/settings/edit` | Yes |
 | Settings Profile | `/settings/profile` | Yes |
 | Settings Subscriptions | `/settings/subscriptions` | Yes |
 | Settings Calendar | `/settings/calendar` | Yes |
+| Settings Notifications | `/settings/notifications` | Yes |
 
 ### Legal / Support
 
@@ -139,6 +146,55 @@ bin/dev
 | Terms | `/terms` | No |
 | Privacy | `/privacy` | No |
 | Health Check | `/up` | No |
+
+---
+
+## App Structure
+
+### Controllers (28 total)
+- `ApplicationController` - Base controller
+- `Authentication` concern - Cookie-based auth
+- `HomeController` - Landing, loader, countdown, welcome
+- `SessionsController` - Login
+- `RegistrationsController` - Sign up
+- `OnboardingController` - 11-step onboarding flow
+- `CalendarController` - Monthly/weekly/appointments views
+- `CalendarEventsController` - CRUD for events
+- `DailyViewController` - Day detail view
+- `TrackingController` - Period entry
+- `SymptomsController` - Symptom logging
+- `SuperpowersController` - Superpower tracking
+- `StreaksController` - Tracking streaks
+- `SettingsController` - All settings routes
+- `PasswordsController` - Password recovery
+- `OmniauthController` - OAuth callbacks
+- `InvitesController` - Invite flow
+- `LaunchSignupsController` - Early access signups
+- `LaunchController` - Launch page
+- `LegalController` - Terms, privacy
+- `FeedbacksController` - User feedback
+- `PWAController` - Manifest, service worker
+- `DebugController` - Dev endpoints
+- `Admin::BaseController` - Admin base
+- `Admin::UsersController` - User admin
+- `Admin::FeedbacksController` - Feedback admin
+
+### Models (12 total)
+- `User` - User accounts
+- `CycleEntry` - Daily cycle tracking
+- `CyclePhaseContent` - Phase content (en/de)
+- `CalendarEvent` - Calendar events
+- `SymptomLog` - Daily symptom logs
+- `SuperpowerLog` - Daily superpower logs
+- `Streak` - Tracking streaks
+- `Reminder` - User reminders
+- `Feedback` - User feedback
+- `LaunchSignup` - Early access signups
+- `Current` - Single-table config
+- `ApplicationRecord` - Base model
+
+### Services (1)
+- `CycleCalculatorService` - Phase/season/cycle day calculations
 
 ---
 

@@ -324,7 +324,7 @@
           <a href="<%= onboarding_path(10, cal_year: (cal_start - 1.month).year, cal_month: (cal_start - 1.month).month) %>"
              class="text-[#933a35] text-sm font-medium px-1">&lt;</a>
           <span class="text-[#933a35] text-sm font-medium">
-            <%= cal_start.strftime("%B") %>
+            <%= cal_start.strftime("%B %Y") %>
           </span>
           <a href="<%= onboarding_path(10, cal_year: (cal_start + 1.month).year, cal_month: (cal_start + 1.month).month) %>"
              class="text-[#933a35] text-sm font-medium px-1">&gt;</a>
