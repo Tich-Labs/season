@@ -74,8 +74,8 @@ de:
       submit: "Weiter"
     step3:
       heading: "Hast du einen regelmäßigen Zyklus?"
-      yes: "Ja"
-      no: "Nein"
+      "yes": "Ja"
+      "no": "Nein"
     step4:
       no_problem_title: "Kein Problem"
       no_problem_body: "Wir helfen dir, deinen Zyklus mit Sport- und Ernährungstipps wieder in den Griff zu bekommen"
@@ -87,8 +87,8 @@ de:
       not_sure: "Nicht sicher"
     step5:
       heading: "Verwendest du hormonelle Verhütungsmittel?"
-      yes: "Ja"
-      no: "Nein"
+      "yes": "Ja"
+      "no": "Nein"
       info: "Hormonelle Verhütungsmittel verändern deinen natürlichen Zyklus. Season orientiert sich aktuell an deinem natürlichen Zyklus, aber durch das Verfolgen deiner Symptome und Superkraft-Momente erstellen wir eine personalisierte Vorhersage für dich."
     step6:
       heading: "Welche Verhütungsmethode verwendest du?"
@@ -102,8 +102,8 @@ de:
       submit: "Weiter"
     step7:
       heading: "Möchtest du eine Erinnerung für dein Verhütungsmittel einrichten?"
-      yes: "Ja"
-      no: "Nein"
+      "yes": "Ja"
+      "no": "Nein"
     step8:
       heading_html: "Hallo %{name},<br>Nimmst du ein Verhütungsmittel?"
       contraceptions:

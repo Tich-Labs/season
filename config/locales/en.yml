@@ -80,8 +80,8 @@ en:
       submit: "Submit"
     step3:
       heading: "Do you have a regular cycle?"
-      yes: "Yes"
-      no: "No"
+      "yes": "Yes"
+      "no": "No"
     step4:
       no_problem_title: "No Problem"
       no_problem_body: "We'll help you get your cycle back on track with exercise and nutrition tips"
@@ -93,8 +93,8 @@ en:
       not_sure: "Not sure"
     step5:
       heading: "Are you using hormonal birth control?"
-      yes: "Yes"
-      no: "No"
+      "yes": "Yes"
+      "no": "No"
       info: "Hormonal birth control alters your natural cycle. Season currently aligns with your natural cycle, but by tracking your symptoms and Superpower Moments, we create a personalized forecast for you."
     step6:
       heading: "What method of birth control do you use?"
@@ -108,8 +108,8 @@ en:
       submit: "Submit"
     step7:
       heading: "Would you like to set up a reminder for your birth control?"
-      yes: "Yes"
-      no: "No"
+      "yes": "Yes"
+      "no": "No"
     step8:
       heading_html: "Hello %{name},<br>Are you taking any contraception?"
       contraceptions:
