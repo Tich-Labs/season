@@ -27,41 +27,59 @@
 
         <%# Nav links %>
         <nav class="flex-1 px-3 py-4 space-y-1">
-          <% users_active = controller_name == "users" %>
+          <% users_active   = controller_name == "users" %>
+          <% inbox_active   = controller_name == "inbox" && action_name == "overview" %>
+          <% feedback_active = controller_name == "inbox" && action_name == "feedback" %>
+          <% bug_active     = controller_name == "inbox" && action_name == "bugs" %>
+          <% support_active = controller_name == "inbox" && action_name == "support" %>
+
           <%= link_to admin_users_path,
-              class: class_names("group flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+              class: class_names("flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
                                  "bg-[#7a2f2a] text-white" => users_active,
-                                 "text-[#f5ede8] hover:bg-[#7a2f2a] hover:text-white" => users_active == false) do %>
-            <span class="w-4 h-4 flex-shrink-0 text-current" aria-hidden="true">&#128100;</span>
+                                 "text-[#f5ede8] hover:bg-[#7a2f2a] hover:text-white" => !users_active) do %>
+            <span aria-hidden="true">&#128100;</span>
             Users
           <% end %>
 
-          <% feedback_active = controller_name == "feedbacks" && !params[:type] %>
-          <%= link_to admin_feedback_path,
-              class: class_names("group flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
-                                 "bg-[#7a2f2a] text-white" => feedback_active,
-                                 "text-[#f5ede8] hover:bg-[#7a2f2a] hover:text-white" => feedback_active == false) do %>
-            <span class="w-4 h-4 flex-shrink-0 text-current" aria-hidden="true">&#128172;</span>
-            Feedback
-          <% end %>
+          <%# Inbox — clicking goes to all messages; sub-items always visible below %>
+          <div class="pt-2 space-y-0.5">
+            <%= link_to admin_inbox_path,
+                class: class_names("flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                                   "bg-[#7a2f2a] text-white" => inbox_active,
+                                   "text-[#f5ede8] hover:bg-[#7a2f2a] hover:text-white" => !inbox_active) do %>
+              <span class="flex items-center gap-3">
+                <span aria-hidden="true">&#128229;</span>
+                Inbox
+              </span>
+              <span class="inline-flex items-center justify-center min-w-[20px] h-5 px-2 rounded-full text-[10px] font-bold leading-none <%= @stats[:total].to_i > 0 ? 'bg-[#ede1d5] text-[#933a35]' : 'bg-[#7a2f2a] text-[#f5ede8]' %>"><%= @stats[:total] %></span>
+            <% end %>
 
-          <% bug_active = params[:type] == "bug_report" %>
-          <%= link_to admin_bugreport_path,
-              class: class_names("group flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
-                                 "bg-[#7a2f2a] text-white" => bug_active,
-                                 "text-[#f5ede8] hover:bg-[#7a2f2a] hover:text-white" => !bug_active) do %>
-            <span class="w-4 h-4 flex-shrink-0 text-current" aria-hidden="true">&#128745;</span>
-            Bugs
-          <% end %>
+            <div class="ml-4 space-y-0.5">
+              <%= link_to admin_inbox_feedback_path,
+                  class: class_names("flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                                     "bg-[#7a2f2a] text-white" => feedback_active,
+                                     "text-[#f5ede8] hover:bg-[#7a2f2a] hover:text-white" => !feedback_active) do %>
+                <span>Feedback</span>
+                <span class="text-xs opacity-60"><%= @stats[:feedback] %></span>
+              <% end %>
 
-          <% support_active = params[:type] == "support" %>
-          <%= link_to admin_support_path,
-              class: class_names("group flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
-                                 "bg-[#7a2f2a] text-white" => support_active,
-                                 "text-[#f5ede8] hover:bg-[#7a2f2a] hover:text-white" => !support_active) do %>
-            <span class="w-4 h-4 flex-shrink-0 text-current" aria-hidden="true">&#128222;</span>
-            Support
-          <% end %>
+              <%= link_to admin_inbox_bugs_path,
+                  class: class_names("flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                                     "bg-[#7a2f2a] text-white" => bug_active,
+                                     "text-[#f5ede8] hover:bg-[#7a2f2a] hover:text-white" => !bug_active) do %>
+                <span>Bugs</span>
+                <span class="text-xs opacity-60"><%= @stats[:bugs] %></span>
+              <% end %>
+
+              <%= link_to admin_inbox_support_path,
+                  class: class_names("flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                                     "bg-[#7a2f2a] text-white" => support_active,
+                                     "text-[#f5ede8] hover:bg-[#7a2f2a] hover:text-white" => !support_active) do %>
+                <span>Support</span>
+                <span class="text-xs opacity-60"><%= @stats[:support] %></span>
+              <% end %>
+            </div>
+          </div>
         </nav>
 
         <%# Footer: current user + sign out %>
@@ -94,5 +112,6 @@
 
       </div>
     </div>
+
   </body>
 </html>
