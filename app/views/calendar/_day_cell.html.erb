@@ -15,7 +15,7 @@
     Column gap on parent grid MUST be 0 so adjacent phase bands merge.
 %>
 
-<% is_today     = date == Date.today %>
+<% is_today     = date == Time.zone.today %>
 <% in_month     = date.month == current_month %>
 <% has_event    = events_by_date.key?(date) %>
 <% events_today = events_by_date[date] || [] %>

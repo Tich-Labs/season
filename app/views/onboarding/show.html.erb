@@ -63,7 +63,7 @@
           </div>
           <div class="flex flex-col items-start gap-2">
             <label for="birthday_year" class="text-[#933a35] text-xs font-normal tracking-wide"><%= t('onboarding.step2.label_year') %></label>
-            <input type="number" name="birthday_year" id="birthday_year" min="1900" max="<%= Date.today.year %>" placeholder="<%= t('onboarding.step2.placeholder_year') %>" autocomplete="bday-year"
+            <input type="number" name="birthday_year" id="birthday_year" min="1900" max="<%= Time.zone.today.year %>" placeholder="<%= t('onboarding.step2.placeholder_year') %>" autocomplete="bday-year"
                    class="w-24 h-[52px] bg-[#ede1d5] opacity-50 rounded-lg px-3 text-[#933a35] text-[22px] font-medium text-center placeholder-[#933a35]/50 tracking-[0.66px]">
           </div>
         </div>
@@ -315,7 +315,7 @@
   <%# ── Step 10: Last period calendar ─────────────────────────────── %>
   <% when 10 %>
     <%
-      today      = Date.today
+      today      = Time.zone.today
       cal_year   = (params[:cal_year] || today.year).to_i
       cal_month_num = (params[:cal_month] || today.month).to_i
       cal_start  = Date.new(cal_year, cal_month_num, 1)

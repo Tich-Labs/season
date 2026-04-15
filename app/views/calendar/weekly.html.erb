@@ -31,7 +31,7 @@
     <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:0; padding:12px 8px 8px; border-bottom:1px solid #EDE1D5; background:#FFFFFF;">
       <% week_days = %w[Mo Tu We Th Fr Sa Su] %>
       <% @week_dates.each_with_index do |day, i| %>
-        <% is_today = day == Date.today %>
+        <% is_today = day == Time.zone.today %>
         <% phase = @cycle_by_date[day]&.dig(:phase) %>
         <% colour = phase_colours[phase] || "#933a35" %>
         <% is_weekend = i >= 5 %>
@@ -123,7 +123,7 @@
 
 <%# ── FAB: add event ── %>
 <div style="position:fixed; bottom:80px; left:50%; transform:translateX(-50%); z-index:40;">
-  <%= link_to new_calendar_event_path(date: Date.today.to_s),
+  <%= link_to new_calendar_event_path(date: Time.zone.today.to_s),
         style: "width:56px; height:56px; border-radius:28px; background:#933a35; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(147,58,53,0.3); text-decoration:none;" do %>
     <span style="color:#ffffff; font-size:28px; font-weight:300; line-height:1;">+</span>
   <% end %>

@@ -37,7 +37,7 @@ class Admin::InboxController < Admin::BaseController
     end
 
     respond_to do |format|
-      format.csv { send_data csv_data, filename: "inbox_#{params[:filter] || "all"}_#{Date.today}.csv" }
+      format.csv { send_data csv_data, filename: "inbox_#{params[:filter] || "all"}_#{Time.zone.today}.csv" }
     end
   end
 

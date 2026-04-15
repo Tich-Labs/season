@@ -9,7 +9,7 @@
 <%
   phase     = current_user.current_phase
   phase_col = CycleCalculatorService::PHASE_META[phase]&.dig(:colour) || "#933a35"
-  evt_date  = params[:date] ? Date.parse(params[:date]) : Date.today
+  evt_date  = params[:date] ? Date.parse(params[:date]) : Time.zone.today
 %>
 
 <div style="background:#FAF7F4; min-height:100vh; padding-bottom:40px; font-family:'Montserrat',sans-serif;">

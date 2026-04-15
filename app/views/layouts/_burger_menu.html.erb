@@ -57,7 +57,7 @@
         <% end %>
 
         <%# Day-View — Figma: top-[339px] %>
-        <%= link_to daily_view_path(Date.today), class: "absolute left-0 top-[339px] w-full h-[40px] flex items-center hover:bg-stone-50", "data-turbo-action": "replace" do %>
+        <%= link_to daily_view_path(Time.zone.today), class: "absolute left-0 top-[339px] w-full h-[40px] flex items-center hover:bg-stone-50", "data-turbo-action": "replace" do %>
           <div class="absolute left-[30px] top-[8px] w-[20px] flex flex-col gap-[1px]">
             <div class="w-[19px] h-[2.5px] bg-[#933a35] rounded-[0.8px]"></div>
             <div class="w-[19px] h-[8px] bg-[#933a35] rounded-[0.8px]"></div>

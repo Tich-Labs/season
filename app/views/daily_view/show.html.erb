@@ -101,7 +101,7 @@
         <% end %>
 
         <%# Current time line (today only) %>
-        <% if @date == Date.today %>
+        <% if @date == Time.zone.today %>
           <% now = Time.now; now_top = [((now.hour - timeline_start_h) * hour_px + now.min.to_f * hour_px / 60.0).round, 0].max %>
           <div style="position:absolute; left:44px; right:0; top:<%= now_top %>px; height:2px; background:<%= phase_col %>; z-index:2; pointer-events:none;">
             <div style="position:absolute; left:-4px; top:-3px; width:8px; height:8px; border-radius:50%; background:<%= phase_col %>;"></div>
