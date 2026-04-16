@@ -59,10 +59,7 @@
         <img src="<%= @user.avatar_url %>" style="width:48px; height:48px; border-radius:50%; object-fit:cover; flex-shrink:0;" alt="Profile">
       <% else %>
         <div style="width:48px; height:48px; border-radius:50%; background:#EDE1D5; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#933a35" stroke-width="1.5" viewBox="0 0 24 24">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-            <circle cx="12" cy="7" r="4" />
-          </svg>
+          <%= vuesax_icon "user", size: 24 %>
         </div>
       <% end %>
       <span style="flex:1; color:#933a35; font-size:16px; font-weight:500;">Profile Picture</span>
@@ -119,10 +116,7 @@
 
     <%# E-Mail Address %>
     <button onclick="document.getElementById('email-modal').style.display='flex'" style="background:none; border:none; width:100%; display:flex; align-items:center; gap:16px; padding:16px 0; cursor:pointer;">
-      <svg style="width:24px; height:24px;" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#933a35" stroke-width="1.5" viewBox="0 0 24 24">
-        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-        <polyline points="22,6 12,13 2,6" />
-      </svg>
+      <%= vuesax_icon "sms", size: 24 %>
       <div style="flex:1; text-align:left;">
         <span style="color:#933a35; font-size:16px; font-weight:500;">E-Mail Address</span>
         <span style="display:block; color:#D18D83; font-size:14px; margin-top:4px;"><%= @user.email %></span>
@@ -134,10 +128,7 @@
 
     <%# Change password %>
     <%= link_to edit_user_password_path, style: "display:flex; align-items:center; gap:16px; padding:16px 0; text-decoration:none;" do %>
-      <svg style="width:24px; height:24px;" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#933a35" stroke-width="1.5" viewBox="0 0 24 24">
-        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-      </svg>
+      <%= vuesax_icon "lock", size: 24 %>
       <span style="flex:1; color:#933a35; font-size:16px; font-weight:500;">Change password</span>
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
         <polyline points="9 18 15 12 9 6" />
