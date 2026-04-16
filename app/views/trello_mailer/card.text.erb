@@ -1,0 +1,18 @@
+<%= @emoji %> <%= @type_label.upcase %>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+From:      <%= @user.email %>
+Submitted: <%= @feedback.created_at.strftime("%d %b %Y at %H:%M UTC") %>
+Type:      <%= @type_label %>
+<% if @has_media %>
+Attachment: <%= @feedback.media.blob.filename %> (<%= number_to_human_size(@feedback.media.blob.byte_size) %>)
+<% end %>
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+MESSAGE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+<%= @feedback.message %>
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+View in admin: https://season.vision/admin/inbox

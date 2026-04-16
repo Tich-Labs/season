@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<body style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;  color:#1a1a1a; max-width:600px; margin:0 auto; padding:24px;">
+
+  <h2 style="text-brand-primary margin:0 0 4px; ">
+    <%= @emoji %> <%= @type_label %>
+  </h2>
+  <p style="color:#888;  margin:0 0 20px;">
+    Submitted <%= @feedback.created_at.strftime("%d %b %Y at %H:%M UTC") %>
+  </p>
+
+  <table style="width:100%; border-collapse:collapse; margin-bottom:20px; ">
+    <tr style="border-bottom:1px solid #eee;">
+      <td style="padding:8px 12px 8px 0; color:#888; width:80px; font-semibold ">From</td>
+      <td style="padding:8px 0;"><a href="mailto:<%= @user.email %>" style="text-brand-primary"><%= @user.email %></a></td>
+    </tr>
+    <tr style="border-bottom:1px solid #eee;">
+      <td style="padding:8px 12px 8px 0; color:#888; font-semibold ">Name</td>
+      <td style="padding:8px 0;"><%= @user.name.presence || "—" %></td>
+    </tr>
+    <% if @has_media %>
+    <tr style="border-bottom:1px solid #eee;">
+      <td style="padding:8px 12px 8px 0; color:#888; width:80px; font-semibold ">File</td>
+      <td style="padding:8px 0; ">
+        📎 <%= @feedback.media.blob.filename %>
+        <span style="color:#aaa;">(<%= number_to_human_size(@feedback.media.blob.byte_size) %>)</span>
+      </td>
+    </tr>
+    <% end %>
+    <tr>
+      <td style="padding:8px 12px 8px 0; color:#888; font-semibold ">Type</td>
+      <td style="padding:8px 0;">
+        <span style="background:<%= @feedback.type == 'bug_report' ? '#fee2e2' : @feedback.type == 'support' ? '#ede1d5' : '#dbeafe' %>; color:<%= @feedback.type == 'bug_report' ? '#991b1b' : @feedback.type == 'support' ? '#933a35' : '#1e40af' %>; padding:2px 8px; border-radius:9999px;  font-semibold ">
+          <%= @type_label %>
+        </span>
+      </td>
+    </tr>
+  </table>
+
+  <div style="background:#f9f9f9; border-left:3px solid #933a35; padding:14px 16px; border-radius:0 6px 6px 0; margin-bottom:20px;">
+    <p style="margin:0; line-height:1.6; white-space:pre-wrap;"><%= @feedback.message %></p>
+  </div>
+
+  <p style="margin:0;  color:#aaa;">
+    <a href="https://season.vision/admin/inbox" style="text-brand-primary">View all messages in admin →</a>
+  </p>
+
+</body>
+</html>

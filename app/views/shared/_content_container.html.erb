@@ -1,0 +1,19 @@
+<%#
+  Standard content container
+  Use in main app views for consistent max-width and padding
+
+  Usage:
+    render "shared/content_container" do
+      # your content
+    end
+
+  Or with custom options:
+    render "shared/content_container", padding_bottom: "120px"
+%>
+<%
+  padding_bottom = local_assigns[:padding_bottom] || "80px"
+  padding_top    = local_assigns[:padding_top] || "0"
+%>
+<div style="max-width:430px; margin:0 auto; padding:<%= padding_top %> 16px <%= padding_bottom %>;">
+  <%= yield %>
+</div>

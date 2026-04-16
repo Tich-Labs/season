@@ -1,0 +1,27 @@
+<%#
+  Settings toggle row with label and optional subtitle
+  Usage:
+    render "shared/settings_toggle_row", field_id: "key", checked: true/false, label: "Label", subtitle: "optional", onchange: "function"
+%>
+<%
+  field_id   = local_assigns[:field_id] || ""
+  checked    = local_assigns[:checked] || false
+  label      = local_assigns[:label] || ""
+  subtitle   = local_assigns[:subtitle] || ""
+  onchange   = local_assigns[:onchange] || ""
+%>
+<div class="flex  align-items:center; justify-content:space-between; padding:14px 0 4px;">
+  <span style="text-brand-primary  font-medium "><%= label %></span>
+  <%= render "shared/toggle_switch",
+        field_id: field_id,
+        checked: checked,
+        aria_label: label,
+        onchange: onchange %>
+</div>
+<% if subtitle.present? %>
+  <div class="flex  align-items:center; justify-content:space-between; margin-bottom:12px;">
+    <%= subtitle.html_safe %>
+  </div>
+<% else %>
+  <div mb- "></div>
+<% end %>

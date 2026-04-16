@@ -1,0 +1,35 @@
+<%#
+  Locals:
+    phase     — String, cycle phase key ("menstrual","follicular","ovulation","luteal") or nil
+    title     — String, main heading text
+    subtitle  — String (optional), secondary line below title
+    date      — Date (optional), shown formatted when provided
+
+  Renders the standard phase-coloured top banner used across tracking, symptom
+  and notification sub-screens. Falls back to brand red when phase is nil.
+%>
+<%
+  meta   = CycleCalculatorService::PHASE_META[phase] || {}
+  colour = meta[:colour] || "#933a35"
+  season = meta[:season]
+%>
+<div style="background:<%= colour %>; padding:24px 20px 20px; font-family:'Montserrat',sans-serif;">
+  <% if season %>
+    <p style="color:#FFFFFF;  font-semibold  text-transform:uppercase; letter-spacing:0.07em; margin:0 0 2px; opacity:0.8;">
+      You are in your <%= season %>
+    </p>
+  <% end %>
+  <h1 style="color:#FFFFFF;  font-bold  margin:0 0 2px; line-height:1.2;">
+    <%= title %>
+  </h1>
+  <% if local_assigns[:subtitle] %>
+    <p style="color:#FFFFFF;  font-normal  margin:4px 0 0; opacity:0.85; line-height:1.4;">
+      <%= subtitle %>
+    </p>
+  <% end %>
+  <% if local_assigns[:date] %>
+    <p style="color:#FFFFFF;  font-normal  margin:4px 0 0; opacity:0.7;">
+      <%= date.strftime("%A, %-d %B %Y") %>
+    </p>
+  <% end %>
+</div>

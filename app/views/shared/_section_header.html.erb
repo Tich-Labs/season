@@ -1,0 +1,16 @@
+<%#
+  Section header with optional icon
+  Usage:
+    render "shared/section_header", title: "Personal Settings", icon_svg: icon_html
+  Optional: padding_top: "24px" (default "20px")
+%>
+<%
+  title       = local_assigns[:title] || ""
+  icon_svg    = local_assigns[:icon_svg] || ""
+  color       = local_assigns[:color] || "#933a35"
+  padding_top = local_assigns[:padding_top] || "20px"
+%>
+<div style="padding:<%= padding_top %> 0 8px;">
+  <h2 style="color:<%= color %>;  font-bold "><%= title %></h2>
+</div>
+<div style="border-bottom:1px solid #DDD0CB;"></div>

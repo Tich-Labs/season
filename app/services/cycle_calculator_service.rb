@@ -10,11 +10,16 @@ class CycleCalculatorService
   PHASE_COLOURS = PHASE_META.transform_values { |m| m[:colour] }.freeze
   SEASON_NAMES = PHASE_META.transform_values { |m| m[:season] }.freeze
 
+  # Hormonal contraceptives that suppress ovulation — only menstrual vs follicular distinction applies.
+  HORMONAL_BC_TYPES = %w[pill hormonering plaster].freeze
+
   def initialize(user)
     @user = user
     @cycle_length = user.cycle_length || 28
     @period_length = user.period_length || 5
     @last_period_start = user.last_period_start
+    @hormonal_bc = user.uses_hormonal_birth_control &&
+      HORMONAL_BC_TYPES.include?(user.contraception_type.to_s)
   end
 
   def current_phase
@@ -46,8 +51,16 @@ class CycleCalculatorService
     end
   end
 
+  # Like phase_for_date but collapses ovulation/luteal → follicular for users
+  # on hormonal BC (pill/ring/plaster) since those phases are suppressed.
+  def effective_phase_for_date(date)
+    phase = phase_for_date(date)
+    return phase unless @hormonal_bc
+    (phase == "menstrual") ? "menstrual" : "follicular"
+  end
+
   def colour_for_date(date)
-    PHASE_COLOURS[phase_for_date(date)]
+    PHASE_COLOURS[effective_phase_for_date(date)]
   end
 
   def month_data(year, month)
@@ -55,7 +68,7 @@ class CycleCalculatorService
     start_date = Date.new(year, month, 1)
     end_date = Date.new(year, month, -1)
     (start_date..end_date).map do |date|
-      phase = phase_for_date(date)
+      phase = effective_phase_for_date(date)
       {
         date: date,
         phase: phase,
@@ -71,7 +84,7 @@ class CycleCalculatorService
     return [] unless @last_period_start
     week_end = week_start + 6
     (week_start..week_end).map do |date|
-      phase = phase_for_date(date)
+      phase = effective_phase_for_date(date)
       {
         date: date,
         phase: phase,
@@ -83,13 +96,13 @@ class CycleCalculatorService
     end
   end
 
-  # Returns recent cycle days for the Selfanalysis day strip.
+  # Returns recent cycle days for the Self Analysis day strip.
   # Produces `count` entries centred on today (past_days before + today + future_days after).
   def strip_data(past_days: 6, future_days: 6)
     return [] unless @last_period_start
     today = Time.zone.today
     ((today - past_days)..(today + future_days)).map do |date|
-      phase = phase_for_date(date)
+      phase = effective_phase_for_date(date)
       cycle_day = ((date - @last_period_start.to_date).to_i % @cycle_length) + 1
       {
         date: date,
@@ -103,18 +116,26 @@ class CycleCalculatorService
 
   # Arc data for the SVG cycle wheel: each phase as start/end angle in degrees.
   # Angles start from the top (–90°) and go clockwise.
+  # For hormonal BC users, collapses to 2 slices: menstrual + follicular.
   def wheel_arcs
     period_days = @period_length
-    follicular_days = @cycle_length - 14 - period_days
-    ovulation_days = 7
-    luteal_days = @cycle_length - period_days - follicular_days - ovulation_days
-
-    slices = [
-      {phase: "menstrual", days: period_days},
-      {phase: "follicular", days: follicular_days},
-      {phase: "ovulation", days: ovulation_days},
-      {phase: "luteal", days: luteal_days}
-    ]
+    slices = if @hormonal_bc
+      follicular_days = @cycle_length - period_days
+      [
+        {phase: "menstrual", days: period_days},
+        {phase: "follicular", days: follicular_days}
+      ]
+    else
+      follicular_days = @cycle_length - 14 - period_days
+      ovulation_days = 7
+      luteal_days = @cycle_length - period_days - follicular_days - ovulation_days
+      [
+        {phase: "menstrual", days: period_days},
+        {phase: "follicular", days: follicular_days},
+        {phase: "ovulation", days: ovulation_days},
+        {phase: "luteal", days: luteal_days}
+      ]
+    end
 
     offset = -90.0
     slices.map do |s|

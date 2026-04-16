@@ -1,56 +1,73 @@
 import { Controller } from "@hotwired/stimulus"
 
+const TYPE_META = {
+  feedback: {
+    heading:     "Share your feedback",
+    description: "We'd love to hear what you think",
+    placeholder: "What's on your mind?"
+  },
+  bug_report: {
+    heading:     "Report a bug",
+    description: "Something isn't working as it should",
+    placeholder: "Describe what happened and what you expected to happen…"
+  },
+  support: {
+    heading:     "Get support",
+    description: "We're here to help",
+    placeholder: "How can we help? Describe your issue…"
+  }
+}
+
 export default class extends Controller {
   connect() {
     window.openFeedbackModal = (type) => this.openWithType(type)
   }
 
-  open(event) {
-    this.openWithType(event.currentTarget?.dataset?.type || "feedback")
-  }
-
-  delayedOpen(event) {
-    setTimeout(() => {
-      this.openWithType(event.currentTarget?.dataset?.type || "feedback")
-    }, 350)
-  }
-
   openWithType(type) {
-    this.setupType(type)
+    this.applyType(type || "feedback")
     this.element.style.display = "flex"
   }
 
-  setupType(type) {
-    document.getElementById("feedback_type").value = type
-    document.querySelectorAll(".type-option").forEach(opt => {
-      opt.classList.remove("bg-[#933a35]", "text-white")
-      opt.classList.add("bg-[#f5ede8]", "text-[#933a35]")
-    })
-    const selected = document.querySelector(`.type-option[data-type="${type}"]`)
-    if (selected) {
-      selected.classList.remove("bg-[#f5ede8]", "text-[#933a35]")
-      selected.classList.add("bg-[#933a35]", "text-white")
-    }
-  }
-
   selectType(event) {
-    const type = event.currentTarget.dataset.type
-    document.getElementById("feedback_type").value = type
-    document.querySelectorAll(".type-option").forEach(opt => {
-      opt.classList.remove("bg-[#933a35]", "text-white")
-      opt.classList.add("bg-[#f5ede8]", "text-[#933a35]")
-    })
-    event.currentTarget.classList.remove("bg-[#f5ede8]", "text-[#933a35]")
-    event.currentTarget.classList.add("bg-[#933a35]", "text-white")
+    this.applyType(event.currentTarget.dataset.type)
   }
 
   close() {
     this.element.style.display = "none"
+    feedbackClearMedia()
   }
 
+  // Close when tapping the dark backdrop (not the sheet)
   clickOutside(event) {
-    if (event.target === this.element) {
-      this.close()
-    }
+    if (event.target === this.element) this.close()
+  }
+
+  // ── private ────────────────────────────────────────────────────────────
+
+  applyType(type) {
+    const meta = TYPE_META[type] || TYPE_META.feedback
+
+    // Hidden input value
+    const typeInput = document.getElementById("feedback_type")
+    if (typeInput) typeInput.value = type
+
+    // Heading + description
+    const heading = document.getElementById("fm-heading")
+    if (heading) heading.textContent = meta.heading
+
+    const desc = document.getElementById("fm-description")
+    if (desc) desc.textContent = meta.description
+
+    // Textarea placeholder
+    const msg = document.getElementById("fm-message")
+    if (msg) msg.placeholder = meta.placeholder
+
+    // Tab button styles
+    document.querySelectorAll(".fm-type-btn").forEach(btn => {
+      const isActive = btn.dataset.type === type
+      btn.style.background     = isActive ? "#933a35" : "#FFFFFF"
+      btn.style.color          = isActive ? "#FFFFFF" : "#933a35"
+      btn.style.borderColor    = isActive ? "#933a35" : "#EDE1D5"
+    })
   }
 }

@@ -1,17 +1,21 @@
 require "test_helper"
 
 class CycleCalculatorServiceTest < ActiveSupport::TestCase
-  # Lightweight stub — service only duck-types these three attributes
-  UserStub = Struct.new(:cycle_length, :period_length, :last_period_start)
+  # Lightweight stub — duck-types all attributes the service reads
+  UserStub = Struct.new(:cycle_length, :period_length, :last_period_start,
+    :uses_hormonal_birth_control, :contraception_type)
 
   # Fixed reference date: 1 Jan 2026 (Thursday)
   PERIOD_START = Date.new(2026, 1, 1)
 
-  def service_for(cycle_length: 28, period_length: 5, last_period_start: PERIOD_START)
+  def service_for(cycle_length: 28, period_length: 5, last_period_start: PERIOD_START,
+    uses_hormonal_birth_control: false, contraception_type: "none")
     user = UserStub.new(
       cycle_length: cycle_length,
       period_length: period_length,
-      last_period_start: last_period_start
+      last_period_start: last_period_start,
+      uses_hormonal_birth_control: uses_hormonal_birth_control,
+      contraception_type: contraception_type
     )
     CycleCalculatorService.new(user)
   end
@@ -153,18 +157,18 @@ class CycleCalculatorServiceTest < ActiveSupport::TestCase
   test "colour_for_date returns hex colour for follicular phase" do
     svc = service_for
     colour = svc.colour_for_date(PERIOD_START + 5)
-    assert_equal "#C8956A", colour
+    assert_equal "#899884", colour
   end
 
   test "colour_for_date returns hex colour for ovulation phase" do
     svc = service_for
     colour = svc.colour_for_date(PERIOD_START + 14)
-    assert_equal "#2E6B3E", colour
+    assert_equal "#50705b", colour
   end
 
   test "colour_for_date returns hex colour for luteal phase" do
     svc = service_for
     colour = svc.colour_for_date(PERIOD_START + 21)
-    assert_equal "#7D5A1E", colour
+    assert_equal "#D18D83", colour
   end
 end
