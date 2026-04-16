@@ -29,21 +29,23 @@
         <%# Track: slides laid out horizontally %>
         <div class="flex will-change-transform" data-feature-slides-target="track">
 
-        <%# ── Slide 1: Introduction (no phone, mascot illustration) ── %>
-        <div class="flex-shrink-0 bg-[#ede1d5] flex flex-col items-center pt-8 pb-8 px-6">
-          <%= image_tag "slides/intro-mascot.png",
-              class: "w-36 h-36 object-contain mb-5",
-              alt: "SEASON mascot" %>
-          <h2 class="font-['Montserrat'] font-semibold text-[22px] text-[#933a35] text-center mb-3 leading-tight">
-            Find Your Superpower with SEASON
-          </h2>
-          <p class="font-['Montserrat'] text-[15px] text-[#933a35] text-center leading-relaxed mb-2 max-w-xs">
-            Your cycle is more than your period. Design your everyday life in harmony with your hormonal cycle.
-          </p>
-          <p class="font-['Montserrat'] text-[13px] text-[#933a35] text-center font-semibold leading-relaxed max-w-xs">
-            Plan, work, love and live according to your cycle.
-          </p>
-        </div>
+<%# ── Slide 1: Introduction (no phone, mascot illustration) ── %>
+          <div class="flex-shrink-0 bg-[#ede1d5] flex flex-col items-center px-6 py-8 min-h-[320px]">
+            <%= image_tag "slides/intro-mascot.png",
+                class: "w-28 h-28 object-contain mb-6",
+                alt: "SEASON mascot" %>
+            <div class="text-center flex-1 flex flex-col justify-center">
+              <h2 class="font-['Montserrat'] font-semibold text-xl text-[#933a35] text-center mb-3 leading-tight">
+                Find Your Superpower with SEASON
+              </h2>
+              <p class="font-['Montserrat'] text-sm text-[#933a35] text-center leading-relaxed mb-2 max-w-xs">
+                Your cycle is more than your period. Design your everyday life in harmony with your hormonal cycle.
+              </p>
+              <p class="font-['Montserrat'] text-xs text-[#933a35] text-center font-semibold leading-relaxed max-w-xs">
+                Plan, work, love and live according to your cycle.
+              </p>
+            </div>
+          </div>
 
         <%# ── Phone slides 2–7: shared macro ── %>
         <%# Each uses real app screenshot inside the SVG phone frame overlay.
@@ -175,7 +177,7 @@
   <%# ── Countdown timer ── %>
   <div style="background:#FFFFFF; border-radius:16px; padding:20px 16px; width:100%; display:flex; justify-content:center; gap:8px; box-shadow:0 2px 20px rgba(147,58,53,0.08); margin-bottom:10px;"
        data-controller="countdown"
-       data-countdown-target-date-value="2026-04-14T00:00:00+02:00">
+       data-countdown-target-date-value="2026-04-19T00:00:00+02:00">
     <% [["days", "Days"], ["hours", "Hours"], ["minutes", "Min"], ["seconds", "Sec"]].each do |target, label| %>
       <div style="display:flex; flex-direction:column; align-items:center; width:60px;">
         <div style="width:56px; height:56px; border-radius:10px; background:#F5EDE8; color:#933a35; display:flex; align-items:center; justify-content:center; font-size:24px; font-weight:900; font-variant-numeric:tabular-nums;"
