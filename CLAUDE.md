@@ -2,11 +2,31 @@
 # This file applies to ALL AI agents: Claude Code, OpenCode, Cursor, Copilot
 # Follow every instruction in this file exactly.
 
-## Current Milestone: M2 — Reliability & Growth
+## Figma Nodes Source of Truth
 
-M1 (all screens built, Figma-aligned, security clean) is complete.
-M2 priorities: SMTP/email, OAuth credentials, accessibility fixes, i18n, rate limiting.
-See README.md for full M2 target list.
+Design reference: `designs/figma_nodes.md`
+
+### Milestones Overview
+| Milestone | Screens | Figma Nodes Section | Status |
+|-----------|---------|----------------------|--------|
+| M1 | 43 | Signing In and Onboarding | ✅ Built |
+| M2 | 32 | Calendar with Basic Cycle & Display | ✅ Built |
+| M3 | 64 | Tracking / Learn (12068-* nodes) | 🔶 Partial (5/64) |
+| M4 | 60 | Forecasting and Appointments | ✅ Built |
+| M5 | 60 | Birth Control and Other Reminders | ✅ Built |
+| M6 | 24 | Gamification & Scoring Flames | ❌ Not built |
+| M7 | 17 | Onboarding & Feedback | ✅ Built |
+
+### Current Status
+- M1, M2, M4, M5, M7: All built
+- M3: Partial — only `/informations` (5 pages) built out of 64 Figma screens
+- M6: Not in scope
+- M2 priorities: SMTP/email, OAuth credentials, accessibility fixes, i18n, rate limiting
+- See README.md for full M2 target list.
+
+### M3 Gap (Tracking / Learn)
+- Built: `/informations` index + `/informations/:phase` (4 phases) = 5 screens
+- Missing: 59 screens from Figma (node IDs 12068-*) covering educational content, articles, tips, etc.
 
 ## Brand Colours
 
@@ -67,6 +87,14 @@ All references must use this colour exactly.
 - Settings subscriptions (`/settings/subscriptions`)
 - Settings calendar (`/settings/calendar`)
 - Settings notifications (`/settings/notifications`)
+
+### M3: Tracking / Learn (64 screens) 🔶 PARTIAL
+Built (5/64):
+- `/informations` - Phase overview (index)
+- `/informations/:phase` - Phase detail (4 pages: menstrual, follicular, ovulation, luteal)
+
+Not built (59/64):
+- All other M3 screens (node IDs 12068-*) — articles, educational content, tips, community features, etc.
 
 ### Public / Launch
 - Launch / countdown (`/launch`) ✅ DONE
@@ -153,3 +181,62 @@ All error states must:
 - **`Admin::FeedbacksController` was deleted**: Feedback is now handled entirely by `Admin::InboxController`. Do not recreate the feedbacks controller.
 - **`User#current_phase`** — may return nil for new users with no cycle data. Always guard with `|| "Unknown"` in views.
 - **`current_user.onboarding_completed?`** — use this (not `last_period_start.present?`) to check if a user has finished onboarding.
+
+## Styling Standard (Tailwind)
+
+**IMPORTANT**: All views MUST use Tailwind classes - no inline `style=""` attributes.
+
+### Tailwind Config (`config/tailwind.config.js`)
+
+Brand colors are defined as CSS variables - use these classes:
+- `text-brand-primary` / `bg-brand-primary` → #933a35
+- `text-brand-secondary` / `bg-brand-secondary` → #6B6B6B
+- `text-brand-background` / `bg-brand-background` → #FAF7F4
+- `text-brand-field` / `bg-brand-field` → #EDE1D5
+- `text-brand-error` / `bg-brand-error` → #FDF0EE
+- `text-brand-muted` / `bg-brand-muted` → #D18D83
+- `text-brand-dark` / `bg-brand-dark` → #3d2b28
+
+Phase colors:
+- `text-phase-menstrual` / `bg-phase-menstrual` → #933a35
+- `text-phase-follicular` / `bg-phase-follicular` → #D18D83
+- `text-phase-ovulation` / `bg-phase-ovulation` → #F5C6AD
+- `text-phase-luteal` / `bg-phase-luteal` → #EDE1D5
+
+### Container Standard
+- All main views: `max-w-app mx-auto px-4` (430px max-width, centered)
+- Page wrapper: `min-h-screen pb-20` (accounts for bottom nav)
+
+### Common Patterns
+```erb
+<!-- Page wrapper -->
+<div class="bg-brand-background min-h-screen pb-20">
+  <div class="max-w-app mx-auto px-4">
+
+<!-- Card -->
+<div class="bg-white rounded-2xl p-5">
+
+<!-- Section header -->
+<h2 class="text-lg font-bold text-brand-dark mb-4">
+
+<!-- Form field -->
+<input class="w-full bg-brand-field rounded-xl px-4 py-3 text-brand-dark">
+
+<!-- Primary button -->
+<button class="w-full bg-brand-primary text-white rounded-xl py-3.5 font-semibold">
+```
+
+### What NOT to do
+- No `style="..."` in views (except dynamic colors from phase calculations)
+- No arbitrary values like `text-[#933a35]` - use `text-brand-primary`
+- No hex colors directly - always use the brand classes
+
+### When to use dynamic styles
+- Phase colors that come from `CycleCalculatorService::PHASE_META`
+- Conditional logic (e.g., selected state colors)
+
+Example:
+```erb
+<div class="rounded-xl p-4" style="background:<%= phase_colour %>;">
+```
+This is acceptable because the color is dynamic and comes from a service.

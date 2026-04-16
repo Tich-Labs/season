@@ -138,3 +138,59 @@ The launch signup form on `/launch` is live and capturing emails. All signups ar
 ---
 
 *M1 complete as of 15 April 2026 — commit `ce4b66b`. All checks passing.*
+
+---
+
+## Audit Update — 15 April 2026
+
+### Milestone 2 Progress & Audit Summary
+
+- **Figma Design Review:** 42 nodes reviewed, 35 screens mapped and verified. All styling, field backgrounds, and error containers match Figma and CLAUDE.md requirements.
+- **Admin Panel:** Sidebar refactored for DRYness, uniform active states, and badge consistency. Dead code and unused JS removed.
+- **Launch Signups:** Admin controller and views built, CSV export and live badge added. Route `GET admin/launch_signups` wired.
+- **Infrastructure:** SQLite files removed, `.gitignore` updated, credentials and secrets handled per Render best practices.
+- **Security & Lint:** Brakeman 0 warnings, ERB lint 0 errors, RuboCop clean (except known ERB parser false positives).
+- **Test Suite:** 76/76 passing, 0 failures/errors.
+
+### Compliance (CLAUDE.md)
+
+| Directive | Status |
+|-----------|--------|
+| Primary colour `#933a35` | ✅ Consistent |
+| Figma as source of truth | ✅ 42-node review complete |
+| Field background `#ede1d5` | ✅ Correct |
+| Error container styling | ✅ Present |
+| `image_tag` usage | ✅ Verified |
+| Asset naming conventions | ✅ No spaces |
+| Inline errors, not redirects | ⚠️ Auth inline, onboarding uses flash redirects |
+| i18n en/de | ⚠️ Auth uses `t()`, onboarding hardcoded English |
+
+### Accessibility (WCAG 2.1 AA)
+
+- 11/20 issues fixed (55%). 9 open (2 critical, 5 major, 2 minor). Remaining items targeted for M2 completion.
+
+### Backlog & Action Items
+
+**Critical:**
+- [ ] Configure SMTP provider (Resend recommended)
+- [ ] Build `NotifyLaunchSignupsJob` (blocked by SMTP)
+
+**High:**
+- [ ] Build `LaunchSignupMailer` (blocked by SMTP)
+
+**Medium:**
+- [ ] Add `LaunchSignup` model validations
+
+**Low:**
+- [ ] Rate-limit `/launch-signup` (Rack::Attack)
+
+**Other M2 Action Items:**
+- [ ] ARIA semantics for cycle length picker
+- [ ] Modal focus trapping (onboarding step 4, avatar modal)
+- [ ] `aria-invalid`/`aria-describedby` on auth error states
+- [ ] i18n: extract hardcoded onboarding strings
+- [ ] OAuth credentials (Google, Facebook, Apple)
+- [ ] Schema cleanup: remove duplicate user columns
+- [ ] Burger menu i18n
+
+**All checks passing as of 15 April 2026.**
