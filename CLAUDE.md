@@ -11,22 +11,30 @@ Design reference: `designs/figma_nodes.md`
 |-----------|---------|----------------------|--------|
 | M1 | 43 | Signing In and Onboarding | ✅ Built |
 | M2 | 32 | Calendar with Basic Cycle & Display | ✅ Built |
-| M3 | 64 | Tracking / Learn (12068-* nodes) | 🔶 Partial (5/64) |
+| M3 | 64 | Tracking / Learn (12068-* nodes) | ✅ Built |
 | M4 | 60 | Forecasting and Appointments | ✅ Built |
 | M5 | 60 | Birth Control and Other Reminders | ✅ Built |
 | M6 | 24 | Gamification & Scoring Flames | ❌ Not built |
 | M7 | 17 | Onboarding & Feedback | ✅ Built |
 
 ### Current Status
-- M1, M2, M4, M5, M7: All built
-- M3: Partial — only `/informations` (5 pages) built out of 64 Figma screens
+
+- M1, M2, M3, M4, M5, M7: All built
 - M6: Not in scope
 - M2 priorities: SMTP/email, OAuth credentials, accessibility fixes, i18n, rate limiting
 - See README.md for full M2 target list.
 
-### M3 Gap (Tracking / Learn)
-- Built: `/informations` index + `/informations/:phase` (4 phases) = 5 screens
-- Missing: 59 screens from Figma (node IDs 12068-*) covering educational content, articles, tips, etc.
+### M3 Summary (Tracking / Learn)
+
+Figma audit revealed 64 nodes break down to ~8 unique screens — the rest are state variants, flow arrows, and already-built views. All unique screens are now built:
+
+- `/informations` + `/informations/:phase` (4 phases) — phase education
+- `/tracking` — Self Analysis overview (donut wheel, cycle day strip, navigation)
+- `/tracking/period` — Period entry / edit (calendar date picker, GET + PATCH)
+- `/symptoms` — Symptom log (Mood / Physical / Mental accordion, notes, temperature, weight)
+- `/symptoms/:id`, `/symptoms/discharge` — symptom detail and discharge guide
+- `/superpowers`, `/superpowers/:id` — superpower tracking
+- `/streaks` — streak display
 
 ## Brand Colours
 
@@ -88,13 +96,20 @@ All references must use this colour exactly.
 - Settings calendar (`/settings/calendar`)
 - Settings notifications (`/settings/notifications`)
 
-### M3: Tracking / Learn (64 screens) 🔶 PARTIAL
-Built (5/64):
-- `/informations` - Phase overview (index)
-- `/informations/:phase` - Phase detail (4 pages: menstrual, follicular, ovulation, luteal)
+### M3: Tracking / Learn (64 screens) ✅ BUILT
 
-Not built (59/64):
-- All other M3 screens (node IDs 12068-*) — articles, educational content, tips, community features, etc.
+- `/informations` — Phase overview (index)
+- `/informations/:phase` — Phase detail (4 pages: menstrual, follicular, ovulation, luteal)
+- `/tracking` — Self Analysis (donut wheel, cycle strip, streak, nav to symptoms/superpowers)
+- `/tracking/period` — Period entry / edit (monthly calendar picker, GET + PATCH)
+- `/symptoms` — Symptom log with Mood / Physical / Mental accordion, notes, temperature, weight
+- `/symptoms/:id` — Symptom detail
+- `/symptoms/discharge` — Discharge guide
+- `/superpowers` — Superpower list
+- `/superpowers/:id` — Superpower detail
+- `/streaks` — Streak display
+
+Note: 64 Figma nodes include ~30 state variants of the Analyse/symptom screen, ~6 profile/tracking overview variants, flow arrows, and connector labels — not 64 distinct screens.
 
 ### Public / Launch
 - Launch / countdown (`/launch`) ✅ DONE

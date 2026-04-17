@@ -1,19 +1,46 @@
 <meta name="turbo-cache-control" content="no-cache">
 
-<div class="min-h-screen bg-white flex flex-col items-center justify-center max-w-[430px] mx-auto px-8 text-center">
+<div class="min-h-screen bg-brand-field flex flex-col max-w-app mx-auto px-6">
 
-  <div class="w-full bg-[#EAECF5] rounded-3xl overflow-hidden mb-8">
-    <%= image_tag "ef5a97eb1ce5997f5ce9b1a64aeafe4e00026251.gif",
-        class: "w-full h-auto object-contain",
-        alt: "Season app setup animation — your journey is ready" %>
+  <%# Skip link — top right %>
+  <div class="flex justify-end pt-14 pb-4">
+    <%= link_to t('.skip'), calendar_path,
+        class: "text-sm text-brand-primary/60 font-medium" %>
   </div>
 
-  <p class="w-60 text-center text-[#933a35] text-xl font-medium leading-7 tracking-wider">
-    Everything is getting set up for you to start your SEASON Journey.
-  </p>
+  <%# Main content — vertically centred %>
+  <div class="flex-1 flex flex-col items-center justify-center text-center gap-8">
 
-  <a href="<%= calendar_path %>" class="mt-8 text-[#933a35] text-lg">
-    Continue to app →
-  </a>
+    <%# Hero GIF %>
+    <%= image_tag 'ef5a97eb1ce5997f5ce9b1a64aeafe4e00026251.gif',
+        class: 'w-full h-auto max-w-[325px]',
+        alt: t('.animation_alt') %>
+
+    <%# Headline message %>
+    <p class="text-[22px] leading-[30px] text-brand-primary font-medium tracking-wider max-w-[260px]">
+      <%= t('.message') %>
+    </p>
+
+    <%# Pagination dots %>
+    <div class="flex items-center gap-2">
+      <div class="w-2.5 h-2.5 rounded-full bg-brand-primary"></div>
+      <div class="w-2.5 h-2.5 rounded-full bg-brand-primary/20"></div>
+      <div class="w-2.5 h-2.5 rounded-full bg-brand-primary/20"></div>
+    </div>
+
+  </div>
+
+  <%# CTA button — anchored to bottom %>
+  <div class="pb-12 pt-8">
+    <%= link_to calendar_path,
+        class: "flex items-center justify-center gap-3 w-full bg-brand-primary text-white rounded-full py-4 font-semibold text-base active:scale-95 transition-all duration-150" do %>
+      <span><%= t('.cta') %></span>
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2.5"
+           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M5 12h14M12 5l7 7-7 7"/>
+      </svg>
+    <% end %>
+  </div>
 
 </div>

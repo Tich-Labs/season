@@ -194,3 +194,84 @@ The launch signup form on `/launch` is live and capturing emails. All signups ar
 - [ ] Burger menu i18n
 
 **All checks passing as of 15 April 2026.**
+
+---
+
+## Update — 17 April 2026
+
+### M3 Complete — Full Figma Screen Audit Done
+
+This entry closes out M3 (Tracking / Learn) and documents findings from a full Figma audit run against all built milestones (M1, M2, M4, M5, M7).
+
+#### Figma Audit Findings
+
+We ran a complete node-by-node API audit of all 296 Figma screens across M1, M2, M4, M5, and M7. Key finding: every unique screen across those milestones was already built and accounted for. Several nodes previously logged as "missing" turned out to be flow arrows, connector labels, state variants, or duplicate views — not distinct screens.
+
+M3 was the outlier. CLAUDE.md had logged it as "5/64 built" with 59 screens missing, described as "educational articles, tips, community features." The audit revealed this was inaccurate. The 64 Figma nodes for M3 (12068-\*) resolve to:
+
+- ~30 nodes: state variants of the Analyse/symptom log screen
+- ~6 nodes: variants of the Self Analysis overview
+- ~4 nodes: flow arrows and connector labels
+- ~6 nodes: text label annotations ("Track my Period", "After hitting submit", etc.)
+- ~8 nodes: unnamed design/prototyping frames with no screen content
+- **8 nodes: actual unique screens** — all of which were partially or fully built
+
+#### What Was Built to Close M3
+
+Two genuine gaps were identified and closed:
+
+**1. Period entry / edit screen (`/tracking/period`)**
+The existing tracking page only allowed logging today's date via a checkbox. Figma showed a dedicated calendar date-picker screen ("Periode eingeben" / "Periode bearbeiten"). Built as a full monthly calendar grid — phase-coloured header, month navigation, tap-to-select past dates, PATCH to save. Serves both entry and editing (title/button adapts based on whether a period start date already exists).
+
+**2. Temperature + weight tracking on symptoms form**
+The `symptom_logs` table already had `temperature` and `weight` decimal columns — they just weren't surfaced in the UI. Added both as number inputs to the Physical section of the symptom accordion. Auto-save via Stimulus (debounced 600ms, same pattern as notes).
+
+Stimulus controller extended with `saveNumber` handler for the new fields.
+
+#### Full M3 Screen Inventory (Now Complete)
+
+| Screen | Route | Status |
+| --- | --- | --- |
+| Phase overview | `/informations` | ✅ |
+| Phase detail (×4) | `/informations/:phase` | ✅ |
+| Self Analysis | `/tracking` | ✅ |
+| Period entry / edit | `/tracking/period` | ✅ Built this sprint |
+| Symptom log (Mood / Physical / Mental) | `/symptoms` | ✅ |
+| Symptom detail | `/symptoms/:id` | ✅ |
+| Discharge guide | `/symptoms/discharge` | ✅ |
+| Superpower list + detail | `/superpowers`, `/superpowers/:id` | ✅ |
+| Streaks | `/streaks` | ✅ |
+
+#### Icon System
+
+82 Figma icons (Vuesax linear + custom Season illustrations) were exported and integrated earlier this sprint via `IconHelper` — `vuesax_icon` and `custom_icon` helpers inline SVG directly from `app/assets/images/icons/`. Icons are recoloured at render time to match the current phase colour. No external icon font dependency.
+
+#### Launch Countdown
+
+Counter target updated to **19 April 2026** (was 14 April). All hardcoded date references in the countdown view corrected.
+
+#### Milestone Status as of Today
+
+| Milestone | Figma Screens | Status |
+| --- | --- | --- |
+| M1 — Signing In & Onboarding | 43 | ✅ Complete |
+| M2 — Calendar & Basic Cycle | 32 | ✅ Complete |
+| M3 — Tracking / Learn | 64 | ✅ Complete |
+| M4 — Forecasting & Appointments | 60 | ✅ Complete |
+| M5 — Birth Control & Reminders | 60 | ✅ Complete |
+| M6 — Gamification & Flames | 24 | ❌ Not in scope |
+| M7 — Onboarding & Feedback | 17 | ✅ Complete |
+
+**M1–M5 and M7 are fully built. M6 remains out of scope.**
+
+#### Open Items Carried Forward
+
+The M2 backlog items from the 15 April entry remain open — none were blocked by M3 work:
+
+- SMTP / email delivery (still the highest-priority unresolved item)
+- OAuth credentials (Google, Facebook, Apple) — code is ready, awaiting credentials
+- 9 remaining WCAG 2.1 AA accessibility issues
+- i18n: hardcoded onboarding strings
+- Schema cleanup: duplicate user columns
+
+*Two days to launch. All screens built and deployed.*

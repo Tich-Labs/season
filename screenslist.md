@@ -7,15 +7,15 @@ This table maps coded screens to Figma design nodes. Use `designs/figma_nodes.md
 |-----------|---------------|--------|
 | M1 | 43 | ✅ Built |
 | M2 | 32 | ✅ Built |
-| M3 | 64 | 🔶 Partial (5/64) |
+| M3 | 64 | ✅ Built |
 | M4 | 60 | ✅ Built |
 | M5 | 60 | ✅ Built |
 | M6 | 24 | ❌ Not built |
 | M7 | 17 | ✅ Built |
 
-## Styling Standard (Last updated: 2026-04-16)
+## Styling Standard (Last updated: 2026-04-17)
 
-**Approach**: Inline styles (not Tailwind) — easier to maintain globally.
+**Approach**: Tailwind CSS with brand utility classes — no inline `style=""` attributes.
 
 **Shared Partial Conventions**:
 - `_section_header` — Section titles (color:#933a35, font-size:16px, font-weight:700)
@@ -24,6 +24,8 @@ This table maps coded screens to Figma design nodes. Use `designs/figma_nodes.md
 - `_phase_banner` — Phase-coloured header band
 - `_content_container` — Standard max-width:430px container
 - `_layout_vars` — CSS variables placeholder
+- `_quick_actions` — Global plus FAB + quick-action modal (Stimulus: `quick-actions`)
+- `_feedback_modal` — Global feedback / bug-report / support sheet (Stimulus: `feedback-modal`)
 
 **Brand Colors**:
 - Primary: #933a35
@@ -42,6 +44,8 @@ This table maps coded screens to Figma design nodes. Use `designs/figma_nodes.md
 | `_phase_banner` | Phase-coloured header band |
 | `_content_container` | Standard max-width:430px container |
 | `_layout_vars` | CSS variables placeholder |
+| `_quick_actions` | Global plus FAB + quick-action modal (Track / Appointment) |
+| `_feedback_modal` | Global feedback / bug-report / support sheet |
 
 ## Route Mapping
 
@@ -85,8 +89,9 @@ This table maps coded screens to Figma design nodes. Use `designs/figma_nodes.md
 | /launch                          | launch#index                | Launch/countdown              | M1-26                                    | ✅ |
 | /terms                           | legal#terms                 | Terms                         | M1-27                                    | ✅ |
 | /privacy                         | legal#privacy               | Privacy                       | M1-28                                    | ✅ |
-| /informations                    | informations#index          | Informations main             | M3-1                                     | 🔶 Partial |
-| /informations/:phase             | informations#show           | Informations phase detail     | M3-2 to M3-5                             | 🔶 Partial |
+| /informations                    | informations#index          | Informations main             | M3-1                                     | ✅ |
+| /informations/:phase             | informations#show           | Informations phase detail     | M3-2 to M3-5                             | ✅ |
+| /tracking/period                 | tracking#period             | Period entry / edit           | M3-6                                     | ✅ |
 | /admin                           | admin/users#index           | Admin users list              | M7-1                                     | ✅ |
 | /admin/users/:id                 | admin/users#show            | Admin user detail             | M7-2                                     | ✅ |
 | /admin/inbox                     | admin/inbox#overview        | Admin inbox (all messages)    | M7-3                                     | ✅ |
@@ -99,15 +104,20 @@ This table maps coded screens to Figma design nodes. Use `designs/figma_nodes.md
 
 ## Known Gaps
 
-### M3: Tracking / Learn (64 screens)
-**Built**: 5 screens (informations index + 4 phase detail pages)
-**Missing**: 59 screens from Figma nodes 12068-* covering:
-- Educational articles
-- Tips & guidance content
-- Community features
-- Phase-specific learning modules
+### M3: Tracking / Learn — ✅ Complete
+
+Figma audit (2026-04-17) found 64 nodes reduce to ~8 unique screens. The remaining nodes are state variants, flow connectors, and labels. All screens built:
+
+- `/informations` + `/informations/:phase` (×4 phases)
+- `/tracking` — Self Analysis with donut wheel + cycle strip
+- `/tracking/period` — Period entry / edit (calendar date picker)
+- `/symptoms` — Accordion log with notes, temperature, weight
+- `/symptoms/:id`, `/symptoms/discharge`
+- `/superpowers`, `/superpowers/:id`
+- `/streaks`
 
 ### M6: Gamification & Scoring Flames (24 screens)
+
 **Status**: Not built (not in scope)
 
 ## How to use this table

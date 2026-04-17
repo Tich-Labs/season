@@ -46,4 +46,24 @@ export default class extends Controller {
       })
     }, 600)
   }
+
+  saveNumber(event) {
+    clearTimeout(this.#notesTimer)
+    const field = event.currentTarget.dataset.field
+    const value = event.currentTarget.value
+    const date  = this.element.dataset.date
+
+    this.#notesTimer = setTimeout(() => {
+      if (value === "") return
+      fetch(this.urlValue, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').content,
+          "Accept": "application/json"
+        },
+        body: JSON.stringify({ symptom_log: { date, [field]: value } })
+      })
+    }, 600)
+  }
 }

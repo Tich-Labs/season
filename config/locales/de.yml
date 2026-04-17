@@ -136,12 +136,20 @@ de:
       body: "Du erhältst sie zwei Tage vor dem voraussichtlichen Beginn deiner Zyklusphase. Du kannst diese später ändern."
       submit: "Weiter"
       maybe_later: "Vielleicht später"
+    finish:
+      skip: "Überspringen"
+      animation_alt: "Season App-Setup-Animation — deine Reise ist bereit"
+      message: "Alles wird für dich vorbereitet, damit du deine SEASON-Reise beginnen kannst."
+      cta: "Meine Reise starten"
   calendar:
     header: "Hallo %{name} — Das ist dein Monat"
     greeting: "Hallo %{name} — Das ist dein Monat"
     subheading: "Verfolge deinen Zyklus"
   tracking:
     feedback: "Feedback geben"
+    period_update:
+      saved: "Startdatum der Periode gespeichert."
+      date_required: "Bitte wähle ein Datum aus."
   calendar_events:
     create:
       created: "Termin erstellt"
@@ -190,3 +198,7 @@ de:
     feedback: "Feedback"
     bugreport: "Fehlerbericht"
     log_out: "Abmelden"
+    track_day: "Meinen Tag tracken"
+    create_appointment: "Termin erstellen"
+    quick_actions_label: "Schnellaktionen öffnen"
+    close: "Schließen"

@@ -142,12 +142,20 @@ en:
       body: "You will receive it two days before the predicted start date of your cycle phase. You can change these later."
       submit: "Submit"
       maybe_later: "Maybe later"
+    finish:
+      skip: "Skip"
+      animation_alt: "Season app setup animation — your journey is ready"
+      message: "Everything is getting set up for you to start your SEASON Journey."
+      cta: "Start my Journey"
   calendar:
     header: "Hello %{name} — This is your month"
     greeting: "Hello %{name} — This is your month"
     subheading: "Track your cycle"
   tracking:
     feedback: "Give feedback"
+    period_update:
+      saved: "Period start date saved."
+      date_required: "Please select a date."
   calendar_events:
     create:
       created: "Event created"
@@ -196,3 +204,7 @@ en:
     feedback: "Feedback"
     bugreport: "Bugreport"
     log_out: "Log out"
+    track_day: "Track my day"
+    create_appointment: "Create appointment"
+    quick_actions_label: "Open quick actions"
+    close: "Close"

@@ -15,13 +15,14 @@ class RegistrationsController < ApplicationController
   def create
     attributes = user_params.to_h.symbolize_keys
     email = attributes[:email].to_s.downcase
+    name = attributes[:name].presence || email.split("@").first
 
     if User.exists?(email: email)
       @error_type = :already_registered
       @user = User.new(attributes)
       render :new, status: :unprocessable_content
     else
-      @user = User.new(attributes.merge(email: email))
+      @user = User.new(attributes.merge(email: email, name: name))
 
       if @user.save
         login @user
@@ -36,9 +37,9 @@ class RegistrationsController < ApplicationController
 
   def user_params
     if params[:user].present?
-      params.expect(user: [:email, :password, :password_confirmation])
+      params.expect(user: [:email, :password, :password_confirmation, :name])
     else
-      params.permit(:email, :password, :password_confirmation)
+      params.permit(:email, :password, :password_confirmation, :name)
     end
   end
 end

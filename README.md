@@ -53,7 +53,7 @@ Season is a women's cycle tracking progressive web app (PWA) built on Rails 8 wi
 | 11-step onboarding | ✅ Pixel-perfect to Figma |
 | Auth (signup, login, OAuth shell, password reset) | ✅ Complete |
 | Calendar (monthly + weekly + appointments) | ✅ Complete |
-| Daily tracking (symptoms, superpowers, period) | ✅ Complete |
+| Daily tracking (symptoms + notes + temp/weight, superpowers, period entry/edit) | ✅ Complete |
 | Daily view | ✅ Complete |
 | Streaks | ✅ Complete |
 | Settings (profile, calendar, notifications, subscriptions) | ✅ Complete |
@@ -156,9 +156,11 @@ bin/dev
 | Add Calendar Event | `/calendar_events/new` | Yes |
 | Edit Calendar Event | `/calendar_events/:id/edit` | Yes |
 | Daily View | `/daily/:date` | Yes |
-| Tracking (period) | `/tracking` | Yes |
+| Tracking (self analysis) | `/tracking` | Yes |
+| Period entry / edit | `/tracking/period` | Yes |
 | Symptom Logs | `/symptoms` | Yes |
 | Symptom Detail | `/symptoms/:id` | Yes |
+| Discharge guide | `/symptoms/discharge` | Yes |
 | Superpowers | `/superpowers` | Yes |
 | Superpower Detail | `/superpowers/:id` | Yes |
 | Streaks | `/streaks` | Yes |

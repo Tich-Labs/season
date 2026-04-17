@@ -49,7 +49,12 @@ Rails.application.routes.draw do
   get "calendar/weekly", to: "calendar#weekly", as: :calendar_weekly
   get "calendar/appointments", to: "calendar#appointments", as: :calendar_appointments
   resources :calendar_events, except: [:index, :show]
-  resources :tracking, only: [:index, :create]
+  resources :tracking, only: [:index, :create] do
+    collection do
+      get :period
+      patch :period, action: :period_update
+    end
+  end
   get "daily/:date", to: "daily_view#show", as: :daily_view
   resources :streaks, only: [:index]
   get "symptoms/discharge", to: "symptoms#discharge", as: :symptom_discharge
