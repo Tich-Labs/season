@@ -16,15 +16,25 @@
     .nav-item { display: block; padding: 0.5rem 1.5rem; color: #444; text-decoration: none; font-size: 0.9rem; transition: all 0.15s; }
     .nav-item:hover { background: #FAF7F4; color: #933a35; }
     .nav-item.active { background: #FDF0EE; color: #933a35; font-weight: 600; border-right: 3px solid #933a35; }
-    .content { margin-left: 260px; flex: 1; padding: 2rem 3rem; max-width: 900px; }
-    .content h1 { color: #933a35; font-size: 1.8rem; margin-bottom: 0.5rem; }
-    .content h2 { color: #933a35; font-size: 1.3rem; margin-top: 1.5rem; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid #EDE1D5; }
-    .content h3 { color: #444; font-size: 1.05rem; margin-top: 1.25rem; margin-bottom: 0.5rem; }
-    .content p { margin-bottom: 1rem; }
-    .content ul { margin-bottom: 1rem; padding-left: 1.5rem; }
+    .content { margin-left: 260px; flex: 1; padding: 2.5rem 3rem; max-width: 900px; }
+    .content h1 { color: #933a35; font-size: 2rem; margin-bottom: 0.75rem; }
+    .content h2 { color: #933a35; font-size: 1.4rem; margin-top: 2rem; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid #EDE1D5; }
+    .content h3 { color: #444; font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.75rem; }
+    .content p { margin-bottom: 1rem; color: #444; }
+    .content ul, .content ol { margin-bottom: 1rem; padding-left: 1.5rem; }
     .content li { margin-bottom: 0.5rem; }
-    .flow-step { background: white; border-left: 4px solid #933a35; padding: 1rem; margin-bottom: 1rem; border-radius: 0 8px 8px 0; }
-    .flow-step-number { display: inline-block; background: #933a35; color: white; width: 24px; height: 24px; border-radius: 50%; text-align: center; line-height: 24px; font-size: 0.8rem; margin-right: 0.5rem; }
+    .content code { background: #EDE1D5; padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.9em; }
+    .content pre { background: #2d2d2d; color: #f8f8f2; padding: 1rem; border-radius: 8px; overflow-x: auto; margin-bottom: 1rem; }
+    .content pre code { background: none; padding: 0; color: inherit; }
+    .content table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+    .content th, .content td { padding: 0.75rem; text-align: left; border-bottom: 1px solid #EDE1D5; }
+    .content th { background: #FAF7F4; font-weight: 600; color: #933a35; }
+    .content a { color: #933a35; text-decoration: underline; }
+    .content blockquote { border-left: 4px solid #933a35; padding-left: 1rem; margin: 1rem 0; color: #6B6B6B; font-style: italic; background: #FDF0EE; padding: 1rem; border-radius: 0 8px 8px 0; }
+    .content hr { border: none; border-top: 1px solid #EDE1D5; margin: 2rem 0; }
+    .flow-step { background: white; border-left: 4px solid #933a35; padding: 1.25rem; margin-bottom: 1rem; border-radius: 0 8px 8px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .flow-step-number { display: inline-block; background: #933a35; color: white; width: 28px; height: 28px; border-radius: 50%; text-align: center; line-height: 28px; font-size: 0.85rem; font-weight: 600; margin-right: 0.75rem; }
+    .highlight-box { background: white; border-radius: 12px; padding: 1.5rem; margin: 1rem 0; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
     @media (max-width: 768px) { .sidebar { display: none; } .content { margin-left: 0; padding: 1.5rem; } }
   </style>
 </head>
@@ -35,75 +45,188 @@
       <p>Internal team documentation</p>
     </div>
     <div class="nav-section">
+      <p class="nav-section-title">Overview</p>
+      <a href="overview.html" class="nav-item">Project Overview</a>
+    </div>
+    <div class="nav-section">
       <p class="nav-section-title">Getting Started</p>
-      <a href="overview.html" class="nav-item">Overview</a>
-      <a href="setup.html" class="nav-item">Setup &amp; README</a>
-      <a href="screenslist.html" class="nav-item">Screens &amp; Routes</a>
+      <a href="screenslist.html" class="nav-item">Screens & Routes</a>
+      <a href="userjourney.html" class="nav-item active">User Journey</a>
       <a href="BACKLOG.html" class="nav-item">Backlog</a>
     </div>
     <div class="nav-section">
-      <p class="nav-section-title">Audit &amp; Reports</p>
+      <p class="nav-section-title">Audit & Reports</p>
       <a href="AUDIT-2026-04-10.html" class="nav-item">Audit Report</a>
       <a href="STYLING-AUDIT.html" class="nav-item">Styling Audit</a>
       <a href="STAKEHOLDER-REPORT-2026-04-15.html" class="nav-item">Stakeholder Report</a>
     </div>
     <div class="nav-section">
       <p class="nav-section-title">Reference</p>
-      <a href="userjourney.html" class="nav-item">User Journey</a>
       <a href="figma_nodes.html" class="nav-item">Figma Nodes</a>
-      <a href="userdata.html" class="nav-item">User Data &amp; Privacy</a>
+      <a href="userdata.html" class="nav-item">User Data & Privacy</a>
     </div>
-  
   </nav>
   <main class="content">
     <h1>User Journey</h1>
-    <p>User flow documentation for Season V2.</p>
+    <p style="font-size: 1.1rem; color: #6B6B6B;">This document traces the full experience of a Season user from the moment they land on the app to daily tracking. It is written as a narrative walkthrough, not a feature checklist.</p>
+    <p>For screen-by-screen route and Figma references, see <a href="screenslist.html">Screens & Routes</a>.</p>
 
-    <h2>New User Flow</h2>
-    <div class="flow-step">
-      <span class="flow-step-number">1</span>
-      <strong>Visit /launch</strong> — See countdown, click "Join Waitlist"
-    </div>
-    <div class="flow-step">
-      <span class="flow-step-number">2</span>
-      <strong>Enter email</strong> — Sign up for waitlist
-    </div>
-    <div class="flow-step">
-      <span class="flow-step-number">3</span>
-      <strong>Receive invite</strong> — Click link in email (/invite/:token)
-    </div>
-    <div class="flow-step">
-      <span class="flow-step-number">4</span>
-      <strong>Complete onboarding</strong> — 11 steps collecting cycle info
-    </div>
-    <div class="flow-step">
-      <span class="flow-step-number">5</span>
-      <strong>Access app</strong> — Redirected to /calendar
+    <hr>
+
+    <h2>Phase 0 — Before the App: The Waitlist</h2>
+    <p>Before Season V2 was live, the landing page at <code>/launch</code> collected email addresses from people interested in the app. The page shows a countdown timer to the launch date and a single email input. This is the only pre-auth surface in the app.</p>
+    <div class="highlight-box">
+      <h3 style="margin-top: 0;">Why it exists</h3>
+      <p>Season has 150 existing V1 users who need to migrate their data and set up proper accounts. The waitlist captures intent and gives the team a contact list for the launch day notification email.</p>
+      <h3>What happens to signups</h3>
+      <p>Emails are stored in the <code>launch_signups</code> table and are visible in the admin panel at <code>/admin/launch_signups</code>. A launch notification mailer (<code>LaunchSignupMailer</code>) is built and ready — it is waiting on SMTP configuration before it can send.</p>
     </div>
 
-    <h2>Returning User Flow</h2>
-    <div class="flow-step">
-      <span class="flow-step-number">1</span>
-      <strong>Log in</strong> — /session/new
-    </div>
-    <div class="flow-step">
-      <span class="flow-step-number">2</span>
-      <strong>View calendar</strong> — See cycle phase, upcoming events
-    </div>
-    <div class="flow-step">
-      <span class="flow-step-number">3</span>
-      <strong>Log symptoms</strong> — Daily tracking
-    </div>
+    <hr>
 
-    <h2>Key Screens</h2>
+    <h2>Phase 1 — First Contact: Sign Up</h2>
+    <p>A new user arrives at <code>/welcome</code>. They see the Season brand, a brief value proposition, and two choices: create an account or sign in.</p>
+
+    <h3>Signing Up (<code>/registration/new</code>)</h3>
+    <p>The sign-up form asks for name, email, and password. It also supports social login via Google, Facebook, or Apple — these are built and routed, pending OAuth credentials being added to the production environment.</p>
+    <p>Errors are shown inline via Turbo Streams — there is no page reload on failure. A wrong email format or a duplicate account shows a styled error message inside the form, not a separate error page.</p>
+    <p>On success, Devise creates the account and sends a confirmation email (once SMTP is configured). The user is redirected into the onboarding flow.</p>
+
+    <h3>Existing Users — The Invite Flow (<code>/invite/:token</code>)</h3>
+    <p>The 150 existing V1 users receive a personalised invite link. When they land on <code>/invite/:token</code>, the app pre-fills their name and email based on the invite record. They set a password and their existing cycle data is migrated to the new account. This is the zero-friction migration path for the founding user base.</p>
+
+    <hr>
+
+    <h2>Phase 2 — Onboarding (11 Steps)</h2>
+    <p>Onboarding is a Hotwire-driven multi-step form at <code>/onboarding/:id</code>. It collects everything the app needs to personalise the experience before the user sees their first calendar. There are no skippable steps that break the core experience — only genuinely optional ones.</p>
+
+    <h3>What each step collects and why</h3>
+    <table>
+      <tr><th>Step</th><th>What</th><th>Why it matters</th></tr>
+      <tr><td>1</td><td>Name</td><td>Personalises all greetings and prompts throughout the app</td></tr>
+      <tr><td>2</td><td>Birthday</td><td>Age-relevant cycle context; used for future health insights</td></tr>
+      <tr><td>3</td><td>"Do you have a regular cycle?"</td><td>Forks the onboarding — irregular cycles get a different setup path</td></tr>
+      <tr><td>4</td><td>Average cycle length (skippable)</td><td>Seeds <code>CycleCalculatorService</code> with accurate phase boundaries. Default is 28 days if skipped</td></tr>
+      <tr><td>5</td><td>"Do you use hormonal birth control?"</td><td>Hormonal contraception changes the cycle pattern; the app adapts its insights accordingly</td></tr>
+      <tr><td>6</td><td>Contraception method</td><td>Determines which birth control reminder to offer</td></tr>
+      <tr><td>7</td><td>"Want a birth control reminder?"</td><td>Opt-in; creates a <code>Reminder</code> record if yes</td></tr>
+      <tr><td>8</td><td>Contraception type (full list)</td><td>Captures the complete contraception picture</td></tr>
+      <tr><td>9</td><td>Food preference</td><td>Seeds nutrition tips — vegetarian, vegan, pescetarian options</td></tr>
+      <tr><td>10</td><td>Last period start date (skippable)</td><td>The single most important data point — seeds the cycle engine. The app works without it but all phase calculations are approximate</td></tr>
+      <tr><td>11</td><td>"Want cycle stage reminders?"</td><td>Opt-in push/email reminders 2 days before each phase change</td></tr>
+    </table>
+
+    <p>At the end of onboarding, the user arrives at the <strong>Finish screen</strong> (<code>/onboarding/finish</code>) — an animated confirmation screen with three progress dots and a "Start my Journey" button. This is the emotional handoff from setup to app.</p>
+
+    <hr>
+
+    <h2>Phase 3 — The Calendar (Daily Use, Entry Point)</h2>
+    <p>After onboarding, every session starts on the Calendar. This is the home screen.</p>
+
+    <h3>Monthly View (<code>/calendar</code>)</h3>
+    <p>The monthly calendar is colour-coded by cycle phase. Days are shaded in the phase colour for that date based on the user's cycle data. The user's name and the current month appear in the header.</p>
+    <p>At the top of the page is a <strong>phase banner</strong> showing the user's current season (e.g., "You're in Summer — Ovulation phase") with the cycle day count. This is the first personalised insight the user sees every time they open the app.</p>
+    <p>Tapping any date navigates to the Daily View for that date. Tapping the "+" FAB creates a new calendar event.</p>
+
+    <h3>Weekly View (<code>/calendar/weekly</code>)</h3>
+    <p>A horizontal week strip showing the same phase colours at a glance. Used for quick navigation when the user wants to see the coming days rather than the whole month.</p>
+
+    <h3>Appointments (<code>/calendar/appointments</code>)</h3>
+    <p>A list view of all upcoming calendar events the user has created. Each event shows title, date, time, and category. Events can be edited inline.</p>
+
+    <h3>Daily View (<code>/daily/:date</code>)</h3>
+    <p>The richest single screen in the app. For a given date it shows:</p>
     <ul>
-      <li><strong>Calendar</strong> — Monthly/weekly view with phase colors</li>
-      <li><strong>Tracking</strong> — Self analysis with donut wheel</li>
-      <li><strong>Symptoms</strong> — Mood, physical, mental logging</li>
-      <li><strong>Superpowers</strong> — Track positive symptoms</li>
-      <li><strong>Streaks</strong> — Gamification</li>
-      <li><strong>Settings</strong> — Profile, calendar, notifications</li>
+      <li>The cycle phase and season for that day</li>
+      <li>Symptom log summary (if logged)</li>
+      <li>Superpower for that phase</li>
+      <li>Nutrition and sport tips personalised to the phase</li>
+      <li>Any calendar events for that day</li>
     </ul>
+    <p>This is the "what does my body need today?" screen.</p>
+
+    <hr>
+
+    <h2>Phase 4 — Tracking (The Core Loop)</h2>
+    <p>Tracking is what brings users back daily. There are three distinct tracking surfaces:</p>
+
+    <h3>Period Entry (<code>/tracking/period</code>)</h3>
+    <p>A full-screen monthly calendar picker where the user taps a date to record the start of her period. The app saves a <code>CycleEntry</code> record and recalculates all future phase predictions from that anchor point.</p>
+    <p>The screen is context-aware: if a period start date already exists it shows "Edit period start" mode; if not it shows "Enter period start" mode. One screen, two states.</p>
+
+    <h3>Symptom Logging (<code>/symptoms</code>)</h3>
+    <p>The symptom log is an accordion form organised into three sections: <strong>Mood</strong>, <strong>Physical</strong>, and <strong>Mental</strong>. Each section contains rated fields (1–5 scale). The full set of trackable fields:</p>
+    <div class="highlight-box">
+      <p style="margin: 0;"><strong>Mood:</strong> mood, energy</p>
+      <p style="margin: 0;"><strong>Physical:</strong> sleep, pain, cravings, discharge, temperature (°C), weight (kg), sexual intercourse</p>
+      <p style="margin: 0;"><strong>Mental:</strong> mental state, physical state</p>
+    </div>
+    <p>There is also a free-text <strong>Notes</strong> field for anything that doesn't fit a category, plus optional temperature and weight inputs.</p>
+    <p>All fields auto-save via Stimulus — there is no submit button. The user taps a value, it saves silently to the server via a Turbo Stream PATCH, and the UI confirms with a subtle indicator.</p>
+
+    <h3>Superpowers (<code>/superpowers</code>)</h3>
+    <p>Each cycle phase has a "superpower" — a specific area where the user tends to excel. Summer (Ovulation) is communication and confidence. Winter (Menstrual) is intuition and reflection. The Superpowers screen lists these with explanations. The user can log when they experience a superpower to build a personal record over time.</p>
+
+    <h3>Streaks (<code>/streaks</code>)</h3>
+    <p>A streak is the number of consecutive days the user has opened the app and logged something. The Streaks screen shows the current streak, best streak, and milestone markers. It is a lightweight gamification hook — not the main draw of the app, but a reason to keep daily tracking habits alive.</p>
+
+    <hr>
+
+    <h2>Phase 5 — Learn (Phase Education)</h2>
+    <p>At <code>/informations</code>, the user can explore each of the four cycle phases in depth. Each phase has its own detail page (<code>/informations/:phase</code>) covering:</p>
+    <ul>
+      <li>What is happening biologically</li>
+      <li>How energy typically feels</li>
+      <li>What to eat and how to exercise</li>
+      <li>Emotional patterns common to this phase</li>
+      <li>How to use the phase intentionally</li>
+    </ul>
+    <p>This is not a blog or content feed — it is a reference guide tied directly to what the user is experiencing right now. The content is seeded per phase and locale (en/de) in the <code>CyclePhaseContent</code> model.</p>
+
+    <hr>
+
+    <h2>Phase 6 — Settings (Personalisation and Account)</h2>
+    <p>Settings are split into four sections, each with its own screen:</p>
+    <ul>
+      <li><strong>Profile</strong> (<code>/settings/profile</code>): Name, email, birthday, avatar upload. Email change triggers a confirmation email.</li>
+      <li><strong>Calendar</strong> (<code>/settings/calendar</code>): Calendar display preferences — which day the week starts on, whether to show phase colours.</li>
+      <li><strong>Notifications</strong> (<code>/settings/notifications</code>): Granular toggle control over which reminders the user receives — morning check-in, period start warning, birth control reminder. Each toggle is saved immediately via a PATCH request.</li>
+      <li><strong>Subscriptions</strong> (<code>/settings/subscriptions</code>): Current plan and upgrade options. Stripe is wired but not yet active; the screen is present and designed but shows a free tier for now.</li>
+    </ul>
+
+    <hr>
+
+    <h2>Phase 7 — Feedback and Support</h2>
+    <p>A persistent <strong>feedback button</strong> is available throughout the main app via the burger menu. Tapping it opens a bottom sheet modal with three tabs: Feedback, Bug Report, and Support.</p>
+    <p>The user writes a message, optionally attaches a screenshot, and submits. The message is saved as a <code>Feedback</code> record and forwarded automatically to the team's Trello board via <code>TrelloMailer</code>. The admin inbox at <code>/admin/inbox</code> shows all submissions organised by type with CSV export.</p>
+
+    <hr>
+
+    <h2>Edge Cases and Error States</h2>
+    <div class="highlight-box">
+      <h3 style="margin-top: 0;">No cycle data</h3>
+      <p>A user who skips the period start date during onboarding still gets a working calendar — phase colours show a placeholder state and the phase banner says "Set up your cycle" with a link to the period entry screen.</p>
+    </div>
+    <div class="highlight-box">
+      <h3 style="margin-top: 0;">New device / session expiry</h3>
+      <p>Sessions expire after 7 days. On expiry the user is redirected to <code>/session/new</code> with a soft message. No data is lost.</p>
+    </div>
+    <div class="highlight-box">
+      <h3 style="margin-top: 0;">Password recovery</h3>
+      <p>The standard Devise flow. The user enters their email at <code>/users/password/new</code>, receives a reset link (pending SMTP), and sets a new password. Three error states have dedicated screens: already reset, inbox full, wrong email.</p>
+    </div>
+    <div class="highlight-box">
+      <h3 style="margin-top: 0;">Invite link reuse</h3>
+      <p>An invite token can only be used once. A second attempt shows an "already used" message with a prompt to log in instead.</p>
+    </div>
+
+    <hr>
+
+    <h2>What the Journey Feels Like (Design Intent)</h2>
+    <blockquote>
+      The app is designed to feel like a personal health companion rather than a medical tracker. The seasonal metaphor is not decorative — it is the lens through which every insight is framed. The colour palette (warm reds, creams, muted pinks) reinforces that this is an intimate, personal space. The typography is clean and readable. There are no aggressive notifications, no streaks that guilt the user, no comparison to other users.
+    </blockquote>
+    <p style="font-size: 1.1rem; font-weight: 600; color: #933a35;">The core promise Season makes to its user: <em>understand your body on your own terms, and use that understanding to live better.</em></p>
   </main>
 </body>
 </html>
