@@ -52,7 +52,7 @@
     </div>
 
     <%# ── Calendar grid + form ── %>
-    <%= form_with url: period_tracking_index_path, method: :patch, local: true do |f| %>
+    <%= form_with url: "/tracking/period", method: :patch, local: true do |f| %>
       <div style="background:#FFFFFF; padding:4px 8px 16px;">
         <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:2px 0;">
           <% grid_days.each do |day| %>
