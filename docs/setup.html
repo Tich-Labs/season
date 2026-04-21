@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Setup &amp; README — Season Docs</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.7; color: #333; background: #FAF7F4; display: flex; min-height: 100vh; }
+    .sidebar { width: 260px; background: white; border-right: 1px solid #EDE1D5; padding: 1.5rem 0; position: fixed; height: 100vh; overflow-y: auto; }
+    .sidebar-header { padding: 0 1.5rem 1.5rem; border-bottom: 1px solid #EDE1D5; margin-bottom: 1rem; }
+    .sidebar-header h1 { font-size: 1.25rem; color: #933a35; }
+    .sidebar-header p { font-size: 0.8rem; color: #6B6B6B; margin-top: 0.25rem; }
+    .nav-section { margin-bottom: 1rem; }
+    .nav-section-title { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: #999; padding: 0 1.5rem; margin-bottom: 0.5rem; }
+    .nav-item { display: block; padding: 0.5rem 1.5rem; color: #444; text-decoration: none; font-size: 0.9rem; transition: all 0.15s; }
+    .nav-item:hover { background: #FAF7F4; color: #933a35; }
+    .nav-item.active { background: #FDF0EE; color: #933a35; font-weight: 600; border-right: 3px solid #933a35; }
+    .content { margin-left: 260px; flex: 1; padding: 2rem 3rem; max-width: 900px; }
+    .content h1 { color: #933a35; font-size: 1.8rem; margin-bottom: 0.5rem; }
+    .content h2 { color: #933a35; font-size: 1.3rem; margin-top: 2rem; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid #EDE1D5; }
+    .content h3 { color: #444; font-size: 1.05rem; margin-top: 1.25rem; margin-bottom: 0.5rem; font-weight: 600; }
+    .content p { margin-bottom: 1rem; }
+    .content ul, .content ol { margin-bottom: 1rem; padding-left: 1.5rem; }
+    .content li { margin-bottom: 0.4rem; }
+    .content code { background: #EDE1D5; padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.9em; font-family: 'SF Mono', Monaco, monospace; }
+    .content pre { background: #2d2d2d; color: #f8f8f2; padding: 1.25rem; border-radius: 8px; overflow-x: auto; margin-bottom: 1.25rem; font-size: 0.9rem; line-height: 1.5; }
+    .content pre code { background: none; padding: 0; color: inherit; }
+    .content a { color: #933a35; }
+    .content table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; font-size: 0.9rem; }
+    .content th, .content td { padding: 0.65rem 0.75rem; text-align: left; border-bottom: 1px solid #EDE1D5; vertical-align: top; }
+    .content th { background: #FAF7F4; font-weight: 600; color: #933a35; }
+    .badge { display: inline-block; background: #EDE1D5; color: #933a35; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.8rem; font-weight: 600; margin-left: 0.4rem; }
+    .badge.required { background: #FDF0EE; }
+    .step { display: flex; gap: 1rem; margin-bottom: 1rem; }
+    .step-num { flex-shrink: 0; width: 28px; height: 28px; background: #933a35; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 600; margin-top: 0.1rem; }
+    .step-body { flex: 1; }
+    .step-body p { margin-bottom: 0.5rem; }
+    @media (max-width: 768px) { .sidebar { display: none; } .content { margin-left: 0; padding: 1.5rem; } }
+  </style>
+</head>
+<body>
+  <nav class="sidebar">
+    <div class="sidebar-header">
+      <h1>📅 Season Docs</h1>
+      <p>Internal team documentation</p>
+    </div>
+    <div class="nav-section">
+      <p class="nav-section-title">Getting Started</p>
+      <a href="overview.html" class="nav-item">Overview</a>
+      <a href="setup.html" class="nav-item active">Setup &amp; README</a>
+      <a href="screenslist.html" class="nav-item">Screens &amp; Routes</a>
+      <a href="BACKLOG.html" class="nav-item">Backlog</a>
+    </div>
+    <div class="nav-section">
+      <p class="nav-section-title">Audit &amp; Reports</p>
+      <a href="AUDIT-2026-04-10.html" class="nav-item">Audit Report</a>
+      <a href="STYLING-AUDIT.html" class="nav-item">Styling Audit</a>
+      <a href="STAKEHOLDER-REPORT-2026-04-15.html" class="nav-item">Stakeholder Report</a>
+    </div>
+    <div class="nav-section">
+      <p class="nav-section-title">Reference</p>
+      <a href="userjourney.html" class="nav-item">User Journey</a>
+      <a href="figma_nodes.html" class="nav-item">Figma Nodes</a>
+      <a href="userdata.html" class="nav-item">User Data &amp; Privacy</a>
+    </div>
+  </nav>
+
+  <main class="content">
+    <h1>Setup &amp; README</h1>
+    <p>Everything you need to run Season locally, understand the tech stack, and get oriented in the codebase.</p>
+
+    <h2>Tech Stack</h2>
+    <table>
+      <thead><tr><th>Layer</th><th>Technology</th><th>Version</th></tr></thead>
+      <tbody>
+        <tr><td>Language</td><td>Ruby</td><td>3.4.7</td></tr>
+        <tr><td>Framework</td><td>Rails</td><td>8.1.3</td></tr>
+        <tr><td>Database</td><td>PostgreSQL</td><td>latest</td></tr>
+        <tr><td>CSS</td><td>Tailwind CSS</td><td>~3.3.1 (via tailwindcss-rails)</td></tr>
+        <tr><td>JS</td><td>Hotwire — Turbo + Stimulus</td><td>turbo-rails / stimulus-rails</td></tr>
+        <tr><td>Auth</td><td>Custom cookie session + Devise (passwords only)</td><td>devise</td></tr>
+        <tr><td>Background Jobs</td><td>Solid Queue</td><td>solid_queue</td></tr>
+        <tr><td>Caching</td><td>Solid Cache</td><td>solid_cache</td></tr>
+        <tr><td>WebSockets</td><td>Solid Cable</td><td>solid_cable</td></tr>
+        <tr><td>Error tracking</td><td>Sentry</td><td>sentry-ruby / sentry-rails</td></tr>
+        <tr><td>Admin</td><td>Ransack</td><td>ransack</td></tr>
+        <tr><td>OmniAuth</td><td>Google, Facebook, Apple</td><td>omniauth-*</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Local Setup</h2>
+
+    <h3>Prerequisites</h3>
+    <ul>
+      <li>Ruby 3.4.7 — use <code>rbenv</code> or <code>asdf</code></li>
+      <li>PostgreSQL running locally</li>
+      <li>Node.js (for Tailwind build watcher)</li>
+    </ul>
+
+    <h3>Installation</h3>
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body"><p>Clone and install dependencies</p>
+      <pre><code>git clone git@github.com:Tich-Labs/season.git
+cd season
+bundle install</code></pre></div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body"><p>Add the master key — get this from the team password manager. Never commit it.</p>
+      <pre><code>echo "YOUR_MASTER_KEY" > config/master.key</code></pre></div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body"><p>Create the database, load schema, and seed phase content</p>
+      <pre><code>bin/rails db:create db:schema:load db:seed</code></pre></div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body"><p>Start the development server</p>
+      <pre><code>bin/dev</code></pre></div>
+    </div>
+
+    <h2>Environment Variables</h2>
+    <table>
+      <thead><tr><th>Variable</th><th>Required</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td><code>RAILS_MASTER_KEY</code></td><td><span class="badge required">Required</span></td><td>Decrypts <code>config/credentials.yml.enc</code>. Never commit this file.</td></tr>
+        <tr><td><code>DATABASE_URL</code></td><td>Production only</td><td>Render PostgreSQL URL — auto-set by Render</td></tr>
+        <tr><td><code>SECRET_KEY_BASE</code></td><td>Production only</td><td>Auto-generated by Render. Local dev reads from <code>credentials.yml.enc</code>. The two values don't need to match.</td></tr>
+        <tr><td><code>GOOGLE_CLIENT_ID</code> / <code>GOOGLE_CLIENT_SECRET</code></td><td>OAuth</td><td>For Google Sign-In</td></tr>
+        <tr><td><code>FACEBOOK_APP_ID</code> / <code>FACEBOOK_APP_SECRET</code></td><td>OAuth</td><td>For Facebook Sign-In</td></tr>
+        <tr><td><code>APPLE_CLIENT_ID</code>, <code>APPLE_TEAM_ID</code>, <code>APPLE_KEY_ID</code>, <code>APPLE_PRIVATE_KEY</code></td><td>OAuth</td><td>For Apple Sign-In — PEM format</td></tr>
+        <tr><td><code>SENTRY_DSN</code></td><td>Production</td><td>Error tracking</td></tr>
+        <tr><td><code>STRIPE_SECRET_KEY</code></td><td>M3 — not yet active</td><td>Payments — wired but not live</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Architecture</h2>
+
+    <h3>Auth</h3>
+    <p>Custom cookie-based <code>Authentication</code> concern in <code>app/controllers/concerns/authentication.rb</code>. Devise is used <em>only</em> for password recovery emails. Sessions are encrypted cookies with a 7-day expiry. Do not re-include the <code>Authentication</code> concern in subclasses — it is included once in <code>ApplicationController</code>.</p>
+
+    <h3>Cycle Logic</h3>
+    <p><code>CycleCalculatorService</code> (<code>app/services/cycle_calculator_service.rb</code>) is the single source of truth for phase, season, cycle day, and calendar colour data. Nothing else calculates phases — always go through this service.</p>
+
+    <h3>Phase Content</h3>
+    <p><code>CyclePhaseContent</code> model, seeded for <code>en</code>/<code>de</code> × 4 phases. Stores superpower, mood, sport, nutrition, and care text per phase and locale.</p>
+
+    <h3>i18n</h3>
+    <p>English default, German available. All user-facing strings must go through <code>t()</code> helpers — never hardcode English text in views. Locale files: <code>config/locales/en.yml</code> and <code>config/locales/de.yml</code>.</p>
+
+    <h3>Admin</h3>
+    <p><code>admin/</code> namespace, gated by <code>User#admin?</code> boolean. Covers users, inbox (feedback/bugs/support), and launch signups.</p>
+
+    <h3>PWA</h3>
+    <p>Mobile-first, 390px base, <code>max-w-[430px]</code> layout container throughout. Turbo Native (iOS/Android) is on the roadmap but not yet implemented.</p>
+
+    <h2>Deployment</h2>
+    <table>
+      <thead><tr><th>Item</th><th>Detail</th></tr></thead>
+      <tbody>
+        <tr><td>Platform</td><td>Render — auto-deploys on push to <code>main</code></td></tr>
+        <tr><td>Database</td><td>Render PostgreSQL — pure PostgreSQL, no SQLite anywhere</td></tr>
+        <tr><td>Build command</td><td><code>bin/render-build.sh</code></td></tr>
+        <tr><td>Cable</td><td>Solid Cable (production adapter)</td></tr>
+        <tr><td>Secrets</td><td><code>RAILS_MASTER_KEY</code> set manually in Render dashboard. All others auto-generated or set via <code>render.yaml</code>.</td></tr>
+      </tbody>
+    </table>
+    <pre><code># bin/render-build.sh
+bundle install
+bundle exec rails assets:precompile
+bundle exec rails assets:clean
+bundle exec rails db:prepare</code></pre>
+
+    <h2>Codebase Structure</h2>
+    <h3>Controllers (29 total)</h3>
+    <ul>
+      <li><code>ApplicationController</code> + <code>Authentication</code> concern — base auth</li>
+      <li><code>HomeController</code> — landing, loader, countdown, welcome</li>
+      <li><code>SessionsController</code>, <code>RegistrationsController</code> — login / signup</li>
+      <li><code>OnboardingController</code> — 11-step onboarding flow</li>
+      <li><code>CalendarController</code> — monthly / weekly / appointments</li>
+      <li><code>CalendarEventsController</code> — CRUD for events</li>
+      <li><code>DailyViewController</code> — day detail view</li>
+      <li><code>TrackingController</code> — period entry</li>
+      <li><code>SymptomsController</code>, <code>SuperpowersController</code>, <code>StreaksController</code> — tracking</li>
+      <li><code>SettingsController</code> — all settings routes</li>
+      <li><code>PasswordsController</code>, <code>OmniauthController</code>, <code>InvitesController</code> — auth utilities</li>
+      <li><code>LaunchSignupsController</code>, <code>LaunchController</code> — waitlist + countdown</li>
+      <li><code>FeedbacksController</code>, <code>LegalController</code>, <code>PWAController</code></li>
+      <li><code>Admin::UsersController</code>, <code>Admin::InboxController</code>, <code>Admin::LaunchSignupsController</code></li>
+    </ul>
+
+    <h3>Models (12 total)</h3>
+    <ul>
+      <li><code>User</code> — accounts, auth, health profile</li>
+      <li><code>CycleEntry</code> — daily cycle tracking</li>
+      <li><code>CyclePhaseContent</code> — phase content (en/de)</li>
+      <li><code>CalendarEvent</code> — calendar events</li>
+      <li><code>SymptomLog</code> — daily symptom logs</li>
+      <li><code>SuperpowerLog</code> — daily superpower logs</li>
+      <li><code>Streak</code> — tracking streaks</li>
+      <li><code>Reminder</code> — user reminders</li>
+      <li><code>Feedback</code> — user feedback (feedback / bug_report / support)</li>
+      <li><code>LaunchSignup</code> — waitlist email signups</li>
+      <li><code>Current</code> — request-scoped current user</li>
+    </ul>
+
+    <h2>Database Rules</h2>
+    <ul>
+      <li><strong>PostgreSQL only</strong> — no SQLite in any environment</li>
+      <li><strong>Reversibility</strong> — every migration must be reversible (<code>change</code> or explicit <code>up/down</code>)</li>
+      <li><strong>No downtime migrations</strong> — avoid destructive operations without a two-step deployment</li>
+      <li><strong>DB-level constraints</strong> — use null constraints and defaults at the database level, not just in Rails</li>
+    </ul>
+
+    <h2>Known Issues / Technical Debt</h2>
+    <table>
+      <thead><tr><th>Severity</th><th>Issue</th><th>Target</th></tr></thead>
+      <tbody>
+        <tr><td>🔴 Critical</td><td>SMTP not configured — emails silently fail in production</td><td>M2</td></tr>
+        <tr><td>🟡 Medium</td><td>Onboarding screens have hardcoded English strings</td><td>M2</td></tr>
+        <tr><td>🟡 Medium</td><td>Burger menu text labels not using <code>t()</code></td><td>M2</td></tr>
+        <tr><td>🟡 Medium</td><td>OAuth credentials not yet set on Render</td><td>M2</td></tr>
+        <tr><td>🟢 Low</td><td>Duplicate columns on <code>users</code> table — schema cleanup pending</td><td>M2</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Development Notes</h2>
+    <ul>
+      <li><code>CLAUDE.md</code> in the project root contains full AI agent instructions — read before making any changes with an AI assistant</li>
+      <li>All user-facing strings must use <code>t()</code> i18n helpers — never hardcode English in views</li>
+      <li>Figma is the source of truth for all colours, spacing, and copy</li>
+      <li>Brand primary is <code>#933a35</code> — no substitutions; use <code>text-brand-primary</code> / <code>bg-brand-primary</code> Tailwind classes</li>
+      <li><code>CycleCalculatorService</code> is the single source of truth for all cycle calculations</li>
+      <li>App is PostgreSQL only — no SQLite in any environment</li>
+    </ul>
+  </main>
+</body>
+</html>

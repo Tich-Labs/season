@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Overview — Season Docs</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.7; color: #333; background: #FAF7F4; display: flex; min-height: 100vh; }
+    .sidebar { width: 260px; background: white; border-right: 1px solid #EDE1D5; padding: 1.5rem 0; position: fixed; height: 100vh; overflow-y: auto; }
+    .sidebar-header { padding: 0 1.5rem 1.5rem; border-bottom: 1px solid #EDE1D5; margin-bottom: 1rem; }
+    .sidebar-header h1 { font-size: 1.25rem; color: #933a35; }
+    .sidebar-header p { font-size: 0.8rem; color: #6B6B6B; margin-top: 0.25rem; }
+    .nav-section { margin-bottom: 1rem; }
+    .nav-section-title { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: #999; padding: 0 1.5rem; margin-bottom: 0.5rem; }
+    .nav-item { display: block; padding: 0.5rem 1.5rem; color: #444; text-decoration: none; font-size: 0.9rem; transition: all 0.15s; }
+    .nav-item:hover { background: #FAF7F4; color: #933a35; }
+    .nav-item.active { background: #FDF0EE; color: #933a35; font-weight: 600; border-right: 3px solid #933a35; }
+    .content { margin-left: 260px; flex: 1; padding: 2rem 3rem; max-width: 900px; }
+    .content h1 { color: #933a35; font-size: 1.8rem; margin-bottom: 0.5rem; }
+    .content h2 { color: #933a35; font-size: 1.3rem; margin-top: 2rem; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid #EDE1D5; }
+    .content h3 { color: #444; font-size: 1.05rem; margin-top: 1.25rem; margin-bottom: 0.5rem; }
+    .content p { margin-bottom: 1rem; }
+    .content ul, .content ol { margin-bottom: 1rem; padding-left: 1.5rem; }
+    .content li { margin-bottom: 0.4rem; }
+    .content code { background: #EDE1D5; padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.9em; font-family: 'SF Mono', Monaco, monospace; }
+    .content a { color: #933a35; }
+    .content table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; font-size: 0.95rem; }
+    .content th, .content td { padding: 0.65rem 0.75rem; text-align: left; border-bottom: 1px solid #EDE1D5; }
+    .content th { background: #FAF7F4; font-weight: 600; color: #933a35; }
+    .callout { background: #FDF0EE; border-left: 4px solid #933a35; padding: 1rem 1.25rem; border-radius: 0 8px 8px 0; margin-bottom: 1.5rem; }
+    .callout p { margin: 0; color: #933a35; font-size: 0.95rem; }
+    .phase-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+    .phase-card { background: white; border-radius: 10px; padding: 1rem; text-align: center; border: 1px solid #EDE1D5; }
+    .phase-card .season { font-size: 1.5rem; }
+    .phase-card h4 { color: #933a35; font-size: 0.9rem; margin: 0.4rem 0 0.25rem; }
+    .phase-card p { font-size: 0.8rem; color: #6B6B6B; margin: 0; }
+    @media (max-width: 768px) { .sidebar { display: none; } .content { margin-left: 0; padding: 1.5rem; } .phase-grid { grid-template-columns: repeat(2, 1fr); } }
+  </style>
+</head>
+<body>
+  <nav class="sidebar">
+    <div class="sidebar-header">
+      <h1>📅 Season Docs</h1>
+      <p>Internal team documentation</p>
+    </div>
+    <div class="nav-section">
+      <p class="nav-section-title">Getting Started</p>
+      <a href="overview.html" class="nav-item active">Overview</a>
+      <a href="setup.html" class="nav-item">Setup & README</a>
+      <a href="screenslist.html" class="nav-item">Screens &amp; Routes</a>
+      <a href="BACKLOG.html" class="nav-item">Backlog</a>
+    </div>
+    <div class="nav-section">
+      <p class="nav-section-title">Audit &amp; Reports</p>
+      <a href="AUDIT-2026-04-10.html" class="nav-item">Audit Report</a>
+      <a href="STYLING-AUDIT.html" class="nav-item">Styling Audit</a>
+      <a href="STAKEHOLDER-REPORT-2026-04-15.html" class="nav-item">Stakeholder Report</a>
+    </div>
+    <div class="nav-section">
+      <p class="nav-section-title">Reference</p>
+      <a href="userjourney.html" class="nav-item">User Journey</a>
+      <a href="figma_nodes.html" class="nav-item">Figma Nodes</a>
+      <a href="userdata.html" class="nav-item">User Data &amp; Privacy</a>
+    </div>
+  </nav>
+
+  <main class="content">
+    <div class="callout"><p>📖 Read this first. Everything else in these docs assumes you've read this page.</p></div>
+
+    <h1>Season — Project Overview</h1>
+
+    <h2>What is Season?</h2>
+    <p>Season is a women's menstrual cycle tracking app built for a community of users who want to understand their body through a seasonal lens rather than a clinical one. Where most cycle apps reduce a woman's experience to a countdown to her next period, Season maps the full cycle to four seasons — Winter, Spring, Summer, Autumn — and uses that framework to surface personalised insights about energy, mood, nutrition, and strength at each phase.</p>
+    <p>The app is a <strong>progressive web app (PWA)</strong> built on Ruby on Rails 8, designed to feel like a native iOS app on mobile. It runs in the browser at full fidelity and is on a roadmap to ship as a Hotwire Native wrapper on the App Store.</p>
+
+    <h2>The Core Idea</h2>
+    <p>A woman's menstrual cycle has four phases. Season maps them like this:</p>
+
+    <div class="phase-grid">
+      <div class="phase-card">
+        <div class="season">❄️</div>
+        <h4>Winter</h4>
+        <p>Menstrual · Days 1–5</p>
+        <p>Rest, reflection, inward energy</p>
+      </div>
+      <div class="phase-card">
+        <div class="season">🌱</div>
+        <h4>Spring</h4>
+        <p>Follicular · Days 6–13</p>
+        <p>Rising energy, creativity, new starts</p>
+      </div>
+      <div class="phase-card">
+        <div class="season">☀️</div>
+        <h4>Summer</h4>
+        <p>Ovulation · Days 14–17</p>
+        <p>Peak energy, sociability, confidence</p>
+      </div>
+      <div class="phase-card">
+        <div class="season">🍂</div>
+        <h4>Autumn</h4>
+        <p>Luteal · Days 18–28</p>
+        <p>Slowdown, nesting, preparation</p>
+      </div>
+    </div>
+
+    <p>Every screen in the app is phase-aware. The calendar is colour-coded by phase. Tracking prompts adapt to where the user is in her cycle. Superpower insights tell her what she's likely to excel at this week. The entire experience is built around the idea that understanding your cycle is a competitive advantage, not just a health necessity.</p>
+
+    <h2>Who is the User?</h2>
+    <p>Season was originally built for <strong>150 existing users</strong> migrating from a first version (V1) of the app. These are women who were already tracking their cycle and understand the seasonal metaphor. V2 is a ground-up rebuild with proper backend persistence, a full settings system, and a launch funnel for new user growth.</p>
+    <p>The app supports <strong>English and German</strong>. The current user base is primarily German-speaking European women, with a global expansion roadmap.</p>
+
+    <h2>What Has Been Built</h2>
+    <p>Season V2 is feature-complete for launch. Every screen across seven milestones has been designed in Figma and built in code.</p>
+    <table>
+      <thead><tr><th>Milestone</th><th>What it covers</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>M1 — Foundation</td><td>Auth, onboarding, all base screens</td><td>✅ Complete</td></tr>
+        <tr><td>M2 — Calendar &amp; Cycle Display</td><td>Monthly/weekly calendar, appointments, daily view</td><td>✅ Complete</td></tr>
+        <tr><td>M3 — Tracking &amp; Learn</td><td>Symptom logging, period entry, phase education, superpowers, streaks</td><td>✅ Complete</td></tr>
+        <tr><td>M4 — Forecasting &amp; Appointments</td><td>Cycle predictions, appointment management</td><td>✅ Complete</td></tr>
+        <tr><td>M5 — Birth Control &amp; Reminders</td><td>Contraception tracking, cycle phase reminders</td><td>✅ Complete</td></tr>
+        <tr><td>M6 — Gamification</td><td>Streak flames and reward badges</td><td>❌ Not in scope for launch</td></tr>
+        <tr><td>M7 — Feedback &amp; Admin</td><td>In-app feedback, admin panel, waitlist</td><td>✅ Complete</td></tr>
+      </tbody>
+    </table>
+
+    <h2>What is Still Needed Before Launch</h2>
+    <p>Two things are blocking launch:</p>
+    <p><strong>1. Email delivery (SMTP)</strong> — The app cannot send any emails in production. Password resets, waitlist launch notifications, and transactional confirmations will silently fail until an SMTP provider is configured. Resend is recommended (3,000 free emails/month, 30-minute setup). See <a href="BACKLOG.html">Backlog</a> for the full spec.</p>
+    <p><strong>2. OAuth credentials</strong> — Sign in with Google, Facebook, and Apple is fully built and routed. The only step remaining is adding the API keys to the Render dashboard. No code changes needed.</p>
+
+    <h2>The Technology</h2>
+    <table>
+      <thead><tr><th>Layer</th><th>Choice</th><th>Why</th></tr></thead>
+      <tbody>
+        <tr><td>Framework</td><td>Rails 8.1</td><td>Full-stack, convention-over-configuration, Hotwire native</td></tr>
+        <tr><td>Frontend</td><td>Hotwire (Turbo + Stimulus)</td><td>Single-page app feel, no separate JS framework</td></tr>
+        <tr><td>CSS</td><td>Tailwind CSS</td><td>Utility-first, design system via brand tokens</td></tr>
+        <tr><td>Database</td><td>PostgreSQL</td><td>Production-grade, no SQLite anywhere</td></tr>
+        <tr><td>Background jobs</td><td>Solid Queue</td><td>Rails-native, no Redis dependency</td></tr>
+        <tr><td>Deployment</td><td>Render</td><td>Auto-deploy from GitHub, managed PostgreSQL</td></tr>
+        <tr><td>Error tracking</td><td>Sentry</td><td>Production error visibility</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Key Design Decisions</h2>
+    <p><strong>The cycle engine lives in one place.</strong> <code>CycleCalculatorService</code> is the single source of truth for which phase a user is in, what day of her cycle it is, and what colour the calendar should show. Nothing else calculates phases.</p>
+    <p><strong>Health data never touches the logs.</strong> All symptom fields, cycle data, and health profile fields are filtered from Rails request logs. A user's weight, mood score, period start date, and contraception type will never appear in plain text in any log file. See <a href="userdata.html">User Data &amp; Privacy</a>.</p>
+    <p><strong>Figma is the source of truth for every pixel.</strong> Every screen was built from a Figma node. Brand colours, spacing, typography, and copy all come from Figma first. The Figma file is the design contract, not a mood board.</p>
+    <p><strong>The admin panel is built for the founding team.</strong> It covers exactly what the Season team needs: a user list with search, a feedback inbox (bugs / support / feedback), and waitlist tracking with CSV export.</p>
+
+    <h2>How to Read the Rest of These Docs</h2>
+    <table>
+      <thead><tr><th>Document</th><th>Read it when…</th></tr></thead>
+      <tbody>
+        <tr><td><a href="setup.html">Setup &amp; README</a></td><td>You're setting up the project locally for the first time</td></tr>
+        <tr><td><a href="userjourney.html">User Journey</a></td><td>You want to understand what a user actually experiences, screen by screen</td></tr>
+        <tr><td><a href="screenslist.html">Screens &amp; Routes</a></td><td>You're building or debugging a specific screen</td></tr>
+        <tr><td><a href="BACKLOG.html">Backlog</a></td><td>You're picking up a task or need to understand what's left</td></tr>
+        <tr><td><a href="userdata.html">User Data &amp; Privacy</a></td><td>You're touching anything that handles personal or health data</td></tr>
+        <tr><td><a href="STAKEHOLDER-REPORT-2026-04-15.html">Stakeholder Report</a></td><td>You need a non-technical summary of what's built and what's next</td></tr>
+        <tr><td><a href="AUDIT-2026-04-10.html">Audit Report</a></td><td>You want the full technical audit: accessibility, security, lint, tests</td></tr>
+      </tbody>
+    </table>
+  </main>
+</body>
+</html>

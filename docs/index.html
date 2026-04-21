@@ -6,44 +6,132 @@
   <title>Season Documentation</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 0 auto; padding: 2rem; background: #FAF7F4; }
-    h1 { color: #933a35; margin-bottom: 0.5rem; font-size: 2rem; }
-    .subtitle { color: #6B6B6B; margin-bottom: 2rem; font-size: 1.1rem; }
-    .section { margin-bottom: 1.5rem; }
-    .section-title { color: #6B6B6B; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.75rem; }
-    .nav-card { background: white; border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 0.75rem; box-shadow: 0 2px 8px rgba(0,0,0,0.06); transition: transform 0.2s, box-shadow 0.2s; }
-    .nav-card:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
-    .nav-card a { text-decoration: none; color: inherit; display: block; }
-    .nav-card h2 { color: #933a35; font-size: 1.1rem; margin-bottom: 0.25rem; }
-    .nav-card p { color: #6B6B6B; font-size: 0.9rem; }
-    .nav-card .meta { font-size: 0.8rem; color: #999; margin-top: 0.5rem; }
-    footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid #EDE1D5; text-align: center; color: #6B6B6B; font-size: 0.85rem; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; background: #FAF7F4; }
+    .hero { background: #933a35; color: white; padding: 3rem 2rem 2.5rem; text-align: center; }
+    .hero h1 { font-size: 2.25rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .hero p { font-size: 1.1rem; opacity: 0.85; margin-bottom: 1.5rem; }
+    .hero-meta { display: flex; justify-content: center; gap: 2rem; font-size: 0.85rem; opacity: 0.7; flex-wrap: wrap; }
+    .container { max-width: 860px; margin: 0 auto; padding: 2.5rem 2rem; }
+    .featured { background: white; border-radius: 14px; padding: 1.75rem 2rem; margin-bottom: 2rem; border: 2px solid #933a35; display: flex; align-items: center; gap: 1.5rem; }
+    .featured-icon { font-size: 2.5rem; flex-shrink: 0; }
+    .featured h2 { color: #933a35; font-size: 1.2rem; margin-bottom: 0.35rem; }
+    .featured p { color: #6B6B6B; font-size: 0.95rem; margin-bottom: 0.75rem; }
+    .featured a.btn { display: inline-block; background: #933a35; color: white; text-decoration: none; padding: 0.5rem 1.25rem; border-radius: 8px; font-size: 0.9rem; font-weight: 600; }
+    .section-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: #999; margin-bottom: 1rem; font-weight: 600; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2.5rem; }
+    .card { background: white; border-radius: 12px; padding: 1.25rem 1.5rem; box-shadow: 0 1px 4px rgba(0,0,0,0.06); transition: transform 0.15s, box-shadow 0.15s; border: 1px solid #EDE1D5; }
+    .card:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(0,0,0,0.09); }
+    .card a { text-decoration: none; color: inherit; display: block; }
+    .card h3 { color: #933a35; font-size: 1rem; margin-bottom: 0.3rem; }
+    .card p { color: #6B6B6B; font-size: 0.875rem; }
+    .card .tag { display: inline-block; font-size: 0.7rem; background: #EDE1D5; color: #933a35; padding: 0.15rem 0.5rem; border-radius: 4px; margin-top: 0.5rem; font-weight: 600; }
+    footer { text-align: center; padding: 2rem; color: #999; font-size: 0.85rem; border-top: 1px solid #EDE1D5; }
+    @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } .featured { flex-direction: column; text-align: center; } }
   </style>
 </head>
 <body>
-  <h1>📅 Season Documentation</h1>
-  <p class="subtitle">Internal team docs for the Season cycle tracking app</p>
+  <div class="hero">
+    <h1>📅 Season Docs</h1>
+    <p>Women's cycle tracking app — Rails 8 · Hotwire · PostgreSQL</p>
+    <div class="hero-meta">
+      <span>M1–M5 + M7 complete</span>
+      <span>Deployed on Render</span>
+      <span>EN / DE</span>
+      <span>Last updated: April 2026</span>
+    </div>
+  </div>
 
-  <div class="section">
+  <div class="container">
+
+    <div class="featured">
+      <div class="featured-icon">🗺️</div>
+      <div>
+        <h2>New here? Start with the Overview.</h2>
+        <p>What Season is, who it's for, the seasonal metaphor, what's been built, and what still needs to happen before launch. Read this before anything else.</p>
+        <a href="overview.html" class="btn">Read Overview →</a>
+      </div>
+    </div>
+
     <p class="section-title">Getting Started</p>
-    <div class="nav-card"><a href="screenslist.html"><h2>Screens & Routes</h2><p>Complete screen inventory with route mappings and styling standards</p></a></div>
-    <div class="nav-card"><a href="BACKLOG.html"><h2>Backlog</h2><p>Feature and bug backlog with priorities</p></a></div>
-  </div>
+    <div class="grid">
+      <div class="card">
+        <a href="overview.html">
+          <h3>Project Overview</h3>
+          <p>What Season is, the seasonal metaphor, milestone status, key design decisions, and how to navigate the docs.</p>
+          <span class="tag">Read first</span>
+        </a>
+      </div>
+      <div class="card">
+        <a href="setup.html">
+          <h3>Setup &amp; README</h3>
+          <p>Local installation, tech stack, environment variables, architecture summary, and codebase structure.</p>
+          <span class="tag">Dev setup</span>
+        </a>
+      </div>
+      <div class="card">
+        <a href="userjourney.html">
+          <h3>User Journey</h3>
+          <p>Narrative walkthrough of every phase of the user experience — from waitlist to daily tracking.</p>
+        </a>
+      </div>
+      <div class="card">
+        <a href="screenslist.html">
+          <h3>Screens &amp; Routes</h3>
+          <p>Complete screen inventory with route mappings, controller actions, Figma nodes, and styling standards.</p>
+          <span class="tag">Core reference</span>
+        </a>
+      </div>
+    </div>
 
-  <div class="section">
-    <p class="section-title">Audit & Reports</p>
-    <div class="nav-card"><a href="AUDIT-2026-04-10.html"><h2>Audit Report</h2><p>Full stakeholder audit with M1 completion status, accessibility fixes</p></a></div>
-    <div class="nav-card"><a href="STYLING-AUDIT.html"><h2>Styling Audit</h2><p>Visual design audit — colors, typography, spacing, components</p></a></div>
-    <div class="nav-card"><a href="STAKEHOLDER-REPORT-2026-04-15.html"><h2>Stakeholder Report</h2><p>Weekly stakeholder updates</p></a></div>
-  </div>
+    <p class="section-title">Audit &amp; Reports</p>
+    <div class="grid">
+      <div class="card">
+        <a href="AUDIT-2026-04-10.html">
+          <h3>Audit Report</h3>
+          <p>Full technical audit — accessibility (WCAG 2.1 AA), security (Brakeman), lint, test results, CLAUDE.md compliance.</p>
+        </a>
+      </div>
+      <div class="card">
+        <a href="STAKEHOLDER-REPORT-2026-04-15.html">
+          <h3>Stakeholder Report</h3>
+          <p>Non-technical milestone updates for product, founders, and investors. Covers M1 delivery and M2 targets.</p>
+        </a>
+      </div>
+      <div class="card">
+        <a href="STYLING-AUDIT.html">
+          <h3>Styling Audit</h3>
+          <p>Visual design audit — brand colours, Tailwind config, component patterns, and what's been converted.</p>
+        </a>
+      </div>
+      <div class="card">
+        <a href="BACKLOG.html">
+          <h3>Backlog</h3>
+          <p>Prioritised feature and infrastructure backlog with implementation specs, effort estimates, and blocked items.</p>
+        </a>
+      </div>
+    </div>
 
-  <div class="section">
     <p class="section-title">Reference</p>
-    <div class="nav-card"><a href="userjourney.html"><h2>User Journey</h2><p>User flow documentation</p></a></div>
-    <div class="nav-card"><a href="figma_nodes.html"><h2>Figma Nodes</h2><p>All Figma design node references by milestone</p></a></div>
-    <div class="nav-card"><a href="userdata.html"><h2>User Data & Privacy</h2><p>Data classification, architecture, and GDPR compliance</p></a></div>
+    <div class="grid">
+      <div class="card">
+        <a href="userdata.html">
+          <h3>User Data &amp; Privacy</h3>
+          <p>Data classification, privacy architecture, GDPR Article 9 compliance, and engineer rules for handling health data.</p>
+          <span class="tag">Read before touching data</span>
+        </a>
+      </div>
+      <div class="card">
+        <a href="figma_nodes.html">
+          <h3>Figma Nodes</h3>
+          <p>All Figma design node references by milestone — the source of truth for every screen's design.</p>
+        </a>
+      </div>
+    </div>
+
   </div>
 
-  <footer><p>Built with ❤️ by the Season team</p></footer>
+  <footer>
+    <p>Season V2 · Built by the Season team · Deployed on Render</p>
+  </footer>
 </body>
 </html>
