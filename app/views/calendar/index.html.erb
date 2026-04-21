@@ -127,15 +127,6 @@
   </div>
 </div>
 
-<%# ── FAB: add event ── %>
-<div style="position:fixed; bottom:80px; left:50%; transform:translateX(-50%); z-index:40;">
-  <%= link_to new_calendar_event_path,
-        aria: { label: "Add event" },
-        style: "width:56px; height:56px; border-radius:28px; background:#933a35; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(147,58,53,0.3); text-decoration:none;" do %>
-    <span style="color:#ffffff; font-size:28px; font-weight:300; line-height:1;">+</span>
-  <% end %>
-</div>
-
 <%# Season Info Modal %>
 <%
   phase = @current_phase
