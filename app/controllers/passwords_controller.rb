@@ -17,7 +17,7 @@ class PasswordsController < ApplicationController
     @user = User.find_by(email: params[:email])
     if @user.present?
       @user.generate_token_for(:password_reset)
-      redirect_to password_done_path
+      redirect_to done_password_path
     else
       redirect_to password_error_wrong_email_path
     end

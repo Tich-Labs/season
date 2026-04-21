@@ -30,6 +30,7 @@ Rails.application.routes.draw do
   get "password/edit", to: redirect("/users/password/edit")
 
   get "password/done", to: "passwords#done", as: :done_password
+  get "password/done", to: "passwords#done", as: :password_done
   get "password/error/already-reset", to: "passwords#error_already_reset", as: :password_error_already_reset
   get "password/error/inbox-full", to: "passwords#error_inbox_full", as: :password_error_inbox_full
   get "password/error/wrong-email", to: "passwords#error_wrong_email", as: :password_error_wrong_email
