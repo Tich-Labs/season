@@ -4,7 +4,7 @@
 
 ## Figma Nodes Source of Truth
 
-Design reference: `designs/figma_nodes.md`
+Design reference: `docs/figma_nodes.md`
 
 ### Milestones Overview
 | Milestone | Screens | Figma Nodes Section | Status |

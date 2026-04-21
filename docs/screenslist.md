@@ -1,6 +1,6 @@
 # Screens & Routes Mapping Table
 
-This table maps coded screens to Figma design nodes. Use `designs/figma_nodes.md` as the source of truth.
+This table maps coded screens to Figma design nodes. Use `docs/figma_nodes.md` as the source of truth.
 
 ## Milestone Reference
 | Milestone | Figma Screens | Status |
@@ -121,6 +121,6 @@ Figma audit (2026-04-17) found 64 nodes reduce to ~8 unique screens. The remaini
 **Status**: Not built (not in scope)
 
 ## How to use this table
-1. Cross-reference routes with Figma nodes in `designs/figma_nodes.md`
+1. Cross-reference routes with Figma nodes in `docs/figma_nodes.md`
 2. For visual comparison, compare actual app screens against Figma designs
 3. Update status column as screens are verified

@@ -4,7 +4,53 @@ Issues tracked here. Push to GitHub with the commands at the bottom of this file
 
 ---
 
-## 🔴 Critical
+## Launch Priorities (V2 Migration)
+
+### 🔴 MUST HAVE (Critical for Launch)
+Without these, the 150 users cannot migrate or use the app.
+
+| # | Feature | Status |
+|---|---------|--------|
+| 1 | Personalized Invite Flow: A /invite/:token landing page to capture those 150 users, pre-fill their names, and allow them to set a password. | ✅ Built |
+| 2 | The Cycle Engine: A robust CycleCalculatorService that takes "Last Period Date" and "Cycle Length" to determine the 4 phases (Winter, Spring, Summer, Autumn). | ✅ Built |
+| 3 | M3 Tracking & Server-Side Storage: Users must be able to log symptoms and period dates. Unlike V1's local storage, this must be encrypted on our PostgreSQL backend. | ✅ Built |
+| 4 | M7 Onboarding: A smart, Hotwire-driven multi-step form that collects cycle history and language preference (EN/DE). | ✅ Built |
+| 5 | M5 Reminders (ActionMailer): Core background jobs to send email notifications for contraception and period starts. | ⚠️ SMTP pending |
+| 6 | i18n Infrastructure: English as the default, with German translations for all UI elements—no hardcoded strings. | ✅ Built |
+| 7 | Simple Admin Table: A single /admin view with Ransack to search, filter, and track which of the 150 users have successfully migrated. | ✅ Built |
+
+### 🟡 SHOULD HAVE (High Priority)
+Important for user retention, but the app "works" without them.
+
+| # | Feature | Status |
+|---|---------|--------|
+| 1 | M4 Personalized Tips: Displaying the "Superpower," "Nutrition," and "Sport" advice based on the current phase. | ✅ Built |
+| 2 | Social Login (OmniAuth): Sign-in with Apple, Google, and Facebook to reduce friction. | 🔴 Credentials needed |
+| 3 | Hotwire Native Wrapper: Deploying the app as a "native" shell on iOS/Android so it's accessible via the App Store. | ⏳ Planned |
+
+### 🟢 COULD HAVE (Nice to Have)
+These are your "Intentional Tech Debt" candidates. Cut these first if launch starts looking shaky.
+
+| # | Feature | Status |
+|---|---------|--------|
+| 1 | M6 Engagement (Streaks/Flames): The gamification system (Flammen) and reward badges. | ❌ Not in scope |
+| 2 | M8 Basic Paywall: Stripe integration for Premium tiers. Launch as "100% Free" for the first month. | ⏳ Planned |
+| 3 | Calendar Sync: Bi-directional sync with Google/Outlook/Apple. Manual entry is sufficient for MVP. | ⏳ Planned |
+
+### ⚪ WON'T HAVE (Post-Launch)
+Deferred to Phase 2 (Global Expansion).
+
+| Feature | Notes |
+|---------|-------|
+| PWA Layer | Optimization for low-bandwidth/offline African markets |
+| Hetzner/Kamal Migration | Staying on Render.com for the launch |
+| Push Notifications | Rely on Email Reminders for MVP |
+
+---
+
+## Infrastructure Backlog
+
+### 🔴 Critical
 
 ### [SMTP] Configure email delivery provider in production
 **Labels:** `infrastructure`, `critical`
@@ -34,11 +80,11 @@ Then add credentials via `rails credentials:edit`.
 
 ---
 
-### [JOB] Create NotifyLaunchSignupsJob — scheduled for April 14th
+### [JOB] Create NotifyLaunchSignupsJob
 **Labels:** `feature`, `critical`
 
 There is no job to send the launch notification email.
-This is the entire point of the waitlist — users signed up expecting to be notified on April 14th.
+This is the entire point of the waitlist — users signed up expecting to be notified.
 
 **Blocked by:** SMTP provider decision + `LaunchSignupMailer` (see below).
 
@@ -46,7 +92,7 @@ Implementation:
 - `rails generate job NotifyLaunchSignups`
 - Iterates all `LaunchSignup` records
 - Sends `LaunchSignupMailer.launch_notification(signup).deliver_later`
-- Schedule via Solid Queue recurring or one-off: `NotifyLaunchSignupsJob.set(wait_until: Date.new(2026, 4, 14).beginning_of_day).perform_later`
+- Schedule via Solid Queue when ready
 
 ---
 
@@ -58,8 +104,8 @@ Implementation:
 No mailer exists. Users get a UI confirmation but nothing in their inbox.
 
 **Templates needed:**
-1. `confirmation` — "You're on the list! We'll notify you on April 14th."
-2. `launch_notification` — "Season is live! Download here → …"
+ 1. `confirmation` — "You're on the list! We'll notify you when we launch."
+ 2. `launch_notification` — "Season is live! Download here → …"
 
 **Blocked by:** SMTP provider decision.
 
@@ -130,14 +176,14 @@ gh issue create \
   --label "infrastructure,critical"
 
 gh issue create \
-  --title "[JOB] Create NotifyLaunchSignupsJob — scheduled for April 14th" \
-  --body "No job exists to send launch notifications. This is the entire point of the waitlist. Blocked by SMTP + LaunchSignupMailer. Needs to be scheduled before April 14th." \
+  --title "[JOB] Create NotifyLaunchSignupsJob" \
+  --body "No job exists to send launch notifications. This is the entire point of the waitlist. Blocked by SMTP + LaunchSignupMailer. Needs to be scheduled when ready." \
   --label "feature,critical"
 
 # High
 gh issue create \
   --title "[MAILER] Generate LaunchSignupMailer with confirmation + launch-day templates" \
-  --body "No mailer exists. Users get UI confirmation but nothing in their inbox. Two templates needed: confirmation on signup, and launch notification on April 14th. Blocked by SMTP provider decision." \
+  --body "No mailer exists. Users get UI confirmation but nothing in their inbox. Two templates needed: confirmation on signup, and launch notification. Blocked by SMTP provider decision." \
   --label "feature,high"
 
 # Medium
