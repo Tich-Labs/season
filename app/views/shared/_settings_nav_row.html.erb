@@ -15,6 +15,7 @@
 <a href="<%= href %>" class="flex  align-items:center; gap:16px; padding:16px 0; text-decoration:none;">
   <% if local_assigns[:icon_svg] %>
     <span style="width:24px; height:24px; flex-shrink:0; color:<%= row_colour %>; display:flex; align-items:center; justify-content:center;">
+      <%# erblint:disable:ErbSafety %>
       <%= icon_svg.html_safe %>
     </span>
   <% end %>

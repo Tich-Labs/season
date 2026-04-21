@@ -19,9 +19,8 @@
         onchange: onchange %>
 </div>
 <% if subtitle.present? %>
+  <%# erblint:disable ErbSafety %>
   <div class="flex  align-items:center; justify-content:space-between; margin-bottom:12px;">
     <%= subtitle.html_safe %>
   </div>
-<% else %>
-  <div mb-
 <% end %>
