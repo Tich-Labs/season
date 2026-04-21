@@ -248,7 +248,7 @@ Stimulus controller extended with `saveNumber` handler for the new fields.
 
 #### Launch Countdown
 
-Counter target updated to **19 April 2026**. All hardcoded date references in the countdown view corrected.
+Counter target updated to **28 April 2026**. All hardcoded date references in the countdown view corrected.
 
 #### Milestone Status as of Today
 
