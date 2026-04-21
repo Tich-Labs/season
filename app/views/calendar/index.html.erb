@@ -1,14 +1,22 @@
-<% content_for(:page_title) { @date.strftime("%B %Y") } %>
+<% content_for(:page_title) { "" } %>
+<% content_for(:header_left) do %>
+  <button class="flex items-center justify-center p-2">
+    <div class="w-6 h-0.5 bg-[#933a35] mb-1.5"></div>
+    <div class="w-6 h-0.5 bg-[#933a35] mb-1.5"></div>
+    <div class="w-6 h-0.5 bg-[#933a35]"></div>
+  </button>
+<% end %>
 <% content_for(:header_right) do %>
-  <div class="flex items-center gap-1">
-    <%= link_to user_root_path(date: @prev_month.to_s, mode: @mode),
-          class: "w-10 h-10 flex items-center justify-center text-[#933a35]" do %>
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6" /></svg>
-    <% end %>
-    <%= link_to user_root_path(date: @next_month.to_s, mode: @mode),
-          class: "w-10 h-10 flex items-center justify-center text-[#933a35]" do %>
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6" /></svg>
-    <% end %>
+  <div class="relative flex items-center gap-3">
+    <div class="relative w-6 h-6 overflow-hidden">
+      <div class="absolute left-[3px] top-[6px] w-4 h-3 bg-orange-800"></div>
+    </div>
+
+    <div class="relative w-5 h-5 outline outline-[1.44px] outline-offset-[-0.72px] outline-orange-800">
+      <div class="absolute left-[2px] top-[2px] w-[2.91px] h-[2.91px] bg-orange-800 rounded-full"></div>
+      <div class="absolute left-[1px] top-[5px] w-2.5 h-0 outline outline-[1.44px] outline-offset-[-0.72px] outline-orange-800"></div>
+      <div class="absolute left-[1px] top-[2px] w-[2.91px] h-[2.91px] outline outline-[1.44px] outline-offset-[-0.72px] outline-orange-800"></div>
+    </div>
   </div>
 <% end %>
 
