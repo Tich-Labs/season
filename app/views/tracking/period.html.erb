@@ -50,54 +50,53 @@
       <% end %>
     </div>
 
-    <%# ── Calendar grid + form ── %>
-    <%= form_with url: "/tracking/period", method: :patch, local: true, data: { turbo: false } do |f| %>
-      <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
-      <div style="background:#FFFFFF; padding:4px 8px 16px;">
-        <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:2px 0;">
-          <% grid_days.each do |day| %>
-            <% if day.nil? %>
-              <div></div>
+    <%# ── Calendar grid (each day is a link) ── %>
+    <div style="background:#FFFFFF; padding:4px 8px 16px;">
+      <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:2px 0;">
+        <% grid_days.each do |day| %>
+          <% if day.nil? %>
+            <div></div>
+          <% else %>
+            <%
+              is_selected = day == @selected
+              is_today    = day == today
+              is_future   = day > today
+              cell_bg     = is_selected ? @phase_col : (is_today ? "#EDE1D5" : "transparent")
+              text_col    = is_selected ? "#FFFFFF"  : (is_future ? "#AFAFAF" : "#3d2b28")
+              fw          = (is_selected || is_today) ? "700" : "400"
+            %>
+            <% if is_future %>
+              <div style="display:flex; align-items:center; justify-content:center; height:40px; width:40px; margin:auto; border-radius:50%; background:<%= cell_bg %>; color:<%= text_col %>; font-size:14px; font-weight:<%= fw %>;">
+                <%= day.day %>
+              </div>
             <% else %>
-              <%
-                is_selected = day == @selected
-                is_today    = day == today
-                is_future   = day > today
-                cell_bg     = is_selected ? @phase_col : (is_today ? "#EDE1D5" : "transparent")
-                text_col    = is_selected ? "#FFFFFF"  : (is_future ? "#AFAFAF" : "#3d2b28")
-                fw          = (is_selected || is_today) ? "700" : "400"
-              %>
-              <% if is_future %>
-                <div style="display:flex; align-items:center; justify-content:center; height:40px; width:40px; margin:auto; border-radius:50%; background:<%= cell_bg %>; color:<%= text_col %>; font-size:14px; font-weight:<%= fw %>;">
-                  <%= day.day %>
-                </div>
-              <% else %>
-                <label style="display:flex; align-items:center; justify-content:center; height:40px; width:40px; margin:auto; border-radius:50%; cursor:pointer; background:<%= cell_bg %>; color:<%= text_col %>; font-size:14px; font-weight:<%= fw %>;">
-                  <%= f.radio_button :date, day.to_s, checked: is_selected, style: "display:none;" %>
-                  <%= day.day %>
-                </label>
-              <% end %>
+              <a href="/tracking/period?selected_date=<%= day %>" data-turbo="false"
+                 style="display:flex; align-items:center; justify-content:center; height:40px; width:40px; margin:auto; border-radius:50%; background:<%= cell_bg %>; color:<%= text_col %>; font-size:14px; font-weight:<%= fw %>; text-decoration:none;">
+                <%= day.day %>
+              </a>
             <% end %>
           <% end %>
-        </div>
+        <% end %>
       </div>
+    </div>
 
-      <%# ── Selected date summary ── %>
-      <div style="margin:16px; background:#FFFFFF; border-radius:16px; padding:16px 20px;">
-        <p style="font-size:13px; font-weight:600; color:#3d2b28; margin:0 0 4px;">Period start date</p>
-        <p style="font-size:16px; font-weight:700; color:<%= @phase_col %>; margin:0 0 6px;">
-          <%= @selected.strftime("%A, %-d %B %Y") %>
-        </p>
-        <p style="font-size:12px; color:#6B6B6B; margin:0;">Tap any past date to select it, then save.</p>
-      </div>
+    <%# ── Selected date summary + Save button ── %>
+    <div style="margin:16px; background:#FFFFFF; border-radius:16px; padding:16px 20px;">
+      <p style="font-size:13px; font-weight:600; color:#3d2b28; margin:0 0 4px;">Period start date</p>
+      <p style="font-size:16px; font-weight:700; color:<%= @phase_col %>; margin:0 0 6px;">
+        <%= @selected.strftime("%A, %-d %B %Y") %>
+      </p>
+      <p style="font-size:12px; color:#6B6B6B; margin:0;">Tap any past date to select it, then save.</p>
+    </div>
 
-      <% btn_text = editing ? "Update period start" : "Save period start" %>
-<% btn_style = "width:100%; background:#{@phase_col}; color:#FFFFFF; padding:16px; border-radius:12px; border:none; font-size:16px; font-weight:600; font-family:'Montserrat',sans-serif; cursor:pointer;" %>
-      <div style="padding:0 16px;">
-        <%= f.submit btn_text, style: btn_style %>
-      </div>
-
-    <% end %>
+    <% btn_text = editing ? "Update period start" : "Save period start" %>
+    <% btn_style = "width:100%; background:#{@phase_col}; color:#FFFFFF; padding:16px; border-radius:12px; border:none; font-size:16px; font-weight:600; font-family:'Montserrat',sans-serif; cursor:pointer;" %>
+    <div style="padding:0 16px;">
+      <a href="/tracking/period?save=1&date=<%= @selected %>" data-turbo="false"
+         style="display:block; text-align:center; <%= btn_style %> text-decoration:none;">
+        <%= btn_text %>
+      </a>
+    </div>
 
   </div>
 </div>

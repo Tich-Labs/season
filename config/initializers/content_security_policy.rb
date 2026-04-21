@@ -13,7 +13,7 @@ Rails.application.configure do
     # Allow importmap-rails inline scripts and Hotwire
     policy.script_src :self
     policy.style_src :self, :unsafe_inline, "https://fonts.googleapis.com"  # Tailwind inline styles + Google Fonts
-    policy.connect_src :self, "https://sentry.io", "https://*.sentry.io"
+    policy.connect_src :self, "https://sentry.io", "https://*.sentry.io", "https://fonts.googleapis.com"
     policy.frame_ancestors :none
   end
 
