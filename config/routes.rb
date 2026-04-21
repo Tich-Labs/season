@@ -59,6 +59,7 @@ Rails.application.routes.draw do
       patch :period, action: :period_update
     end
   end
+  get "tracking/period", to: "tracking#period", as: :period_tracking_path
   get "daily/:date", to: "daily_view#show", as: :daily_view
   resources :streaks, only: [:index]
   get "symptoms/discharge", to: "symptoms#discharge", as: :symptom_discharge
