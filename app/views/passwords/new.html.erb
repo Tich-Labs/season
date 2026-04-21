@@ -1,42 +1,36 @@
-<div style="background:#ffffff; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:60px 32px 48px; max-width:430px; margin:0 auto;">
-
-  <%# Back %>
-  <div style="width:100%;">
-    <a href="<%= new_session_path %>" style="color:#933a35; font-size:16px; font-weight:400; text-decoration:none;">&lt; back</a>
+<div class="bg-white min-h-screen flex flex-col items-center px-4 py-16 max-w-app mx-auto">
+  <div class="w-full">
+    <%= link_to "&lt; back".html_safe, new_session_path, class: "text-brand-primary text-base font-normal no-underline" %>
   </div>
 
-  <%# Title %>
-  <div style="width:100%;">
-    <h1 style="color:#933a35; font-size:36px; font-weight:700; text-transform:uppercase; letter-spacing:3.24px; text-align:center;">
-      FORGOT<br>PASSWORD
+  <div class="w-full mt-10">
+    <h1 class="text-brand-primary text-[36px] font-black uppercase tracking-[0.18em] text-center leading-none">
+      Change<br>password
     </h1>
   </div>
 
-  <%# Form %>
-  <div style="width:100%; margin-top:32px;">
+  <div class="w-full mt-10">
     <%= form_with url: user_password_path, method: :post do |f| %>
-      <div style="margin-top:29px;">
+      <div class="mt-8">
         <label for="email" class="sr-only">Email</label>
         <%= f.email_field :email,
             id: "email",
             name: "email",
             autofocus: true,
             placeholder: "E-mail...",
-            style: "width:100%; background:#EDE1D5; border-radius:8px; padding:14px 21px; height:52px; border:none; font-size:22px; font-weight:500; color:#933a35; outline:none; box-sizing:border-box;",
-            "aria-label": "Email address" %>
+            class: "w-full bg-brand-field rounded-2xl px-5 py-4 h-14 text-[22px] font-semibold text-brand-primary placeholder:text-brand-primary placeholder:opacity-50 outline-none",
+            aria: { label: "Email address" } %>
       </div>
 
-      <div style="margin-top:16px;">
+      <div class="mt-4">
         <%= f.submit "Forgot password",
-            style: "width:322px; height:52px; background:#933a35; color:#ffffff; font-size:22px; font-weight:500; letter-spacing:0.66px; border-radius:8px; border:none; cursor:pointer;",
-            "data-disable-with": "Sending..." %>
+            class: "w-full h-14 bg-brand-primary text-white text-[22px] font-semibold tracking-[0.03em] rounded-2xl",
+            data: { disable_with: "Sending..." } %>
       </div>
     <% end %>
   </div>
 
-  <%# Sign up link %>
-  <div style="width:100%; text-align:center; margin-top:22px;">
-    <a href="<%= new_registration_path %>" style="color:#933a35; font-size:16px; font-weight:400; text-decoration:none;">I am new... Sign up!</a>
+  <div class="w-full text-center mt-6">
+    <%= link_to "I am new... Sign up!", new_registration_path, class: "text-brand-primary text-base font-normal no-underline" %>
   </div>
-
 </div>

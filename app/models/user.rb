@@ -4,6 +4,8 @@ class User < ApplicationRecord
     :confirmable,
     :omniauthable, omniauth_providers: [:google_oauth2, :facebook, :apple]
 
+  generates_token_for :password_reset, expires_in: 1.hour
+
   validates :name, presence: true, if: :onboarding_completed?
 
   has_one_attached :avatar
