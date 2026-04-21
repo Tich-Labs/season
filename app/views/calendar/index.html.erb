@@ -18,11 +18,11 @@
     <p style="color:#933a35; font-size:14px; margin:0 0 8px;">
       We haven't received your period data yet. Add your last period start date to see your cycle phases.
     </p>
-    <%= link_to period_tracking_path,
-          class: "inline-block bg-[#933a35] text-white rounded-full px-4 py-2 text-sm font-semibold",
-          style: "text-decoration:none;" do %>
+    <a href="/tracking/period"
+       class="inline-block bg-[#933a35] text-white rounded-full px-4 py-2 text-sm font-semibold"
+       style="text-decoration:none;">
       Log period start
-    <% end %>
+    </a>
   </div>
 <% end %>
 
