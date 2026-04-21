@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Screens & Routes - Season Docs</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.7; color: #333; background: #FAF7F4; display: flex; min-height: 100vh; }
+    .sidebar { width: 260px; background: white; border-right: 1px solid #EDE1D5; padding: 1.5rem 0; position: fixed; height: 100vh; overflow-y: auto; }
+    .sidebar-header { padding: 0 1.5rem 1.5rem; border-bottom: 1px solid #EDE1D5; margin-bottom: 1rem; }
+    .sidebar-header h1 { font-size: 1.25rem; color: #933a35; }
+    .sidebar-header p { font-size: 0.8rem; color: #6B6B6B; margin-top: 0.25rem; }
+    .nav-section { margin-bottom: 1rem; }
+    .nav-section-title { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: #999; padding: 0 1.5rem; margin-bottom: 0.5rem; }
+    .nav-item { display: block; padding: 0.5rem 1.5rem; color: #444; text-decoration: none; font-size: 0.9rem; transition: all 0.15s; }
+    .nav-item:hover { background: #FAF7F4; color: #933a35; }
+    .nav-item.active { background: #FDF0EE; color: #933a35; font-weight: 600; border-right: 3px solid #933a35; }
+    .content { margin-left: 260px; flex: 1; padding: 2rem 3rem; max-width: 900px; }
+    .content h1 { color: #933a35; font-size: 1.8rem; margin-bottom: 0.5rem; }
+    .content h2 { color: #933a35; font-size: 1.4rem; margin-top: 2rem; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid #EDE1D5; }
+    .content h3 { color: #444; font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.5rem; }
+    .content p { margin-bottom: 1rem; }
+    .content ul, .content ol { margin-bottom: 1rem; padding-left: 1.5rem; }
+    .content li { margin-bottom: 0.25rem; }
+    .content code { background: #EDE1D5; padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.9em; }
+    .content table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
+    .content th, .content td { padding: 0.5rem; text-align: left; border-bottom: 1px solid #EDE1D5; font-size: 0.85rem; }
+    .content th { background: #FAF7F4; font-weight: 600; color: #933a35; }
+    .content a { color: #933a35; }
+    @media (max-width: 768px) { .sidebar { display: none; } .content { margin-left: 0; padding: 1.5rem; } }
+  </style>
+</head>
+<body>
+  <nav class="sidebar">
+    <div class="sidebar-header">
+      <h1>📅 Season Docs</h1>
+      <p>Internal team documentation</p>
+    </div>
+    <div class="nav-section">
+      <p class="nav-section-title">Getting Started</p>
+      <a href="screenslist.html" class="nav-item active">Screens & Routes</a>
+      <a href="BACKLOG.html" class="nav-item">Backlog</a>
+    </div>
+    <div class="nav-section">
+      <p class="nav-section-title">Audit & Reports</p>
+      <a href="AUDIT-2026-04-10.html" class="nav-item">Audit Report</a>
+      <a href="STYLING-AUDIT.html" class="nav-item">Styling Audit</a>
+      <a href="STAKEHOLDER-REPORT-2026-04-15.html" class="nav-item">Stakeholder Report</a>
+    </div>
+    <div class="nav-section">
+      <p class="nav-section-title">Reference</p>
+      <a href="userjourney.html" class="nav-item">User Journey</a>
+      <a href="figma_nodes.html" class="nav-item">Figma Nodes</a>
+      <a href="userdata.html" class="nav-item">User Data & Privacy</a>
+    </div>
+  </nav>
+  <main class="content">
+    <h1>Screens & Routes Mapping Table</h1>
+    <p>This table maps coded screens to Figma design nodes. Use <code>docs/figma_nodes.md</code> as the source of truth.</p>
+
+    <h2>Milestone Reference</h2>
+    <table>
+      <tr><th>Milestone</th><th>Figma Screens</th><th>Status</th></tr>
+      <tr><td>M1</td><td>43</td><td>✅ Built</td></tr>
+      <tr><td>M2</td><td>32</td><td>✅ Built</td></tr>
+      <tr><td>M3</td><td>64</td><td>✅ Built</td></tr>
+      <tr><td>M4</td><td>60</td><td>✅ Built</td></tr>
+      <tr><td>M5</td><td>60</td><td>✅ Built</td></tr>
+      <tr><td>M6</td><td>24</td><td>❌ Not built</td></tr>
+      <tr><td>M7</td><td>17</td><td>✅ Built</td></tr>
+    </table>
+
+    <h2>Styling Standard</h2>
+    <p><strong>Approach</strong>: Tailwind CSS with brand utility classes — no inline <code>style=""</code> attributes.</p>
+
+    <h3>Brand Colors</h3>
+    <ul>
+      <li>Primary: #933a35</li>
+      <li>Background: #FAF7F4</li>
+      <li>Field background: #EDE1D5</li>
+      <li>Accent muted: #D18D83</li>
+    </ul>
+
+    <h2>Route Mapping</h2>
+    <table>
+      <tr><th>Route</th><th>Controller#Action</th><th>Status</th></tr>
+      <tr><td>/app</td><td>home#app</td><td>✅</td></tr>
+      <tr><td>/loader</td><td>home#loader</td><td>✅</td></tr>
+      <tr><td>/welcome</td><td>home#welcome</td><td>✅</td></tr>
+      <tr><td>/registration/new</td><td>registrations#new</td><td>✅</td></tr>
+      <tr><td>/session/new</td><td>sessions#new</td><td>✅</td></tr>
+      <tr><td>/calendar</td><td>calendar#index</td><td>✅</td></tr>
+      <tr><td>/calendar/weekly</td><td>calendar#weekly</td><td>✅</td></tr>
+      <tr><td>/calendar/appointments</td><td>calendar#appointments</td><td>✅</td></tr>
+      <tr><td>/daily/:date</td><td>daily_view#show</td><td>✅</td></tr>
+      <tr><td>/tracking</td><td>tracking#index</td><td>✅</td></tr>
+      <tr><td>/symptoms</td><td>symptoms#index</td><td>✅</td></tr>
+      <tr><td>/superpowers</td><td>superpowers#index</td><td>✅</td></tr>
+      <tr><td>/streaks</td><td>streaks#index</td><td>✅</td></tr>
+      <tr><td>/settings/edit</td><td>settings#edit</td><td>✅</td></tr>
+      <tr><td>/admin</td><td>admin/users#index</td><td>✅</td></tr>
+      <tr><td>/admin/inbox</td><td>admin/inbox#overview</td><td>✅</td></tr>
+      <tr><td>/admin/launch_signups</td><td>admin/launch_signups#index</td><td>✅</td></tr>
+    </table>
+
+    <h2>Known Gaps</h2>
+    <p><strong>M6: Gamification & Scoring Flames</strong> — Not built (not in scope)</p>
+  </main>
+</body>
+</html>

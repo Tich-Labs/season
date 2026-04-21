@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Data & Privacy - Season Docs</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.7; color: #333; background: #FAF7F4; display: flex; min-height: 100vh; }
+    .sidebar { width: 260px; background: white; border-right: 1px solid #EDE1D5; padding: 1.5rem 0; position: fixed; height: 100vh; overflow-y: auto; }
+    .sidebar-header { padding: 0 1.5rem 1.5rem; border-bottom: 1px solid #EDE1D5; margin-bottom: 1rem; }
+    .sidebar-header h1 { font-size: 1.25rem; color: #933a35; }
+    .sidebar-header p { font-size: 0.8rem; color: #6B6B6B; margin-top: 0.25rem; }
+    .nav-section { margin-bottom: 1rem; }
+    .nav-section-title { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: #999; padding: 0 1.5rem; margin-bottom: 0.5rem; }
+    .nav-item { display: block; padding: 0.5rem 1.5rem; color: #444; text-decoration: none; font-size: 0.9rem; transition: all 0.15s; }
+    .nav-item:hover { background: #FAF7F4; color: #933a35; }
+    .nav-item.active { background: #FDF0EE; color: #933a35; font-weight: 600; border-right: 3px solid #933a35; }
+    .content { margin-left: 260px; flex: 1; padding: 2rem 3rem; max-width: 900px; }
+    .content h1 { color: #933a35; font-size: 1.8rem; margin-bottom: 0.5rem; }
+    .content h2 { color: #933a35; font-size: 1.3rem; margin-top: 1.5rem; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid #EDE1D5; }
+    .content h3 { color: #444; font-size: 1.05rem; margin-top: 1.25rem; margin-bottom: 0.5rem; }
+    .content p { margin-bottom: 1rem; }
+    .content ul { margin-bottom: 1rem; padding-left: 1.5rem; }
+    .content li { margin-bottom: 0.25rem; }
+    .content code { background: #EDE1D5; padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.9em; }
+    .content table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
+    .content th, .content td { padding: 0.4rem; text-align: left; border-bottom: 1px solid #EDE1D5; font-size: 0.8rem; }
+    .content th { background: #FAF7F4; font-weight: 600; color: #933a35; }
+    .tier-1 { background: #FEE2E2; }
+    .tier-2 { background: #FEF3C7; }
+    .tier-3 { background: #DCFCE7; }
+    .tier-4 { background: #E0E7FF; }
+    .warning { background: #FEF3C7; padding: 0.75rem; border-radius: 6px; border-left: 4px solid #F59E0B; margin: 1rem 0; }
+    @media (max-width: 768px) { .sidebar { display: none; } .content { margin-left: 0; padding: 1.5rem; } }
+  </style>
+</head>
+<body>
+  <nav class="sidebar">
+    <div class="sidebar-header">
+      <h1>📅 Season Docs</h1>
+      <p>Internal team documentation</p>
+    </div>
+    <div class="nav-section">
+      <p class="nav-section-title">Getting Started</p>
+      <a href="screenslist.html" class="nav-item">Screens & Routes</a>
+      <a href="BACKLOG.html" class="nav-item">Backlog</a>
+    </div>
+    <div class="nav-section">
+      <p class="nav-section-title">Audit & Reports</p>
+      <a href="AUDIT-2026-04-10.html" class="nav-item">Audit Report</a>
+      <a href="STYLING-AUDIT.html" class="nav-item">Styling Audit</a>
+      <a href="STAKEHOLDER-REPORT-2026-04-15.html" class="nav-item">Stakeholder Report</a>
+    </div>
+    <div class="nav-section">
+      <p class="nav-section-title">Reference</p>
+      <a href="userjourney.html" class="nav-item">User Journey</a>
+      <a href="figma_nodes.html" class="nav-item">Figma Nodes</a>
+      <a href="userdata.html" class="nav-item active">User Data & Privacy</a>
+    </div>
+  </nav>
+  <main class="content">
+    <h1>User Data & Privacy</h1>
+    <p><strong>Last updated:</strong> 21 April 2026</p>
+
+    <div class="warning">
+      <strong>Principle:</strong> Users are identified by name/email for account access only. 
+      All health data is stored and queried by <code>user_id</code> alone — never by name or email.
+    </div>
+
+    <h2>Data Classification</h2>
+    <table>
+      <tr><th>Tier</th><th>Label</th><th>Definition</th></tr>
+      <tr class="tier-1"><td>1</td><td>Identity</td><td>Directly identifies user (email, name)</td></tr>
+      <tr class="tier-2"><td>2</td><td>Health</td><td>GDPR Article 9 — highest protection</td></tr>
+      <tr class="tier-3"><td>3</td><td>Behavioural</td><td>Usage patterns, content read</td></tr>
+      <tr class="tier-4"><td>4</td><td>System</td><td>Infrastructure/auth only</td></tr>
+    </table>
+
+    <h2>Data Inventory</h2>
+    <h3>Users Table (Identity + Auth + Health)</h3>
+    <ul>
+      <li><strong>Tier 1:</strong> email, name</li>
+      <li><strong>Tier 2:</strong> birthday, last_period_start, cycle_length, period_length, contraception_type</li>
+      <li><strong>Tier 4:</strong> encrypted_password, admin, OAuth UIDs</li>
+    </ul>
+
+    <h3>Symptom Logs (Health)</h3>
+    <ul>
+      <li>mood, energy, sleep, physical, mental, pain, cravings, discharge</li>
+      <li>temperature, weight</li>
+      <li>notes (free text — can contain PII)</li>
+      <li>sexual_intercourse</li>
+    </ul>
+
+    <h3>Cycle Entries (Health)</h3>
+    <ul>
+      <li>phase (menstrual/follicular/ovulation/luteal)</li>
+      <li>season_name (winter/spring/summer/autumn)</li>
+      <li>cycle_day, period_start, period_end</li>
+    </ul>
+
+    <h2>Target Architecture</h2>
+    <p>Separate health data into its own table:</p>
+    <ul>
+      <li><code>users</code> — Identity + Auth only</li>
+      <li><code>user_health_profiles</code> — All health columns, linked by user_id</li>
+    </ul>
+
+    <h2>Migration Priorities</h2>
+    <table>
+      <tr><th>Priority</th><th>Action</th><th>Effort</th></tr>
+      <tr><td>P1</td><td>Add public_id UUID to users</td><td>30 min</td></tr>
+      <tr><td>P1</td><td>filter_parameters for health fields</td><td>15 min</td></tr>
+      <tr><td>P2</td><td>Truncate email in admin list</td><td>30 min</td></tr>
+      <tr><td>P2</td><td>Create user_health_profiles table</td><td>2 hrs</td></tr>
+    </table>
+
+    <h2>Compliance</h2>
+    <ul>
+      <li><strong>GDPR:</strong> Consent via onboarding ✅ — segregation target</li>
+      <li><strong>App Store:</strong> Privacy labels needed</li>
+      <li><strong>Play Store:</strong> Data safety form needed</li>
+    </ul>
+  </main>
+</body>
+</html>

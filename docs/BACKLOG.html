@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Backlog - Season Docs</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.7; color: #333; background: #FAF7F4; display: flex; min-height: 100vh; }
+    .sidebar { width: 260px; background: white; border-right: 1px solid #EDE1D5; padding: 1.5rem 0; position: fixed; height: 100vh; overflow-y: auto; }
+    .sidebar-header { padding: 0 1.5rem 1.5rem; border-bottom: 1px solid #EDE1D5; margin-bottom: 1rem; }
+    .sidebar-header h1 { font-size: 1.25rem; color: #933a35; }
+    .sidebar-header p { font-size: 0.8rem; color: #6B6B6B; margin-top: 0.25rem; }
+    .nav-section { margin-bottom: 1rem; }
+    .nav-section-title { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: #999; padding: 0 1.5rem; margin-bottom: 0.5rem; }
+    .nav-item { display: block; padding: 0.5rem 1.5rem; color: #444; text-decoration: none; font-size: 0.9rem; transition: all 0.15s; }
+    .nav-item:hover { background: #FAF7F4; color: #933a35; }
+    .nav-item.active { background: #FDF0EE; color: #933a35; font-weight: 600; border-right: 3px solid #933a35; }
+    .content { margin-left: 260px; flex: 1; padding: 2rem 3rem; max-width: 900px; }
+    .content h1 { color: #933a35; font-size: 1.8rem; margin-bottom: 0.5rem; }
+    .content h2 { color: #933a35; font-size: 1.3rem; margin-top: 1.5rem; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid #EDE1D5; }
+    .content h3 { color: #444; font-size: 1.05rem; margin-top: 1.25rem; margin-bottom: 0.5rem; }
+    .content p { margin-bottom: 1rem; }
+    .content ul { margin-bottom: 1rem; padding-left: 1.5rem; }
+    .content li { margin-bottom: 0.25rem; }
+    .content code { background: #EDE1D5; padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.9em; }
+    .content pre { background: #2d2d2d; color: #f8f8f2; padding: 1rem; border-radius: 8px; overflow-x: auto; margin-bottom: 1rem; }
+    .content pre code { background: none; padding: 0; color: inherit; }
+    .content table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
+    .content th, .content td { padding: 0.5rem; text-align: left; border-bottom: 1px solid #EDE1D5; font-size: 0.85rem; }
+    .content th { background: #FAF7F4; font-weight: 600; color: #933a35; }
+    .tag { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
+    .tag-red { background: #FDF0EE; color: #933a35; }
+    .tag-yellow { background: #FEF3C7; color: #92400E; }
+    .tag-green { background: #DCFCE7; color: #166534; }
+    .status-done { color: #22c55e; }
+    .status-pending { color: #f59e0b; }
+    .status-todo { color: #ef4444; }
+    @media (max-width: 768px) { .sidebar { display: none; } .content { margin-left: 0; padding: 1.5rem; } }
+  </style>
+</head>
+<body>
+  <nav class="sidebar">
+    <div class="sidebar-header">
+      <h1>📅 Season Docs</h1>
+      <p>Internal team documentation</p>
+    </div>
+    <div class="nav-section">
+      <p class="nav-section-title">Getting Started</p>
+      <a href="screenslist.html" class="nav-item">Screens & Routes</a>
+      <a href="BACKLOG.html" class="nav-item active">Backlog</a>
+    </div>
+    <div class="nav-section">
+      <p class="nav-section-title">Audit & Reports</p>
+      <a href="AUDIT-2026-04-10.html" class="nav-item">Audit Report</a>
+      <a href="STYLING-AUDIT.html" class="nav-item">Styling Audit</a>
+      <a href="STAKEHOLDER-REPORT-2026-04-15.html" class="nav-item">Stakeholder Report</a>
+    </div>
+    <div class="nav-section">
+      <p class="nav-section-title">Reference</p>
+      <a href="userjourney.html" class="nav-item">User Journey</a>
+      <a href="figma_nodes.html" class="nav-item">Figma Nodes</a>
+      <a href="userdata.html" class="nav-item">User Data & Privacy</a>
+    </div>
+  </nav>
+  <main class="content">
+    <h1>Backlog</h1>
+
+    <h2>🔴 MUST HAVE (Critical for Launch)</h2>
+    <table>
+      <tr><th>#</th><th>Feature</th><th>Status</th></tr>
+      <tr><td>1</td><td>Personalized Invite Flow (/invite/:token)</td><td><span class="status-done">✅ Built</span></td></tr>
+      <tr><td>2</td><td>Cycle Engine (CycleCalculatorService)</td><td><span class="status-done">✅ Built</span></td></tr>
+      <tr><td>3</td><td>M3 Tracking & Server-Side Storage</td><td><span class="status-done">✅ Built</span></td></tr>
+      <tr><td>4</td><td>M7 Onboarding (Hotwire multi-step)</td><td><span class="status-done">✅ Built</span></td></tr>
+      <tr><td>5</td><td>M5 Reminders (ActionMailer)</td><td><span class="status-pending">⚠️ SMTP pending</span></td></tr>
+      <tr><td>6</td><td>i18n Infrastructure (EN/DE)</td><td><span class="status-done">✅ Built</span></td></tr>
+      <tr><td>7</td><td>Simple Admin Table</td><td><span class="status-done">✅ Built</span></td></tr>
+    </table>
+
+    <h2>🟡 SHOULD HAVE (High Priority)</h2>
+    <table>
+      <tr><th>#</th><th>Feature</th><th>Status</th></tr>
+      <tr><td>1</td><td>M4 Personalized Tips</td><td><span class="status-done">✅ Built</span></td></tr>
+      <tr><td>2</td><td>Social Login (OmniAuth)</td><td><span class="status-todo">🔴 Credentials needed</span></td></tr>
+      <tr><td>3</td><td>Hotwire Native Wrapper</td><td><span class="status-pending">⏳ Planned</span></td></tr>
+    </table>
+
+    <h2>🟢 COULD HAVE (Nice to Have)</h2>
+    <table>
+      <tr><th>#</th><th>Feature</th><th>Status</th></tr>
+      <tr><td>1</td><td>M6 Engagement (Streaks/Flames)</td><td><span class="status-todo">❌ Not in scope</span></td></tr>
+      <tr><td>2</td><td>M8 Basic Paywall (Stripe)</td><td><span class="status-pending">⏳ Planned</span></td></tr>
+      <tr><td>3</td><td>Calendar Sync</td><td><span class="status-pending">⏳ Planned</span></td></tr>
+    </table>
+
+    <h2>⚪ WON'T HAVE (Post-Launch)</h2>
+    <ul>
+      <li><strong>PWA Layer</strong> — Optimization for low-bandwidth markets</li>
+      <li><strong>Hetzner/Kamal Migration</strong> — Staying on Render.com</li>
+      <li><strong>Push Notifications</strong> — Rely on Email Reminders for MVP</li>
+    </ul>
+
+    <h2>Infrastructure Backlog</h2>
+    <h3>🔴 Critical: SMTP</h3>
+    <p>SMTP is commented out in <code>config/environments/production.rb</code>. All emails will silently fail.</p>
+    <p><strong>Providers to consider:</strong></p>
+    <ul>
+      <li><a href="https://resend.com">Resend</a> — 3,000/mo free</li>
+      <li><a href="https://postmarkapp.com">Postmark</a> — 100/mo free</li>
+      <li><a href="https://sendgrid.com">SendGrid</a> — 100/day free</li>
+      <li><a href="https://brevo.com">Brevo</a> — 300/day free</li>
+    </ul>
+  </main>
+</body>
+</html>

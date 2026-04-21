@@ -6,61 +6,18 @@
   <title>Season Documentation</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      line-height: 1.6;
-      color: #333;
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 2rem;
-      background: #FAF7F4;
-    }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 0 auto; padding: 2rem; background: #FAF7F4; }
     h1 { color: #933a35; margin-bottom: 0.5rem; font-size: 2rem; }
     .subtitle { color: #6B6B6B; margin-bottom: 2rem; font-size: 1.1rem; }
     .section { margin-bottom: 1.5rem; }
-    .section-title {
-      color: #6B6B6B;
-      font-size: 0.85rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 0.75rem;
-    }
-    .nav-card {
-      background: white;
-      border-radius: 12px;
-      padding: 1.25rem 1.5rem;
-      margin-bottom: 0.75rem;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .nav-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-    }
-    .nav-card a {
-      text-decoration: none;
-      color: inherit;
-      display: block;
-    }
-    .nav-card h2 {
-      color: #933a35;
-      font-size: 1.1rem;
-      margin-bottom: 0.25rem;
-    }
+    .section-title { color: #6B6B6B; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.75rem; }
+    .nav-card { background: white; border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 0.75rem; box-shadow: 0 2px 8px rgba(0,0,0,0.06); transition: transform 0.2s, box-shadow 0.2s; }
+    .nav-card:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+    .nav-card a { text-decoration: none; color: inherit; display: block; }
+    .nav-card h2 { color: #933a35; font-size: 1.1rem; margin-bottom: 0.25rem; }
     .nav-card p { color: #6B6B6B; font-size: 0.9rem; }
-    .nav-card .meta {
-      font-size: 0.8rem;
-      color: #999;
-      margin-top: 0.5rem;
-    }
-    footer {
-      margin-top: 3rem;
-      padding-top: 1.5rem;
-      border-top: 1px solid #EDE1D5;
-      text-align: center;
-      color: #6B6B6B;
-      font-size: 0.85rem;
-    }
+    .nav-card .meta { font-size: 0.8rem; color: #999; margin-top: 0.5rem; }
+    footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid #EDE1D5; text-align: center; color: #6B6B6B; font-size: 0.85rem; }
   </style>
 </head>
 <body>
@@ -69,77 +26,24 @@
 
   <div class="section">
     <p class="section-title">Getting Started</p>
-
-    <div class="nav-card">
-      <a href="screenslist.md">
-        <h2>Screens & Routes</h2>
-        <p>Complete screen inventory with route mappings and styling standards</p>
-        <p class="meta">Core reference</p>
-      </a>
-    </div>
-
-    <div class="nav-card">
-      <a href="BACKLOG.md">
-        <h2>Backlog</h2>
-        <p>Feature and bug backlog with priorities</p>
-      </a>
-    </div>
+    <div class="nav-card"><a href="screenslist.html"><h2>Screens & Routes</h2><p>Complete screen inventory with route mappings and styling standards</p></a></div>
+    <div class="nav-card"><a href="BACKLOG.html"><h2>Backlog</h2><p>Feature and bug backlog with priorities</p></a></div>
   </div>
 
   <div class="section">
     <p class="section-title">Audit & Reports</p>
-
-    <div class="nav-card">
-      <a href="AUDIT-2026-04-10.md">
-        <h2>Audit Report</h2>
-        <p>Full stakeholder audit with M1 completion status, accessibility fixes</p>
-      </a>
-    </div>
-
-    <div class="nav-card">
-      <a href="STYLING-AUDIT.md">
-        <h2>Styling Audit</h2>
-        <p>Visual design audit — colors, typography, spacing, components</p>
-      </a>
-    </div>
-
-    <div class="nav-card">
-      <a href="STAKEHOLDER-REPORT-2026-04-15.md">
-        <h2>Stakeholder Report</h2>
-        <p>Weekly stakeholder updates</p>
-      </a>
-    </div>
+    <div class="nav-card"><a href="AUDIT-2026-04-10.html"><h2>Audit Report</h2><p>Full stakeholder audit with M1 completion status, accessibility fixes</p></a></div>
+    <div class="nav-card"><a href="STYLING-AUDIT.html"><h2>Styling Audit</h2><p>Visual design audit — colors, typography, spacing, components</p></a></div>
+    <div class="nav-card"><a href="STAKEHOLDER-REPORT-2026-04-15.html"><h2>Stakeholder Report</h2><p>Weekly stakeholder updates</p></a></div>
   </div>
 
   <div class="section">
     <p class="section-title">Reference</p>
-
-    <div class="nav-card">
-      <a href="userjourney.md">
-        <h2>User Journey</h2>
-        <p>User flow documentation</p>
-      </a>
-    </div>
-
-    <div class="nav-card">
-      <a href="figma_nodes.md">
-        <h2>Figma Nodes</h2>
-        <p>All Figma design node references by milestone</p>
-      </a>
-    </div>
-
-    <div class="nav-card">
-      <a href="userdata.md">
-        <h2>User Data & Privacy</h2>
-        <p>Data classification, architecture, and GDPR compliance</p>
-        <p class="meta">Engineering reference</p>
-      </a>
-    </div>
+    <div class="nav-card"><a href="userjourney.html"><h2>User Journey</h2><p>User flow documentation</p></a></div>
+    <div class="nav-card"><a href="figma_nodes.html"><h2>Figma Nodes</h2><p>All Figma design node references by milestone</p></a></div>
+    <div class="nav-card"><a href="userdata.html"><h2>User Data & Privacy</h2><p>Data classification, architecture, and GDPR compliance</p></a></div>
   </div>
 
-  <footer>
-    <p>Built with ❤️ by the Season team</p>
-    <p>Last updated: April 2026</p>
-  </footer>
+  <footer><p>Built with ❤️ by the Season team</p></footer>
 </body>
 </html>

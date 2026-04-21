@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Journey - Season Docs</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.7; color: #333; background: #FAF7F4; display: flex; min-height: 100vh; }
+    .sidebar { width: 260px; background: white; border-right: 1px solid #EDE1D5; padding: 1.5rem 0; position: fixed; height: 100vh; overflow-y: auto; }
+    .sidebar-header { padding: 0 1.5rem 1.5rem; border-bottom: 1px solid #EDE1D5; margin-bottom: 1rem; }
+    .sidebar-header h1 { font-size: 1.25rem; color: #933a35; }
+    .sidebar-header p { font-size: 0.8rem; color: #6B6B6B; margin-top: 0.25rem; }
+    .nav-section { margin-bottom: 1rem; }
+    .nav-section-title { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: #999; padding: 0 1.5rem; margin-bottom: 0.5rem; }
+    .nav-item { display: block; padding: 0.5rem 1.5rem; color: #444; text-decoration: none; font-size: 0.9rem; transition: all 0.15s; }
+    .nav-item:hover { background: #FAF7F4; color: #933a35; }
+    .nav-item.active { background: #FDF0EE; color: #933a35; font-weight: 600; border-right: 3px solid #933a35; }
+    .content { margin-left: 260px; flex: 1; padding: 2rem 3rem; max-width: 900px; }
+    .content h1 { color: #933a35; font-size: 1.8rem; margin-bottom: 0.5rem; }
+    .content h2 { color: #933a35; font-size: 1.3rem; margin-top: 1.5rem; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid #EDE1D5; }
+    .content h3 { color: #444; font-size: 1.05rem; margin-top: 1.25rem; margin-bottom: 0.5rem; }
+    .content p { margin-bottom: 1rem; }
+    .content ul { margin-bottom: 1rem; padding-left: 1.5rem; }
+    .content li { margin-bottom: 0.5rem; }
+    .flow-step { background: white; border-left: 4px solid #933a35; padding: 1rem; margin-bottom: 1rem; border-radius: 0 8px 8px 0; }
+    .flow-step-number { display: inline-block; background: #933a35; color: white; width: 24px; height: 24px; border-radius: 50%; text-align: center; line-height: 24px; font-size: 0.8rem; margin-right: 0.5rem; }
+    @media (max-width: 768px) { .sidebar { display: none; } .content { margin-left: 0; padding: 1.5rem; } }
+  </style>
+</head>
+<body>
+  <nav class="sidebar">
+    <div class="sidebar-header">
+      <h1>📅 Season Docs</h1>
+      <p>Internal team documentation</p>
+    </div>
+    <div class="nav-section">
+      <p class="nav-section-title">Getting Started</p>
+      <a href="screenslist.html" class="nav-item">Screens & Routes</a>
+      <a href="BACKLOG.html" class="nav-item">Backlog</a>
+    </div>
+    <div class="nav-section">
+      <p class="nav-section-title">Audit & Reports</p>
+      <a href="AUDIT-2026-04-10.html" class="nav-item">Audit Report</a>
+      <a href="STYLING-AUDIT.html" class="nav-item">Styling Audit</a>
+      <a href="STAKEHOLDER-REPORT-2026-04-15.html" class="nav-item">Stakeholder Report</a>
+    </div>
+    <div class="nav-section">
+      <p class="nav-section-title">Reference</p>
+      <a href="userjourney.html" class="nav-item active">User Journey</a>
+      <a href="figma_nodes.html" class="nav-item">Figma Nodes</a>
+      <a href="userdata.html" class="nav-item">User Data & Privacy</a>
+    </div>
+  </nav>
+  <main class="content">
+    <h1>User Journey</h1>
+    <p>User flow documentation for Season V2.</p>
+
+    <h2>New User Flow</h2>
+    <div class="flow-step">
+      <span class="flow-step-number">1</span>
+      <strong>Visit /launch</strong> — See countdown, click "Join Waitlist"
+    </div>
+    <div class="flow-step">
+      <span class="flow-step-number">2</span>
+      <strong>Enter email</strong> — Sign up for waitlist
+    </div>
+    <div class="flow-step">
+      <span class="flow-step-number">3</span>
+      <strong>Receive invite</strong> — Click link in email (/invite/:token)
+    </div>
+    <div class="flow-step">
+      <span class="flow-step-number">4</span>
+      <strong>Complete onboarding</strong> — 11 steps collecting cycle info
+    </div>
+    <div class="flow-step">
+      <span class="flow-step-number">5</span>
+      <strong>Access app</strong> — Redirected to /calendar
+    </div>
+
+    <h2>Returning User Flow</h2>
+    <div class="flow-step">
+      <span class="flow-step-number">1</span>
+      <strong>Log in</strong> — /session/new
+    </div>
+    <div class="flow-step">
+      <span class="flow-step-number">2</span>
+      <strong>View calendar</strong> — See cycle phase, upcoming events
+    </div>
+    <div class="flow-step">
+      <span class="flow-step-number">3</span>
+      <strong>Log symptoms</strong> — Daily tracking
+    </div>
+
+    <h2>Key Screens</h2>
+    <ul>
+      <li><strong>Calendar</strong> — Monthly/weekly view with phase colors</li>
+      <li><strong>Tracking</strong> — Self analysis with donut wheel</li>
+      <li><strong>Symptoms</strong> — Mood, physical, mental logging</li>
+      <li><strong>Superpowers</strong> — Track positive symptoms</li>
+      <li><strong>Streaks</strong> — Gamification</li>
+      <li><strong>Settings</strong> — Profile, calendar, notifications</li>
+    </ul>
+  </main>
+</body>
+</html>
