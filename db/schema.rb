@@ -10,9 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_15_202103) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_21_100104) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+  enable_extension "pgcrypto"
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
@@ -187,6 +188,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_15_202103) do
     t.boolean "onboarding_completed", default: false, null: false
     t.integer "period_length"
     t.string "plan", default: "free"
+    t.uuid "public_id", default: -> { "gen_random_uuid()" }, null: false
     t.datetime "remember_created_at"
     t.datetime "reset_password_sent_at"
     t.string "reset_password_token"
@@ -196,6 +198,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_15_202103) do
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["invite_token"], name: "index_users_on_invite_token"
     t.index ["language"], name: "index_users_on_language"
+    t.index ["public_id"], name: "index_users_on_public_id", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
