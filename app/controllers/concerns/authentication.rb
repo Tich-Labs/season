@@ -6,11 +6,16 @@ module Authentication
   included do
     helper_method :authenticated?
     before_action :authenticate_user, unless: :devise_controller?
+    before_action :require_onboarding_completed, if: :authenticated?
   end
 
   class_methods do
     def allow_unauthenticated_access(**)
       skip_before_action(:authenticate_user, **)
+    end
+
+    def skip_onboarding_requirement(**)
+      skip_before_action(:require_onboarding_completed, **)
     end
 
     def devise_controller?

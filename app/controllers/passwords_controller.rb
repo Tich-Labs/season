@@ -1,7 +1,7 @@
 class PasswordsController < ApplicationController
   layout "launch"
   allow_unauthenticated_access
-  skip_before_action :require_onboarding_completed
+  skip_onboarding_requirement
 
   def new
   end
