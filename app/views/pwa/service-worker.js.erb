@@ -40,29 +40,32 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// Fetch event - serve from cache for static GET assets only; bypass dynamic/auth requests.
+// Fetch event - serve cached static assets only; use network for everything else.
 self.addEventListener('fetch', (event) => {
   const request = event.request;
-  const authRoutes = ['/session', '/registration', '/users/password', '/auth/'];
-  const shouldBypassCache = request.method !== 'GET' || authRoutes.some((path) => request.url.includes(path));
+  const url = new URL(request.url);
+  const isSameOrigin = url.origin === location.origin;
+  const staticAsset = [
+    '/',
+    '/manifest.json',
+    '/assets/tailwind.css',
+    '/icon.png',
+    '/favicon.png'
+  ].includes(url.pathname) || url.pathname.startsWith('/assets/');
 
-  const networkFetch = () => fetch(request).catch((error) => {
-    console.warn('Service worker fetch failed:', request.url, error);
-    return new Response('Network error', {
-      status: 504,
-      statusText: 'Network error',
-      headers: { 'Content-Type': 'text/plain' }
-    });
-  });
-
-  if (shouldBypassCache) {
-    event.respondWith(networkFetch());
+  if (request.method !== 'GET' || !isSameOrigin || request.mode === 'navigate' || !staticAsset) {
+    event.respondWith(fetch(request));
     return;
   }
 
   event.respondWith(
     caches.match(request).then((response) => {
-      return response || networkFetch();
+      if (response) return response;
+      return fetch(request).then((networkResponse) => {
+        const clone = networkResponse.clone();
+        caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+        return networkResponse;
+      });
     })
   );
 });

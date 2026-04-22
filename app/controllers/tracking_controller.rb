@@ -51,11 +51,18 @@ class TrackingController < ApplicationController
         cycle_day: 1,
         period_start: true
       )
-      redirect_to tracking_index_path, notice: "Period saved!"
+      redirect_to tracking_index_path, notice: t("tracking.period_update.saved")
       return
     end
 
-    @selected = params[:selected_date] ? Date.parse(params[:selected_date]) : (params[:date] ? Date.parse(params[:date]) : (@existing || Time.zone.today))
+    @selected = if params[:selected_date]
+      Date.parse(params[:selected_date])
+    elsif params[:date]
+      Date.parse(params[:date])
+    else
+      @existing || Time.zone.today
+    end
+
     @month = Date.new(@selected.year, @selected.month, 1)
   end
 
