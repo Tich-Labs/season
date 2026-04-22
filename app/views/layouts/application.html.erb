@@ -21,9 +21,12 @@
     <%= javascript_importmap_tags %>
     <script nonce="<%= content_security_policy_nonce %>">
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/service-worker.js')
-          .then((registration) => console.log('SW registered:', registration.scope))
-          .catch((err) => console.log('SW registration failed:', err));
+        navigator.serviceWorker.getRegistrations().then((registrations) => {
+          registrations.forEach((registration) => registration.unregister());
+        });
+      }
+      if ('caches' in window) {
+        caches.keys().then((names) => names.forEach((name) => caches.delete(name)));
       }
     </script>
   </head>
@@ -31,7 +34,7 @@
   <%# Logic check: Only show App Bar/Menu if user is logged in and past the splash/auth screens %>
   <% is_authenticated_view = authenticated? && !controller_name.in?(%w[sessions registrations home onboarding]) %>
 
-  <body class="bg-[#FCF9F7] font-['Montserrat'] antialiased h-full overflow-x-hidden" data-controller="update-prompt">
+  <body class="bg-[#FCF9F7] font-['Montserrat'] antialiased h-full overflow-x-hidden">
 
     <% if is_authenticated_view %>
     <div data-controller="menu">

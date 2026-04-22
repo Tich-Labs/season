@@ -2,7 +2,6 @@ const CACHE_NAME = 'season-v2-v1';
 const ASSETS_TO_CACHE = [
   '/',
   '/manifest.json',
-  '/assets/tailwind.css',
   '/icon.png',
   '/favicon.png'
 ];
@@ -44,28 +43,46 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const request = event.request;
   const url = new URL(request.url);
-  const isSameOrigin = url.origin === location.origin;
+  const isSameOrigin = url.origin === self.location.origin;
   const staticAsset = [
     '/',
     '/manifest.json',
-    '/assets/tailwind.css',
     '/icon.png',
     '/favicon.png'
   ].includes(url.pathname) || url.pathname.startsWith('/assets/');
 
+  const networkOnly = () =>
+    fetch(request).catch((error) => {
+      console.warn('Service worker fetch failed:', request.url, error);
+      return new Response('Service unavailable', {
+        status: 503,
+        statusText: 'Service unavailable',
+        headers: { 'Content-Type': 'text/plain' }
+      });
+    });
+
   if (request.method !== 'GET' || !isSameOrigin || request.mode === 'navigate' || !staticAsset) {
-    event.respondWith(fetch(request));
+    event.respondWith(networkOnly());
     return;
   }
 
   event.respondWith(
     caches.match(request).then((response) => {
       if (response) return response;
-      return fetch(request).then((networkResponse) => {
-        const clone = networkResponse.clone();
-        caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
-        return networkResponse;
-      });
+      return fetch(request)
+        .then((networkResponse) => {
+          const clone = networkResponse.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+          return networkResponse;
+        })
+        .catch((error) => {
+          console.warn('Service worker fetch failed:', request.url, error);
+          return new Response('Service unavailable', {
+            status: 503,
+            statusText: 'Service unavailable',
+            headers: { 'Content-Type': 'text/plain' }
+          });
+        });
     })
   );
 });
