@@ -111,11 +111,4 @@
   </div>
 </div>
 
-<%# ── FAB: add event ── %>
-<div style="position:fixed; bottom:80px; left:50%; transform:translateX(-50%); z-index:40;">
-  <%= link_to new_calendar_event_path(date: Time.zone.today.to_s),
-        aria: { label: "Add event" },
-        style: "width:56px; height:56px; border-radius:28px; background:#EDE1D5; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 14px rgba(147,58,53,0.18); text-decoration:none;" do %>
-    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="#933a35" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" /></svg>
-  <% end %>
-</div>
+
