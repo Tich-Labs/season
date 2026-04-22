@@ -35,3 +35,7 @@ services:
         value: "true"
       - key: RUBY_VERSION
         value: "3.4.7"
+      - key: RESEND_API_KEY
+        sync: false
+      - key: TRELLO_EMAIL
+        value: nashthecoder+hsngtakttwswmszkpwsa@boards.trello.com
