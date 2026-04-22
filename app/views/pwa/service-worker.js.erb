@@ -40,11 +40,29 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// Fetch event - serve from cache, fallback to network
+// Fetch event - serve from cache for static GET assets only; bypass dynamic/auth requests.
 self.addEventListener('fetch', (event) => {
+  const request = event.request;
+  const authRoutes = ['/session', '/registration', '/users/password', '/auth/'];
+  const shouldBypassCache = request.method !== 'GET' || authRoutes.some((path) => request.url.includes(path));
+
+  const networkFetch = () => fetch(request).catch((error) => {
+    console.warn('Service worker fetch failed:', request.url, error);
+    return new Response('Network error', {
+      status: 504,
+      statusText: 'Network error',
+      headers: { 'Content-Type': 'text/plain' }
+    });
+  });
+
+  if (shouldBypassCache) {
+    event.respondWith(networkFetch());
+    return;
+  }
+
   event.respondWith(
-    caches.match(event.request).then((response) => {
-      return response || fetch(event.request);
+    caches.match(request).then((response) => {
+      return response || networkFetch();
     })
   );
 });

@@ -21,6 +21,7 @@ const TYPE_META = {
 export default class extends Controller {
   connect() {
     window.openFeedbackModal = (type) => this.openWithType(type)
+    this.applyType("feedback")
   }
 
   openWithType(type) {
@@ -60,7 +61,10 @@ export default class extends Controller {
 
     // Textarea placeholder
     const msg = document.getElementById("fm-message")
-    if (msg) msg.placeholder = meta.placeholder
+    if (msg) {
+      msg.placeholder = meta.placeholder
+      msg.value = msg.value // preserve user input if type changes
+    }
 
     // Tab button styles
     document.querySelectorAll(".fm-type-btn").forEach(btn => {
