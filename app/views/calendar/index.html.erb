@@ -7,15 +7,15 @@
   </button>
 <% end %>
 <% content_for(:header_right) do %>
-  <div class="relative flex items-center gap-3">
-    <div class="relative w-6 h-6 overflow-hidden">
-      <div class="absolute left-[3px] top-[6px] w-4 h-3 bg-orange-800"></div>
-    </div>
-
-    <div class="relative w-5 h-5 outline outline-[1.44px] outline-offset-[-0.72px] outline-orange-800">
-      <div class="absolute left-[2px] top-[2px] w-[2.91px] h-[2.91px] bg-orange-800 rounded-full"></div>
-      <div class="absolute left-[1px] top-[5px] w-2.5 h-0 outline outline-[1.44px] outline-offset-[-0.72px] outline-orange-800"></div>
-      <div class="absolute left-[1px] top-[2px] w-[2.91px] h-[2.91px] outline outline-[1.44px] outline-offset-[-0.72px] outline-orange-800"></div>
+  <div class="flex items-center gap-3">
+    <div class="flex items-center gap-2">
+      <svg class="w-5 h-5 text-brand-primary" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+      </svg>
+      <svg class="w-6 h-6 text-brand-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M12 6v6l4 2"/>
+      </svg>
     </div>
   </div>
 <% end %>
