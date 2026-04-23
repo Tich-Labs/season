@@ -71,7 +71,7 @@ Rails.application.configure do
     address: "smtp.resend.com",
     port: 587,
     domain: "seasonv2.onrender.com",
-    user_name: "resend",
+    user_name: "apikey",
     password: ENV["RESEND_API_KEY"],
     authentication: :plain,
     enable_starttls_auto: true
