@@ -20,9 +20,6 @@ Rails.application.routes.draw do
 
   # Devise for password recovery + OmniAuth
   devise_for :users,
-    controllers: {
-      passwords: "passwords"
-    },
     omniauth_providers: [:google_oauth2, :facebook, :apple]
 
   # Custom password routes at /password/*
