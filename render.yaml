@@ -25,10 +25,10 @@ services:
         value: "true"
       - key: RAILS_SERVE_STATIC_FILES
         value: "true"
+      - key: RAILS_MASTER_KEY
+        generateValue: true
       - key: SECRET_KEY_BASE
         generateValue: true
-      - key: RAILS_MASTER_KEY
-        sync: false
       - key: WEB_CONCURRENCY
         value: 1
       - key: SOLID_QUEUE_IN_PUMA
