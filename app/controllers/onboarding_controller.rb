@@ -1,6 +1,6 @@
 class OnboardingController < ApplicationController
   layout "launch", except: [:invite]
-  allow_unauthenticated_access only: [:invite]
+  allow_unauthenticated_access only: [:show, :invite]
 
   TOTAL_STEPS = 11
 
