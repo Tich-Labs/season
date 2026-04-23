@@ -1,6 +1,6 @@
 class SupportMailer < ApplicationMailer
-  default to: "info@season.vision",
-    from: "Season App <info@season.vision>"
+  default to: ENV.fetch("SUPPORT_EMAIL", "info@season.vision"),
+    from: "Season App <#{ENV.fetch("RESEND_FROM_EMAIL", "info@season.vision")}>"
 
   def support_request(feedback)
     @feedback = feedback

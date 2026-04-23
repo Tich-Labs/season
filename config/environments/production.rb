@@ -63,14 +63,15 @@ Rails.application.configure do
   config.action_mailer.perform_deliveries = true
 
   # Set host to be used by links generated in mailer templates.
-  config.action_mailer.default_url_options = {host: "seasonv2.onrender.com", protocol: "https"}
+  host = ENV.fetch("APP_HOST", "seasonv2.onrender.com")
+  config.action_mailer.default_url_options = {host: host, protocol: "https"}
 
   # Resend SMTP
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
     address: "smtp.resend.com",
     port: 587,
-    domain: "seasonv2.onrender.com",
+    domain: host,
     user_name: "apikey",
     password: ENV["RESEND_API_KEY"],
     authentication: :plain,

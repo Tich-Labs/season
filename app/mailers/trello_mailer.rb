@@ -32,7 +32,7 @@ class TrelloMailer < ApplicationMailer
 
     mail(
       to: to_address,
-      from: "Season App <info@season.vision>",
+      from: "Season App <#{ENV.fetch("RESEND_FROM_EMAIL", "info@season.vision")}>",
       reply_to: @user.email,
       subject: "#{@emoji} #{@type_label} — #{@user.email}: #{feedback.message.truncate(55)}"
     )
