@@ -16,7 +16,7 @@ class PasswordsController < ApplicationController
   def create
     email = params[:email]
     Rails.logger.info "Password reset for email: #{email}"
-    
+
     user = User.find_by(email: email)
     if user
       Rails.logger.info "Found user: #{user.id}"
@@ -25,11 +25,13 @@ class PasswordsController < ApplicationController
     else
       Rails.logger.info "User not found"
     end
-    # Always redirect to done page (don't reveal if email exists)
+
+    # Always redirect to done page (don't reveal whether the email exists).
     redirect_to done_password_path
-  rescue StandardError => e
+  rescue => e
     Rails.logger.error "Password reset error: #{e.class} - #{e.message}"
-    redirect_to done_password_path
+    Rails.logger.error e.backtrace.join("\n")
+    redirect_to password_error_contact_path, alert: t(".unable_to_send", default: "We were unable to send the reset email. Please contact support.")
   end
 
   def update

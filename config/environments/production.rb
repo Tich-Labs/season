@@ -60,15 +60,17 @@ Rails.application.configure do
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.perform_deliveries = true
 
   # Set host to be used by links generated in mailer templates.
-  config.action_mailer.default_url_options = {host: "season-v2.onrender.com", protocol: "https"}
+  config.action_mailer.default_url_options = {host: "seasonv2.onrender.com", protocol: "https"}
 
   # Resend SMTP
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
     address: "smtp.resend.com",
     port: 587,
+    domain: "seasonv2.onrender.com",
     user_name: "resend",
     password: ENV["RESEND_API_KEY"],
     authentication: :plain,
