@@ -14,14 +14,22 @@ class PasswordsController < ApplicationController
   end
 
   def create
-    @user = User.find_by(email: params[:email])
-    if @user.present?
-      User.send_reset_password_instructions(email: params[:email])
-      redirect_to done_password_path
+    email = params[:email]
+    Rails.logger.info "Password reset for email: #{email}"
+    
+    user = User.find_by(email: email)
+    if user
+      Rails.logger.info "Found user: #{user.id}"
+      user.send_reset_password_instructions
+      Rails.logger.info "Sent reset instructions"
     else
-      # Same behavior for security (don't reveal if email exists)
-      redirect_to done_password_path
+      Rails.logger.info "User not found"
     end
+    # Always redirect to done page (don't reveal if email exists)
+    redirect_to done_password_path
+  rescue StandardError => e
+    Rails.logger.error "Password reset error: #{e.class} - #{e.message}"
+    redirect_to done_password_path
   end
 
   def update
