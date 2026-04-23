@@ -15,7 +15,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
-    <script>
+    <script nonce="<%= content_security_policy_nonce %>">
       const clearOldServiceWorkers = async () => {
         if (!('serviceWorker' in navigator)) return;
 
