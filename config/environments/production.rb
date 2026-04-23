@@ -62,7 +62,7 @@ Rails.application.configure do
   config.action_mailer.raise_delivery_errors = true
 
   # Set host to be used by links generated in mailer templates.
-  config.action_mailer.default_url_options = {host: "season-v2.onrender.com"}
+  config.action_mailer.default_url_options = {host: "season-v2.onrender.com", protocol: "https"}
 
   # Resend SMTP
   config.action_mailer.delivery_method = :smtp
