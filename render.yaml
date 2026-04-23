@@ -37,5 +37,11 @@ services:
         value: "3.4.7"
       - key: RESEND_API_KEY
         sync: false
+      - key: RESEND_FROM_EMAIL
+        value: noreply@season.vision
+      - key: SUPPORT_EMAIL
+        value: info@season.vision
+      - key: APP_HOST
+        value: seasonv2.onrender.com
       - key: TRELLO_EMAIL
         value: nashthecoder+hsngtakttwswmszkpwsa@boards.trello.com
