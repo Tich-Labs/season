@@ -17,6 +17,8 @@ class PasswordsController < ApplicationController
     @user = User.find_by(email: params[:email])
     if @user.present?
       @user.send_reset_password_instructions
+      # Or try deliver_now for debugging:
+      # User.send_reset_password_instructions(email: params[:email])
       redirect_to done_password_path
     else
       # Same behavior for security (don't reveal if email exists)
