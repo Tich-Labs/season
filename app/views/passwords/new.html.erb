@@ -27,7 +27,7 @@
 
       <div class="mt-20">
         <label for="email" class="sr-only">Email</label>
-        <%= form_with url: user_password_path, method: :post do |f| %>
+        <%= form_with url: passwords_path, method: :post do |f| %>
           <%= f.email_field :email,
               id: "email",
               name: "email",
