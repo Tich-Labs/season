@@ -18,14 +18,16 @@ Rails.application.routes.draw do
   resource :registration, only: [:new, :create]
   resource :session, only: [:new, :create, :destroy]
 
-  # Devise for password recovery + OmniAuth
+# Devise for password recovery + OmniAuth
   devise_for :users,
+    controllers: {
+      passwords: "passwords"
+    },
     omniauth_providers: [:google_oauth2, :facebook, :apple]
 
   # Custom password routes at /password/*
   get "password/new", to: redirect("/users/password/new")
   get "password/edit", to: redirect("/users/password/edit")
-
   get "password/done", to: "passwords#done", as: :done_password
   get "password/done", to: "passwords#done", as: :password_done
   get "password/error/already-reset", to: "passwords#error_already_reset", as: :password_error_already_reset
