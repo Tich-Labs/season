@@ -1,0 +1,19 @@
+<div id="feedback-modal-container"
+     data-controller="feedback-modal"
+     class="fixed inset-0 z-50 flex items-end justify-center bg-[#121212]/40">
+  <div class="bg-brand-background rounded-t-3xl px-6 pt-8 pb-10 w-full max-w-app text-center relative">
+    <div class="w-10 h-1 bg-[#D1C4C2] rounded-full mx-auto mb-6"></div>
+    <div class="w-14 h-14 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-4">
+      <svg width="28" height="28" fill="none" stroke="#2E6B3E" stroke-width="2.5" viewBox="0 0 24 24">
+        <polyline points="20 6 9 17 4 12" />
+      </svg>
+    </div>
+    <p class="text-brand-primary text-lg font-semibold mb-2">Thank you!</p>
+    <p class="text-brand-secondary text-sm mb-6">Your message has been received.</p>
+    <button type="button"
+            data-action="click->feedback-modal#close"
+            class="bg-brand-primary text-white rounded-xl py-3 px-8 text-[15px] font-semibold font-['Montserrat']">
+      Close
+    </button>
+  </div>
+</div>

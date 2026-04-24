@@ -3,26 +3,18 @@ class PasswordsController < ApplicationController
   allow_unauthenticated_access
   skip_onboarding_requirement
 
+  before_action :load_user_from_token, only: [:edit, :update]
+
   def new
   end
 
   def edit
-    @user = User.find_by_token_for(:password_reset, params[:token])
-    redirect_to password_error_link_expired_path if @user.nil?
   end
 
   def create
     email = params[:email]
-    Rails.logger.info "Password reset for email: #{email}"
-
     user = User.find_by(email: email)
-    if user
-      Rails.logger.info "Found user: #{user.id}"
-      user.send_reset_password_instructions
-      Rails.logger.info "Sent reset instructions"
-    else
-      Rails.logger.info "User not found"
-    end
+    user&.send_reset_password_instructions
 
     # Always redirect to done page (don't reveal whether the email exists).
     redirect_to done_password_path
@@ -33,11 +25,6 @@ class PasswordsController < ApplicationController
   end
 
   def update
-    @user = User.find_by_token_for(:password_reset, params[:token])
-    if @user.nil?
-      redirect_to password_error_link_expired_path and return
-    end
-
     if @user.update(password: params[:password], password_confirmation: params[:password_confirmation])
       redirect_to new_session_path, notice: t(".password_updated_notice")
     else
@@ -61,5 +48,12 @@ class PasswordsController < ApplicationController
   end
 
   def error_contact
+  end
+
+  private
+
+  def load_user_from_token
+    @user = User.find_by_token_for(:password_reset, params[:token])
+    redirect_to password_error_link_expired_path if @user.nil?
   end
 end

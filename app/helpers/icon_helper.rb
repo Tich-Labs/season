@@ -28,10 +28,10 @@ module IconHelper
   private
 
   def svg_icon(path, size:, colour:, default_stroke:, **attrs)
-    return "".html_safe unless File.exist?(path)
-
     raw = File.read(path)
-
+  rescue Errno::ENOENT
+    "".html_safe
+  else
     # Replace width/height attributes when a size is given
     if size
       raw = raw.sub(/(<svg[^>]*)\swidth="[^"]*"/, "\\1 width=\"#{size}\"")

@@ -1,6 +1,4 @@
 class Admin::InboxController < Admin::BaseController
-  before_action :set_stats, only: [:overview, :feedback, :bugs, :support]
-
   def overview
     @messages = Feedback.order(created_at: :desc).limit(50)
     render "admin/inbox/index"
@@ -39,16 +37,5 @@ class Admin::InboxController < Admin::BaseController
     respond_to do |format|
       format.csv { send_data csv_data, filename: "inbox_#{params[:filter] || "all"}_#{Time.zone.today}.csv" }
     end
-  end
-
-  private
-
-  def set_stats
-    @stats = {
-      total: Feedback.count,
-      feedback: Feedback.feedback_type_feedback.count,
-      bugs: Feedback.feedback_type_bug_report.count,
-      support: Feedback.feedback_type_support.count
-    }
   end
 end

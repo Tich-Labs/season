@@ -33,7 +33,4 @@
 <script>
   window.addEventListener('DOMContentLoaded', function() {
     setTimeout(function() {
-      window.location.href = '<%= calendar_path %>';
-    }, 10000);
-  });
-</script>
+        window.location.href = <%= calendar_path.to_json %>;
