@@ -53,7 +53,7 @@ class PasswordsController < ApplicationController
   private
 
   def load_user_from_token
-    @user = User.find_by_token_for(:password_reset, params[:token])
+    @user = User.with_reset_password_token(params[:reset_password_token])
     redirect_to password_error_link_expired_path if @user.nil?
   end
 end

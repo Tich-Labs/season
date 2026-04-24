@@ -1,5 +1,5 @@
 class ApplicationMailer < ActionMailer::Base
-  default from: "Season App <#{ENV.fetch("RESEND_FROM_EMAIL", "info@season.vision")}>"
+  default from: "Season App <#{ENV.fetch("MAIL_FROM", "info@season.vision")}>"
   layout "mailer"
 
   private

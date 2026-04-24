@@ -42,7 +42,6 @@ class SettingsController < ApplicationController
     @user = current_user
     if params[:email].present? && params[:email] != @user.email
       @user.update(email: params[:email])
-      @user.send_confirmation_instructions
       redirect_to profile_settings_path, notice: t(".confirmation_sent")
     elsif params[:name].present? || params[:cycle_length].present? || params[:period_length].present?
       updates = {}
