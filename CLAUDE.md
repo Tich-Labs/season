@@ -196,6 +196,10 @@ All error states must:
 - **`Admin::FeedbacksController` was deleted**: Feedback is now handled entirely by `Admin::InboxController`. Do not recreate the feedbacks controller.
 - **`User#current_phase`** — may return nil for new users with no cycle data. Always guard with `|| "Unknown"` in views.
 - **`current_user.onboarding_completed?`** — use this (not `last_period_start.present?`) to check if a user has finished onboarding.
+- **Resend mailer**: use the gem adapter — `config.action_mailer.delivery_method = :resend` in `production.rb`. The API key must be set via `config/initializers/resend.rb` (`Resend.api_key = ENV["RESEND_API_KEY"]`). Do NOT use raw SMTP with `smtp.resend.com` — it was removed.
+- **OmniAuth (Google/Facebook/Apple)**: configured once via `config.omniauth` in `config/initializers/devise.rb` only. A separate `config/initializers/omniauth.rb` was deleted — do not recreate it.
+- **Password reset — expired/invalid token**: redirects to `password_error_link_expired_path` (`/password/error/link-expired`). Do not use `password_error_already_reset_path` for this case — that page is only for rate-limit messaging.
+- **Password reset form**: has two fields (`password` + `password_confirmation`). Validation errors re-render the form inline (not redirect). The token is passed via a hidden field.
 
 ## Styling Standard (Tailwind)
 

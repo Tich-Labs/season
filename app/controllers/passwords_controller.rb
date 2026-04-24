@@ -8,9 +8,7 @@ class PasswordsController < ApplicationController
 
   def edit
     @user = User.find_by_token_for(:password_reset, params[:token])
-    if @user.nil?
-      redirect_to password_error_already_reset_path
-    end
+    redirect_to password_error_link_expired_path if @user.nil?
   end
 
   def create
@@ -36,10 +34,14 @@ class PasswordsController < ApplicationController
 
   def update
     @user = User.find_by_token_for(:password_reset, params[:token])
-    if @user&.update(password: params[:password])
+    if @user.nil?
+      redirect_to password_error_link_expired_path and return
+    end
+
+    if @user.update(password: params[:password], password_confirmation: params[:password_confirmation])
       redirect_to new_session_path, notice: t(".password_updated_notice")
     else
-      redirect_to password_error_contact_path, alert: t(".unable_to_update")
+      render :edit, status: :unprocessable_content
     end
   end
 
@@ -47,6 +49,9 @@ class PasswordsController < ApplicationController
   end
 
   def error_already_reset
+  end
+
+  def error_link_expired
   end
 
   def error_wrong_email

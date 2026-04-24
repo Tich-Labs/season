@@ -1,0 +1,24 @@
+<div class="bg-white min-h-screen flex flex-col items-center justify-between py-16 px-8 max-w-app mx-auto">
+
+  <div></div>
+
+  <div class="w-full flex flex-col items-center">
+    <div class="w-56 h-56 rounded-full bg-brand-field overflow-hidden mb-10">
+      <%= image_tag("error_screens_login/errorscreen-already-reset.png", alt: "Link expired", class: "w-full h-full object-contain") %>
+    </div>
+
+    <p class="text-brand-primary text-lg font-normal tracking-wide text-center max-w-xs mb-12">
+      That link has expired. Please request a new password reset email.
+    </p>
+
+    <div class="w-full mb-4">
+      <%= link_to "Request new link", new_user_password_path,
+          class: "block w-full bg-brand-primary text-white text-center text-xl font-medium tracking-wide rounded-xl py-3.5 no-underline" %>
+    </div>
+
+    <%= link_to "Back to login", new_session_path, class: "text-brand-primary text-base font-normal no-underline" %>
+  </div>
+
+  <div></div>
+
+</div>

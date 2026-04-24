@@ -18,7 +18,7 @@ Rails.application.routes.draw do
   resource :registration, only: [:new, :create]
   resource :session, only: [:new, :create, :destroy]
 
-# Devise for password recovery + OmniAuth
+  # Devise for password recovery + OmniAuth
   devise_for :users,
     controllers: {
       passwords: "passwords"
@@ -29,8 +29,8 @@ Rails.application.routes.draw do
   get "password/new", to: redirect("/users/password/new")
   get "password/edit", to: redirect("/users/password/edit")
   get "password/done", to: "passwords#done", as: :done_password
-  get "password/done", to: "passwords#done", as: :password_done
   get "password/error/already-reset", to: "passwords#error_already_reset", as: :password_error_already_reset
+  get "password/error/link-expired", to: "passwords#error_link_expired", as: :password_error_link_expired
   get "password/error/inbox-full", to: "passwords#error_inbox_full", as: :password_error_inbox_full
   get "password/error/wrong-email", to: "passwords#error_wrong_email", as: :password_error_wrong_email
   get "password/error/contact", to: "passwords#error_contact", as: :password_error_contact

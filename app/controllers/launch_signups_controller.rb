@@ -16,6 +16,6 @@ class LaunchSignupsController < ApplicationController
 
     LaunchSignup.find_or_create_by!(email: email)
 
-    render json: {message: "You're on the list! We'll notify you on April 14th."}
+    render json: {message: "You're on the list! We'll notify you on April 30th."}
   end
 end
