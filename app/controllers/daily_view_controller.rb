@@ -1,6 +1,4 @@
 class DailyViewController < ApplicationController
-  include Authentication
-
   before_action :require_onboarding_completed
 
   def show
@@ -23,11 +21,7 @@ class DailyViewController < ApplicationController
       @content = nil
     end
 
-    @events = begin
-      current_user.calendar_events.where(date: @date).order(:start_time)
-    rescue
-      []
-    end
+    @events = current_user.calendar_events.where(date: @date).order(:start_time)
     @symptom_log = current_user.symptom_logs.find_by(date: @date)
 
     @week_dates = (0..6).map { |i| @date.beginning_of_week(:monday) + i.days }

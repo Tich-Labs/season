@@ -3,5 +3,18 @@
     "allow": [
       "Read(//Users/naijeriatowett/**)"
     ]
-  }
+  },
+  "extraKnownMarketplaces": {
+    "maquina": {
+      "source": {
+        "source": "github",
+        "repo": "maquina-app/rails-claude-code"
+      }
+    }
+  },
+  "enabledPlugins": [
+    "rails-simplifier@maquina",
+    "recuerd0@maquina",
+    "rails-security-auditor@maquina"
+  ]
 }

@@ -12,7 +12,7 @@
 <%
   row_colour = local_assigns.fetch(:colour, "#933a35")
 %>
-<a href="<%= href %>" class="flex  align-items:center; gap:16px; padding:16px 0; text-decoration:none;">
+<a href="<%= href %>" class="flex items-center gap-4 py-4 no-underline">
   <% if local_assigns[:icon_svg] %>
     <span style="width:24px; height:24px; flex-shrink:0; color:<%= row_colour %>; display:flex; align-items:center; justify-content:center;">
       <%# erblint:disable:ErbSafety %>
@@ -20,11 +20,11 @@
     </span>
   <% end %>
   <div style="flex:1;">
-    <span style="color:<%= row_colour %>;  font-medium  font-family:'Montserrat',sans-serif;">
+    <span class="font-medium" style="color:<%= row_colour %>; font-family:'Montserrat',sans-serif;">
       <%= label %>
     </span>
     <% if local_assigns[:subtitle] %>
-      <span class="block  text-brand-muted  margin-top:4px; font-family:'Montserrat',sans-serif;">
+      <span class="block text-brand-muted mt-1" style="font-family:'Montserrat',sans-serif;">
         <%= subtitle %>
       </span>
     <% end %>

@@ -23,8 +23,6 @@
       <div class="mt-[29px]">
         <label for="password" class="sr-only">New password</label>
         <%= f.password_field :password,
-            id: "password",
-            name: "password",
             autofocus: true,
             placeholder: "New password...",
             class: "w-full bg-brand-field rounded-lg px-[21px] h-[52px] text-[22px] font-medium text-brand-primary outline-none border-0 box-border",
@@ -34,8 +32,6 @@
       <div class="mt-4">
         <label for="password_confirmation" class="sr-only">Confirm new password</label>
         <%= f.password_field :password_confirmation,
-            id: "password_confirmation",
-            name: "password_confirmation",
             placeholder: "Confirm password...",
             class: "w-full bg-brand-field rounded-lg px-[21px] h-[52px] text-[22px] font-medium text-brand-primary outline-none border-0 box-border",
             "aria-label": "Confirm new password" %>

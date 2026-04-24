@@ -10,8 +10,8 @@
   subtitle   = local_assigns[:subtitle] || ""
   onchange   = local_assigns[:onchange] || ""
 %>
-<div class="flex  align-items:center; justify-content:space-between; padding:14px 0 4px;">
-  <span style="text-brand-primary  font-medium "><%= label %></span>
+<div class="flex items-center justify-between pt-3.5 pb-1">
+  <span class="text-brand-primary font-medium"><%= label %></span>
   <%= render "shared/toggle_switch",
         field_id: field_id,
         checked: checked,
@@ -20,7 +20,7 @@
 </div>
 <% if subtitle.present? %>
   <%# erblint:disable ErbSafety %>
-  <div class="flex  align-items:center; justify-content:space-between; margin-bottom:12px;">
+  <div class="flex items-center justify-between mb-3">
     <%= subtitle.html_safe %>
   </div>
 <% end %>

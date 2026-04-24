@@ -1,5 +1,3 @@
-require "ostruct"
-
 class SettingsController < ApplicationController
   before_action :require_onboarding_completed
 
@@ -11,37 +9,22 @@ class SettingsController < ApplicationController
     @user = current_user
   end
 
+  SubscriptionData = Struct.new(:plan, :payment_method)
+  CalendarSettings = Struct.new(:appointments, :cycledays, :tracking_reminder, :moonphases,
+    :holidays, :kalenderwochen, :day_of_week, :keep_timezone)
+  NotificationSettings = Struct.new(:cycle_reminder, :period_prediction, :ovulation_alert,
+    :appointment_reminder, :newsletter, :push_notifications, :email_notifications, :reminder_time)
+
   def subscriptions
-    @subscription = OpenStruct.new(
-      plan: current_user.plan || "Freemium",
-      payment_method: "none"
-    )
+    @subscription = SubscriptionData.new(current_user.plan || "Freemium", "none")
   end
 
   def calendar
-    @settings = OpenStruct.new(
-      appointments: true,
-      cycledays: false,
-      tracking_reminder: true,
-      moonphases: true,
-      holidays: true,
-      kalenderwochen: false,
-      day_of_week: "monday",
-      keep_timezone: true
-    )
+    @settings = CalendarSettings.new(true, false, true, true, true, false, "monday", true)
   end
 
   def notifications
-    @notifications = OpenStruct.new(
-      cycle_reminder: true,
-      period_prediction: true,
-      ovulation_alert: true,
-      appointment_reminder: false,
-      newsletter: true,
-      push_notifications: true,
-      email_notifications: true,
-      reminder_time: "09:00"
-    )
+    @notifications = NotificationSettings.new(true, true, true, false, true, true, true, "09:00")
   end
 
   def update_avatar

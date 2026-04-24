@@ -1,8 +1,6 @@
 class SuperpowersController < ApplicationController
-  include Authentication
   include Streakable
 
-  before_action :authenticate_user
   before_action :require_onboarding_completed
 
   SUPERPOWERS = {

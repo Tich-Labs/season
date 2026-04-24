@@ -1,6 +1,4 @@
 class CalendarController < ApplicationController
-  include Authentication
-
   before_action :require_onboarding_completed
 
   VALID_MODES = %w[all events tracking cycle].freeze
@@ -51,13 +49,13 @@ class CalendarController < ApplicationController
     if current_user.last_period_start
       calculator = CycleCalculatorService.new(current_user)
       @cycle_by_date = calculator.week_data(@week_start).index_by { |d| d[:date] }
+      @current_phase = calculator.current_phase
     else
       @cycle_by_date = {}
+      @current_phase = nil
     end
 
-    @current_phase = current_user.current_phase
-    @current_season = @current_phase ?
-      CycleCalculatorService::SEASON_NAMES[@current_phase] : nil
+    @current_season = CycleCalculatorService::SEASON_NAMES[@current_phase]
   end
 
   def index
@@ -72,8 +70,10 @@ class CalendarController < ApplicationController
     if current_user.last_period_start
       calculator = CycleCalculatorService.new(current_user)
       @cycle_by_date = calculator.month_data(@year, @month).index_by { |d| d[:date] }
+      @current_phase = calculator.current_phase
     else
       @cycle_by_date = {}
+      @current_phase = nil
     end
 
     # Events — keyed by date as Set for O(1) presence check, list for detail
@@ -91,9 +91,7 @@ class CalendarController < ApplicationController
     @prev_month = @date - 1.month
     @next_month = @date + 1.month
 
-    @current_phase = current_user.current_phase
-    @current_season = @current_phase ?
-      CycleCalculatorService::SEASON_NAMES[@current_phase] : nil
+    @current_season = CycleCalculatorService::SEASON_NAMES[@current_phase]
     @streak = current_user.streak&.current_streak || 0
   end
 end

@@ -1,6 +1,4 @@
 class TrackingController < ApplicationController
-  include Authentication
-
   before_action :require_onboarding_completed
 
   def index

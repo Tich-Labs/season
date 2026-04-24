@@ -1,5 +1,4 @@
 class SymptomsController < ApplicationController
-  include Authentication
   include Streakable
 
   before_action :require_onboarding_completed

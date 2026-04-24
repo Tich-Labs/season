@@ -1,7 +1,5 @@
 class InformationsController < ApplicationController
-  include Authentication
-
-  PHASES = %w[menstrual follicular ovulation luteal].freeze
+  PHASES = CycleEntry::PHASES
 
   def index
     @phases = PHASES.map do |phase|
