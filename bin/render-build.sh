@@ -17,6 +17,4 @@ echo "Loading solid_cache schema..."
 bundle exec rails db:cache:schema:load || { echo "ERROR: solid_cache schema load failed"; exit 1; }
 echo "Loading solid_queue schema..."
 bundle exec rails db:queue:schema:load || { echo "ERROR: solid_queue schema load failed"; exit 1; }
-echo "Loading solid_cable schema..."
-bundle exec rails db:cable:schema:load || { echo "ERROR: solid_cable schema load failed"; exit 1; }
-echo "All solid schemas loaded successfully."
+echo "Solid schemas loaded successfully."

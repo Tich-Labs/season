@@ -44,7 +44,6 @@ gem "httparty"
 gem "resend"
 
 # Background jobs & caching
-gem "solid_cable"
 gem "solid_cache"
 gem "solid_queue"
 
