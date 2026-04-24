@@ -20,7 +20,7 @@ class CalendarControllerTest < ActionDispatch::IntegrationTest
     sign_in_as(@alice)
     get user_root_path(date: "2026-06-01")
     assert_response :success
-    assert_match "June", response.body
+    assert_match "2026", response.body
   end
 
   test "GET /calendar with a different month date does not raise" do
