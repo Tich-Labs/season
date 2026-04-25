@@ -33,11 +33,16 @@ Rails.application.routes.draw do
   resource :registration, only: [:new, :create]
   resource :session, only: [:new, :create, :destroy]
 
-  # Devise for password recovery + OmniAuth
+  # Redirect Devise's default /users/sign_in to our custom Season login page.
+  # Warden's failure app and any external links pointing here will land on Season UI.
+  get "/users/sign_in", to: redirect("/session/new")
+
+  # Devise for password recovery + OmniAuth only — sessions handled by our own SessionsController
   devise_for :users,
     controllers: {
       passwords: "passwords"
     },
+    skip: [:sessions],
     omniauth_providers: [:google_oauth2, :facebook, :apple]
 
   # Custom password routes at /password/*
