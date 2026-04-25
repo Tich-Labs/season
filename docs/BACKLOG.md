@@ -159,6 +159,37 @@ end
 
 ---
 
+## Security Backlog (Post-MVP)
+
+From security audit 2026-04-25. Critical items already fixed. These are the remaining findings.
+
+### 🔴 High
+
+| ID | Issue | File | Fix |
+|----|-------|------|-----|
+| PROD-05 | `config.hosts` is commented out — DNS rebinding protection disabled | `config/environments/production.rb` | Uncomment and set to `ENV.fetch("APP_HOST")` + health check exclusion |
+| RATE-02 | Login rate limiter keyed on `request.ip` — bypassable via `X-Forwarded-For` spoofing | `sessions_controller.rb` | Add `rack-attack` gem + trusted proxy config |
+| FWKD-01 | `config.load_defaults 8.0` but app runs Rails 8.1.3 — missing 8.1 security defaults | `config/application.rb` | Run `bin/rails app:update` and review `new_framework_defaults_8_1.rb` |
+
+### 🟠 Medium
+
+| ID | Issue | File | Fix |
+|----|-------|------|-----|
+| AUTH-02 | Devise paranoid mode off — account enumeration possible via password reset/confirm responses | `config/initializers/devise.rb` | `config.paranoid = true` |
+| CSP-01 | CSP is report-only with no `report-uri` — zero enforcement or observability | `config/initializers/content_security_policy.rb` | Add `report-uri` endpoint, then flip `report_only` to `false` |
+| HDR-01 | No Permissions Policy — camera, mic, geolocation unrestricted | missing file | Create `config/initializers/permissions_policy.rb` |
+| PROD-04 | Devise password minimum is 6 chars (below NIST 8-char minimum) | `config/initializers/devise.rb` | `config.password_length = 10..128` |
+| DATA-01 | Active Storage on local disk in production — avatars lost on every Render redeploy | `config/environments/production.rb` | Switch to S3 / Cloudflare R2 |
+
+### 🟢 Info
+
+| ID | Issue | Notes |
+|----|-------|-------|
+| INFO-03 | Sentry gem installed but no initializer found — exceptions silently dropped in production | Create `config/initializers/sentry.rb` and add `SENTRY_DSN` to `render.yaml` |
+| INFO-02 | `DebugController` has unconditional `allow_unauthenticated_access` — relies on route guard only | Add `raise` or environment check inside the controller as belt-and-suspenders |
+
+---
+
 ## Pushing these as GitHub Issues
 
 Once you've installed `gh` and authenticated, run:
