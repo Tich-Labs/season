@@ -12,7 +12,7 @@ class SessionsController < ApplicationController
   end
 
   def create
-    email = params[:email]
+    email = params[:email].to_s.strip
     password = params[:password]
 
     @user = User.find_by(email: email.downcase)
