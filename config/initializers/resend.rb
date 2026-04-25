@@ -12,7 +12,11 @@ Resend::Mailer.prepend(Module.new do
     if from_field.respond_to?(:formatted)
       from_field.formatted.first
     else
-      from_field.value.to_s.strip
+      # Log the raw value so we can see what mail 2.9.0 is actually returning
+      extracted = from_field.value.to_s.strip
+      Rails.logger.info "[RESEND PATCH] UnstructuredField value=#{extracted.inspect}"
+      # Use extracted value if it contains @, otherwise fall back to env var
+      extracted.include?("@") ? extracted : ENV.fetch("RESEND_FROM_EMAIL", ENV.fetch("MAIL_FROM", "info@season.vision"))
     end
   end
 end)
