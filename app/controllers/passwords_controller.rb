@@ -14,13 +14,15 @@ class PasswordsController < ApplicationController
   def create
     email = params[:email]
     user = User.find_by(email: email)
+    Rails.logger.info "[PASSWORD RESET] Requested for email=#{email.inspect} user_found=#{user.present?}"
     user&.send_reset_password_instructions
+    Rails.logger.info "[PASSWORD RESET] Email sent OK for email=#{email.inspect}"
 
     # Always redirect to done page (don't reveal whether the email exists).
     redirect_to done_password_path
   rescue => e
-    Rails.logger.error "Password reset error: #{e.class} - #{e.message}"
-    Rails.logger.error e.backtrace.join("\n")
+    Rails.logger.error "[PASSWORD RESET] FAILED email=#{email.inspect} error=#{e.class} message=#{e.message}"
+    Rails.logger.error e.backtrace.first(10).join("\n")
     Sentry.capture_exception(e) if defined?(Sentry)
     redirect_to password_error_contact_path, alert: "Error: #{e.message}"
   end
