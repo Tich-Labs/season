@@ -21,12 +21,15 @@ class PasswordsController < ApplicationController
   rescue => e
     Rails.logger.error "Password reset error: #{e.class} - #{e.message}"
     Rails.logger.error e.backtrace.join("\n")
-    redirect_to password_error_contact_path, alert: t(".unable_to_send", default: "We were unable to send the reset email. Please contact support.")
+    Sentry.capture_exception(e) if defined?(Sentry)
+    redirect_to password_error_contact_path, alert: "Error: #{e.message}"
   end
 
   def update
     if @user.update(password: params[:password], password_confirmation: params[:password_confirmation])
-      redirect_to new_session_path, notice: t(".password_updated_notice")
+      @user.skip_reconfirmation!
+      login @user
+      redirect_to after_sign_in_path, notice: t(".password_updated_notice")
     else
       render :edit, status: :unprocessable_content
     end

@@ -21,6 +21,7 @@ class RegistrationsController < ApplicationController
       render :new, status: :unprocessable_content
     else
       @user = User.new(attributes.merge(email: email, name: name))
+      @user.skip_confirmation!
 
       if @user.save
         login @user
