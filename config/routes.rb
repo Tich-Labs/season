@@ -10,6 +10,19 @@ Rails.application.routes.draw do
         [500, {"Content-Type" => "text/plain"}, ["Error: #{e.class}: #{e.message}\n#{e.backtrace.first(3).join("\n")}"]]
       end
     }
+    get "test-email", to: proc { |env|
+      begin
+        result = Resend::Emails.send({
+          from: ENV.fetch("RESEND_FROM_EMAIL", "onboarding@resend.dev"),
+          to: ENV.fetch("RESEND_TEST_TO", "delivered@resend.dev"),
+          subject: "Test from Season",
+          html: "<p>Working!</p>"
+        })
+        [200, {"Content-Type" => "application/json"}, [result.inspect]]
+      rescue => e
+        [500, {"Content-Type" => "application/json"}, [{error: e.message}.to_json]]
+      end
+    }
   end
 
   get "/app", to: "home#app", as: :app_landing
