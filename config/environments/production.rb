@@ -66,7 +66,6 @@ Rails.application.configure do
 
   if ENV["RESEND_API_KEY"].present?
     config.action_mailer.delivery_method = :resend
-    config.action_mailer.default_options = {from: ENV.fetch("RESEND_FROM_EMAIL", "Season <info@season.vision>")}
   else
     config.action_mailer.delivery_method = :smtp
     config.action_mailer.smtp_settings = {
@@ -78,7 +77,6 @@ Rails.application.configure do
       authentication: :plain,
       enable_starttls_auto: true
     }
-    config.action_mailer.default_options = {from: ENV.fetch("SMTP_FROM_EMAIL", "Season <seasonfemcycleapp@gmail.com>")}
   end
 
   config.action_mailer.default_url_options = {host: host, protocol: "https"}
