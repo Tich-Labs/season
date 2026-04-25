@@ -1,6 +1,7 @@
 class SessionsController < ApplicationController
   layout "launch"
   allow_unauthenticated_access only: [:new, :create]
+  skip_onboarding_requirement
   before_action :redirect_if_authenticated, only: [:new, :create]
   before_action :rate_limit_login, only: [:create]
 
