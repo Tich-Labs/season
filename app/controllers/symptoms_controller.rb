@@ -1,7 +1,6 @@
 class SymptomsController < ApplicationController
   include Streakable
 
-  before_action :require_onboarding_completed
 
   def index
     @date = params[:date] ? Date.parse(params[:date]) : Time.zone.today

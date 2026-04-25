@@ -1,5 +1,4 @@
 class StreaksController < ApplicationController
-  before_action :require_onboarding_completed
 
   def index
     @streak = current_user.streak || current_user.create_streak(

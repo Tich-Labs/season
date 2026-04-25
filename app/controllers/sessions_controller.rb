@@ -59,9 +59,7 @@ class SessionsController < ApplicationController
   end
 
   def increment_login_attempts
-    key = login_attempts_key
-    attempts = login_attempts + 1
-    Rails.cache.write(key, attempts, expires_in: LOGIN_RATE_WINDOW)
+    Rails.cache.increment(login_attempts_key, 1, expires_in: LOGIN_RATE_WINDOW, initial: 1)
   end
 
   def reset_login_attempts

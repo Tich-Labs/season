@@ -1,5 +1,4 @@
 class SettingsController < ApplicationController
-  before_action :require_onboarding_completed
 
   def edit
     @user = current_user

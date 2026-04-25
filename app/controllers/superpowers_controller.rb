@@ -1,7 +1,6 @@
 class SuperpowersController < ApplicationController
   include Streakable
 
-  before_action :require_onboarding_completed
 
   SUPERPOWERS = {
     "menstrual" => [

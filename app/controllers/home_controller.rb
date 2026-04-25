@@ -3,12 +3,7 @@ class HomeController < ApplicationController
   layout "launch", only: [:loader, :app, :countdown, :welcome]
 
   def app
-    if authenticated?
-      step = current_user.first_incomplete_onboarding_step
-      step ? redirect_to(onboarding_path(step)) : redirect_to(user_root_path)
-    else
-      redirect_to welcome_path
-    end
+    authenticated? ? redirect_to(after_sign_in_path) : redirect_to(welcome_path)
   end
 
   def loader

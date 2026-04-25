@@ -2,7 +2,7 @@ class RegistrationsController < ApplicationController
   layout "launch"
 
   allow_unauthenticated_access only: [:new, :create]
-  skip_before_action :authenticate_user, only: [:new, :create]
+  skip_onboarding_requirement
 
   def new
     @user = User.new
@@ -25,7 +25,7 @@ class RegistrationsController < ApplicationController
 
       if @user.save
         login @user
-        redirect_to onboarding_path(1)
+        redirect_to after_sign_in_path
       else
         render :new, status: :unprocessable_content
       end
@@ -35,10 +35,6 @@ class RegistrationsController < ApplicationController
   private
 
   def user_params
-    if params[:user].present?
-      params.expect(user: [:email, :password, :password_confirmation, :name])
-    else
-      params.permit(:email, :password, :password_confirmation, :name)
-    end
+    params.permit(:email, :password, :password_confirmation, :name)
   end
 end

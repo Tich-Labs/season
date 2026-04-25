@@ -1,5 +1,4 @@
 class CalendarController < ApplicationController
-  before_action :require_onboarding_completed
 
   VALID_MODES = %w[all events tracking cycle].freeze
 

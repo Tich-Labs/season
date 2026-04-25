@@ -1,5 +1,4 @@
 class TrackingController < ApplicationController
-  before_action :require_onboarding_completed
 
   def index
     @date = Time.zone.today

@@ -17,10 +17,6 @@ module Authentication
     def skip_onboarding_requirement(**)
       skip_before_action(:require_onboarding_completed, **)
     end
-
-    def devise_controller?
-      false
-    end
   end
 
   private
@@ -67,12 +63,12 @@ module Authentication
 
   def after_sign_in_path
     step = current_user.first_incomplete_onboarding_step
-    step ? onboarding_path(step) : user_root_path
+    return onboarding_path(step) if step
+
+    session.delete("user_return_to") || user_root_path
   end
 
   def require_onboarding_completed
-    return unless authenticated?
-
     step = current_user.first_incomplete_onboarding_step
     redirect_to onboarding_path(step) if step
   end

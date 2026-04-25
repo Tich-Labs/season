@@ -1,5 +1,4 @@
 class DailyViewController < ApplicationController
-  before_action :require_onboarding_completed
 
   def show
     @date = if params[:date] == "today"
