@@ -219,7 +219,12 @@
     </div>
 
     <%= form_with url: update_profile_settings_path, method: :patch, local: true do %>
+      <label style="display:block; color:#933a35; font-size:13px; font-weight:500; margin-bottom:6px;">New email address</label>
       <input type="email" name="email" value="<%= @user.email %>" required autocomplete="email"
+             style="width:100%; background:#FFFFFF; border:1px solid #DDD0CB; border-radius:12px; padding:16px; font-size:16px; color:#933a35; box-sizing:border-box; margin-bottom:12px;">
+      <label style="display:block; color:#933a35; font-size:13px; font-weight:500; margin-bottom:6px;">Current password</label>
+      <input type="password" name="current_password" required autocomplete="current-password"
+             placeholder="Enter your password to confirm"
              style="width:100%; background:#FFFFFF; border:1px solid #DDD0CB; border-radius:12px; padding:16px; font-size:16px; color:#933a35; box-sizing:border-box; margin-bottom:16px;">
       <button type="submit" style="width:100%; background:#933a35; color:white; border:none; border-radius:12px; padding:14px; font-size:16px; font-weight:500; cursor:pointer;">
         Save

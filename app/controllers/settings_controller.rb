@@ -41,6 +41,10 @@ class SettingsController < ApplicationController
   def update_profile
     @user = current_user
     if params[:email].present? && params[:email] != @user.email
+      unless @user.valid_password?(params[:current_password].to_s)
+        redirect_to profile_settings_path, alert: t(".invalid_password", default: "Current password is incorrect.")
+        return
+      end
       @user.update(email: params[:email])
       redirect_to profile_settings_path, notice: t(".confirmation_sent")
     elsif params[:name].present? || params[:cycle_length].present? || params[:period_length].present?

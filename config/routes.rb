@@ -1,14 +1,16 @@
 Rails.application.routes.draw do
-  get "test-db", to: proc { |env| [200, {"Content-Type" => "text/plain"}, ["OK - Rails #{Rails.env}"]] }
-  get "test-load", to: proc { |env|
-    begin
-      require "registrations_controller"
-      klass = RegistrationsController
-      [200, {"Content-Type" => "text/plain"}, ["Controller loads OK: #{klass}"]]
-    rescue => e
-      [500, {"Content-Type" => "text/plain"}, ["Error: #{e.class}: #{e.message}\n#{e.backtrace.first(3).join("\n")}"]]
-    end
-  }
+  unless Rails.env.production?
+    get "test-db", to: proc { |env| [200, {"Content-Type" => "text/plain"}, ["OK - Rails #{Rails.env}"]] }
+    get "test-load", to: proc { |env|
+      begin
+        require "registrations_controller"
+        klass = RegistrationsController
+        [200, {"Content-Type" => "text/plain"}, ["Controller loads OK: #{klass}"]]
+      rescue => e
+        [500, {"Content-Type" => "text/plain"}, ["Error: #{e.class}: #{e.message}\n#{e.backtrace.first(3).join("\n")}"]]
+      end
+    }
+  end
 
   get "/app", to: "home#app", as: :app_landing
   get "/loader", to: "home#loader", as: :loader
@@ -92,28 +94,30 @@ Rails.application.routes.draw do
 
   get "up" => "rails/health#show", :as => :rails_health_check
   get "ping" => ->(env) { [200, {"Content-Type" => "text/plain"}, ["OK"]] }
-  get "test" => "debug#test"
-  get "model-test", to: ->(env) {
-    begin
-      user_count = User.count
-      [200, {"Content-Type" => "text/plain"}, ["User count: #{user_count}"]]
-    rescue => e
-      [500, {"Content-Type" => "text/plain"}, ["Error: #{e.message}"]]
-    end
-  }
-  get "i18n-test", to: ->(env) {
-    # Test if I18n works
-    I18n.locale = I18n.default_locale
-    test = I18n.t("devise.registrations.new.subtitle", default: "NOT FOUND")
-    [200, {"Content-Type" => "text/plain"}, ["I18n test: #{test}"]]
-  }
-  get "env", to: ->(env) {
-    body = "Rails: #{Rails.env}\nEager: #{Rails.application.config.eager_load?}\n"
-    body += "SECRET_KEY_BASE: #{ENV["SECRET_KEY_BASE"]&.present? ? "set" : "missing"}\n"
-    body += "DATABASE_URL: #{ENV["DATABASE_URL"]&.present? ? "set" : "missing"}\n"
-    body += "RAILS_MASTER_KEY: #{ENV["RAILS_MASTER_KEY"]&.present? ? "set" : "missing"}\n"
-    [200, {"Content-Type" => "text/plain"}, [body]]
-  }
+
+  unless Rails.env.production?
+    get "test" => "debug#test"
+    get "model-test", to: ->(env) {
+      begin
+        user_count = User.count
+        [200, {"Content-Type" => "text/plain"}, ["User count: #{user_count}"]]
+      rescue => e
+        [500, {"Content-Type" => "text/plain"}, ["Error: #{e.message}"]]
+      end
+    }
+    get "i18n-test", to: ->(env) {
+      I18n.locale = I18n.default_locale
+      test = I18n.t("devise.registrations.new.subtitle", default: "NOT FOUND")
+      [200, {"Content-Type" => "text/plain"}, ["I18n test: #{test}"]]
+    }
+    get "env", to: ->(env) {
+      body = "Rails: #{Rails.env}\nEager: #{Rails.application.config.eager_load?}\n"
+      body += "SECRET_KEY_BASE: #{ENV["SECRET_KEY_BASE"]&.present? ? "set" : "missing"}\n"
+      body += "DATABASE_URL: #{ENV["DATABASE_URL"]&.present? ? "set" : "missing"}\n"
+      body += "RAILS_MASTER_KEY: #{ENV["RAILS_MASTER_KEY"]&.present? ? "set" : "missing"}\n"
+      [200, {"Content-Type" => "text/plain"}, [body]]
+    }
+  end
 
   get "informations", to: "informations#index", as: :informations
   get "informations/:phase", to: "informations#show", as: :informations_phase

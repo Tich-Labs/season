@@ -118,6 +118,14 @@
             <% end %>
           </div>
         </div>
+      <% elsif @error_type == :unconfirmed %>
+        <div id="auth-error" role="alert" style="display:flex; align-items:flex-start; gap:10px; background:#FDF0EE; border-radius:8px; padding:12px 14px; margin-top:16px;">
+          <span style="color:#933a35; font-size:20px; font-weight:700; line-height:1; flex-shrink:0;">!</span>
+          <div>
+            <p style="color:#933a35; font-size:15px; font-weight:500;">Please confirm your email first.</p>
+            <p style="color:#933a35; font-size:15px; font-weight:400;">Check your inbox for the confirmation link.</p>
+          </div>
+        </div>
       <% elsif alert.present? %>
         <div style="background:#FDF0EE; border-radius:8px; padding:12px 14px; margin-top:16px;">
           <p style="color:#933a35; font-size:15px; font-weight:400;"><%= alert %></p>

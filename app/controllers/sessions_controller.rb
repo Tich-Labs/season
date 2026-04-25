@@ -18,6 +18,12 @@ class SessionsController < ApplicationController
     @user = User.find_by(email: email.downcase)
 
     if @user&.valid_password?(password)
+      unless @user.confirmed?
+        @error_type = :unconfirmed
+        @user = User.new
+        render :new, status: :unprocessable_content
+        return
+      end
       reset_login_attempts
       login @user
       redirect_to after_sign_in_path

@@ -64,14 +64,28 @@ class User < ApplicationRecord
   end
 
   def self.find_or_create_from_oauth(provider, auth)
-    find_or_initialize_by(email: auth.info.email.downcase).tap do |user|
-      user.assign_attributes(
-        :name => auth.info.name,
-        "#{provider}_uid" => auth.uid
-      )
-      user.save! if user.new_record?
+    uid_column = "#{provider}_uid"
+    email = auth.info.email&.downcase
+
+    # UID-first lookup handles Apple repeat logins where email is absent after first auth
+    user = find_by(uid_column => auth.uid) if auth.uid.present?
+    user ||= find_or_initialize_by(email: email) if email.present?
+    return User.new unless user
+
+    user.assign_attributes(
+      :name => auth.info.name.presence || user.name,
+      uid_column => auth.uid
+    )
+
+    if user.new_record?
+      user.skip_confirmation!
+      user.save!
+    elsif user.public_send(uid_column).blank?
+      user.update(uid_column => auth.uid)
     end
-  rescue ActiveRecord::RecordInvalid
+
     user
+  rescue ActiveRecord::RecordInvalid
+    user || User.new
   end
 end

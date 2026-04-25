@@ -38,7 +38,7 @@ services:
       - key: RESEND_API_KEY
         sync: false
       - key: RESEND_FROM_EMAIL
-        value: noreply@season.vision
+        value: Season <info@season.vision>
       - key: SUPPORT_EMAIL
         value: info@season.vision
       - key: APP_HOST
