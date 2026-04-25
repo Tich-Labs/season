@@ -13,10 +13,10 @@ class SessionsController < ApplicationController
   end
 
   def create
-    email = params[:email].to_s.strip
+    email = params[:email].to_s.strip.downcase
     password = params[:password]
 
-    @user = User.find_by(email: email.downcase)
+    @user = User.find_by(email: email)
 
     if @user&.valid_password?(password)
       unless @user.confirmed?
