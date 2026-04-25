@@ -11,7 +11,7 @@
 <div style="background:#ffffff; min-height:100%;">
   <div style="max-width:430px; margin:0 auto; padding:0 16px 80px;">
 
-    <script>
+    <script nonce="<%= content_security_policy_nonce %>">
       function toggleSetting(key) {
         fetch(<%= update_notifications_settings_path.to_json %>, {
           method: 'PATCH',

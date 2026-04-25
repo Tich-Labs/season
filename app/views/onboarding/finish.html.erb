@@ -30,7 +30,7 @@
   </div>
 </div>
 
-<script>
+<script nonce="<%= content_security_policy_nonce %>">
   window.addEventListener('DOMContentLoaded', function() {
     setTimeout(function() {
         window.location.href = <%= calendar_path.to_json %>;

@@ -94,7 +94,7 @@
       </div>
     </div>
 
-    <script>
+    <script nonce="<%= content_security_policy_nonce %>">
       function selectPlan(plan) {
         document.getElementById('dot-yearly').style.display = 'none';
         document.getElementById('dot-monthly').style.display = 'none';

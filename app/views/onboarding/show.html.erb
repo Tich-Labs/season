@@ -1,6 +1,6 @@
 <div class="min-h-screen bg-white flex flex-col max-w-[430px] mx-auto px-8 pt-[60px] pb-12">
 
-  <script>
+  <script nonce="<%= content_security_policy_nonce %>">
     function selectDate(date, btn) {
       document.getElementById('last_period_value').value = date;
       document.querySelectorAll('.cal-day').forEach(function(b) {
@@ -114,7 +114,7 @@
           </button>
         </div>
       </div>
-      <script>
+      <script nonce="<%= content_security_policy_nonce %>">
         (function() {
           var modal = document.getElementById('no-problem-modal');
           if (!modal) return;
@@ -427,7 +427,7 @@
   <% end %>
 </div>
 
-<script>
+<script nonce="<%= content_security_policy_nonce %>">
 document.addEventListener('turbo:load', function () {
 
   // ── Step 4: Cycle length drum picker ──────────────────────────────

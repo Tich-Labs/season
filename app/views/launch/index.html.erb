@@ -7,7 +7,7 @@
       class="h-60 object-contain">
   </div>
 
-  <script>
+  <script nonce="<%= content_security_policy_nonce %>">
     // Auto-redirect after 2 seconds
     setTimeout(() => {
       window.location.href = '/welcome';

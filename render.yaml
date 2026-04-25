@@ -26,7 +26,7 @@ services:
       - key: RAILS_SERVE_STATIC_FILES
         value: "true"
       - key: RAILS_MASTER_KEY
-        generateValue: true
+        sync: false
       - key: SECRET_KEY_BASE
         generateValue: true
       - key: WEB_CONCURRENCY
