@@ -17,13 +17,13 @@ namespace :setup do
 
     # ── 2. Test accounts ──────────────────────────────────────────────────────
     test_accounts = [
-      { email: "test1@seasonapp.co", name: "Test User One",  password: "Season2026!" },
-      { email: "test2@seasonapp.co", name: "Test User Two",  password: "Season2026!" }
+      {email: "test1@seasonapp.co", name: "Test User One", password: "Season2026!"},
+      {email: "test2@seasonapp.co", name: "Test User Two", password: "Season2026!"}
     ]
 
     test_accounts.each do |attrs|
       user = User.find_or_initialize_by(email: attrs[:email])
-      user.name     = attrs[:name]
+      user.name = attrs[:name]
       user.password = attrs[:password]
       user.language = "en"
       user.onboarding_completed = false
