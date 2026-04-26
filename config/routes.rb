@@ -99,6 +99,9 @@ Rails.application.routes.draw do
   end
 
   namespace :admin do
+    get "login", to: "sessions#new", as: :login
+    post "login", to: "sessions#create"
+    delete "logout", to: "sessions#destroy", as: :logout
     resources :users, only: [:index, :show]
     get "inbox", to: "inbox#overview", as: :inbox
     get "inbox/feedback", to: "inbox#feedback"

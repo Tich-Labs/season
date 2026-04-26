@@ -5,7 +5,11 @@ class Admin::BaseController < ApplicationController
   private
 
   def require_admin
-    redirect_to root_path unless authenticated? && current_user.admin?
+    unless authenticated?
+      redirect_to admin_login_path
+      return
+    end
+    redirect_to root_path unless current_user.admin?
   end
 
   def set_inbox_stats
