@@ -492,6 +492,9 @@ All under `/admin`, gated by `Admin::BaseController` requiring `current_user.adm
 | GET | `/admin/inbox/export_csv` | `admin/inbox#export_csv` |
 | GET | `/admin/launch_signups` | `admin/launch_signups#index` |
 | GET | `/admin/launch_signups/export_csv` | `admin/launch_signups#export_csv` |
+| GET | `/admin/login` | `admin/sessions#new` | Standalone admin login page |
+| POST | `/admin/login` | `admin/sessions#create` | Submit admin credentials |
+| DELETE | `/admin/logout` | `admin/sessions#destroy` | Admin sign out |
 
 ### Debug/Test Routes (Production Risk)
 
@@ -669,6 +672,7 @@ Devise's `expire_all_remember_me_on_sign_out = true` is configured but only appl
 - `edit`: `before_action :load_user_from_token` — calls `User.with_reset_password_token(params[:reset_password_token])`. If nil (expired or invalid), redirects to `password_error_link_expired_path`.
 - Token expiry: **6 hours** (`config.reset_password_within = 6.hours`).
 - `update`: Calls `@user.update(password:, password_confirmation:)`. On success: redirects to `new_session_path` with notice. On failure: re-renders `edit`.
+- The edit form includes a hidden `autocomplete="username"` field containing the user's email address. This ensures browsers associate the newly saved password with the correct account email rather than an ambiguous domain entry. Both password fields carry `autocomplete="new-password"`.
 - After successful reset, Devise's default `sign_in_after_reset_password = true` signs the user in — but since this is handled via Devise's `update` method chain, and the app uses custom sessions, the auto-sign-in likely does not apply. The user is redirected to sign-in manually.
 
 #### Error Pages
@@ -766,11 +770,27 @@ Token-based invite for new users (likely admin-generated, though the admin panel
 ### Access Control
 
 `Admin::BaseController < ApplicationController` with:
-- `before_action :require_admin` — checks `authenticated? && current_user.admin?`. Redirects to `root_path` if either is false.
+- `before_action :require_admin` — checks `authenticated?` first, then `current_user.admin?`. If unauthenticated, redirects to `admin_login_path`. If authenticated but not admin, redirects to `root_path`.
 - `before_action :set_inbox_stats` — populates `@stats` hash for sidebar badge counts.
 - `layout "admin"` — uses `app/views/layouts/admin.html.erb`.
 
 The `admin` boolean is set directly on the `User` record. There is no admin provisioning UI. Use the rake task below to bootstrap the first admin user and test accounts.
+
+### Admin Login
+
+`/admin/login` is a standalone desktop login page separate from the app's mobile sign-in flow. It is handled by `Admin::SessionsController` and rendered with the `admin_auth` layout (`app/views/layouts/admin_auth.html.erb`) — a clean, sidebar-free page with a Season-branded login card.
+
+**Behaviour:**
+
+| Visitor state | Result |
+|---------------|--------|
+| Unauthenticated | Redirected to `/admin/login` by `require_admin` |
+| Authenticated as admin | Passes straight through to the requested admin page |
+| Authenticated as non-admin | Redirected to app `root_path` |
+
+After a successful admin login via `/admin/login`, the user is redirected to `/admin`.
+
+The admin sidebar footer includes a "Sign out" button that issues `DELETE /admin/logout`, which calls `Admin::SessionsController#destroy` and clears the session.
 
 ### Controllers
 
@@ -851,11 +871,20 @@ Base mailer. Default `from:` reads `MAIL_FROM` env var (defaults to `info@season
 
 #### Devise Mailer
 
-Devise's default mailer handles:
+Devise's mailer handles:
 - Email confirmation on registration
 - Password reset email (`send_reset_password_instructions`)
 
 `config.mailer_sender` = `MAIL_FROM` env var (`info@season.vision`).
+
+Custom branded HTML templates replace Devise's bare defaults:
+
+| Template             | Path                                                                    |
+|----------------------|-------------------------------------------------------------------------|
+| Password reset       | `app/views/devise/mailer/reset_password_instructions.html.erb`          |
+| Account confirmation | `app/views/devise/mailer/confirmation_instructions.html.erb`            |
+
+Both templates use the Season brand (red CTA button, cream `#FAF7F4` background) and include a plain-text fallback URL below the button. The shared mailer shell is at `app/views/layouts/mailer.html.erb`.
 
 ### URL Options
 
