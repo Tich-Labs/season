@@ -47,48 +47,74 @@
   <%# Two-column detail row %>
   <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
 
-    <%# Cycle data %>
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-      <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-4">Cycle Data</h3>
-      <dl class="grid grid-cols-2 gap-4">
-        <div>
-          <dt class="text-xs text-gray-500">Cycle Length</dt>
-          <dd class="text-sm font-medium text-[#933a35] mt-0.5"><%= @user.cycle_length ? "#{@user.cycle_length} days" : "\u2014" %></dd>
-        </div>
-        <div>
-          <dt class="text-xs text-gray-500">Period Length</dt>
-          <dd class="text-sm font-medium text-[#933a35] mt-0.5"><%= @user.period_length ? "#{@user.period_length} days" : "\u2014" %></dd>
-        </div>
-        <div>
-          <dt class="text-xs text-gray-500">Last Period</dt>
-          <dd class="text-sm font-medium text-[#933a35] mt-0.5"><%= @user.last_period_start || "Not set" %></dd>
-        </div>
-        <div>
-          <dt class="text-xs text-gray-500">Current Phase</dt>
-          <dd class="text-sm font-medium text-[#933a35] mt-0.5"><%= @user.current_phase || "Unknown" %></dd>
-        </div>
-      </dl>
-    </div>
+<%# Cycle data %>
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+    <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-4">Cycle Data</h3>
+    <dl class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+      <div>
+        <dt class="text-xs text-gray-500">Cycle Length</dt>
+        <dd class="text-sm font-medium text-[#933a35] mt-0.5"><%= @user.cycle_length ? "#{@user.cycle_length} days" : "\u2014" %></dd>
+      </div>
+      <div>
+        <dt class="text-xs text-gray-500">Period Length</dt>
+        <dd class="text-sm font-medium text-[#933a35] mt-0.5"><%= @user.period_length ? "#{@user.period_length} days" : "\u2014" %></dd>
+      </div>
+      <div>
+        <dt class="text-xs text-gray-500">Avg Cycle (actual)</dt>
+        <dd class="text-sm font-bold text-[#933a35] mt-0.5"><%= @avg_cycle_length ? "#{@avg_cycle_length} days" : "\u2014" %></dd>
+      </div>
+      <div>
+        <dt class="text-xs text-gray-500">Last Period</dt>
+        <dd class="text-sm font-medium text-[#933a35] mt-0.5"><%= @user.last_period_start || "\u2014" %></dd>
+      </div>
+      <div>
+        <dt class="text-xs text-gray-500">Current Phase</dt>
+        <dd class="text-sm font-medium text-[#933a35] mt-0.5 capitalize"><%= @user.current_phase || "Unknown" %></dd>
+      </div>
+      <div>
+        <dt class="text-xs text-gray-500">Cycle Day</dt>
+        <dd class="text-sm font-bold text-[#933a35] mt-0.5"><%= @user.current_cycle_day || "\u2014" %></dd>
+      </div>
+      <div>
+        <dt class="text-xs text-gray-500">Next Period</dt>
+        <dd class="text-sm font-medium text-[#933a35] mt-0.5">
+          <% if @user.last_period_start && @user.cycle_length %>
+            <%= begin (@user.last_period_start.to_date + @user.cycle_length.days).strftime("%Y-%m-%d") rescue "\u2014" end %>
+          <% else %>
+            <span class="text-gray-400">\u2014</span>
+          <% end %>
+        </dd>
+      </div>
+    </dl>
 
-    <%# Activity stats %>
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-      <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-4">Activity</h3>
-      <div class="grid grid-cols-3 gap-4 text-center">
-        <div>
-          <p class="text-2xl font-bold text-[#933a35]"><%= @user.cycle_entries.count %></p>
-          <p class="text-xs text-gray-500 mt-0.5">Entries</p>
-        </div>
-        <div>
-          <p class="text-2xl font-bold text-[#933a35]"><%= @user.symptom_logs.count %></p>
-          <p class="text-xs text-gray-500 mt-0.5">Symptoms</p>
-        </div>
-        <div>
-          <p class="text-2xl font-bold text-[#933a35]"><%= @user.calendar_events.count %></p>
-          <p class="text-xs text-gray-500 mt-0.5">Events</p>
-        </div>
+    <%# Period history %>
+    <% if @period_dates.any? %>
+      <h4 class="text-xs font-semibold text-gray-500 uppercase tracking-wide mt-6 mb-2">Recent Periods (<%= @period_dates.size %>)</h4>
+      <div class="flex flex-wrap gap-2">
+        <% @period_dates.each do |date| %>
+          <span class="inline-flex px-2 py-1 rounded-md bg-[#f5ede8] text-[#933a35] text-xs"><%= date.strftime("%Y-%m-%d") %></span>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <%# Activity stats %>
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+    <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-4">Activity</h3>
+    <div class="grid grid-cols-3 gap-4 text-center">
+      <div>
+        <p class="text-2xl font-bold text-[#933a35]"><%= @user.cycle_entries.count %></p>
+        <p class="text-xs text-gray-500 mt-0.5">Entries</p>
+      </div>
+      <div>
+        <p class="text-2xl font-bold text-[#933a35]"><%= @user.symptom_logs.count %></p>
+        <p class="text-xs text-gray-500 mt-0.5">Symptoms</p>
+      </div>
+      <div>
+        <p class="text-2xl font-bold text-[#933a35]"><%= @user.calendar_events.count %></p>
+        <p class="text-xs text-gray-500 mt-0.5">Events</p>
       </div>
     </div>
-
   </div>
 
 </div>

@@ -21,8 +21,9 @@ Design reference: `docs/figma_nodes.md`
 
 - M1, M2, M3, M4, M5, M7: All built
 - M6: Not in scope
-- M2 priorities: SMTP/email, OAuth credentials, accessibility fixes, i18n, rate limiting
-- See README.md for full M2 target list.
+- M2 remaining: OAuth credentials, accessibility fixes
+- M2 complete: SMTP/email (Resend), admin enhancements, LaunchSignup system
+- See docs/AUDIT-2026-04-10.md for full status.
 
 ### M3 Summary (Tracking / Learn)
 
@@ -128,7 +129,7 @@ Admin lives at `/admin/*`, gated by `User#admin?`. Layout: `app/views/layouts/ad
 
 ### Admin routes
 - `GET /admin` → Users list (root)
-- `GET /admin/users/:id` → User detail
+- `GET /admin/users/:id` → User detail (includes cycle stats: avg cycle length, period history, next period prediction)
 - `GET /admin/inbox` → All messages (overview)
 - `GET /admin/inbox/feedback` → Feedback only
 - `GET /admin/inbox/bugs` → Bug reports only
@@ -136,6 +137,7 @@ Admin lives at `/admin/*`, gated by `User#admin?`. Layout: `app/views/layouts/ad
 - `GET /admin/inbox/export_csv` → CSV download
 - `GET /admin/launch_signups` → Waitlist list
 - `GET /admin/launch_signups/export_csv` → CSV download
+- `GET /admin/login` → Admin-only login (separate from app auth)
 
 ### Admin sidebar rules
 - All active states use `bg-[#7a2f2a] text-white` — never use blue/red/purple per section
@@ -197,7 +199,7 @@ All error states must:
 - **`User#current_phase`** — may return nil for new users with no cycle data. Always guard with `|| "Unknown"` in views.
 - **`current_user.onboarding_completed?`** — use this (not `last_period_start.present?`) to check if a user has finished onboarding.
 - **Resend mailer**: use the gem adapter — `config.action_mailer.delivery_method = :resend` in `production.rb`. The API key must be set via `config/initializers/resend.rb` (`Resend.api_key = ENV["RESEND_API_KEY"]`). Do NOT use raw SMTP with `smtp.resend.com` — it was removed.
-- **OmniAuth (Google/Facebook/Apple)**: configured once via `config.omniauth` in `config/initializers/devise.rb` only. A separate `config/initializers/omniauth.rb` was deleted — do not recreate it.
+- **OmniAuth (Google/Facebook/Apple)**: configured once via `config.omniauth` in `config/initializers/devise.rb` only. A separate `config/initializers/omniauth.rb` was deleted — do not recreate it. **OAuth is fully built — just add credentials to Render dashboard.** See docs/app_documentation.md for step-by-step setup.
 - **Password reset — expired/invalid token**: redirects to `password_error_link_expired_path` (`/password/error/link-expired`). Do not use `password_error_already_reset_path` for this case — that page is only for rate-limit messaging.
 - **Password reset form**: has two fields (`password` + `password_confirmation`). Validation errors re-render the form inline (not redirect). The token is passed via a hidden field.
 

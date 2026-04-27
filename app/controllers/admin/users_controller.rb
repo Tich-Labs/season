@@ -18,9 +18,21 @@ class Admin::UsersController < Admin::BaseController
 
   def show
     @user = User.find(params[:id])
+    @period_dates = @user.cycle_entries.where(phase: "menstrual").order(date: :desc).limit(12).pluck(:date)
+    @avg_cycle_length = calculate_avg_cycle_length
   end
 
   private
+
+  def calculate_avg_cycle_length
+    periods = @user.cycle_entries.where(phase: "menstrual").order(:date).pluck(:date)
+    return nil if periods.size < 2
+
+    gaps = periods.first(periods.size - 1).each_with_index.map do |date, i|
+      (date - periods[i + 1]).to_i
+    end
+    (gaps.sum.to_f / gaps.size).round
+  end
 
   def generate_csv(users)
     CSV.generate(headers: true) do |csv|

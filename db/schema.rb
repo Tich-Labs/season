@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_21_100104) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_26_154703) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -106,6 +106,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_21_100104) do
 
   create_table "reminders", force: :cascade do |t|
     t.boolean "active", default: false, null: false
+    t.integer "advance_days"
     t.integer "break_days"
     t.datetime "created_at", null: false
     t.text "message"

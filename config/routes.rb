@@ -1,4 +1,36 @@
 Rails.application.routes.draw do
+  get "health", to: proc { |env|
+    status = {
+      rails: "ok",
+      database: "unknown",
+      resend: ENV["RESEND_API_KEY"].present? ? "configured" : "missing"
+    }
+    begin
+      ActiveRecord::Base.connection.execute("SELECT 1")
+      status[:database] = "ok"
+    rescue
+      status[:database] = "error"
+    end
+    code = (status[:database] == "ok" && status[:resend] == "configured") ? 200 : 503
+    [code, {"Content-Type" => "application/json"}, [status.to_json]]
+  }
+  get "test-email-prod", to: proc { |env|
+    begin
+      if ENV["RESEND_API_KEY"].blank?
+        [500, {"Content-Type" => "application/json"}, [{error: "RESEND_API_KEY not set"}]]
+      else
+        result = Resend::Emails.send({
+          from: ENV.fetch("RESEND_FROM_EMAIL", "onboarding@resend.dev"),
+          to: ENV.fetch("RESEND_TEST_TO", "delivered@resend.dev"),
+          subject: "Production Test from Season",
+          html: "<p>Production email test working!</p>"
+        })
+        [200, {"Content-Type" => "application/json"}, [result.inspect]]
+      end
+    rescue => e
+      [500, {"Content-Type" => "application/json"}, [{error: e.class, message: e.message}]]
+    end
+  }
   unless Rails.env.production?
     get "test-db", to: proc { |env| [200, {"Content-Type" => "text/plain"}, ["OK - Rails #{Rails.env}"]] }
     get "test-load", to: proc { |env|
@@ -20,7 +52,7 @@ Rails.application.routes.draw do
         })
         [200, {"Content-Type" => "application/json"}, [result.inspect]]
       rescue => e
-        [500, {"Content-Type" => "application/json"}, [{error: e.message}.to_json]]
+        [500, {"Content-Type" => "application/json"}, [{error: e.message}]]
       end
     }
   end
@@ -96,6 +128,9 @@ Rails.application.routes.draw do
     patch :update_avatar, on: :collection
     patch :update_profile, on: :collection
     patch :update_notifications, on: :collection
+    patch :save_morning_reminder, on: :collection
+    patch :save_period_reminder, on: :collection
+    patch :save_birth_control_reminder, on: :collection
   end
 
   namespace :admin do
