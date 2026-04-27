@@ -14,7 +14,7 @@ class OmniauthController < ApplicationController
   private
 
   def normalize_provider(provider)
-    provider == "google_oauth2" ? "google" : provider
+    (provider == "google_oauth2") ? "google" : provider
   end
 
   def handle_oauth(provider_name)

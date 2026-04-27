@@ -178,6 +178,13 @@ de:
     update_profile:
       confirmation_sent: "Bestätigungsmail gesendet. Bitte überprüfe deinen Posteingang."
       saved: "Gespeichert"
+    reminders:
+      morning_saved: "Morgen-Erinnerung gespeichert."
+      period_saved: "Perioden-Erinnerung gespeichert."
+      birth_control_saved: "Verhütungs-Erinnerung gespeichert."
+  reminder_mailer:
+    birth_control_reminder:
+      subject: "Deine tägliche Erinnerung 💊 Season"
   bug_reports:
     create:
       thank_you: "Vielen Dank für deine Fehlermeldung!"

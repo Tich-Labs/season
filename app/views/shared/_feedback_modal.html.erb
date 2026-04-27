@@ -19,7 +19,7 @@
     <p id="fm-description" style="font-family:Montserrat,sans-serif; font-size:14px; color:#6B6B6B; margin:0 0 20px; line-height:1.5;">Help us improve Season</p>
 
     <%# Form %>
-    <form action="/feedbacks" method="post" data-turbo="false" enctype="multipart/form-data">
+    <form action="/feedbacks" method="post" enctype="multipart/form-data">
       <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
       <input type="hidden" id="feedback_type" name="feedback[type]" value="feedback">
 

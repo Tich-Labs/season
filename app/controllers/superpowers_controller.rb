@@ -1,7 +1,6 @@
 class SuperpowersController < ApplicationController
   include Streakable
 
-
   SUPERPOWERS = {
     "menstrual" => [
       "Deep intuition", "Inner clarity",
@@ -35,6 +34,10 @@ class SuperpowersController < ApplicationController
     @superpower_logs = current_user.superpower_logs.order(date: :desc).limit(10)
     @log = current_user.superpower_logs.find_or_initialize_by(date: @date)
     @ratings = @log.ratings || {}
+  end
+
+  def show
+    @superpower_log = current_user.superpower_logs.find(params[:id])
   end
 
   def create

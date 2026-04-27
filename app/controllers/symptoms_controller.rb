@@ -1,12 +1,15 @@
 class SymptomsController < ApplicationController
   include Streakable
 
-
   def index
     @date = params[:date] ? Date.parse(params[:date]) : Time.zone.today
     @log = current_user.symptom_logs.find_or_initialize_by(date: @date)
     @phase = current_user.current_phase
     @season = CycleCalculatorService::SEASON_NAMES[@phase] if @phase
+  end
+
+  def show
+    @symptom_log = current_user.symptom_logs.find(params[:id])
   end
 
   def discharge

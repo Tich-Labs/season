@@ -1,6 +1,6 @@
 # Season — Backlog
 
-Issues tracked here. Push to GitHub with the commands at the bottom of this file.
+**Last Updated:** 27 April 2026
 
 ---
 
@@ -15,7 +15,7 @@ Without these, the 150 users cannot migrate or use the app.
 | 2 | The Cycle Engine: A robust CycleCalculatorService that takes "Last Period Date" and "Cycle Length" to determine the 4 phases (Winter, Spring, Summer, Autumn). | ✅ Built |
 | 3 | M3 Tracking & Server-Side Storage: Users must be able to log symptoms and period dates. Unlike V1's local storage, this must be encrypted on our PostgreSQL backend. | ✅ Built |
 | 4 | M7 Onboarding: A smart, Hotwire-driven multi-step form that collects cycle history and language preference (EN/DE). | ✅ Built |
-| 5 | M5 Reminders (ActionMailer): Core background jobs to send email notifications for contraception and period starts. | ⚠️ SMTP pending |
+| 5 | M5 Reminders (ActionMailer): Core background jobs to send email notifications for contraception and period starts. | ✅ Built |
 | 6 | i18n Infrastructure: English as the default, with German translations for all UI elements—no hardcoded strings. | ✅ Built |
 | 7 | Simple Admin Table: A single /admin view with Ransack to search, filter, and track which of the 150 users have successfully migrated. | ✅ Built |
 
@@ -48,93 +48,72 @@ Deferred to Phase 2 (Global Expansion).
 
 ---
 
-## Infrastructure Backlog
+## ✅ RESOLVED (27 April 2026)
 
-### 🔴 Critical
+### [TESTS] Fix 8 pre-existing test failures — all 166 runs now green
+**Status:** ✅ DONE
+
+All controller and integration tests pass. The following bugs were identified and fixed:
+
+1. **`settings/notification_birth_control` — 500 SyntaxError (Ruby 3.4)**
+   `CONTRACEPTION_META = {…}` was a constant assigned inside an ERB method body. Ruby 3.4 raises `SyntaxError` for constant assignment inside a method. Renamed to a lowercase local variable `contraception_meta`.
+
+2. **`informations#show` — 500 on invalid phase**
+   `redirect_to informations_path unless PHASES.include?(phase)` had no `return`, so execution continued past the redirect and called `.merge` on `nil`. Fixed with `and return`.
+
+3. **`feedbacks#create` — 500 / wrong HTTP response**
+   - Form had `data-turbo="false"`, which bypassed Turbo entirely so turbo-stream responses never fired. Removed that attribute.
+   - Error path was returning a 302 redirect instead of 422. Fixed to `head :unprocessable_content`.
+   - i18n key paths were wrong (`feedbacks.create.*` → `feedback.create.*`).
+
+4. **`RegistrationsController#new` — no redirect for authenticated users**
+   Visiting `/registration/new` while already signed in did not redirect. Added `redirect_to user_root_path and return if authenticated?`.
+
+5. **`SuperpowersController#show` — hardcoded IDs not in DB**
+   Test used IDs 1 and 5 which don't exist as fixtures. Added `test/fixtures/superpower_logs.yml` with records for the `alice` user. Test updated to reference fixtures by name.
+
+6. **`OnboardingController` — wrong step/params in test**
+   Test was PATCHing step 1 with `last_period_start` params, but step 1 expects a `name`. Fixed: test now PATCHes step 10 with `last_period_date`.
+
+7. **`TrackingController` — params shape mismatch**
+   Test sent `period_start: date` but `period_update` reads `params.dig(:period, :date)`. Fixed test params to `period: { date: date }`.
+
+---
+
+## ✅ RESOLVED (26 April 2026)
 
 ### [SMTP] Configure email delivery provider in production
-**Labels:** `infrastructure`, `critical`
+**Status:** ✅ DONE — Resend configured, domain verified
 
-SMTP is completely commented out in `config/environments/production.rb`.
-All emails (confirmation, launch notification) will silently fail until this is wired up.
-
-**Decision needed:** Which provider to use?
-- [Resend](https://resend.com) — modern, developer-friendly, generous free tier (3,000/mo)
-- [Postmark](https://postmarkapp.com) — best deliverability, 100 free/mo then paid
-- [SendGrid](https://sendgrid.com) — 100/day free forever
-- [Brevo](https://brevo.com) — 300/day free forever
-
-Once decided, update `config/environments/production.rb`:
-```ruby
-config.action_mailer.delivery_method = :smtp
-config.action_mailer.smtp_settings = {
-  user_name: Rails.application.credentials.dig(:smtp, :user_name),
-  password:  Rails.application.credentials.dig(:smtp, :password),
-  address:   "smtp.<provider>.com",
-  port:      587,
-  authentication: :plain,
-  enable_starttls_auto: true
-}
-```
-Then add credentials via `rails credentials:edit`.
+SMTP configured via Resend with `season.vision` domain. Password reset and confirmation emails working.
 
 ---
 
 ### [JOB] Create NotifyLaunchSignupsJob
-**Labels:** `feature`, `critical`
+**Status:** ✅ DONE
 
-There is no job to send the launch notification email.
-This is the entire point of the waitlist — users signed up expecting to be notified.
-
-**Blocked by:** SMTP provider decision + `LaunchSignupMailer` (see below).
-
-Implementation:
-- `rails generate job NotifyLaunchSignups`
-- Iterates all `LaunchSignup` records
-- Sends `LaunchSignupMailer.launch_notification(signup).deliver_later`
-- Schedule via Solid Queue when ready
+Background job created and configured with Solid Queue.
 
 ---
 
-## 🟡 High
+### [MAILER] Generate LaunchSignupMailer
+**Status:** ✅ DONE
 
-### [MAILER] Generate LaunchSignupMailer with confirmation + launch-day templates
-**Labels:** `feature`, `high`
-
-No mailer exists. Users get a UI confirmation but nothing in their inbox.
-
-**Templates needed:**
- 1. `confirmation` — "You're on the list! We'll notify you when we launch."
- 2. `launch_notification` — "Season is live! Download here → …"
-
-**Blocked by:** SMTP provider decision.
+Branded email templates for password reset and confirmation working in production.
 
 ---
-
-## 🟠 Medium
 
 ### [MODEL] Add validations to LaunchSignup model
-**Labels:** `quality`, `medium`
+**Status:** ✅ DONE
 
-`app/models/launch_signup.rb` is completely bare — all validation is in the controller.
-
-Add:
-```ruby
-validates :email, presence: true,
-                  uniqueness: { case_sensitive: false },
-                  format: { with: URI::MailTo::EMAIL_REGEXP }
-```
+Validations added: presence, uniqueness, email format.
 
 ---
 
-### [ADMIN] Add admin view for LaunchSignup count + list
-**Labels:** `admin`, `medium`
+### [ADMIN] Add admin view for LaunchSignup
+**Status:** ✅ DONE
 
-No visibility into how many people have signed up for the waitlist.
-
-- Add `admin/launch_signups_controller.rb` with `index` action
-- Simple view: total count + table of emails + signup dates
-- Mount under existing admin layout (already has `admin/` namespace)
+`Admin::LaunchSignupsController` built with count, table, and CSV export.
 
 ---
 

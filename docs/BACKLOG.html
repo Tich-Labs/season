@@ -42,15 +42,18 @@
 <body>
   <nav class="sidebar">
     <div class="sidebar-header">
-      <h1>📅 Season Docs</h1>
+      <h1>Season Docs</h1>
       <p>Internal team documentation</p>
     </div>
     <div class="nav-section">
+      <p class="nav-section-title">Start Here</p>
+      <a href="overview.html" class="nav-item">Project Overview</a>
+    </div>
+    <div class="nav-section">
       <p class="nav-section-title">Getting Started</p>
-      <a href="overview.html" class="nav-item">Overview</a>
-      <a href="setup.html" class="nav-item">Setup &amp; README</a>
+      <a href="userjourney.html" class="nav-item">User Journey</a>
       <a href="screenslist.html" class="nav-item">Screens &amp; Routes</a>
-      <a href="BACKLOG.html" class="nav-item">Backlog</a>
+      <a href="BACKLOG.html" class="nav-item active">Backlog</a>
     </div>
     <div class="nav-section">
       <p class="nav-section-title">Audit &amp; Reports</p>
@@ -60,14 +63,13 @@
     </div>
     <div class="nav-section">
       <p class="nav-section-title">Reference</p>
-      <a href="userjourney.html" class="nav-item">User Journey</a>
       <a href="figma_nodes.html" class="nav-item">Figma Nodes</a>
       <a href="userdata.html" class="nav-item">User Data &amp; Privacy</a>
     </div>
-  
   </nav>
   <main class="content">
     <h1>Backlog</h1>
+    <p style="color:#6B6B6B;font-size:0.85rem;margin-bottom:1.5rem;">Last updated: 27 April 2026</p>
 
     <h2>🔴 MUST HAVE (Critical for Launch)</h2>
     <table>
@@ -76,7 +78,7 @@
       <tr><td>2</td><td>Cycle Engine (CycleCalculatorService)</td><td><span class="status-done">✅ Built</span></td></tr>
       <tr><td>3</td><td>M3 Tracking & Server-Side Storage</td><td><span class="status-done">✅ Built</span></td></tr>
       <tr><td>4</td><td>M7 Onboarding (Hotwire multi-step)</td><td><span class="status-done">✅ Built</span></td></tr>
-      <tr><td>5</td><td>M5 Reminders (ActionMailer)</td><td><span class="status-pending">⚠️ SMTP pending</span></td></tr>
+      <tr><td>5</td><td>M5 Reminders (ActionMailer)</td><td><span class="status-done">✅ Built — mailer, jobs, cron, settings save wired (26 Apr 2026)</span></td></tr>
       <tr><td>6</td><td>i18n Infrastructure (EN/DE)</td><td><span class="status-done">✅ Built</span></td></tr>
       <tr><td>7</td><td>Simple Admin Table</td><td><span class="status-done">✅ Built</span></td></tr>
     </table>
@@ -105,15 +107,35 @@
     </ul>
 
     <h2>Infrastructure Backlog</h2>
-    <h3>🔴 Critical: SMTP</h3>
-    <p>SMTP is commented out in <code>config/environments/production.rb</code>. All emails will silently fail.</p>
-    <p><strong>Providers to consider:</strong></p>
-    <ul>
-      <li><a href="https://resend.com">Resend</a> — 3,000/mo free</li>
-      <li><a href="https://postmarkapp.com">Postmark</a> — 100/mo free</li>
-      <li><a href="https://sendgrid.com">SendGrid</a> — 100/day free</li>
-      <li><a href="https://brevo.com">Brevo</a> — 300/day free</li>
-    </ul>
+    <h3 class="status-done">✅ SMTP — Resolved 26 April 2026</h3>
+    <p>Resend is configured. The <code>season.vision</code> domain is fully verified (SPF, DKIM, MX on Squarespace). Password reset and account confirmation emails deliver to inbox with custom branded HTML templates. End-to-end password reset confirmed working in production. Delivery method: <code>config.action_mailer.delivery_method = :resend</code>; API key set via <code>config/initializers/resend.rb</code>.</p>
+    <h3 class="status-done">✅ M5 Reminder emails — Completed 26 April 2026</h3>
+    <p><code>ReminderMailer</code> built with three actions (morning summary, period reminder, birth control reminder). Three Solid Queue jobs send to opted-in users on a cron schedule defined in <code>config/queue.yml</code>. Settings save endpoints persist reminder preferences (including <code>advance_days</code>) to the <code>reminders</code> table. No further infrastructure work required for reminder delivery.</p>
+
+    <h2>Test Suite Fixes (27 April 2026)</h2>
+    <p>All 166 tests pass. Eight pre-existing failures were resolved. No production logic was changed — fixes were either correcting silent bugs triggered only in tests or aligning test params/fixtures to match existing controller behaviour.</p>
+    <table>
+      <tr><th>Area</th><th>Root cause</th><th>Fix</th></tr>
+      <tr><td><code>settings/notification_birth_control</code></td><td>Ruby 3.4 raises <code>SyntaxError</code> for constant assignment inside a method body (ERB template method)</td><td>Renamed <code>CONTRACEPTION_META</code> constant to local variable <code>contraception_meta</code></td></tr>
+      <tr><td><code>informations#show</code></td><td>Missing <code>return</code> after redirect guard — execution continued and called <code>.merge</code> on <code>nil</code></td><td>Added <code>and return</code> to the redirect</td></tr>
+      <tr><td><code>feedbacks#create</code></td><td><code>data-turbo="false"</code> on the form blocked Turbo; error path returned 302 instead of 422; wrong i18n key paths</td><td>Removed <code>data-turbo="false"</code>; changed error response to <code>head :unprocessable_content</code>; corrected keys to <code>feedback.create.*</code></td></tr>
+      <tr><td><code>RegistrationsController#new</code></td><td>No redirect when already authenticated</td><td>Added <code>redirect_to user_root_path and return if authenticated?</code></td></tr>
+      <tr><td><code>SuperpowersController#show</code></td><td>Test used hardcoded IDs 1 and 5 not present in DB</td><td>Added <code>test/fixtures/superpower_logs.yml</code> for the <code>alice</code> fixture; test updated to reference fixture names</td></tr>
+      <tr><td><code>OnboardingController</code></td><td>Test PATCHed step 1 with <code>last_period_start</code> params — step 1 expects <code>name</code></td><td>Test changed to PATCH step 10 with <code>last_period_date</code></td></tr>
+      <tr><td><code>TrackingController</code></td><td>Test sent <code>period_start: date</code> but controller reads <code>params.dig(:period, :date)</code></td><td>Test params changed to <code>period: { date: date }</code></td></tr>
+    </table>
+
+    <h2>Recent Additions (26 April 2026)</h2>
+    <table>
+      <tr><th>Area</th><th>What was done</th><th>Status</th></tr>
+      <tr><td>M5 Reminders — settings save</td><td>All 3 notification settings screens now persist to the database via real form POSTs: <code>PATCH /settings/save_morning_reminder</code> (saves <code>morning</code> Reminder), <code>PATCH /settings/save_period_reminder</code> (saves <code>period_start</code> + <code>period_end</code> Reminders with <code>advance_days</code>), <code>PATCH /settings/save_birth_control_reminder</code> (saves <code>pill</code> Reminder). Migration adds <code>advance_days</code> column to <code>reminders</code>.</td><td><span class="status-done">✅ Done</span></td></tr>
+      <tr><td>M5 Reminders — ReminderMailer</td><td><code>app/mailers/reminder_mailer.rb</code> with 3 actions: <code>morning_summary(user)</code> — daily phase/superpower/tip email; <code>period_reminder(user, event_type)</code> — period start or end with predicted date; <code>birth_control_reminder(user)</code> — daily pill reminder with cycle day. Branded HTML + plain-text templates in <code>app/views/reminder_mailer/</code>.</td><td><span class="status-done">✅ Done</span></td></tr>
+      <tr><td>M5 Reminders — Solid Queue jobs &amp; cron</td><td><code>SendMorningRemindersJob</code>, <code>SendPeriodRemindersJob</code>, <code>SendBirthControlRemindersJob</code> in <code>app/jobs/</code>. Cron schedule in <code>config/queue.yml</code> (production only): morning 07:00 UTC, period 08:00 UTC, birth control 19:00 UTC.</td><td><span class="status-done">✅ Done</span></td></tr>
+      <tr><td>Admin login</td><td>Standalone <code>/admin/login</code> page — desktop-optimised <code>admin_auth</code> layout, <code>Admin::SessionsController</code>. Unauthenticated <code>/admin/*</code> requests redirect to <code>/admin/login</code> (not app root). Sidebar has a Sign out button (<code>DELETE /admin/logout</code>).</td><td><span class="status-done">✅ Done</span></td></tr>
+      <tr><td>Test account provisioning</td><td><code>bundle exec rails setup:accounts</code> promotes <code>naijeria@gmail.com</code> to admin, creates <code>test1@seasonapp.co</code> and <code>test2@seasonapp.co</code> (password: <code>Season2026!</code>), all confirmed. Idempotent — safe to re-run. File: <code>lib/tasks/setup_accounts.rake</code>.</td><td><span class="status-done">✅ Done</span></td></tr>
+      <tr><td>Password reset UX</td><td>Hidden <code>autocomplete="username"</code> field on reset form so browsers save the password against the correct email. Show/hide eye toggle added to all password fields (<code>password-visibility</code> Stimulus controller) on <code>passwords/edit.html.erb</code> and <code>invites/show.html.erb</code>. All new-password fields have <code>autocomplete="new-password"</code>.</td><td><span class="status-done">✅ Done</span></td></tr>
+      <tr><td>Email templates</td><td>Custom branded HTML email templates for password reset and account confirmation — Season red button, cream background.</td><td><span class="status-done">✅ Done</span></td></tr>
+    </table>
   </main>
 </body>
 </html>

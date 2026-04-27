@@ -1,6 +1,6 @@
 # Season App — Developer Documentation & Auth Security Review
 
-**Generated:** 2026-04-24 — **Last updated:** 2026-04-26
+**Generated:** 2026-04-24 — **Last updated:** 2026-04-27 (test suite fully green — 166 runs, 0 failures)
 **Rails version:** 8.1.3
 **Ruby version:** >= 3.4.7
 **Database:** PostgreSQL (all environments)
@@ -40,7 +40,7 @@ Season is a menstrual cycle tracking app targeted at users who want to understan
 | Daily view | Single-day overview combining phase data, events, and symptom log |
 | Streaks | Consecutive daily tracking counter with flame milestones |
 | Appointments/Events | User-created calendar events with title, time, category, notes |
-| Reminders | Supplement, pill, period, morning/evening reminder records (data model exists; UI in M5) |
+| Reminders | Morning summary, period start/end, and birth control (pill) reminders. Settings screens persist preferences to the `reminders` table. Emails sent by `ReminderMailer` via Solid Queue jobs on a production cron schedule. |
 | Settings | Profile, subscription, calendar display, notifications |
 | Launch waitlist | Pre-launch email signup (unauthenticated) |
 | Feedback/Bugs/Support | In-app form forwarded to admin inbox and Trello via email |
@@ -316,7 +316,7 @@ reminders
   INDEX on (user_id, active)
 ```
 
-No background job delivery wired yet; data model is in place for M5.
+The `advance_days` column (added in M5 migration) controls how many days before the event a period reminder fires. Background jobs and mailer are fully wired — see Section 8 (Mailer Setup) and Section 10 (Solid Queue jobs).
 
 ---
 
@@ -475,6 +475,9 @@ Standard Rails 8 Active Storage tables (`active_storage_blobs`, `active_storage_
 | PATCH | `/settings/update_avatar` | `settings#update_avatar` |
 | PATCH | `/settings/update_profile` | `settings#update_profile` |
 | PATCH | `/settings/update_notifications` | `settings#update_notifications` |
+| PATCH | `/settings/save_morning_reminder` | `settings#save_morning_reminder` |
+| PATCH | `/settings/save_period_reminder` | `settings#save_period_reminder` |
+| PATCH | `/settings/save_birth_control_reminder` | `settings#save_birth_control_reminder` |
 
 ### Admin Routes
 
@@ -886,6 +889,26 @@ Custom branded HTML templates replace Devise's bare defaults:
 
 Both templates use the Season brand (red CTA button, cream `#FAF7F4` background) and include a plain-text fallback URL below the button. The shared mailer shell is at `app/views/layouts/mailer.html.erb`.
 
+#### `ReminderMailer`
+
+Three actions for opt-in notification emails sent via Solid Queue jobs on a production cron schedule.
+
+| Action | Job | Cron (UTC) | Recipients |
+| ------ | --- | ---------- | ---------- |
+| `morning_summary(user)` | `SendMorningRemindersJob` | `0 7 * * *` | Users with active `morning` Reminder |
+| `period_reminder(user, event_type)` | `SendPeriodRemindersJob` | `0 8 * * *` | Users whose next period start/end is exactly `advance_days` away |
+| `birth_control_reminder(user)` | `SendBirthControlRemindersJob` | `0 19 * * *` | Users with active `pill` Reminder |
+
+**Email content:**
+
+- `morning_summary` — current phase, cycle day, superpower of the day, movement and nutrition tips
+- `period_reminder` — predicted period start or end date, contextual message; `event_type` is `period_start` or `period_end`
+- `birth_control_reminder` — pill/contraception reminder with current cycle day
+
+Templates live in `app/views/reminder_mailer/` as branded HTML + plain-text pairs. Cron schedule is defined in `config/queue.yml` under the `production` key and only fires in the production environment.
+
+---
+
 ### URL Options
 
 - Production: `host: APP_HOST` (env var, defaults to `seasonv2.onrender.com`), `protocol: "https"`.
@@ -939,6 +962,32 @@ Steps 5 and 6 are necessary because `db:prepare` only processes the primary data
 | `FACEBOOK_APP_ID/SECRET` | Not in render.yaml — **manual** | Must be added for Facebook OAuth |
 | `APPLE_CLIENT_ID/SECRET` | Not in render.yaml — **manual** | Must be added for Apple Sign In |
 
+### OAuth Setup (How To)
+
+#### 1. Google OAuth
+1. Go to [Google Cloud Console](https://console.cloud.google.com) → APIs & Services → Credentials
+2. Create OAuth 2.0 Client ID for Web Application
+3. Authorized redirect URI: `https://seasonv2.onrender.com/auth/google_oauth2/callback`
+4. Copy Client ID to `GOOGLE_CLIENT_ID`, Client Secret to `GOOGLE_CLIENT_SECRET`
+5. Add to Render Dashboard → Environment Variables
+
+#### 2. Facebook OAuth
+1. Go to [Facebook Developers](https://developers.facebook.com) → My Apps
+2. Create app → Add Facebook Login → Web
+3. Valid OAuth Redirect URI: `https://seasonv2.onrender.com/auth/facebook/callback`
+4. Copy App ID to `FACEBOOK_APP_ID`, App Secret to `FACEBOOK_APP_SECRET`
+5. Add to Render Dashboard → Environment Variables
+
+#### 3. Apple Sign In
+1. Go to [Apple Developer](https://developer.apple.com) → Identifiers → App IDs
+2. Enable Sign in with Apple capability
+3. Create Services ID (Web Service Configuration)
+4. Return URL: `https://seasonv2.onrender.com/auth/apple/callback`
+5. Copy Services Identifier to `APPLE_CLIENT_ID`, Private Key to `APPLE_CLIENT_SECRET`
+6. Add to Render Dashboard → Environment Variables
+
+> **Important:** After adding each set of credentials, test the login flow in production before launching.
+
 ### SSL / HTTPS
 
 `config.assume_ssl = true` (trusts upstream SSL termination).
@@ -986,7 +1035,7 @@ New feedback records trigger `TrelloMailer.card(self).deliver_later` via `after_
 
 ### Solid Queue In-Process
 
-Running Solid Queue inside Puma (no separate worker dyno) works correctly for low-traffic apps on Render free tier. Background jobs (currently only `TrelloMailer.deliver_later`) process in the same Puma process. If job volume grows or jobs become slow/blocking, a separate worker dyno would be needed.
+Running Solid Queue inside Puma (no separate worker dyno) works correctly for low-traffic apps on Render free tier. Background jobs — `TrelloMailer.deliver_later` (feedback forwarding) and the three reminder jobs (`SendMorningRemindersJob`, `SendPeriodRemindersJob`, `SendBirthControlRemindersJob`) — process in the same Puma process. The reminder jobs run on a cron schedule defined in `config/queue.yml` (production only). If job volume grows or jobs become slow/blocking, a separate worker dyno would be needed.
 
 ### Ransack Scope Restriction
 
@@ -1177,6 +1226,24 @@ end
 | 7 | No account lockout | Low-Medium | Medium |
 | 8 | Invite token entropy unknown | Low | Low |
 | 9 | Email change requires no password confirmation | Medium | Low |
+
+---
+
+## 12. Changelog
+
+### 2026-04-27 — Test suite: 166 runs, 0 failures
+
+Eight pre-existing test failures were fixed. No logic changes to production behaviour — all fixes were either correcting test params/fixtures or fixing silent bugs that only manifested in the test environment.
+
+| Area | Fix |
+|------|-----|
+| `settings/notification_birth_control` | `CONTRACEPTION_META` constant inside ERB method body caused Ruby 3.4 `SyntaxError`. Renamed to local variable `contraception_meta`. |
+| `informations#show` | Missing `return` after `redirect_to` caused execution to continue and call `.merge` on `nil`. Fixed with `and return`. |
+| `feedbacks#create` | Removed `data-turbo="false"` from form (blocked turbo-stream responses). Error path changed from 302 to 422. i18n keys corrected from `feedbacks.create.*` to `feedback.create.*`. |
+| `RegistrationsController#new` | Added redirect to `user_root_path` when already authenticated. |
+| `SuperpowersController#show` | Added `test/fixtures/superpower_logs.yml` for the `alice` fixture user. Tests updated to reference fixtures by name instead of hardcoded IDs. |
+| `OnboardingController` | Test was PATCHing step 1 with `last_period_start` params (step 1 expects `name`). Fixed to PATCH step 10 with `last_period_date`. |
+| `TrackingController` | Test params changed from `period_start: date` to `period: { date: date }` to match `params.dig(:period, :date)` in `period_update`. |
 
 ---
 

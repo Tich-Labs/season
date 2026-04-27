@@ -1,5 +1,4 @@
 class SettingsController < ApplicationController
-
   def edit
     @user = current_user
   end
@@ -69,15 +68,48 @@ class SettingsController < ApplicationController
 
   def notification_morning
     @user = current_user
+    @reminder = current_user.reminders.find_or_initialize_by(reminder_type: "morning")
   end
 
   def notification_period
     @user = current_user
+    @start_reminder = current_user.reminders.find_or_initialize_by(reminder_type: "period_start")
+    @end_reminder = current_user.reminders.find_or_initialize_by(reminder_type: "period_end")
   end
 
   def notification_birth_control
     @user = current_user
     @contraception = @user.contraception_type.presence || "none"
+    @reminder = current_user.reminders.find_or_initialize_by(reminder_type: "pill")
+  end
+
+  def save_morning_reminder
+    reminder = current_user.reminders.find_or_initialize_by(reminder_type: "morning")
+    reminder.active = params[:enabled] == "1"
+    reminder.time = params[:time].presence || "09:00"
+    reminder.save!
+    redirect_to notification_morning_settings_path, notice: t("settings.reminders.morning_saved")
+  end
+
+  def save_period_reminder
+    enabled = params[:enabled] == "1"
+    advance = params[:advance_days].to_i.clamp(1, 7)
+    %w[period_start period_end].each do |type|
+      r = current_user.reminders.find_or_initialize_by(reminder_type: type)
+      r.active = enabled
+      r.time = params["#{type}_time"].presence || "08:00"
+      r.advance_days = advance
+      r.save!
+    end
+    redirect_to notification_period_settings_path, notice: t("settings.reminders.period_saved")
+  end
+
+  def save_birth_control_reminder
+    reminder = current_user.reminders.find_or_initialize_by(reminder_type: "pill")
+    reminder.active = params[:enabled] == "1"
+    reminder.time = params[:time].presence || "21:00"
+    reminder.save!
+    redirect_to notification_birth_control_settings_path, notice: t("settings.reminders.birth_control_saved")
   end
 
   def update_notifications

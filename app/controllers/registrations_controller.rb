@@ -5,6 +5,7 @@ class RegistrationsController < ApplicationController
   skip_onboarding_requirement
 
   def new
+    redirect_to user_root_path and return if authenticated?
     @user = User.new
     @invite_token = params[:invite_token]
     @error_type = params[:error]

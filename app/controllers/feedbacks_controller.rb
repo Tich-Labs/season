@@ -10,15 +10,15 @@ class FeedbacksController < ApplicationController
           render turbo_stream: turbo_stream.replace("feedback-modal-container",
             partial: "feedbacks/success")
         end
-        format.html { redirect_to user_root_path, notice: t(".thank_you") }
+        format.html { redirect_to user_root_path, notice: t("feedback.create.thank_you") }
       end
     else
       respond_to do |format|
         format.turbo_stream do
           render turbo_stream: turbo_stream.replace("fm-error",
-            "<p id='fm-error' style='color:#933a35; font-size:13px; margin:8px 0 0;'>#{t(".enter_message")}</p>")
+            "<p id='fm-error' style='color:#933a35; font-size:13px; margin:8px 0 0;'>#{t("feedback.create.enter_message")}</p>")
         end
-        format.html { redirect_to user_root_path, alert: t(".enter_message") }
+        format.html { head :unprocessable_content }
       end
     end
   end

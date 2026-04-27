@@ -1,5 +1,4 @@
 class DailyViewController < ApplicationController
-
   def show
     @date = if params[:date] == "today"
       Time.zone.today

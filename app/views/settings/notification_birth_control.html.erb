@@ -7,17 +7,16 @@
 <% end %>
 
 <%
-  # Contraception display metadata
-  CONTRACEPTION_META = {
-    "pill"       => { label: "Pill",            icon: "💊", daily: true,   days: 21, break_days: 7  },
-    "hormonering"=> { label: "Hormone Ring",     icon: "💍", daily: false,  days: 21, break_days: 7  },
-    "plaster"    => { label: "Plaster",          icon: "🩹", daily: false,  days: 7,  break_days: 7  },
-    "iud"        => { label: "IUD",              icon: "🔵", daily: false,  days: nil, break_days: nil },
-    "implant"    => { label: "Implant",          icon: "💉", daily: false,  days: nil, break_days: nil },
-    "injection"  => { label: "Injection",        icon: "💉", daily: false,  days: 84,  break_days: 14 },
-    "none"       => { label: "No birth control", icon: "🌿", daily: false,  days: nil, break_days: nil }
-  }.freeze
-  meta = CONTRACEPTION_META[@contraception] || CONTRACEPTION_META["none"]
+  contraception_meta = {
+    "pill"        => { label: "Pill",            icon: "💊", daily: true,   days: 21, break_days: 7  },
+    "hormonering" => { label: "Hormone Ring",     icon: "💍", daily: false,  days: 21, break_days: 7  },
+    "plaster"     => { label: "Plaster",          icon: "🩹", daily: false,  days: 7,  break_days: 7  },
+    "iud"         => { label: "IUD",              icon: "🔵", daily: false,  days: nil, break_days: nil },
+    "implant"     => { label: "Implant",          icon: "💉", daily: false,  days: nil, break_days: nil },
+    "injection"   => { label: "Injection",        icon: "💉", daily: false,  days: 84,  break_days: 14 },
+    "none"        => { label: "No birth control", icon: "🌿", daily: false,  days: nil, break_days: nil }
+  }
+  meta = contraception_meta[@contraception] || contraception_meta["none"]
   has_cycle = meta[:days].present?
 %>
 
@@ -34,6 +33,12 @@
       </h1>
     </div>
 
+    <% if notice.present? %>
+      <div style="background:#EDE1D5; padding:10px 20px; border-bottom:1px solid #EDE1D5;">
+        <p style="color:#933a35; font-size:13px; font-weight:600; margin:0;"><%= notice %></p>
+      </div>
+    <% end %>
+
     <%# ── Current method row ── %>
     <div style="background:#FFFFFF; padding:16px 20px; border-bottom:1px solid #EDE1D5; display:flex; align-items:center; justify-content:space-between;">
       <div style="display:flex; align-items:center; gap:10px;">
@@ -48,82 +53,88 @@
             style: "color:#933a35; font-size:14px; font-weight:600; text-decoration:none; background:#EDE1D5; padding:6px 14px; border-radius:20px;" %>
     </div>
 
-    <%# ── Toggle ── %>
-    <div style="background:#FFFFFF; padding:16px 20px; border-bottom:1px solid #EDE1D5; display:flex; align-items:center; justify-content:space-between;">
-      <span style="color:#3d2b28; font-size:16px; font-weight:500;">Enable Reminder</span>
-      <label style="position:relative; width:44px; height:24px; cursor:pointer; flex-shrink:0;" aria-label="Enable birth control reminder">
-        <input type="checkbox" id="bc_enabled" checked
-               style="opacity:0; width:0; height:0;">
-        <span style="position:absolute; inset:0; background:#933a35; border-radius:24px; transition:0.2s;"></span>
-        <span style="position:absolute; top:2px; left:22px; width:20px; height:20px; background:white; border-radius:50%; transition:0.2s; box-shadow:0 1px 3px rgba(0,0,0,0.2);"></span>
-      </label>
-    </div>
+    <%= form_with url: save_birth_control_reminder_settings_path, method: :patch, local: true do |f| %>
 
-    <%# ── Time picker ── %>
-    <div style="background:#FFFFFF; padding:16px 20px; border-bottom:1px solid #EDE1D5;">
-      <p style="color:#933a35; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; margin:0 0 10px;">
-        Reminder time
-      </p>
-      <div style="display:flex; align-items:center; gap:12px;">
-        <svg width="20" height="20" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0;">
-          <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
-        </svg>
-        <input type="time" value="21:00" autocomplete="off"
-               style="background:#EDE1D5; border:none; border-radius:8px; padding:10px 14px; font-size:16px; color:#3d2b28; font-family:'Montserrat',sans-serif; outline:none; flex:1;">
+      <%# ── Toggle ── %>
+      <div style="background:#FFFFFF; padding:16px 20px; border-bottom:1px solid #EDE1D5; display:flex; align-items:center; justify-content:space-between;">
+        <span style="color:#3d2b28; font-size:16px; font-weight:500;">Enable Reminder</span>
+        <label style="position:relative; width:44px; height:24px; cursor:pointer; flex-shrink:0;" aria-label="Enable birth control reminder">
+          <%= f.check_box :enabled, {id: "bc_enabled", style: "opacity:0; width:0; height:0;",
+                          checked: @reminder.active?}, "1", "0" %>
+          <span style="position:absolute; inset:0; background:#933a35; border-radius:24px; transition:0.2s;"></span>
+          <span style="position:absolute; top:2px; left:22px; width:20px; height:20px; background:white; border-radius:50%; transition:0.2s; box-shadow:0 1px 3px rgba(0,0,0,0.2);"></span>
+        </label>
       </div>
-      <p style="color:#D18D83; font-size:13px; font-weight:500; margin:8px 0 0;">
-        Daily → 09:00 p.m.
-      </p>
-    </div>
 
-    <%# ── Day tracking (only for pill/ring/plaster/injection) ── %>
-    <% if has_cycle %>
+      <%# ── Time picker ── %>
       <div style="background:#FFFFFF; padding:16px 20px; border-bottom:1px solid #EDE1D5;">
         <p style="color:#933a35; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; margin:0 0 10px;">
-          Cycle tracking
+          Reminder time
         </p>
-        <div style="background:#FDF0EE; border-radius:10px; padding:12px 14px;">
-          <p style="color:#933a35; font-size:13px; font-weight:600; margin:0 0 4px;">
-            Keep track of:
-          </p>
-          <p style="color:#3d2b28; font-size:15px; font-weight:500; margin:0;">
-            Today is day <strong>15</strong> of taking the <%= meta[:label].downcase %>
-          </p>
+        <div style="display:flex; align-items:center; gap:12px;">
+          <svg width="20" height="20" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0;">
+            <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
+          </svg>
+          <%= f.time_field :time,
+                value: (@reminder.time&.strftime("%H:%M") || "21:00"),
+                autocomplete: "off",
+                style: "background:#EDE1D5; border:none; border-radius:8px; padding:10px 14px; font-size:16px; color:#3d2b28; font-family:'Montserrat',sans-serif; outline:none; flex:1;" %>
         </div>
-        <% if meta[:break_days] %>
-          <div style="display:flex; gap:8px; margin-top:10px;">
-            <div style="flex:1; background:#EDE1D5; border-radius:10px; padding:10px 12px; text-align:center;">
-              <p style="color:#6B6B6B; font-size:10px; font-weight:600; text-transform:uppercase; margin:0 0 4px; letter-spacing:0.04em;">Active days</p>
-              <p style="color:#933a35; font-size:18px; font-weight:700; margin:0;"><%= meta[:days] %></p>
-            </div>
-            <div style="flex:1; background:#EDE1D5; border-radius:10px; padding:10px 12px; text-align:center;">
-              <p style="color:#6B6B6B; font-size:10px; font-weight:600; text-transform:uppercase; margin:0 0 4px; letter-spacing:0.04em;">Break days</p>
-              <p style="color:#D18D83; font-size:18px; font-weight:700; margin:0;"><%= meta[:break_days] %></p>
-            </div>
+      </div>
+
+      <%# ── Day tracking ── %>
+      <% if has_cycle %>
+        <div style="background:#FFFFFF; padding:16px 20px; border-bottom:1px solid #EDE1D5;">
+          <p style="color:#933a35; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; margin:0 0 10px;">
+            Cycle tracking
+          </p>
+          <div style="background:#FDF0EE; border-radius:10px; padding:12px 14px;">
+            <p style="color:#933a35; font-size:13px; font-weight:600; margin:0 0 4px;">Keep track of:</p>
+            <p style="color:#3d2b28; font-size:15px; font-weight:500; margin:0;">
+              Today is day <strong>15</strong> of taking the <%= meta[:label].downcase %>
+            </p>
           </div>
-        <% end %>
-      </div>
-    <% else %>
-      <div style="background:#FFFFFF; padding:16px 20px; border-bottom:1px solid #EDE1D5;">
-        <div style="background:#EDE1D5; border-radius:10px; padding:12px 14px;">
-          <p style="color:#6B6B6B; font-size:14px; font-weight:500; margin:0; line-height:1.5;">
-            <%= if @contraception == "none"
-                  "No birth control method selected. Tap \"Change\" above to set your method."
-                else
-                  "#{meta[:label]} is a long-acting method — no daily tracking needed."
-                end %>
-          </p>
+          <% if meta[:break_days] %>
+            <div style="display:flex; gap:8px; margin-top:10px;">
+              <div style="flex:1; background:#EDE1D5; border-radius:10px; padding:10px 12px; text-align:center;">
+                <p style="color:#6B6B6B; font-size:10px; font-weight:600; text-transform:uppercase; margin:0 0 4px; letter-spacing:0.04em;">Active days</p>
+                <p style="color:#933a35; font-size:18px; font-weight:700; margin:0;"><%= meta[:days] %></p>
+              </div>
+              <div style="flex:1; background:#EDE1D5; border-radius:10px; padding:10px 12px; text-align:center;">
+                <p style="color:#6B6B6B; font-size:10px; font-weight:600; text-transform:uppercase; margin:0 0 4px; letter-spacing:0.04em;">Break days</p>
+                <p style="color:#D18D83; font-size:18px; font-weight:700; margin:0;"><%= meta[:break_days] %></p>
+              </div>
+            </div>
+          <% end %>
         </div>
+      <% else %>
+        <div style="background:#FFFFFF; padding:16px 20px; border-bottom:1px solid #EDE1D5;">
+          <div style="background:#EDE1D5; border-radius:10px; padding:12px 14px;">
+            <p style="color:#6B6B6B; font-size:14px; font-weight:500; margin:0; line-height:1.5;">
+              <%= if @contraception == "none"
+                    "No birth control method selected. Tap \"Change\" above to set your method."
+                  else
+                    "#{meta[:label]} is a long-acting method — no daily tracking needed."
+                  end %>
+            </p>
+          </div>
+        </div>
+      <% end %>
+
+      <%# ── Save button ── %>
+      <div style="padding:20px 20px 0;">
+        <%= f.submit "Save", style: "width:100%; background:#933a35; color:#FFFFFF; padding:16px; border-radius:12px; border:none; font-size:16px; font-weight:600; font-family:'Montserrat',sans-serif; cursor:pointer; letter-spacing:0.02em;" %>
       </div>
+
     <% end %>
 
-    <%# ── Choose contraception modal (inline, shown via params[:choose]) ── %>
+    <%# ── Choose contraception modal ── %>
     <% if params[:choose].present? %>
       <div style="background:#FFFFFF; border-top:2px solid #933a35; padding:16px 20px;">
         <p style="color:#933a35; font-size:14px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; margin:0 0 12px;">
           Choose your method
         </p>
-        <% CONTRACEPTION_META.except("none").each do |key, m| %>
+        <% contraception_meta.except("none").each do |key, m| %>
           <%= link_to notification_birth_control_settings_path,
                 style: "display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid #EDE1D5; text-decoration:none;" do %>
             <span style="font-size:20px; width:28px; text-align:center;"><%= m[:icon] %></span>
@@ -139,13 +150,6 @@
         <% end %>
       </div>
     <% end %>
-
-    <%# ── Save button ── %>
-    <div style="padding:20px 20px 0;">
-      <button style="width:100%; background:#933a35; color:#FFFFFF; padding:16px; border-radius:12px; border:none; font-size:16px; font-weight:600; font-family:'Montserrat',sans-serif; cursor:pointer; letter-spacing:0.02em;">
-        Save
-      </button>
-    </div>
 
   </div>
 </div>

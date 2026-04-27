@@ -1,5 +1,4 @@
 class StreaksController < ApplicationController
-
   def index
     @streak = current_user.streak || current_user.create_streak(
       current_streak: 0,

@@ -1,5 +1,4 @@
 class CalendarController < ApplicationController
-
   VALID_MODES = %w[all events tracking cycle].freeze
 
   def appointments

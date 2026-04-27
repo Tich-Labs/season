@@ -11,7 +11,7 @@ class InformationsController < ApplicationController
 
   def show
     phase = params[:phase]
-    redirect_to informations_path unless PHASES.include?(phase)
+    redirect_to informations_path and return unless PHASES.include?(phase)
 
     @phase = phase
     @content = CyclePhaseContent.for(phase, I18n.locale.to_s)

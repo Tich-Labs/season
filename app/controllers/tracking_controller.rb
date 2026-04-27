@@ -1,5 +1,4 @@
 class TrackingController < ApplicationController
-
   def index
     @date = Time.zone.today
     @phase = current_user.current_phase

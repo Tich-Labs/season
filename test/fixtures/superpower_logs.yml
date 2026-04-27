@@ -1,0 +1,9 @@
+alice_log_a:
+  user: alice
+  date: <%= 10.days.ago.to_date %>
+  ratings: {}
+
+alice_log_b:
+  user: alice
+  date: <%= 5.days.ago.to_date %>
+  ratings: {}

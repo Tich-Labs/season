@@ -184,6 +184,13 @@ en:
     update_profile:
       confirmation_sent: "Confirmation email sent. Please check your inbox."
       saved: "Saved"
+    reminders:
+      morning_saved: "Morning reminder saved."
+      period_saved: "Period reminder saved."
+      birth_control_saved: "Birth control reminder saved."
+  reminder_mailer:
+    birth_control_reminder:
+      subject: "Your daily reminder 💊 Season"
   bug_reports:
     create:
       thank_you: "Thank you for reporting this bug!"
