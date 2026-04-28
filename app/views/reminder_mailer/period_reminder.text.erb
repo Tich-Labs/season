@@ -1,0 +1,16 @@
+<%= @event_type == "period_start" ? "Your period is starting soon 🌙" : "Your period is almost over 🌱" %>
+
+<% if @predicted_date %>
+<%= @event_type == "period_start" ? "Expected period start" : "Expected period end" %>: <%= @predicted_date.strftime("%A, %B %-d") %>
+<% end %>
+
+<% if @event_type == "period_start" %>
+Your body is entering the menstrual phase. Take it easy, prioritise warmth and rest, and listen to what you need.
+<% else %>
+Your period is wrapping up. The follicular phase is just ahead — energy and clarity are on their way.
+<% end %>
+
+Log in Season: <%= tracking_index_url %>
+
+---
+Manage reminders: <%= notifications_settings_url %>

@@ -11,6 +11,7 @@ alice:
   has_regular_cycle: true
   uses_hormonal_birth_control: false
   food_preference: None
+  confirmed_at: "<%= 1.year.ago %>"
 
 bob:
   email: bob@example.com
@@ -21,6 +22,7 @@ bob:
   period_length: 5
   last_period_start: "<%= 30.days.ago.to_date %>"
   language: en
+  confirmed_at: "<%= 1.year.ago %>"
 
 carol:
   email: carol@example.com
@@ -28,6 +30,7 @@ carol:
   name: Carol White
   onboarding_completed: false
   language: en
+  confirmed_at: "<%= 1.year.ago %>"
 
 invited_user:
   email: invited@example.com

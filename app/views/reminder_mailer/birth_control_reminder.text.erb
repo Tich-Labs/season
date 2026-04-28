@@ -1,0 +1,13 @@
+Time for your <%= @contraception == "none" ? "contraception" : @contraception %> reminder 💊
+
+<% if @cycle_day %>
+Today: Day <%= @cycle_day %> of your cycle
+<% end %>
+
+Stay consistent — taking your birth control at the same time every day is key to its effectiveness.
+
+Quick tip: If you miss a dose, check the instructions for your method. Most have catch-up rules — don't panic.
+
+---
+Open Season: <%= root_url %>
+Manage reminders: <%= notifications_settings_url %>

@@ -1,6 +1,6 @@
 # Season — Backlog
 
-**Last Updated:** 27 April 2026
+**Last Updated:** 28 April 2026
 
 ---
 
@@ -48,7 +48,131 @@ Deferred to Phase 2 (Global Expansion).
 
 ---
 
-## ✅ RESOLVED (27 April 2026)
+## GDPR & Privacy Compliance (28 April 2026 Update)
+
+### ✅ DONE (Ready for EU Launch)
+
+| # | Feature | GDPR Ref | Notes | Status |
+|---|---------|---------|-------|--------|
+| 1 | **Account Deletion** (`DELETE /account`) | Art. 17 | Full data purge via `AccountController#destroy` | ✅ Done |
+| 2 | **Explicit Consent for Health Data** | Art. 9 | `UserConsent` model + audit trail; `/settings/consent` grant/revoke UI; `ConsentCheck` concern enforces gate | ✅ Done |
+| 3 | **Privacy Policy** | Art. 13-14 | ⚠️ Needs update to reference consent mechanism and retention periods | ⚠️ Needs update |
+| 4 | **Cookie Consent Banner** | ePrivacy | No third-party cookies in use | ✅ N/A |
+
+### 🟡 HIGH (Required Before Launch)
+
+| # | Feature | GDPR Ref | Notes |
+|---|---------|---------|-------|
+| 5 | **Data Export** (`GET /account/export`) | Art. 20 | Not yet built — user should be able to download all their data as JSON |
+| 6 | **Data Retention Policy** | Art. 5(1)(e) | Define retention periods and implement auto-deletion job |
+| 7 | **Third-Party DPAs** | Art. 28 | DPAs needed with Render, Resend, Sentry |
+
+### 🟢 MEDIUM (Post-Launch)
+
+| # | Feature | Notes |
+|---|---------|-------|
+| 8 | Enable DB Encryption (pgcrypto) | Encrypt sensitive fields |
+| 9 | Invite Token Expiry | Tokens expire after 7 days |
+| 10 | Audit Logging | Log data access |
+| 11 | Rate Limiting | Auth endpoints |
+| 12 | Article 22 Review | Automated decisions |
+
+### GitHub Issues Template
+
+```bash
+# DONE
+# 1. Account deletion — DELETE /account ✅ (28 April 2026)
+# 2. Explicit consent — /settings/consent ✅ (28 April 2026)
+
+# High - TODO
+gh issue create \
+  --title "[GDPR] Data Export Endpoint — GDPR Article 20" \
+  --body "Implement data portability. GET /account/export returns all user data as JSON (cycle_entries, symptom_logs, superpower_logs, calendar_events, reminders, settings). Include metadata (export date, data categories)." \
+  --label "gdpr,high"
+
+gh issue create \
+  --title "[GDPR] Data Retention Policy" \
+  --body "Define retention periods: cycle data (3 years?), symptom logs (2 years?), calendar events (1 year?). Implement background job to auto-delete expired data. Document in privacy policy." \
+  --label "gdpr,high"
+
+gh issue create \
+  --title "[GDPR] Privacy Policy Update — GDPR Article 13-14" \
+  --body "Update /legal/privacy to include: consent mechanism info, retention periods, DPO contact. See current implementation at /settings/consent." \
+  --label "gdpr,high"
+```
+
+---
+
+## ✅ RESOLVED (28 April 2026)
+
+### [GDPR] Consent system — GDPR Article 9
+**Status:** ✅ DONE
+
+- `UserConsent` model with full audit trail (IP, user agent, granted_at, revoked_at).
+- `ConsentCheck` concern gates symptom/tracking/superpower screens behind `health_data_processing` consent check.
+- `SettingsController#consent` and `#save_consents` — single form grants checked types and revokes unchecked active types.
+- `ConsentController` at `/consent` for grant-only onboarding-adjacent flow.
+- Schema: `user_consents` table with partial unique index `(user_id, consent_type) WHERE revoked_at IS NULL`.
+
+### [GDPR] Account deletion — GDPR Article 17
+**Status:** ✅ DONE
+
+- `AccountController#destroy` at `DELETE /account` purges all user data via `user.destroy!` (dependent: :destroy cascades) and purges Active Storage avatar.
+- User is logged out and redirected to root with confirmation.
+
+### [SECURITY] Debug routes in production
+**Status:** ✅ DONE
+
+All debug and test routes (`/env`, `/test-db`, `/test-load`, `/test`, `/model-test`, `/i18n-test`, `/test-email-prod`) moved behind `unless Rails.env.production?` guards. None are accessible in production.
+
+### [SECURITY] force_ssl, CSP enforcement, Permissions Policy, host authorization
+**Status:** ✅ DONE
+
+- `force_ssl = true` — Rails redirects HTTP → HTTPS and sets HSTS.
+- CSP: `content_security_policy_report_only = false` — fully enforced; nonces on script-src.
+- `config/initializers/permissions_policy.rb` created — camera, mic, geolocation, payment, USB all `:none`.
+- `config.hosts` set to `APP_HOST` + Render wildcard with health-check exclusion.
+
+### [ADMIN] Admin CMS full CRUD for CyclePhaseContent
+**Status:** ✅ DONE
+
+`Admin::CyclePhaseContentsController` now supports `new`, `create`, `edit`, `update`, `destroy`. Admins can manage all Informations page content from `/admin/cycle_phase_contents` without Rails console access. Table shows last-updated timestamps.
+
+### [FEATURE] Symptoms: cycle_day, temperature, weight
+**Status:** ✅ DONE
+
+`SymptomsController#index` now assigns `@cycle_day`. Temperature and weight fields are included in `symptom_params` and persisted to `symptom_logs`.
+
+### [UI] Informations show pages — Figma redesign
+**Status:** ✅ DONE
+
+Phase detail pages rebuilt to match Figma: flat white layout, phase-coloured text, three sections (phase title + hormone note / emotional world / that will do you good) with gray divider lines between them.
+
+### [BUG] JS listener leak in QuickActionsController
+**Status:** ✅ DONE
+
+`turbo:load` handler stored as `this._checkModals` and removed in `disconnect()`. Previously the anonymous function could not be unregistered, causing cumulative listeners on each page visit.
+
+### [REFACTOR] User#has_consent? → consent?, has_health_consent? → health_consent?
+**Status:** ✅ DONE
+
+Method names simplified. All callsites updated including `ConsentCheck` concern.
+
+---
+
+## ✅ RESOLVED (27 April 2026 — commit 18470ff)
+
+### [REFACTOR] Simplifier pass — CycleCalculatorService, SendPeriodRemindersJob, ReminderMailer, SettingsController, FeedbacksController, locales
+**Status:** ✅ DONE
+
+1. **CycleCalculatorService** — Added `next_period_start` method using O(1) arithmetic (replaces while loop). Now the single source of truth for next period start prediction across the codebase.
+2. **SendPeriodRemindersJob** — Removed duplicate `predicted_start` private method; now delegates to `CycleCalculatorService#next_period_start`.
+3. **ReminderMailer** — Removed dead `@calculator` in `period_reminder`; removed `predicted_period_date` private method (superseded by service); moved all hardcoded email subjects to locale files via `t(".subject")`.
+4. **SettingsController** — Extracted `save_single_reminder` private helper (morning and birth_control save actions were near-identical clones); wrapped `save_period_reminder` in `ApplicationRecord.transaction`; removed dead `@user = current_user` in 3 notification show actions.
+5. **FeedbacksController** — Replaced inline HTML string with `style=` in turbo_stream error response with `app/views/feedbacks/_error.html.erb` partial (Tailwind brand classes only).
+6. **Locales (`en.yml`, `de.yml`)** — Added `reminder_mailer.morning_summary.subject` and `reminder_mailer.period_reminder.subject_period_start/end` keys for full i18n coverage of mailer subjects.
+
+---
 
 ### [TESTS] Fix 8 pre-existing test failures — all 166 runs now green
 **Status:** ✅ DONE
@@ -140,32 +264,32 @@ end
 
 ## Security Backlog (Post-MVP)
 
-From security audit 2026-04-25. Critical items already fixed. These are the remaining findings.
+From security audit 2026-04-25. Items resolved on 2026-04-28 are marked.
 
 ### 🔴 High
 
-| ID | Issue | File | Fix |
-|----|-------|------|-----|
-| PROD-05 | `config.hosts` is commented out — DNS rebinding protection disabled | `config/environments/production.rb` | Uncomment and set to `ENV.fetch("APP_HOST")` + health check exclusion |
-| RATE-02 | Login rate limiter keyed on `request.ip` — bypassable via `X-Forwarded-For` spoofing | `sessions_controller.rb` | Add `rack-attack` gem + trusted proxy config |
-| FWKD-01 | `config.load_defaults 8.0` but app runs Rails 8.1.3 — missing 8.1 security defaults | `config/application.rb` | Run `bin/rails app:update` and review `new_framework_defaults_8_1.rb` |
+| ID | Issue | File | Status |
+|----|-------|------|--------|
+| PROD-05 | `config.hosts` is commented out — DNS rebinding protection disabled | `config/environments/production.rb` | ✅ Fixed 2026-04-28 |
+| RATE-02 | Login rate limiter keyed on `request.ip` — bypassable via `X-Forwarded-For` spoofing | `sessions_controller.rb` | ⏳ Open |
+| FWKD-01 | `config.load_defaults 8.0` but app runs Rails 8.1.3 — missing 8.1 security defaults | `config/application.rb` | ⏳ Open |
 
 ### 🟠 Medium
 
-| ID | Issue | File | Fix |
-|----|-------|------|-----|
-| AUTH-02 | Devise paranoid mode off — account enumeration possible via password reset/confirm responses | `config/initializers/devise.rb` | `config.paranoid = true` |
-| CSP-01 | CSP is report-only with no `report-uri` — zero enforcement or observability | `config/initializers/content_security_policy.rb` | Add `report-uri` endpoint, then flip `report_only` to `false` |
-| HDR-01 | No Permissions Policy — camera, mic, geolocation unrestricted | missing file | Create `config/initializers/permissions_policy.rb` |
-| PROD-04 | Devise password minimum is 6 chars (below NIST 8-char minimum) | `config/initializers/devise.rb` | `config.password_length = 10..128` |
-| DATA-01 | Active Storage on local disk in production — avatars lost on every Render redeploy | `config/environments/production.rb` | Switch to S3 / Cloudflare R2 |
+| ID | Issue | File | Status |
+|----|-------|------|--------|
+| AUTH-02 | Devise paranoid mode off — account enumeration possible via password reset/confirm responses | `config/initializers/devise.rb` | ⏳ Open |
+| CSP-01 | CSP was report-only with no enforcement | `config/initializers/content_security_policy.rb` | ✅ Fixed 2026-04-28 — `report_only = false` |
+| HDR-01 | No Permissions Policy | missing file | ✅ Fixed 2026-04-28 — `permissions_policy.rb` created |
+| PROD-04 | Devise password minimum is 6 chars (below NIST 8-char minimum) | `config/initializers/devise.rb` | ⏳ Open |
+| DATA-01 | Active Storage on local disk in production — avatars lost on every Render redeploy | `config/environments/production.rb` | ⏳ Open |
 
 ### 🟢 Info
 
-| ID | Issue | Notes |
-|----|-------|-------|
-| INFO-03 | Sentry gem installed but no initializer found — exceptions silently dropped in production | Create `config/initializers/sentry.rb` and add `SENTRY_DSN` to `render.yaml` |
-| INFO-02 | `DebugController` has unconditional `allow_unauthenticated_access` — relies on route guard only | Add `raise` or environment check inside the controller as belt-and-suspenders |
+| ID | Issue | Status |
+|----|-------|--------|
+| INFO-03 | Sentry gem installed but no initializer found — exceptions silently dropped in production | ⏳ Open |
+| INFO-02 | `DebugController` has unconditional `allow_unauthenticated_access` — relies on route guard only | ⏳ Open (debug routes now production-guarded, but controller itself unchanged) |
 
 ---
 

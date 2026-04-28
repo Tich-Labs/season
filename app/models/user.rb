@@ -13,10 +13,11 @@ class User < ApplicationRecord
   has_many :superpower_logs, dependent: :destroy
   has_many :reminders, dependent: :destroy
   has_many :feedbacks, dependent: :destroy
+  has_many :user_consents, dependent: :destroy
   has_one :streak, dependent: :destroy
 
   def self.ransackable_attributes(auth_object = nil)
-    %w[email name created_at onboarding_completed language]
+    %w[email name created_at onboarding_completed language public_id]
   end
 
   def self.ransackable_associations(auth_object = nil)
@@ -61,6 +62,14 @@ class User < ApplicationRecord
 
   def first_name
     name&.split&.first || name
+  end
+
+  def consent?(consent_type)
+    user_consents.active.exists?(consent_type: consent_type)
+  end
+
+  def health_consent?
+    consent?("health_data_processing")
   end
 
   def self.find_or_create_from_oauth(provider, auth)

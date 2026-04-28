@@ -159,8 +159,12 @@ de:
       deleted: "Termin gelöscht"
   admin:
     cycle_phase_contents:
+      create:
+        created: "Informationsinhalt erstellt."
       update:
         updated: "Informationsinhalt aktualisiert."
+      destroy:
+        destroyed: "Informationsinhalt gelöscht."
   invites:
     show:
       already_used: "Diese Einladung wurde bereits verwendet."

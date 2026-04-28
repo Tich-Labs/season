@@ -1,0 +1,31 @@
+alice_morning:
+  user: alice
+  reminder_type: morning
+  active: true
+  time: "09:00:00"
+
+alice_period_start:
+  user: alice
+  reminder_type: period_start
+  active: true
+  time: "08:00:00"
+  advance_days: 2
+
+alice_period_end:
+  user: alice
+  reminder_type: period_end
+  active: true
+  time: "08:00:00"
+  advance_days: 1
+
+alice_pill:
+  user: alice
+  reminder_type: pill
+  active: true
+  time: "21:00:00"
+
+bob_morning:
+  user: bob
+  reminder_type: morning
+  active: false
+  time: "09:00:00"

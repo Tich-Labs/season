@@ -1,0 +1,17 @@
+<% content_for :page_title, "New Informations Content" %>
+
+<div class="space-y-6 max-w-3xl">
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+    <div class="flex items-start justify-between gap-4">
+      <div>
+        <h2 class="text-xl font-bold text-gray-900">New Informations Content</h2>
+        <p class="text-sm text-gray-500 mt-1">Create a new content record for the Informations page.</p>
+      </div>
+      <%= link_to "Back", admin_cycle_phase_contents_path, class: "text-sm text-[#933a35] hover:underline" %>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+    <%= render "form", content: @content %>
+  </div>
+</div>

@@ -34,14 +34,17 @@
 <body>
   <nav class="sidebar">
     <div class="sidebar-header">
-      <h1>📅 Season Docs</h1>
+      <h1>Season Docs</h1>
       <p>Internal team documentation</p>
     </div>
     <div class="nav-section">
+      <p class="nav-section-title">Start Here</p>
+      <a href="overview.html" class="nav-item">Project Overview</a>
+    </div>
+    <div class="nav-section">
       <p class="nav-section-title">Getting Started</p>
-      <a href="overview.html" class="nav-item">Overview</a>
-      <a href="setup.html" class="nav-item">Setup &amp; README</a>
-      <a href="screenslist.html" class="nav-item">Screens &amp; Routes</a>
+      <a href="userjourney.html" class="nav-item">User Journey</a>
+      <a href="screenslist.html" class="nav-item active">Screens &amp; Routes</a>
       <a href="BACKLOG.html" class="nav-item">Backlog</a>
     </div>
     <div class="nav-section">
@@ -52,63 +55,90 @@
     </div>
     <div class="nav-section">
       <p class="nav-section-title">Reference</p>
-      <a href="userjourney.html" class="nav-item">User Journey</a>
       <a href="figma_nodes.html" class="nav-item">Figma Nodes</a>
       <a href="userdata.html" class="nav-item">User Data &amp; Privacy</a>
     </div>
-  
   </nav>
   <main class="content">
-    <h1>Screens & Routes Mapping Table</h1>
-    <p>This table maps coded screens to Figma design nodes. Use <code>docs/figma_nodes.md</code> as the source of truth.</p>
+    <h1>Screens &amp; Routes</h1>
+    <p>This page maps every route to its controller action and milestone. For the Figma design source for each screen, see <a href="figma_nodes.html">Figma Nodes</a>. For styling rules and Tailwind conventions, see <a href="STYLING-AUDIT.html">Styling Audit</a>.</p>
 
-    <h2>Milestone Reference</h2>
+    <h2>Milestone Summary</h2>
     <table>
-      <tr><th>Milestone</th><th>Figma Screens</th><th>Status</th></tr>
-      <tr><td>M1</td><td>43</td><td>✅ Built</td></tr>
-      <tr><td>M2</td><td>32</td><td>✅ Built</td></tr>
-      <tr><td>M3</td><td>64</td><td>✅ Built</td></tr>
-      <tr><td>M4</td><td>60</td><td>✅ Built</td></tr>
-      <tr><td>M5</td><td>60</td><td>✅ Built</td></tr>
-      <tr><td>M6</td><td>24</td><td>❌ Not built</td></tr>
-      <tr><td>M7</td><td>17</td><td>✅ Built</td></tr>
+      <tr><th>Milestone</th><th>What it covers</th><th>Figma screens</th><th>Status</th></tr>
+      <tr><td>M1</td><td>Auth, invite flow, 11-step onboarding</td><td>43</td><td>✅ Built</td></tr>
+      <tr><td>M2</td><td>Calendar, appointments, daily view</td><td>32</td><td>✅ Built</td></tr>
+      <tr><td>M3</td><td>Tracking, symptoms, superpowers, streaks, phase education</td><td>64</td><td>✅ Built</td></tr>
+      <tr><td>M4</td><td>Forecasting, personalized tips, appointments CRUD</td><td>60</td><td>✅ Built</td></tr>
+      <tr><td>M5</td><td>Birth control, reminder settings, email jobs</td><td>60</td><td>✅ Built</td></tr>
+      <tr><td>M6</td><td>Gamification &amp; streak flames</td><td>24</td><td>❌ Not in scope</td></tr>
+      <tr><td>M7</td><td>In-app feedback, admin panel, waitlist</td><td>17</td><td>✅ Built</td></tr>
     </table>
 
-    <h2>Styling Standard</h2>
-    <p><strong>Approach</strong>: Tailwind CSS with brand utility classes — no inline <code>style=""</code> attributes.</p>
-
-    <h3>Brand Colors</h3>
-    <ul>
-      <li>Primary: #933a35</li>
-      <li>Background: #FAF7F4</li>
-      <li>Field background: #EDE1D5</li>
-      <li>Accent muted: #D18D83</li>
-    </ul>
-
-    <h2>Route Mapping</h2>
+    <h2>Auth &amp; Public Routes (no bottom nav)</h2>
     <table>
-      <tr><th>Route</th><th>Controller#Action</th><th>Status</th></tr>
-      <tr><td>/app</td><td>home#app</td><td>✅</td></tr>
-      <tr><td>/loader</td><td>home#loader</td><td>✅</td></tr>
-      <tr><td>/welcome</td><td>home#welcome</td><td>✅</td></tr>
-      <tr><td>/registration/new</td><td>registrations#new</td><td>✅</td></tr>
-      <tr><td>/session/new</td><td>sessions#new</td><td>✅</td></tr>
-      <tr><td>/calendar</td><td>calendar#index</td><td>✅</td></tr>
-      <tr><td>/calendar/weekly</td><td>calendar#weekly</td><td>✅</td></tr>
-      <tr><td>/calendar/appointments</td><td>calendar#appointments</td><td>✅</td></tr>
-      <tr><td>/daily/:date</td><td>daily_view#show</td><td>✅</td></tr>
-      <tr><td>/tracking</td><td>tracking#index</td><td>✅</td></tr>
-      <tr><td>/symptoms</td><td>symptoms#index</td><td>✅</td></tr>
-      <tr><td>/superpowers</td><td>superpowers#index</td><td>✅</td></tr>
-      <tr><td>/streaks</td><td>streaks#index</td><td>✅</td></tr>
-      <tr><td>/settings/edit</td><td>settings#edit</td><td>✅</td></tr>
-      <tr><td>/admin</td><td>admin/users#index</td><td>✅</td></tr>
-      <tr><td>/admin/inbox</td><td>admin/inbox#overview</td><td>✅</td></tr>
-      <tr><td>/admin/launch_signups</td><td>admin/launch_signups#index</td><td>✅</td></tr>
+      <tr><th>Route</th><th>Controller#Action</th><th>Notes</th></tr>
+      <tr><td>/</td><td>home#app</td><td>Splash / loader screen</td></tr>
+      <tr><td>/welcome</td><td>home#welcome</td><td>Brand welcome screen</td></tr>
+      <tr><td>/registration/new</td><td>registrations#new</td><td>Sign up form</td></tr>
+      <tr><td>/session/new</td><td>sessions#new</td><td>Log in form</td></tr>
+      <tr><td>/users/password/new</td><td>devise/passwords#new</td><td>Password recovery</td></tr>
+      <tr><td>/users/password/edit</td><td>devise/passwords#edit</td><td>Password reset form</td></tr>
+      <tr><td>/password/done</td><td>passwords#done</td><td>Password success screen</td></tr>
+      <tr><td>/invite/:token</td><td>invites#show</td><td>Personalised invite for V1 users</td></tr>
+      <tr><td>/onboarding/:id</td><td>onboarding#show</td><td>Steps 1&ndash;11 (Hotwire multi-step)</td></tr>
+      <tr><td>/onboarding/finish</td><td>onboarding#finish</td><td>Animated completion screen</td></tr>
+      <tr><td>/launch</td><td>launch#index</td><td>Countdown + waitlist signup</td></tr>
+      <tr><td>/terms</td><td>pages#terms</td><td>Terms of service</td></tr>
+      <tr><td>/privacy</td><td>pages#privacy</td><td>Privacy policy</td></tr>
     </table>
 
-    <h2>Known Gaps</h2>
-    <p><strong>M6: Gamification & Scoring Flames</strong> — Not built (not in scope)</p>
+    <h2>Main App Routes (with top bar + burger menu)</h2>
+    <table>
+      <tr><th>Route</th><th>Controller#Action</th><th>Notes</th></tr>
+      <tr><td>/calendar</td><td>calendar#index</td><td>Monthly calendar, phase-coloured</td></tr>
+      <tr><td>/calendar/weekly</td><td>calendar#weekly</td><td>Horizontal week strip</td></tr>
+      <tr><td>/calendar/appointments</td><td>calendar#appointments</td><td>Upcoming events list</td></tr>
+      <tr><td>/calendar_events/new</td><td>calendar_events#new</td><td>Create event</td></tr>
+      <tr><td>/calendar_events/:id/edit</td><td>calendar_events#edit</td><td>Edit event</td></tr>
+      <tr><td>/daily/:date</td><td>daily_view#show</td><td>Phase insights, symptoms, tips for a given date</td></tr>
+      <tr><td>/tracking</td><td>tracking#index</td><td>Self Analysis — donut wheel, cycle strip, navigation</td></tr>
+      <tr><td>/tracking/period</td><td>tracking#period</td><td>Period start entry / edit</td></tr>
+      <tr><td>/symptoms</td><td>symptoms#index</td><td>Symptom log — Mood / Physical / Mental accordion</td></tr>
+      <tr><td>/symptoms/:id</td><td>symptoms#show</td><td>Symptom detail</td></tr>
+      <tr><td>/symptoms/discharge</td><td>symptoms#discharge</td><td>Discharge guide</td></tr>
+      <tr><td>/superpowers</td><td>superpowers#index</td><td>Superpower list by phase</td></tr>
+      <tr><td>/superpowers/:id</td><td>superpowers#show</td><td>Superpower detail</td></tr>
+      <tr><td>/streaks</td><td>streaks#index</td><td>Current streak, best streak, milestones</td></tr>
+      <tr><td>/informations</td><td>informations#index</td><td>Phase education overview</td></tr>
+      <tr><td>/informations/:phase</td><td>informations#show</td><td>Phase detail (menstrual / follicular / ovulation / luteal)</td></tr>
+      <tr><td>/settings/edit</td><td>settings#edit</td><td>Settings main</td></tr>
+      <tr><td>/settings/profile</td><td>settings#profile</td><td>Name, email, birthday, avatar</td></tr>
+      <tr><td>/settings/calendar</td><td>settings#calendar</td><td>Calendar display preferences</td></tr>
+      <tr><td>/settings/notifications</td><td>settings#notifications</td><td>Reminder toggles</td></tr>
+      <tr><td>/settings/subscriptions</td><td>settings#subscriptions</td><td>Plan and upgrade (Stripe — not yet active)</td></tr>
+      <tr><td>PATCH /settings/save_morning_reminder</td><td>settings#save_morning_reminder</td><td>Persists morning reminder preference</td></tr>
+      <tr><td>PATCH /settings/save_period_reminder</td><td>settings#save_period_reminder</td><td>Persists period reminder + advance_days</td></tr>
+      <tr><td>PATCH /settings/save_birth_control_reminder</td><td>settings#save_birth_control_reminder</td><td>Persists pill reminder preference</td></tr>
+    </table>
+
+    <h2>Admin Routes (gated by User#admin?)</h2>
+    <table>
+      <tr><th>Route</th><th>Controller#Action</th><th>Notes</th></tr>
+      <tr><td>/admin/login</td><td>admin/sessions#new</td><td>Standalone admin login — desktop layout</td></tr>
+      <tr><td>/admin</td><td>admin/users#index</td><td>User list with search</td></tr>
+      <tr><td>/admin/users/:id</td><td>admin/users#show</td><td>User detail</td></tr>
+      <tr><td>/admin/inbox</td><td>admin/inbox#overview</td><td>All messages (feedback / bugs / support)</td></tr>
+      <tr><td>/admin/inbox/feedback</td><td>admin/inbox#feedback</td><td>Feedback only</td></tr>
+      <tr><td>/admin/inbox/bugs</td><td>admin/inbox#bugs</td><td>Bug reports only</td></tr>
+      <tr><td>/admin/inbox/support</td><td>admin/inbox#support</td><td>Support only</td></tr>
+      <tr><td>/admin/inbox/export_csv</td><td>admin/inbox#export_csv</td><td>CSV download</td></tr>
+      <tr><td>/admin/launch_signups</td><td>admin/launch_signups#index</td><td>Waitlist list</td></tr>
+      <tr><td>/admin/launch_signups/export_csv</td><td>admin/launch_signups#export_csv</td><td>CSV download</td></tr>
+    </table>
+
+    <h2>Not Built</h2>
+    <p><strong>M6 — Gamification &amp; Scoring Flames:</strong> Not built and not in scope for launch.</p>
   </main>
 </body>
 </html>

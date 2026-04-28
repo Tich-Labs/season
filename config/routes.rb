@@ -14,23 +14,25 @@ Rails.application.routes.draw do
     code = (status[:database] == "ok" && status[:resend] == "configured") ? 200 : 503
     [code, {"Content-Type" => "application/json"}, [status.to_json]]
   }
-  get "test-email-prod", to: proc { |env|
-    begin
-      if ENV["RESEND_API_KEY"].blank?
-        [500, {"Content-Type" => "application/json"}, [{error: "RESEND_API_KEY not set"}]]
-      else
-        result = Resend::Emails.send({
-          from: ENV.fetch("RESEND_FROM_EMAIL", "onboarding@resend.dev"),
-          to: ENV.fetch("RESEND_TEST_TO", "delivered@resend.dev"),
-          subject: "Production Test from Season",
-          html: "<p>Production email test working!</p>"
-        })
-        [200, {"Content-Type" => "application/json"}, [result.inspect]]
+  unless Rails.env.production?
+    get "test-email-prod", to: proc { |env|
+      begin
+        if ENV["RESEND_API_KEY"].blank?
+          [500, {"Content-Type" => "application/json"}, [{error: "RESEND_API_KEY not set"}]]
+        else
+          result = Resend::Emails.send({
+            from: ENV.fetch("RESEND_FROM_EMAIL", "onboarding@resend.dev"),
+            to: ENV.fetch("RESEND_TEST_TO", "delivered@resend.dev"),
+            subject: "Production Test from Season",
+            html: "<p>Production email test working!</p>"
+          })
+          [200, {"Content-Type" => "application/json"}, [result.inspect]]
+        end
+      rescue => e
+        [500, {"Content-Type" => "application/json"}, [{error: e.class, message: e.message}]]
       end
-    rescue => e
-      [500, {"Content-Type" => "application/json"}, [{error: e.class, message: e.message}]]
-    end
-  }
+    }
+  end
   unless Rails.env.production?
     get "test-db", to: proc { |env| [200, {"Content-Type" => "text/plain"}, ["OK - Rails #{Rails.env}"]] }
     get "test-load", to: proc { |env|
@@ -133,6 +135,16 @@ Rails.application.routes.draw do
     patch :save_birth_control_reminder, on: :collection
   end
 
+  get "settings/consent", to: "settings#consent", as: nil
+  post "settings/consent", to: "settings#save_consents", as: nil
+
+  resource :account, only: [:show] do
+    delete :destroy, on: :collection
+  end
+
+  # Explicit consent for GDPR Article 9 - uses settings/consent
+  # (duplicate named route removed to avoid conflicts)
+
   namespace :admin do
     get "login", to: "sessions#new", as: :login
     post "login", to: "sessions#create"
@@ -145,7 +157,7 @@ Rails.application.routes.draw do
     get "inbox/export_csv", to: "inbox#export_csv"
     get "launch_signups", to: "launch_signups#index", as: :launch_signups
     get "launch_signups/export_csv", to: "launch_signups#export_csv", as: :launch_signups_export_csv
-    resources :cycle_phase_contents, only: [:index, :edit, :update]
+    resources :cycle_phase_contents, except: [:show]
     root to: "users#index"
   end
 

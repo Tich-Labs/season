@@ -1,6 +1,6 @@
 # Season App — Developer Documentation & Auth Security Review
 
-**Generated:** 2026-04-24 — **Last updated:** 2026-04-27 (test suite fully green — 166 runs, 0 failures)
+**Generated:** 2026-04-24 — **Last updated:** 2026-04-28 (consent system, security hardening, admin CMS CRUD, symptoms enhancements)
 **Rails version:** 8.1.3
 **Ruby version:** >= 3.4.7
 **Database:** PostgreSQL (all environments)
@@ -113,7 +113,7 @@ Season is a menstrual cycle tracking app targeted at users who want to understan
 
 ### Schema version
 
-`20260421100104` (PostgreSQL, `ActiveRecord::Schema[8.1]`)
+`20260428121630` (PostgreSQL, `ActiveRecord::Schema[8.1]`)
 
 ### Models & Associations
 
@@ -177,6 +177,7 @@ users
 - `has_many :superpower_logs, dependent: :destroy`
 - `has_many :reminders, dependent: :destroy`
 - `has_many :feedbacks, dependent: :destroy`
+- `has_many :user_consents, dependent: :destroy`
 - `has_one :streak, dependent: :destroy`
 
 **Key methods:**
@@ -189,7 +190,9 @@ users
 | `first_incomplete_onboarding_step` | Returns step integer (1–11) or nil |
 | `profile_complete?` | All required onboarding fields present |
 | `first_name` | First word of `name` |
-| `self.find_or_create_from_oauth(provider, auth)` | Upsert for OAuth users |
+| `consent?(type)` | Returns true if the user has an active (non-revoked) `UserConsent` of the given type |
+| `health_consent?` | Shorthand for `consent?("health_data_processing")` |
+| `self.find_or_create_from_oauth(provider, auth)` | UID-first lookup (handles Apple repeat logins), falls back to email; saves UID for existing users |
 | `self.ransackable_attributes` | Limits ransack search fields to safe set |
 
 **Devise modules:** `database_authenticatable`, `registerable`, `recoverable`, `rememberable`, `validatable`, `confirmable`, `omniauthable`
@@ -355,6 +358,29 @@ launch_signups
 
 ---
 
+#### `UserConsent`
+
+Audit trail for GDPR Article 9 explicit consent. One record per user per consent type (revoked records are retained as a log; only records with `revoked_at IS NULL` are considered active).
+
+```
+user_consents
+  id              bigserial PK
+  user_id         bigint FK NOT NULL
+  consent_type    string NOT NULL  -- health_data_processing|symptom_tracking|cycle_tracking|menstrual_data|reminders|marketing
+  granted_at      datetime NOT NULL
+  revoked_at      datetime         -- nil means currently active
+  ip_address      string           -- IP at time of grant/revoke
+  user_agent      string           -- browser at time of grant/revoke
+  metadata        text
+  UNIQUE INDEX on (user_id, consent_type) WHERE revoked_at IS NULL
+```
+
+**Valid consent types:** `health_data_processing`, `symptom_tracking`, `cycle_tracking`, `menstrual_data`, `reminders`, `marketing`.
+
+Key methods: `active?`, `revoked?`, `grant!(ip, ua)`, `revoke!(ip, ua)`. Class method `UserConsent.granted_by?(user, type)` for direct lookups.
+
+---
+
 #### `CyclePhaseContent`
 
 CMS-style educational content per phase and locale. Seeded, not user-created.
@@ -478,6 +504,10 @@ Standard Rails 8 Active Storage tables (`active_storage_blobs`, `active_storage_
 | PATCH | `/settings/save_morning_reminder` | `settings#save_morning_reminder` |
 | PATCH | `/settings/save_period_reminder` | `settings#save_period_reminder` |
 | PATCH | `/settings/save_birth_control_reminder` | `settings#save_birth_control_reminder` |
+| GET | `/settings/consent` | `settings#consent` |
+| POST | `/settings/consent` | `settings#save_consents` |
+| GET | `/account` | `account#show` |
+| DELETE | `/account` | `account#destroy` |
 
 ### Admin Routes
 
@@ -495,24 +525,31 @@ All under `/admin`, gated by `Admin::BaseController` requiring `current_user.adm
 | GET | `/admin/inbox/export_csv` | `admin/inbox#export_csv` |
 | GET | `/admin/launch_signups` | `admin/launch_signups#index` |
 | GET | `/admin/launch_signups/export_csv` | `admin/launch_signups#export_csv` |
+| GET | `/admin/cycle_phase_contents` | `admin/cycle_phase_contents#index` |
+| GET | `/admin/cycle_phase_contents/new` | `admin/cycle_phase_contents#new` |
+| POST | `/admin/cycle_phase_contents` | `admin/cycle_phase_contents#create` |
+| GET | `/admin/cycle_phase_contents/:id/edit` | `admin/cycle_phase_contents#edit` |
+| PATCH | `/admin/cycle_phase_contents/:id` | `admin/cycle_phase_contents#update` |
+| DELETE | `/admin/cycle_phase_contents/:id` | `admin/cycle_phase_contents#destroy` |
 | GET | `/admin/login` | `admin/sessions#new` | Standalone admin login page |
 | POST | `/admin/login` | `admin/sessions#create` | Submit admin credentials |
 | DELETE | `/admin/logout` | `admin/sessions#destroy` | Admin sign out |
 
-### Debug/Test Routes (Production Risk)
+### Debug/Test Routes
 
-The following routes are defined directly in `routes.rb` and remain active in production:
+All debug and test routes are now wrapped in `unless Rails.env.production?` guards and are **not accessible in production**.
 
-| Path | What it does |
-|------|-------------|
-| `/test-db` | Returns Rails env string |
-| `/test-load` | Attempts to load `RegistrationsController`, returns load status |
-| `/test` | `debug#test` action |
-| `/model-test` | Runs `User.count` and returns result |
-| `/i18n-test` | Runs an I18n lookup and returns result |
-| `/env` | **Returns environment variable presence** (DATABASE_URL, RAILS_MASTER_KEY, SECRET_KEY_BASE) |
+| Path | What it does | Environment |
+|------|-------------|-------------|
+| `/test-db` | Returns Rails env string | dev/test only |
+| `/test-load` | Attempts to load `RegistrationsController` | dev/test only |
+| `/test` | `debug#test` action | dev/test only |
+| `/model-test` | Runs `User.count` and returns result | dev/test only |
+| `/i18n-test` | Runs an I18n lookup and returns result | dev/test only |
+| `/env` | Returns environment variable presence | dev/test only |
+| `/test-email-prod` | Sends a Resend test email | dev/test only |
 
-> **Security concern:** `/env` discloses whether sensitive environment variables are set. While it does not expose the values, this is operational information that should not be publicly accessible.
+> Previously `/env`, `/test-db`, and `/test-email-prod` were accessible in production. All are now guarded. The security gap (finding #4 from the 2026-04-25 audit) is resolved.
 
 ---
 
@@ -549,6 +586,7 @@ luteal:     remainder
 | `month_data(year, month)` | Array of hashes per day: `{date, phase, season, colour, cycle_day}` |
 | `week_data(week_start)` | Same structure for a 7-day window |
 | `strip_data(past_days:, future_days:)` | Centred window for day strip widget |
+| `next_period_start` | Predicted start date of the next period using O(1) arithmetic |
 | `wheel_arcs` | SVG arc data (start/end angle per phase) for the donut wheel |
 
 **`PHASE_META`** constant is used directly in views and controllers to retrieve colours and season names without instantiating the service.
@@ -764,7 +802,9 @@ Token-based invite for new users (likely admin-generated, though the admin panel
 | Password reset window | 6 hours | Devise `reset_password_within` |
 | bcrypt stretches | 12 (1 in test) | Devise default |
 | CSRF | Rails default (`protect_from_forgery`) | OmniAuth callback exempt |
-| CSP | Report-only mode | Via `content_security_policy_report_only = true` |
+| CSP | Enforced | `content_security_policy_report_only = false`; nonces on script-src |
+| Permissions Policy | Enforced | camera/mic/geo/payment/USB blocked via `permissions_policy.rb` |
+| Host authorization | Enforced | `config.hosts` set to `APP_HOST` + Render wildcard |
 
 ---
 
@@ -799,9 +839,10 @@ The admin sidebar footer includes a "Sign out" button that issues `DELETE /admin
 
 | Controller | Actions | Notes |
 |-----------|---------|-------|
-| `Admin::UsersController` | `index`, `show` | Ransack search, manual pagination (20/page), CSV export |
+| `Admin::UsersController` | `index`, `show` | Ransack search, manual pagination (20/page), cycle stats (avg length, next period, period history) |
 | `Admin::InboxController` | `overview`, `feedback`, `bugs`, `support`, `export_csv` | Filters `Feedback` by type; all share one view `admin/inbox/index` |
 | `Admin::LaunchSignupsController` | `index`, `export_csv` | Launch waitlist management |
+| `Admin::CyclePhaseContentsController` | `index`, `new`, `create`, `edit`, `update`, `destroy` | Full CMS CRUD for `CyclePhaseContent` records; controls the text shown on `/informations/:phase` |
 
 ### Provisioning Admin & Test Accounts
 
@@ -991,9 +1032,9 @@ Steps 5 and 6 are necessary because `db:prepare` only processes the primary data
 ### SSL / HTTPS
 
 `config.assume_ssl = true` (trusts upstream SSL termination).
-`config.force_ssl = false` (disabled for Render free tier which lacks automatic HTTPS redirect).
+`config.force_ssl = true` (enabled — Rails will redirect HTTP → HTTPS and set HSTS headers).
 
-> This means HTTP connections are not redirected to HTTPS at the Rails level. The security comment in the code acknowledges this is a Render free-tier limitation.
+Host authorization is now enforced: `config.hosts` is set to `[ENV.fetch("APP_HOST", "seasonv2.onrender.com"), /.*\.onrender\.com/]` with a health-check exclusion. This resolves the DNS rebinding risk (PROD-05 from the 2026-04-25 audit).
 
 ---
 
@@ -1039,7 +1080,35 @@ Running Solid Queue inside Puma (no separate worker dyno) works correctly for lo
 
 ### Ransack Scope Restriction
 
-`User.ransackable_attributes` restricts Ransack search to `%w[email name created_at onboarding_completed language]`. `ransackable_associations` returns an empty array. This is correct security hygiene — prevents search-based data exfiltration of sensitive fields.
+`User.ransackable_attributes` restricts Ransack search to `%w[email name created_at onboarding_completed language public_id]`. `ransackable_associations` returns an empty array. This is correct security hygiene — prevents search-based data exfiltration of sensitive fields.
+
+---
+
+### Consent System (GDPR Article 9)
+
+Health data consent is tracked in the `user_consents` table via the `UserConsent` model. Each grant or revoke is a timestamped record with IP address and user agent — a full audit trail.
+
+**`ConsentCheck` concern** is included in controllers that serve health data (symptoms, superpowers, tracking). Its `before_action :check_health_consent` redirects users who have not granted `health_data_processing` consent to `/settings/consent` before they can view or log health data. The consent and account-deletion paths are excluded from the check.
+
+**`SettingsController#save_consents`** handles both granting and revoking: checked consent types are granted, previously active but now unchecked types are revoked. All four health-data types (`health_data_processing`, `symptom_tracking`, `cycle_tracking`, `menstrual_data`) are managed together in one form submission.
+
+The standalone `ConsentController` at `/consent` provides a simpler grant-only flow (used during onboarding-adjacent flows). The full grant/revoke UI lives at `/settings/consent`.
+
+---
+
+### Security Hardening (2026-04-28)
+
+Several production security settings were tightened:
+
+| Setting | Before | After |
+|---------|--------|-------|
+| `force_ssl` | `false` | `true` |
+| CSP enforcement | report-only | **enforced** (`report_only = false`) |
+| Permissions Policy | missing | created — camera/mic/geo/payment/USB all `:none` |
+| Host authorization | commented out | enabled with `APP_HOST` + Render wildcard |
+| Debug routes in production | exposed | all behind `unless Rails.env.production?` guard |
+| `test-email-prod` route | production-accessible | dev/test only |
+| Session cookie `httponly` | `true` | `true` (confirmed) |
 
 ---
 
@@ -1127,45 +1196,27 @@ end
 
 ---
 
-#### 4. Debug/Test Routes Exposed in Production
+#### 4. Debug/Test Routes Exposed in Production — RESOLVED
 
-**Severity:** Medium
+**Severity:** Medium — **Fixed 2026-04-28**
 
-Routes `/env`, `/model-test`, `/test-load`, `/test`, `/i18n-test`, and `/test-db` are defined in `routes.rb` with no authentication or environment guard. Particularly, `/env` reveals whether `DATABASE_URL`, `RAILS_MASTER_KEY`, and `SECRET_KEY_BASE` are set. While values are not exposed, this leaks operational intelligence.
-
-**Fix:** Wrap in an environment guard:
-
-```ruby
-if Rails.env.development? || Rails.env.test?
-  get "/env", to: ...
-  get "/model-test", to: ...
-  # etc.
-end
-```
+All debug routes (`/env`, `/model-test`, `/test-load`, `/test`, `/i18n-test`, `/test-db`, `/test-email-prod`) are now wrapped in `unless Rails.env.production?` guards and are not accessible in production.
 
 ---
 
-#### 5. `force_ssl` Disabled
+#### 5. `force_ssl` Disabled — RESOLVED
 
-**Severity:** Low (Render-specific, acknowledged)
+**Severity:** Low — **Fixed 2026-04-28**
 
-`config.force_ssl = false` means Rails does not redirect HTTP to HTTPS. Traffic arriving over HTTP to the Render service (if possible) would not be upgraded. Render's edge typically handles this, but it is not enforced at the application layer.
-
-**Fix:** Acceptable given `config.assume_ssl = true` and Render's infrastructure. Document as a known trade-off. When moving to a paid plan with a custom domain, re-enable `force_ssl`.
+`config.force_ssl = true` is now set. Rails enforces HTTPS redirection and sets HSTS headers.
 
 ---
 
-#### 6. CSP in Report-Only Mode
+#### 6. CSP in Report-Only Mode — RESOLVED
 
-**Severity:** Low
+**Severity:** Low — **Fixed 2026-04-28**
 
-`config.content_security_policy_report_only = true` means the CSP is not enforced — it only reports violations. This is appropriate while the policy is being tuned, but enforcement should be enabled before the app handles sensitive health data at scale.
-
-**Fix:** After verifying no violations in Sentry, change to:
-
-```ruby
-config.content_security_policy_report_only = false
-```
+`config.content_security_policy_report_only = false` is now set. The CSP is fully enforced. Script nonces are generated per-request via `content_security_policy_nonce_generator`.
 
 ---
 
@@ -1215,21 +1266,60 @@ end
 
 ### Summary Table
 
-| # | Finding | Severity | Fix Complexity |
-|---|---------|----------|----------------|
-| 1 | Email confirmation not enforced on login | Medium | Low |
-| 2 | OAuth UID not saved for existing users | Low | Low |
-| 3 | Apple Sign In: email nil on repeat logins | Medium | Medium |
-| 4 | Debug routes exposed in production | Medium | Low |
-| 5 | force_ssl disabled | Low | Low (deferred) |
-| 6 | CSP in report-only mode | Low | Low |
-| 7 | No account lockout | Low-Medium | Medium |
-| 8 | Invite token entropy unknown | Low | Low |
-| 9 | Email change requires no password confirmation | Medium | Low |
+| # | Finding | Severity | Status |
+|---|---------|----------|--------|
+| 1 | Email confirmation not enforced on login | Medium | Open |
+| 2 | OAuth UID not saved for existing users | Low | **Fixed** — UID-first lookup + save on existing users |
+| 3 | Apple Sign In: email nil on repeat logins | Medium | **Fixed** — UID-first lookup handles repeat Apple logins |
+| 4 | Debug routes exposed in production | Medium | **Fixed 2026-04-28** — all behind `unless Rails.env.production?` |
+| 5 | `force_ssl` disabled | Low | **Fixed 2026-04-28** — `force_ssl = true` |
+| 6 | CSP in report-only mode | Low | **Fixed 2026-04-28** — `report_only = false` |
+| 7 | No account lockout | Low-Medium | Open |
+| 8 | Invite token entropy unknown | Low | Open |
+| 9 | Email change requires no password confirmation | Medium | **Fixed** — `valid_password?` check added in `update_profile` |
 
 ---
 
 ## 12. Changelog
+
+### 2026-04-28 — Consent system, security hardening, admin CMS, symptoms enhancements
+
+| Area | Change |
+|------|--------|
+| `UserConsent` model | New model and migration. Tracks GDPR Art. 9 explicit consent per type with full audit trail (IP, user agent, granted_at, revoked_at). |
+| `ConsentCheck` concern | New controller concern. `before_action :check_health_consent` redirects users without `health_data_processing` consent to `/settings/consent`. |
+| `User#consent?` / `#health_consent?` | Renamed from `has_consent?` / `has_health_consent?`. Delegates to `user_consents.active`. |
+| `SettingsController#consent` + `#save_consents` | New actions. `save_consents` now grants checked types and **revokes** unchecked active types in a single form submission. |
+| `ConsentController` | New standalone controller at `/consent` for grant-only flow during early onboarding. |
+| `AccountController` | New controller at `/account` for GDPR Art. 17 right-to-erasure (account deletion with full data purge). |
+| `SendMorningRemindersJob` | New Solid Queue job. Queries active `morning` reminders and delivers `ReminderMailer.morning_summary`. |
+| `SendBirthControlRemindersJob` | New Solid Queue job. Queries active `pill` reminders and delivers `ReminderMailer.birth_control_reminder`. |
+| `config/recurring.yml` | Solid Queue cron schedule confirmed in production. Both new jobs wired here. |
+| `Admin::CyclePhaseContentsController` | Expanded from read-only to full CRUD (`new`, `create`, `edit`, `update`, `destroy`). Admins can create and delete phase content records from the browser without Rails console. |
+| `SymptomsController#index` | Now assigns `@cycle_day` (from `current_user.current_cycle_day`) and the `temperature` / `weight` fields are included in `symptom_params` and persisted. |
+| `force_ssl` | Changed from `false` to `true`. |
+| CSP | `content_security_policy_report_only` changed from `true` to `false` — fully enforced. |
+| `permissions_policy.rb` | New initializer. Camera, microphone, geolocation, payment, USB all set to `:none`. |
+| Host authorization | `config.hosts` now set to `APP_HOST` + Render wildcard; health-check path excluded. |
+| Debug routes | All behind `unless Rails.env.production?` guard. `test-email-prod` route also production-guarded. |
+| `quick_actions_controller.js` | Fixed event listener leak — `turbo:load` handler now stored as `this._checkModals` and removed in `disconnect()`. |
+| `User.find_or_create_from_oauth` | Rewritten with UID-first lookup (resolves Apple repeat-login nil-email issue) and saves UID for existing users. |
+| Schema version | Bumped to `20260428121630`. |
+
+---
+
+### 2026-04-27 — Simplifier/refactor pass (commit 18470ff)
+
+| Area | Change |
+|------|--------|
+| `CycleCalculatorService` | Added `next_period_start` method using O(1) arithmetic. Replaces the while-loop approach and is now the single source of truth for next period start prediction. |
+| `SendPeriodRemindersJob` | Removed duplicate `predicted_start` private method; delegates to `CycleCalculatorService#next_period_start`. |
+| `ReminderMailer` | Removed dead `@calculator` in `period_reminder`; removed `predicted_period_date` private method (superseded by service); all hardcoded email subjects moved to locale files using `t(".subject")`. |
+| `SettingsController` | Extracted `save_single_reminder` private helper (morning and birth_control save actions were near-identical clones); wrapped `save_period_reminder` in `ApplicationRecord.transaction`; removed dead `@user = current_user` from 3 notification show actions. |
+| `FeedbacksController` | Replaced inline HTML string with `style=` attribute in turbo_stream error response with `app/views/feedbacks/_error.html.erb` partial using Tailwind brand classes. |
+| `en.yml` / `de.yml` | Added `reminder_mailer.morning_summary.subject` and `reminder_mailer.period_reminder.subject_period_start/end` keys for full i18n coverage of mailer subjects. |
+
+---
 
 ### 2026-04-27 — Test suite: 166 runs, 0 failures
 

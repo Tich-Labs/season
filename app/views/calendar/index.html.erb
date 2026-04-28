@@ -1,4 +1,4 @@
-<% content_for(:page_title) { "" } %>
+<% content_for(:page_title) { @date.strftime("%B") } %>
 <% content_for(:header_left) do %>
   <button class="p-2" data-action="click->menu#open">
     <svg class="w-6 h-6 text-brand-primary" viewBox="0 0 24 24" fill="currentColor">
@@ -6,17 +6,30 @@
     </svg>
   </button>
 <% end %>
+<% content_for(:header_center_dropdown) do %>
+  <div class="relative" id="view-dropdown" data-controller="calendar-index">
+    <button type="button" class="p-1" data-action="click->calendar-index#toggleDropdown">
+      <svg class="w-5 h-5 text-brand-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M6 9l6 6 6-6" />
+      </svg>
+    </button>
+    <div class="absolute left-0 top-full mt-1 w-40 bg-white rounded-lg shadow-lg hidden z-50"
+         id="view-dropdown-menu">
+      <%= link_to "Day View", daily_view_path(Time.zone.today), class: "block px-4 py-2 text-sm text-[#933a35] hover:bg-[#f5ede8]", data: { turbo_action: "replace" } %>
+      <%= link_to "Week View", calendar_weekly_path, class: "block px-4 py-2 text-sm text-[#933a35] hover:bg-[#f5ede8]", data: { turbo_action: "replace" } %>
+      <%= link_to "Month View", user_root_path, class: "block px-4 py-2 text-sm text-[#933a35] hover:bg-[#f5ede8]", data: { turbo_action: "replace" } %>
+    </div>
+  </div>
+<% end %>
 <% content_for(:header_right) do %>
   <div class="flex items-center gap-3">
-    <div class="flex items-center gap-2">
-      <svg class="w-5 h-5 text-brand-primary" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+    <%= link_to informations_path do %>
+      <svg class="w-6 h-6 text-brand-primary" viewBox="0 0 25 25" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12.4998 22.9168C18.2289 22.9168 22.9164 18.2293 22.9164 12.5001C22.9164 6.77094 18.2289 2.08344 12.4998 2.08344C6.7706 2.08344 2.0831 6.77094 2.0831 12.5001C2.0831 18.2293 6.7706 22.9168 12.4998 22.9168Z" />
+        <path d="M12.4998 8.33344V13.5418" stroke-width="1.7" />
+        <path d="M12.4957 16.6667H12.5051" stroke-width="2" />
       </svg>
-      <svg class="w-6 h-6 text-brand-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="12" cy="12" r="10" />
-        <path d="M12 6v6l4 2" />
-      </svg>
-    </div>
+    <% end %>
   </div>
 <% end %>
 

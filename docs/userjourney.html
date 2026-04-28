@@ -30,32 +30,36 @@
     .content th, .content td { padding: 0.75rem; text-align: left; border-bottom: 1px solid #EDE1D5; }
     .content th { background: #FAF7F4; font-weight: 600; color: #933a35; }
     .content a { color: #933a35; text-decoration: underline; }
+    .subtitle-note { font-size: 1.1rem; color: #6B6B6B; margin-bottom: 1.5rem; }
     .content blockquote { border-left: 4px solid #933a35; padding-left: 1rem; margin: 1rem 0; color: #6B6B6B; font-style: italic; background: #FDF0EE; padding: 1rem; border-radius: 0 8px 8px 0; }
     .content hr { border: none; border-top: 1px solid #EDE1D5; margin: 2rem 0; }
     .flow-step { background: white; border-left: 4px solid #933a35; padding: 1.25rem; margin-bottom: 1rem; border-radius: 0 8px 8px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
     .flow-step-number { display: inline-block; background: #933a35; color: white; width: 28px; height: 28px; border-radius: 50%; text-align: center; line-height: 28px; font-size: 0.85rem; font-weight: 600; margin-right: 0.75rem; }
     .highlight-box { background: white; border-radius: 12px; padding: 1.5rem; margin: 1rem 0; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .field-row { margin: 0 0 0.25rem; }
+    .box-heading { margin-top: 0; }
+    .core-promise { font-size: 1.1rem; font-weight: 600; color: #933a35; }
     @media (max-width: 768px) { .sidebar { display: none; } .content { margin-left: 0; padding: 1.5rem; } }
   </style>
 </head>
 <body>
   <nav class="sidebar">
     <div class="sidebar-header">
-      <h1>📅 Season Docs</h1>
+      <h1>Season Docs</h1>
       <p>Internal team documentation</p>
     </div>
     <div class="nav-section">
-      <p class="nav-section-title">Overview</p>
+      <p class="nav-section-title">Start Here</p>
       <a href="overview.html" class="nav-item">Project Overview</a>
     </div>
     <div class="nav-section">
       <p class="nav-section-title">Getting Started</p>
-      <a href="screenslist.html" class="nav-item">Screens & Routes</a>
       <a href="userjourney.html" class="nav-item active">User Journey</a>
+      <a href="screenslist.html" class="nav-item">Screens &amp; Routes</a>
       <a href="BACKLOG.html" class="nav-item">Backlog</a>
     </div>
     <div class="nav-section">
-      <p class="nav-section-title">Audit & Reports</p>
+      <p class="nav-section-title">Audit &amp; Reports</p>
       <a href="AUDIT-2026-04-10.html" class="nav-item">Audit Report</a>
       <a href="STYLING-AUDIT.html" class="nav-item">Styling Audit</a>
       <a href="STAKEHOLDER-REPORT-2026-04-15.html" class="nav-item">Stakeholder Report</a>
@@ -63,12 +67,12 @@
     <div class="nav-section">
       <p class="nav-section-title">Reference</p>
       <a href="figma_nodes.html" class="nav-item">Figma Nodes</a>
-      <a href="userdata.html" class="nav-item">User Data & Privacy</a>
+      <a href="userdata.html" class="nav-item">User Data &amp; Privacy</a>
     </div>
   </nav>
   <main class="content">
     <h1>User Journey</h1>
-    <p style="font-size: 1.1rem; color: #6B6B6B;">This document traces the full experience of a Season user from the moment they land on the app to daily tracking. It is written as a narrative walkthrough, not a feature checklist.</p>
+    <p class="subtitle-note">This document traces the full experience of a Season user from the moment they land on the app to daily tracking. It is written as a narrative walkthrough, not a feature checklist.</p>
     <p>For screen-by-screen route and Figma references, see <a href="screenslist.html">Screens & Routes</a>.</p>
 
     <hr>
@@ -76,10 +80,10 @@
     <h2>Phase 0 — Before the App: The Waitlist</h2>
     <p>Before Season V2 was live, the landing page at <code>/launch</code> collected email addresses from people interested in the app. The page shows a countdown timer to the launch date and a single email input. This is the only pre-auth surface in the app.</p>
     <div class="highlight-box">
-      <h3 style="margin-top: 0;">Why it exists</h3>
+      <h3 class="box-heading">Why it exists</h3>
       <p>Season has 150 existing V1 users who need to migrate their data and set up proper accounts. The waitlist captures intent and gives the team a contact list for the launch day notification email.</p>
       <h3>What happens to signups</h3>
-      <p>Emails are stored in the <code>launch_signups</code> table and are visible in the admin panel at <code>/admin/launch_signups</code>. A launch notification mailer (<code>LaunchSignupMailer</code>) is built and ready — it is waiting on SMTP configuration before it can send.</p>
+      <p>Emails are stored in the <code>launch_signups</code> table and are visible in the admin panel at <code>/admin/launch_signups</code>. Email delivery is live via Resend — <code>LaunchSignupMailer</code> is built and ready to send on launch day.</p>
     </div>
 
     <hr>
@@ -88,9 +92,9 @@
     <p>A new user arrives at <code>/welcome</code>. They see the Season brand, a brief value proposition, and two choices: create an account or sign in.</p>
 
     <h3>Signing Up (<code>/registration/new</code>)</h3>
-    <p>The sign-up form asks for name, email, and password. It also supports social login via Google, Facebook, or Apple — these are built and routed, pending OAuth credentials being added to the production environment.</p>
+    <p>The sign-up form asks for name, email, and password. Social login via Google, Facebook, and Apple is fully built and routed. It is the one item still pending before launch — the OAuth API keys need to be added to the Render dashboard.</p>
     <p>Errors are shown inline via Turbo Streams — there is no page reload on failure. A wrong email format or a duplicate account shows a styled error message inside the form, not a separate error page.</p>
-    <p>On success, Devise creates the account and sends a confirmation email (once SMTP is configured). The user is redirected into the onboarding flow.</p>
+    <p>On success, Devise creates the account and sends a branded confirmation email via Resend. The user is redirected into the onboarding flow.</p>
 
     <h3>Existing Users — The Invite Flow (<code>/invite/:token</code>)</h3>
     <p>The 150 existing V1 users receive a personalised invite link. When they land on <code>/invite/:token</code>, the app pre-fills their name and email based on the invite record. They set a password and their existing cycle data is migrated to the new account. This is the zero-friction migration path for the founding user base.</p>
@@ -157,9 +161,9 @@
     <h3>Symptom Logging (<code>/symptoms</code>)</h3>
     <p>The symptom log is an accordion form organised into three sections: <strong>Mood</strong>, <strong>Physical</strong>, and <strong>Mental</strong>. Each section contains rated fields (1–5 scale). The full set of trackable fields:</p>
     <div class="highlight-box">
-      <p style="margin: 0;"><strong>Mood:</strong> mood, energy</p>
-      <p style="margin: 0;"><strong>Physical:</strong> sleep, pain, cravings, discharge, temperature (°C), weight (kg), sexual intercourse</p>
-      <p style="margin: 0;"><strong>Mental:</strong> mental state, physical state</p>
+      <p class="field-row"><strong>Mood:</strong> mood, energy</p>
+      <p class="field-row"><strong>Physical:</strong> sleep, pain, cravings, discharge, temperature (&deg;C), weight (kg), sexual intercourse</p>
+      <p class="field-row"><strong>Mental:</strong> mental state, physical state</p>
     </div>
     <p>There is also a free-text <strong>Notes</strong> field for anything that doesn't fit a category, plus optional temperature and weight inputs.</p>
     <p>All fields auto-save via Stimulus — there is no submit button. The user taps a value, it saves silently to the server via a Turbo Stream PATCH, and the UI confirms with a subtle indicator.</p>
@@ -204,19 +208,19 @@
 
     <h2>Edge Cases and Error States</h2>
     <div class="highlight-box">
-      <h3 style="margin-top: 0;">No cycle data</h3>
+      <h3 class="box-heading">No cycle data</h3>
       <p>A user who skips the period start date during onboarding still gets a working calendar — phase colours show a placeholder state and the phase banner says "Set up your cycle" with a link to the period entry screen.</p>
     </div>
     <div class="highlight-box">
-      <h3 style="margin-top: 0;">New device / session expiry</h3>
+      <h3 class="box-heading">New device / session expiry</h3>
       <p>Sessions expire after 7 days. On expiry the user is redirected to <code>/session/new</code> with a soft message. No data is lost.</p>
     </div>
     <div class="highlight-box">
-      <h3 style="margin-top: 0;">Password recovery</h3>
-      <p>The standard Devise flow. The user enters their email at <code>/users/password/new</code>, receives a reset link (pending SMTP), and sets a new password. Three error states have dedicated screens: already reset, inbox full, wrong email.</p>
+      <h3 class="box-heading">Password recovery</h3>
+      <p>The standard Devise flow. The user enters their email at <code>/users/password/new</code>, receives a branded reset link via Resend, and sets a new password. Three error states have dedicated screens: already reset, inbox full, wrong email.</p>
     </div>
     <div class="highlight-box">
-      <h3 style="margin-top: 0;">Invite link reuse</h3>
+      <h3 class="box-heading">Invite link reuse</h3>
       <p>An invite token can only be used once. A second attempt shows an "already used" message with a prompt to log in instead.</p>
     </div>
 
@@ -226,7 +230,7 @@
     <blockquote>
       The app is designed to feel like a personal health companion rather than a medical tracker. The seasonal metaphor is not decorative — it is the lens through which every insight is framed. The colour palette (warm reds, creams, muted pinks) reinforces that this is an intimate, personal space. The typography is clean and readable. There are no aggressive notifications, no streaks that guilt the user, no comparison to other users.
     </blockquote>
-    <p style="font-size: 1.1rem; font-weight: 600; color: #933a35;">The core promise Season makes to its user: <em>understand your body on your own terms, and use that understanding to live better.</em></p>
+    <p class="core-promise">The core promise Season makes to its user: <em>understand your body on your own terms, and use that understanding to live better.</em></p>
   </main>
 </body>
 </html>

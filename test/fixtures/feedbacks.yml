@@ -1,0 +1,11 @@
+alice_feedback:
+  user: alice
+  type: feedback
+  message: I love the seasonal metaphor, really helpful!
+  active: true
+
+alice_bug:
+  user: alice
+  type: bug_report
+  message: The calendar sometimes shows the wrong phase colour.
+  active: true

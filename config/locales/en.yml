@@ -151,6 +151,9 @@ en:
     header: "Hello %{name} — This is your month"
     greeting: "Hello %{name} — This is your month"
     subheading: "Track your cycle"
+  consent:
+    saved: "Preferences saved"
+    revoked: "Consent withdrawn"
   tracking:
     feedback: "Give feedback"
     period_update:
@@ -165,8 +168,12 @@ en:
       deleted: "Event deleted"
   admin:
     cycle_phase_contents:
+      create:
+        created: "Informations content created."
       update:
         updated: "Informations content updated."
+      destroy:
+        destroyed: "Informations content deleted."
   invites:
     show:
       already_used: "This invite has already been used."

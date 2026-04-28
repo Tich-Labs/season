@@ -19,6 +19,7 @@ Season is a women's cycle tracking progressive web app (PWA) built on Rails 8 wi
 | Background Jobs | Solid Queue | solid_queue |
 | Caching | Solid Cache | solid_cache |
 | WebSockets | Solid Cable | solid_cable |
+| Email | Resend (via resend gem) | resend |
 | Error tracking | Sentry | sentry-ruby / sentry-rails |
 | Payments | Stripe | stripe (wired, not active) |
 | Admin | Ransack | ransack |
@@ -32,6 +33,7 @@ Season is a women's cycle tracking progressive web app (PWA) built on Rails 8 wi
 - **Auth** — Custom cookie-based `Authentication` concern in `app/controllers/concerns/authentication.rb`. Devise is used only for password recovery emails. Sessions are encrypted cookies with 7-day expiry.
 - **Cycle logic** — `CycleCalculatorService` (`app/services/cycle_calculator_service.rb`). Single source of truth for phase, season, cycle day, and calendar colour data.
 - **Phase content** — `CyclePhaseContent` model, seeded for en/de x 4 phases. Stores superpower, mood, sport, nutrition, and care text per phase/locale.
+- **Background jobs** — Solid Queue runs `SendMorningRemindersJob`, `SendPeriodRemindersJob`, and `SendBirthControlRemindersJob`. All email delivered via Resend.
 - **i18n** — English default, German available. All user-facing strings must go through `t()` helpers. Locales: `config/locales/en.yml` + `config/locales/de.yml`.
 - **Admin** — `admin/` namespace, gated by `User#admin?` boolean. Users, Inbox (feedback/bugs/support), Launch Signups.
 
@@ -39,43 +41,31 @@ Season is a women's cycle tracking progressive web app (PWA) built on Rails 8 wi
 
 ## Milestone Status
 
-| Milestone | Status | Notes |
-|-----------|--------|-------|
-| **M1 — Foundation** | ✅ Complete | Auth, onboarding, all screens built, Figma-aligned, security clean |
-| **M2 — Reliability & Growth** | 🔄 In Progress | SMTP, mailer, OAuth, accessibility, i18n, rate limiting |
-| M3 — Monetisation | ⏳ Planned | Stripe paywall, subscription tiers |
-| M4 — Native App | ⏳ Planned | Turbo Native iOS/Android wrapper |
+Based on Figma file: [SEASON.Vision-App-2026--Copy-](https://www.figma.com/design/Vi7qdepuk2lWGl4TWXbedb/SEASON.Vision-App-2026--Copy-)
 
-### M1 Deliverables (Complete)
+| Milestone | Screens | Description | Status |
+| --------- | ------- | ----------- | ------ |
+| **M1** | 43 | Signing In and Onboarding | ✅ Complete |
+| **M2** | 32 | Calendar with Basic Cycle & Display | ✅ Complete |
+| **M3** | 64 | Tracking / Learn | ✅ Complete |
+| **M4** | 60 | Forecasting and Appointments | ✅ Complete |
+| **M5** | 60 | Birth Control and Other Reminders | ✅ Complete |
+| **M6** | 24 | Gamification & Scoring Flames | ❌ Not in scope for launch |
+| **M7** | 17 | Onboarding & Feedback | ✅ Complete |
 
-| Area | Status |
-|------|--------|
-| 11-step onboarding | ✅ Pixel-perfect to Figma |
-| Auth (signup, login, OAuth shell, password reset) | ✅ Complete |
-| Calendar (monthly + weekly + appointments) | ✅ Complete |
-| Daily tracking (symptoms + notes + temp/weight, superpowers, period entry/edit) | ✅ Complete |
-| Daily view | ✅ Complete |
-| Streaks | ✅ Complete |
-| Settings (profile, calendar, notifications, subscriptions) | ✅ Complete |
-| Admin panel (users, inbox, launch signups) | ✅ Complete |
-| Launch page + waitlist signup | ✅ Complete |
-| Legal (terms + privacy) | ✅ Complete |
-| Security (Brakeman 0 warnings) | ✅ Clean |
-| ERB lint (0 errors) | ✅ Clean |
-| Test suite (76/76) | ✅ Passing |
+### What's Left Before Launch
 
-### M2 Targets
-
-| Item | Priority |
-|------|----------|
-| SMTP email provider (Resend recommended) | 🔴 Critical |
-| LaunchSignupMailer + NotifyLaunchSignupsJob | 🔴 Critical |
-| OAuth credentials (Google, Facebook, Apple) | 🟡 High |
-| LaunchSignup model validations | 🟠 Medium |
-| Rate-limit `/launch-signup` (Rack::Attack) | 🟠 Medium |
-| ARIA fixes — cycle picker, modal focus traps, auth error states | 🟠 Medium |
-| i18n: extract hardcoded onboarding strings | 🟠 Medium |
-| Schema cleanup: duplicate user columns | 🟢 Low |
+| Item | Priority | Status |
+| ---- | -------- | ------ |
+| OAuth credentials on Render (Google, Facebook, Apple) | High | Credentials not set |
+| `config.hosts` — uncomment DNS rebinding protection | High | Disabled in production |
+| Rack::Attack on login + launch-signup endpoints | High | No rate limiting on login IP spoof vector |
+| `config.load_defaults 8.1` — run `bin/rails app:update` | High | Still on 8.0 defaults |
+| Devise `config.paranoid = true` — prevent account enumeration | Medium | Off |
+| CSP enforcement — flip `report_only` to `false`, add `report-uri` | Medium | Report-only only |
+| Active Storage: switch production to S3/R2 — avatars lost on redeploy | Medium | Local disk in prod |
+| Sentry initializer + `SENTRY_DSN` on Render | Medium | Not wired |
+| Stripe paywall (launch as free first month) | Low | Planned post-launch |
 
 ---
 
@@ -113,6 +103,8 @@ bin/dev
 | `RAILS_MASTER_KEY` | Yes | Decrypts `config/credentials.yml.enc`. Never commit this file. |
 | `DATABASE_URL` | Production only | Render PostgreSQL URL (auto-set by Render) |
 | `SECRET_KEY_BASE` | Production only | Auto-generated by Render (`generateValue: true`) |
+| `RESEND_API_KEY` | Production | Email delivery via Resend. All mailers will fail without this. |
+| `RESEND_FROM_EMAIL` | Production | Sender address, e.g. `hello@seasonapp.co` |
 | `GOOGLE_CLIENT_ID` | OAuth | For Google Sign-In |
 | `GOOGLE_CLIENT_SECRET` | OAuth | For Google Sign-In |
 | `FACEBOOK_APP_ID` | OAuth | For Facebook Sign-In |
@@ -122,7 +114,7 @@ bin/dev
 | `APPLE_KEY_ID` | OAuth | For Apple Sign-In |
 | `APPLE_PRIVATE_KEY` | OAuth | PEM format |
 | `SENTRY_DSN` | Production | Error tracking |
-| `STRIPE_SECRET_KEY` | M3 | Payments (not yet active) |
+| `STRIPE_SECRET_KEY` | Post-launch | Payments (not yet active) |
 
 > `SECRET_KEY_BASE` and local dev: Rails reads it from `credentials.yml.enc` locally. On Render it reads `ENV['SECRET_KEY_BASE']` which takes priority. The two values do not need to match.
 
@@ -132,58 +124,78 @@ bin/dev
 
 ### Auth Flow (no bottom nav)
 
-| Screen | Route | Auth Required |
-|--------|-------|---------------|
-| Loader / Splash | `/` and `/loader` | No |
-| Welcome | `/welcome` | No |
-| Sign Up | `/registration/new` | No |
-| Log In | `/session/new` | No |
-| Forgot Password | `/users/password/new` | No |
-| Reset Password | `/users/password/edit` | No |
-| Password Done | `/password/done` | No |
-| Password Error States | `/password/error/*` | No |
-| Invite Landing | `/invite/:token` | No |
-| Onboarding Steps 1–11 | `/onboarding/:id` | Yes |
-| Onboarding Finish | `/onboarding/finish` | Yes |
+| Screen | Route |
+|--------|-------|
+| Loader / Splash | `/` and `/loader` |
+| Welcome | `/welcome` |
+| Sign Up | `/registration/new` |
+| Log In | `/session/new` |
+| Forgot Password | `/users/password/new` |
+| Reset Password | `/users/password/edit` |
+| Password Done | `/password/done` |
+| Password Error States | `/password/error/*` |
+| Invite Landing | `/invite/:token` |
+| Onboarding Steps 1–11 | `/onboarding/:id` |
+| Onboarding Finish | `/onboarding/finish` |
 
 ### Main App (with top bar + burger menu)
 
-| Screen | Route | Auth Required |
-|--------|-------|---------------|
-| Calendar (Monthly) | `/calendar` | Yes |
-| Calendar (Weekly) | `/calendar/weekly` | Yes |
-| Calendar Appointments | `/calendar/appointments` | Yes |
-| Add Calendar Event | `/calendar_events/new` | Yes |
-| Edit Calendar Event | `/calendar_events/:id/edit` | Yes |
-| Daily View | `/daily/:date` | Yes |
-| Tracking (self analysis) | `/tracking` | Yes |
-| Period entry / edit | `/tracking/period` | Yes |
-| Symptom Logs | `/symptoms` | Yes |
-| Symptom Detail | `/symptoms/:id` | Yes |
-| Discharge guide | `/symptoms/discharge` | Yes |
-| Superpowers | `/superpowers` | Yes |
-| Superpower Detail | `/superpowers/:id` | Yes |
-| Streaks | `/streaks` | Yes |
-| Settings (main) | `/settings/edit` | Yes |
-| Settings Profile | `/settings/profile` | Yes |
-| Settings Subscriptions | `/settings/subscriptions` | Yes |
-| Settings Calendar | `/settings/calendar` | Yes |
-| Settings Notifications | `/settings/notifications` | Yes |
+| Screen | Route |
+|--------|-------|
+| Calendar (Monthly) | `/calendar` |
+| Calendar (Weekly) | `/calendar/weekly` |
+| Calendar Appointments | `/calendar/appointments` |
+| Add Calendar Event | `/calendar_events/new` |
+| Edit Calendar Event | `/calendar_events/:id/edit` |
+| Daily View | `/daily/:date` |
+| Phase Overview | `/informations` |
+| Phase Detail | `/informations/:phase` (menstrual, follicular, ovulation, luteal) |
+| Tracking (self analysis) | `/tracking` |
+| Period entry / edit | `/tracking/period` |
+| Symptom Logs | `/symptoms` |
+| Symptom Detail | `/symptoms/:id` |
+| Discharge guide | `/symptoms/discharge` |
+| Superpowers | `/superpowers` |
+| Superpower Detail | `/superpowers/:id` |
+| Streaks | `/streaks` |
+| Settings (main) | `/settings/edit` |
+| Settings Profile | `/settings/profile` |
+| Settings Subscriptions | `/settings/subscriptions` |
+| Settings Calendar | `/settings/calendar` |
+| Settings Notifications | `/settings/notifications` |
+| Settings Notification — Morning | `/settings/notification_morning` |
+| Settings Notification — Period | `/settings/notification_period` |
+| Settings Notification — Birth Control | `/settings/notification_birth_control` |
+
+### Admin (gated by `User#admin?`)
+
+| Screen | Route |
+|--------|-------|
+| Users list | `/admin` |
+| User detail | `/admin/users/:id` |
+| Inbox (all) | `/admin/inbox` |
+| Inbox — Feedback | `/admin/inbox/feedback` |
+| Inbox — Bugs | `/admin/inbox/bugs` |
+| Inbox — Support | `/admin/inbox/support` |
+| Inbox CSV export | `/admin/inbox/export_csv` |
+| Launch Signups list | `/admin/launch_signups` |
+| Launch Signups CSV | `/admin/launch_signups/export_csv` |
+| Admin login | `/admin/login` |
 
 ### Public / Legal
 
-| Screen | Route | Auth Required |
-|--------|-------|---------------|
-| Launch / Countdown | `/launch` | No |
-| Terms | `/terms` | No |
-| Privacy | `/privacy` | No |
-| Health Check | `/up` | No |
+| Screen | Route |
+|--------|-------|
+| Launch / Countdown | `/launch` |
+| Terms | `/terms` |
+| Privacy | `/privacy` |
+| Health Check | `/up` |
 
 ---
 
 ## App Structure
 
-### Controllers (29 total)
+### Controllers (28 total)
 
 - `ApplicationController` — Base controller
 - `Authentication` concern — Cookie-based auth
@@ -194,11 +206,12 @@ bin/dev
 - `CalendarController` — Monthly/weekly/appointments views
 - `CalendarEventsController` — CRUD for events
 - `DailyViewController` — Day detail view
-- `TrackingController` — Period entry
+- `InformationsController` — Phase overview + detail (4 phases)
+- `TrackingController` — Self analysis + period entry
 - `SymptomsController` — Symptom logging
 - `SuperpowersController` — Superpower tracking
 - `StreaksController` — Tracking streaks
-- `SettingsController` — All settings routes
+- `SettingsController` — All settings routes including notification detail screens
 - `PasswordsController` — Password recovery
 - `OmniauthController` — OAuth callbacks
 - `InvitesController` — Invite flow
@@ -222,11 +235,25 @@ bin/dev
 - `SymptomLog` — Daily symptom logs
 - `SuperpowerLog` — Daily superpower logs
 - `Streak` — Tracking streaks
-- `Reminder` — User reminders
+- `Reminder` — User reminders (morning, period, birth control)
 - `Feedback` — User feedback (type: feedback / bug_report / support)
 - `LaunchSignup` — Waitlist email signups
 - `Current` — Request-scoped current user
 - `ApplicationRecord` — Base model
+
+### Mailers (4 total)
+
+- `ApplicationMailer` — Base mailer (Resend adapter)
+- `ReminderMailer` — Morning check-in, period, birth control reminder emails
+- `SupportMailer` — Forwards user support/feedback messages
+- `TrelloMailer` — Bug reports forwarded to Trello inbox
+
+### Jobs (4 total)
+
+- `ApplicationJob` — Base job (Solid Queue)
+- `SendMorningRemindersJob` — Sends daily morning check-in emails to opted-in users
+- `SendPeriodRemindersJob` — Sends period start warning emails based on cycle prediction
+- `SendBirthControlRemindersJob` — Sends birth control pill/break reminders
 
 ### Services (1)
 
@@ -254,6 +281,7 @@ bin/dev
 - **Database:** Render PostgreSQL (pure PostgreSQL — no SQLite anywhere)
 - **Build command:** `bin/render-build.sh`
 - **Production cable adapter:** Solid Cable
+- **Email:** Resend (set `RESEND_API_KEY` and `RESEND_FROM_EMAIL` in Render dashboard)
 - **Error tracking:** Sentry
 
 ### Build Script (`bin/render-build.sh`)
@@ -267,7 +295,7 @@ bundle exec rails db:prepare
 
 ### Render Environment Variables to Set Manually
 
-Only `RAILS_MASTER_KEY` requires manual entry in the Render dashboard. All others are either auto-generated or set via `render.yaml`.
+`RAILS_MASTER_KEY`, `RESEND_API_KEY`, and `RESEND_FROM_EMAIL` must be entered manually in the Render dashboard. All others are either auto-generated or set via `render.yaml`.
 
 ---
 
@@ -280,6 +308,7 @@ Only `RAILS_MASTER_KEY` requires manual entry in the Render dashboard. All other
 - `CycleCalculatorService` is the single source of truth for all cycle calculations
 - `Authentication` concern is included once in `ApplicationController` — do not re-include in subclasses
 - App is PostgreSQL only — no SQLite in any environment
+- Resend is the email provider — do not configure raw SMTP. Delivery method is `:resend` via the gem adapter.
 
 ---
 
@@ -299,9 +328,7 @@ We follow high-integrity migration patterns to ensure 100% uptime and data safet
 ## Known Issues / Technical Debt
 
 | # | Severity | Issue | Target |
-|---|----------|-------|--------|
-| 1 | Medium | Duplicate columns on `users` table: `locale`/`language`, `birthday`/`age`, `last_period_start`/`last_menstruation`, `cycle_length`/`cycle_days` | M2 |
-| 2 | Medium | Burger menu text labels hardcoded English — not using `t()` | M2 |
-| 3 | Medium | Onboarding screens have hardcoded English strings | M2 |
-| 4 | Medium | SMTP not configured — emails silently fail in production | M2 Critical |
-| 5 | Low | OAuth credentials not yet set on Render | M2 |
+| - | -------- | ----- | ------ |
+| 1 | Medium | Burger menu text labels not using `t()` — hardcoded English | Pre-launch |
+| 2 | Medium | Onboarding screens have hardcoded English strings | Pre-launch |
+| 3 | Low | OAuth credentials not yet set on Render — social login unavailable | Pre-launch |

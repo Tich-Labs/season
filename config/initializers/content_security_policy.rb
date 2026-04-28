@@ -21,6 +21,5 @@ Rails.application.configure do
   config.content_security_policy_nonce_generator = ->(_request) { SecureRandom.base64(16) }
   config.content_security_policy_nonce_directives = %w[script-src]
 
-  # Report-only mode initially — change to enforcement after verifying no violations.
-  config.content_security_policy_report_only = true
+  config.content_security_policy_report_only = false
 end

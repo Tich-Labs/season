@@ -25,20 +25,24 @@
     .content table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
     .content th, .content td { padding: 0.5rem; text-align: left; border-bottom: 1px solid #EDE1D5; font-size: 0.85rem; }
     .content th { background: #FAF7F4; font-weight: 600; color: #933a35; }
-    .status-done { color: #22c55e; }
+    .status-done { color: #22c55e; font-weight: 600; }
+    .content a { color: #933a35; }
     @media (max-width: 768px) { .sidebar { display: none; } .content { margin-left: 0; padding: 1.5rem; } }
   </style>
 </head>
 <body>
   <nav class="sidebar">
     <div class="sidebar-header">
-      <h1>📅 Season Docs</h1>
+      <h1>Season Docs</h1>
       <p>Internal team documentation</p>
     </div>
     <div class="nav-section">
+      <p class="nav-section-title">Start Here</p>
+      <a href="overview.html" class="nav-item">Project Overview</a>
+    </div>
+    <div class="nav-section">
       <p class="nav-section-title">Getting Started</p>
-      <a href="overview.html" class="nav-item">Overview</a>
-      <a href="setup.html" class="nav-item">Setup &amp; README</a>
+      <a href="userjourney.html" class="nav-item">User Journey</a>
       <a href="screenslist.html" class="nav-item">Screens &amp; Routes</a>
       <a href="BACKLOG.html" class="nav-item">Backlog</a>
     </div>
@@ -46,57 +50,75 @@
       <p class="nav-section-title">Audit &amp; Reports</p>
       <a href="AUDIT-2026-04-10.html" class="nav-item">Audit Report</a>
       <a href="STYLING-AUDIT.html" class="nav-item">Styling Audit</a>
-      <a href="STAKEHOLDER-REPORT-2026-04-15.html" class="nav-item">Stakeholder Report</a>
+      <a href="STAKEHOLDER-REPORT-2026-04-15.html" class="nav-item active">Stakeholder Report</a>
     </div>
     <div class="nav-section">
       <p class="nav-section-title">Reference</p>
-      <a href="userjourney.html" class="nav-item">User Journey</a>
       <a href="figma_nodes.html" class="nav-item">Figma Nodes</a>
       <a href="userdata.html" class="nav-item">User Data &amp; Privacy</a>
     </div>
-  
   </nav>
   <main class="content">
     <h1>Stakeholder Report</h1>
-    <p><strong>Date:</strong> 15 April 2026</p>
+    <p><strong>Original date:</strong> 15 April 2026 &mdash; <strong>Updated:</strong> 26 April 2026</p>
+    <p>This is a non-technical summary of the current state of Season V2. For deeper technical context see the <a href="overview.html">Project Overview</a>.</p>
 
-    <h2>Tech Stack</h2>
+    <h2>Summary</h2>
+    <p>Season V2 is <strong>feature-complete</strong>. All six in-scope milestones are built and deployed. The app is running live on Render, serving invited users. One item remains before a broader launch: adding OAuth API keys (Google, Facebook, Apple) to the production environment. No code changes are required for that step.</p>
+
+    <h2>Milestone Status</h2>
+    <table>
+      <tr><th>Milestone</th><th>What it covers</th><th>Screens</th><th>Status</th></tr>
+      <tr><td>M1</td><td>Auth, invite flow, 11-step onboarding</td><td>43</td><td class="status-done">✅ Complete</td></tr>
+      <tr><td>M2</td><td>Monthly &amp; weekly calendar, appointments, daily view</td><td>32</td><td class="status-done">✅ Complete</td></tr>
+      <tr><td>M3</td><td>Symptom logging, period entry, phase education, superpowers, streaks</td><td>64</td><td class="status-done">✅ Complete</td></tr>
+      <tr><td>M4</td><td>Cycle forecasting, personalized tips, appointments CRUD</td><td>60</td><td class="status-done">✅ Complete</td></tr>
+      <tr><td>M5</td><td>Birth control tracking, email reminders (morning, period, pill)</td><td>60</td><td class="status-done">✅ Complete</td></tr>
+      <tr><td>M6</td><td>Gamification &amp; streak flames</td><td>24</td><td>❌ Not in scope</td></tr>
+      <tr><td>M7</td><td>In-app feedback, admin panel, waitlist management</td><td>17</td><td class="status-done">✅ Complete</td></tr>
+    </table>
+
+    <h2>What is Built</h2>
+    <ul>
+      <li>Personalised invite flow for 150 existing V1 users</li>
+      <li>Full auth: signup, login, social login (pending OAuth keys), password reset with branded email</li>
+      <li>11-step onboarding collecting cycle length, contraception, food preferences, and reminders</li>
+      <li>Calendar (monthly + weekly + appointments) colour-coded by cycle phase</li>
+      <li>Daily view with phase insights, symptom summary, tips, and events</li>
+      <li>Symptom log (mood, physical, mental, notes, temperature, weight)</li>
+      <li>Phase education library (4 phases, EN + DE)</li>
+      <li>Superpowers and streaks</li>
+      <li>Email reminders: morning summary, period reminder, birth control reminder — all with user-controlled settings</li>
+      <li>Settings: profile, calendar preferences, notification toggles, subscriptions</li>
+      <li>Admin panel: user list, feedback inbox, waitlist with CSV export</li>
+      <li>Launch page, waitlist signup, legal pages (terms + privacy)</li>
+    </ul>
+
+    <h2>What is Blocking Launch</h2>
+    <p>One item only: <strong>OAuth credentials</strong> for Sign in with Google, Facebook, and Apple. The code is built and deployed. The API keys need to be added to the Render environment dashboard.</p>
+
+    <h2>What is Planned Post-Launch</h2>
+    <ul>
+      <li>Stripe paywall (M8)</li>
+      <li>Hotwire Native wrapper for App Store distribution</li>
+      <li>Calendar sync (iCal / Google Calendar)</li>
+      <li>Accessibility improvements (ARIA for cycle picker)</li>
+      <li>i18n: extract remaining hardcoded onboarding strings</li>
+    </ul>
+
+    <h2>Tech Stack (for reference)</h2>
     <table>
       <tr><th>Layer</th><th>Tech</th></tr>
       <tr><td>Language</td><td>Ruby 3.4.7</td></tr>
       <tr><td>Framework</td><td>Rails 8.1.3</td></tr>
-      <tr><td>Database</td><td>PostgreSQL</td></tr>
+      <tr><td>Database</td><td>PostgreSQL (Render managed)</td></tr>
       <tr><td>CSS</td><td>Tailwind CSS</td></tr>
-      <tr><td>JS</td><td>Hotwire (Turbo + Stimulus)</td></tr>
-      <tr><td>Auth</td><td>Custom cookie + Devise</td></tr>
-      <tr><td>Background Jobs</td><td>Solid Queue</td></tr>
-      <tr><td>Admin</td><td>Ransack</td></tr>
+      <tr><td>Frontend</td><td>Hotwire (Turbo + Stimulus)</td></tr>
+      <tr><td>Auth</td><td>Devise + custom session cookie</td></tr>
+      <tr><td>Background Jobs</td><td>Solid Queue (no Redis required)</td></tr>
+      <tr><td>Email delivery</td><td>Resend (season.vision domain verified)</td></tr>
+      <tr><td>Deployment</td><td>Render — auto-deploys from GitHub main</td></tr>
     </table>
-
-    <h2>Milestone Status</h2>
-    <table>
-      <tr><th>Milestone</th><th>Screens</th><th>Status</th></tr>
-      <tr><td>M1 — Signing In & Onboarding</td><td>43</td><td class="status-done">✅ Complete</td></tr>
-      <tr><td>M2 — Calendar & Basic Cycle</td><td>32</td><td class="status-done">✅ Complete</td></tr>
-      <tr><td>M3 — Tracking / Learn</td><td>64</td><td class="status-done">✅ Complete</td></tr>
-      <tr><td>M4 — Forecasting & Appointments</td><td>60</td><td class="status-done">✅ Complete</td></tr>
-      <tr><td>M5 — Birth Control & Reminders</td><td>60</td><td class="status-done">✅ Complete</td></tr>
-      <tr><td>M6 — Gamification & Flames</td><td>24</td><td>❌ Not in scope</td></tr>
-      <tr><td>M7 — Onboarding & Feedback</td><td>17</td><td class="status-done">✅ Complete</td></tr>
-    </table>
-
-    <h2>What's Built</h2>
-    <ul>
-      <li>11-step onboarding with Hotwire</li>
-      <li>Auth (signup, login, password reset)</li>
-      <li>Calendar (monthly + weekly + appointments)</li>
-      <li>Daily tracking (symptoms, notes, temp/weight)</li>
-      <li>Superpowers & Streaks</li>
-      <li>Settings (profile, calendar, notifications)</li>
-      <li>Admin panel (users, inbox, launch signups)</li>
-      <li>Launch page + waitlist signup</li>
-      <li>Legal (terms + privacy)</li>
-    </ul>
   </main>
 </body>
 </html>

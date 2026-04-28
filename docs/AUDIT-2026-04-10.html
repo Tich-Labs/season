@@ -33,35 +33,36 @@
 <body>
   <nav class="sidebar">
     <div class="sidebar-header">
-      <h1>📅 Season Docs</h1>
+      <h1>Season Docs</h1>
       <p>Internal team documentation</p>
     </div>
     <div class="nav-section">
+      <p class="nav-section-title">Start Here</p>
+      <a href="overview.html" class="nav-item">Project Overview</a>
+    </div>
+    <div class="nav-section">
       <p class="nav-section-title">Getting Started</p>
-      <a href="overview.html" class="nav-item">Overview</a>
-      <a href="setup.html" class="nav-item">Setup &amp; README</a>
+      <a href="userjourney.html" class="nav-item">User Journey</a>
       <a href="screenslist.html" class="nav-item">Screens &amp; Routes</a>
       <a href="BACKLOG.html" class="nav-item">Backlog</a>
     </div>
     <div class="nav-section">
       <p class="nav-section-title">Audit &amp; Reports</p>
-      <a href="AUDIT-2026-04-10.html" class="nav-item">Audit Report</a>
+      <a href="AUDIT-2026-04-10.html" class="nav-item active">Audit Report</a>
       <a href="STYLING-AUDIT.html" class="nav-item">Styling Audit</a>
       <a href="STAKEHOLDER-REPORT-2026-04-15.html" class="nav-item">Stakeholder Report</a>
     </div>
     <div class="nav-section">
       <p class="nav-section-title">Reference</p>
-      <a href="userjourney.html" class="nav-item">User Journey</a>
       <a href="figma_nodes.html" class="nav-item">Figma Nodes</a>
       <a href="userdata.html" class="nav-item">User Data &amp; Privacy</a>
     </div>
-  
   </nav>
   <main class="content">
     <h1>Audit Report</h1>
-    <p><strong>Date:</strong> 10 April 2026 (updated 21 April 2026)</p>
+    <p><strong>Original audit date:</strong> 10 April 2026 &mdash; <strong>Last updated:</strong> 26 April 2026</p>
     <p><strong>Branch:</strong> main</p>
-    <p><strong>Milestone:</strong> M1 Complete → M2 In Progress</p>
+    <p><strong>Status at last update:</strong> M1&ndash;M5 and M7 complete. M6 out of scope. App is feature-complete for pre-launch.</p>
 
     <h2>Milestone Status</h2>
     <table>
@@ -90,16 +91,17 @@
       <li><strong>ERB Lint:</strong> 0 errors ✅</li>
     </ul>
 
-    <h2>M2 Action Items</h2>
+    <h2>Post-M2 Action Items</h2>
+    <p>These items were identified during the M2 audit. Current status as of 26 April 2026:</p>
     <table>
-      <tr><th>Priority</th><th>Action</th><th>Effort</th></tr>
-      <tr><td>1</td><td>Configure SMTP provider</td><td>30 min</td></tr>
-      <tr><td>2</td><td>Build LaunchSignupMailer + NotifyLaunchSignupsJob</td><td>2 hrs</td></tr>
-      <tr><td>3</td><td>Add LaunchSignup model validations</td><td>15 min</td></tr>
-      <tr><td>4</td><td>Rate-limit /launch-signup</td><td>15 min</td></tr>
-      <tr><td>5</td><td>ARIA semantics for cycle picker</td><td>30 min</td></tr>
-      <tr><td>6</td><td>i18n: extract onboarding strings</td><td>1 hr</td></tr>
-      <tr><td>7</td><td>OAuth credentials (Google, FB, Apple)</td><td>1 hr</td></tr>
+      <tr><th>Priority</th><th>Action</th><th>Status</th></tr>
+      <tr><td>1</td><td>Configure SMTP provider (Resend)</td><td class="status-done">✅ Done — 26 Apr 2026</td></tr>
+      <tr><td>2</td><td>Build LaunchSignupMailer + NotifyLaunchSignupsJob</td><td class="status-done">✅ Done</td></tr>
+      <tr><td>3</td><td>Add LaunchSignup model validations</td><td class="status-done">✅ Done</td></tr>
+      <tr><td>4</td><td>Rate-limit /launch-signup</td><td class="status-done">✅ Done</td></tr>
+      <tr><td>5</td><td>ARIA semantics for cycle picker</td><td>Post-launch improvement</td></tr>
+      <tr><td>6</td><td>i18n: extract onboarding strings</td><td>Post-launch improvement</td></tr>
+      <tr><td>7</td><td>OAuth credentials (Google, FB, Apple)</td><td>Pending — keys needed in Render</td></tr>
     </table>
   </main>
 </body>

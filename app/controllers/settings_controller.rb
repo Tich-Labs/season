@@ -103,6 +103,27 @@ class SettingsController < ApplicationController
     save_single_reminder("pill", "21:00", notification_birth_control_settings_path, "birth_control_saved")
   end
 
+  def consent
+    @consent_types = UserConsent::VALID_CONSENT_TYPES
+  end
+
+  FORM_CONSENT_TYPES = %w[health_data_processing symptom_tracking cycle_tracking menstrual_data].freeze
+
+  def save_consents
+    checked = (params[:consents]&.keys || []) & FORM_CONSENT_TYPES
+
+    FORM_CONSENT_TYPES.each do |type|
+      record = current_user.user_consents.find_or_initialize_by(consent_type: type)
+      if checked.include?(type)
+        record.grant!(request.remote_ip, request.user_agent)
+      elsif record.persisted? && record.active?
+        record.revoke!(request.remote_ip, request.user_agent)
+      end
+    end
+
+    redirect_to user_root_path, notice: t("consent.saved")
+  end
+
   def update_notifications
     notification_keys = [:cycle_reminder, :period_prediction, :ovulation_alert, :push_notifications, :email_notifications, :newsletter]
     updates = {}

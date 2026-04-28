@@ -55,13 +55,23 @@ The app is deployed on Render, auto-deploys on every push to `main`, and is conn
 
 ## What is Still Needed Before Launch
 
-Two things are blocking launch:
+One thing is blocking launch:
 
-**1. Email delivery (SMTP)** — The app can create accounts, send onboarding, and manage users, but it cannot deliver emails in production. Password reset emails, launch notifications to the waitlist, and any transactional email will silently fail until an SMTP provider is configured. Resend is recommended (3,000 free emails/month, 30-minute setup). See [BACKLOG.md](BACKLOG.md) for the full implementation spec.
-
-**2. OAuth credentials** — Sign in with Google, Facebook, and Apple is fully built and routed. The only step remaining is adding the API keys to the Render dashboard. No code changes needed.
+**OAuth credentials** — Sign in with Google, Facebook, and Apple is fully built and routed. The only step remaining is adding the API keys to the Render dashboard. No code changes needed.
 
 Everything else — accessibility, i18n completeness, schema cleanup — is improvement work that can happen post-launch.
+
+> **Resolved 26 April 2026 — Email delivery:** Resend is configured and the `season.vision` domain is fully verified (SPF, DKIM, MX on Squarespace). Password reset and account confirmation emails now deliver to inbox with custom branded HTML templates. End-to-end password reset confirmed working in production.
+>
+> **Completed 26 April 2026 — M5 Reminders:** `ReminderMailer` built with three actions: `morning_summary` (daily phase/superpower/tip), `period_reminder` (period start or end with predicted date), and `birth_control_reminder` (daily pill reminder). Three Solid Queue jobs (`SendMorningRemindersJob`, `SendPeriodRemindersJob`, `SendBirthControlRemindersJob`) run on a production cron schedule (07:00, 08:00, 19:00 UTC). All three notification settings screens now persist to the database via `PATCH /settings/save_morning_reminder`, `PATCH /settings/save_period_reminder`, and `PATCH /settings/save_birth_control_reminder`. Migration adds `advance_days` column to the `reminders` table.
+>
+> **Completed 28 April 2026 — GDPR consent system:** `UserConsent` model and audit trail table added. `ConsentCheck` concern enforces health-data consent before any tracking screen is accessible. `/settings/consent` lets users grant or revoke consent at any time. `AccountController` added for GDPR Art. 17 account deletion.
+>
+> **Completed 28 April 2026 — Security hardening:** `force_ssl = true`, CSP fully enforced (not report-only), `permissions_policy.rb` created, host authorization enabled, all debug/test routes moved behind `unless Rails.env.production?` guard.
+>
+> **Completed 28 April 2026 — Admin CMS CRUD:** `Admin::CyclePhaseContentsController` now has full create/edit/delete, giving the team control over `/informations/:phase` content without Rails console access.
+>
+> **Completed 28 April 2026 — Informations show redesign:** Phase detail pages rebuilt to match Figma — flat white layout, phase-coloured text throughout, three sections (phase title + hormone note, emotional world, that will do you good) separated by divider lines.
 
 ---
 
@@ -86,13 +96,14 @@ The app is deliberately **dependency-light**. No React, no GraphQL, no separate 
 
 ```
 app/
-  controllers/     — 29 controllers (auth, features, admin)
-  models/          — 12 models (User, CycleEntry, SymptomLog, etc.)
-  views/           — ~60 ERB templates, Figma-matched
+  controllers/     — 32 controllers (auth, features, admin, consent, account)
+  models/          — 13 models (User, CycleEntry, SymptomLog, UserConsent, etc.)
+  views/           — ~65 ERB templates, Figma-matched
   javascript/
-    controllers/   — Stimulus controllers (menu, modal, symptoms, etc.)
+    controllers/   — Stimulus controllers (menu, modal, symptoms, calendar, etc.)
   services/
     cycle_calculator_service.rb   — Single source of truth for phase/day calculations
+  jobs/            — SendMorningRemindersJob, SendBirthControlRemindersJob, SendPeriodRemindersJob
 
 config/
   locales/en.yml   — All English strings
@@ -115,7 +126,7 @@ docs/              — You are here
 
 **Figma is the source of truth for every pixel.** Every screen was built from a Figma node. Brand colours, spacing, typography, and copy all come from Figma first, then get translated to Tailwind. The Figma file is the design contract, not a mood board.
 
-**The admin panel is built for the founding team, not a SaaS admin.** It covers exactly what the Season team needs: a user list with search, a feedback inbox (bugs / support / feedback), and waitlist tracking with CSV export. Nothing more.
+**The admin panel is built for the founding team, not a SaaS admin.** It covers exactly what the Season team needs: a user list with search, a feedback inbox (bugs / support / feedback), and waitlist tracking with CSV export. Nothing more. Admin auth is completely separate from the mobile app login — `/admin/login` uses its own `admin_auth` layout (desktop-optimised, no sidebar) handled by `Admin::SessionsController`. Unauthenticated requests to `/admin/*` redirect to `/admin/login`, not the app root. Test accounts and admin promotion are provisioned via `bundle exec rails setup:accounts` — no Rails console needed.
 
 ---
 

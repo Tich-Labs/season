@@ -1,0 +1,67 @@
+<%
+  meta = {
+    "pill"        => { label: "Pill",         icon: "💊" },
+    "hormonering" => { label: "Hormone Ring",  icon: "💍" },
+    "plaster"     => { label: "Plaster",       icon: "🩹" },
+    "iud"         => { label: "IUD",           icon: "🔵" },
+    "implant"     => { label: "Implant",       icon: "💉" },
+    "injection"   => { label: "Injection",     icon: "💉" },
+    "none"        => { label: "Contraception", icon: "🌿" }
+  }[@contraception] || { label: "Contraception", icon: "💊" }
+%>
+
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#FAF7F4; padding:32px 16px;">
+  <tr><td align="center">
+    <table width="100%" cellpadding="0" cellspacing="0" style="max-width:480px;">
+
+      <%# Header %>
+      <tr><td style="background:#933a35; border-radius:16px 16px 0 0; padding:28px 28px 24px; text-align:center;">
+        <p style="font-size:36px; margin:0 0 8px;"><%= meta[:icon] %></p>
+        <h1 style="color:#FFFFFF; font-size:22px; font-weight:700; margin:0 0 4px; line-height:1.2;">
+          Time for your <%= meta[:label].downcase %>
+        </h1>
+        <p style="color:rgba(255,255,255,0.85); font-size:14px; margin:0;">
+          Daily reminder from Season
+        </p>
+      </td></tr>
+
+      <%# Status card %>
+      <tr><td style="background:#FFFFFF; padding:24px 28px; border-bottom:1px solid #EDE1D5;">
+        <% if @cycle_day %>
+          <div style="background:#FDF0EE; border-radius:12px; padding:16px 20px; margin-bottom:16px;">
+            <p style="color:#6B6B6B; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.07em; margin:0 0 4px;">Today</p>
+            <p style="color:#933a35; font-size:18px; font-weight:700; margin:0;">
+              Day <%= @cycle_day %> of your cycle
+            </p>
+          </div>
+        <% end %>
+        <p style="color:#3d2b28; font-size:15px; font-weight:500; margin:0; line-height:1.6;">
+          Stay consistent — taking your <%= meta[:label].downcase %> at the same time every day is key to its effectiveness.
+        </p>
+      </td></tr>
+
+      <%# Tip %>
+      <tr><td style="background:#FFFFFF; padding:20px 28px; border-bottom:1px solid #EDE1D5;">
+        <p style="color:#6B6B6B; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.07em; margin:0 0 10px;">Quick tip</p>
+        <div style="display:flex; align-items:flex-start; gap:12px;">
+          <span style="font-size:20px;">⏰</span>
+          <p style="color:#3d2b28; font-size:14px; font-weight:400; margin:0; line-height:1.6;">
+            If you miss a dose, check the instructions for your <%= meta[:label].downcase %> brand. Most methods have catch-up rules — don't panic.
+          </p>
+        </div>
+      </td></tr>
+
+      <%# CTA %>
+      <tr><td style="background:#FFFFFF; padding:20px 28px; border-radius:0 0 16px 16px; text-align:center;">
+        <a href="<%= root_url %>"
+           style="display:inline-block; background:#933a35; color:#FFFFFF; text-decoration:none; font-size:15px; font-weight:600; padding:14px 32px; border-radius:12px; letter-spacing:0.02em;">
+          Open Season
+        </a>
+        <p style="color:#6B6B6B; font-size:12px; margin:16px 0 0;">
+          <%= link_to "Manage reminders", notifications_settings_url, style: "color:#933a35;" %>
+        </p>
+      </td></tr>
+
+    </table>
+  </td></tr>
+</table>

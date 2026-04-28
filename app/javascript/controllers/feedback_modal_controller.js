@@ -24,7 +24,8 @@ export default class extends Controller {
     this.applyType("feedback")
   }
 
-  openWithType(type) {
+  openWithType(event) {
+    const type = event?.currentTarget?.dataset?.feedbackModalTypeParam || event
     this.applyType(type || "feedback")
     this.element.style.display = "flex"
   }

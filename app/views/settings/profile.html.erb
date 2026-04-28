@@ -189,33 +189,19 @@
 
     <div style="border-bottom:1px solid #DDD0CB; padding-top: 16px;"></div>
 
-    <%# ── Delete Account ── %>
+<%# ── Delete Account ── %>
 
     <%# Delete Account link %>
-    <button onclick="document.getElementById('delete-modal').style.display='flex'" style="background:none; border:none; width:100%; display:flex; align-items:center; gap:16px; padding:16px 0; cursor:pointer;">
+    <%= link_to account_path, style: "display:flex; align-items:center; gap:16px; padding:16px 0; text-decoration:none;" do %>
       <svg style="width:24px; height:24px;" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#933a35" stroke-width="1.5" viewBox="0 0 24 24">
         <polyline points="3 6 5 6 21 6" />
         <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
       </svg>
       <span style="flex:1; color:#933a35; font-size:16px; font-weight:500;">Delete Account</span>
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
         <polyline points="9 18 15 12 9 6" />
       </svg>
-    </a>
-
-  </div>
-</div>
-
-<%# ── Email Edit Modal ── %>
-<div id="email-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:100; align-items:center; justify-content:center;">
-  <div style="background:#FAF7F4; border-radius:16px; padding:24px; width:90%; max-width:340px; margin:16px;">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-      <h3 style="color:#933a35; font-size:18px; font-weight:600; margin:0;">E-Mail Address</h3>
-      <button onclick="document.getElementById('email-modal').style.display='none'" style="background:none; border:none; cursor:pointer;">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
-          <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
-        </svg>
-      </button>
+    <% end %>
     </div>
 
     <%= form_with url: update_profile_settings_path, method: :patch, local: true do %>
@@ -276,33 +262,6 @@
 
     <button onclick="document.getElementById('personal-info-modal').style.display='none'"
             style="width:100%; background:transparent; color:#933a35; border:1px solid #DDD0CB; border-radius:12px; padding:14px; font-size:16px; font-weight:500; cursor:pointer; margin-top:8px;">
-      Cancel
-    </button>
-  </div>
-</div>
-
-<%# ── Delete Account Modal ── %>
-<div id="delete-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:100; align-items:center; justify-content:center;">
-  <div style="background:#FAF7F4; border-radius:16px; padding:24px; width:90%; max-width:340px; margin:16px;">
-    <div style="text-align:center; margin-bottom:20px;">
-      <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="none" stroke="#933a35" stroke-width="1.5" viewBox="0 0 24 24" style="margin:0 auto 12px;">
-        <polyline points="3 6 5 6 21 6" />
-        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-      </svg>
-      <h3 style="color:#933a35; font-size:18px; font-weight:600; margin:0;">Delete Account</h3>
-    </div>
-
-    <p style="color:#933a35; font-size:14px; line-height:1.5; margin:0 0 16px; text-align:center;">
-      Are you sure you want to delete your account? This action cannot be undone.
-    </p>
-
-    <%= button_to "Delete Account", user_registration_path,
-          method: :delete,
-          data: { turbo_confirm: "Are you sure?" },
-          style: "width:100%; background:#933a35; color:white; border:none; border-radius:12px; padding:14px; font-size:16px; font-weight:500; cursor:pointer; margin-bottom:8px;" %>
-
-    <button onclick="document.getElementById('delete-modal').style.display='none'"
-            style="width:100%; background:transparent; color:#933a35; border:1px solid #DDD0CB; border-radius:12px; padding:14px; font-size:16px; font-weight:500; cursor:pointer;">
       Cancel
     </button>
   </div>

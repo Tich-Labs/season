@@ -1,4 +1,4 @@
-<% content_for :page_title, @user.name.presence || @user.email %>
+<% content_for :page_title, @user.public_id %>
 
 <div class="space-y-6 max-w-4xl">
 
@@ -11,7 +11,9 @@
     <div class="flex items-start justify-between">
       <div>
         <h2 class="text-xl font-bold text-gray-900"><%= @user.name.presence || "Unnamed User" %></h2>
-        <p class="text-sm text-gray-500 mt-0.5"><%= @user.email %></p>
+        <div class="flex items-center gap-2 mt-1">
+          <span class="text-xs font-mono text-gray-400">ID: <%= @user.public_id %></span>
+        </div>
       </div>
       <% if @user.admin? %>
         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#933a35] text-white">Admin</span>
@@ -46,6 +48,99 @@
 
   <%# Two-column detail row %>
   <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+
+<%# GDPR & Consent Data %>
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+    <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-4">GDPR & Privacy</h3>
+    <dl class="space-y-3">
+      <div class="flex items-center justify-between">
+        <dt class="text-xs text-gray-500">Health Data Consent</dt>
+        <dd>
+          <% if @user.consent?("health_data_processing") %>
+            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">Granted</span>
+          <% else %>
+            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-50 text-[#933a35]">Not Granted</span>
+          <% end %>
+        </dd>
+      </div>
+      <div class="flex items-center justify-between">
+        <dt class="text-xs text-gray-500">Symptom Tracking</dt>
+        <dd>
+          <% if @user.consent?("symptom_tracking") %>
+            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">Granted</span>
+          <% else %>
+            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-50 text-[#933a35]">Not Granted</span>
+          <% end %>
+        </dd>
+      </div>
+      <div class="flex items-center justify-between">
+        <dt class="text-xs text-gray-500">Cycle Tracking</dt>
+        <dd>
+          <% if @user.consent?("cycle_tracking") %>
+            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">Granted</span>
+          <% else %>
+            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-50 text-[#933a35]">Not Granted</span>
+          <% end %>
+        </dd>
+      </div>
+      <div class="flex items-center justify-between">
+        <dt class="text-xs text-gray-500">Menstrual Data</dt>
+        <dd>
+          <% if @user.consent?("menstrual_data") %>
+            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">Granted</span>
+          <% else %>
+            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-50 text-[#933a35]">Not Granted</span>
+          <% end %>
+        </dd>
+      </div>
+    </dl>
+
+    <%# Consent history %>
+    <% if @user.user_consents.any? %>
+      <h4 class="text-xs font-semibold text-gray-500 uppercase tracking-wide mt-6 mb-2">Consent History</h4>
+      <div class="max-h-32 overflow-y-auto">
+        <table class="w-full text-xs">
+          <thead>
+            <tr class="text-gray-500">
+              <th class="text-left py-1">Type</th>
+              <th class="text-left py-1">Granted</th>
+              <th class="text-left py-1">Revoked</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @user.user_consents.order("granted_at DESC").each do |consent| %>
+              <tr class="border-t border-gray-100">
+                <td class="py-1 text-gray-700"><%= consent.consent_type %></td>
+                <td class="py-1 text-gray-500"><%= consent.granted_at&.strftime("%Y-%m-%d %H:%M") || "-" %></td>
+                <td class="py-1 text-gray-500"><%= consent.revoked_at&.strftime("%Y-%m-%d %H:%M") || "-" %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% end %>
+
+    <%# Data summary %>
+    <h4 class="text-xs font-semibold text-gray-500 uppercase tracking-wide mt-6 mb-2">User Data</h4>
+    <div class="grid grid-cols-2 gap-2 text-xs">
+      <div class="bg-gray-50 rounded px-2 py-1">
+        <span class="text-gray-500">Cycle Entries:</span>
+        <span class="font-medium text-[#933a35] ml-1"><%= @user.cycle_entries.count %></span>
+      </div>
+      <div class="bg-gray-50 rounded px-2 py-1">
+        <span class="text-gray-500">Symptom Logs:</span>
+        <span class="font-medium text-[#933a35] ml-1"><%= @user.symptom_logs.count %></span>
+      </div>
+      <div class="bg-gray-50 rounded px-2 py-1">
+        <span class="text-gray-500">Superpowers:</span>
+        <span class="font-medium text-[#933a35] ml-1"><%= @user.superpower_logs.count %></span>
+      </div>
+      <div class="bg-gray-50 rounded px-2 py-1">
+        <span class="text-gray-500">Calendar Events:</span>
+        <span class="font-medium text-[#933a35] ml-1"><%= @user.calendar_events.count %></span>
+      </div>
+    </div>
+  </div>
 
 <%# Cycle data %>
   <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">

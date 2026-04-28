@@ -6,6 +6,7 @@ class SymptomsController < ApplicationController
     @log = current_user.symptom_logs.find_or_initialize_by(date: @date)
     @phase = current_user.current_phase
     @season = CycleCalculatorService::SEASON_NAMES[@phase] if @phase
+    @cycle_day = current_user.current_cycle_day
   end
 
   def show
@@ -36,7 +37,7 @@ class SymptomsController < ApplicationController
     params.expect(
       symptom_log: [:date, :mood, :energy, :sleep, :physical,
         :mental, :pain, :cravings, :discharge, :notes,
-        :sexual_intercourse]
+        :sexual_intercourse, :temperature, :weight]
     )
   end
 end

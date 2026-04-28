@@ -47,12 +47,14 @@
     <div data-controller="menu">
       <%# --- TOP APP BAR — constrained to mobile viewport --- %>
       <%# Settings controller auto-applies dark theme; any view can opt in via content_for(:header_dark) %>
+      <%# Views can also pass content_for(:header_color) with a hex string for a phase-specific bg color %>
       <% is_settings = controller_name == 'settings' %>
       <% dark_header = is_settings || content_for?(:header_dark) %>
       <% hdr_bg      = dark_header ? "bg-[#933a35]" : "bg-[#ede1d5]" %>
       <% bar_color   = dark_header ? "bg-white"     : "bg-[#933a35]" %>
       <% hdr_fg      = dark_header ? "text-white"   : "text-[#933a35]" %>
-      <header class="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-md h-20 <%= hdr_bg %> z-40 flex items-center px-4">
+      <% hdr_inline  = content_for?(:header_color) ? "style=\"background:#{yield(:header_color)};\"" : "" %>
+      <header class="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-md h-20 <%= hdr_bg %> z-40 flex items-center px-4" <%= hdr_inline.html_safe %>>
 
         <%# Left: custom back-arrow OR default hamburger %>
         <% if content_for?(:header_left) %>
@@ -77,6 +79,9 @@
             <span class="text-white text-2xl font-medium font-['Montserrat']">Settings</span>
           <% else %>
             <span class="<%= hdr_fg %> text-xl font-medium tracking-wide font-['Montserrat']">Season</span>
+            <% if content_for?(:header_center_dropdown) %>
+              <%= yield(:header_center_dropdown) %>
+            <% end %>
           <% end %>
         </div>
 

@@ -1,0 +1,69 @@
+<%= form_with model: [:admin, content], local: true do |f| %>
+  <div class="grid grid-cols-1 gap-6">
+    <% if content.errors.any? %>
+      <div class="rounded-2xl border border-red-200 bg-brand-error p-4 text-sm text-brand-error">
+        <p class="font-semibold">Please fix the following errors:</p>
+        <ul class="mt-2 list-disc pl-5 space-y-1">
+          <% content.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div>
+        <%= f.label :phase, "Phase", class: "block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2" %>
+        <%= f.select :phase, CycleEntry::PHASES.map { |phase| [phase.capitalize, phase] }, {}, class: "w-full bg-brand-field rounded-xl px-4 py-3 text-sm text-brand-dark border-0" %>
+      </div>
+      <div>
+        <%= f.label :locale, "Locale", class: "block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2" %>
+        <%= f.select :locale, [["English", "en"], ["Deutsch", "de"]], {}, class: "w-full bg-brand-field rounded-xl px-4 py-3 text-sm text-brand-dark border-0" %>
+      </div>
+    </div>
+
+    <div>
+      <%= f.label :season_name, "Season info", class: "block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2" %>
+      <%= f.text_field :season_name, placeholder: "Estrogen is produced slowly.", class: "w-full bg-brand-field rounded-xl px-4 py-3 text-sm text-brand-dark border-0" %>
+    </div>
+
+    <div class="rounded-3xl border border-gray-200 bg-white p-5">
+      <p class="text-xs font-semibold uppercase tracking-[0.25em] text-gray-500 mb-4">Informations page content</p>
+
+      <div class="space-y-6">
+        <div>
+          <%= f.label :mood_text, "Emotional world", class: "block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2" %>
+          <%= f.text_area :mood_text, rows: 4, placeholder: "Enter the emotional world guidance for this phase.", class: "w-full bg-brand-field rounded-xl px-4 py-3 text-sm text-brand-dark border-0" %>
+        </div>
+
+        <div>
+          <%= f.label :take_care_text, "That will do you good", class: "block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2" %>
+          <%= f.text_area :take_care_text, rows: 4, placeholder: "Enter recommendations for self-care in this phase.", class: "w-full bg-brand-field rounded-xl px-4 py-3 text-sm text-brand-dark border-0" %>
+        </div>
+      </div>
+    </div>
+
+    <div class="rounded-3xl border border-gray-200 bg-white p-5">
+      <p class="text-xs font-semibold uppercase tracking-[0.25em] text-gray-500 mb-4">Optional additional content</p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <%= f.label :superpower_text, "Superpower", class: "block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2" %>
+          <%= f.text_area :superpower_text, rows: 3, class: "w-full bg-brand-field rounded-xl px-4 py-3 text-sm text-brand-dark border-0" %>
+        </div>
+        <div>
+          <%= f.label :sport_text, "Movement", class: "block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2" %>
+          <%= f.text_area :sport_text, rows: 3, class: "w-full bg-brand-field rounded-xl px-4 py-3 text-sm text-brand-dark border-0" %>
+        </div>
+      </div>
+
+      <div class="mt-4">
+        <%= f.label :nutrition_text, "Nutrition", class: "block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2" %>
+        <%= f.text_area :nutrition_text, rows: 3, class: "w-full bg-brand-field rounded-xl px-4 py-3 text-sm text-brand-dark border-0" %>
+      </div>
+    </div>
+
+    <div class="flex justify-end gap-3">
+      <%= link_to "Cancel", admin_cycle_phase_contents_path, class: "px-4 py-2 rounded-xl bg-gray-100 text-gray-700 text-sm hover:bg-gray-200 transition-colors" %>
+      <%= f.submit content.persisted? ? "Save changes" : "Create content", class: "px-5 py-2 rounded-xl bg-brand-primary text-white text-sm font-semibold hover:bg-[#7a2f2a] transition-colors" %>
+    </div>
+  </div>
+<% end %>

@@ -30,9 +30,13 @@
     .content th, .content td { padding: 0.75rem; text-align: left; border-bottom: 1px solid #EDE1D5; }
     .content th { background: #FAF7F4; font-weight: 600; color: #933a35; }
     .content a { color: #933a35; text-decoration: underline; }
+    .subtitle-note { font-size: 1.1rem; color: #6B6B6B; margin-bottom: 1.5rem; }
     .content blockquote { border-left: 4px solid #933a35; padding-left: 1rem; margin: 1rem 0; color: #6B6B6B; font-style: italic; background: #FDF0EE; padding: 1rem; border-radius: 0 8px 8px 0; }
     .content hr { border: none; border-top: 1px solid #EDE1D5; margin: 2rem 0; }
     .highlight-box { background: white; border-radius: 12px; padding: 1.5rem; margin: 1rem 0; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .resolved-box { border-left: 4px solid #22c55e; }
+    .box-heading { margin-top: 0; }
+    .resolved-heading { color: #166534; }
     .status-done { color: #22c55e; font-weight: 600; }
     .status-todo { color: #ef4444; font-weight: 600; }
     .status-pending { color: #f59e0b; font-weight: 600; }
@@ -42,21 +46,21 @@
 <body>
   <nav class="sidebar">
     <div class="sidebar-header">
-      <h1>📅 Season Docs</h1>
+      <h1>Season Docs</h1>
       <p>Internal team documentation</p>
     </div>
     <div class="nav-section">
-      <p class="nav-section-title">Overview</p>
-      <a href="overview.html" class="nav-item">Project Overview</a>
+      <p class="nav-section-title">Start Here</p>
+      <a href="overview.html" class="nav-item active">Project Overview</a>
     </div>
     <div class="nav-section">
       <p class="nav-section-title">Getting Started</p>
-      <a href="screenslist.html" class="nav-item">Screens & Routes</a>
       <a href="userjourney.html" class="nav-item">User Journey</a>
+      <a href="screenslist.html" class="nav-item">Screens &amp; Routes</a>
       <a href="BACKLOG.html" class="nav-item">Backlog</a>
     </div>
     <div class="nav-section">
-      <p class="nav-section-title">Audit & Reports</p>
+      <p class="nav-section-title">Audit &amp; Reports</p>
       <a href="AUDIT-2026-04-10.html" class="nav-item">Audit Report</a>
       <a href="STYLING-AUDIT.html" class="nav-item">Styling Audit</a>
       <a href="STAKEHOLDER-REPORT-2026-04-15.html" class="nav-item">Stakeholder Report</a>
@@ -64,12 +68,12 @@
     <div class="nav-section">
       <p class="nav-section-title">Reference</p>
       <a href="figma_nodes.html" class="nav-item">Figma Nodes</a>
-      <a href="userdata.html" class="nav-item">User Data & Privacy</a>
+      <a href="userdata.html" class="nav-item">User Data &amp; Privacy</a>
     </div>
   </nav>
   <main class="content">
     <h1>Project Overview</h1>
-    <p style="font-size: 1.1rem; color: #6B6B6B;">Read this first. Everything else in this docs folder assumes you've read this.</p>
+    <p class="subtitle-note">Read this first. Everything else in this docs folder assumes you have read this.</p>
 
     <hr>
 
@@ -115,16 +119,20 @@
     <hr>
 
     <h2>What is Still Needed Before Launch</h2>
-    <p>Two things are blocking launch:</p>
+    <p>One thing is blocking launch:</p>
     <div class="highlight-box">
-      <h3 style="margin-top: 0;">1. Email delivery (SMTP)</h3>
-      <p>The app can create accounts, send onboarding, and manage users, but it cannot deliver emails in production. Password reset emails, launch notifications to the waitlist, and any transactional email will silently fail until an SMTP provider is configured. Resend is recommended (3,000 free emails/month, 30-minute setup). See <a href="BACKLOG.html">BACKLOG.md</a> for the full implementation spec.</p>
-    </div>
-    <div class="highlight-box">
-      <h3 style="margin-top: 0;">2. OAuth credentials</h3>
+      <h3 class="box-heading">OAuth credentials</h3>
       <p>Sign in with Google, Facebook, and Apple is fully built and routed. The only step remaining is adding the API keys to the Render dashboard. No code changes needed.</p>
     </div>
     <p>Everything else — accessibility, i18n completeness, schema cleanup — is improvement work that can happen post-launch.</p>
+    <div class="highlight-box resolved-box">
+      <h3 class="box-heading resolved-heading">Resolved 26 April 2026: Email delivery</h3>
+      <p>Resend is configured and the <code>season.vision</code> domain is fully verified (SPF, DKIM, MX). Password reset and account confirmation emails now deliver to inbox with custom branded HTML templates. End-to-end password reset confirmed working in production.</p>
+    </div>
+    <div class="highlight-box resolved-box">
+      <h3 class="box-heading resolved-heading">Completed 26 April 2026: M5 Reminders</h3>
+      <p><code>ReminderMailer</code> built with three actions: <code>morning_summary</code>, <code>period_reminder</code>, and <code>birth_control_reminder</code>. Three Solid Queue jobs run on a production cron schedule in <code>config/queue.yml</code> (07:00, 08:00, 19:00 UTC). All three notification settings screens now persist to the database. See the <a href="BACKLOG.html">Backlog</a> for the full implementation detail.</p>
+    </div>
 
     <hr>
 
@@ -171,13 +179,13 @@ docs/              — You are here</code></pre>
       <strong>The cycle engine lives in one place.</strong> <code>CycleCalculatorService</code> is the single source of truth for which phase a user is in, what day of her cycle it is, and what colour the calendar should show. Nothing else calculates phases. If the logic ever needs to change, there is one file to change.
     </blockquote>
     <blockquote>
-      <strong>Health data never touches the logs.</strong> All symptom fields, cycle data, and health profile fields are filtered from Rails request logs. A user's weight, mood score, period start date, and contraception type will never appear in plain text in any log file. See <a href="userdata.html">userdata.md</a> for the full privacy architecture.
+      <strong>Health data never touches the logs.</strong> All symptom fields, cycle data, and health profile fields are filtered from Rails request logs. A user's weight, mood score, period start date, and contraception type will never appear in plain text in any log file. See <a href="userdata.html">User Data &amp; Privacy</a> for the full privacy architecture.
     </blockquote>
     <blockquote>
       <strong>Figma is the source of truth for every pixel.</strong> Every screen was built from a Figma node. Brand colours, spacing, typography, and copy all come from Figma first, then get translated to Tailwind. The Figma file is the design contract, not a mood board.
     </blockquote>
     <blockquote>
-      <strong>The admin panel is built for the founding team, not a SaaS admin.</strong> It covers exactly what the Season team needs: a user list with search, a feedback inbox (bugs / support / feedback), and waitlist tracking with CSV export. Nothing more.
+      <strong>The admin panel is built for the founding team, not a SaaS admin.</strong> It covers exactly what the Season team needs: a user list with search, a feedback inbox (bugs / support / feedback), and waitlist tracking with CSV export. Nothing more. Admin auth is completely separate from the mobile app login — <code>/admin/login</code> uses its own <code>admin_auth</code> layout (desktop-optimised, no sidebar) handled by <code>Admin::SessionsController</code>. Unauthenticated requests to <code>/admin/*</code> redirect to <code>/admin/login</code>, not the app root. Test accounts and admin promotion are provisioned via <code>bundle exec rails setup:accounts</code> — no Rails console needed.
     </blockquote>
 
     <hr>

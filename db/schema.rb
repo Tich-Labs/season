@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_26_154703) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_28_121630) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -161,6 +161,22 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_26_154703) do
     t.index ["user_id", "date"], name: "index_symptom_logs_on_user_id_and_date", unique: true
   end
 
+  create_table "user_consents", force: :cascade do |t|
+    t.string "consent_type", null: false
+    t.datetime "created_at", null: false
+    t.datetime "granted_at", null: false
+    t.string "ip_address"
+    t.text "metadata"
+    t.datetime "revoked_at"
+    t.datetime "updated_at", null: false
+    t.string "user_agent"
+    t.bigint "user_id", null: false
+    t.index ["consent_type"], name: "index_user_consents_on_consent_type"
+    t.index ["granted_at"], name: "index_user_consents_on_granted_at"
+    t.index ["user_id", "consent_type"], name: "index_user_consents_on_user_id_and_consent_type", unique: true, where: "(revoked_at IS NULL)"
+    t.index ["user_id"], name: "index_user_consents_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.boolean "admin", default: false, null: false
     t.string "apple_uid"
@@ -212,4 +228,5 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_26_154703) do
   add_foreign_key "streaks", "users"
   add_foreign_key "superpower_logs", "users"
   add_foreign_key "symptom_logs", "users"
+  add_foreign_key "user_consents", "users"
 end

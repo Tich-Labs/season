@@ -205,14 +205,16 @@
     </div>
 
     <%# ── Feedback link ──────────────────────────────────────────────── %>
-    <a href="#" class="flex justify-between items-center py-4 mt-2"
-       style="color:#933a35; text-decoration:none; border-top:1px solid rgba(147,58,53,0.15);">
+    <button type="button"
+            onclick="window.openFeedbackModal?.('feedback')"
+            class="flex justify-between items-center py-4 mt-2 w-full"
+            style="color:#933a35; text-decoration:none; border-top:1px solid rgba(147,58,53,0.15); background:none;">
       <span class="text-sm"><%= t("tracking.feedback") %></span>
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none"
            stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
         <polyline points="9 18 15 12 9 6" />
       </svg>
-    </a>
+    </button>
 
   </div>
 </div>

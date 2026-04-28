@@ -13,7 +13,7 @@ This table maps coded screens to Figma design nodes. Use `docs/figma_nodes.md` a
 | M6 | 24 | ❌ Not built |
 | M7 | 17 | ✅ Built |
 
-## Styling Standard (Last updated: 2026-04-17)
+## Styling Standard (Last updated: 2026-04-28)
 
 **Approach**: Tailwind CSS with brand utility classes — no inline `style=""` attributes.
 
@@ -24,7 +24,7 @@ This table maps coded screens to Figma design nodes. Use `docs/figma_nodes.md` a
 - `_phase_banner` — Phase-coloured header band
 - `_content_container` — Standard max-width:430px container
 - `_layout_vars` — CSS variables placeholder
-- `_quick_actions` — Global plus FAB + quick-action modal (Stimulus: `quick-actions`)
+- `_quick_actions` — Global plus FAB + quick-action modal (Stimulus: `quick-actions`). **Auto-hides when feedback modal or burger menu is open.**
 - `_feedback_modal` — Global feedback / bug-report / support sheet (Stimulus: `feedback-modal`)
 
 **Brand Colors**:
@@ -44,7 +44,7 @@ This table maps coded screens to Figma design nodes. Use `docs/figma_nodes.md` a
 | `_phase_banner` | Phase-coloured header band |
 | `_content_container` | Standard max-width:430px container |
 | `_layout_vars` | CSS variables placeholder |
-| `_quick_actions` | Global plus FAB + quick-action modal (Track / Appointment) |
+| `_quick_actions` | Global plus FAB + quick-action modal (Track / Appointment). Auto-hides on modal/menu open. |
 | `_feedback_modal` | Global feedback / bug-report / support sheet |
 
 ## Route Mapping
@@ -86,7 +86,9 @@ This table maps coded screens to Figma design nodes. Use `docs/figma_nodes.md` a
 | /settings/notification_morning   | settings#notification_morning | Morning notification        | M5-1                                     | ✅ |
 | /settings/notification_period   | settings#notification_period | Period notification          | M5-2                                     | ✅ |
 | /settings/notification_birth_control | settings#notification_birth_control | Birth control notification | M5-3                                     | ✅ |
-| /launch                          | launch#index                | Launch/countdown              | M1-26                                    | ✅ |
+| /settings/consent                   | settings#consent              | GDPR consent (Art. 9)        | —                                        | ✅ |
+| /account                           | account#show                 | Delete account (Art. 17)       | —                                        | ✅ |
+| /launch                            | launch#index                 | Launch/countdown              | M1-26                                    | ✅ |
 | /terms                           | legal#terms                 | Terms                         | M1-27                                    | ✅ |
 | /privacy                         | legal#privacy               | Privacy                       | M1-28                                    | ✅ |
 | /informations                    | informations#index          | Informations main             | M3-1                                     | ✅ |
@@ -101,6 +103,11 @@ This table maps coded screens to Figma design nodes. Use `docs/figma_nodes.md` a
 | /admin/launch_signups            | admin/launch_signups#index  | Admin waitlist                | M7-7                                     | ✅ |
 | /admin/launch_signups/export_csv | admin/launch_signups#export_csv | Admin waitlist CSV        | M7-8                                     | ✅ |
 | /admin/inbox/export_csv          | admin/inbox#export_csv      | Admin inbox CSV               | M7-9                                     | ✅ |
+| /admin/cycle_phase_contents      | admin/cycle_phase_contents#index | Admin content CMS (index) | —                                        | ✅ |
+| /admin/cycle_phase_contents/new  | admin/cycle_phase_contents#new | Admin content CMS (new)    | —                                        | ✅ |
+| /admin/cycle_phase_contents/:id/edit | admin/cycle_phase_contents#edit | Admin content CMS (edit) | —                                      | ✅ |
+| /consent                         | consent#show                | GDPR consent (onboarding)     | —                                        | ✅ |
+| /account                         | account#show                | Account management / deletion | —                                        | ✅ |
 
 ## Known Gaps
 

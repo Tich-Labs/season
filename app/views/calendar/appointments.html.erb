@@ -1,15 +1,24 @@
 <% content_for(:page_title) { @date.strftime("%B") } %>
 <% content_for(:header_right) do %>
-  <div class="flex items-center gap-1">
-    <%= link_to calendar_appointments_path(date: @prev_month.to_s),
-          aria: { label: "Previous month" },
-          class: "w-10 h-10 flex items-center justify-center text-[#933a35]" do %>
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><polyline points="15 18 9 12 15 6" /></svg>
-    <% end %>
-    <%= link_to calendar_appointments_path(date: @next_month.to_s),
-          aria: { label: "Next month" },
-          class: "w-10 h-10 flex items-center justify-center text-[#933a35]" do %>
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 18 15 12 9 6" /></svg>
+  <div class="flex items-center gap-2">
+    <div class="flex items-center gap-1">
+      <%= link_to calendar_appointments_path(date: @prev_month.to_s),
+            aria: { label: "Previous month" },
+            class: "w-10 h-10 flex items-center justify-center text-[#933a35]" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><polyline points="15 18 9 12 15 6" /></svg>
+      <% end %>
+      <%= link_to calendar_appointments_path(date: @next_month.to_s),
+            aria: { label: "Next month" },
+            class: "w-10 h-10 flex items-center justify-center text-[#933a35]" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 18 15 12 9 6" /></svg>
+      <% end %>
+    </div>
+    <%= link_to informations_path do %>
+      <svg class="w-6 h-6 text-brand-primary" viewBox="0 0 25 25" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12.4998 22.9168C18.2289 22.9168 22.9164 18.2293 22.9164 12.5001C22.9164 6.77094 18.2289 2.08344 12.4998 2.08344C6.7706 2.08344 2.0831 6.77094 2.0831 12.5001C2.0831 18.2293 6.7706 22.9168 12.4998 22.9168Z" />
+        <path d="M12.4998 8.33344V13.5418" stroke-width="1.7" />
+        <path d="M12.4957 16.6667H12.5051" stroke-width="2" />
+      </svg>
     <% end %>
   </div>
 <% end %>

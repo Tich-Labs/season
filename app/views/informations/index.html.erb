@@ -1,58 +1,44 @@
 <% content_for(:page_title) { "Informations" } %>
+<% content_for(:header_dark) { "true" } %>
+<% content_for(:header_color) { "#933a35" } %>
 
-<div style="background:#FAF7F4; min-height:100vh; padding-bottom:80px; font-family:'Montserrat',sans-serif;">
-  <div style="max-width:430px; width:100%; margin:0 auto; padding:24px 16px 0;">
+<div class="bg-brand-background min-h-screen pb-20">
+  <div class="max-w-app mx-auto px-4 pt-6 pb-10">
 
     <%# Header %>
-    <h1 style="color:#933a35; font-size:28px; font-weight:600; margin:0 0 6px; line-height:1.2;">Your cycle phases</h1>
-    <p style="color:#6B6B6B; font-size:14px; font-weight:400; margin:0 0 24px; line-height:1.5;">
-      Learn about each phase of your cycle and how it affects your body and mind.
-    </p>
+    <div class="mb-6">
+      <h1 class="text-3xl font-semibold text-brand-primary tracking-tight">Your cycle phases</h1>
+      <p class="mt-2 text-sm text-brand-secondary max-w-xl">Learn about each phase of your cycle and how it affects your body and mind.</p>
+    </div>
 
     <%# Phase cards %>
-    <div style="display:flex; flex-direction:column; gap:16px;">
+    <div class="space-y-4">
       <% @phases.each do |item| %>
         <% meta    = item[:meta] %>
         <% content = item[:content] %>
-        <%= link_to informations_phase_path(item[:phase]),
-              style: "display:block; border-radius:16px; overflow:hidden; text-decoration:none; box-shadow:0 2px 12px rgba(0,0,0,0.08);" do %>
 
-          <%# Coloured header band %>
-          <div style="background:<%= meta[:colour] %>; padding:20px 20px 16px;">
-            <div style="display:flex; align-items:center; justify-content:space-between;">
-              <div>
-                <p style="color:<%= meta[:text_colour] %>; font-size:11px; font-weight:500; letter-spacing:0.08em; text-transform:uppercase; margin:0 0 4px; opacity:0.85;">
-                  <%= meta[:days] %>
-                </p>
-                <h2 style="color:<%= meta[:text_colour] %>; font-size:22px; font-weight:700; margin:0; line-height:1.1;">
-                  <%= meta[:season] %>
-                </h2>
-                <p style="color:<%= meta[:text_colour] %>; font-size:13px; font-weight:400; margin:4px 0 0; opacity:0.9; text-transform:capitalize;">
-                  <%= item[:phase] %> phase
-                </p>
+        <%= link_to informations_phase_path(item[:phase]), class: "block rounded-[26px] overflow-hidden bg-white border border-gray-200 shadow-sm transition hover:shadow-md" do %>
+          <div class="p-5" style="background:<%= meta[:colour] %>;">
+            <div class="flex items-start justify-between gap-4">
+              <div class="min-w-0">
+                <p class="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/85 mb-2"><%= meta[:days] %></p>
+                <h2 class="text-xl font-bold text-white mb-1"><%= meta[:season] %></h2>
+                <p class="text-sm text-white/90 capitalize"><%= item[:phase] %> phase</p>
               </div>
-              <span style="font-size:40px; line-height:1;"><%= meta[:emoji] %></span>
+              <span class="text-4xl leading-none"><%= meta[:emoji] %></span>
             </div>
           </div>
 
-          <%# White body %>
-          <div style="background:#FFFFFF; padding:16px 20px;">
+          <div class="border-t border-gray-100 p-5">
             <% if content %>
-              <p style="color:#6B6B6B; font-size:13px; line-height:1.55; margin:0 0 8px;">
-                <span style="color:#933a35; font-weight:600;">Superpower: </span><%= content.superpower_text %>
-              </p>
-              <p style="color:#6B6B6B; font-size:13px; line-height:1.55; margin:0;">
-                <span style="color:#933a35; font-weight:600;">Mood: </span><%= content.mood_text %>
-              </p>
+              <p class="text-sm text-brand-secondary"><span class="font-semibold text-brand-primary">Emotional world:</span> <%= content.mood_text %></p>
             <% end %>
-            <div style="display:flex; align-items:center; justify-content:flex-end; margin-top:12px;">
-              <span style="color:<%= meta[:colour] %>; font-size:12px; font-weight:600; letter-spacing:0.04em;">Read more →</span>
+            <div class="mt-4 flex justify-end">
+              <span class="text-xs font-semibold uppercase tracking-[0.24em] text-brand-primary">Read more →</span>
             </div>
           </div>
-
         <% end %>
       <% end %>
     </div>
-
   </div>
 </div>

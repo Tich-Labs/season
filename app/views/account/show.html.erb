@@ -1,0 +1,62 @@
+<%# Account / Delete Account screen %>
+<% content_for(:header_left) do %>
+  <%= link_to edit_settings_path, class: "p-2 flex items-center" do %>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
+      <line x1="19" y1="12" x2="5" y2="12" />
+      <polyline points="12 19 5 12 12 5" />
+    </svg>
+  <% end %>
+<% end %>
+
+<div style="background:#ffffff; min-height:100vh;">
+
+  <div style="max-width:430px; margin:0 auto; padding:0 16px 80px;">
+
+    <%# Header %>
+    <div style="padding:20px 0 8px;">
+      <h2 style="color:#933a35; font-size:16px; font-weight:700;">Delete Account</h2>
+    </div>
+    <div style="border-bottom:1px solid #DDD0CB;"></div>
+
+    <%# Info %>
+    <div style="text-align:center; padding:40px 20px;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="none" stroke="#933a35" stroke-width="1.5" viewBox="0 0 24 24" style="margin:0 auto 16px;">
+        <polyline points="3 6 5 6 21 6" />
+        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+      </svg>
+      <h3 style="color:#933a35; font-size:20px; font-weight:600; margin:0 0 12px;">Delete Account</h3>
+      <p style="color:#6B6B6B; font-size:14px; line-height:1.5; margin:0 0 24px;">
+        This will permanently delete your account and all associated data including:
+      </p>
+
+      <%# Data list %>
+      <ul style="text:left; color:#6B6B6B; font-size:14px; line-height:1.8; margin:0 0 24px; padding-left:20px;">
+        <li>Cycle tracking history</li>
+        <li>Symptom logs</li>
+        <li>Superpower entries</li>
+        <li>Calendar events</li>
+        <li>Reminders</li>
+        <li>Streaks & achievements</li>
+        <li>Profile picture</li>
+      </ul>
+
+      <div style="background:#FDF0EE; border-radius:12px; padding:16px; margin-bottom:24px;">
+        <p style="color:#933a35; font-size:14px; font-weight:500; margin:0;">
+          This action cannot be undone.
+        </p>
+      </div>
+    </div>
+
+    <%# Delete Form %>
+    <%= form_with url: account_path, method: :delete, data: { turbo_confirm: "Are you sure you want to delete your account? This cannot be undone." } do %>
+      <button type="submit"
+              style="width:100%; background:#933a35; color:white; border:none; border-radius:12px; padding:16px; font-size:16px; font-weight:500; cursor:pointer;">
+        Delete My Account
+      </button>
+    <% end %>
+
+    <%= link_to "Cancel", edit_settings_path,
+          style: "display:block; width:100%; text-align:center; color:#933a35; border:1px solid #DDD0CB; border-radius:12px; padding:16px; font-size:16px; font-weight:500; margin-top:12px; text-decoration:none;">
+
+  </div>
+</div>

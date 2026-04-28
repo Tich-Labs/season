@@ -26,59 +26,66 @@
       </p>
     </div>
 
-    <%# ── Toggle row ── %>
-    <div style="background:#FFFFFF; padding:16px 20px; border-bottom:1px solid #EDE1D5; display:flex; align-items:center; justify-content:space-between;">
-      <span style="color:#3d2b28; font-size:16px; font-weight:500;">Enable Good Morning</span>
-      <label style="position:relative; width:44px; height:24px; cursor:pointer; flex-shrink:0;" aria-label="Enable Good Morning notification">
-        <input type="checkbox" id="morning_enabled" checked
-               style="opacity:0; width:0; height:0;">
-        <span style="position:absolute; inset:0; background:#933a35; border-radius:24px; transition:0.2s;"></span>
-        <span style="position:absolute; top:2px; left:22px; width:20px; height:20px; background:white; border-radius:50%; transition:0.2s; box-shadow:0 1px 3px rgba(0,0,0,0.2);"></span>
-      </label>
-    </div>
-
-    <%# ── Time picker ── %>
-    <div style="background:#FFFFFF; padding:16px 20px; border-bottom:1px solid #EDE1D5;">
-      <p style="color:#933a35; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; margin:0 0 10px;">
-        Delivery time
-      </p>
-      <div style="display:flex; align-items:center; gap:12px;">
-        <svg width="20" height="20" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0;">
-          <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
-        </svg>
-        <input type="time" value="09:00" autocomplete="off"
-               style="background:#EDE1D5; border:none; border-radius:8px; padding:10px 14px; font-size:16px; color:#3d2b28; font-family:'Montserrat',sans-serif; outline:none; flex:1;">
+    <% if notice.present? %>
+      <div style="background:#EDE1D5; padding:10px 20px; border-bottom:1px solid #EDE1D5;">
+        <p style="color:#933a35; font-size:13px; font-weight:600; margin:0;"><%= notice %></p>
       </div>
-      <p style="color:#D18D83; font-size:13px; font-weight:500; margin:8px 0 0;">
-        Summary → 9:00 a.m.
-      </p>
-    </div>
+    <% end %>
 
-    <%# ── What's included ── %>
-    <div style="background:#FFFFFF; padding:16px 20px; border-bottom:1px solid #EDE1D5;">
-      <p style="color:#933a35; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; margin:0 0 12px;">
-        What's included
-      </p>
-      <% [
-        ["🌙", "Cycle phase of the day"],
-        ["⚡", "Your superpower"],
-        ["🏃", "Sport recommendation"],
-        ["🥗", "Nutrition tip"],
-        ["🌸", "Fertility status"]
-      ].each do |emoji, text| %>
-        <div style="display:flex; align-items:center; gap:10px; padding:6px 0;">
-          <span style="font-size:16px; width:24px; text-align:center;"><%= emoji %></span>
-          <span style="color:#3d2b28; font-size:14px; font-weight:500;"><%= text %></span>
+    <%= form_with url: save_morning_reminder_settings_path, method: :patch, local: true do |f| %>
+
+      <%# ── Toggle row ── %>
+      <div style="background:#FFFFFF; padding:16px 20px; border-bottom:1px solid #EDE1D5; display:flex; align-items:center; justify-content:space-between;">
+        <span style="color:#3d2b28; font-size:16px; font-weight:500;">Enable Good Morning</span>
+        <label style="position:relative; width:44px; height:24px; cursor:pointer; flex-shrink:0;" aria-label="Enable Good Morning notification">
+          <%= f.check_box :enabled, {id: "morning_enabled", style: "opacity:0; width:0; height:0;",
+                          checked: @reminder.active?}, "1", "0" %>
+          <span style="position:absolute; inset:0; background:#933a35; border-radius:24px; transition:0.2s;"></span>
+          <span style="position:absolute; top:2px; left:22px; width:20px; height:20px; background:white; border-radius:50%; transition:0.2s; box-shadow:0 1px 3px rgba(0,0,0,0.2);"></span>
+        </label>
+      </div>
+
+      <%# ── Time picker ── %>
+      <div style="background:#FFFFFF; padding:16px 20px; border-bottom:1px solid #EDE1D5;">
+        <p style="color:#933a35; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; margin:0 0 10px;">
+          Delivery time
+        </p>
+        <div style="display:flex; align-items:center; gap:12px;">
+          <svg width="20" height="20" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0;">
+            <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
+          </svg>
+          <%= f.time_field :time,
+                value: (@reminder.time&.strftime("%H:%M") || "09:00"),
+                autocomplete: "off",
+                style: "background:#EDE1D5; border:none; border-radius:8px; padding:10px 14px; font-size:16px; color:#3d2b28; font-family:'Montserrat',sans-serif; outline:none; flex:1;" %>
         </div>
-      <% end %>
-    </div>
+      </div>
 
-    <%# ── Save button ── %>
-    <div style="padding:20px 20px 0;">
-      <button style="width:100%; background:#933a35; color:#FFFFFF; padding:16px; border-radius:12px; border:none; font-size:16px; font-weight:600; font-family:'Montserrat',sans-serif; cursor:pointer; letter-spacing:0.02em;">
-        Save
-      </button>
-    </div>
+      <%# ── What's included ── %>
+      <div style="background:#FFFFFF; padding:16px 20px; border-bottom:1px solid #EDE1D5;">
+        <p style="color:#933a35; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; margin:0 0 12px;">
+          What's included
+        </p>
+        <% [
+          ["🌙", "Cycle phase of the day"],
+          ["⚡", "Your superpower"],
+          ["🏃", "Sport recommendation"],
+          ["🥗", "Nutrition tip"],
+          ["🌸", "Fertility status"]
+        ].each do |emoji, text| %>
+          <div style="display:flex; align-items:center; gap:10px; padding:6px 0;">
+            <span style="font-size:16px; width:24px; text-align:center;"><%= emoji %></span>
+            <span style="color:#3d2b28; font-size:14px; font-weight:500;"><%= text %></span>
+          </div>
+        <% end %>
+      </div>
+
+      <%# ── Save button ── %>
+      <div style="padding:20px 20px 0;">
+        <%= f.submit "Save", style: "width:100%; background:#933a35; color:#FFFFFF; padding:16px; border-radius:12px; border:none; font-size:16px; font-weight:600; font-family:'Montserrat',sans-serif; cursor:pointer; letter-spacing:0.02em;" %>
+      </div>
+
+    <% end %>
 
   </div>
 </div>

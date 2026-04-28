@@ -1,0 +1,66 @@
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#FAF7F4; padding:32px 16px;">
+  <tr><td align="center">
+    <table width="100%" cellpadding="0" cellspacing="0" style="max-width:480px;">
+
+      <%# Header %>
+      <tr><td style="background:#933a35; border-radius:16px 16px 0 0; padding:28px 28px 24px; text-align:center;">
+        <h1 style="color:#FFFFFF; font-size:24px; font-weight:700; margin:0 0 6px; line-height:1.2;">
+          <%= @event_type == "period_start" ? "Your period is starting soon 🌙" : "Your period is almost over 🌱" %>
+        </h1>
+        <p style="color:rgba(255,255,255,0.85); font-size:14px; margin:0;">
+          A heads-up from Season
+        </p>
+      </td></tr>
+
+      <%# Date card %>
+      <tr><td style="background:#FFFFFF; padding:24px 28px; border-bottom:1px solid #EDE1D5;">
+        <% if @predicted_date %>
+          <p style="color:#6B6B6B; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.07em; margin:0 0 8px;">
+            <%= @event_type == "period_start" ? "Expected period start" : "Expected period end" %>
+          </p>
+          <div style="background:#FDF0EE; border-radius:12px; padding:16px 20px; display:inline-block;">
+            <p style="color:#933a35; font-size:22px; font-weight:700; margin:0;">
+              <%= @predicted_date.strftime("%A, %B %-d") %>
+            </p>
+          </div>
+        <% end %>
+
+        <% if @event_type == "period_start" %>
+          <p style="color:#3d2b28; font-size:14px; font-weight:400; margin:16px 0 0; line-height:1.6;">
+            Your body is entering the menstrual phase. Take it easy, prioritise warmth and rest, and listen to what you need.
+          </p>
+        <% else %>
+          <p style="color:#3d2b28; font-size:14px; font-weight:400; margin:16px 0 0; line-height:1.6;">
+            Your period is wrapping up. The follicular phase is just ahead — energy and clarity are on their way.
+          </p>
+        <% end %>
+      </td></tr>
+
+      <%# Tips %>
+      <tr><td style="background:#FFFFFF; padding:20px 28px; border-bottom:1px solid #EDE1D5;">
+        <p style="color:#6B6B6B; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.07em; margin:0 0 12px;">
+          <%= @event_type == "period_start" ? "Prepare with" : "Coming next" %>
+        </p>
+        <% tips = @event_type == "period_start" ? [["🛁", "Warm baths or a heating pad"], ["🍫", "Dark chocolate for magnesium"], ["😴", "Extra rest is productive"], ["📓", "Journalling and reflection"]] : [["🌱", "Energy begins to rise"], ["🏋️", "Great time to start exercising"], ["🥗", "Focus on lighter, fresh foods"], ["💡", "Clarity and motivation return"]] %>
+        <% tips.each do |icon, tip| %>
+          <div style="display:flex; align-items:center; gap:12px; padding:6px 0;">
+            <span style="font-size:18px; width:26px; text-align:center;"><%= icon %></span>
+            <span style="color:#3d2b28; font-size:14px; font-weight:500;"><%= tip %></span>
+          </div>
+        <% end %>
+      </td></tr>
+
+      <%# CTA %>
+      <tr><td style="background:#FFFFFF; padding:20px 28px; border-radius:0 0 16px 16px; text-align:center;">
+        <a href="<%= tracking_index_url %>"
+           style="display:inline-block; background:#933a35; color:#FFFFFF; text-decoration:none; font-size:15px; font-weight:600; padding:14px 32px; border-radius:12px; letter-spacing:0.02em;">
+          Log in Season
+        </a>
+        <p style="color:#6B6B6B; font-size:12px; margin:16px 0 0;">
+          <%= link_to "Manage reminders", notifications_settings_url, style: "color:#933a35;" %>
+        </p>
+      </td></tr>
+
+    </table>
+  </td></tr>
+</table>
