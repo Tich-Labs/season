@@ -14,7 +14,9 @@ bundle exec rails db:prepare
 # the same DATABASE_URL, so the solid_cache/queue/cable tables never get
 # created otherwise — causing 500s on any request that touches Rails.cache.
 echo "Loading solid_cache schema..."
-bundle exec rails db:cache:schema:load || { echo "ERROR: solid_cache schema load failed"; exit 1; }
+bundle exec rails db:schema:load:cache || { echo "ERROR: solid_cache schema load failed"; exit 1; }
 echo "Loading solid_queue schema..."
-bundle exec rails db:queue:schema:load || { echo "ERROR: solid_queue schema load failed"; exit 1; }
+bundle exec rails db:schema:load:queue || { echo "ERROR: solid_queue schema load failed"; exit 1; }
+echo "Loading solid_cable schema..."
+bundle exec rails db:schema:load:cable || { echo "ERROR: solid_cable schema load failed"; exit 1; }
 echo "Solid schemas loaded successfully."

@@ -15,5 +15,7 @@ class Feedback < ApplicationRecord
 
   def forward_to_trello
     TrelloMailer.card(self).deliver_later
+  rescue => e
+    Rails.logger.error "TrelloMailer enqueue failed for Feedback##{id}: #{e.message}"
   end
 end
