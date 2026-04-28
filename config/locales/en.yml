@@ -163,6 +163,10 @@ en:
       updated: "Event updated"
     destroy:
       deleted: "Event deleted"
+  admin:
+    cycle_phase_contents:
+      update:
+        updated: "Informations content updated."
   invites:
     show:
       already_used: "This invite has already been used."

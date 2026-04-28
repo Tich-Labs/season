@@ -145,6 +145,7 @@ Rails.application.routes.draw do
     get "inbox/export_csv", to: "inbox#export_csv"
     get "launch_signups", to: "launch_signups#index", as: :launch_signups
     get "launch_signups/export_csv", to: "launch_signups#export_csv", as: :launch_signups_export_csv
+    resources :cycle_phase_contents, only: [:index, :edit, :update]
     root to: "users#index"
   end
 

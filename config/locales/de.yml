@@ -157,6 +157,10 @@ de:
       updated: "Termin aktualisiert"
     destroy:
       deleted: "Termin gelöscht"
+  admin:
+    cycle_phase_contents:
+      update:
+        updated: "Informationsinhalt aktualisiert."
   invites:
     show:
       already_used: "Diese Einladung wurde bereits verwendet."

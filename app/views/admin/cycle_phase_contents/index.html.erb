@@ -1,0 +1,40 @@
+<% content_for :page_title, "Content" %>
+
+<div class="space-y-6">
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+    <div class="flex items-center justify-between gap-4 flex-wrap">
+      <div>
+        <h2 class="text-lg font-bold text-[#933a35]">Content management</h2>
+        <p class="text-sm text-gray-500 mt-1">Edit the information page content for each cycle phase and locale.</p>
+      </div>
+      <span class="inline-flex items-center px-3 py-1.5 rounded-full bg-[#ede1d5] text-[#933a35] text-xs font-semibold">Informations</span>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-50">
+        <tr>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phase</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Locale</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Season</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Last updated</th>
+          <th class="px-6 py-3"></th>
+        </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-200">
+        <% @contents.each do |content| %>
+          <tr class="hover:bg-gray-50">
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-[#933a35] capitalize"><%= content.phase %></td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 uppercase"><%= content.locale %></td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700"><%= content.season_name %></td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><%= content.updated_at.strftime("%Y-%m-%d") %></td>
+            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+              <%= link_to "Edit", edit_admin_cycle_phase_content_path(content), class: "text-[#933a35] hover:underline" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

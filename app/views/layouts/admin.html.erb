@@ -28,6 +28,7 @@
         <%# Nav links %>
         <nav class="flex-1 px-3 py-4 space-y-1">
           <% users_active    = controller_name == "users" %>
+          <% content_active  = controller_name == "cycle_phase_contents" %>
           <% signups_active  = controller_name == "launch_signups" %>
           <% inbox_active    = controller_name == "inbox" && action_name == "overview" %>
           <% feedback_active = controller_name == "inbox" && action_name == "feedback" %>
@@ -41,6 +42,24 @@
             <span aria-hidden="true">&#128100;</span>
             Users
           <% end %>
+
+          <details class="group rounded-lg" <%= 'open' if content_active %>>
+            <summary class="flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium text-[#f5ede8] cursor-pointer hover:bg-[#7a2f2a]">
+              <span class="flex items-center gap-3">
+                <span aria-hidden="true">&#128195;</span>
+                Content
+              </span>
+              <span class="text-xs text-[#f5ede8] group-open:rotate-180 transition-transform">&#9660;</span>
+            </summary>
+            <div class="mt-2 ml-4 space-y-0.5">
+              <%= link_to admin_cycle_phase_contents_path,
+                  class: class_names("block px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                                     "bg-[#7a2f2a] text-white" => content_active,
+                                     "text-[#f5ede8] hover:bg-[#7a2f2a] hover:text-white" => !content_active) do %>
+                Informations
+              <% end %>
+            </div>
+          </details>
 
           <%= link_to admin_launch_signups_path,
               class: class_names("flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors",
