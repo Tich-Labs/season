@@ -37,6 +37,14 @@ class CycleCalculatorService
       @cycle_length) + 1
   end
 
+  def next_period_start
+    return nil unless @last_period_start
+    last = @last_period_start.to_date
+    today = Time.zone.today
+    cycles = (today - last).to_i / @cycle_length
+    last + ((cycles + 1) * @cycle_length)
+  end
+
   def phase_for_date(date)
     return nil unless @last_period_start
     cycle_day = ((date - @last_period_start.to_date).to_i % @cycle_length) + 1

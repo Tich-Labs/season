@@ -183,6 +183,11 @@ de:
       period_saved: "Perioden-Erinnerung gespeichert."
       birth_control_saved: "Verhütungs-Erinnerung gespeichert."
   reminder_mailer:
+    morning_summary:
+      subject: "Guten Morgen, %{name} 🌸 Deine Season-Zusammenfassung"
+    period_reminder:
+      subject_period_start: "Deine Periode beginnt bald 🌙"
+      subject_period_end: "Deine Periode ist fast vorbei 🌱"
     birth_control_reminder:
       subject: "Deine tägliche Erinnerung 💊 Season"
   bug_reports:

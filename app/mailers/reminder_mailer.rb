@@ -7,17 +7,16 @@ class ReminderMailer < ApplicationMailer
     @season = @calculator.current_season || "Spring"
     @phase_meta = CycleCalculatorService::PHASE_META[@phase]
 
-    mail(to: user.email, subject: "Good morning, #{user.name.split.first} 🌸 Your Season summary")
+    mail(to: user.email, subject: t(".subject", name: user.name.split.first))
   end
 
   def period_reminder(user, event_type)
     @user = user
     @event_type = event_type
-    @calculator = CycleCalculatorService.new(user)
-    @predicted_date = predicted_period_date(user, event_type)
+    next_start = CycleCalculatorService.new(user).next_period_start
+    @predicted_date = (event_type == "period_end" && next_start) ? next_start + (user.period_length || 5) - 1 : next_start
 
-    subject = (event_type == "period_start") ? "Your period is starting soon 🌙" : "Your period is almost over 🌱"
-    mail(to: user.email, subject: subject)
+    mail(to: user.email, subject: t(".subject_#{event_type}"))
   end
 
   def birth_control_reminder(user)
@@ -26,19 +25,6 @@ class ReminderMailer < ApplicationMailer
     @calculator = CycleCalculatorService.new(user)
     @cycle_day = @calculator.current_cycle_day
 
-    mail(to: user.email, subject: t("reminder_mailer.birth_control_reminder.subject"))
-  end
-
-  private
-
-  def predicted_period_date(user, event_type)
-    return nil unless user.last_period_start && user.cycle_length
-    last = user.last_period_start.to_date
-    cycle = user.cycle_length || 28
-    period_len = user.period_length || 5
-    today = Time.zone.today
-    next_start = last + cycle
-    next_start += cycle while next_start <= today
-    (event_type == "period_end") ? next_start + period_len - 1 : next_start
+    mail(to: user.email, subject: t(".subject"))
   end
 end

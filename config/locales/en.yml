@@ -189,6 +189,11 @@ en:
       period_saved: "Period reminder saved."
       birth_control_saved: "Birth control reminder saved."
   reminder_mailer:
+    morning_summary:
+      subject: "Good morning, %{name} 🌸 Your Season summary"
+    period_reminder:
+      subject_period_start: "Your period is starting soon 🌙"
+      subject_period_end: "Your period is almost over 🌱"
     birth_control_reminder:
       subject: "Your daily reminder 💊 Season"
   bug_reports:

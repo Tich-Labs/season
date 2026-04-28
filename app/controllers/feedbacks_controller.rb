@@ -16,7 +16,7 @@ class FeedbacksController < ApplicationController
       respond_to do |format|
         format.turbo_stream do
           render turbo_stream: turbo_stream.replace("fm-error",
-            "<p id='fm-error' style='color:#933a35; font-size:13px; margin:8px 0 0;'>#{t("feedback.create.enter_message")}</p>")
+            partial: "feedbacks/error", locals: {message: t("feedback.create.enter_message")})
         end
         format.html { head :unprocessable_content }
       end
