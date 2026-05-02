@@ -11,7 +11,7 @@ test:
   <<: *default
   database: season_test
 
-production:
+production: &production
   primary:
     <<: *default
     url: <%= ENV["DATABASE_URL"] %>
@@ -27,3 +27,6 @@ production:
     <<: *default
     url: <%= ENV.fetch("CABLE_DATABASE_URL", ENV["DATABASE_URL"]) %>
     migrations_paths: db/cable_migrate
+
+staging:
+  <<: *production
