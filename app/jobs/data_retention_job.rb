@@ -4,7 +4,7 @@
 
 class DataRetentionJob < ApplicationJob
   queue_as :default
-  sidekiq_options retry: 3
+  retry_on StandardError, attempts: 3
 
   # Retention periods (in years)
   CYCLE_RETENTION_YEARS = 3

@@ -3,7 +3,7 @@
 
 class CleanupExpiredInvitesJob < ApplicationJob
   queue_as :default
-  sidekiq_options retry: 3
+  retry_on StandardError, attempts: 3
 
   def perform
     Rails.logger.info "[CleanupExpiredInvitesJob] Starting at #{Time.zone.now}"
