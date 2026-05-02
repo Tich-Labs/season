@@ -25,13 +25,22 @@ export default class extends Controller {
   }
 
   openWithType(event) {
-    const type = event?.currentTarget?.dataset?.feedbackModalTypeParam || event
+    const type = typeof event === "string"
+      ? event
+      : event?.currentTarget?.dataset?.type || event?.currentTarget?.dataset?.feedbackModalTypeParam
+
     this.applyType(type || "feedback")
     this.element.style.display = "flex"
   }
 
   selectType(event) {
     this.applyType(event.currentTarget.dataset.type)
+  }
+
+  fileSelected(event) {
+    const fileName = event.currentTarget.files[0]?.name || ""
+    const label = document.getElementById("attachment-name")
+    if (label) label.textContent = fileName
   }
 
   close() {

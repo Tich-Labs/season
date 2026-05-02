@@ -1,7 +1,7 @@
 <% editing = @existing.present? %>
 <% content_for(:page_title) { editing ? "Edit Period" : "Log Period" } %>
 <% content_for(:header_left) do %>
-  <a href="/tracking" style="color:#933a35; font-size:15px; font-weight:500; text-decoration:none; padding:8px 4px; font-family:'Montserrat',sans-serif;">
+  <a href="/tracking" class="text-brand-primary text-sm font-medium no-underline p-2">
     &lt; back
   </a>
 <% end %>
@@ -17,42 +17,42 @@
   next_month = @month.next_month
 %>
 
-<div style="background:#FAF7F4; min-height:100vh; padding-bottom:80px; font-family:'Montserrat',sans-serif;">
-  <div style="max-width:430px; margin:0 auto;">
+<div class="bg-brand-background min-h-screen pb-20">
+  <div class="max-w-app mx-auto">
 
     <%# ── Phase-coloured header ── %>
-    <div style="background:<%= @phase_col %>; padding:24px 20px 20px;">
-      <p style="color:rgba(255,255,255,0.8); font-size:12px; font-weight:500; text-transform:uppercase; letter-spacing:0.06em; margin:0 0 4px;">
+    <div class="p-6 pb-5" style="background:<%= @phase_col %>;">
+      <p class="text-white/80 text-xs font-medium uppercase tracking-wider m-0 mb-1">
         <%= editing ? "Edit period start" : "When did your period start?" %>
       </p>
-      <p style="color:#FFFFFF; font-size:22px; font-weight:700; margin:0; line-height:1.2;">
+      <p class="text-white text-2xl font-bold m-0 leading-tight">
         <%= @selected.strftime("%B %-d, %Y") %>
       </p>
     </div>
 
     <%# ── Month navigation ── %>
-    <div style="background:#FFFFFF; display:flex; align-items:center; justify-content:space-between; padding:14px 20px; border-bottom:1px solid #EDE1D5;">
+    <div class="bg-white flex items-center justify-between p-3.5 border-b border-brand-field">
       <%= link_to "/tracking/period?date=#{prev_month}",
-            style: "display:flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:50%; background:#EDE1D5; text-decoration:none;" do %>
+            class: "flex items-center justify-center w-9 h-9 rounded-full bg-brand-field no-underline" do %>
         <svg width="18" height="18" fill="none" stroke="#933a35" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6" /></svg>
       <% end %>
-      <span style="font-weight:700; font-size:16px; color:#3d2b28;"><%= @month.strftime("%B %Y") %></span>
+      <span class="font-bold text-base text-brand-dark"><%= @month.strftime("%B %Y") %></span>
       <%= link_to "/tracking/period?date=#{next_month}",
-            style: "display:flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:50%; background:#EDE1D5; text-decoration:none;" do %>
+            class: "flex items-center justify-center w-9 h-9 rounded-full bg-brand-field no-underline" do %>
         <svg width="18" height="18" fill="none" stroke="#933a35" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6" /></svg>
       <% end %>
     </div>
 
     <%# ── Weekday headers ── %>
-    <div style="background:#FFFFFF; display:grid; grid-template-columns:repeat(7,1fr); padding:12px 8px 4px;">
+    <div class="bg-white grid grid-cols-7 p-3 pb-1">
       <% %w[Mo Tu We Th Fr Sa Su].each do |d| %>
-        <div style="text-align:center; font-size:11px; font-weight:600; color:#6B6B6B;"><%= d %></div>
+        <div class="text-center text-xs font-semibold text-brand-secondary"><%= d %></div>
       <% end %>
     </div>
 
     <%# ── Calendar grid (each day is a link) ── %>
-    <div style="background:#FFFFFF; padding:4px 8px 16px;">
-      <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:2px 0;">
+    <div class="bg-white p-1 pb-4 px-2">
+      <div class="grid grid-cols-7 gap-y-0">
         <% grid_days.each do |day| %>
           <% if day.nil? %>
             <div></div>
@@ -66,12 +66,12 @@
               fw          = (is_selected || is_today) ? "700" : "400"
             %>
             <% if is_future %>
-              <div style="display:flex; align-items:center; justify-content:center; height:40px; width:40px; margin:auto; border-radius:50%; background:<%= cell_bg %>; color:<%= text_col %>; font-size:14px; font-weight:<%= fw %>;">
+              <div class="flex items-center justify-center h-10 w-10 mx-auto rounded-full text-sm" style="background:<%= cell_bg %>; color:<%= text_col %>; font-weight:<%= fw %>;">
                 <%= day.day %>
               </div>
             <% else %>
               <a href="/tracking/period?selected_date=<%= day %>" data-turbo="false"
-                 style="display:flex; align-items:center; justify-content:center; height:40px; width:40px; margin:auto; border-radius:50%; background:<%= cell_bg %>; color:<%= text_col %>; font-size:14px; font-weight:<%= fw %>; text-decoration:none;">
+                 class="flex items-center justify-center h-10 w-10 mx-auto rounded-full text-sm no-underline" style="background:<%= cell_bg %>; color:<%= text_col %>; font-weight:<%= fw %>;">
                 <%= day.day %>
               </a>
             <% end %>
@@ -81,22 +81,20 @@
     </div>
 
     <%# ── Selected date summary + Save button ── %>
-    <div style="margin:16px; background:#FFFFFF; border-radius:16px; padding:16px 20px;">
-      <p style="font-size:13px; font-weight:600; color:#3d2b28; margin:0 0 4px;">Period start date</p>
-      <p style="font-size:16px; font-weight:700; color:<%= @phase_col %>; margin:0 0 6px;">
+    <div class="m-4 bg-white rounded-2xl p-5">
+      <p class="text-xs font-semibold text-brand-dark m-0 mb-1">Period start date</p>
+      <p class="text-base font-bold m-0 mb-1.5" style="color:<%= @phase_col %>;">
         <%= @selected.strftime("%A, %-d %B %Y") %>
       </p>
-      <p style="font-size:12px; color:#6B6B6B; margin:0;">Tap any past date to select it, then save.</p>
+      <p class="text-xs text-brand-secondary m-0">Tap any past date to select it, then save.</p>
     </div>
 
     <% btn_text = editing ? "Update period start" : "Save period start" %>
-    <% btn_style = "width:100%; background:#{@phase_col}; color:#FFFFFF; padding:16px; border-radius:12px; border:none; font-size:16px; font-weight:600; font-family:'Montserrat',sans-serif; cursor:pointer;" %>
-    <div style="padding:0 16px;">
+    <div class="px-4">
       <a href="/tracking/period?save=1&date=<%= @selected %>" data-turbo="false"
-         style="display:block; text-align:center; <%= btn_style %> text-decoration:none;">
+         class="block text-center no-underline text-white rounded-xl p-4 text-base font-semibold" style="background:<%= @phase_col %>;">
         <%= btn_text %>
       </a>
     </div>
-
   </div>
 </div>

@@ -3,6 +3,8 @@ class Admin::SessionsController < ApplicationController
   allow_unauthenticated_access only: [:new, :create]
   skip_onboarding_requirement only: [:new, :create, :destroy]
 
+  rate_limit to: 5, within: 15.minutes, only: :create, with: -> { rate_limited }
+
   def new
     redirect_to admin_root_path if authenticated? && current_user&.admin?
   end
@@ -22,5 +24,12 @@ class Admin::SessionsController < ApplicationController
   def destroy
     logout
     redirect_to admin_login_path
+  end
+
+  private
+
+  def rate_limited
+    @error = :rate_limited
+    render :new, status: :too_many_requests
   end
 end

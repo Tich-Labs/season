@@ -15,6 +15,7 @@ namespace :users do
         if user.new_record?
           user.name = row["name"].strip if row["name"].present?
           user.invite_token = SecureRandom.urlsafe_base64(16)
+          user.invite_token_expires_at = 7.days.from_now
           user.password = SecureRandom.hex(16)
           user.onboarding_completed = false
           user.language = "en"

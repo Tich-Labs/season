@@ -14,17 +14,17 @@
 %>
 <a href="<%= href %>" class="flex items-center gap-4 py-4 no-underline">
   <% if local_assigns[:icon_svg] %>
-    <span style="width:24px; height:24px; flex-shrink:0; color:<%= row_colour %>; display:flex; align-items:center; justify-content:center;">
+    <span class="w-6 h-6 flex-shrink-0 flex items-center justify-center" style="color:<%= row_colour %>;">
       <%# erblint:disable:ErbSafety %>
       <%= icon_svg.html_safe %>
     </span>
   <% end %>
-  <div style="flex:1;">
-    <span class="font-medium" style="color:<%= row_colour %>; font-family:'Montserrat',sans-serif;">
+  <div class="flex-1">
+    <span class="font-montserrat font-medium" style="color:<%= row_colour %>;">
       <%= label %>
     </span>
     <% if local_assigns[:subtitle] %>
-      <span class="block text-brand-muted mt-1" style="font-family:'Montserrat',sans-serif;">
+      <span class="block text-brand-muted mt-1 font-montserrat text-xs">
         <%= subtitle %>
       </span>
     <% end %>

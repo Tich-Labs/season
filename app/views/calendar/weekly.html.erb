@@ -3,13 +3,15 @@
   <div class="flex items-center gap-2">
     <div class="flex items-center gap-1">
       <%= link_to calendar_weekly_path(date: @prev_week.to_s),
-            class: "w-10 h-10 flex items-center justify-center text-[#933a35]" do %>
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6" /></svg>
+            aria: { label: "Previous week" },
+            class: "w-10 h-10 flex items-center justify-center text-brand-primary" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><polyline points="15 18 9 12 15 6" /></svg>
       <% end %>
-      <span class="text-[#933a35] text-sm font-medium px-2"><%= @week_start.strftime("%b %d") %> - <%= @week_end.strftime("%b %d") %></span>
+      <span class="text-brand-primary text-sm font-medium px-2"><%= @week_start.strftime("%b %d") %> - <%= @week_end.strftime("%b %d") %></span>
       <%= link_to calendar_weekly_path(date: @next_week.to_s),
-            class: "w-10 h-10 flex items-center justify-center text-[#933a35]" do %>
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6" /></svg>
+            aria: { label: "Next week" },
+            class: "w-10 h-10 flex items-center justify-center text-brand-primary" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 18 15 12 9 6" /></svg>
       <% end %>
     </div>
     <%= link_to informations_path do %>
@@ -33,25 +35,25 @@
   timeline_hours = (6..22).to_a
 %>
 
-<div style="background:#FAF7F4; min-height:100vh; padding-bottom:80px;">
-  <div style="max-width:430px; width:100%; margin:0 auto;">
+<div class="bg-brand-background min-h-screen pb-20">
+  <div class="max-w-app mx-auto">
 
     <%# ── Week header ── %>
-    <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:0; padding:12px 8px 8px; border-bottom:1px solid #EDE1D5; background:#FFFFFF;">
+    <div class="grid grid-cols-7 gap-0 px-2 py-3 pb-2 border-b border-brand-field bg-white">
       <% week_days = %w[Mo Tu We Th Fr Sa Su] %>
       <% @week_dates.each_with_index do |day, i| %>
         <% is_today = day == Time.zone.today %>
         <% phase = @cycle_by_date[day]&.dig(:phase) %>
         <% colour = phase_colours[phase] || "#933a35" %>
         <% is_weekend = i >= 5 %>
-        <div style="text-align:center;">
-          <div style="font-size:11px; color:#6B6B6B; font-weight:500; margin-bottom:4px;"><%= week_days[i] %></div>
+        <div class="text-center">
+          <div class="text-xs text-brand-secondary font-medium mb-1"><%= week_days[i] %></div>
           <% if is_today %>
-            <div style="width:28px; height:28px; border-radius:50%; background:<%= colour %>; color:#FFFFFF; font-size:14px; font-weight:600; display:inline-flex; align-items:center; justify-content:center;">
+            <div class="w-7 h-7 rounded-full inline-flex items-center justify-center text-white text-sm font-bold" style="background: <%= colour %>;">
               <%= day.day %>
             </div>
           <% else %>
-            <div style="font-size:14px; color:<%= is_weekend ? '#D18D83' : '#933a35' %>; font-weight:500;">
+            <div class="text-sm font-medium" style="color: <%= is_weekend ? '#D18D83' : '#933a35' %>;">
               <%= day.day %>
             </div>
           <% end %>
@@ -61,25 +63,25 @@
 
     <%# ── Week legend ── %>
     <% if current_user.last_period_start %>
-      <div style="padding:8px 16px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+      <div class="px-4 py-2 flex gap-3 justify-center flex-wrap">
         <% phase_colours.each do |phase, colour| %>
-          <div style="display:flex; align-items:center; gap:4px;">
-            <span style="width:8px; height:8px; border-radius:50%; background:<%= colour %>;"></span>
-            <span style="font-size:10px; color:#6B6B6B; text-transform:capitalize;"><%= phase %></span>
+          <div class="flex items-center gap-1">
+            <span class="w-2 h-2 rounded-full" style="background: <%= colour %>;"></span>
+            <span class="text-xs text-brand-secondary capitalize"><%= phase %></span>
           </div>
         <% end %>
       </div>
     <% end %>
 
     <%# ── Timeline grid ── %>
-    <div style="position:relative; overflow-y:auto; max-height:60vh;">
+    <div class="relative overflow-y-auto" style="max-height: 60vh;">
       <div style="display:grid; grid-template-columns:40px 1fr; gap:0;">
 
         <%# Time column %>
-        <div style="border-right:1px solid #EDE1D5;">
+        <div class="border-r border-brand-field">
           <% timeline_hours.each do |hour| %>
-            <div style="height:<%= hour_px %>px; border-bottom:1px solid #F5EDE8;">
-              <span style="font-size:10px; color:#6B6B6B; padding:2px 4px; display:block;">
+            <div class="border-b" style="height: <%= hour_px %>px; border-color: #F5EDE8;">
+              <span class="text-xs text-brand-secondary block px-1 py-0.5">
                 <%= format("%02d:00", hour) %>
               </span>
             </div>
@@ -94,14 +96,14 @@
             <% events = @events_by_date[day] || [] %>
             <% is_weekend = day_idx >= 5 %>
 
-            <div style="border-right:<%= is_weekend ? '2px' : '1px' %> solid <%= is_weekend ? '#F5C6AD' : '#EDE1D5' %>; position:relative;">
+            <div class="relative" style="border-right: <%= is_weekend ? '2px' : '1px' %> solid <%= is_weekend ? '#F5C6AD' : '#EDE1D5' %>;">
               <%# Hour grid lines %>
               <% timeline_hours.each do |hour| %>
-                <div style="height:<%= hour_px %>px; border-bottom:1px solid #F5EDE8;"></div>
+                <div class="border-b" style="height: <%= hour_px %>px; border-color: #F5EDE8;"></div>
               <% end %>
 
               <%# Phase background band (24h) %>
-              <div style="position:absolute; top:0; left:0; right:0; bottom:0; background:<%= colour %>; opacity:0.15; pointer-events:none;"></div>
+              <div class="absolute inset-0 pointer-events-none" style="background: <%= colour %>; opacity: 0.15;"></div>
 
               <%# Events positioned on timeline %>
               <% events.each do |event| %>
@@ -110,12 +112,13 @@
                 <% top_px = (start_hour - 6) * hour_px + (event.start_time&.min || 0) * hour_px / 60 %>
                 <% height_px = [(end_hour - start_hour) * hour_px, hour_px].max %>
                 <%= link_to calendar_event_path(event),
-                      style: "position:absolute; left:2px; right:2px; top:#{top_px}px; height:#{height_px}px; background:#FFFFFF; border-left:3px solid #{colour}; border-radius:4px; padding:4px 6px; font-size:11px; color:#933a35; text-decoration:none; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,0.1);" do %>
-                  <span style="font-weight:600; display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+                      class: "absolute block overflow-hidden rounded text-xs text-brand-primary no-underline shadow-sm",
+                      style: "left: 2px; right: 2px; top: #{top_px}px; height: #{height_px}px; background: #FFFFFF; border-left: 3px solid #{colour}; padding: 1rem 0.375rem;" do %>
+                  <span class="font-bold block overflow-hidden text-ellipsis whitespace-nowrap">
                     <%= event.title %>
                   </span>
                   <% if event.start_time %>
-                    <span style="font-size:10px; color:#6B6B6B;">
+                    <span class="text-xs text-brand-secondary block">
                       <%= event.start_time.strftime("%H:%M") %>
                     </span>
                   <% end %>

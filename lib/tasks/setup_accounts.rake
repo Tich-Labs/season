@@ -7,13 +7,11 @@ namespace :setup do
       admin.password = SecureRandom.hex(16)
       admin.name = "Naijeria"
       admin.skip_confirmation!
-    else
-      admin.skip_reconfirmation!
-      admin.confirmed_at ||= Time.current
     end
     admin.admin = true
+    admin.confirmed_at ||= Time.current
     admin.save!(validate: false)
-    puts "✓ naijeria@gmail.com → admin=true, confirmed"
+    puts "✓ naijeria@gmail.com → admin=true"
 
     # ── 2. Test accounts ──────────────────────────────────────────────────────
     test_accounts = [

@@ -1,0 +1,24 @@
+<div class="bg-white min-h-screen flex flex-col items-center justify-between pt-[60px] pb-12 px-8 max-w-app mx-auto">
+
+  <div class="w-full flex justify-center">
+    <%= image_tag "screen1logo.png", alt: "Season", class: "w-[234px] h-auto" %>
+  </div>
+
+  <div class="w-full text-center">
+    <h1 class="text-brand-primary text-[36px] font-bold uppercase tracking-[3.24px] leading-tight mb-6">
+      Check your<br>inbox
+    </h1>
+    <p class="text-brand-secondary text-base leading-relaxed">
+      We sent a confirmation link to your email address.<br>
+      Click it to activate your Season account.
+    </p>
+  </div>
+
+  <div class="w-full text-center space-y-4">
+    <%= link_to "Resend confirmation email", new_user_confirmation_path,
+        class: "block text-brand-primary text-base font-normal no-underline underline" %>
+    <%= link_to "Back to login", new_session_path,
+        class: "block text-brand-secondary text-sm font-normal no-underline" %>
+  </div>
+
+</div>

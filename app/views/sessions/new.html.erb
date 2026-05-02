@@ -1,41 +1,27 @@
-<div style="background:#ffffff; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:60px 32px 48px; max-width:430px; margin:0 auto;">
-
-  <script nonce="<%= content_security_policy_nonce %>">
-    function togglePassword(inputId, iconId) {
-      const input = document.getElementById(inputId);
-      const icon = document.getElementById(iconId);
-      if (input.type === 'password') {
-        input.type = 'text';
-        icon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(147,58,53,0.5)" stroke-width="1.5"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
-      } else {
-        input.type = 'password';
-        icon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(147,58,53,0.5)" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
-      }
-    }
-  </script>
+<div class="bg-white min-h-screen flex flex-col items-center justify-between pt-[60px] pb-12 px-8 max-w-app mx-auto">
 
   <!-- Title -->
-  <div style="width:100%; text-align:center;">
-    <h1 style="color:#933a35; font-size:36px; font-weight:700; text-transform:uppercase; letter-spacing:3.24px; text-align:center;">
+  <div class="w-full text-center">
+    <h1 class="text-brand-primary text-[36px] font-bold uppercase tracking-[3.24px] text-center">
       LOG IN
     </h1>
   </div>
 
   <!-- Social Login -->
-  <div style="width:100%; margin-top:62px;">
-    <p style="color:#933a35; font-size:16px; font-weight:400; margin-bottom:21px; text-align:center;">
+  <div class="w-full mt-[62px]">
+    <p class="text-brand-primary text-base font-normal mb-[21px] text-center">
       <%= t('devise.sessions.new.fast_lane', default: 'Use the fast lane:') %>
     </p>
 
-    <div style="display:flex; justify-content:center; gap:19px;">
+    <div class="flex justify-center gap-[19px]">
 
       <%# Apple %>
       <%= button_to omniauth_authorize_path(:user, :apple),
             method: :post,
             data: { turbo: false },
             aria: { label: "Sign in with Apple" },
-            style: "width:59px; height:52px; background:#000000; border-radius:8px; display:flex; align-items:center; justify-content:center; border:none; padding:0;" do %>
-        <%= image_tag "apple-logo.png", alt: "Apple", style: "width:35px; height:35px; object-fit:contain;" %>
+            class: "w-[59px] h-[52px] bg-black rounded-lg flex items-center justify-center border-0 p-0 cursor-pointer" do %>
+        <%= image_tag "apple-logo.png", alt: "Apple", class: "w-[35px] h-[35px] object-contain" %>
       <% end %>
 
       <%# Facebook %>
@@ -43,8 +29,8 @@
             method: :post,
             data: { turbo: false },
             aria: { label: "Sign in with Facebook" },
-            style: "width:59px; height:52px; background:#448AFF; border-radius:8px; display:flex; align-items:center; justify-content:center; border:none; padding:0;" do %>
-        <%= image_tag "facebook.png", alt: "Facebook", style: "width:45px; height:45px; object-fit:contain;" %>
+            class: "w-[59px] h-[52px] bg-[#448AFF] rounded-lg flex items-center justify-center border-0 p-0 cursor-pointer" do %>
+        <%= image_tag "facebook.png", alt: "Facebook", class: "w-[45px] h-[45px] object-contain" %>
       <% end %>
 
       <%# Google %>
@@ -52,99 +38,102 @@
             method: :post,
             data: { turbo: false },
             aria: { label: "Sign in with Google" },
-            style: "width:59px; height:52px; background:#ffffff; border:1.5px solid #dddddd; border-radius:8px; display:flex; align-items:center; justify-content:center; padding:0;" do %>
-        <%= image_tag "google.png", alt: "Google", style: "width:34px; height:34px; object-fit:contain;" %>
+            class: "w-[59px] h-[52px] bg-white border border-[#dddddd] rounded-lg flex items-center justify-center p-0 cursor-pointer" do %>
+        <%= image_tag "google.png", alt: "Google", class: "w-[34px] h-[34px] object-contain" %>
       <% end %>
 
     </div>
   </div>
 
   <!-- Email divider -->
-  <div style="width:100%; margin-top:62px; text-align:center;">
-    <span style="color:#933a35; font-size:16px; font-weight:400;">
+  <div class="w-full mt-[62px] text-center">
+    <span class="text-brand-primary text-base font-normal">
       <%= t('devise.sessions.new.or_email', default: '... or login with your E-mail') %>
     </span>
   </div>
 
   <!-- Form -->
-  <div style="width:100%;">
-    <%= form_with url: session_path, method: :post, local: true do |f| %>
+  <div class="w-full">
+    <%= form_with url: session_path, method: :post do |f| %>
+
       <!-- Email -->
-      <div style="margin-top:29px;">
+      <div class="mt-[29px]">
         <label for="email" class="sr-only">Email</label>
         <%= f.email_field :email,
             id: "email",
             autofocus: true,
+            autocomplete: "username",
             placeholder: t('devise.sessions.new.email_placeholder', default: 'E-mail...'),
             aria: { invalid: @error_type == :wrong_email, describedby: @error_type == :wrong_email ? "auth-error" : nil },
-            style: "width:100%; background:#EDE1D5; border-radius:8px; padding:14px 21px; height:52px; border:#{@error_type == :wrong_email ? '2px solid #933a35' : 'none'}; font-size:22px; font-weight:500; color:#933a35; outline:none; box-sizing:border-box;" %>
+            class: "w-full bg-brand-field rounded-lg px-[21px] h-[52px] text-[22px] font-medium text-brand-primary outline-none #{@error_type == :wrong_email ? 'border-2 border-brand-primary' : 'border-0'}" %>
       </div>
 
-      <!-- Password — shows border + ! icon on wrong_password error -->
-      <div style="margin-top:15px; position:relative;">
+      <!-- Password -->
+      <div class="mt-[15px] relative" data-controller="password-visibility">
         <label for="password_field" class="sr-only">Password</label>
         <%= f.password_field :password,
-            id: 'password_field',
+            id: "password_field",
+            autocomplete: "current-password",
             placeholder: t('devise.sessions.new.password_placeholder', default: 'Password...'),
             aria: { invalid: @error_type == :wrong_password, describedby: @error_type == :wrong_password ? "auth-error" : nil },
-            style: "width:100%; background:#EDE1D5; border-radius:8px; padding:14px 50px 14px 21px; height:52px; border:#{@error_type == :wrong_password ? '2px solid #933a35' : 'none'}; font-size:22px; font-weight:500; color:#933a35; outline:none; box-sizing:border-box;" %>
-        <button type="button" id="toggle_password" onclick="togglePassword('password_field', 'toggle_password')" aria-label="Toggle password visibility" style="position:absolute; right:16px; top:50%; transform:translateY(-50%); cursor:pointer; display:inline-block; background:none; border:none; padding:0;">
-          <% if @error_type == :wrong_password %>
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#933a35" stroke-width="2"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>
-          <% else %>
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(147,58,53,0.5)" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
-          <% end %>
-      </button>
+            data: { "password-visibility-target": "input" },
+            class: "w-full bg-brand-field rounded-lg px-[21px] pr-[50px] h-[52px] text-[22px] font-medium text-brand-primary outline-none #{@error_type == :wrong_password ? 'border-2 border-brand-primary' : 'border-0'}" %>
+        <button type="button" data-action="click->password-visibility#toggle" aria-label="Toggle password visibility" class="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer bg-transparent border-0 p-0">
+          <svg data-password-visibility-target="eyeOpen" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(147,58,53,0.5)" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
+          <svg data-password-visibility-target="eyeClosed" class="hidden" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(147,58,53,0.5)" stroke-width="1.5"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" /><line x1="1" y1="1" x2="23" y2="23" /></svg>
+        </button>
       </div>
 
       <!-- Forgot password -->
-      <div style="margin-top:15px; text-align:right;">
+      <div class="mt-[15px] text-right">
         <%= link_to t('devise.sessions.new.forgot_password', default: 'I forgot my password...'),
             new_user_password_path,
-            style: "color:#933a35; font-size:16px; font-weight:400; text-decoration:none;" %>
+            class: "text-brand-primary text-base font-normal no-underline" %>
       </div>
 
-      <!-- Inline error message (matches Login Error.png) -->
+      <!-- Inline error -->
       <% if @error_type == :wrong_password || @error_type == :wrong_email %>
-        <div id="auth-error" role="alert" style="display:flex; align-items:flex-start; gap:10px; background:#FDF0EE; border-radius:8px; padding:12px 14px; margin-top:16px;">
-          <span style="color:#933a35; font-size:20px; font-weight:700; line-height:1; flex-shrink:0;">!</span>
+        <div id="auth-error" role="alert" class="flex items-start gap-[10px] bg-brand-error rounded-lg px-[14px] py-3 mt-4">
+          <span class="text-brand-primary text-xl font-bold leading-none shrink-0">!</span>
           <div>
             <% if @error_type == :wrong_password %>
-              <p style="color:#933a35; font-size:15px; font-weight:500;">Wrong E-mail or password.</p>
-              <p style="color:#933a35; font-size:15px; font-weight:400;">Please try again.</p>
+              <p class="text-brand-primary text-[15px] font-medium">Wrong E-mail or password.</p>
+              <p class="text-brand-primary text-[15px] font-normal">Please try again.</p>
             <% else %>
-              <p style="color:#933a35; font-size:15px; font-weight:500;">Hmm... we don't recognize this email.</p>
-              <p style="color:#933a35; font-size:15px; font-weight:400;">Check again or sign up.</p>
+              <p class="text-brand-primary text-[15px] font-medium">Hmm... we don't recognize this email.</p>
+              <p class="text-brand-primary text-[15px] font-normal">Check again or sign up.</p>
             <% end %>
           </div>
         </div>
       <% elsif @error_type == :unconfirmed %>
-        <div id="auth-error" role="alert" style="display:flex; align-items:flex-start; gap:10px; background:#FDF0EE; border-radius:8px; padding:12px 14px; margin-top:16px;">
-          <span style="color:#933a35; font-size:20px; font-weight:700; line-height:1; flex-shrink:0;">!</span>
+        <div id="auth-error" role="alert" class="flex items-start gap-[10px] bg-brand-error rounded-lg px-[14px] py-3 mt-4">
+          <span class="text-brand-primary text-xl font-bold leading-none shrink-0">!</span>
           <div>
-            <p style="color:#933a35; font-size:15px; font-weight:500;">Please confirm your email first.</p>
-            <p style="color:#933a35; font-size:15px; font-weight:400;">Check your inbox for the confirmation link.</p>
+            <p class="text-brand-primary text-[15px] font-medium">Please confirm your email first.</p>
+            <p class="text-brand-primary text-[15px] font-normal">
+              Check your inbox, or <%= link_to "resend the confirmation email", new_user_confirmation_path, class: "underline" %>.
+            </p>
           </div>
         </div>
       <% elsif alert.present? %>
-        <div style="background:#FDF0EE; border-radius:8px; padding:12px 14px; margin-top:16px;">
-          <p style="color:#933a35; font-size:15px; font-weight:400;"><%= alert %></p>
+        <div class="bg-brand-error rounded-lg px-[14px] py-3 mt-4">
+          <p class="text-brand-primary text-[15px] font-normal"><%= alert %></p>
         </div>
       <% end %>
 
       <!-- Submit -->
-      <div style="display:flex; justify-content:center; margin-top:32px;">
+      <div class="flex justify-center mt-8">
         <%= f.submit t('devise.sessions.new.submit', default: 'Log In'),
-            style: "width:322px; height:52px; background:#933a35; color:#ffffff; font-size:22px; font-weight:500; letter-spacing:0.66px; border-radius:8px; border:none; cursor:pointer;" %>
+            class: "w-[322px] h-[52px] bg-brand-primary text-white text-[22px] font-medium tracking-[0.66px] rounded-lg border-0 cursor-pointer" %>
       </div>
     <% end %>
   </div>
 
   <!-- Sign Up link -->
-  <div style="width:100%; text-align:center; margin-top:22px;">
-    <%= link_to t('devise.sessions.new.no_account', default: 'I am new... Sign in!'),
+  <div class="w-full text-center mt-[22px]">
+    <%= link_to t('devise.sessions.new.no_account', default: "I am new... Sign up!"),
         new_registration_path,
-        style: "color:#933a35; font-size:16px; font-weight:400; text-decoration:none;" %>
+        class: "text-brand-primary text-base font-normal no-underline" %>
   </div>
 
 </div>

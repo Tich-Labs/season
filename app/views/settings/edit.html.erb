@@ -1,79 +1,79 @@
 <%# Settings screen - matches Figma node 12048-37859 %>
 <%# Header auto-rendered by layout (controller_name == 'settings') %>
 
-<div style="background:#ffffff; min-height:100%;">
+<div class="bg-white min-h-screen">
 
   <%# Content - max-width 430px centered %>
-  <div style="max-width:430px; margin:0 auto; padding:0 16px 80px;">
+  <div class="max-w-app mx-auto px-4 pb-20">
 
     <%# ── Personal Settings ── %>
-    <div style="padding:20px 0 8px;">
-      <h2 style="color:#933a35; font-size:16px; font-weight:700;">Personal Settings</h2>
+    <div class="py-5 pb-2">
+      <h2 class="text-brand-primary text-base font-bold">Personal Settings</h2>
     </div>
-    <div style="border-bottom:1px solid #DDD0CB;"></div>
+    <div class="border-b border-[#DDD0CB]"></div>
 
     <%# My Profile %>
-    <a href="<%= profile_settings_path %>" style="display:flex; align-items:center; gap:16px; padding:16px 0;">
+    <a href="<%= profile_settings_path %>" class="flex items-center gap-4 py-4">
       <%= vuesax_icon "user", size: 24 %>
-      <span style="flex:1; color:#933a35; font-size:16px; font-weight:500;">My Profile</span>
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
+      <span class="flex-1 text-brand-primary text-base font-medium">My Profile</span>
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="text-brand-primary">
         <polyline points="9 18 15 12 9 6" />
       </svg>
     </a>
 
     <%# My Subscriptions %>
-    <a href="<%= subscriptions_settings_path %>" style="display:flex; align-items:center; gap:16px; padding:16px 0;">
+    <a href="<%= subscriptions_settings_path %>" class="flex items-center gap-4 py-4">
       <%= vuesax_icon "bag", size: 24 %>
-      <span style="flex:1; color:#933a35; font-size:16px; font-weight:500;">My Subscriptions</span>
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
+      <span class="flex-1 text-brand-primary text-base font-medium">My Subscriptions</span>
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="text-brand-primary">
         <polyline points="9 18 15 12 9 6" />
       </svg>
     </a>
     <%# My Calendar %>
-    <a href="<%= calendar_settings_path %>" style="display:flex; align-items:center; gap:16px; padding:16px 0;">
+    <a href="<%= calendar_settings_path %>" class="flex items-center gap-4 py-4">
       <%= vuesax_icon "calendar", size: 24 %>
-      <span style="flex:1; color:#933a35; font-size:16px; font-weight:500;">My Calendar</span>
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
+      <span class="flex-1 text-brand-primary text-base font-medium">My Calendar</span>
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="text-brand-primary">
         <polyline points="9 18 15 12 9 6" />
       </svg>
     </a>
 
     <%# ── App Settings ── %>
-    <div style="padding:24px 0 8px;">
-      <h2 style="color:#933a35; font-size:16px; font-weight:700;">App Settings</h2>
+    <div class="py-6 pb-2">
+      <h2 class="text-brand-primary text-base font-bold">App Settings</h2>
     </div>
-    <div style="border-bottom:1px solid #DDD0CB;"></div>
+    <div class="border-b border-[#DDD0CB]"></div>
 
     <%# Notifications & Reminders %>
-    <a href="<%= notifications_settings_path %>" style="display:flex; align-items:center; gap:16px; padding:16px 0;">
+    <a href="<%= notifications_settings_path %>" class="flex items-center gap-4 py-4">
       <%= vuesax_icon "notification", size: 24 %>
-      <span style="flex:1; color:#933a35; font-size:16px; font-weight:500;">Notifications & Reminders</span>
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
+      <span class="flex-1 text-brand-primary text-base font-medium">Notifications & Reminders</span>
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="text-brand-primary">
         <polyline points="9 18 15 12 9 6" />
       </svg>
     </a>
 
     <%# Data & Privacy (GDPR Consent) %>
-    <a href="/settings/consent" style="display:flex; align-items:center; gap:16px; padding:16px 0;">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#933a35" stroke-width="1.5" viewBox="0 0 24 24">
+    <a href="/settings/consent" class="flex items-center gap-4 py-4">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" class="text-brand-primary">
         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
       </svg>
-      <span style="flex:1; color:#933a35; font-size:16px; font-weight:500;">Data & Privacy</span>
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
+      <span class="flex-1 text-brand-primary text-base font-medium">Data & Privacy</span>
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="text-brand-primary">
         <polyline points="9 18 15 12 9 6" />
       </svg>
     </a>
 
     <%# Language %>
-    <a href="#" style="display:flex; align-items:center; gap:16px; padding:16px 0;">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#933a35" stroke-width="1.5" viewBox="0 0 24 24">
+    <a href="#" class="flex items-center gap-4 py-4">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" class="text-brand-primary">
         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
       </svg>
-      <div style="flex:1;">
-        <span style="color:#933a35; font-size:16px; font-weight:500;">Language</span>
-        <span style="display:block; color:#D18D83; font-size:14px; margin-top:4px;">English</span>
+      <div class="flex-1">
+        <span class="text-brand-primary text-base font-medium">Language</span>
+        <span class="block text-brand-muted text-sm mt-1">English</span>
       </div>
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="text-brand-primary">
         <polyline points="9 18 15 12 9 6" />
       </svg>
     </a>
@@ -111,7 +111,8 @@
 
     <%# Support %>
     <button type="button"
-            onclick="openFeedbackModal('support')"
+            data-type="support"
+            data-action="click->feedback-modal#openWithType"
             style="display:flex; align-items:center; gap:16px; padding:16px; background:#899884; border-radius:8px; margin-top:8px; width:100%; border:none; cursor:pointer; text-align:left;">
       <%= vuesax_icon "message-question", size: 32, colour: "white" %>
       <div style="flex:1;">

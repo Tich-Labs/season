@@ -178,9 +178,11 @@ en:
     show:
       already_used: "This invite has already been used."
       invalid_link: "Invalid invite link."
+      token_expired: "This invite link has expired. Please contact support for a new invite."
     update:
       welcome: "Welcome to Season!"
       invalid_link: "Invalid invite link."
+      token_expired: "This invite link has expired. Please contact support for a new invite."
   passwords:
     update:
       password_updated: "Password updated"

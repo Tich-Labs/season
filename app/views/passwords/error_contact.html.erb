@@ -1,23 +1,23 @@
-<div style="background:#ffffff; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:60px 32px 48px; max-width:430px; margin:0 auto;">
+<div class="bg-white min-h-screen flex flex-col justify-between p-16 pt-28 pb-12 max-w-app mx-auto">
 
   <%# Empty top for spacing %>
   <div></div>
 
   <%# Content centered %>
-  <div style="width:100%; display:flex; flex-direction:column; align-items:center;">
-    <div style="width:220px; height:220px; border-radius:110px; background:#ede1d5; overflow:hidden; margin-bottom:40px;">
+  <div class="w-full flex flex-col items-center">
+    <div class="w-64 h-64 rounded-full bg-brand-field overflow-hidden mb-10">
       <%= image_tag("error_screens_login/errorscreen-contact-support.png", alt: "Contact support", class: "w-full h-full object-contain") %>
     </div>
 
-    <p style="color:#933a35; font-size:18px; font-weight:400; letter-spacing:1.62px; text-align:center; max-width:290px; margin-bottom:48px;">
+    <p class="text-brand-primary text-lg font-normal letter-spacing-wide text-center max-w-xs mb-12">
       Something seems off here—please contact our support team!
     </p>
 
-    <div style="width:100%; margin-bottom:16px;">
-      <a href="mailto:info@season.vision" style="display:block; width:322px; height:52px; background:#933a35; color:#ffffff; text-align:center; line-height:52px; font-size:22px; font-weight:500; letter-spacing:0.66px; text-decoration:none; border-radius:8px; margin:0 auto;">contact support</a>
+    <div class="w-full mb-4">
+      <a href="mailto:info@season.vision" class="block w-64 h-12 bg-brand-primary text-white text-center leading-12 text-2xl font-medium letter-spacing-wider no-underline rounded-lg mx-auto">contact support</a>
     </div>
 
-    <a href="<%= new_session_path %>" style="color:#933a35; font-size:16px; font-weight:400; text-decoration:none;">Go back to LogIn</a>
+    <a href="<%= new_session_path %>" class="text-brand-primary text-base font-normal no-underline">Go back to LogIn</a>
   </div>
 
   <%# Empty bottom for spacing %>

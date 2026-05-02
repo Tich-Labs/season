@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_28_121630) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_02_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -198,6 +198,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_28_121630) do
     t.boolean "has_regular_cycle"
     t.datetime "invite_accepted_at"
     t.string "invite_token"
+    t.datetime "invite_token_expires_at"
     t.string "language", default: "en", null: false
     t.date "last_period_start"
     t.string "life_stage", default: "menstrual"

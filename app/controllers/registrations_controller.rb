@@ -1,36 +1,36 @@
 class RegistrationsController < ApplicationController
   layout "launch"
 
-  allow_unauthenticated_access only: [:new, :create]
+  allow_unauthenticated_access only: [:new, :create, :check_email]
   skip_onboarding_requirement
+  before_action :redirect_if_authenticated, only: [:new, :create]
 
   def new
-    redirect_to user_root_path and return if authenticated?
     @user = User.new
     @invite_token = params[:invite_token]
     @error_type = params[:error]
   end
 
   def create
-    attributes = user_params.to_h.symbolize_keys
-    email = attributes[:email].to_s.downcase
-    name = attributes[:name].presence || email.split("@").first
+    email = user_params[:email].to_s.downcase
+    name = user_params[:name].presence || email.split("@").first
 
     if User.exists?(email: email)
       @error_type = :already_registered
-      @user = User.new(attributes)
+      @user = User.new(user_params)
       render :new, status: :unprocessable_content
     else
-      @user = User.new(attributes.merge(email: email, name: name))
-      @user.skip_confirmation!
+      @user = User.new(user_params.merge(email: email, name: name))
 
       if @user.save
-        login @user
-        redirect_to after_sign_in_path
+        redirect_to check_email_registration_path
       else
         render :new, status: :unprocessable_content
       end
     end
+  end
+
+  def check_email
   end
 
   private

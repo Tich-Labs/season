@@ -1,20 +1,18 @@
-<div style="background:#ffffff; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:60px 32px 48px; max-width:430px; margin:0 auto;">
+<div class="bg-white min-h-screen flex flex-col items-center justify-between pt-[60px] pb-12 px-8 max-w-app mx-auto">
 
-  <%# Logo %>
-  <div style="width:100%; display:flex; justify-content:center;">
-    <img src="<%= asset_path('screen1logo.png') %>" alt="Season" style="width:234px; height:auto;">
+  <div class="w-full flex justify-center">
+    <%= image_tag "screen1logo.png", alt: "Season", class: "w-[234px] h-auto" %>
   </div>
 
-  <%# Message %>
   <div class="w-full">
-    <h1 class="text-orange-800 text-4xl font-bold font-['Montserrat'] tracking-[3.24px] text-center leading-none">
+    <h1 class="text-brand-primary text-[36px] font-bold uppercase tracking-[3.24px] text-center leading-tight">
       Check your<br>E-Mail inbox
     </h1>
   </div>
 
-  <%# Button %>
-  <div style="width:100%;">
-    <a href="<%= new_session_path %>" style="display:block; width:322px; height:52px; background:#933a35; color:#ffffff; text-align:center; line-height:52px; font-size:22px; font-weight:500; letter-spacing:0.66px; text-decoration:none; border-radius:8px; margin:0 auto;">Back to LogIn</a>
+  <div class="w-full">
+    <%= link_to "Back to LogIn", new_session_path,
+        class: "block w-[322px] h-[52px] bg-brand-primary text-white text-center leading-[52px] text-[22px] font-medium tracking-[0.66px] no-underline rounded-lg mx-auto" %>
   </div>
 
 </div>

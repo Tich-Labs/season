@@ -9,7 +9,12 @@
   <%# Card %>
   <div class="bg-white rounded-2xl shadow-sm p-8">
 
-    <% if @error %>
+    <% if @error == :rate_limited %>
+      <div class="bg-[#FDF0EE] rounded-xl px-4 py-3 mb-6 text-sm text-[#933a35] flex items-center gap-2">
+        <span class="font-bold text-base">!</span>
+        Too many login attempts. Please try again in 15 minutes.
+      </div>
+    <% elsif @error %>
       <div class="bg-[#FDF0EE] rounded-xl px-4 py-3 mb-6 text-sm text-[#933a35] flex items-center gap-2">
         <span class="font-bold text-base">!</span>
         Invalid email or password, or account is not an admin.

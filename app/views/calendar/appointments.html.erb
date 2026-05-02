@@ -50,19 +50,19 @@
   end
 } %>
 
-<div style="background:#FAF7F4; min-height:100vh; padding:16px 16px 100px;">
-  <div style="max-width:430px; width:100%; margin:0 auto;">
+<div class="bg-brand-background min-h-screen pb-24 px-4">
+  <div class="max-w-app mx-auto">
 
     <% if @events_by_date.empty? %>
-      <div style="display:flex; flex-direction:column; align-items:center; padding:60px 0; gap:12px;">
+      <div class="flex flex-col items-center gap-3 py-60">
         <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#EDE1D5" stroke-width="1.5" xmlns="http://www.w3.org/2000/svg">
           <rect x="3" y="4" width="18" height="18" rx="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" />
         </svg>
-        <p style="color:#C4B8B8; font-size:15px; font-weight:500; font-family:'Montserrat',sans-serif; margin:0;">
+        <p class="text-brand-muted text-base font-medium m-0">
           No appointments this month
         </p>
         <%= link_to new_calendar_event_path,
-              style: "margin-top:8px; color:#933a35; font-size:13px; font-weight:600; font-family:'Montserrat',sans-serif; text-decoration:none;" do %>
+              class: "mt-2 text-brand-primary text-sm font-semibold no-underline" do %>
           + Add one
         <% end %>
       </div>
@@ -71,40 +71,40 @@
         <% cycle_data   = @cycle_by_date[date] %>
         <% phase_colour = cycle_data&.dig(:colour) || "#933a35" %>
 
-        <div style="margin-bottom:24px;">
+        <div class="mb-6">
 
           <%# ── Date heading ── %>
-          <p style="color:<%= phase_colour %>; font-size:20px; font-weight:600; font-family:'Montserrat',sans-serif; margin:0 0 12px; line-height:1.2;">
+          <h2 class="text-xl font-semibold m-0 mb-3 leading-relaxed" style="color: <%= phase_colour %>;">
             <%= date.strftime("%A, %-d. %B") %>
-          </p>
+          </h2>
 
           <%# ── Event rows with left bar ── %>
-          <div style="display:flex; gap:0; align-items:stretch;">
+          <div class="flex gap-0 items-stretch">
 
             <%# Vertical phase bar %>
-            <div style="width:3px; border-radius:2px; background:<%= phase_colour %>; flex-shrink:0; margin-right:18px;"></div>
+            <div class="w-0.5 rounded flex-shrink-0 mr-4.5" style="background: <%= phase_colour %>;"></div>
 
             <%# Events list %>
-            <div style="flex:1; min-width:0;">
+            <div class="flex-1 min-w-0">
               <% events.each_with_index do |event, idx| %>
-                <div style="display:flex; align-items:center; gap:12px; padding:9px 0;<%= idx < events.size - 1 ? ' border-bottom:1px solid rgba(0,0,0,0.08);' : '' %>">
+                <div class="flex items-center gap-3 py-2.25<%= idx < events.size - 1 ? ' border-b border-black/10' : '' %>">
 
                   <%# Category icon %>
-                  <div style="width:20px; height:20px; flex-shrink:0; color:<%= phase_colour %>;">
+                  <div class="w-5 h-5 flex-shrink-0" style="color: <%= phase_colour %>;">
                     <%= sanitize category_icon.(event.category) %>
                   </div>
 
                   <%# Title %>
-                  <span style="flex:1; min-width:0; color:<%= phase_colour %>; font-size:15px; font-weight:500; font-family:'Montserrat',sans-serif; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+                  <span class="flex-1 min-w-0 text-base font-medium overflow-hidden text-ellipsis whitespace-nowrap" style="color: <%= phase_colour %>;">
                     <%= event.title %>
                   </span>
 
                   <%# Time %>
-                  <span style="flex-shrink:0; color:<%= phase_colour %>; font-size:13px; font-weight:500; font-family:'Montserrat',sans-serif; text-align:right; min-width:80px;">
+                  <span class="flex-shrink-0 text-sm font-medium text-right min-w-20" style="color: <%= phase_colour %>;">
                     <% if event.start_time %>
                       <%= event.start_time.strftime("%-H:%M") %><% if event.end_time %>&nbsp;-&nbsp;<%= event.end_time.strftime("%-H:%M") %><% end %>
                     <% else %>
-                      <span style="color:#6B6B6B;">All day</span>
+                      <span class="text-brand-secondary">All day</span>
                     <% end %>
                   </span>
 

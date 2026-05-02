@@ -1,20 +1,22 @@
 <% content_for(:page_title) { @date.strftime("%B") } %>
 <% content_for(:header_left) do %>
   <%= link_to user_root_path(date: @date.to_s),
-        style: "color:#933a35; font-size:15px; font-weight:500; text-decoration:none; padding:8px 4px; font-family:'Montserrat',sans-serif; letter-spacing:0.04em; white-space:nowrap;" do %>
+        class: "text-brand-primary font-montserrat text-base font-medium no-underline px-1 py-2 tracking-wider whitespace-nowrap" do %>
     &lt; back
   <% end %>
 <% end %>
 
 <% content_for(:header_right) do %>
-  <div style="display:flex; align-items:center; gap:2px;">
+  <div class="flex items-center gap-0.5">
     <%= link_to daily_view_path(date: (@date - 1.day).to_s),
-          style: "width:36px; height:36px; display:flex; align-items:center; justify-content:center; color:#933a35;" do %>
-      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6" /></svg>
+          aria: { label: "Previous day" },
+          class: "w-9 h-9 flex items-center justify-center text-brand-primary" do %>
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><polyline points="15 18 9 12 15 6" /></svg>
     <% end %>
     <%= link_to daily_view_path(date: (@date + 1.day).to_s),
-          style: "width:36px; height:36px; display:flex; align-items:center; justify-content:center; color:#933a35;" do %>
-      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6" /></svg>
+          aria: { label: "Next day" },
+          class: "w-9 h-9 flex items-center justify-center text-brand-primary" do %>
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 18 15 12 9 6" /></svg>
     <% end %>
   </div>
 <% end %>
@@ -35,39 +37,39 @@
   end
 %>
 
-<div style="background:#FFFFFF; min-height:100vh; padding-bottom:100px; font-family:'Montserrat',sans-serif;">
-  <div style="max-width:430px; margin:0 auto;">
+<div class="bg-white min-h-screen pb-24">
+  <div class="max-w-app mx-auto">
 
     <%# ── Greeting banner (Figma: Kalender April — phase-coloured header) ── %>
-    <div style="background:<%= phase_col %>; padding:20px 16px 18px;">
-      <p style="color:#FFFFFF; font-size:28px; font-weight:500; margin:0 0 4px; line-height:1.15;">
+    <div class="py-5 px-4" style="background: <%= phase_col %>;">
+      <p class="text-white text-3xl font-medium m-0 mb-1 leading-tight">
         Hello <%= name %>
       </p>
       <% if @phase %>
-        <p style="color:#FFFFFF; font-size:14px; font-weight:400; margin:0; opacity:0.9; line-height:1.4;">
+        <p class="text-white text-sm font-normal m-0 opacity-90 leading-relaxed">
           You are in your <%= @season || @phase.capitalize %><br>And this is your day:
         </p>
       <% end %>
     </div>
 
     <%# ── Week strip ── %>
-    <div style="padding:10px 8px 0; background:#FFFFFF;">
-      <div style="display:grid; grid-template-columns:repeat(7,1fr);">
+    <div class="px-2 pt-2.5 bg-white">
+      <div class="grid grid-cols-7">
         <% %w[M T W T F S S].each_with_index do |letter, i| %>
-          <div style="text-align:center; font-size:12px; font-weight:500; color:<%= i >= 5 ? '#D18D84' : '#933a35' %>; padding:2px 0;">
+          <div class="text-center text-xs font-medium py-0.5" style="color: <%= i >= 5 ? '#D18D84' : '#933a35' %>;">
             <%= letter %>
           </div>
         <% end %>
         <% @week_dates.each_with_index do |day, i| %>
           <% is_selected = day == @date; is_weekend = i >= 5; num_col = is_weekend ? "#D18D84" : "#933a35" %>
-          <div style="text-align:center; padding:4px 0;">
+          <div class="text-center py-1">
             <% if is_selected %>
-              <span style="display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:50%; background:<%= phase_col %>; color:#FFFFFF; font-size:15px; font-weight:700;">
+              <span class="inline-flex items-center justify-center w-11 h-11 rounded-full text-white text-base font-bold" style="background: <%= phase_col %>;">
                 <%= day.day %>
               </span>
             <% else %>
               <%= link_to day.day, daily_view_path(date: day.to_s),
-                    style: "display:inline-block; color:#{num_col}; font-size:15px; font-weight:500; text-decoration:none; width:28px; height:28px; line-height:28px; text-align:center;" %>
+                    class: "inline-block font-medium text-base no-underline w-11 h-11 leading-11 text-center", style: "color: #{num_col};" %>
             <% end %>
           </div>
         <% end %>
@@ -76,24 +78,24 @@
 
     <%# ── All-day events ── %>
     <% if @all_day_events.any? %>
-      <div style="margin-top:8px;">
+      <div class="mt-2">
         <% @all_day_events.each do |evt| %>
-          <div style="background:#EDE1D5; padding:6px 12px; display:flex; align-items:center; gap:12px; min-height:26px;">
-            <span style="font-size:11px; font-weight:500; color:<%= phase_col %>; min-width:44px;">All day</span>
-            <span style="font-size:15px; font-weight:700; color:<%= phase_col %>;"><%= evt.title %></span>
+          <div class="bg-brand-field px-3 py-1.5 flex items-center gap-3 min-h-6">
+            <span class="text-xs font-medium min-w-11" style="color: <%= phase_col %>;">All day</span>
+            <span class="text-base font-bold" style="color: <%= phase_col %>;"><%= evt.title %></span>
           </div>
         <% end %>
       </div>
     <% end %>
 
     <%# ── Timeline ── %>
-    <div style="margin-top:10px; padding-bottom:16px;">
+    <div class="mt-2.5 pb-4">
       <div style="position:relative; height:<%= (timeline_end_h - timeline_start_h + 1) * hour_px %>px;">
 
         <%# Hour grid lines and time labels %>
         <% (timeline_start_h..timeline_end_h).each do |hour| %>
-          <div style="position:absolute; left:0; right:0; top:<%= (hour - timeline_start_h) * hour_px %>px; display:flex; align-items:center;">
-            <span style="width:44px; text-align:right; padding-right:8px; font-size:11px; color:#AFAFAF; flex-shrink:0; line-height:1; font-family:'Montserrat',sans-serif;">
+          <div style="position:absolute; left:0; right:0; top:<%= (hour - timeline_start_h) * hour_px %>px;" class="flex items-center">
+            <span style="width:44px; text-align:right; padding-right:8px; font-size:11px; color:#AFAFAF; flex-shrink:0; line-height:1;">
               <%= sprintf("%02d:00", hour) %>
             </span>
             <div style="flex:1; height:1px; background:#EDE1D5;"></div>
@@ -118,13 +120,13 @@
           <% top_px    = ((s_h - timeline_start_h) * hour_px + s_m.to_f * hour_px / 60.0).round %>
           <% height_px = [(dur * hour_px / 60.0).round, 26].max %>
           <%= link_to edit_calendar_event_path(evt),
-                style: "position:absolute; left:48px; right:8px; top:#{top_px}px; height:#{height_px}px; background:#{phase_col}; border-radius:6px; padding:5px 8px; overflow:hidden; box-sizing:border-box; z-index:1; text-decoration:none; display:block;" do %>
-            <div style="color:#FFFFFF; font-size:11px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.3;"><%= evt.title %></div>
+                class: "absolute no-underline block", style: "left:48px; right:8px; top:#{top_px}px; height:#{height_px}px; background:#{phase_col}; border-radius:6px; padding:5px 8px; overflow:hidden; box-sizing:border-box; z-index:1;" do %>
+            <div class="text-white text-xs font-bold whitespace-nowrap overflow-hidden text-ellipsis leading-relaxed"><%= evt.title %></div>
             <% if height_px > 30 && et %>
-              <div style="color:#FFFFFF; font-size:10px; opacity:0.8; margin-top:1px;"><%= st.strftime("%H:%M") %>&ndash;<%= et.strftime("%H:%M") %></div>
+              <div class="text-white text-xs opacity-80 mt-0.5"><%= st.strftime("%H:%M") %>&ndash;<%= et.strftime("%H:%M") %></div>
             <% end %>
             <% if height_px > 46 && evt.notes.present? %>
-              <div style="color:#FFFFFF; font-size:10px; opacity:0.85; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Note: <%= evt.notes %></div>
+              <div class="text-white text-xs opacity-85 mt-0.5 whitespace-nowrap overflow-hidden text-ellipsis">Note: <%= evt.notes %></div>
             <% end %>
           <% end %>
         <% end %>
@@ -134,58 +136,58 @@
 
     <%# ── Phase tips (Figma: Verwenden) ── %>
     <% if @phase %>
-      <div style="border-top:1px solid #EDE1D5; padding:16px 16px 8px; background:#FFFFFF;">
-        <p style="color:<%= phase_col %>; font-size:13px; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; margin:0 0 12px;">
+      <div class="border-t border-brand-field px-4 py-4 pb-2 bg-white">
+        <p class="text-sm font-semibold uppercase tracking-wider m-0 mb-3" style="color: <%= phase_col %>;">
           Here are your tips for today:
         </p>
 
-        <div style="display:flex; flex-direction:column; gap:8px;">
+        <div class="flex flex-col gap-2">
 
           <%# Super Power %>
           <% if @content&.superpower_text.present? %>
-            <div style="background:<%= phase_col %>; border-radius:10px; padding:12px 14px;">
-              <p style="color:#FFFFFF; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; margin:0 0 3px; opacity:0.8;">Super Power</p>
-              <p style="color:#FFFFFF; font-size:15px; font-weight:500; margin:0; line-height:1.3;"><%= @content.superpower_text %></p>
+            <div class="rounded-lg px-3.5 py-3" style="background: <%= phase_col %>;">
+              <p class="text-white text-xs font-semibold uppercase tracking-widest m-0 mb-0.5 opacity-80">Super Power</p>
+              <p class="text-white text-base font-medium m-0 leading-snug"><%= @content.superpower_text %></p>
             </div>
           <% end %>
 
           <%# Watch out for %>
           <% if @content&.take_care_text.present? %>
-            <div style="background:<%= phase_col %>; border-radius:10px; padding:12px 14px;">
-              <p style="color:#FFFFFF; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; margin:0 0 3px; opacity:0.8;">Watch out for</p>
-              <p style="color:#FFFFFF; font-size:15px; font-weight:500; margin:0; line-height:1.3;"><%= @content.take_care_text %></p>
+            <div class="rounded-lg px-3.5 py-3" style="background: <%= phase_col %>;">
+              <p class="text-white text-xs font-semibold uppercase tracking-widest m-0 mb-0.5 opacity-80">Watch out for</p>
+              <p class="text-white text-base font-medium m-0 leading-snug"><%= @content.take_care_text %></p>
             </div>
           <% end %>
 
           <%# Sport %>
           <% if @content&.sport_text.present? %>
-            <div style="background:<%= phase_col %>; border-radius:10px; padding:12px 14px;">
-              <p style="color:#FFFFFF; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; margin:0 0 3px; opacity:0.8;">Sport</p>
-              <p style="color:#FFFFFF; font-size:15px; font-weight:500; margin:0; line-height:1.3;"><%= @content.sport_text %></p>
+            <div class="rounded-lg px-3.5 py-3" style="background: <%= phase_col %>;">
+              <p class="text-white text-xs font-semibold uppercase tracking-widest m-0 mb-0.5 opacity-80">Sport</p>
+              <p class="text-white text-base font-medium m-0 leading-snug"><%= @content.sport_text %></p>
             </div>
           <% end %>
 
           <%# Nutrition %>
           <% if @content&.nutrition_text.present? %>
-            <div style="background:<%= phase_col %>; border-radius:10px; padding:12px 14px;">
-              <p style="color:#FFFFFF; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; margin:0 0 3px; opacity:0.8;">Nutrition</p>
-              <p style="color:#FFFFFF; font-size:15px; font-weight:500; margin:0; line-height:1.3;"><%= @content.nutrition_text %></p>
+            <div class="rounded-lg px-3.5 py-3" style="background: <%= phase_col %>;">
+              <p class="text-white text-xs font-semibold uppercase tracking-widest m-0 mb-0.5 opacity-80">Nutrition</p>
+              <p class="text-white text-base font-medium m-0 leading-snug"><%= @content.nutrition_text %></p>
             </div>
           <% end %>
 
           <%# Fertility %>
           <% if fertility_status %>
-            <div style="background:<%= phase_col %>; border-radius:10px; padding:12px 14px;">
-              <p style="color:#FFFFFF; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; margin:0 0 3px; opacity:0.8;">Fertility</p>
-              <p style="color:#FFFFFF; font-size:15px; font-weight:500; margin:0;"><%= fertility_status %></p>
+            <div class="rounded-lg px-3.5 py-3" style="background: <%= phase_col %>;">
+              <p class="text-white text-xs font-semibold uppercase tracking-widest m-0 mb-0.5 opacity-80">Fertility</p>
+              <p class="text-white text-base font-medium m-0"><%= fertility_status %></p>
             </div>
           <% end %>
 
           <%# Mood %>
           <% if @content&.mood_text.present? %>
-            <div style="background:<%= phase_col %>; border-radius:10px; padding:12px 14px;">
-              <p style="color:#FFFFFF; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; margin:0 0 3px; opacity:0.8;">Mood</p>
-              <p style="color:#FFFFFF; font-size:15px; font-weight:500; margin:0; line-height:1.3;"><%= @content.mood_text %></p>
+            <div class="rounded-lg px-3.5 py-3" style="background: <%= phase_col %>;">
+              <p class="text-white text-xs font-semibold uppercase tracking-widest m-0 mb-0.5 opacity-80">Mood</p>
+              <p class="text-white text-base font-medium m-0 leading-snug"><%= @content.mood_text %></p>
             </div>
           <% end %>
 

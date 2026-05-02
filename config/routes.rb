@@ -64,7 +64,9 @@ Rails.application.routes.draw do
   get "/welcome", to: "home#welcome", as: :welcome
   post "/launch-signup", to: "launch_signups#create"
 
-  resource :registration, only: [:new, :create]
+  resource :registration, only: [:new, :create] do
+    get :check_email, on: :collection
+  end
   resource :session, only: [:new, :create, :destroy]
 
   # Redirect Devise's default /users/sign_in to our custom Season login page.
@@ -74,7 +76,8 @@ Rails.application.routes.draw do
   # Devise for password recovery + OmniAuth only — sessions handled by our own SessionsController
   devise_for :users,
     controllers: {
-      passwords: "passwords"
+      passwords: "passwords",
+      confirmations: "confirmations"
     },
     skip: [:sessions],
     omniauth_providers: [:google_oauth2, :facebook, :apple]
@@ -139,6 +142,7 @@ Rails.application.routes.draw do
   post "settings/consent", to: "settings#save_consents", as: nil
 
   resource :account, only: [:show] do
+    get :export, on: :collection
     delete :destroy, on: :collection
   end
 

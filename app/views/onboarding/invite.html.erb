@@ -1,21 +1,12 @@
-<div style="background:#ffffff;
-  min-height:100vh; display:flex;
-  flex-direction:column;
-  align-items:center;
-  padding:60px 24px 48px;
-  max-width:430px; margin:0 auto;">
+<div class="bg-white min-h-screen flex flex-col items-center pt-16 pb-12 px-6 max-w-app mx-auto">
 
-  <%= image_tag "season-logo.svg", style: "width:120px; height:auto; margin-bottom:48px;", alt: "Season" %>
+  <%= image_tag "season-logo.svg", class: "w-32 h-auto mb-12", alt: "Season" %>
 
-  <h1 style="font-size:24px;
-    font-weight:700; color:#933a35;
-    text-align:center; margin-bottom:8px;">
+  <h1 class="text-xl font-bold text-brand-primary text-center mb-2">
     <%= "Welcome back, #{@user.name}!" %>
   </h1>
 
-  <p style="font-size:14px;
-    color:#933a35; text-align:center;
-    margin-bottom:40px;">
+  <p class="text-sm text-brand-primary text-center mb-10">
     Your Season V2 account is ready.
   </p>
 
@@ -27,29 +18,14 @@
       value="<%= @user.email %>"
       autocomplete="email"
       readonly
-      style="width:100%;
-      background:#F5EDE8;
-      border-radius:12px; padding:16px;
-      border:none; font-size:16px;
-      color:#933a35; opacity:0.7;
-      margin-bottom:12px;
-      box-sizing:border-box;">
+      class="w-full bg-[#F5EDE8] rounded-2xl p-4 border-none text-base text-brand-primary opacity-70 mb-3">
 
     <!-- Password field -->
     <%= f.password_field :password,
         placeholder: 'Set your password...',
-        style: "width:100%;
-        background:#F5EDE8;
-        border-radius:12px; padding:16px;
-        border:none; font-size:16px;
-        margin-bottom:32px;
-        box-sizing:border-box;" %>
+        class: "w-full bg-[#F5EDE8] rounded-2xl p-4 border-none text-base mb-8" %>
 
     <%= f.submit 'Get started',
-        style: "width:100%;
-        background:#933a35; color:white;
-        border:none; border-radius:12px;
-        padding:18px; font-size:16px;
-        font-weight:600; cursor:pointer;" %>
+        class: "w-full bg-brand-primary text-white border-none rounded-2xl p-4 text-base font-semibold cursor-pointer" %>
   <% end %>
 </div>

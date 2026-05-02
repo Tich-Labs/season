@@ -25,4 +25,10 @@ export default class extends Controller {
     }
     this.element.addEventListener("close-menu", () => this.close())
   }
+
+  openFeedback(event) {
+    const type = event.currentTarget.dataset.type
+    this.element.dispatchEvent(new CustomEvent("close-menu", { bubbles: true }))
+    setTimeout(() => window.openFeedbackModal?.(type), 350)
+  }
 }

@@ -8,8 +8,8 @@
   <% end %>
 <% end %>
 
-<div style="background:#ffffff; min-height:100%;">
-  <div style="max-width:430px; margin:0 auto; padding:0 16px 80px;">
+<div class="bg-white min-h-screen">
+  <div class="max-w-app mx-auto px-4 pb-20">
 
     <script nonce="<%= content_security_policy_nonce %>">
       function toggleSetting(key) {
@@ -25,94 +25,81 @@
     </script>
 
     <%# ── Section header ── %>
-    <div style="display:flex; align-items:center; gap:12px; padding:20px 0 8px;">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="25" fill="none" stroke="#933a35" stroke-width="1.5" viewBox="0 0 24 24">
+    <div class="flex items-center gap-3 py-5 pb-2">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="25" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" class="text-brand-primary">
         <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
         <polyline points="22,6 12,13 2,6" />
       </svg>
-      <h2 style="color:#933a35; font-size:16px; font-weight:700;">Notifications &amp; reminder</h2>
+      <h2 class="text-brand-primary text-base font-bold">Notifications &amp; reminder</h2>
     </div>
-    <div style="border-bottom:1px solid #DDD0CB;"></div>
+    <div class="border-b border-[#DDD0CB]"></div>
 
     <%# Good morning set %>
-    <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 0 4px;">
-      <span style="color:#933a35; font-size:16px; font-weight:500;">Good morning set</span>
-      <label style="position:relative; width:41px; height:20px; cursor:pointer; flex-shrink:0;">
-        <input type="checkbox" id="cycle_reminder" <%= @notifications.cycle_reminder ? 'checked' : '' %>
-               aria-label="Good morning set"
-               onchange="toggleSetting('cycle_reminder')"
-               style="opacity:0; width:0; height:0;">
-        <span style="position:absolute; inset:0; background:<%= @notifications.cycle_reminder ? '#933a35' : '#ccc' %>; border-radius:20px; transition:0.2s;"></span>
-        <span style="position:absolute; top:1px; left:<%= @notifications.cycle_reminder ? '22px' : '2px' %>; width:18px; height:18px; background:white; border-radius:50%; transition:0.2s;"></span>
-      </label>
+    <div class="flex items-center justify-between py-3.5 pb-1">
+      <span class="text-brand-primary text-base font-medium">Good morning set</span>
+      <%= render "shared/toggle_switch",
+            field_id: "cycle_reminder",
+            checked: @notifications.cycle_reminder,
+            aria_label: "Good morning set",
+            onchange: "toggleSetting('cycle_reminder')" %>
     </div>
-    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
-      <p style="color:#d18d83; font-size:14px; font-weight:500; margin:0;">Summary → 9:00 a.m.</p>
-      <%= link_to "edit", notification_morning_settings_path,
-            style: "color:#d18d83; font-size:14px; font-weight:500; text-decoration:none;" %>
+    <div class="flex items-center justify-between mb-3">
+      <p class="text-brand-muted text-sm font-medium m-0">Summary → 9:00 a.m.</p>
+      <%= link_to "edit", notification_morning_settings_path, class: "text-brand-muted text-sm font-medium no-underline" %>
     </div>
-    <div style="border-bottom:1px solid #DDD0CB;"></div>
+    <div class="border-b border-[#DDD0CB]"></div>
 
     <%# Period reminder %>
-    <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 0 4px;">
-      <span style="color:#933a35; font-size:16px; font-weight:500;">Period reminder</span>
-      <label style="position:relative; width:41px; height:20px; cursor:pointer; flex-shrink:0;">
-        <input type="checkbox" id="period_prediction" <%= @notifications.period_prediction ? 'checked' : '' %>
-               aria-label="Period reminder"
-               onchange="toggleSetting('period_prediction')"
-               style="opacity:0; width:0; height:0;">
-        <span style="position:absolute; inset:0; background:<%= @notifications.period_prediction ? '#933a35' : '#ccc' %>; border-radius:20px; transition:0.2s;"></span>
-        <span style="position:absolute; top:1px; left:<%= @notifications.period_prediction ? '22px' : '2px' %>; width:18px; height:18px; background:white; border-radius:50%; transition:0.2s;"></span>
-      </label>
+    <div class="flex items-center justify-between py-3.5 pb-1">
+      <span class="text-brand-primary text-base font-medium">Period reminder</span>
+      <%= render "shared/toggle_switch",
+            field_id: "period_prediction",
+            checked: @notifications.period_prediction,
+            aria_label: "Period reminder",
+            onchange: "toggleSetting('period_prediction')" %>
     </div>
-    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
-      <div style="display:flex; gap:16px;">
-        <p style="color:#d18d83; font-size:14px; font-weight:500; margin:0;">Start → 12:00 a.m.</p>
-        <p style="color:#d18d83; font-size:14px; font-weight:500; margin:0;">End → 12:00 a.m.</p>
+    <div class="flex items-center justify-between mb-3">
+      <div class="flex gap-4">
+        <p class="text-brand-muted text-sm font-medium m-0">Start → 12:00 a.m.</p>
+        <p class="text-brand-muted text-sm font-medium m-0">End → 12:00 a.m.</p>
       </div>
-      <%= link_to "edit", notification_period_settings_path,
-            style: "color:#d18d83; font-size:14px; font-weight:500; text-decoration:none;" %>
+      <%= link_to "edit", notification_period_settings_path, class: "text-brand-muted text-sm font-medium no-underline" %>
     </div>
-    <div style="border-bottom:1px solid #DDD0CB;"></div>
+    <div class="border-b border-[#DDD0CB]"></div>
 
     <%# Birth control reminder %>
-    <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 0 4px;">
-      <span style="color:#933a35; font-size:16px; font-weight:500;">Birth control reminder</span>
-      <label style="position:relative; width:41px; height:20px; cursor:pointer; flex-shrink:0;">
-        <input type="checkbox" id="ovulation_alert" <%= @notifications.ovulation_alert ? 'checked' : '' %>
-               aria-label="Birth control reminder"
-               onchange="toggleSetting('ovulation_alert')"
-               style="opacity:0; width:0; height:0;">
-        <span style="position:absolute; inset:0; background:<%= @notifications.ovulation_alert ? '#933a35' : '#ccc' %>; border-radius:20px; transition:0.2s;"></span>
-        <span style="position:absolute; top:1px; left:<%= @notifications.ovulation_alert ? '22px' : '2px' %>; width:18px; height:18px; background:white; border-radius:50%; transition:0.2s;"></span>
-      </label>
+    <div class="flex items-center justify-between py-3.5 pb-1">
+      <span class="text-brand-primary text-base font-medium">Birth control reminder</span>
+      <%= render "shared/toggle_switch",
+            field_id: "ovulation_alert",
+            checked: @notifications.ovulation_alert,
+            aria_label: "Birth control reminder",
+            onchange: "toggleSetting('ovulation_alert')" %>
     </div>
-    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+    <div class="flex items-center justify-between mb-3">
       <div>
-        <p style="color:#d18d83; font-size:14px; font-weight:500; margin:0 0 2px;">Daily → 09:00 p.m.</p>
-        <p style="color:#933a35; font-size:10px; font-weight:500; margin:0; line-height:1.4;">
+        <p class="text-brand-muted text-sm font-medium m-0 mb-0.5">Daily → 09:00 p.m.</p>
+        <p class="text-brand-primary text-xs font-medium m-0 leading-relaxed">
           Keep track of: Today is day 15 of taking the pill
         </p>
       </div>
-      <%= link_to "edit", notification_birth_control_settings_path,
-            style: "color:#d18d83; font-size:14px; font-weight:500; text-decoration:none; align-self:flex-start;" %>
+      <%= link_to "edit", notification_birth_control_settings_path, class: "text-brand-muted text-sm font-medium no-underline self-start" %>
     </div>
-    <div style="border-bottom:1px solid #DDD0CB;"></div>
+    <div class="border-b border-[#DDD0CB]"></div>
 
     <%# Supplement reminder %>
-    <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 0 4px;">
-      <span style="color:#933a35; font-size:16px; font-weight:500;">Supplement reminder</span>
-      <label style="position:relative; width:41px; height:20px; cursor:pointer; flex-shrink:0;">
-        <input type="checkbox" id="newsletter" <%= @notifications.newsletter ? 'checked' : '' %>
-               aria-label="Supplement reminder"
-               onchange="toggleSetting('newsletter')"
-               style="opacity:0; width:0; height:0;">
-        <span style="position:absolute; inset:0; background:<%= @notifications.newsletter ? '#933a35' : '#ccc' %>; border-radius:20px; transition:0.2s;"></span>
-        <span style="position:absolute; top:1px; left:<%= @notifications.newsletter ? '22px' : '2px' %>; width:18px; height:18px; background:white; border-radius:50%; transition:0.2s;"></span>
-      </label>
+    <div class="flex items-center justify-between py-3.5 pb-1">
+      <span class="text-brand-primary text-base font-medium">Supplement reminder</span>
+      <%= render "shared/toggle_switch",
+            field_id: "newsletter",
+            checked: @notifications.newsletter,
+            aria_label: "Supplement reminder",
+            onchange: "toggleSetting('newsletter')" %>
     </div>
-    <p style="color:#d18d83; font-size:14px; font-weight:500; margin:0 0 12px;">Daily → 06:00 p.m.</p>
-    <div style="border-bottom:1px solid #DDD0CB;"></div>
+    <div class="flex items-center justify-between mb-3">
+      <p class="text-brand-muted text-sm font-medium m-0">Daily → 06:00 p.m.</p>
+    </div>
+    <div class="border-b border-[#DDD0CB]"></div>
 
     <%# In-App Popups %>
     <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 0 8px;">

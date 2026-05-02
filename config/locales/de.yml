@@ -169,9 +169,11 @@ de:
     show:
       already_used: "Diese Einladung wurde bereits verwendet."
       invalid_link: "Ungültiger Einladungslink."
+      token_expired: "Dieser Einladungslink ist abgelaufen. Bitte kontaktieren Sie den Support für eine neue Einladung."
     update:
       welcome: "Willkommen bei Season!"
       invalid_link: "Ungültiger Einladungslink."
+      token_expired: "Dieser Einladungslink ist abgelaufen. Bitte kontaktieren Sie den Support für eine neue Einladung."
   passwords:
     update:
       password_updated: "Passwort aktualisiert"

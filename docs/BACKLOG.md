@@ -336,4 +336,30 @@ gh issue create \
   --title "[SECURITY] Rate limit POST /launch-signup endpoint" \
   --body "No rate limiting on the launch signup endpoint. Add Rack::Attack: throttle to 5 requests/IP/hour on POST /launch-signup." \
   --label "security,low"
+
+---
+
+## Devise & Authentication (28 April 2026)
+
+### 🟡 MEDIUM PRIORITY
+
+| # | Feature | Notes |
+|---|---------|-------|
+| 1 | Add `devise_parameter_sanitizer` to ApplicationController | Missing param filter |
+| 2 | Resolve `:confirmable` - use or remove | Enabled but always skipped |
+| 3 | Add user-level rate limiting | Currently per-IP only |
+
+### GitHub Issues
+
+```bash
+# Medium - Devise cleanup
+gh issue create \
+  --title "[AUTH] Add devise_parameter_sanitizer to ApplicationController" \
+  --body "Add before_action :configure_permitted_parameters with devise_parameter_sanitizer for sign_in, sign_up, account_update." \
+  --label "devise,medium"
+
+gh issue create \
+  --title "[AUTH] Resolve confirmable - either implement or remove" \
+  --body "Devise :confirmable module is enabled in User model but registration always skips confirmation. Either implement email confirmation flow or remove the module." \
+  --label "devise,medium"
 ```

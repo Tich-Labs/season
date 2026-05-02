@@ -1,18 +1,18 @@
-<div style="background:#ffffff; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:60px 32px 48px; max-width:430px; margin:0 auto;">
+<div class="bg-white min-h-screen flex flex-col items-center justify-between pt-16 pb-12 px-8 max-w-app mx-auto">
 
   <div></div>
 
-  <div style="width:100%; display:flex; flex-direction:column; align-items:center;">
-    <div style="width:220px; height:220px; border-radius:110px; background:#ede1d5; overflow:hidden; margin-bottom:40px;">
+  <div class="w-full flex flex-col items-center">
+    <div class="w-55 h-55 rounded-full bg-brand-field overflow-hidden mb-10">
       <%= image_tag("error_screens_login/errorscreen-inbox-full.png", alt: "Inbox full", class: "w-full h-full object-contain") %>
     </div>
 
-    <p style="color:#933a35; font-size:18px; font-weight:400; letter-spacing:1.62px; text-align:center; max-width:290px; margin-bottom:48px;">
+    <p class="text-brand-primary text-lg font-normal text-center max-w-72 mb-12">
       Your email inbox is full and isn't accepting our emails
     </p>
 
-    <div style="width:100%;">
-      <a href="<%= new_session_path %>" style="display:block; width:322px; height:52px; background:#933a35; color:#ffffff; text-align:center; line-height:52px; font-size:22px; font-weight:500; letter-spacing:0.66px; text-decoration:none; border-radius:8px; margin:0 auto;">Go back to login</a>
+    <div class="w-full">
+      <a href="<%= new_session_path %>" class="block w-80 h-13 bg-brand-primary text-white text-center leading-13 text-xl font-medium rounded-lg mx-auto no-underline">Go back to login</a>
     </div>
   </div>
 

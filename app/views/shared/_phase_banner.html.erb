@@ -13,22 +13,22 @@
   colour = meta[:colour] || "#933a35"
   season = meta[:season]
 %>
-<div style="background:<%= colour %>; padding:24px 20px 20px; font-family:'Montserrat',sans-serif;">
+<div class="p-6 pb-5 font-montserrat" style="background:<%= colour %>;">
   <% if season %>
-    <p style="color:#FFFFFF; font-weight:600; text-transform:uppercase; letter-spacing:0.07em; margin:0 0 2px; opacity:0.8;">
+    <p class="text-white font-semibold uppercase letter-spacing-wider m-0 mb-0.5 opacity-80">
       You are in your <%= season %>
     </p>
   <% end %>
-  <h1 style="color:#FFFFFF; font-weight:700; margin:0 0 2px; line-height:1.2;">
+  <h1 class="text-white font-bold m-0 mb-0.5 leading-tight">
     <%= title %>
   </h1>
   <% if local_assigns[:subtitle] %>
-    <p style="color:#FFFFFF; font-weight:400; margin:4px 0 0; opacity:0.85; line-height:1.4;">
+    <p class="text-white font-normal m-0 mt-1 opacity-85 leading-relaxed">
       <%= subtitle %>
     </p>
   <% end %>
   <% if local_assigns[:date] %>
-    <p style="color:#FFFFFF; font-weight:400; margin:4px 0 0; opacity:0.7;">
+    <p class="text-white font-normal m-0 mt-1 opacity-70">
       <%= date.strftime("%A, %-d %B %Y") %>
     </p>
   <% end %>

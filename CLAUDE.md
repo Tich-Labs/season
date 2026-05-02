@@ -169,6 +169,17 @@ All error states must:
 - Devise errors render via `devise/shared/error_messages` partial
 - Custom error partial styling must match above
 
+## Auth flow requirements
+
+- **Email confirmation (`:confirmable`)** is fully implemented:
+  - Sign up → redirect to `/registration/check_email` ("Check your inbox" page)
+  - User clicks confirmation link in email → `ConfirmationsController#show` auto-logs in → redirects to onboarding
+  - OmniAuth (Google/Apple/Facebook) bypasses confirmation — provider already verified email
+  - Unconfirmed user trying to sign in → shows `:unconfirmed` error with resend link
+  - Expired/reused confirmation link → redirect to `/users/confirmation/new` with alert
+- **`devise_parameter_sanitizer`** configured in `ApplicationController` for `sign_up` and `account_update`
+- **Rate limiting**: 5 attempts per 15 min in production (disabled in development)
+
 ## i18n rules
 
 - **MVP language is English.** Do not hardcode German text in views.

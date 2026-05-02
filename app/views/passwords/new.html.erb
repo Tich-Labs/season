@@ -1,52 +1,38 @@
-<div class="relative bg-white min-h-screen overflow-hidden max-w-app mx-auto">
-  <div class="absolute left-0 top-0 w-full h-7 bg-white">
-    <div class="absolute left-2 top-1 text-zinc-900 text-xs font-normal font-['Montserrat'] leading-4 tracking-wide">12:30</div>
-    <div class="absolute left-[368px] top-[4px] w-4 h-4 overflow-hidden">
-      <div class="absolute left-0 top-[2.67px] w-4 h-3 bg-zinc-400"></div>
-      <div class="absolute left-[1.64px] top-[5.67px] w-3 h-2 bg-zinc-900"></div>
-    </div>
-    <div class="absolute left-[388px] top-[4px] w-4 h-4 overflow-hidden">
-      <div class="absolute left-[1.33px] top-[1.33px] w-3.5 h-3.5 bg-zinc-900"></div>
-      <div class="absolute left-[11px] top-[1.33px] w-1 h-3.5 bg-zinc-400"></div>
-    </div>
-    <div class="absolute left-[408px] top-[4px] w-4 h-4 overflow-hidden">
-      <div class="absolute left-[5px] top-[2px] w-1.5 h-3.5 bg-zinc-900"></div>
-      <div class="absolute left-[5px] top-[2px] w-1.5 h-1.5 bg-zinc-400"></div>
-    </div>
+<div class="bg-white min-h-screen flex flex-col items-center justify-center py-[60px] px-8 max-w-app mx-auto">
+
+  <div class="w-full">
+    <%= link_to "‹ back", new_session_path, class: "text-brand-primary text-base font-medium no-underline" %>
   </div>
 
-  <div class="px-4 pt-16">
-    <div class="w-full max-w-[384px] mx-auto">
-      <div class="mb-10">
-        <%= link_to "‹ back", new_session_path, class: "text-orange-800 text-base font-medium font-['Montserrat'] tracking-wide" %>
-      </div>
+  <div class="w-full max-w-[384px] mx-auto">
 
-      <h1 class="text-orange-800 text-4xl font-bold font-['Montserrat'] uppercase tracking-[3.24px] text-center leading-none">
-        Change<br>password
-      </h1>
+    <h1 class="text-brand-primary text-[36px] font-bold uppercase tracking-[3.24px] text-center leading-tight">
+      Change<br>password
+    </h1>
 
-      <div class="mt-20">
+    <div class="mt-20">
+      <%= form_with url: user_password_path, method: :post do |f| %>
         <label for="email" class="sr-only">Email</label>
-        <%= form_with url: user_password_path, method: :post do |f| %>
-          <%= f.email_field :email,
-              id: "email",
-              name: "email",
-              autofocus: true,
-              placeholder: "E–mail...",
-              class: "w-full h-14 rounded-2xl bg-brand-field px-5 text-[22px] font-medium text-orange-800 placeholder:text-orange-800/50 placeholder:text-xl outline-none",
-              aria: { label: "Email address" } %>
+        <%= f.email_field :email,
+            id: "email",
+            name: "email",
+            autofocus: true,
+            autocomplete: "email",
+            placeholder: "E–mail...",
+            class: "w-full h-14 rounded-2xl bg-brand-field px-5 text-[22px] font-medium text-brand-primary placeholder:text-brand-primary/50 placeholder:text-xl outline-none border-0" %>
 
-          <div class="mt-10">
-            <%= f.submit "Forgot password",
-                class: "w-full h-12 bg-orange-800 rounded-lg text-white text-xl font-medium font-['Montserrat'] tracking-wide",
-                data: { disable_with: "Sending..." } %>
-          </div>
-        <% end %>
-      </div>
-
-      <div class="mt-6 text-center">
-        <%= link_to "I am new... Sign in!", new_registration_path, class: "text-orange-800 text-base font-normal font-['Montserrat']" %>
-      </div>
+        <div class="mt-10">
+          <%= f.submit "Forgot password",
+              class: "w-full h-12 bg-brand-primary rounded-lg text-white text-xl font-medium tracking-wide border-0 cursor-pointer",
+              data: { disable_with: "Sending..." } %>
+        </div>
+      <% end %>
     </div>
+
+    <div class="mt-6 text-center">
+      <%= link_to "I'm new — Sign up!", new_registration_path, class: "text-brand-primary text-base font-normal no-underline" %>
+    </div>
+
   </div>
+
 </div>
