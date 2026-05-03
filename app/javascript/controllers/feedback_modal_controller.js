@@ -51,7 +51,15 @@ export default class extends Controller {
 
   close() {
     this.element.style.display = "none"
-    feedbackClearMedia()
+    this.clearMedia()
+  }
+
+  clearMedia() {
+    const fileInput = document.getElementById("feedback_attachment")
+    if (fileInput) fileInput.value = ""
+    
+    const label = document.getElementById("attachment-name")
+    if (label) label.textContent = "No file selected"
   }
 
   // Close when tapping the dark backdrop (not the sheet)
