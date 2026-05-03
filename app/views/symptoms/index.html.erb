@@ -181,6 +181,8 @@
               <%
                 selected = @log.bleeding == bleeding_opt[:name]
                 opacity = selected ? "1" : "0.6"
+                # Fill opacity based on intensity (Light=0.3, Medium=0.5, Heavy=0.7, Disaster=1)
+                fill_opacity = (bleeding_opt[:fill_pct] / 100.0).round(2)
               %>
               <button class="bleeding-option flex flex-col items-center gap-2 transition-opacity duration-150"
                       data-action="click->symptom#saveBleedingFlow"
@@ -188,8 +190,11 @@
                       data-url="<%= log_bleeding_symptom_path %>"
                       aria-label="<%= bleeding_opt[:name] %> bleeding" aria-pressed="<%= selected %>"
                       style="cursor:pointer; opacity:<%= opacity %>;">
-                <div class="w-12 h-12 flex items-center justify-center">
-                  <%= image_tag "m3/bleeding/#{bleeding_opt[:svg]}", alt: "", class: "w-full h-full" %>
+                <div class="w-12 h-12 flex items-center justify-center rounded-lg relative"
+                     style="background:<%= bleeding_opt[:color] %>; opacity:<%= fill_opacity %>;">
+                  <div class="absolute inset-0 flex items-center justify-center">
+                    <%= image_tag "m3/bleeding/#{bleeding_opt[:svg]}", alt: "", class: "w-full h-full", style: "opacity:#{(1.0 / fill_opacity).round(2)}" %>
+                  </div>
                 </div>
                 <span class="text-xs font-medium text-center" style="color:<%= bleeding_opt[:color] %>;">
                   <%= bleeding_opt[:name] %>
