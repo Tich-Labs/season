@@ -12,6 +12,7 @@
   physical_done     = @log.any_physical_symptom?
   mental_done       = @log.any_mental_symptom?
   discharge_done    = @log.discharge.present?
+  bleeding_done     = @log.bleeding.present?
   intercourse_done  = @log.sexual_intercourse?
   cravings_done     = @log.cravings.present?
   sleep_done        = @log.sleep.present?
@@ -170,24 +171,48 @@
           </svg>
           <span class="font-medium text-[22px] tracking-[0.66px]" style="color:<%= phase_colour %>;"><%= discharge_label %></span>
         </div>
-        <% if discharge_done %><%= render 'symptoms/bi_check', colour: phase_colour %><% end %>
+        <% if discharge_done || bleeding_done %><%= render 'symptoms/bi_check', colour: phase_colour %><% end %>
       </summary>
       <div class="pb-5">
-        <% unless @phase == "menstrual" %>
+        <% if @phase == "menstrual" %>
+          <%# Bleeding flow options (Light, Medium, Heavy, Disaster) %>
+          <div class="flex gap-3 justify-center" role="group" aria-label="Bleeding flow">
+            <% BleedingService.all.each do |bleeding_opt| %>
+              <%
+                selected = @log.bleeding == bleeding_opt[:name]
+                opacity = selected ? "1" : "0.6"
+              %>
+              <button class="bleeding-option flex flex-col items-center gap-2 transition-opacity duration-150"
+                      data-action="click->symptom#saveBleedingFlow"
+                      data-flow="<%= bleeding_opt[:name] %>"
+                      data-url="<%= log_bleeding_symptom_path %>"
+                      aria-label="<%= bleeding_opt[:name] %> bleeding" aria-pressed="<%= selected %>"
+                      style="cursor:pointer; opacity:<%= opacity %>;">
+                <div class="w-12 h-12 flex items-center justify-center">
+                  <%= image_tag "m3/bleeding/#{bleeding_opt[:svg]}", alt: "", class: "w-full h-full" %>
+                </div>
+                <span class="text-xs font-medium text-center" style="color:<%= bleeding_opt[:color] %>;">
+                  <%= bleeding_opt[:name] %>
+                </span>
+              </button>
+            <% end %>
+          </div>
+        <% else %>
+          <%# Vaginal discharge scale (1-5) for non-menstrual phases %>
           <div class="flex justify-end mb-2">
             <%= link_to "Detail →", symptom_discharge_path,
                   class: "text-xs font-medium", style: "color:#{phase_colour}; text-decoration:none;" %>
           </div>
+          <div class="flex gap-2" role="group" aria-label="Vaginal discharge 1 to 5">
+            <% (1..5).each do |i| %>
+              <% selected = @log.discharge == i; bg = selected ? phase_colour : "#EDE1D5"; fg = selected ? "#ffffff" : "#6B6B6B" %>
+              <button class="dot flex-1 py-2.5 rounded-xl text-sm font-bold transition-colors duration-150"
+                      data-action="click->symptom#save" data-field="discharge" data-value="<%= i %>"
+                      aria-label="Vaginal discharge <%= i %>" aria-pressed="<%= selected %>"
+                      style="background:<%= bg %>; color:<%= fg %>; border:none; cursor:pointer;"><%= i %></button>
+            <% end %>
+          </div>
         <% end %>
-        <div class="flex gap-2" role="group" aria-label="<%= discharge_label %> 1 to 5">
-          <% (1..5).each do |i| %>
-            <% selected = @log.discharge == i; bg = selected ? phase_colour : "#EDE1D5"; fg = selected ? "#ffffff" : "#6B6B6B" %>
-            <button class="dot flex-1 py-2.5 rounded-xl text-sm font-bold transition-colors duration-150"
-                    data-action="click->symptom#save" data-field="discharge" data-value="<%= i %>"
-                    aria-label="<%= discharge_label %> <%= i %>" aria-pressed="<%= selected %>"
-                    style="background:<%= bg %>; color:<%= fg %>; border:none; cursor:pointer;"><%= i %></button>
-          <% end %>
-        </div>
       </div>
     </details>
 

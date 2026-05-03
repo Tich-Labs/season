@@ -42,6 +42,11 @@ class SymptomsController < ApplicationController
     render json: {status: "ok"}
   end
 
+  def log_bleeding
+    log_for_today.record_bleeding_flow(params[:flow])
+    render json: {status: "ok"}
+  end
+
   private
 
   def log_for_today

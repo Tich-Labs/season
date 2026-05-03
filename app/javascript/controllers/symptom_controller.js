@@ -50,6 +50,24 @@ export default class extends Controller {
     this.#debouncedSave({ [field]: value })
   }
 
+  // Handle bleeding flow selection (Light, Medium, Heavy, Disaster)
+  saveBleedingFlow(event) {
+    const button = event.currentTarget
+    const flow = button.dataset.flow
+    const url = button.dataset.url
+
+    // Update visual feedback
+    this.element.querySelectorAll('[data-action*="saveBleedingFlow"]').forEach(btn => {
+      btn.style.opacity = btn === button ? "1" : "0.6"
+    })
+
+    // Send to server
+    this.#post(url, {
+      date: this.#date,
+      flow
+    })
+  }
+
   // ── private ──────────────────────────────────────────────────────────────
 
   get #date() {

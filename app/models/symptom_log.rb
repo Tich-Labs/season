@@ -46,6 +46,8 @@ class SymptomLog < ApplicationRecord
     {key: "confusion", label: "Confusion"}
   ].freeze
 
+  BLEEDING_FLOWS = ["Light", "Medium", "Heavy", "Disaster"].freeze
+
   def record_physical_symptom(key, value)
     record_symptom(:physical_symptoms, key, value)
   end
@@ -60,6 +62,13 @@ class SymptomLog < ApplicationRecord
 
   def any_mental_symptom?
     mental_symptoms.values.any? { |v| v.to_i > 0 }
+  end
+
+  def record_bleeding_flow(flow_name)
+    return if flow_name.blank?
+    return unless BLEEDING_FLOWS.include?(flow_name.to_s)
+
+    update(bleeding: flow_name.to_s)
   end
 
   private

@@ -121,6 +121,7 @@ Rails.application.routes.draw do
   get "symptoms/discharge", to: "symptoms#discharge", as: :symptom_discharge
   post "symptoms/log_physical", to: "symptoms#log_physical", as: :log_physical_symptom
   post "symptoms/log_mental", to: "symptoms#log_mental", as: :log_mental_symptom
+  post "symptoms/log_bleeding", to: "symptoms#log_bleeding", as: :log_bleeding_symptom
   resources :symptoms, only: [:index, :show, :create, :update]
   resources :superpowers, only: [:index, :show, :create, :update]
   resources :feedbacks, only: [:create]
