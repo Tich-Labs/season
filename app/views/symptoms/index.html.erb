@@ -176,27 +176,45 @@
       <div class="pb-5">
         <% if @phase == "menstrual" %>
           <%# Bleeding flow options (Light, Medium, Heavy, Disaster) %>
-          <div class="flex gap-3 justify-center" role="group" aria-label="Bleeding flow">
-            <% BleedingService.all.each do |bleeding_opt| %>
+          <div class="grid grid-cols-4 gap-4 px-2" role="group" aria-label="Bleeding flow">
+            <% BleedingService.all.each_with_index do |bleeding_opt, idx| %>
               <%
                 selected = @log.bleeding == bleeding_opt[:name]
-                opacity = selected ? "1" : "0.6"
-                # Fill opacity based on intensity (Light=0.3, Medium=0.5, Heavy=0.7, Disaster=1)
-                fill_opacity = (bleeding_opt[:fill_pct] / 100.0).round(2)
+                num_small_drops = idx  # 0, 1, 2, 3 small drops
               %>
-              <button class="bleeding-option flex flex-col items-center gap-2 transition-opacity duration-150"
+              <button class="bleeding-btn flex flex-col items-center gap-3 p-3 rounded-2xl transition-all duration-200"
                       data-action="click->symptom#saveBleedingFlow"
                       data-flow="<%= bleeding_opt[:name] %>"
                       data-url="<%= log_bleeding_symptom_path %>"
                       aria-label="<%= bleeding_opt[:name] %> bleeding" aria-pressed="<%= selected %>"
-                      style="cursor:pointer; opacity:<%= opacity %>;">
-                <div class="w-12 h-12 flex items-center justify-center rounded-lg relative"
-                     style="background:<%= bleeding_opt[:color] %>; opacity:<%= fill_opacity %>;">
-                  <div class="absolute inset-0 flex items-center justify-center">
-                    <%= image_tag "m3/bleeding/#{bleeding_opt[:svg]}", alt: "", class: "w-full h-full", style: "opacity:#{(1.0 / fill_opacity).round(2)}" %>
-                  </div>
+                      style="cursor:pointer; 
+                             border: 2px solid <%= selected ? bleeding_opt[:color] : '#EDE1D5' %>; 
+                             background: <%= selected ? 'rgba(147, 58, 53, 0.05)' : '#FFFFFF' %>;
+                             transform: <%= selected ? 'scale(1.08)' : 'scale(1)' %>;
+                             box-shadow: <%= selected ? '0 4px 12px rgba(147, 58, 53, 0.15)' : 'none' %>;">
+                
+                <%# Droplet visualization %>
+                <div class="relative w-16 h-16 flex items-center justify-center">
+                  <%# Main droplet %>
+                  <%= image_tag "m3/bleeding/drop.svg", alt: "", class: "w-6 h-8 absolute" %>
+                  
+                  <%# Small droplets %>
+                  <% if num_small_drops >= 1 %>
+                    <%= image_tag "m3/bleeding/drop.svg", alt: "", class: "w-3 h-4 absolute", style: "top: 0px; right: 4px; opacity: 0.6;" %>
+                  <% end %>
+                  <% if num_small_drops >= 2 %>
+                    <%= image_tag "m3/bleeding/drop.svg", alt: "", class: "w-3 h-4 absolute", style: "bottom: 2px; right: 0px; opacity: 0.6;" %>
+                  <% end %>
+                  <% if num_small_drops >= 3 %>
+                    <%= image_tag "m3/bleeding/drop.svg", alt: "", class: "w-3 h-4 absolute", style: "bottom: 2px; left: 0px; opacity: 0.6;" %>
+                  <% end %>
                 </div>
-                <span class="text-xs font-medium text-center" style="color:<%= bleeding_opt[:color] %>;">
+                
+                <%# Label %>
+                <span class="text-sm font-semibold text-center w-full leading-tight" 
+                      style="color:<%= selected ? bleeding_opt[:color] : '#999' %>; 
+                             letter-spacing: 0.3px;
+                             transition: color 200ms;">
                   <%= bleeding_opt[:name] %>
                 </span>
               </button>
