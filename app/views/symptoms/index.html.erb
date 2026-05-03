@@ -188,32 +188,60 @@
                       data-url="<%= log_bleeding_symptom_path %>"
                       aria-label="<%= bleeding_opt[:name] %> bleeding" aria-pressed="<%= selected %>"
                       style="cursor:pointer; 
-                             border: 2px solid <%= selected ? bleeding_opt[:color] : '#EDE1D5' %>; 
-                             background: <%= selected ? 'rgba(147, 58, 53, 0.05)' : '#FFFFFF' %>;
+                             border: 1px solid <%= selected ? bleeding_opt[:color] : '#D3D3D3' %>; 
+                             background: <%= selected ? 'rgba(147, 58, 53, 0.08)' : '#F8F8F8' %>;
                              transform: <%= selected ? 'scale(1.08)' : 'scale(1)' %>;
-                             box-shadow: <%= selected ? '0 4px 12px rgba(147, 58, 53, 0.15)' : 'none' %>;">
+                             box-shadow: <%= selected ? '0 2px 8px rgba(147, 58, 53, 0.12)' : 'none' %>;">
                 
-                <%# Droplet visualization — progressive fill with intensity %>
-                <div class="relative w-16 h-16 flex items-center justify-center">
+                <%# Droplet visualization — filled droplets with progressive intensity %>
+                <div class="relative w-20 h-20 flex items-center justify-center">
                   <%
-                    # Main droplet opacity: Light (0.3) → Medium (0.5) → Heavy (0.7) → Disaster (0.9)
-                    main_opacity = 0.3 + (idx * 0.2)
-                    # Small droplet opacity: Light (0) → Medium (0.5) → Heavy (0.75) → Disaster (1.0)
-                    small_opacity = idx > 0 ? 0.5 + ((idx - 1) * 0.25) : 0
+                    # Progressive opacity: Light (0.2) → Medium (0.5) → Heavy (0.75) → Disaster (1.0)
+                    drop_opacity = [0.2, 0.5, 0.75, 1.0][idx]
+                    small_opacity = [0, 0.4, 0.7, 1.0][idx]
                   %>
-                  <%# Main droplet — outline to filled progression %>
-                  <%= image_tag "m3/bleeding/drop.svg", alt: "", class: "w-6 h-8 absolute", style: "opacity: #{main_opacity};" %>
                   
-                  <%# Small droplets — progressively filled based on intensity %>
+                  <%# Main droplet — Figma-accurate teardrop shape %>
+                  <svg class="absolute" width="48" height="61" viewBox="0 0 48 61" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g style="opacity: <%= drop_opacity %>;">
+                      <path d="M24.6445 16.1438C23.9695 15.6188 23.032 15.6188 22.357 16.1438C18.7945 18.8625 8.27576 27.7312 8.33201 38.0625C8.33201 46.425 15.1383 53.25 23.5195 53.25C31.9008 53.25 38.707 46.4438 38.707 38.0812C38.7257 27.9 28.1882 18.8813 24.6445 16.1438Z" 
+                            fill="<%= bleeding_opt[:color] %>" />
+                      <path d="M23.6445 20.1438C22.9695 19.6188 22.032 19.6188 21.357 20.1438C17.7945 22.8625 7.27576 31.7312 7.33201 42.0625C7.33201 50.425 14.1383 57.25 22.5195 57.25C30.9008 57.25 37.707 50.4437 37.707 42.0812C37.7257 31.9 27.1882 22.8813 23.6445 20.1438Z" 
+                            stroke="<%= bleeding_opt[:color] %>" stroke-width="1.7" stroke-miterlimit="10" />
+                    </g>
+                  </svg>
+                  
+                  <%# Small droplet 1 — top right %>
                   <% if num_small_drops >= 1 %>
-                    <% drop1_opacity = 0.5 + (idx > 0 ? 0 : -0.3) %>
-                    <%= image_tag "m3/bleeding/drop.svg", alt: "", class: "w-3 h-4 absolute", style: "top: 0px; right: 4px; opacity: #{small_opacity};" %>
+                    <svg class="absolute" width="32" height="41" viewBox="0 0 48 61" fill="none" xmlns="http://www.w3.org/2000/svg" 
+                         style="top: -8px; right: -4px; width: 20px; height: 26px; opacity: <%= small_opacity %>;">
+                      <path d="M24.6445 16.1438C23.9695 15.6188 23.032 15.6188 22.357 16.1438C18.7945 18.8625 8.27576 27.7312 8.33201 38.0625C8.33201 46.425 15.1383 53.25 23.5195 53.25C31.9008 53.25 38.707 46.4438 38.707 38.0812C38.7257 27.9 28.1882 18.8813 24.6445 16.1438Z" 
+                            fill="<%= bleeding_opt[:color] %>" />
+                      <path d="M23.6445 20.1438C22.9695 19.6188 22.032 19.6188 21.357 20.1438C17.7945 22.8625 7.27576 31.7312 7.33201 42.0625C7.33201 50.425 14.1383 57.25 22.5195 57.25C30.9008 57.25 37.707 50.4437 37.707 42.0812C37.7257 31.9 27.1882 22.8813 23.6445 20.1438Z" 
+                            stroke="<%= bleeding_opt[:color] %>" stroke-width="1.2" stroke-miterlimit="10" />
+                    </svg>
                   <% end %>
+                  
+                  <%# Small droplet 2 — bottom right %>
                   <% if num_small_drops >= 2 %>
-                    <%= image_tag "m3/bleeding/drop.svg", alt: "", class: "w-3 h-4 absolute", style: "bottom: 2px; right: 0px; opacity: #{small_opacity};" %>
+                    <svg class="absolute" width="32" height="41" viewBox="0 0 48 61" fill="none" xmlns="http://www.w3.org/2000/svg" 
+                         style="bottom: -12px; right: -8px; width: 20px; height: 26px; opacity: <%= small_opacity %>;">
+                      <path d="M24.6445 16.1438C23.9695 15.6188 23.032 15.6188 22.357 16.1438C18.7945 18.8625 8.27576 27.7312 8.33201 38.0625C8.33201 46.425 15.1383 53.25 23.5195 53.25C31.9008 53.25 38.707 46.4438 38.707 38.0812C38.7257 27.9 28.1882 18.8813 24.6445 16.1438Z" 
+                            fill="<%= bleeding_opt[:color] %>" />
+                      <path d="M23.6445 20.1438C22.9695 19.6188 22.032 19.6188 21.357 20.1438C17.7945 22.8625 7.27576 31.7312 7.33201 42.0625C7.33201 50.425 14.1383 57.25 22.5195 57.25C30.9008 57.25 37.707 50.4437 37.707 42.0812C37.7257 31.9 27.1882 22.8813 23.6445 20.1438Z" 
+                            stroke="<%= bleeding_opt[:color] %>" stroke-width="1.2" stroke-miterlimit="10" />
+                    </svg>
                   <% end %>
+                  
+                  <%# Small droplet 3 — bottom left %>
                   <% if num_small_drops >= 3 %>
-                    <%= image_tag "m3/bleeding/drop.svg", alt: "", class: "w-3 h-4 absolute", style: "bottom: 2px; left: 0px; opacity: #{small_opacity};" %>
+                    <svg class="absolute" width="32" height="41" viewBox="0 0 48 61" fill="none" xmlns="http://www.w3.org/2000/svg" 
+                         style="bottom: -12px; left: -8px; width: 20px; height: 26px; opacity: <%= small_opacity %>;">
+                      <path d="M24.6445 16.1438C23.9695 15.6188 23.032 15.6188 22.357 16.1438C18.7945 18.8625 8.27576 27.7312 8.33201 38.0625C8.33201 46.425 15.1383 53.25 23.5195 53.25C31.9008 53.25 38.707 46.4438 38.707 38.0812C38.7257 27.9 28.1882 18.8813 24.6445 16.1438Z" 
+                            fill="<%= bleeding_opt[:color] %>" />
+                      <path d="M23.6445 20.1438C22.9695 19.6188 22.032 19.6188 21.357 20.1438C17.7945 22.8625 7.27576 31.7312 7.33201 42.0625C7.33201 50.425 14.1383 57.25 22.5195 57.25C30.9008 57.25 37.707 50.4437 37.707 42.0812C37.7257 31.9 27.1882 22.8813 23.6445 20.1438Z" 
+                            stroke="<%= bleeding_opt[:color] %>" stroke-width="1.2" stroke-miterlimit="10" />
+                    </svg>
                   <% end %>
                 </div>
                 
