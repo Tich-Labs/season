@@ -29,7 +29,7 @@ class DataRetentionJob < ApplicationJob
 
   def delete_old_cycle_entries
     cutoff_date = CYCLE_RETENTION_YEARS.years.ago
-    CycleEntry.where("updated_at < ?", cutoff_date).delete_all
+    CycleEntry.where(updated_at: ...cutoff_date).delete_all
   rescue => e
     Rails.logger.error "[DataRetentionJob] Error deleting cycle entries: #{e.message}"
     0
@@ -37,7 +37,7 @@ class DataRetentionJob < ApplicationJob
 
   def delete_old_symptom_logs
     cutoff_date = SYMPTOM_RETENTION_YEARS.years.ago
-    SymptomLog.where("updated_at < ?", cutoff_date).delete_all
+    SymptomLog.where(updated_at: ...cutoff_date).delete_all
   rescue => e
     Rails.logger.error "[DataRetentionJob] Error deleting symptom logs: #{e.message}"
     0
@@ -45,7 +45,7 @@ class DataRetentionJob < ApplicationJob
 
   def delete_old_calendar_events
     cutoff_date = CALENDAR_RETENTION_YEARS.years.ago
-    CalendarEvent.where("updated_at < ?", cutoff_date).delete_all
+    CalendarEvent.where(updated_at: ...cutoff_date).delete_all
   rescue => e
     Rails.logger.error "[DataRetentionJob] Error deleting calendar events: #{e.message}"
     0
@@ -53,7 +53,7 @@ class DataRetentionJob < ApplicationJob
 
   def delete_old_superpower_logs
     cutoff_date = CALENDAR_RETENTION_YEARS.years.ago
-    SuperpowerLog.where("updated_at < ?", cutoff_date).delete_all
+    SuperpowerLog.where(updated_at: ...cutoff_date).delete_all
   rescue => e
     Rails.logger.error "[DataRetentionJob] Error deleting superpower logs: #{e.message}"
     0

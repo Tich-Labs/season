@@ -1,6 +1,6 @@
 # Season App — Developer Documentation & Auth Security Review
 
-**Generated:** 2026-04-24 — **Last updated:** 2026-04-28 (consent system, security hardening, admin CMS CRUD, symptoms enhancements)
+**Generated:** 2026-04-24 — **Last updated:** 2026-05-03 (physical/mental symptom trackers, profile avatar fix, email modal fix)
 **Rails version:** 8.1.3
 **Ruby version:** >= 3.4.7
 **Database:** PostgreSQL (all environments)
@@ -113,7 +113,7 @@ Season is a menstrual cycle tracking app targeted at users who want to understan
 
 ### Schema version
 
-`20260428121630` (PostgreSQL, `ActiveRecord::Schema[8.1]`)
+`20260503130000` (PostgreSQL, `ActiveRecord::Schema[8.1]`)
 
 ### Models & Associations
 
@@ -223,7 +223,7 @@ Scopes: `for_month(year, month)`, `ordered`.
 
 #### `SymptomLog`
 
-One record per day per user. Integer scale ratings (1–5 implied) for each metric.
+One record per day per user. Integer scale ratings (1–5 implied) for single-value metrics; JSONB hashes for the expanded physical and mental symptom lists.
 
 ```
 symptom_logs
@@ -231,10 +231,11 @@ symptom_logs
   user_id             bigint FK NOT NULL
   date                date NOT NULL
   mood                integer
+  mood_text           text                   -- named mood (e.g. "Happy", "Sad") from MoodPickerService
   energy              integer
   sleep               integer
-  physical            integer
-  mental              integer
+  physical            integer                -- legacy scalar; use physical_symptoms jsonb for detail
+  mental              integer                -- legacy scalar; use mental_symptoms jsonb for detail
   pain                integer
   cravings            integer
   discharge           integer
@@ -242,10 +243,23 @@ symptom_logs
   temperature         decimal
   weight              decimal
   notes               text
+  physical_symptoms   jsonb DEFAULT {} NOT NULL   -- keyed by symptom key, value 0–3
+  mental_symptoms     jsonb DEFAULT {} NOT NULL   -- keyed by symptom key, value 0–3
   UNIQUE INDEX on (user_id, date)
 ```
 
-`TRACKABLE = %w[mood energy sleep physical mental pain cravings discharge]`
+**Constants:**
+
+- `TRACKABLE = %w[mood energy sleep physical mental pain cravings discharge]`
+- `PHYSICAL_SYMPTOMS` — 24-element array of `{key:, label:}` hashes (headaches, migraines, dizziness, acne, neck_pain, shoulder_pain, back_pain, breast_tenderness, breast_sensitivity, lumbago, lower_back_pain, joint_pain, abdominal_pain, flu, illness, cramps, itching, rash, night_sweats, hot_flashes, weight_gain, pms, pmdd, pcos)
+- `MENTAL_SYMPTOMS` — 8-element array of `{key:, label:}` hashes (anxiety, insomnia, moodiness, tension, irritability, lack_of_concentration, fatigue, confusion)
+
+**Helper methods:**
+
+| Method                  | Returns                                              |
+|-------------------------|------------------------------------------------------|
+| `any_physical_symptom?` | `true` if any value in `physical_symptoms` is > 0   |
+| `any_mental_symptom?`   | `true` if any value in `mental_symptoms` is > 0     |
 
 ---
 
@@ -485,6 +499,8 @@ Standard Rails 8 Active Storage tables (`active_storage_blobs`, `active_storage_
 | POST | `/symptoms` | `symptoms#create` |
 | PATCH | `/symptoms/:id` | `symptoms#update` |
 | GET | `/symptoms/discharge` | `symptoms#discharge` |
+| POST | `/symptoms/log_physical` | `symptoms#log_physical` |
+| POST | `/symptoms/log_mental` | `symptoms#log_mental` |
 | GET | `/superpowers` | `superpowers#index` |
 | GET | `/superpowers/:id` | `superpowers#show` |
 | POST | `/superpowers` | `superpowers#create` |
@@ -1281,6 +1297,101 @@ end
 ---
 
 ## 12. Changelog
+
+### 2026-05-03 — Physical/mental symptom trackers, profile avatar fix, email modal fix
+
+#### Data model
+
+Two new JSONB columns added to `symptom_logs`. Each stores a hash keyed by symptom key string, with integer values 0–3 (0 = not logged, 1 = low, 2 = medium, 3 = high).
+
+| Migration file | Column added | Default |
+|---|---|---|
+| `20260503120001_add_physical_symptoms_to_symptom_logs.rb` | `physical_symptoms jsonb` | `{}` NOT NULL |
+| `20260503130000_add_mental_symptoms_to_symptom_logs.rb` | `mental_symptoms jsonb` | `{}` NOT NULL |
+
+A third migration (`20260503095411_add_mood_text_to_symptom_logs.rb`) adds `mood_text text` to support the named mood picker (replaces the previous integer `mood` score for mood selection).
+
+Schema version bumped to `20260503130000`.
+
+#### `SymptomLog` model constants
+
+`PHYSICAL_SYMPTOMS` — 24 entries covering: Headaches, Migraines, Dizziness, Acne, Neck pain, Shoulder pain, Back pain, Breast tenderness, Breast sensitivity, Lumbago, Lower back pain, Joint pain, Abdominal pain, Flu, Illness, Cramps, Itching, Rash, Night sweats, Hot flashes, Weight gain, PMS, PMDD, PCOS.
+
+`MENTAL_SYMPTOMS` — 8 entries: Anxiety, Insomnia, Moodiness, Tension, Irritability, Lack of concentration, Fatigue, Confusion.
+
+Both constants are arrays of `{key: String, label: String}` hashes. The `key` is the JSONB hash key stored in the database. The `label` is the display string rendered in the view.
+
+Helper methods added to the model:
+
+- `any_physical_symptom?` — returns `true` if any value in `physical_symptoms` is > 0. Used for the completion checkmark on the Physical accordion.
+- `any_mental_symptom?` — same pattern for `mental_symptoms`.
+
+#### New endpoints
+
+| Method | Path | Controller#Action | Notes |
+|--------|------|-------------------|-------|
+| POST | `/symptoms/log_physical` | `symptoms#log_physical` | Named `log_physical_symptom_path` |
+| POST | `/symptoms/log_mental` | `symptoms#log_mental` | Named `log_mental_symptom_path` |
+
+Both routes are authenticated and defined before the `symptoms/:id` resource to prevent routing conflicts with the `discharge` and `log_*` member paths.
+
+Both actions delegate to the private `log_symptom_group(field)` method in `SymptomsController`:
+
+```ruby
+def log_symptom_group(field)
+  date = params[:date].presence || Time.zone.today
+  @log = current_user.symptom_logs.find_or_initialize_by(date: date)
+  key  = params[:symptom_key].to_s.gsub(/[^a-z_]/, "")   # sanitise — letters and underscore only
+  value = params[:value].to_i.clamp(0, 3)
+  @log.public_send(:"#{field}=", (@log.public_send(field) || {}).merge(key => value))
+  @log.save
+  render json: { status: "ok" }
+end
+```
+
+The `symptom_key` param is sanitised (strips anything that is not a lowercase letter or underscore) before being used as a JSONB hash key. The `value` is clamped to 0–3. Requests are upserts: the log record is found-or-initialised for the given date, the single key is merged into the existing JSONB hash, and the record is saved.
+
+#### Shared partial: `_symptom_slider_row`
+
+`app/views/symptoms/_symptom_slider_row.html.erb` renders a single slider row for both Physical and Mental sections. Locals:
+
+| Local | Type | Description |
+|-------|------|-------------|
+| `symptom` | Hash | `{key:, label:}` from the model constant |
+| `val` | Integer | Current value 0–3 read from the JSONB column |
+| `fill_pct` | Integer | `(val / 3.0 * 100).round` — used for label position |
+| `fill_bg` | String | Inline style string for the slider track gradient |
+| `log_url` | String | Either `log_physical_symptom_path` or `log_mental_symptom_path` |
+
+The partial renders an `<input type="range" min="0" max="3">` wired to `data-action="input->symptom#saveSymptomSlider"`. The save URL is passed via `data-log-url` on the input element itself (not on the Stimulus controller wrapper), so the same partial can target different endpoints without needing a second controller instance.
+
+Three tick dots below the track are coloured `#933a35` for positions at or below the current value and `#EDE1D5` above it, giving a visual fill effect that mirrors the CSS gradient on the track.
+
+#### Stimulus: `saveSymptomSlider` action
+
+Added to `app/javascript/controllers/symptom_controller.js`. Reads `data-symptom-key` and `data-log-url` from the slider element, calls `#applySliderVisual` immediately (synchronous visual update), then POSTs JSON to the endpoint:
+
+```json
+{ "date": "<log date>", "symptom_key": "<key>", "value": <0-3> }
+```
+
+The date is read from `data-date` on the Stimulus controller root element (the outer `<div data-controller="symptom">`), keeping it consistent with other save actions on the same form.
+
+`#applySliderVisual` (private) updates the track gradient, the three tick dots, and the level label (`low` / `medium` / `high`) on every slider interaction, including on `connect()` for already-saved values.
+
+#### Profile avatar fix — iOS Safari compatibility
+
+`app/views/settings/profile.html.erb`: the file `<input type="file">` for avatar upload was repositioned off-screen using `position:absolute; left:-9999px; width:1px; height:1px; opacity:0;` instead of `display:none` or `visibility:hidden`. iOS Safari does not trigger the system file picker on hidden inputs; the off-screen absolute position keeps the element in the accessibility tree and interactive while visually hiding it.
+
+A visible `<button type="button">` calls `document.getElementById('avatar-file').click()` to open the picker. The form submits automatically via `onchange` once the user selects a file. `data: { turbo: false }` is set on the form so the page performs a full redirect after upload rather than a Turbo Stream response (Active Storage attachment is not Turbo-compatible without additional configuration).
+
+#### Profile email modal fix — container scope
+
+`app/views/settings/profile.html.erb`: the `id="email-modal"` `<div>` was previously rendered outside the page's `max-width` container `<div>`, which meant its `position:fixed` overlay did not cover the full viewport correctly on some mobile browsers. The modal is now placed at the end of the template body, outside both the inner content `<div>` and the outer wrapper `<div>`, so it sits at the top level of the `<body>` and its fixed positioning is relative to the viewport as intended.
+
+The modal requires the user to enter their current password alongside the new email address, satisfying the security requirement from audit finding #9 (`valid_password?` check added in `update_profile`).
+
+---
 
 ### 2026-04-28 — Consent system, security hardening, admin CMS, symptoms enhancements
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_02_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_03_130000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -147,10 +147,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_02_120000) do
     t.integer "discharge"
     t.integer "energy"
     t.integer "mental"
+    t.jsonb "mental_symptoms", default: {}, null: false
     t.integer "mood"
+    t.text "mood_text"
     t.text "notes"
     t.integer "pain"
     t.integer "physical"
+    t.jsonb "physical_symptoms", default: {}, null: false
     t.boolean "sexual_intercourse", default: false, null: false
     t.integer "sleep"
     t.decimal "temperature"

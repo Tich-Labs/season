@@ -55,8 +55,11 @@
       </button>
     <% end %>
 
-    <%= link_to "Cancel", edit_settings_path,
-          style: "display:block; width:100%; text-align:center; color:#933a35; border:1px solid #DDD0CB; border-radius:12px; padding:16px; font-size:16px; font-weight:500; margin-top:12px; text-decoration:none;">
+     <%= link_to edit_settings_path,
+              style: "display:block; width:100%; text-align:center; color:#933a35; border:1px solid #DDD0CB; border-radius:12px; padding:16px; font-size:16px; font-weight:500; margin-top:12px; text-decoration:none;" do %>
+        Cancel
+      <% end %>
 
   </div>
+
 </div>

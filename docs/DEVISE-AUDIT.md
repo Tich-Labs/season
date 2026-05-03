@@ -193,16 +193,70 @@ If someone registered but never confirmed, then tries to log in:
 
 ## H. Playwright Auth Tests
 
-| Test File | Coverage |
-|-----------|----------|
-| `tests/auth/sign-up.spec.js` | Valid sign up, duplicate email, password mismatch |
-| `tests/auth/sign-in.spec.js` | Valid login, wrong password, non-existent email, redirect if authenticated |
-| `tests/auth/sign-out.spec.js` | Sign out, protected page access after sign out |
-| `tests/auth/password-reset.spec.js` | Forgot password page, submit request, done page |
+| Test File | Coverage | Status |
+|-----------|----------|--------|
+| `tests/auth/sign-up.spec.js` | Valid sign up, duplicate email, password mismatch | 🟡 Partial |
+| `tests/auth/sign-in.spec.js` | Valid login, wrong password, non-existent email, redirect if authenticated | ✅ Passing |
+| `tests/auth/sign-out.spec.js` | Sign out, protected page access after sign out | 🟡 Partial |
+| `tests/auth/password-reset.spec.js` | Forgot password page, submit request, done page | ✅ Passing |
 
-**Status:** 🟡 Partial — password reset tests passing; sign-in/out flows need Turbo Drive compatibility fixes
+---
+
+## I. Feedback Button Update (2 May 2026)
+
+### What Changed
+| File | Change |
+|------|--------|
+| `app/views/tracking/index.html.erb` | Feedback button now calls `feedback-modal#openWithType` directly (removed wrapping `<div data-controller="feedback-modal">`) |
+| `app/views/layouts/launch.html.erb` | Added `<%= render "shared/feedback_modal" %>` so modal is available on tracking page |
+| `app/javascript/controllers/feedback_modal_controller.js` | `window.openFeedbackModal` function available for programmatic opening with type |
+
+### How It Works
+- Tracking page has a **feedback button** with `data-type="feedback"` and `data-action="click->feedback-modal#openWithType"`
+- Clicking opens the feedback modal with **Feedback** tab pre-selected (heading: "Share your feedback", placeholder: "What's on your mind?")
+- User can switch between **Feedback**, **Bug Report**, and **Support** tabs
+- Modal renders from `shared/_feedback_modal.html.erb` with Stimulus controller `feedback-modal`
+
+---
+
+## J. Tracking Page Audit (2 May 2026)
+
+### What's Implemented
+| Component | Status | Details |
+|-----------|--------|---------|
+| Cycle wheel (SVG donut) | ✅ | Shows current phase, day needle, phase colours |
+| Cycle day strip | ✅ | 6 past + 6 future days, highlights "Today" |
+| Self Analysis heading | ✅ | Month name, streak badge |
+| Navigation cards | ✅ | My Symptoms, My Superpower links |
+| Period card | ✅ | Last period start, edit/update button |
+| Feedback button | ✅ | Opens modal with pre-selected type |
+
+### TrackingController Endpoints
+| Action | Route | Purpose |
+|--------|-------|---------|
+| `index` | `GET /tracking` | Main tracking page with cycle data |
+| `create` | `POST /tracking` | Log period start, create cycle entry |
+| `period` | `GET /tracking/period` | Period date picker page |
+| `period_update` | `PATCH /tracking` | Update period start date |
+
+### Feedback Flow
+```
+Tracking page → click "Feedback" button
+         ↓
+    Modal opens (Feedback tab active)
+         ↓
+    User fills message, attaches screenshot/audio (optional)
+         ↓
+    POST /feedbacks → Feedback#create
+         ↓
+    Turbo Stream: replace modal with success/error
+         ↓
+    After save: TrelloMailer job enqueued → Trello card created
+```
+
+**Feedback Model:** `belongs_to :user`, `has_one_attached :media`, enum `:type` (feedback/bug_report/support)
 
 ---
 
 *Audit conducted: 28 April 2026*  
-*Updated: 2 May 2026 — confirmable fully implemented, all audit recommendations complete*
+*Updated: 2 May 2026 — confirmable fully implemented, all audit recommendations complete, feedback button wired, tracking page audited*

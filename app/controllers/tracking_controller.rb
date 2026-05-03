@@ -2,7 +2,7 @@ class TrackingController < ApplicationController
   def index
     @date = Time.zone.today
     @phase = current_user.current_phase
-    @meta = CycleCalculatorService::PHASE_META[@phase]
+    @meta = CycleCalculatorService::PHASE_META[@phase] || {}
     @cycle_day = current_user.current_cycle_day
     @streak = current_user.streak&.current_streak || 0
 

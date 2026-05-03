@@ -6,4 +6,3 @@ if defined?(Rack::Attack)
   # Disable for tests
   Rack::Attack.enabled = !Rails.env.test?
 end
-

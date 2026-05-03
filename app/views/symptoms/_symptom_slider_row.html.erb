@@ -1,0 +1,41 @@
+<%
+  val      = val.to_i
+  fill_pct = (val / 3.0 * 100).round
+  fill_bg  = val.positive? \
+    ? "background:linear-gradient(to right,#933a35 #{fill_pct}%,#EDE1D5 #{fill_pct}%)" \
+    : "background:#EDE1D5"
+  dot_positions = ["left:calc(33.33% - 2.5px)", "left:calc(66.67% - 2.5px)", "right:2.5px"]
+%>
+<div class="symptom-row flex items-center gap-3" style="margin-bottom:25px;">
+  <%# Symptom name — 16px Montserrat Medium, letter-spacing 1.12px %>
+  <span class="shrink-0 font-medium font-['Montserrat']"
+        style="min-width:144px; font-size:16px; color:#933a35; letter-spacing:1.12px;">
+    <%= symptom[:label] %>
+  </span>
+
+  <%# Slider + tick dots + level label %>
+  <div class="relative flex-1" style="padding-bottom:22px;">
+    <input type="range" min="0" max="3" step="1" value="<%= val %>"
+           class="symptom-slider"
+           data-action="input->symptom#saveSymptomSlider"
+           data-symptom-key="<%= symptom[:key] %>"
+           data-log-url="<%= log_url %>"
+           aria-label="<%= symptom[:label] %> intensity"
+           style="<%= fill_bg %>;">
+
+    <%# Tick dots: 5px circles below the 9px track, coloured by current value %>
+    <% dot_positions.each_with_index do |position, i| %>
+      <% level = i + 1 %>
+      <span class="pointer-events-none absolute rounded-full" data-dot="<%= level %>" aria-hidden="true"
+            style="width:5px;height:5px;top:20px;<%= position %>;background:<%= val >= level ? '#933a35' : '#EDE1D5' %>;"></span>
+    <% end %>
+
+    <%# Level label — 10px Montserrat Regular, letter-spacing 0.4px %>
+    <span class="slider-label absolute font-['Montserrat'] font-normal"
+          style="bottom:-8px; font-size:10px; letter-spacing:0.4px; color:#933a35;
+                 left:<%= fill_pct %>%; transform:translateX(-50%);
+                 <%= val.zero? ? 'display:none;' : '' %>">
+      <%= ["", "low", "medium", "high"][val] %>
+    </span>
+  </div>
+</div>

@@ -119,6 +119,8 @@ Rails.application.routes.draw do
   get "daily/:date", to: "daily_view#show", as: :daily_view
   resources :streaks, only: [:index]
   get "symptoms/discharge", to: "symptoms#discharge", as: :symptom_discharge
+  post "symptoms/log_physical", to: "symptoms#log_physical", as: :log_physical_symptom
+  post "symptoms/log_mental", to: "symptoms#log_mental", as: :log_mental_symptom
   resources :symptoms, only: [:index, :show, :create, :update]
   resources :superpowers, only: [:index, :show, :create, :update]
   resources :feedbacks, only: [:create]

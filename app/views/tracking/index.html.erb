@@ -1,213 +1,156 @@
 <% content_for(:page_title) { "Self Analysis" } %>
+<% content_for(:header_color) { "#ffffff" } %>
 
 <%
-  # Inline arc-path helper — builds a donut arc SVG path string.
-  # cx/cy = centre, r_out/r_in = outer/inner radius, start/end in degrees.
   def arc_path(cx, cy, r_out, r_in, start_deg, end_deg)
     to_rad = Math::PI / 180.0
-    # Clamp sweep to just under 360° so full-circle arcs still render
     sweep = end_deg - start_deg
     sweep = 359.9999 if sweep.abs >= 360
     large = sweep.abs > 180 ? 1 : 0
     dir   = sweep >= 0 ? 1 : 0
-
     sx = cx + r_out * Math.cos(start_deg * to_rad)
     sy = cy + r_out * Math.sin(start_deg * to_rad)
     ex = cx + r_out * Math.cos(end_deg   * to_rad)
     ey = cy + r_out * Math.sin(end_deg   * to_rad)
-
     ix = cx + r_in  * Math.cos(end_deg   * to_rad)
     iy = cy + r_in  * Math.sin(end_deg   * to_rad)
     jx = cx + r_in  * Math.cos(start_deg * to_rad)
     jy = cy + r_in  * Math.sin(start_deg * to_rad)
-
-    [
-      "M #{sx.round(3)},#{sy.round(3)}",
-      "A #{r_out},#{r_out} 0 #{large},#{dir} #{ex.round(3)},#{ey.round(3)}",
-      "L #{ix.round(3)},#{iy.round(3)}",
-      "A #{r_in},#{r_in} 0 #{large},#{1 - dir} #{jx.round(3)},#{jy.round(3)}",
-      "Z"
-    ].join(" ")
+    ["M #{sx.round(3)},#{sy.round(3)}", "A #{r_out},#{r_out} 0 #{large},#{dir} #{ex.round(3)},#{ey.round(3)}", "L #{ix.round(3)},#{iy.round(3)}", "A #{r_in},#{r_in} 0 #{large},#{1 - dir} #{jx.round(3)},#{jy.round(3)}", "Z"].join(" ")
   end
 %>
 
-<% phase_colour  = @meta&.dig(:colour)      || "#933a35" %>
-<% phase_season  = @meta&.dig(:season)      || "" %>
-<% phase_label   = @phase ? @phase.capitalize : nil %>
+<% phase_colour = @meta&.dig(:colour) || "#933a35" %>
+<% phase_label  = @phase ? @phase.capitalize : nil %>
+<% phase_season = @meta&.dig(:season) %>
 
 <div class="min-h-screen pb-24 bg-brand-field">
-  <div class="max-w-app mx-auto px-4 pt-6">
+  <div class="max-w-app mx-auto px-4">
 
-    <%# ── Date ──────────────────────────────────────────────────────── %>
-    <p class="text-sm mb-5 text-brand-secondary">
-      <%= Time.zone.today.strftime("%A, %d %B %Y") %>
-    </p>
-
-    <%# ── Phase header ──────────────────────────────────────────────── %>
-    <% if phase_label %>
-      <p class="text-sm mb-1 text-brand-secondary">You are in your:</p>
-      <h1 class="text-3xl font-bold mb-1 leading-tight" style="color:<%= phase_colour %>;">
-        <%= phase_season %> &mdash; <%= phase_label %>
-      </h1>
-      <% if @cycle_day %>
-        <p class="text-sm mb-5 text-brand-secondary">Day <%= @cycle_day %> of your cycle</p>
+    <%# ── Avatar (tap to change) ──────────────────────────────────────── %>
+    <div class="flex justify-center pt-8 pb-5">
+      <%= link_to profile_settings_path, class: "relative block w-56 h-56 shrink-0", aria: { label: "Change profile picture" } do %>
+        <div class="w-56 h-56 rounded-full flex items-center justify-center overflow-hidden"
+             style="background:<%= phase_colour %>;">
+          <% if current_user.avatar.attached? %>
+            <%= image_tag current_user.avatar,
+                  class: "w-full h-full object-cover",
+                  alt: current_user.name %>
+          <% elsif current_user.avatar_url.present? %>
+            <img src="<%= current_user.avatar_url %>"
+                 class="w-full h-full object-cover"
+                 alt="<%= current_user.name %>">
+          <% else %>
+            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="none"
+                 stroke="white" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true">
+               <circle cx="12" cy="8" r="4" />
+               <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+            </svg>
+          <% end %>
+        </div>
+        <%# Camera edit badge %>
+        <span class="absolute bottom-2 right-2 w-10 h-10 rounded-full bg-white shadow-md
+                     flex items-center justify-center" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none"
+               stroke="<%= phase_colour %>" stroke-width="1.8" viewBox="0 0 24 24">
+             <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+             <circle cx="12" cy="13" r="4" />
+          </svg>
+        </span>
       <% end %>
-    <% else %>
-      <div class="rounded-2xl px-4 py-3 mb-5 text-sm bg-brand-error text-brand-primary">
-        Log your last period to see your current phase.
-      </div>
-    <% end %>
+    </div>
 
-    <%# ── Cycle-day strip ────────────────────────────────────────────── %>
+    <%# ── Phase text ──────────────────────────────────────────────────── %>
+    <div class="text-center mb-6">
+      <% if phase_label %>
+        <p class="text-2xl font-medium text-brand-primary font-['Montserrat']">You are in your:</p>
+        <h1 class="text-3xl font-extrabold leading-tight" style="color:<%= phase_colour %>;">
+          <%= phase_label %> Phase
+        </h1>
+      <% else %>
+        <div class="rounded-2xl px-4 py-3 text-sm bg-brand-error text-brand-primary">
+          Log your last period to see your current phase.
+        </div>
+      <% end %>
+    </div>
+
+    <%# ── Cycle-day strip ─────────────────────────────────────────────── %>
     <% if @strip.present? %>
-      <div class="mb-6 -mx-4 px-4 overflow-x-auto scrollbar-hide">
-        <div class="flex gap-2 pb-1 w-max">
+      <div class="mb-1 overflow-x-auto scrollbar-hide">
+        <div class="flex gap-3 pt-2 pb-1 w-max px-4">
           <% @strip.each do |day| %>
             <% dot_colour = day[:colour] || "#D18D83" %>
-            <% if day[:current] %>
-              <div class="flex flex-col items-center gap-1">
-                <div class="w-11 h-11 rounded-full flex items-center justify-center text-white text-sm font-bold ring-2 ring-offset-2 ring-white"
-                     style="background:<%= dot_colour %>; ring-color:<%= dot_colour %>;">
-                  <%= day[:cycle_day] %>
-                </div>
-                <span class="text-[10px] font-semibold" style="color:<%= dot_colour %>;">
-                  Today
-                </span>
-              </div>
-            <% else %>
-              <div class="flex flex-col items-center gap-1">
-                <div class="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs opacity-70"
-                     style="background:<%= dot_colour %>;">
-                  <%= day[:cycle_day] %>
-                </div>
-                <span class="text-[9px] text-brand-secondary">
-                  <%= day[:date].strftime("%-d") %>
-                </span>
-              </div>
-            <% end %>
+            <div class="w-12 h-12 rounded-full flex items-center justify-center text-base font-semibold <%= day[:current] ? 'text-white ring-2 ring-offset-2 ring-white' : 'text-white opacity-75' %>"
+                 style="background:<%= dot_colour %>;">
+              <%= day[:cycle_day] %>
+            </div>
           <% end %>
         </div>
       </div>
-    <% end %>
-
-    <%# ── SVG donut wheel ────────────────────────────────────────────── %>
-    <% if @arcs.present? %>
-      <div class="flex justify-center mb-6">
-        <%
-          cx = 110; cy = 110; r_out = 96; r_in = 62
-          # Needle angle for current cycle day position
-          needle_angle = -90.0
-          if @cycle_day
-            needle_angle = -90.0 + ((@cycle_day - 1).to_f / (current_user.cycle_length || 28)) * 360
-          end
-          nx = cx + (r_in + (r_out - r_in) / 2.0) * Math.cos(needle_angle * Math::PI / 180.0)
-          ny = cy + (r_in + (r_out - r_in) / 2.0) * Math.sin(needle_angle * Math::PI / 180.0)
-        %>
-        <svg width="220" height="220" viewBox="0 0 220 220" role="img"
-             aria-label="Cycle wheel showing current phase">
-          <% @arcs.each do |arc| %>
-            <path d="<%= arc_path(cx, cy, r_out, r_in, arc[:start_angle], arc[:end_angle]) %>"
-                  fill="<%= arc[:colour] %>"
-                  stroke="#EDE1D5" stroke-width="2" />
-          <% end %>
-
-          <%# Centre label %>
-          <% if @cycle_day %>
-            <text x="<%= cx %>" y="<%= cy - 8 %>"
-                  text-anchor="middle" dominant-baseline="middle"
-                  font-size="28" font-weight="700"
-                  fill="<%= phase_colour %>"><%= @cycle_day %></text>
-            <text x="<%= cx %>" y="<%= cy + 18 %>"
-                  text-anchor="middle" dominant-baseline="middle"
-                  font-size="11" fill="#6B6B6B">Day</text>
-          <% else %>
-            <text x="<%= cx %>" y="<%= cy %>"
-                  text-anchor="middle" dominant-baseline="middle"
-                  font-size="13" fill="#6B6B6B">No data</text>
-          <% end %>
-
-          <%# Current-day dot on wheel %>
-          <circle cx="<%= nx.round(2) %>" cy="<%= ny.round(2) %>"
-                  r="6" fill="white" stroke="<%= phase_colour %>" stroke-width="2.5" />
-        </svg>
-      </div>
-    <% end %>
-
-    <%# ── Self Analysis heading ───────────────────────────────────────── %>
-    <h2 class="text-xl font-bold mb-4 text-brand-dark">
-      Self Analysis &mdash; <%= Time.zone.today.strftime("%B") %>
-    </h2>
-
-    <%# ── Streak badge ───────────────────────────────────────────────── %>
-    <% if @streak > 0 %>
-      <div class="flex items-center gap-3 rounded-2xl px-4 py-3 mb-4 bg-white">
-        <span class="text-2xl" aria-hidden="true">🔥</span>
-        <div>
-          <p class="font-bold text-lg leading-none text-brand-primary"><%= @streak %> day streak</p>
-          <p class="text-xs mt-0.5 text-brand-secondary">Keep going!</p>
-        </div>
-      </div>
+      <% if @cycle_day %>
+        <p class="text-center text-xs text-brand-primary font-['Montserrat'] mb-6">Cycleday <%= @cycle_day %></p>
+      <% end %>
     <% end %>
 
     <%# ── Navigation cards ───────────────────────────────────────────── %>
-    <div class="flex flex-col gap-3 mb-4">
+    <div class="flex flex-col gap-3 mb-8">
 
       <%= link_to symptoms_path,
-            class: "flex justify-between items-center rounded-2xl px-5 py-4 bg-white no-underline" do %>
-        <span class="font-semibold text-base text-brand-dark">My Symptoms</span>
+            class: "flex justify-between items-center rounded-lg px-5 h-12 bg-white no-underline" do %>
+        <span class="text-xl font-medium text-brand-primary font-['Montserrat']">My Symptoms</span>
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none"
-             stroke="#933a35" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+             stroke="<%= phase_colour %>" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
           <polyline points="9 18 15 12 9 6" />
         </svg>
       <% end %>
 
       <%= link_to superpowers_path,
-            class: "flex justify-between items-center rounded-2xl px-5 py-4 bg-white no-underline" do %>
-        <span class="font-semibold text-base text-brand-dark">My Superpower</span>
+            class: "flex justify-between items-center rounded-lg px-5 h-12 bg-white no-underline" do %>
+        <span class="text-xl font-medium text-brand-primary font-['Montserrat']">My Superpower</span>
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none"
-             stroke="#933a35" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+             stroke="<%= phase_colour %>" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
           <polyline points="9 18 15 12 9 6" />
         </svg>
       <% end %>
 
-    </div>
-
-    <%# ── Period card ─────────────────────────────────────────────────── %>
-    <div class="rounded-2xl px-5 py-5 bg-white">
-      <h3 class="font-bold text-base mb-4 text-brand-dark">Period</h3>
-
-      <% if current_user.last_period_start %>
-        <div class="flex items-center justify-between rounded-xl px-4 py-3 mb-4 bg-brand-field">
-          <div>
-            <p class="text-xs font-medium mb-0.5 text-brand-secondary">Last period start</p>
-            <p class="text-base font-semibold text-brand-primary">
-              <%= current_user.last_period_start.strftime("%-d %B %Y") %>
-            </p>
-          </div>
-          <%= link_to period_tracking_index_path,
-                class: "text-xs font-semibold px-3 py-1.5 rounded-lg bg-brand-primary text-white no-underline" do %>
-            Edit
-          <% end %>
-        </div>
-      <% end %>
-
       <%= link_to period_tracking_index_path,
-            class: "flex items-center justify-center w-full py-4 rounded-xl font-semibold text-base bg-brand-primary text-white no-underline" do %>
-        <%= current_user.last_period_start ? "Update period start" : "Log period start" %>
+            class: "flex justify-between items-center rounded-lg px-5 h-12 bg-white no-underline" do %>
+        <span class="text-xl font-medium text-brand-primary font-['Montserrat']">Track my Period</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none"
+             stroke="<%= phase_colour %>" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+          <polyline points="9 18 15 12 9 6" />
+        </svg>
       <% end %>
+
+      <button type="button"
+              data-controller="open-feedback"
+              data-open-feedback-type-value="feedback"
+              data-action="click->open-feedback#open"
+              class="flex justify-between items-center rounded-lg px-5 h-12 bg-white/50 w-full text-left">
+        <span class="text-xl font-medium text-brand-primary font-['Montserrat']">Give feedback</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none"
+             stroke="<%= phase_colour %>" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+          <polyline points="9 18 15 12 9 6" />
+        </svg>
+      </button>
+
     </div>
 
-    <%# ── Feedback link ──────────────────────────────────────────────── %>
-    <button type="button"
-            data-type="feedback"
-            data-action="click->feedback-modal#openWithType"
-            class="flex justify-between items-center py-4 mt-2 w-full text-brand-primary border-t border-brand-primary/15 bg-none">
-      <span class="text-sm"><%= t("tracking.feedback") %></span>
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none"
-           stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-        <polyline points="9 18 15 12 9 6" />
-      </svg>
-    </button>
+    <%# ── Calendar shortcut ───────────────────────────────────────────── %>
+    <div class="flex justify-center pb-4">
+      <%= link_to calendar_path,
+            class: "w-16 h-16 rounded-full bg-white flex items-center justify-center shadow-sm",
+            aria: { label: "Go to calendar" } do %>
+        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="none"
+             stroke="<%= phase_colour %>" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
+             viewBox="0 0 24 24" aria-hidden="true">
+           <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+           <line x1="16" y1="2" x2="16" y2="6" />
+           <line x1="8" y1="2" x2="8" y2="6" />
+           <line x1="3" y1="10" x2="21" y2="10" />
+        </svg>
+      <% end %>
+    </div>
 
   </div>
 </div>

@@ -21,7 +21,13 @@ const TYPE_META = {
 export default class extends Controller {
   connect() {
     window.openFeedbackModal = (type) => this.openWithType(type)
+    this._openHandler = (e) => this.openWithType(e.detail?.type || "feedback")
+    document.addEventListener("feedback-modal:open", this._openHandler)
     this.applyType("feedback")
+  }
+
+  disconnect() {
+    document.removeEventListener("feedback-modal:open", this._openHandler)
   }
 
   openWithType(event) {

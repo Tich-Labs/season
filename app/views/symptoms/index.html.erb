@@ -1,14 +1,23 @@
 <%
   phase_meta   = CycleCalculatorService::PHASE_META[@phase] || {}
   phase_colour = phase_meta[:colour] || "#933a35"
-  phase_season = phase_meta[:season] || @phase&.capitalize || "Unknown"
-  prev_date    = @date - 1
-  next_date    = @date + 1
+  phase_label  = @phase ? @phase.capitalize : "Unknown"
+  phase_season = phase_meta[:season]
 
-  mood_done     = [@log.mood, @log.energy, @log.sleep].any?(&:present?)
-  physical_done = [@log.pain, @log.physical, @log.cravings, @log.discharge].any?(&:present?) || @log.sexual_intercourse?
-  mental_done   = @log.mental.present?
-  notes_done    = @log.notes.present?
+  # Phase-specific symptom name
+  discharge_label = @phase == "menstrual" ? "Bleeding" : "vaginal discharge"
+
+  # Completion flags (for checkmarks)
+  mood_done         = @log.mood_text.present?
+  physical_done     = @log.any_physical_symptom?
+  mental_done       = @log.any_mental_symptom?
+  discharge_done    = @log.discharge.present?
+  intercourse_done  = @log.sexual_intercourse?
+  cravings_done     = @log.cravings.present?
+  sleep_done        = @log.sleep.present?
+  temperature_done  = @log.temperature.present?
+  weight_done       = @log.weight.present?
+  notes_done        = @log.notes.present?
 %>
 <% content_for(:page_title) { "My Symptoms" } %>
 <% content_for(:header_dark) { "true" } %>
@@ -19,61 +28,58 @@
      data-symptom-url-value="<%= symptoms_path %>"
      data-date="<%= @date %>">
 
-  <%# Date navigation pill %>
-  <div class="flex items-center justify-center gap-3 pt-6 pb-2">
-    <%= link_to symptoms_path(date: prev_date),
-          class: "flex items-center justify-center w-8 h-8 text-brand-primary" do %>
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none"
-           stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
-        <polyline points="15 18 9 12 15 6" />
-      </svg>
-    <% end %>
-
-    <div class="bg-brand-field rounded-full px-6 py-2 text-brand-primary font-medium text-base">
+  <%# ── Date picker drum ──────────────────────────────────────────────── %>
+  <div class="relative flex justify-center pt-6 pb-2" data-controller="date-picker">
+    <button class="bg-brand-field rounded-full px-6 py-2 text-brand-primary font-medium text-base
+                   flex items-center gap-2 focus:outline-none"
+            data-action="click->date-picker#toggle"
+            aria-label="Select date">
       <%= @date.strftime("%-d %B") %>
-    </div>
-
-    <%= link_to symptoms_path(date: next_date),
-          class: "flex items-center justify-center w-8 h-8 text-brand-primary" do %>
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none"
-           stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
-        <polyline points="9 18 15 12 9 6" />
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none"
+           stroke="currentColor" stroke-width="3" viewBox="0 0 24 24" aria-hidden="true">
+        <polyline points="6 9 12 15 18 9" />
       </svg>
-    <% end %>
+    </button>
+
+    <%# Dropdown drum list %>
+    <div class="hidden absolute top-12 z-50 bg-brand-field rounded-2xl shadow-xl w-48"
+         data-date-picker-target="dropdown">
+      <%# Close chevron %>
+      <div class="flex justify-end px-4 pt-3 pb-0">
+        <button data-action="click->date-picker#close" aria-label="Close date picker"
+                class="text-brand-primary focus:outline-none">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none"
+               stroke="currentColor" stroke-width="3" viewBox="0 0 24 24" aria-hidden="true">
+            <polyline points="18 15 12 9 6 15" />
+          </svg>
+        </button>
+      </div>
+      <%# Scrollable date list — 30 days back through today %>
+      <ul class="overflow-y-auto max-h-48 text-center pb-3 scrollbar-hide" data-date-picker-target="list" style="scroll-snap-type:y mandatory;">
+        <% ((Date.today - 29)..Date.today).each do |d| %>
+          <li class="<%= d == @date ? 'bg-white/60 rounded-lg mx-2' : '' %>" style="scroll-snap-align:center;">
+            <%= link_to d.strftime("%-d %B"), symptoms_path(date: d),
+                  class: "block py-2 font-['Montserrat'] #{d == @date ? 'font-bold text-base text-brand-primary' : 'font-normal text-sm text-brand-primary opacity-50'}",
+                  data: (d == @date ? { selected: true } : {}) %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
   </div>
 
-  <%# Cycle wheel + phase label %>
-  <div class="flex flex-col items-center pt-4 pb-5">
-    <svg width="160" height="160" viewBox="0 0 220 220" role="img"
-         aria-label="Cycle wheel showing current phase">
-      <path d="M 110.0,14.0 A 96,96 0 0,1 196.493,68.347 L 165.86,83.099 A 62,62 0 0,0 110.0,48.0 Z"
-            fill="#933a35" opacity="<%= @phase == 'menstrual' ? '1' : '0.4' %>" />
-      <path d="M 196.493,68.347 A 96,96 0 0,1 110.0,206.0 L 110.0,172.0 A 62,62 0 0,0 165.86,83.099 Z"
-            fill="#899884" opacity="<%= @phase == 'follicular' ? '1' : '0.4' %>" />
-      <path d="M 110.0,206.0 A 96,96 0 0,1 14.0,110.0 L 48.0,110.0 A 62,62 0 0,0 110.0,172.0 Z"
-            fill="#50705b" opacity="<%= @phase == 'ovulation' ? '1' : '0.4' %>" />
-      <path d="M 14.0,110.0 A 96,96 0 0,1 110.0,14.0 L 110.0,48.0 A 62,62 0 0,0 48.0,110.0 Z"
-            fill="#D18D83" opacity="<%= @phase == 'luteal' ? '1' : '0.4' %>" />
-      <text x="110" y="102" text-anchor="middle" font-family="Montserrat, sans-serif"
-            font-size="28" font-weight="700" fill="<%= phase_colour %>">
-        <%= @cycle_day || "—" %>
-      </text>
-      <text x="110" y="128" text-anchor="middle" font-family="Montserrat, sans-serif"
-            font-size="11" fill="#6B6B6B">Day</text>
-      <circle cx="60.74" cy="48.24" r="6" fill="white"
-              stroke="<%= phase_colour %>" stroke-width="2.5" />
-    </svg>
-
-    <p class="text-brand-primary text-lg font-medium mt-2">You are in your</p>
-    <p class="font-extrabold text-3xl leading-tight" style="color:<%= phase_colour %>;">
-      <%= phase_season %>
+  <%# ── Phase label ───────────────────────────────────────────────────── %>
+  <div class="text-center pt-6 pb-5">
+    <p class="text-brand-primary text-lg font-medium font-['Montserrat']">You are in your</p>
+    <p class="font-extrabold text-3xl leading-tight font-['Montserrat']" style="color:<%= phase_colour %>;">
+      <%= phase_label %> Phase
     </p>
   </div>
 
-  <%# Symptom list %>
+  <%# ── Symptom list (flat accordions) ────────────────────────────────── %>
   <div class="px-5">
 
-    <%# Mood section %>
+    <%# Helper: scale dots row — renders 1-5 buttons for a given field %>
+    <%# 1. Mood %>
     <details class="group border-b border-[#F0E8DF]" id="section-mood">
       <summary class="flex items-center justify-between py-4 cursor-pointer list-none [&::-webkit-details-marker]:hidden select-none">
         <div class="flex items-center gap-3">
@@ -84,41 +90,29 @@
           </svg>
           <span class="font-medium text-[22px] tracking-[0.66px]" style="color:<%= phase_colour %>;">Mood</span>
         </div>
-        <% if mood_done %>
-          <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26"
-               fill="none" stroke="<%= phase_colour %>" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
-            <polyline points="20 6 9 17 4 12" />
-          </svg>
-        <% end %>
+        <% if mood_done %><%= render 'symptoms/bi_check', colour: phase_colour %><% end %>
       </summary>
-      <div class="pb-5 flex flex-col gap-5">
-        <% [["mood","Mood",:scale],["energy","Energy",:scale],["sleep","Sleep",:scale]].each do |field, label, _| %>
-          <div>
-            <p class="text-sm font-semibold text-brand-dark mb-2"><%= label %></p>
-            <div class="flex gap-2" role="group" aria-label="<%= label %> 1 to 5">
-              <% (1..5).each do |i| %>
-                <%
-                  selected = @log.send(field) == i
-                  bg = selected ? phase_colour : "#EDE1D5"
-                  fg = selected ? "#ffffff" : "#6B6B6B"
-                %>
-                <button class="dot flex-1 py-2.5 rounded-xl text-sm font-bold transition-colors duration-150"
-                        data-action="click->symptom#save"
-                        data-field="<%= field %>"
-                        data-value="<%= i %>"
-                        aria-label="<%= label %> <%= i %>"
-                        aria-pressed="<%= selected %>"
-                        style="background:<%= bg %>; color:<%= fg %>; border:none; cursor:pointer;">
-                  <%= i %>
-                </button>
-              <% end %>
+      <div class="pb-5 grid grid-cols-3 gap-4" role="group" aria-label="Mood picker">
+        <% MoodPickerService.all.each do |mood_opt| %>
+          <% selected = @log.mood_text == mood_opt[:name] %>
+          <% border_colour = mood_opt[:color] %>
+          <button class="flex flex-col items-center justify-center gap-2 transition-all duration-150 focus:outline-none"
+                  data-action="click->symptom#save" data-field="mood_text" data-value="<%= mood_opt[:name] %>"
+                  aria-label="<%= mood_opt[:name] %>" aria-pressed="<%= selected %>"
+                  style="cursor:pointer; opacity: <%= selected ? '1' : '0.7' %>; transform: <%= selected ? 'scale(1.1)' : 'scale(1)' %>;">
+            <%# Emoji SVG from icons/emojis folder %>
+            <div class="w-16 h-16 flex items-center justify-center">
+              <%= image_tag "icons/emojis/#{mood_opt[:svg]}", alt: "", class: "w-full h-full" %>
             </div>
-          </div>
+            <span class="text-xs font-medium text-center" style="color: <%= border_colour %>;">
+              <%= mood_opt[:name] %>
+            </span>
+          </button>
         <% end %>
       </div>
     </details>
 
-    <%# Physical section %>
+    <%# 2. Physical %>
     <details class="group border-b border-[#F0E8DF]" id="section-physical">
       <summary class="flex items-center justify-between py-4 cursor-pointer list-none [&::-webkit-details-marker]:hidden select-none">
         <div class="flex items-center gap-3">
@@ -129,91 +123,20 @@
           </svg>
           <span class="font-medium text-[22px] tracking-[0.66px]" style="color:<%= phase_colour %>;">Physical</span>
         </div>
-        <% if physical_done %>
-          <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26"
-               fill="none" stroke="<%= phase_colour %>" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
-            <polyline points="20 6 9 17 4 12" />
-          </svg>
-        <% end %>
+        <% if physical_done %><%= render 'symptoms/bi_check', colour: phase_colour %><% end %>
       </summary>
-      <div class="pb-5 flex flex-col gap-5">
-        <% [["pain","Pain",:scale],["physical","Physical",:scale],["cravings","Cravings",:scale]].each do |field, label, _| %>
-          <div>
-            <p class="text-sm font-semibold text-brand-dark mb-2"><%= label %></p>
-            <div class="flex gap-2" role="group" aria-label="<%= label %> 1 to 5">
-              <% (1..5).each do |i| %>
-                <%
-                  selected = @log.send(field) == i
-                  bg = selected ? phase_colour : "#EDE1D5"
-                  fg = selected ? "#ffffff" : "#6B6B6B"
-                %>
-                <button class="dot flex-1 py-2.5 rounded-xl text-sm font-bold transition-colors duration-150"
-                        data-action="click->symptom#save"
-                        data-field="<%= field %>"
-                        data-value="<%= i %>"
-                        aria-label="<%= label %> <%= i %>"
-                        aria-pressed="<%= selected %>"
-                        style="background:<%= bg %>; color:<%= fg %>; border:none; cursor:pointer;">
-                  <%= i %>
-                </button>
-              <% end %>
-            </div>
-          </div>
+
+      <div class="pb-2" role="group" aria-label="Physical symptoms">
+        <% SymptomLog::PHYSICAL_SYMPTOMS.each do |symptom| %>
+          <%= render "symptoms/symptom_slider_row",
+                symptom: symptom,
+                val: (@log.physical_symptoms || {})[symptom[:key]],
+                log_url: log_physical_symptom_path %>
         <% end %>
-
-        <%# Vaginal discharge %>
-        <div>
-          <div class="flex items-center justify-between mb-2">
-            <p class="text-sm font-semibold text-brand-dark">Vaginal discharge</p>
-            <%= link_to "Detail →", symptom_discharge_path,
-                  class: "text-xs font-medium",
-                  style: "color:#{phase_colour}; text-decoration:none;" %>
-          </div>
-          <div class="flex gap-2" role="group" aria-label="Discharge 1 to 5">
-            <% (1..5).each do |i| %>
-              <%
-                selected = @log.discharge == i
-                bg = selected ? phase_colour : "#EDE1D5"
-                fg = selected ? "#ffffff" : "#6B6B6B"
-              %>
-              <button class="dot flex-1 py-2.5 rounded-xl text-sm font-bold transition-colors duration-150"
-                      data-action="click->symptom#save"
-                      data-field="discharge"
-                      data-value="<%= i %>"
-                      aria-label="Discharge <%= i %>"
-                      aria-pressed="<%= selected %>"
-                      style="background:<%= bg %>; color:<%= fg %>; border:none; cursor:pointer;">
-                <%= i %>
-              </button>
-            <% end %>
-          </div>
-        </div>
-
-        <%# Sexual intercourse toggle %>
-        <div class="flex justify-between items-center">
-          <p class="text-sm font-semibold text-brand-dark">Sexual intercourse</p>
-          <%
-            tog_on = @log.sexual_intercourse?
-            tog_bg = tog_on ? phase_colour : "#EDE1D5"
-            tog_tx = tog_on ? "translate-x-5" : "translate-x-0"
-          %>
-          <label class="relative inline-flex items-center cursor-pointer" aria-label="Sexual intercourse">
-            <input type="checkbox" class="sr-only"
-                   data-action="change->symptom#save"
-                   data-field="sexual_intercourse"
-                   data-value="true"
-                   <%= tog_on ? "checked" : "" %>>
-            <div class="relative w-11 h-6 rounded-full transition-colors duration-200"
-                 style="background:<%= tog_bg %>;">
-              <span class="absolute top-[2px] left-[2px] w-5 h-5 bg-white rounded-full
-                           shadow transition-transform duration-200 <%= tog_tx %>"></span>
-            </div>
-          </label>
-        </div>
       </div>
     </details>
 
-    <%# Mental section %>
+    <%# 3. Mental %>
     <details class="group border-b border-[#F0E8DF]" id="section-mental">
       <summary class="flex items-center justify-between py-4 cursor-pointer list-none [&::-webkit-details-marker]:hidden select-none">
         <div class="flex items-center gap-3">
@@ -224,77 +147,174 @@
           </svg>
           <span class="font-medium text-[22px] tracking-[0.66px]" style="color:<%= phase_colour %>;">Mental</span>
         </div>
-        <% if mental_done %>
-          <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26"
-               fill="none" stroke="<%= phase_colour %>" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
-            <polyline points="20 6 9 17 4 12" />
-          </svg>
+        <% if mental_done %><%= render 'symptoms/bi_check', colour: phase_colour %><% end %>
+      </summary>
+      <div class="pb-2" role="group" aria-label="Mental symptoms">
+        <% SymptomLog::MENTAL_SYMPTOMS.each do |symptom| %>
+          <%= render "symptoms/symptom_slider_row",
+                symptom: symptom,
+                val: (@log.mental_symptoms || {})[symptom[:key]],
+                log_url: log_mental_symptom_path %>
         <% end %>
+      </div>
+    </details>
+
+    <%# 4. vaginal discharge / Bleeding (menstrual phase) %>
+    <details class="group border-b border-[#F0E8DF]" id="section-discharge">
+      <summary class="flex items-center justify-between py-4 cursor-pointer list-none [&::-webkit-details-marker]:hidden select-none">
+        <div class="flex items-center gap-3">
+          <svg class="transition-transform duration-200 group-open:rotate-90 shrink-0"
+               xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+               fill="none" stroke="<%= phase_colour %>" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+            <polyline points="9 18 15 12 9 6" />
+          </svg>
+          <span class="font-medium text-[22px] tracking-[0.66px]" style="color:<%= phase_colour %>;"><%= discharge_label %></span>
+        </div>
+        <% if discharge_done %><%= render 'symptoms/bi_check', colour: phase_colour %><% end %>
       </summary>
       <div class="pb-5">
-        <div>
-          <p class="text-sm font-semibold text-brand-dark mb-2">Mental wellbeing</p>
-          <div class="flex gap-2" role="group" aria-label="Mental 1 to 5">
-            <% (1..5).each do |i| %>
-              <%
-                selected = @log.mental == i
-                bg = selected ? phase_colour : "#EDE1D5"
-                fg = selected ? "#ffffff" : "#6B6B6B"
-              %>
-              <button class="dot flex-1 py-2.5 rounded-xl text-sm font-bold transition-colors duration-150"
-                      data-action="click->symptom#save"
-                      data-field="mental"
-                      data-value="<%= i %>"
-                      aria-label="Mental <%= i %>"
-                      aria-pressed="<%= selected %>"
-                      style="background:<%= bg %>; color:<%= fg %>; border:none; cursor:pointer;">
-                <%= i %>
-              </button>
-            <% end %>
+        <% unless @phase == "menstrual" %>
+          <div class="flex justify-end mb-2">
+            <%= link_to "Detail →", symptom_discharge_path,
+                  class: "text-xs font-medium", style: "color:#{phase_colour}; text-decoration:none;" %>
           </div>
+        <% end %>
+        <div class="flex gap-2" role="group" aria-label="<%= discharge_label %> 1 to 5">
+          <% (1..5).each do |i| %>
+            <% selected = @log.discharge == i; bg = selected ? phase_colour : "#EDE1D5"; fg = selected ? "#ffffff" : "#6B6B6B" %>
+            <button class="dot flex-1 py-2.5 rounded-xl text-sm font-bold transition-colors duration-150"
+                    data-action="click->symptom#save" data-field="discharge" data-value="<%= i %>"
+                    aria-label="<%= discharge_label %> <%= i %>" aria-pressed="<%= selected %>"
+                    style="background:<%= bg %>; color:<%= fg %>; border:none; cursor:pointer;"><%= i %></button>
+          <% end %>
         </div>
       </div>
     </details>
 
-    <%# Temperature row %>
-    <div class="border-b border-[#F0E8DF] py-4">
-      <label for="symptom_temperature" class="flex items-center gap-3 mb-3 cursor-pointer">
+    <%# 5. Sexual intercourse %>
+    <div class="border-b border-[#F0E8DF] py-4 flex justify-between items-center">
+      <div class="flex items-center gap-3">
         <svg class="shrink-0" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
              fill="none" stroke="<%= phase_colour %>" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
           <polyline points="9 18 15 12 9 6" />
         </svg>
-        <span class="font-medium text-[22px] tracking-[0.66px]" style="color:<%= phase_colour %>;">Temperature</span>
+        <span class="font-medium text-[22px] tracking-[0.66px]" style="color:<%= phase_colour %>;">Sexual Intercourse</span>
+      </div>
+      <%
+        tog_on = @log.sexual_intercourse?
+        tog_bg = tog_on ? phase_colour : "#EDE1D5"
+        tog_tx = tog_on ? "translate-x-5" : "translate-x-0"
+      %>
+      <% if intercourse_done %><%= render 'symptoms/bi_check', colour: phase_colour %><% end %>
+      <label class="relative inline-flex items-center cursor-pointer" aria-label="Sexual intercourse">
+        <input type="checkbox" class="sr-only"
+               data-action="change->symptom#save"
+               data-field="sexual_intercourse"
+               data-value="true"
+               <%= tog_on ? "checked" : "" %>>
+        <div class="relative w-11 h-6 rounded-full transition-colors duration-200"
+             style="background:<%= tog_bg %>;">
+          <span class="absolute top-[2px] left-[2px] w-5 h-5 bg-white rounded-full
+                       shadow transition-transform duration-200 <%= tog_tx %>"></span>
+        </div>
       </label>
-      <input id="symptom_temperature" type="number" step="0.1" min="35" max="42" autocomplete="off"
-             name="symptom_log[temperature]"
-             data-field="temperature"
-             data-action="input->symptom#saveNumber"
-             value="<%= @log.temperature %>"
-             placeholder="36.5 °C"
-             class="w-full rounded-xl px-4 py-3 text-sm border-0 outline-none font-['Montserrat']"
-             style="background:#EDE1D5; color:#3d2b28;">
     </div>
 
-    <%# Weight row %>
-    <div class="border-b border-[#F0E8DF] py-4">
-      <label for="symptom_weight" class="flex items-center gap-3 mb-3 cursor-pointer">
-        <svg class="shrink-0" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-             fill="none" stroke="<%= phase_colour %>" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
-          <polyline points="9 18 15 12 9 6" />
-        </svg>
-        <span class="font-medium text-[22px] tracking-[0.66px]" style="color:<%= phase_colour %>;">Weight</span>
-      </label>
-      <input id="symptom_weight" type="number" step="0.1" min="30" max="200" autocomplete="off"
-             name="symptom_log[weight]"
-             data-field="weight"
-             data-action="input->symptom#saveNumber"
-             value="<%= @log.weight %>"
-             placeholder="65.0 kg"
-             class="w-full rounded-xl px-4 py-3 text-sm border-0 outline-none font-['Montserrat']"
-             style="background:#EDE1D5; color:#3d2b28;">
-    </div>
+    <%# 6. Cravings %>
+    <details class="group border-b border-[#F0E8DF]" id="section-cravings">
+      <summary class="flex items-center justify-between py-4 cursor-pointer list-none [&::-webkit-details-marker]:hidden select-none">
+        <div class="flex items-center gap-3">
+          <svg class="transition-transform duration-200 group-open:rotate-90 shrink-0"
+               xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+               fill="none" stroke="<%= phase_colour %>" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+            <polyline points="9 18 15 12 9 6" />
+          </svg>
+          <span class="font-medium text-[22px] tracking-[0.66px]" style="color:<%= phase_colour %>;">Cravings</span>
+        </div>
+        <% if cravings_done %><%= render 'symptoms/bi_check', colour: phase_colour %><% end %>
+      </summary>
+      <div class="pb-5 flex gap-2" role="group" aria-label="Cravings 1 to 5">
+        <% (1..5).each do |i| %>
+          <% selected = @log.cravings == i; bg = selected ? phase_colour : "#EDE1D5"; fg = selected ? "#ffffff" : "#6B6B6B" %>
+          <button class="dot flex-1 py-2.5 rounded-xl text-sm font-bold transition-colors duration-150"
+                  data-action="click->symptom#save" data-field="cravings" data-value="<%= i %>"
+                  aria-label="Cravings <%= i %>" aria-pressed="<%= selected %>"
+                  style="background:<%= bg %>; color:<%= fg %>; border:none; cursor:pointer;"><%= i %></button>
+        <% end %>
+      </div>
+    </details>
 
-    <%# Notes row %>
+    <%# 7. Sleep %>
+    <details class="group border-b border-[#F0E8DF]" id="section-sleep">
+      <summary class="flex items-center justify-between py-4 cursor-pointer list-none [&::-webkit-details-marker]:hidden select-none">
+        <div class="flex items-center gap-3">
+          <svg class="transition-transform duration-200 group-open:rotate-90 shrink-0"
+               xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+               fill="none" stroke="<%= phase_colour %>" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+            <polyline points="9 18 15 12 9 6" />
+          </svg>
+          <span class="font-medium text-[22px] tracking-[0.66px]" style="color:<%= phase_colour %>;">Sleep</span>
+        </div>
+        <% if sleep_done %><%= render 'symptoms/bi_check', colour: phase_colour %><% end %>
+      </summary>
+      <div class="pb-5 flex gap-2" role="group" aria-label="Sleep 1 to 5">
+        <% (1..5).each do |i| %>
+          <% selected = @log.sleep == i; bg = selected ? phase_colour : "#EDE1D5"; fg = selected ? "#ffffff" : "#6B6B6B" %>
+          <button class="dot flex-1 py-2.5 rounded-xl text-sm font-bold transition-colors duration-150"
+                  data-action="click->symptom#save" data-field="sleep" data-value="<%= i %>"
+                  aria-label="Sleep <%= i %>" aria-pressed="<%= selected %>"
+                  style="background:<%= bg %>; color:<%= fg %>; border:none; cursor:pointer;"><%= i %></button>
+        <% end %>
+      </div>
+    </details>
+
+    <%# 8. Temperature %>
+    <details class="group border-b border-[#F0E8DF]" id="section-temperature">
+      <summary class="flex items-center justify-between py-4 cursor-pointer list-none [&::-webkit-details-marker]:hidden select-none">
+        <div class="flex items-center gap-3">
+          <svg class="transition-transform duration-200 group-open:rotate-90 shrink-0"
+               xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+               fill="none" stroke="<%= phase_colour %>" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+            <polyline points="9 18 15 12 9 6" />
+          </svg>
+          <span class="font-medium text-[22px] tracking-[0.66px]" style="color:<%= phase_colour %>;">Temperature</span>
+        </div>
+        <% if temperature_done %><%= render 'symptoms/bi_check', colour: phase_colour %><% end %>
+      </summary>
+      <div class="pb-5">
+        <input id="symptom_temperature" type="number" step="0.1" min="35" max="42" autocomplete="off"
+               name="symptom_log[temperature]" data-field="temperature"
+               data-action="input->symptom#saveNumber"
+               value="<%= @log.temperature %>" placeholder="36.5 °C"
+               class="w-full rounded-xl px-4 py-3 text-sm border-0 outline-none font-['Montserrat']"
+               style="background:#EDE1D5; color:#3d2b28;">
+      </div>
+    </details>
+
+    <%# 9. Weight %>
+    <details class="group border-b border-[#F0E8DF]" id="section-weight">
+      <summary class="flex items-center justify-between py-4 cursor-pointer list-none [&::-webkit-details-marker]:hidden select-none">
+        <div class="flex items-center gap-3">
+          <svg class="transition-transform duration-200 group-open:rotate-90 shrink-0"
+               xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+               fill="none" stroke="<%= phase_colour %>" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+            <polyline points="9 18 15 12 9 6" />
+          </svg>
+          <span class="font-medium text-[22px] tracking-[0.66px]" style="color:<%= phase_colour %>;">Weight</span>
+        </div>
+        <% if weight_done %><%= render 'symptoms/bi_check', colour: phase_colour %><% end %>
+      </summary>
+      <div class="pb-5">
+        <input id="symptom_weight" type="number" step="0.1" min="30" max="200" autocomplete="off"
+               name="symptom_log[weight]" data-field="weight"
+               data-action="input->symptom#saveNumber"
+               value="<%= @log.weight %>" placeholder="65.0 kg"
+               class="w-full rounded-xl px-4 py-3 text-sm border-0 outline-none font-['Montserrat']"
+               style="background:#EDE1D5; color:#3d2b28;">
+      </div>
+    </details>
+
+    <%# 10. Notes regarding today %>
     <details class="group border-b border-[#F0E8DF]" id="section-notes">
       <summary class="flex items-center justify-between py-4 cursor-pointer list-none [&::-webkit-details-marker]:hidden select-none">
         <div class="flex items-center gap-3">
@@ -305,19 +325,12 @@
           </svg>
           <span class="font-medium text-[22px] tracking-[0.66px]" style="color:<%= phase_colour %>;">Notes regarding today</span>
         </div>
-        <% if notes_done %>
-          <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26"
-               fill="none" stroke="<%= phase_colour %>" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
-            <polyline points="20 6 9 17 4 12" />
-          </svg>
-        <% end %>
+        <% if notes_done %><%= render 'symptoms/bi_check', colour: phase_colour %><% end %>
       </summary>
       <div class="pb-5">
         <label for="symptom_notes" class="sr-only">Notes regarding today</label>
-        <textarea id="symptom_notes"
-                  name="symptom_log[notes]"
-                  rows="4"
-                  placeholder="How are you feeling today?"
+        <textarea id="symptom_notes" name="symptom_log[notes]" rows="4"
+                  placeholder="Enter your notes here..."
                   data-action="input->symptom#saveNotes"
                   aria-label="Notes regarding today"
                   class="w-full rounded-xl px-4 py-3 text-sm border-0 resize-none outline-none font-['Montserrat']"
@@ -325,10 +338,10 @@
       </div>
     </details>
 
-    <%# Submit button %>
+    <%# Submit %>
     <div class="pt-6 pb-8">
       <%= link_to tracking_index_path,
-            class: "block w-full text-white text-center rounded-lg py-4 text-xl font-medium tracking-wide",
+            class: "block w-full text-white text-center rounded-lg py-4 text-xl font-medium tracking-wide font-['Montserrat']",
             style: "background:#{phase_colour}; text-decoration:none;" do %>
         Submit
       <% end %>
