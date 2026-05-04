@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>M2 OAuth Setup - Season Docs</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.7; color: #333; background: #FAF7F4; display: flex; min-height: 100vh; }
+    .sidebar { width: 260px; background: white; border-right: 1px solid #EDE1D5; padding: 1.5rem 0; position: fixed; height: 100vh; overflow-y: auto; }
+    .sidebar-header { padding: 0 1.5rem 1.5rem; border-bottom: 1px solid #EDE1D5; margin-bottom: 1rem; }
+    .sidebar-header h1 { font-size: 1.25rem; color: #933a35; }
+    .sidebar-header p { font-size: 0.8rem; color: #6B6B6B; margin-top: 0.25rem; }
+    .nav-section { margin-bottom: 1rem; }
+    .nav-section-title { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: #999; padding: 0 1.5rem; margin-bottom: 0.5rem; }
+    .nav-item { display: block; padding: 0.5rem 1.5rem; color: #444; text-decoration: none; font-size: 0.9rem; transition: all 0.15s; }
+    .nav-item:hover { background: #FAF7F4; color: #933a35; }
+    .nav-item.active { background: #FDF0EE; color: #933a35; font-weight: 600; border-right: 3px solid #933a35; }
+    .content { margin-left: 260px; flex: 1; padding: 2rem 3rem; max-width: 900px; }
+    .content h1 { color: #933a35; font-size: 1.8rem; margin-bottom: 0.5rem; }
+    .content h2 { color: #933a35; font-size: 1.3rem; margin-top: 1.5rem; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid #EDE1D5; }
+    .content h3 { color: #444; font-size: 1.05rem; margin-top: 1.25rem; margin-bottom: 0.5rem; }
+    .content p { margin-bottom: 1rem; }
+    .content ul { margin-bottom: 1rem; padding-left: 1.5rem; }
+    .content li { margin-bottom: 0.25rem; }
+    .content ol { margin-bottom: 1rem; padding-left: 1.5rem; }
+    .content ol li { margin-bottom: 0.5rem; }
+    .content code { background: #FDF0EE; padding: 2px 6px; border-radius: 3px; font-family: 'Monaco', 'Courier New', monospace; font-size: 0.9em; color: #933a35; }
+    .content pre { background: #FDF0EE; padding: 1rem; border-radius: 6px; overflow-x: auto; margin-bottom: 1rem; font-size: 0.85em; }
+    .content pre code { background: none; padding: 0; color: #333; }
+    .content table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
+    .content table th { background: #FAF7F4; color: #933a35; padding: 0.75rem; text-align: left; font-weight: 600; }
+    .content table td { padding: 0.75rem; border-bottom: 1px solid #EDE1D5; }
+    .status-badge { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.8rem; font-weight: 600; margin-right: 0.5rem; }
+    .status-complete { background: #E8F5E9; color: #2E7D32; }
+    .status-pending { background: #FFF3E0; color: #E65100; }
+    .highlight-box { background: #FDF0EE; border-left: 4px solid #933a35; padding: 1rem; margin-bottom: 1rem; border-radius: 4px; }
+    .highlight-box strong { color: #933a35; }
+    @media (max-width: 768px) { .sidebar { display: none; } .content { margin-left: 0; padding: 1.5rem; } }
+  </style>
+</head>
+<body>
+  <nav class="sidebar">
+    <div class="sidebar-header">
+      <h1>Season Docs</h1>
+      <p>Internal team documentation</p>
+    </div>
+    <div class="nav-section">
+      <p class="nav-section-title">Start Here</p>
+      <a href="overview.html" class="nav-item">Project Overview</a>
+    </div>
+    <div class="nav-section">
+      <p class="nav-section-title">Getting Started</p>
+      <a href="userjourney.html" class="nav-item">User Journey</a>
+      <a href="screenslist.html" class="nav-item">Screens &amp; Routes</a>
+      <a href="BACKLOG.html" class="nav-item">Backlog</a>
+      <a href="M2-OAUTH-SETUP.html" class="nav-item active">OAuth Setup</a>
+    </div>
+    <div class="nav-section">
+      <p class="nav-section-title">Audit &amp; Reports</p>
+      <a href="AUDIT-2026-04-10.html" class="nav-item">Audit Report</a>
+      <a href="STYLING-AUDIT.html" class="nav-item">Styling Audit</a>
+      <a href="STAKEHOLDER-REPORT-2026-04-15.html" class="nav-item">Stakeholder Report</a>
+    </div>
+    <div class="nav-section">
+      <p class="nav-section-title">Reference</p>
+      <a href="figma_nodes.html" class="nav-item">Figma Nodes</a>
+      <a href="userdata.html" class="nav-item">User Data &amp; Privacy</a>
+    </div>
+  </nav>
+  <main class="content">
+    <h1>M2 OAuth Setup — Render Deployment</h1>
+    <p>OAuth social login (Google, Facebook, Apple) is fully configured in the Rails app via Devise/OmniAuth. This guide covers the <strong>Render dashboard configuration</strong> required to complete M2.</p>
+
+    <div class="highlight-box">
+      <strong>Status:</strong><br/>
+      <span class="status-badge status-complete">✓ Rails configuration complete</span> — <code>devise.rb</code> ready<br/>
+      <span class="status-badge status-complete">✓ Callbacks wired</span> — <code>OmniauthController</code> ready<br/>
+      <span class="status-badge status-pending">⏳ Render env vars</span> — Pending manual setup on Render dashboard
+    </div>
+
+    <h2>Environment Variables Required</h2>
+    <table>
+      <tr>
+        <th>Variable</th>
+        <th>Provider</th>
+        <th>Source</th>
+      </tr>
+      <tr>
+        <td><code>GOOGLE_CLIENT_ID</code></td>
+        <td>Google Cloud Console</td>
+        <td>OAuth 2.0 Client ID (Web)</td>
+      </tr>
+      <tr>
+        <td><code>GOOGLE_CLIENT_SECRET</code></td>
+        <td>Google Cloud Console</td>
+        <td>OAuth 2.0 Client Secret (Web)</td>
+      </tr>
+      <tr>
+        <td><code>FACEBOOK_APP_ID</code></td>
+        <td>Meta / Facebook App</td>
+        <td>App ID from dashboard</td>
+      </tr>
+      <tr>
+        <td><code>FACEBOOK_APP_SECRET</code></td>
+        <td>Meta / Facebook App</td>
+        <td>App Secret from dashboard</td>
+      </tr>
+      <tr>
+        <td><code>APPLE_CLIENT_ID</code></td>
+        <td>Apple Developer</td>
+        <td>Service ID / Bundle ID</td>
+      </tr>
+      <tr>
+        <td><code>APPLE_CLIENT_SECRET</code></td>
+        <td>Apple Developer</td>
+        <td>Private key (JWT)</td>
+      </tr>
+    </table>
+
+    <h2>Setup Instructions</h2>
+
+    <h3>1. Google OAuth (Google Cloud Console)</h3>
+    <ol>
+      <li>Go to <a href="https://console.cloud.google.com/" target="_blank">Google Cloud Console</a></li>
+      <li>Create a new project or use an existing one</li>
+      <li>Navigate to <strong>APIs &amp; Services &gt; Credentials</strong></li>
+      <li>Click <strong>Create Credentials &gt; OAuth 2.0 Client ID</strong></li>
+      <li>Choose <strong>Web Application</strong></li>
+      <li>Under <strong>Authorized redirect URIs</strong>, add:
+        <ul>
+          <li><code>https://season.vision/auth/google_oauth2/callback</code></li>
+          <li><code>https://app.season.vision/auth/google_oauth2/callback</code> (if applicable)</li>
+          <li><code>http://localhost:3000/auth/google_oauth2/callback</code> (local dev)</li>
+        </ul>
+      </li>
+      <li>Copy <strong>Client ID</strong> → <code>GOOGLE_CLIENT_ID</code></li>
+      <li>Copy <strong>Client Secret</strong> → <code>GOOGLE_CLIENT_SECRET</code></li>
+    </ol>
+
+    <h3>2. Facebook OAuth (Meta / Facebook App)</h3>
+    <ol>
+      <li>Go to <a href="https://developers.facebook.com/" target="_blank">Meta Developers</a></li>
+      <li>Create a new app or use existing one</li>
+      <li>Navigate to <strong>App Settings &gt; Basic</strong></li>
+      <li>Copy <strong>App ID</strong> → <code>FACEBOOK_APP_ID</code></li>
+      <li>Copy <strong>App Secret</strong> → <code>FACEBOOK_APP_SECRET</code></li>
+      <li>Under <strong>Facebook Login &gt; Settings</strong>, add redirect URIs:
+        <ul>
+          <li><code>https://season.vision/auth/facebook/callback</code></li>
+          <li><code>https://app.season.vision/auth/facebook/callback</code></li>
+          <li><code>http://localhost:3000/auth/facebook/callback</code></li>
+        </ul>
+      </li>
+      <li>Ensure "Email" permission is enabled in Login Scopes</li>
+    </ol>
+
+    <h3>3. Apple Sign In (Apple Developer)</h3>
+    <ol>
+      <li>Go to <a href="https://developer.apple.com/" target="_blank">Apple Developer Account</a></li>
+      <li>Navigate to <strong>Certificates, Identifiers &amp; Profiles &gt; Identifiers</strong></li>
+      <li>Create or use an existing Service ID (e.g., <code>com.seasonapp.web</code>)</li>
+      <li>Configure <strong>Sign in with Apple</strong>:
+        <ul>
+          <li>Add <strong>Return URLs</strong>:
+            <ul>
+              <li><code>https://season.vision/auth/apple/callback</code></li>
+              <li><code>https://app.season.vision/auth/apple/callback</code></li>
+              <li><code>http://localhost:3000/auth/apple/callback</code></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li>Create a <strong>Private Key</strong> for the Service ID</li>
+      <li>Download the key and generate JWT token:
+        <ul>
+          <li>Use Team ID, Key ID, and private key to create JWT</li>
+          <li>Service ID → <code>APPLE_CLIENT_ID</code></li>
+          <li>JWT token → <code>APPLE_CLIENT_SECRET</code></li>
+        </ul>
+      </li>
+    </ol>
+
+    <h2>Render Dashboard Configuration</h2>
+    <ol>
+      <li>Go to <a href="https://dashboard.render.com/" target="_blank">Render Dashboard</a></li>
+      <li>Select your Season app service</li>
+      <li>Navigate to <strong>Environment</strong></li>
+      <li>Add the following variables:
+        <pre>GOOGLE_CLIENT_ID=&lt;value from Google Cloud&gt;
+GOOGLE_CLIENT_SECRET=&lt;value from Google Cloud&gt;
+FACEBOOK_APP_ID=&lt;value from Meta&gt;
+FACEBOOK_APP_SECRET=&lt;value from Meta&gt;
+APPLE_CLIENT_ID=&lt;value from Apple&gt;
+APPLE_CLIENT_SECRET=&lt;JWT from Apple&gt;</pre>
+      </li>
+      <li>Click <strong>Save Changes</strong></li>
+      <li>Render will automatically redeploy with new environment variables</li>
+    </ol>
+
+    <h2>Testing</h2>
+
+    <h3>Local Development</h3>
+    <p>Set env vars in <code>.env</code> or <code>.env.local</code>:</p>
+    <pre>GOOGLE_CLIENT_ID=&lt;dev_client_id&gt;
+GOOGLE_CLIENT_SECRET=&lt;dev_client_secret&gt;
+FACEBOOK_APP_ID=&lt;dev_app_id&gt;
+FACEBOOK_APP_SECRET=&lt;dev_app_secret&gt;
+APPLE_CLIENT_ID=&lt;dev_service_id&gt;
+APPLE_CLIENT_SECRET=&lt;dev_jwt&gt;</pre>
+    <p>Run <code>bin/dev</code> and test login buttons at <code>/session/new</code>.</p>
+
+    <h3>Production</h3>
+    <p>After setting env vars on Render:</p>
+    <ol>
+      <li>Check <strong>Logs</strong> for any Devise/OmniAuth initialization errors</li>
+      <li>Test sign-in flow at <code>https://season.vision/session/new</code></li>
+      <li>Click each provider button and verify:
+        <ul>
+          <li>Redirect to provider login</li>
+          <li>Callback returns user to <code>/calendar</code> or <code>/onboarding</code></li>
+          <li>User record created with correct <code>{provider}_uid</code> field</li>
+        </ul>
+      </li>
+    </ol>
+
+    <h2>Configuration Verification</h2>
+    <p>To verify OAuth is correctly wired in Rails:</p>
+    <pre>cd /path/to/season
+grep -A 3 "config.omniauth" config/initializers/devise.rb</pre>
+    <p>Expected output:</p>
+    <pre>config.omniauth :google_oauth2, ENV["GOOGLE_CLIENT_ID"], ENV["GOOGLE_CLIENT_SECRET"],
+  scope: "email,profile", prompt: "select_account"
+config.omniauth :facebook, ENV["FACEBOOK_APP_ID"], ENV["FACEBOOK_APP_SECRET"],
+  scope: "email", prompt: "select_account"
+config.omniauth :apple, ENV["APPLE_CLIENT_ID"], ENV["APPLE_CLIENT_SECRET"],
+  scope: "email, name"</pre>
+    <p>If any ENV var is missing, OmniAuth will skip that provider silently.</p>
+
+    <h2>Troubleshooting</h2>
+    <table>
+      <tr>
+        <th>Issue</th>
+        <th>Solution</th>
+      </tr>
+      <tr>
+        <td>"Invalid OAuth credentials"</td>
+        <td>Verify Client IDs/Secrets on provider dashboard match Render env vars exactly</td>
+      </tr>
+      <tr>
+        <td>"Redirect URI mismatch"</td>
+        <td>Add full callback URL to authorized URIs list on each provider</td>
+      </tr>
+      <tr>
+        <td>Provider button not showing</td>
+        <td>Check <code>render.yaml</code> or Render dashboard env vars are set</td>
+      </tr>
+      <tr>
+        <td>Silent OmniAuth failure</td>
+        <td>Check Rails logs for <code>devise.omniauth</code> warnings</td>
+      </tr>
+    </table>
+
+    <h2>Security Notes</h2>
+    <ul>
+      <li>All <code>*_SECRET</code> values are <strong>never committed</strong> to Git</li>
+      <li>Render marks <code>RESEND_API_KEY</code> as <code>sync: false</code> in <code>render.yaml</code> — OAuth vars should follow the same pattern (manual entry only)</li>
+      <li>Use different credentials for local dev vs production</li>
+      <li>Rotate secrets periodically via provider dashboards</li>
+    </ul>
+  </main>
+</body>
+</html>
