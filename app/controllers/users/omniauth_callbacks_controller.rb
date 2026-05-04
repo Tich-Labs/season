@@ -40,8 +40,8 @@ module Users
       user = User.find_or_create_from_oauth(provider_name, auth)
 
       if user.persisted?
-        sign_in_and_redirect user, event: :authentication
-        set_flash_message(:notice, :success, kind: provider_name.titleize) if is_navigational_format?
+        login user
+        redirect_to after_sign_in_path
       else
         redirect_to new_session_path, alert: I18n.t("oauth.errors.creation_failed")
       end
