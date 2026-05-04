@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_04_051116) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_04_091822) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -216,15 +216,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_04_051116) do
     t.datetime "remember_created_at"
     t.datetime "reset_password_sent_at"
     t.string "reset_password_token"
-    t.boolean "show_appointments"
-    t.boolean "show_cycledays"
+    t.boolean "show_appointments", default: true
+    t.boolean "show_cycledays", default: true
     t.boolean "show_forecast"
-    t.boolean "show_holidays"
-    t.boolean "show_moonphases"
+    t.boolean "show_holidays", default: false
+    t.boolean "show_moonphases", default: true
     t.boolean "show_phases"
     t.boolean "show_prediction"
     t.boolean "show_superpowers"
-    t.boolean "show_week_numbers"
+    t.boolean "show_week_numbers", default: false
     t.string "unconfirmed_email"
     t.datetime "updated_at", null: false
     t.boolean "uses_hormonal_birth_control"
