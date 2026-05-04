@@ -10,9 +10,7 @@ class AvatarService
     { id: "frame-244", name: "Calm Cat", file: "frame-244.png" },
     { id: "frame-245", name: "Silly Cat", file: "frame-245.png" },
     { id: "frame-248", name: "Proud Cat", file: "frame-248.png" },
-    { id: "frame-249", name: "Tender Cat", file: "frame-249.png" },
-    { id: "frame-255", name: "Cheeky Cat", file: "frame-255.png" },
-    { id: "frame-256", name: "Gentle Cat", file: "frame-256.png" }
+    { id: "frame-249", name: "Tender Cat", file: "frame-249.png" }
   ].freeze
 
   def self.all
