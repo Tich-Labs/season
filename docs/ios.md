@@ -16,11 +16,12 @@ The Season app is **well-positioned** for Turbo Native integration. It's already
 |-----------|--------|-------|
 | **Rails 8.1.3** | ✅ Ready | Modern Rails with Hotwire built-in |
 | **Turbo Rails** | ✅ Installed | v2.0.23, fully integrated |
-| **Stimulus** | ✅ Active | 16 controllers, properly structured |
+| **Stimulus** | ✅ Active | 17 controllers (incl. `calendar_toggle_controller`) |
 | **Import Maps** | ✅ Configured | No Node/build dependencies |
 | **Mobile-First CSS** | ✅ Excellent | Tailwind, max-w-[430px] container |
 | **PWA Infrastructure** | ✅ Present | Manifest, service worker, meta tags |
 | **Cookie Auth** | ⚠️ Needs Work | Must be adapted for native |
+| **Calendar Preferences** | ✅ Complete | 5 toggles: appointments, cycle days, moon phases, holidays, week numbers |
 
 ### Key Files
 - `Gemfile` (lines 15-16: turbo-rails, stimulus-rails)

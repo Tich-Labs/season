@@ -18,7 +18,26 @@ class SettingsController < ApplicationController
   end
 
   def calendar
-    @settings = CalendarSettings.new(true, false, true, true, true, false, "monday", true)
+    @user = current_user
+  end
+
+  def update_calendar
+    @user = current_user
+    preferences = {
+      show_appointments: params[:show_appointments] == "1",
+      show_cycledays: params[:show_cycledays] == "1",
+      show_phases: params[:show_phases] == "1",
+      show_prediction: params[:show_prediction] == "1",
+      show_forecast: params[:show_forecast] == "1",
+      show_superpowers: params[:show_superpowers] == "1",
+      week_start_day: params[:week_start_day] || "monday",
+      hide_past_events: params[:hide_past_events] == "1"
+    }
+    if @user.update(preferences)
+      redirect_to calendar_settings_path, notice: t("settings.calendar.saved", default: "Calendar preferences saved")
+    else
+      redirect_to calendar_settings_path, alert: t("settings.calendar.error", default: "Failed to save preferences")
+    end
   end
 
   def notifications
@@ -27,11 +46,20 @@ class SettingsController < ApplicationController
 
   def update_avatar
     @user = current_user
-    if params[:avatar].is_a?(ActionDispatch::Http::UploadedFile)
+    if params[:avatar_preset].present?
+      # User selected a preset avatar
+      preset = AvatarService.find_by(id: params[:avatar_preset])
+      if preset
+        @user.update(avatar_preset: params[:avatar_preset])
+        @user.avatar.purge if @user.avatar.attached?
+        @user.update(avatar_url: nil)
+      end
+    elsif params[:avatar].is_a?(ActionDispatch::Http::UploadedFile)
       @user.avatar.attach(params[:avatar])
+      @user.update(avatar_preset: nil)
     elsif params[:avatar_url].present? && params[:avatar_url].starts_with?("http")
       # URL fallback
-      @user.update(avatar_url: params[:avatar_url])
+      @user.update(avatar_url: params[:avatar_url], avatar_preset: nil)
     end
     redirect_to profile_settings_path
   end

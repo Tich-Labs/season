@@ -25,6 +25,15 @@ Design reference: `docs/figma_nodes.md`
 - M2 complete: SMTP/email (Resend), admin enhancements, LaunchSignup system
 - See docs/AUDIT-2026-04-10.md for full status.
 
+### M2 Summary (Calendar & Settings)
+- Calendar now supports user-toggleable display preferences (appointments, cycle days, moon phases, holidays, week numbers)
+- Settings calendar page: all 5 toggles save to `users` table and persist correctly
+- `CalendarController` loads preferences via `load_calendar_preferences` and filters data accordingly
+- `CalendarHelper` provides `holidays_for_month(year, month)` and `iso_week_number(date)`
+- `_day_cell.html.erb` respects `show_holidays` and `show_week_numbers` locals
+- Fields added: `show_moonphases`, `show_holidays`, `show_week_numbers` (boolean, default nil)
+- Rubocop/erb_lint clean on all modified files
+
 ### M3 Summary (Tracking / Learn)
 
 Figma audit revealed 64 nodes break down to ~8 unique screens — the rest are state variants, flow arrows, and already-built views. All unique screens are now built:

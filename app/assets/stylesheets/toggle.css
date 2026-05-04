@@ -1,0 +1,48 @@
+.toggle-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.toggle-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.toggle-track {
+  width: 40px;
+  height: 20px;
+  background: #933a3520;
+  border-radius: 20px;
+  position: relative;
+  transition: background 0.2s;
+}
+
+.toggle-thumb {
+  width: 16px;
+  height: 16px;
+  background: white;
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: left 0.2s;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-btn.active .toggle-track {
+  background: #933a35;
+}
+
+.toggle-btn.active .toggle-thumb {
+  left: 22px;
+}
+
+.toggle-btn:disabled .toggle-track {
+  background: #ccc;
+}
+
+.toggle-btn:disabled.active .toggle-track {
+  background: #999;
+}

@@ -46,7 +46,7 @@ bundle exec erb_lint --lint-all --format compact  # NOT erblint
 - No page redirects → use inline errors with Turbo Stream
 
 ## Docs
-
 - Figma: `docs/figma_nodes.md`
 - Full instructions: `CLAUDE.md`
+- Calendar preferences: `app/helpers/calendar_helper.rb`
 - Internal docs: `/docs` (GitHub Pages)

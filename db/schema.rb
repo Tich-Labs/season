@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_03_150000) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_04_051116) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -184,6 +184,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_03_150000) do
   create_table "users", force: :cascade do |t|
     t.boolean "admin", default: false, null: false
     t.string "apple_uid"
+    t.string "avatar_preset"
     t.string "avatar_url"
     t.boolean "birth_control_reminder"
     t.date "birthday"
@@ -200,6 +201,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_03_150000) do
     t.string "food_preference"
     t.string "google_uid"
     t.boolean "has_regular_cycle"
+    t.boolean "hide_past_events"
     t.datetime "invite_accepted_at"
     t.string "invite_token"
     t.datetime "invite_token_expires_at"
@@ -214,9 +216,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_03_150000) do
     t.datetime "remember_created_at"
     t.datetime "reset_password_sent_at"
     t.string "reset_password_token"
+    t.boolean "show_appointments"
+    t.boolean "show_cycledays"
+    t.boolean "show_forecast"
+    t.boolean "show_holidays"
+    t.boolean "show_moonphases"
+    t.boolean "show_phases"
+    t.boolean "show_prediction"
+    t.boolean "show_superpowers"
+    t.boolean "show_week_numbers"
     t.string "unconfirmed_email"
     t.datetime "updated_at", null: false
     t.boolean "uses_hormonal_birth_control"
+    t.string "week_start_day"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["invite_token"], name: "index_users_on_invite_token"
     t.index ["language"], name: "index_users_on_language"

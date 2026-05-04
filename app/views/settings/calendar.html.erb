@@ -1,5 +1,4 @@
-<%# Settings - My Calendar screen - matches Figma node %>
-<%# Dark header auto-applied by layout; only back arrow override needed %>
+<%# Settings - My Calendar screen %>
 <% content_for(:header_left) do %>
   <%= link_to edit_settings_path, class: "p-2 flex items-center" do %>
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
@@ -9,91 +8,127 @@
   <% end %>
 <% end %>
 
-<div style="background:#ffffff; min-height:100%;">
+<div class="bg-white min-h-screen">
+  <div class="max-w-app mx-auto px-4 pb-20">
 
-  <%# Content - max-width 430px centered %>
-  <div style="max-width:430px; margin:0 auto; padding:0 16px 80px;">
+    <%# Flash message toast %>
+    <% if notice.present? %>
+      <div class="fixed top-4 left-4 right-4 bg-green-50 border border-green-200 rounded-lg px-4 py-3 text-sm text-green-700 z-50" role="status" data-notification="success">
+        <%= notice %>
+      </div>
+      <script>
+        setTimeout(() => {
+          const toast = document.querySelector('[data-notification="success"]');
+          if (toast) {
+            toast.style.opacity = '0';
+            toast.style.transition = 'opacity 0.3s ease-out';
+            setTimeout(() => toast.remove(), 300);
+          }
+        }, 3000);
+      </script>
+    <% end %>
 
-    <%# My Calender title %>
-    <div style="display:flex; align-items:center; gap:16px; padding:20px 0 8px;">
+    <%= form_with url: update_calendar_settings_path, method: :patch, local: true, data: { controller: "calendar-toggle" }, class: "w-full" do %>
+
+    <%# My Calendar title %>
+    <div class="flex items-center gap-4 pt-5 pb-2">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#933a35" stroke-width="1.5" viewBox="0 0 24 24">
         <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
         <line x1="16" y1="2" x2="16" y2="6" />
         <line x1="8" y1="2" x2="8" y2="6" />
         <line x1="3" y1="10" x2="21" y2="10" />
       </svg>
-      <span style="color:#933a35; font-size:18px; font-weight:700;">My Calender</span>
+      <span class="text-brand-primary text-lg font-bold">My Calendar</span>
     </div>
-    <div style="border-bottom:1px solid #DDD0CB;"></div>
+    <div class="border-b border-[#DDD0CB]"></div>
 
     <%# Show features title %>
-    <div style="display:flex; align-items:center; gap:12px; padding:20px 0 8px;">
+    <div class="flex items-center gap-3 pt-5 pb-2">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
         <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
         <line x1="12" y1="8" x2="12" y2="16" />
         <line x1="8" y1="12" x2="16" y2="12" />
       </svg>
-      <span style="color:#933a35; font-size:16px; font-weight:500;">Show features</span>
+      <span class="text-brand-primary text-base font-medium">Show features</span>
     </div>
 
-    <%# Appointments toggle %>
-    <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 0;">
-      <span style="color:#d18d83; font-size:14px; font-weight:500;">Appontments</span>
-      <label style="position:relative; width:40px; height:20px; background:#933a35; border-radius:20px; cursor:pointer;">
-        <input type="checkbox" checked style="opacity:0; width:0; height:0;">
-        <span style="position:absolute; top:2px; left:2px; width:16px; height:16px; background:white; border-radius:50%; transition:0.2s;"></span>
-      </label>
+    <%# Toggle items %>
+    <div class="space-y-0">
+      <div class="flex items-center justify-between py-3">
+        <div>
+          <div class="text-[#d18d83] text-sm font-medium">Appointments</div>
+          <div class="text-[#999] text-xs mt-1">Show scheduled appointments on your calendar</div>
+        </div>
+        <button type="button" class="toggle-btn <%= "active" if @user.show_appointments? %>" data-action="click->calendar-toggle#toggle" data-field="show_appointments">
+          <div class="toggle-track">
+            <div class="toggle-thumb"></div>
+          </div>
+        </button>
+      </div>
+
+      <div class="flex items-center justify-between py-3">
+        <div>
+          <div class="text-[#d18d83] text-sm font-medium">Cycle Days</div>
+          <div class="text-[#999] text-xs mt-1">Show your menstrual cycle days</div>
+        </div>
+        <button type="button" class="toggle-btn <%= "active" if @user.show_cycledays? %>" data-action="click->calendar-toggle#toggle" data-field="show_cycledays">
+          <div class="toggle-track">
+            <div class="toggle-thumb"></div>
+          </div>
+        </button>
+      </div>
+
+      <div class="flex items-center justify-between py-3">
+        <div>
+          <div class="text-[#d18d83] text-sm font-medium">Moon Phases</div>
+          <div class="text-[#999] text-xs mt-1">Show moon phase information</div>
+        </div>
+        <button type="button" class="toggle-btn <%= "active" if @user.show_moonphases? %>" data-action="click->calendar-toggle#toggle" data-field="show_moonphases">
+          <div class="toggle-track">
+            <div class="toggle-thumb"></div>
+          </div>
+        </button>
+      </div>
+
+      <div class="flex items-center justify-between py-3">
+        <div>
+          <div class="text-[#d18d83] text-sm font-medium">Holidays</div>
+          <div class="text-[#999] text-xs mt-1">Show national holidays and observances</div>
+        </div>
+        <button type="button" class="toggle-btn <%= "active" if @user.show_holidays? %>" data-action="click->calendar-toggle#toggle" data-field="show_holidays">
+          <div class="toggle-track">
+            <div class="toggle-thumb"></div>
+          </div>
+        </button>
+      </div>
+
+      <div class="flex items-center justify-between py-3">
+        <div>
+          <div class="text-[#d18d83] text-sm font-medium">Week Numbers</div>
+          <div class="text-[#999] text-xs mt-1">Display ISO week numbers on the calendar</div>
+        </div>
+        <button type="button" class="toggle-btn <%= "active" if @user.show_week_numbers? %>" data-action="click->calendar-toggle#toggle" data-field="show_week_numbers">
+          <div class="toggle-track">
+            <div class="toggle-thumb"></div>
+          </div>
+        </button>
+      </div>
     </div>
 
-    <%# Cycledays toggle %>
-    <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 0;">
-      <span style="color:#d18d83; font-size:14px; font-weight:500;">Cycledays</span>
-      <label style="position:relative; width:40px; height:20px; background:#933a3520; border-radius:20px; cursor:pointer;">
-        <input type="checkbox" style="opacity:0; width:0; height:0;">
-        <span style="position:absolute; top:2px; left:2px; width:16px; height:16px; background:white; border-radius:50%; transition:0.2s;"></span>
-      </label>
-    </div>
+    <%# Hidden form inputs for toggles %>
+    <input type="hidden" name="show_appointments" value="<%= @user.show_appointments ? "1" : "0" %>">
+    <input type="hidden" name="show_cycledays" value="<%= @user.show_cycledays ? "1" : "0" %>">
+    <input type="hidden" name="show_moonphases" value="<%= @user.show_moonphases ? "1" : "0" %>">
+    <input type="hidden" name="show_holidays" value="<%= @user.show_holidays ? "1" : "0" %>">
+    <input type="hidden" name="show_week_numbers" value="<%= @user.show_week_numbers ? "1" : "0" %>">
+    <input type="hidden" name="gmail_sync" value="0">
+    <input type="hidden" name="microsoft_sync" value="0">
+    <input type="hidden" name="icloud_sync" value="0">
 
-    <%# Tracking Reminder toggle %>
-    <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 0;">
-      <span style="color:#d18d83; font-size:14px; font-weight:500;">Tracking Reminder</span>
-      <label style="position:relative; width:40px; height:20px; background:#933a35; border-radius:20px; cursor:pointer;">
-        <input type="checkbox" checked style="opacity:0; width:0; height:0;">
-        <span style="position:absolute; top:2px; left:20px; width:16px; height:16px; background:white; border-radius:50%; transition:0.2s;"></span>
-      </label>
-    </div>
+    <div class="border-b border-[#DDD0CB] my-2"></div>
 
-    <%# Moonphases toggle %>
-    <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 0;">
-      <span style="color:#d18d83; font-size:14px; font-weight:500;">Moonphases</span>
-      <label style="position:relative; width:40px; height:20px; background:#933a35; border-radius:20px; cursor:pointer;">
-        <input type="checkbox" checked style="opacity:0; width:0; height:0;">
-        <span style="position:absolute; top:2px; left:20px; width:16px; height:16px; background:white; border-radius:50%; transition:0.2s;"></span>
-      </label>
-    </div>
-
-    <%# Holidays toggle %>
-    <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 0;">
-      <span style="color:#d18d83; font-size:14px; font-weight:500;">Holidays</span>
-      <label style="position:relative; width:40px; height:20px; background:#933a35; border-radius:20px; cursor:pointer;">
-        <input type="checkbox" checked style="opacity:0; width:0; height:0;">
-        <span style="position:absolute; top:2px; left:20px; width:16px; height:16px; background:white; border-radius:50%; transition:0.2s;"></span>
-      </label>
-    </div>
-
-    <%# Kalenderwochen toggle %>
-    <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 0;">
-      <span style="color:#d18d83; font-size:14px; font-weight:500;">Kalenderwochen</span>
-      <label style="position:relative; width:40px; height:20px; background:#933a3520; border-radius:20px; cursor:pointer;">
-        <input type="checkbox" style="opacity:0; width:0; height:0;">
-        <span style="position:absolute; top:2px; left:2px; width:16px; height:16px; background:white; border-radius:50%; transition:0.2s;"></span>
-      </label>
-    </div>
-
-    <div style="border-bottom:1px solid #DDD0CB; margin:8px 0;"></div>
-
-    <%# Day of the Week title %>
-    <div style="display:flex; align-items:center; gap:12px; padding:20px 0 8px;">
+    <%# Day of the Week %>
+    <div class="flex items-center gap-3 pt-5 pb-2">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#933a35" stroke-width="1.5" viewBox="0 0 24 24">
         <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
         <line x1="16" y1="2" x2="16" y2="6" />
@@ -101,18 +136,20 @@
         <line x1="3" y1="10" x2="21" y2="10" />
         <polyline points="14 14 17 17 20 13" />
       </svg>
-      <span style="color:#933a35; font-size:16px; font-weight:500;">Day of the Week</span>
+      <span class="text-brand-primary text-base font-medium">Day of the Week</span>
+    </div>
+    <div class="py-3">
+      <select name="week_start_day" data-action="change->calendar-toggle#submitForm" class="w-full bg-brand-field rounded-xl px-4 py-3 text-brand-primary text-sm font-medium">
+        <option value="monday" <%= "selected" if @user.week_start_day == "monday" || @user.week_start_day.nil? %>>Monday</option>
+        <option value="sunday" <%= "selected" if @user.week_start_day == "sunday" %>>Sunday</option>
+        <option value="saturday" <%= "selected" if @user.week_start_day == "saturday" %>>Saturday</option>
+      </select>
     </div>
 
-    <%# Monday option %>
-    <div style="padding:8px 0;">
-      <span style="color:#933a3580; font-size:14px; font-weight:500;">Monday</span>
-    </div>
+    <div class="border-b border-[#DDD0CB] my-2"></div>
 
-    <div style="border-bottom:1px solid #DDD0CB; margin:8px 0;"></div>
-
-    <%# Keep the device's time zone title %>
-    <div style="display:flex; align-items:center; gap:12px; padding:20px 0 8px;">
+    <%# Time Zone %>
+    <div class="flex items-center gap-3 pt-5 pb-2">
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="24" fill="none" stroke="#933a35" stroke-width="1.5" viewBox="0 0 24 24">
         <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
         <line x1="9" y1="6" x2="15" y2="6" />
@@ -120,50 +157,78 @@
         <line x1="9" y1="14" x2="12" y2="14" />
         <line x1="9" y1="18" x2="12" y2="18" />
       </svg>
-      <span style="color:#933a35; font-size:16px; font-weight:500;">Keep the device's time zone</span>
+      <span class="text-brand-primary text-base font-medium">Timezone</span>
+    </div>
+    <div class="py-3">
+      <select name="timezone" class="w-full bg-brand-field rounded-xl px-4 py-3 text-brand-primary text-sm font-medium">
+        <option value="UTC" selected>UTC / GMT</option>
+        <option value="CET">Central European Time (CET)</option>
+        <option value="EST">Eastern Standard Time (EST)</option>
+        <option value="PST">Pacific Standard Time (PST)</option>
+        <option value="IST">Indian Standard Time (IST)</option>
+        <option value="JST">Japan Standard Time (JST)</option>
+        <option value="AEST">Australian Eastern (AEST)</option>
+      </select>
     </div>
 
-    <%# Timezone option %>
-    <div style="padding:8px 0;">
-      <span style="color:#933a35; font-size:16px; font-weight:500;">Timezone</span>
-    </div>
-    <div style="padding-bottom:8px;">
-      <span style="color:#933a3580; font-size:14px; font-weight:500;">Central European Standard Time</span>
-    </div>
+    <div class="border-b border-[#DDD0CB] my-2"></div>
 
-    <div style="border-bottom:1px solid #DDD0CB; margin:8px 0;"></div>
-
-    <%# Links & Syncs title %>
-    <div style="display:flex; align-items:center; gap:12px; padding:20px 0 8px;">
+    <%# Links & Syncs %>
+    <div class="flex items-center gap-3 pt-5 pb-2">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#933a35" stroke-width="1.5" viewBox="0 0 24 24">
         <path d="M21 12A9 9 0 0 1 12 21" stroke-dasharray="3 3" />
         <path d="M3 12a9 9 0 0 1 9-9" />
       </svg>
-      <span style="color:#933a35; font-size:16px; font-weight:500;">Links & Syncs</span>
+      <span class="text-brand-primary text-base font-medium">Links & Syncs</span>
     </div>
 
-    <%# Email sync options %>
-    <div style="padding:12px 0;">
-      <span style="color:#d18d83; font-size:14px; font-weight:500;">name@mailprogramm.com</span>
-    </div>
-    <div style="display:flex; align-items:center; gap:12px; padding:8px 0;">
-      <span style="color:#933a3550; font-size:11px;">Gmail</span>
-      <label style="position:relative; width:40px; height:20px; background:#933a35; border-radius:20px; cursor:pointer;">
-        <input type="checkbox" checked style="opacity:0; width:0; height:0;">
-        <span style="position:absolute; top:2px; left:20px; width:16px; height:16px; background:white; border-radius:50%; transition:0.2s;"></span>
-      </label>
+    <div>
+      <div class="py-3">
+        <span class="text-[#d18d83] text-sm font-medium">user@gmail.com</span>
+      </div>
+      <div class="flex items-center justify-between py-2">
+        <span class="text-brand-primary/60 text-xs">Gmail Calendar Sync</span>
+        <button type="button" class="toggle-btn" data-action="click->calendar-toggle#toggle" data-field="gmail_sync">
+          <div class="toggle-track">
+            <div class="toggle-thumb"></div>
+          </div>
+        </button>
+      </div>
+
+      <div class="py-3">
+        <span class="text-[#d18d83] text-sm font-medium">user@outlook.com</span>
+      </div>
+      <div class="flex items-center justify-between py-2">
+        <span class="text-brand-primary/60 text-xs">Microsoft Outlook Sync</span>
+        <button type="button" class="toggle-btn" data-action="click->calendar-toggle#toggle" data-field="microsoft_sync">
+          <div class="toggle-track">
+            <div class="toggle-thumb"></div>
+          </div>
+        </button>
+      </div>
+
+      <div class="py-3">
+        <span class="text-[#d18d83] text-sm font-medium">user@icloud.com</span>
+      </div>
+      <div class="flex items-center justify-between py-2">
+        <span class="text-brand-primary/60 text-xs">Apple iCloud Sync</span>
+        <button type="button" class="toggle-btn" data-action="click->calendar-toggle#toggle" data-field="icloud_sync">
+          <div class="toggle-track">
+            <div class="toggle-thumb"></div>
+          </div>
+        </button>
+      </div>
     </div>
 
-    <div style="padding:12px 0;">
-      <span style="color:#d18d83; font-size:14px; font-weight:500;">name@mailprogramm.com</span>
+    <%# Auto-save status %>
+    <div class="mt-8 pt-4 text-center text-xs text-[#999]" data-notification="auto-save" style="display:none;">
+      Saving...
     </div>
-    <div style="display:flex; align-items:center; gap:12px; padding:8px 0;">
-      <span style="color:#933a3550; font-size:11px;">Microsoft</span>
-      <label style="position:relative; width:40px; height:20px; background:#933a3520; border-radius:20px; cursor:pointer;">
-        <input type="checkbox" style="opacity:0; width:0; height:0;">
-        <span style="position:absolute; top:2px; left:2px; width:16px; height:16px; background:white; border-radius:50%; transition:0.2s;"></span>
-      </label>
-    </div>
+
+    <% end %>
 
   </div>
 </div>
+
+<%= stylesheet_link_tag "toggle", media: "all" %>
+<%= javascript_import_module_tag "controllers/calendar_toggle_controller" %>
