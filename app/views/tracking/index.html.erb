@@ -32,14 +32,19 @@
       <%= link_to profile_settings_path, class: "relative block w-56 h-56 shrink-0", aria: { label: "Change profile picture" } do %>
         <div class="w-56 h-56 rounded-full flex items-center justify-center overflow-hidden"
              style="background:<%= phase_colour %>;">
-          <% if current_user.avatar.attached? %>
+          <% if current_user.avatar_preset.present? %>
+            <% preset = AvatarService.find_by_id(current_user.avatar_preset) %>
+            <% if preset %>
+              <%= image_tag "avatars/#{preset[:file]}", class: "w-full h-full object-cover", alt: preset[:name] %>
+            <% end %>
+          <% elsif current_user.avatar.attached? %>
             <%= image_tag current_user.avatar,
                   class: "w-full h-full object-cover",
                   alt: current_user.name %>
           <% elsif current_user.avatar_url.present? %>
-            <img src="<%= current_user.avatar_url %>"
-                 class="w-full h-full object-cover"
-                 alt="<%= current_user.name %>">
+            <%= image_tag current_user.avatar_url,
+                  class: "w-full h-full object-cover",
+                  alt: current_user.name %>
           <% else %>
             <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="none"
                  stroke="white" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true">

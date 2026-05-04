@@ -77,7 +77,8 @@ Rails.application.routes.draw do
   devise_for :users,
     controllers: {
       passwords: "passwords",
-      confirmations: "confirmations"
+      confirmations: "confirmations",
+      omniauth_callbacks: "users/omniauth_callbacks"
     },
     skip: [:sessions],
     omniauth_providers: [:google_oauth2, :facebook, :apple]
@@ -135,6 +136,7 @@ Rails.application.routes.draw do
     get :notification_birth_control, on: :collection
     patch :update_avatar, on: :collection
     patch :update_profile, on: :collection
+    patch :update_calendar, on: :collection
     patch :update_notifications, on: :collection
     patch :save_morning_reminder, on: :collection
     patch :save_period_reminder, on: :collection

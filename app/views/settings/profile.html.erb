@@ -1,35 +1,5 @@
 <%# My Profile screen - matches Figma node 12048-37877 %>
 <%# Dark header auto-applied by layout; only back arrow override needed %>
-<script nonce="<%= content_security_policy_nonce %>">
-  (function() {
-    function openAvatarModal() {
-      var modal = document.getElementById('avatar-modal');
-      modal.style.display = 'flex';
-      var focusable = modal.querySelectorAll('button, input, a[href], [tabindex]:not([tabindex="-1"])');
-      if (focusable.length) focusable[0].focus();
-      modal._opener = document.activeElement;
-      modal.addEventListener('keydown', trapFocus);
-    }
-    function closeAvatarModal() {
-      var modal = document.getElementById('avatar-modal');
-      modal.style.display = 'none';
-      modal.removeEventListener('keydown', trapFocus);
-      if (modal._opener) modal._opener.focus();
-    }
-    function trapFocus(e) {
-      var modal = document.getElementById('avatar-modal');
-      var focusable = Array.from(modal.querySelectorAll('button, input, a[href], [tabindex]:not([tabindex="-1"])'));
-      if (!focusable.length) return;
-      if (e.key === 'Escape') { closeAvatarModal(); return; }
-      if (e.key !== 'Tab') return;
-      var first = focusable[0], last = focusable[focusable.length - 1];
-      if (e.shiftKey) { if (document.activeElement === first) { e.preventDefault(); last.focus(); } }
-      else { if (document.activeElement === last) { e.preventDefault(); first.focus(); } }
-    }
-    window.openAvatarModal = openAvatarModal;
-    window.closeAvatarModal = closeAvatarModal;
-  })();
-</script>
 <% content_for(:header_left) do %>
   <%= link_to edit_settings_path, class: "p-2 flex items-center" do %>
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
@@ -39,7 +9,7 @@
   <% end %>
 <% end %>
 
-<div style="background:#ffffff; min-height:100%;">
+<div style="background:#ffffff; min-height:100%;" data-controller="profile-modal" data-action="click@window->profile-modal#clickOutside">
 
   <%# Content - max-width 430px centered %>
   <div style="max-width:430px; margin:0 auto; padding:0 16px 80px;">
@@ -51,9 +21,14 @@
     <div style="border-bottom:1px solid #DDD0CB;"></div>
 
     <%# Profile Picture %>
-    <button onclick="openAvatarModal()" aria-haspopup="dialog"
+    <button data-action="click->profile-modal#openAvatarModal" aria-haspopup="dialog"
             style="display:flex; align-items:center; gap:16px; padding:16px 0; width:100%; background:none; border:none; cursor:pointer; text-align:left;">
-      <% if @user.avatar.attached? %>
+      <% if @user.avatar_preset.present? %>
+        <% preset = AvatarService.find_by_id(@user.avatar_preset) %>
+        <% if preset %>
+          <%= image_tag "avatars/#{preset[:file]}", style: "width:48px; height:48px; border-radius:50%; object-fit:cover; flex-shrink:0;", alt: preset[:name] %>
+        <% end %>
+      <% elsif @user.avatar.attached? %>
         <%= image_tag @user.avatar, style: "width:48px; height:48px; border-radius:50%; object-fit:cover; flex-shrink:0;", alt: "Profile" %>
       <% elsif @user.avatar_url.present? %>
         <%= image_tag @user.avatar_url, alt: "Profile",
@@ -74,19 +49,37 @@
       <div style="background:#FAF7F4; border-radius:16px; padding:24px; width:90%; max-width:340px; margin:16px;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
           <h3 id="avatar-modal-title" style="color:#933a35; font-size:18px; font-weight:600; margin:0;">Profile Picture</h3>
-          <button id="avatar-modal-close" onclick="closeAvatarModal()" style="background:none; border:none; cursor:pointer;">
+          <button id="avatar-modal-close" data-action="click->profile-modal#closeAvatarModal" style="background:none; border:none; cursor:pointer;">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
               <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
             </svg>
           </button>
         </div>
 
+        <%# Preset Avatars %>
+        <div style="margin-bottom:20px;">
+          <label style="display:block; color:#933a35; font-size:13px; font-weight:500; margin-bottom:12px;">Choose a cat avatar</label>
+          <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:12px;">
+            <% AvatarService.all.each do |preset| %>
+              <%= form_with url: update_avatar_settings_path, method: :patch, data: { turbo: false }, local: true do %>
+                <input type="hidden" name="avatar_preset" value="<%= preset[:id] %>">
+                <button type="submit" title="<%= preset[:name] %>" aria-label="<%= preset[:name] %>"
+                        style="display:flex; align-items:center; justify-content:center; width:100%; aspect-ratio:1; background:white; border:<%= @user.avatar_preset == preset[:id] ? '3px solid #933a35' : '1px solid #DDD0CB' %>; border-radius:12px; padding:8px; cursor:pointer; transition:all 0.2s;">
+                  <%= image_tag "avatars/#{preset[:file]}", alt: preset[:name], style: "width:100%; height:100%; object-fit:cover; border-radius:8px;" %>
+                </button>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+
+        <hr style="border:none; border-top:1px solid #DDD0CB; margin:20px 0;">
+
         <%# Option 1: Upload from device %>
         <%= form_with url: update_avatar_settings_path, method: :patch, multipart: true, data: { turbo: false }, id: "avatar-upload-form" do %>
           <input type="file" id="avatar-file" name="avatar" accept="image/*"
-                 style="position:absolute; left:-9999px; width:1px; height:1px; opacity:0;"
-                 onchange="document.getElementById('avatar-upload-form').submit();">
-          <button type="button" onclick="document.getElementById('avatar-file').click()"
+                 data-action="change->profile-modal#submitAvatarForm"
+                 style="position:absolute; left:-9999px; width:1px; height:1px; opacity:0;">
+          <button type="button" data-action="click->profile-modal#clickAvatarUpload"
                   style="display:flex; align-items:center; gap:12px; width:100%; background:#FFFFFF; border:1px solid #DDD0CB; border-radius:12px; padding:16px; margin-bottom:12px; cursor:pointer; text-align:left;">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#933a35" stroke-width="1.5" viewBox="0 0 24 24">
               <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
@@ -108,7 +101,7 @@
         <% end %>
 
         <%# Cancel button %>
-        <button onclick="closeAvatarModal()"
+        <button data-action="click->profile-modal#closeAvatarModal"
                 style="width:100%; background:transparent; color:#933a35; border:1px solid #DDD0CB; border-radius:12px; padding:14px; font-size:16px; font-weight:500; cursor:pointer; margin-top:8px;">
           Cancel
         </button>
@@ -116,7 +109,7 @@
     </div>
 
     <%# E-Mail Address %>
-    <button onclick="document.getElementById('email-modal').style.display='flex'" style="background:none; border:none; width:100%; display:flex; align-items:center; gap:16px; padding:16px 0; cursor:pointer;">
+    <button data-action="click->profile-modal#openEmailModal" style="background:none; border:none; width:100%; display:flex; align-items:center; gap:16px; padding:16px 0; cursor:pointer;">
       <%= vuesax_icon "sms", size: 24 %>
       <div style="flex:1; text-align:left;">
         <span style="color:#933a35; font-size:16px; font-weight:500;">E-Mail Address</span>
@@ -157,7 +150,7 @@
     <div style="border-bottom:1px solid #DDD0CB; padding-top: 16px;"></div>
 
     <%# ── Personal information ── %>
-    <button onclick="document.getElementById('personal-info-modal').style.display='flex'" style="background:none; border:none; width:100%; display:flex; align-items:center; gap:8px; padding:24px 0 8px; cursor:pointer;">
+    <button data-action="click->profile-modal#openPersonalInfoModal" style="background:none; border:none; width:100%; display:flex; align-items:center; gap:8px; padding:24px 0 8px; cursor:pointer;">
       <svg style="width:24px; height:24px;" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#933a35" stroke-width="1.5" viewBox="0 0 24 24">
         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
         <circle cx="12" cy="7" r="4" />
@@ -169,7 +162,7 @@
     </button>
 
     <%# Personal info items %>
-    <button onclick="document.getElementById('personal-info-modal').style.display='flex'" style="background:none; border:none; width:100%; display:flex; align-items:center; padding:8px 0 8px 32px; cursor:pointer;">
+    <button data-action="click->profile-modal#openPersonalInfoModal" style="background:none; border:none; width:100%; display:flex; align-items:center; padding:8px 0 8px 32px; cursor:pointer;">
       <span style="flex:1; color:#D18D83; font-size:14px; text-align:left;">Name: <%= @user.first_name %></span>
       <svg style="width:6px; height:12px;" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
         <polyline points="9 18 15 12 9 6" />
@@ -212,7 +205,7 @@
   <div style="background:#FAF7F4; border-radius:16px; padding:24px; width:90%; max-width:340px; margin:16px;">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
       <h3 id="email-modal-title" style="color:#933a35; font-size:18px; font-weight:600; margin:0;">Change Email</h3>
-      <button onclick="document.getElementById('email-modal').style.display='none'" style="background:none; border:none; cursor:pointer;">
+      <button data-action="click->profile-modal#closeEmailModal" style="background:none; border:none; cursor:pointer;">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
           <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
         </svg>
@@ -232,7 +225,7 @@
       </button>
     <% end %>
 
-    <button onclick="document.getElementById('email-modal').style.display='none'"
+    <button data-action="click->profile-modal#closeEmailModal"
             style="width:100%; background:transparent; color:#933a35; border:1px solid #DDD0CB; border-radius:12px; padding:14px; font-size:16px; font-weight:500; cursor:pointer; margin-top:8px;">
       Cancel
     </button>
@@ -240,11 +233,11 @@
 </div>
 
 <%# ── Personal Information Edit Modal ── %>
-<div id="personal-info-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:100; align-items:center; justify-content:center;">
+<div id="personal-info-modal" role="dialog" aria-modal="true" aria-labelledby="personal-info-modal-title" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:100; align-items:center; justify-content:center;">
   <div style="background:#FAF7F4; border-radius:16px; padding:24px; width:90%; max-width:340px; margin:16px;">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-      <h3 style="color:#933a35; font-size:18px; font-weight:600; margin:0;">Personal Information</h3>
-      <button onclick="document.getElementById('personal-info-modal').style.display='none'" style="background:none; border:none; cursor:pointer;">
+      <h3 id="personal-info-modal-title" style="color:#933a35; font-size:18px; font-weight:600; margin:0;">Personal Information</h3>
+      <button data-action="click->profile-modal#closePersonalInfoModal" style="background:none; border:none; cursor:pointer;">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
           <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
         </svg>
@@ -275,7 +268,7 @@
       </button>
     <% end %>
 
-    <button onclick="document.getElementById('personal-info-modal').style.display='none'"
+    <button data-action="click->profile-modal#closePersonalInfoModal"
             style="width:100%; background:transparent; color:#933a35; border:1px solid #DDD0CB; border-radius:12px; padding:14px; font-size:16px; font-weight:500; cursor:pointer; margin-top:8px;">
       Cancel
     </button>
