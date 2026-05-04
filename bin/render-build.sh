@@ -9,14 +9,14 @@ bundle exec rails assets:precompile
 bundle exec rails assets:clean
 bundle exec rails db:prepare
 
-# Load solid adapter schemas explicitly.
+# Migrate solid adapter databases explicitly.
 # db:prepare only migrates the primary database when all databases share
 # the same DATABASE_URL, so the solid_cache/queue/cable tables never get
 # created otherwise — causing 500s on any request that touches Rails.cache.
-echo "Loading solid_cache schema..."
-bundle exec rails db:schema:load:cache || { echo "ERROR: solid_cache schema load failed"; exit 1; }
-echo "Loading solid_queue schema..."
-bundle exec rails db:schema:load:queue || { echo "ERROR: solid_queue schema load failed"; exit 1; }
-echo "Loading solid_cable schema..."
-bundle exec rails db:schema:load:cable || { echo "ERROR: solid_cable schema load failed"; exit 1; }
-echo "Solid schemas loaded successfully."
+echo "Migrating solid_cache database..."
+bundle exec rails db:migrate:cache || { echo "ERROR: solid_cache migration failed"; exit 1; }
+echo "Migrating solid_queue database..."
+bundle exec rails db:migrate:queue || { echo "ERROR: solid_queue migration failed"; exit 1; }
+echo "Migrating solid_cable database..."
+bundle exec rails db:migrate:cable || { echo "ERROR: solid_cable migration failed"; exit 1; }
+echo "Solid adapter databases migrated successfully."
