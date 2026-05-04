@@ -48,7 +48,7 @@ class SettingsController < ApplicationController
     @user = current_user
     if params[:avatar_preset].present?
       # User selected a preset avatar
-      preset = AvatarService.find_by(id: params[:avatar_preset])
+      preset = AvatarService.all.find { |p| p[:id] == params[:avatar_preset] }
       if preset
         @user.update(avatar_preset: params[:avatar_preset])
         @user.avatar.purge if @user.avatar.attached?
