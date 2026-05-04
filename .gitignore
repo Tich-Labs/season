@@ -44,5 +44,6 @@ setup.sh
 /app/assets/builds/*
 !/app/assets/builds/.keep
 
-
-.idea/
+# Ignore specific non-avatar images
+/app/assets/images/avatars/frame-255.png
+/app/assets/images/avatars/frame-256.png
