@@ -26,6 +26,7 @@ gem "devise"
 gem "omniauth-google-oauth2"
 gem "omniauth-facebook"
 gem "omniauth-apple"
+gem "omniauth-rails_csrf_protection"
 gem "rack-attack"  # Rate limiting for auth endpoints
 
 # UI
