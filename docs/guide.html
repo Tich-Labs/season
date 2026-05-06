@@ -389,7 +389,7 @@
                 </a>
                 <a href="#ch3audit" class="nav-item" style="font-size: 0.8rem; padding: 4px 12px;" onclick="showSection('ch3audit')">
                     <span class="nav-item-icon" style="font-size: 0.7rem;">3</span> Ch3: Views
-                    <span class="chapter-count" style="font-size: 0.7rem;">95%</span>
+                    <span class="chapter-count" style="font-size: 0.7rem;">100%</span>
                 </a>
                 <a href="#ch4audit" class="nav-item" style="font-size: 0.8rem; padding: 4px 12px;" onclick="showSection('ch4audit')">
                     <span class="nav-item-icon" style="font-size: 0.7rem;">4</span> Ch4: Auth
@@ -1230,10 +1230,13 @@
             <div class="card">
                 <div class="card-header">
                     <div class="icon">3</div>
-                    <div class="card-title">Audit Summary <span class="badge badge-green">95%</span></div>
+                    <div class="card-title">Audit Summary <span class="badge badge-green">100%</span></div>
                 </div>
+                <p><strong>Status:</strong> ✅ Complete - Brand colors, Tailwind config, mobile container, i18n compliant</p>
+                <p style="margin-top: 10px;"><strong>Fixed:</strong> Burger menu hardcoded strings → t() translations (8b1dc98)</p>
+            </div>
                 <p><strong>Status:</strong> ✅ Complete - Brand colors, Tailwind config, mobile container</p>
-                <p style="margin-top: 10px;"><strong>TODO:</strong> Burger menu text hardcoded (t() needed), onboarding strings hardcoded</p>
+                <p style="margin-top: 10px;"><strong>TODO:</strong> Onboarding strings hardcoded (check complete - already using t())</p>
             </div>
         </div>
 
@@ -1247,7 +1250,7 @@
                     <div class="card-title">Audit Summary <span class="badge badge-green">90%</span></div>
                 </div>
                 <p><strong>Status:</strong> ✅ Mostly Complete - Devise, OmniAuth, confirmable, rate limiting guards in place</p>
-                <p style="margin-top: 10px;"><strong>Improvements:</strong> Enable paranoid mode, verify OAuth credentials are set in Render</p>
+                <p style="margin-top: 10px;"><strong>Improvements:</strong> Complete Apple OAuth credentials in Render dashboard</p>
             </div>
             <div class="card" style="margin-top: 20px;">
                 <div class="card-header">
@@ -1273,7 +1276,7 @@
                     <div class="icon">🟡</div>
                     <div class="card-title">MEDIUM Priority TODO</div>
                 </div>
-                <div class="step"><div class="step-num">2</div><div><strong>Devise config.paranoid = true</strong> - Prevents account enumeration attacks<br>Uncomment line 93 in <code>config/initializers/devise.rb</code></div></div>
+                <div class="step"><div class="step-num">✓</div><div><strong>Devise config.paranoid = true</strong> ✅ — Enabled in <code>config/initializers/devise.rb:93</code> <span style="color:#4ade80;">(20e8e81)</span></div></div>
             </div>
         </div>
 
@@ -1428,201 +1431,190 @@
         <!-- Season App Section -->
         <div id="season" class="content-section">
             <h1>Applications: Season V2</h1>
-            <p class="subtitle">Women's cycle tracking PWA - Audit progress & chapter completion</p>
+            <p class="subtitle">Women's cycle tracking PWA — Rails 8 + Hotwire + PostgreSQL</p>
 
-            <div class="card">
-                <div class="card-header">
-                    <div class="icon">🌸</div>
-                    <div class="card-title">Season V2 <span class="badge badge-orange">In Progress</span></div>
+            <!-- App snapshot -->
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number">90%</div>
+                    <div class="stat-label">Overall Audit</div>
                 </div>
-                <p><strong>Description:</strong> Women's cycle tracking progressive web app (PWA) built on Rails 8 with Hotwire.</p>
-                <p style="margin-top: 10px;"><strong>Path:</strong> <code>/Users/tichlabs/Documents/onlyCode/season</code></p>
-                <p style="margin-top: 5px;"><strong>Tech Stack:</strong> Rails 8.1.3, PostgreSQL, Hotwire (Turbo + Stimulus), Tailwind CSS, Resend, Sentry</p>
-                <p style="margin-top: 5px;"><strong>Status:</strong> M1-M5, M7 complete (Launch ready after TODOs)</p>
-                <p style="margin-top: 5px;"><strong>Milestones:</strong> M1 (Signing In/Onboarding) ✅ | M2 (Calendar) ✅ | M3 (Tracking/Learn) ✅ | M4 (Forecasting) ✅ | M5 (Reminders) ✅ | M6 (Gamification) ❌ | M7 (Feedback) ✅</p>
+                <div class="stat-card">
+                    <div class="stat-number">6/7</div>
+                    <div class="stat-label">Milestones Done</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">76</div>
+                    <div class="stat-label">Tests Passing</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">10</div>
+                    <div class="stat-label">Chapters Audited</div>
+                </div>
             </div>
 
+            <!-- App info -->
+            <div class="card" style="margin-top: 20px;">
+                <div class="card-header">
+                    <div class="icon">🌸</div>
+                    <div class="card-title">Season V2 <span class="badge badge-orange">Launch Ready*</span></div>
+                </div>
+                <table>
+                    <tr><th>Field</th><th>Value</th></tr>
+                    <tr><td><strong>Description</strong></td><td>Women's cycle tracking PWA built on Rails 8 with Hotwire</td></tr>
+                    <tr><td><strong>Tech Stack</strong></td><td>Rails 8.1.3 · PostgreSQL · Hotwire (Turbo + Stimulus) · Tailwind CSS · Resend · Sentry</td></tr>
+                    <tr><td><strong>Deployment</strong></td><td>Render — <code>seasonv2.onrender.com</code></td></tr>
+                    <tr><td><strong>Local Path</strong></td><td><code>season/</code></td></tr>
+                </table>
+                <p style="margin-top: 12px; color: #94a3b8; font-size: 0.85rem;">* Apple OAuth still pending. All other HIGH priority items complete.</p>
+            </div>
+
+            <!-- Milestones -->
+            <div class="card" style="margin-top: 20px;">
+                <div class="card-header">
+                    <div class="icon">🗺️</div>
+                    <div class="card-title">Milestones</div>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; margin-top: 10px;">
+                    <div style="background:#1e293b; border-radius:8px; padding:10px;">
+                        <div style="font-size:0.75rem; color:#64748b; margin-bottom:4px;">M1</div>
+                        <div style="font-size:0.85rem;">Signing In &amp; Onboarding</div>
+                        <div style="color:#4ade80; margin-top:4px;">✅ Complete</div>
+                    </div>
+                    <div style="background:#1e293b; border-radius:8px; padding:10px;">
+                        <div style="font-size:0.75rem; color:#64748b; margin-bottom:4px;">M2</div>
+                        <div style="font-size:0.85rem;">Calendar &amp; Settings</div>
+                        <div style="color:#4ade80; margin-top:4px;">✅ Complete</div>
+                    </div>
+                    <div style="background:#1e293b; border-radius:8px; padding:10px;">
+                        <div style="font-size:0.75rem; color:#64748b; margin-bottom:4px;">M3</div>
+                        <div style="font-size:0.85rem;">Tracking / Learn</div>
+                        <div style="color:#4ade80; margin-top:4px;">✅ Complete</div>
+                    </div>
+                    <div style="background:#1e293b; border-radius:8px; padding:10px;">
+                        <div style="font-size:0.75rem; color:#64748b; margin-bottom:4px;">M4</div>
+                        <div style="font-size:0.85rem;">Forecasting &amp; Appointments</div>
+                        <div style="color:#4ade80; margin-top:4px;">✅ Complete</div>
+                    </div>
+                    <div style="background:#1e293b; border-radius:8px; padding:10px;">
+                        <div style="font-size:0.75rem; color:#64748b; margin-bottom:4px;">M5</div>
+                        <div style="font-size:0.85rem;">Reminders &amp; Birth Control</div>
+                        <div style="color:#4ade80; margin-top:4px;">✅ Complete</div>
+                    </div>
+                    <div style="background:#1e293b; border-radius:8px; padding:10px; opacity:0.5;">
+                        <div style="font-size:0.75rem; color:#64748b; margin-bottom:4px;">M6</div>
+                        <div style="font-size:0.85rem;">Gamification &amp; Scoring</div>
+                        <div style="color:#f87171; margin-top:4px;">❌ Not in scope</div>
+                    </div>
+                    <div style="background:#1e293b; border-radius:8px; padding:10px;">
+                        <div style="font-size:0.75rem; color:#64748b; margin-bottom:4px;">M7</div>
+                        <div style="font-size:0.85rem;">Onboarding &amp; Feedback</div>
+                        <div style="color:#4ade80; margin-top:4px;">✅ Complete</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chapter audit summary -->
             <div class="card" style="margin-top: 20px;">
                 <div class="card-header">
                     <div class="icon">📊</div>
-                    <div class="card-title">Chapter Completion Status</div>
+                    <div class="card-title">Chapter Audit Summary</div>
                 </div>
                 <table>
                     <tr>
-                        <th>Chapter</th>
+                        <th>Ch</th>
                         <th>Topic</th>
-                        <th>Completion</th>
-                        <th>What's Left</th>
+                        <th>Score</th>
+                        <th>Remaining</th>
                     </tr>
                     <tr>
                         <td><strong>1</strong></td>
                         <td>Foundation</td>
-                        <td><span style="color: #4ade80;">95%</span></td>
-                        <td>
-                            <span class="tag">CI/CD fully configured</span>
-                            <span class="tag">Linting passing</span>
-                        </td>
+                        <td><span style="color:#4ade80;">95%</span></td>
+                        <td><span class="tag">CI/CD pipeline</span></td>
                     </tr>
                     <tr>
                         <td><strong>2</strong></td>
                         <td>Core Features</td>
-                        <td><span style="color: #4ade80;">100%</span></td>
-                        <td><span class="tag">Complete</span></td>
+                        <td><span style="color:#4ade80;">100%</span></td>
+                        <td><span class="tag" style="background:#1a3a1a; color:#4ade80;">Complete ✅</span></td>
                     </tr>
                     <tr>
                         <td><strong>3</strong></td>
                         <td>Views & Styling</td>
-                        <td><span style="color: #4ade80;">95%</span></td>
+                        <td><span style="color: #4ade80;">100%</span></td>
                         <td>
-                            <span class="tag">Burger menu text hardcoded (t() needed)</span>
-                            <span class="tag">Onboarding strings hardcoded</span>
+                            <span class="tag">Complete ✅</span>
                         </td>
                     </tr>
                     <tr>
                         <td><strong>4</strong></td>
                         <td>Authentication</td>
-                        <td><span style="color: #4ade80;">95%</span></td>
-                        <td>
-                            <span class="tag">Devise paranoid mode ✅</span>
-                            <span class="tag">OAuth: Facebook ✅, Google ✅, Apple ⏳</span>
-                        </td>
+                        <td><span style="color:#4ade80;">95%</span></td>
+                        <td><span class="tag">Apple OAuth ⏳</span></td>
                     </tr>
                     <tr>
                         <td><strong>5</strong></td>
                         <td>Mobile PWA</td>
-                        <td><span style="color: #4ade80;">95%</span></td>
-                        <td>
-                            <span class="tag">Turbo Native roadmap</span>
-                            <span class="tag">iOS install banner ✅</span>
-                        </td>
+                        <td><span style="color:#4ade80;">95%</span></td>
+                        <td><span class="tag">Turbo Native roadmap</span></td>
                     </tr>
                     <tr>
                         <td><strong>6</strong></td>
                         <td>Advanced Features</td>
-                        <td><span style="color: #4ade80;">90%</span></td>
-                        <td>
-                            <span class="tag">Active Storage: local (beta) → Cloudflare R2 (launch)</span>
-                        </td>
+                        <td><span style="color:#4ade80;">90%</span></td>
+                        <td><span class="tag">Storage → R2 at launch</span></td>
                     </tr>
                     <tr>
                         <td><strong>7</strong></td>
                         <td>API Development</td>
-                        <td><span style="color: #94a3b8;">N/A</span></td>
-                        <td><span class="tag">Not applicable (PWA with Hotwire)</span></td>
+                        <td><span style="color:#94a3b8;">N/A</span></td>
+                        <td><span class="tag">PWA / Hotwire — not applicable</span></td>
                     </tr>
                     <tr>
                         <td><strong>8</strong></td>
                         <td>Integration</td>
-                        <td><span style="color: #4ade80;">85%</span></td>
-                        <td>
-                            <span class="tag">OAuth: Facebook ✅, Google ✅, Apple ⏳</span>
-                            <span class="tag">Sentry DSN (medium - parked)</span>
-                            <span class="tag">Stripe wired (post-launch)</span>
-                        </td>
+                        <td><span style="color:#4ade80;">85%</span></td>
+                        <td><span class="tag">Apple OAuth ⏳</span> <span class="tag">Sentry DSN</span></td>
                     </tr>
                     <tr>
                         <td><strong>9</strong></td>
                         <td>Testing</td>
-                        <td><span style="color: #4ade80;">100%</span></td>
-                        <td><span class="tag">76 tests passing</span></td>
+                        <td><span style="color:#4ade80;">100%</span></td>
+                        <td><span class="tag" style="background:#1a3a1a; color:#4ade80;">76 tests passing ✅</span></td>
                     </tr>
                     <tr>
                         <td><strong>10</strong></td>
                         <td>Production</td>
-                        <td><span style="color: #4ade80;">90%</span></td>
-                        <td>
-                            <span class="tag">config.hosts ✅</span>
-                            <span class="tag">config.load_defaults 8.1 ✅</span>
-                            <span class="tag">Rack::Attack ✅</span>
-                            <span class="tag">CSP enforcement ✅</span>
-                        </td>
+                        <td><span style="color:#4ade80;">90%</span></td>
+                        <td><span class="tag">CSP enforcement</span></td>
                     </tr>
                 </table>
             </div>
 
-            <div class="card" style="margin-top: 20px;">
+            <!-- Completed HIGH priority items -->
+            <div class="card" style="margin-top: 20px; border-color: #166534;">
                 <div class="card-header">
                     <div class="icon">✅</div>
-                    <div class="card-title">Critical Pre-Launch Items (HIGH Priority) - DONE ✅</div>
+                    <div class="card-title">Completed — HIGH Priority Items</div>
                 </div>
-                <div class="step">
-                    <div class="step-num">✓</div>
-                    <div>
-                        <strong>OAuth credentials on Render</strong> (Google ✅, Facebook ✅, Apple ⏳)<br>
-                        Google & Facebook ready - callbacks updated to <code>/users/auth/:provider/callback</code><br>
-                        <span style="color: #4ade80;">Status: ✅ Google & Facebook ready</span>
-                    </div>
-                </div>
-                <div class="step">
-                    <div class="step-num">✓</div>
-                    <div>
-                        <strong>config.hosts uncommented</strong> (DNS rebinding protection)<br>
-                        <code>config.hosts &lt;&lt; ENV["APP_HOST"]</code> in <code>config/environments/production.rb</code><br>
-                        <span style="color: #4ade80;">Status: ✅ Done (cf85c4c)</span>
-                    </div>
-                </div>
-                <div class="step">
-                    <div class="step-num">✓</div>
-                    <div>
-                        <strong>Rack::Attack on login endpoints</strong> (rate limiting)<br>
-                        Created <code>config/initializers/rack_attack.rb</code> with rate limits on <code>/users/sign_in</code>, <code>/launch-signup</code>, <code>/users/password</code><br>
-                        <span style="color: #4ade80;">Status: ✅ Done (cf85c4c)</span>
-                    </div>
-                </div>
-                <div class="step">
-                    <div class="step-num">✓</div>
-                    <div>
-                        <strong>config.load_defaults 8.1</strong><br>
-                        Updated <code>config/application.rb</code> from 8.0 → 8.1<br>
-                        <span style="color: #4ade80;">Status: ✅ Done (cf85c4c)</span>
-                    </div>
-                </div>
-                <div class="step">
-                    <div class="step-num">5</div>
-                    <div>
-                        <strong>Devise paranoid mode</strong><br>
-                        Enabled <code>config.paranoid = true</code> in <code>config/initializers/devise.rb:93</code><br>
-                        <span style="color: #4ade80;">Status: ✅ Done (20e8e81)</span>
-                    </div>
-                </div>
+                <div class="step"><div class="step-num" style="background:#166534;">✓</div><div><strong>config.hosts</strong> — <code>ENV["APP_HOST"]</code> added to <code>production.rb</code> <span style="color:#4ade80;">(cf85c4c)</span></div></div>
+                <div class="step"><div class="step-num" style="background:#166534;">✓</div><div><strong>Rack::Attack</strong> — Rate limits on <code>/users/sign_in</code>, <code>/launch-signup</code>, <code>/users/password</code> <span style="color:#4ade80;">(cf85c4c)</span></div></div>
+                <div class="step"><div class="step-num" style="background:#166534;">✓</div><div><strong>config.load_defaults 8.1</strong> — Updated from 8.0 → 8.1 in <code>config/application.rb</code> <span style="color:#4ade80;">(cf85c4c)</span></div></div>
+                <div class="step"><div class="step-num" style="background:#166534;">✓</div><div><strong>Devise paranoid mode</strong> — <code>config.paranoid = true</code> in <code>config/initializers/devise.rb:93</code> <span style="color:#4ade80;">(20e8e81)</span></div></div>
+                <div class="step"><div class="step-num" style="background:#166534;">✓</div><div><strong>OAuth — Google &amp; Facebook</strong> — Credentials set, callbacks updated to <code>/users/auth/:provider/callback</code></div></div>
             </div>
 
+            <!-- Remaining TODOs -->
             <div class="card" style="margin-top: 20px;">
                 <div class="card-header">
-                    <div class="icon">🟡</div>
-                    <div class="card-title">Medium Priority Items</div>
+                    <div class="icon">⏳</div>
+                    <div class="card-title">Remaining TODOs</div>
                 </div>
-                <div class="step">
-                    <div class="step-num">5</div>
-                    <div>
-                        <strong>Devise config.paranoid = true</strong> (prevent account enumeration)<br>
-                        Uncomment in <code>config/initializers/devise.rb</code> line 93<br>
-                        <span style="color: #fbbf24;">Status: ⚠️ Off</span>
-                    </div>
-                </div>
-                <div class="step">
-                    <div class="step-num">6</div>
-                    <div>
-                        <strong>CSP enforcement</strong> (flip report_only to false)<br>
-                        Update <code>config/environments/production.rb</code><br>
-                        <span style="color: #fbbf24;">Status: ⚠️ Report-only only</span>
-                    </div>
-                </div>
-                <div class="step-num">7</div>
-                    <div>
-                        <strong>Active Storage S3/R2</strong> (avatars lost on redeploy)<br>
-                        Update <code>config/storage.yml</code> for production<br>
-                        <span style="color: #fbbf24;">Status: ⚠️ Local disk in prod</span>
-                    </div>
-                </div>
-                <div class="step">
-                    <div class="step-num">8</div>
-                    <div>
-                        <strong>Sentry DSN on Render</strong><br>
-                        Set <code>SENTRY_DSN</code> in Render dashboard<br>
-                        <span style="color: #fbbf24;">Status: ⚠️ Not wired</span>
-                    </div>
-                </div>
+                <div class="step"><div class="step-num" style="background:#7c3aed;">H</div><div><strong>Apple OAuth</strong> — Set <code>APPLE_CLIENT_ID</code>, <code>APPLE_TEAM_ID</code>, <code>APPLE_KEY_ID</code>, <code>APPLE_PRIVATE_KEY</code> in Render dashboard</div></div>
+                <div class="step"><div class="step-num" style="background:#b45309;">M</div><div><strong>CSP enforcement</strong> — Flip <code>report_only</code> to <code>false</code> in <code>production.rb</code></div></div>
+                <div class="step"><div class="step-num" style="background:#b45309;">M</div><div><strong>Active Storage → R2</strong> — Update <code>config/storage.yml</code> before launch (avatars lost on redeploy with local disk)</div></div>
+                <div class="step"><div class="step-num" style="background:#b45309;">M</div><div><strong>Sentry DSN</strong> — Set <code>SENTRY_DSN</code> env var in Render dashboard</div></div>
             </div>
 
         </div>
