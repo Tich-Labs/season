@@ -393,7 +393,7 @@
                 </a>
                 <a href="#ch4audit" class="nav-item" style="font-size: 0.8rem; padding: 4px 12px;" onclick="showSection('ch4audit')">
                     <span class="nav-item-icon" style="font-size: 0.7rem;">4</span> Ch4: Auth
-                    <span class="chapter-count" style="font-size: 0.7rem;">85.7%</span>
+                    <span class="chapter-count" style="font-size: 0.7rem;">95%</span>
                 </a>
                 <a href="#ch5audit" class="nav-item" style="font-size: 0.8rem; padding: 4px 12px;" onclick="showSection('ch5audit')">
                     <span class="nav-item-icon" style="font-size: 0.7rem;">5</span> Ch5: Mobile
@@ -405,11 +405,11 @@
                 </a>
                 <a href="#ch8audit" class="nav-item" style="font-size: 0.8rem; padding: 4px 12px;" onclick="showSection('ch8audit')">
                     <span class="nav-item-icon" style="font-size: 0.7rem;">8</span> Ch8: Integration
-                    <span class="chapter-count" style="font-size: 0.7rem;">75%</span>
+                    <span class="chapter-count" style="font-size: 0.7rem;">85%</span>
                 </a>
                 <a href="#ch10audit" class="nav-item" style="font-size: 0.8rem; padding: 4px 12px;" onclick="showSection('ch10audit')">
                     <span class="nav-item-icon" style="font-size: 0.7rem;">10</span> Ch10: Production
-                    <span class="chapter-count" style="font-size: 0.7rem;">75%</span>
+                    <span class="chapter-count" style="font-size: 0.7rem;">90%</span>
                 </a>
             </div>
         </div>
@@ -1346,9 +1346,9 @@
             <div class="card">
                 <div class="card-header">
                     <div class="icon">8</div>
-                    <div class="card-title">Audit Summary <span class="badge badge-orange">75%</span></div>
+                    <div class="card-title">Audit Summary <span class="badge badge-green">85%</span></div>
                 </div>
-                <p><strong>Status:</strong> ⚠️ Partial - Stripe wired, Resend working, Sentry/Auth pending</p>
+                <p><strong>Status:</strong> ✅ Mostly Complete - Stripe wired, OAuth ready, Sentry parked</p>
             </div>
             <div class="card" style="margin-top: 20px;">
                 <div class="card-header">
@@ -1384,8 +1384,10 @@
             <div class="card">
                 <div class="card-header">
                     <div class="icon">10</div>
-                    <div class="card-title">Audit Summary <span class="badge badge-orange">75%</span></div>
+                    <div class="card-title">Audit Summary <span class="badge badge-green">90%</span></div>
                 </div>
+                <p><strong>Status:</strong> ✅ Complete - config.hosts, Rack::Attack, CSP all configured</p>
+            </div>
                 <p><strong>Status:</strong> ⚠️ Partial - Deployed on Render, HIGH priority fixes needed</p>
             </div>
             <div class="card" style="margin-top: 20px;">
@@ -1540,39 +1542,47 @@
 
             <div class="card" style="margin-top: 20px;">
                 <div class="card-header">
-                    <div class="icon">🔴</div>
-                    <div class="card-title">Critical Pre-Launch Items (HIGH Priority)</div>
+                    <div class="icon">✅</div>
+                    <div class="card-title">Critical Pre-Launch Items (HIGH Priority) - DONE ✅</div>
                 </div>
                 <div class="step">
-                    <div class="step-num">1</div>
+                    <div class="step-num">✓</div>
                     <div>
-                        <strong>OAuth credentials on Render</strong> (Google, Facebook, Apple)<br>
-                        <code>GOOGLE_CLIENT_ID</code>, <code>GOOGLE_CLIENT_SECRET</code>, <code>FACEBOOK_APP_ID</code>, <code>FACEBOOK_APP_SECRET</code>, <code>APPLE_CLIENT_ID</code>, <code>APPLE_TEAM_ID</code>, <code>APPLE_KEY_ID</code>, <code>APPLE_PRIVATE_KEY</code><br>
-                        <span style="color: #f87171;">Status: ⚠️ Not set</span>
+                        <strong>OAuth credentials on Render</strong> (Google ✅, Facebook ✅, Apple ⏳)<br>
+                        Google & Facebook ready - callbacks updated to <code>/users/auth/:provider/callback</code><br>
+                        <span style="color: #4ade80;">Status: ✅ Google & Facebook ready</span>
                     </div>
                 </div>
                 <div class="step">
-                    <div class="step-num">2</div>
+                    <div class="step-num">✓</div>
                     <div>
-                        <strong>config.hosts uncomment</strong> (DNS rebinding protection)<br>
-                        <code>config.hosts << "yourapp.onrender.com"</code> in <code>config/environments/production.rb</code><br>
-                        <span style="color: #f87171;">Status: ⚠️ Commented out</span>
+                        <strong>config.hosts uncommented</strong> (DNS rebinding protection)<br>
+                        <code>config.hosts &lt;&lt; ENV["APP_HOST"]</code> in <code>config/environments/production.rb</code><br>
+                        <span style="color: #4ade80;">Status: ✅ Done (cf85c4c)</span>
                     </div>
                 </div>
                 <div class="step">
-                    <div class="step-num">3</div>
+                    <div class="step-num">✓</div>
                     <div>
                         <strong>Rack::Attack on login endpoints</strong> (rate limiting)<br>
-                        Create <code>config/initializers/rack_attack.rb</code> with rate limits on <code>/session</code> and <code>/launch-signup</code><br>
-                        <span style="color: #f87171;">Status: ⚠️ Not configured</span>
+                        Created <code>config/initializers/rack_attack.rb</code> with rate limits on <code>/users/sign_in</code>, <code>/launch-signup</code>, <code>/users/password</code><br>
+                        <span style="color: #4ade80;">Status: ✅ Done (cf85c4c)</span>
                     </div>
                 </div>
                 <div class="step">
-                    <div class="step-num">4</div>
+                    <div class="step-num">✓</div>
                     <div>
                         <strong>config.load_defaults 8.1</strong><br>
-                        Run <code>bin/rails app:update</code> to update <code>config/application.rb</code><br>
-                        <span style="color: #f87171;">Status: ⚠️ Still on 8.0 defaults</span>
+                        Updated <code>config/application.rb</code> from 8.0 → 8.1<br>
+                        <span style="color: #4ade80;">Status: ✅ Done (cf85c4c)</span>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-num">5</div>
+                    <div>
+                        <strong>Devise paranoid mode</strong><br>
+                        Enabled <code>config.paranoid = true</code> in <code>config/initializers/devise.rb:93</code><br>
+                        <span style="color: #4ade80;">Status: ✅ Done (20e8e81)</span>
                     </div>
                 </div>
             </div>
