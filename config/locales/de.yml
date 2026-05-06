@@ -5,6 +5,18 @@ de:
     track: "Tracking"
     streaks: "Streaks"
     settings: "Einstellungen"
+    menu:
+      coming_soon: "Demnächst"
+      premium_now: "Jetzt Season Premium holen"
+      premium_benefits: "für noch mehr Vorteile!"
+      schedule_overview: "Terminübersicht"
+      day_view: "Tagesansicht"
+      weekly_view: "Wochenansicht"
+      monthly_view: "Monatsansicht"
+      email_partner: "E-Mail an Partner"
+      feedback: "Feedback"
+      bug_report: "Fehler melden"
+      log_out: "Abmelden"
   registrations:
     new:
       subtitle: "Erstelle ein Konto, damit wir deine Daten und Einstellungen speichern können."
