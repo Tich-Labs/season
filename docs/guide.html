@@ -1432,8 +1432,59 @@
 
         <!-- Season App Section -->
         <div id="season" class="content-section">
-            <h1>Applications: Season V2</h1>
-            <p class="subtitle">Women's cycle tracking PWA — Rails 8 + Hotwire + PostgreSQL</p>
+            <h1>🌸 Season V2 — Progress Dashboard</h1>
+            <p class="subtitle">Beta launch status — see what's ready, what's next.</p>
+
+            <!-- Overall Progress -->
+            <div class="card" style="background: linear-gradient(135deg, #933a35 0%, #7a2d28 100%); color: white;">
+                <div class="card-header">
+                    <div class="icon" style="color: white;">📊</div>
+                    <div class="card-title" style="color: white;">Overall Progress</div>
+                </div>
+                <div style="margin: 15px 0;">
+                    <div style="background: rgba(255,255,255,0.2); height: 12px; border-radius: 6px; overflow: hidden;">
+                        <div id="overall-progress" style="background: white; height: 100%; width: 89%; border-radius: 6px; transition: width 0.5s;"></div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 0.9rem;">
+                        <span>89% Complete</span>
+                        <span>Launch Ready: 6/10 chapters ≥85%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- What's Next? -->
+            <div class="card" style="border: 2px solid #933a35;">
+                <div class="card-header">
+                    <div class="icon">🚀</div>
+                    <div class="card-title">What's Next?</div>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <a href="#ch6audit" onclick="showSection('ch6audit')" style="display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: #fdf0ea; border-radius: 8px; text-decoration: none; color: #3d2b28;">
+                        <span style="font-size: 1.2rem;">📊</span>
+                        <div style="flex: 1;">
+                            <div style="font-weight: 600; font-size: 0.9rem;">Setup Cloudflare R2</div>
+                            <div style="font-size: 0.75rem; color: #6b6b6b;">Ch6: Active Storage — Post-launch (Free 10GB)</div>
+                        </div>
+                        <span style="color: #933a35;">→</span>
+                    </a>
+                    <a href="#ch8audit" onclick="showSection('ch8audit')" style="display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: #fdf0ea; border-radius: 8px; text-decoration: none; color: #3d2b28;">
+                        <span style="font-size: 1.2rem;">🔒</span>
+                        <div style="flex: 1;">
+                            <div style="font-weight: 600; font-size: 0.9rem;">Add Sentry DSN</div>
+                            <div style="font-size: 0.75rem; color: #6b6b6b;">Ch8: Integration — Monitor production errors</div>
+                        </div>
+                        <span style="color: #933a35;">→</span>
+                    </a>
+                    <a href="#ch9" onclick="showSection('ch9')" style="display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: #fdf0ea; border-radius: 8px; text-decoration: none; color: #3d2b28;">
+                        <span style="font-size: 1.2rem;">🧪</span>
+                        <div style="flex: 1;">
+                            <div style="font-weight: 600; font-size: 0.9rem;">Write Missing Tests</div>
+                            <div style="font-size: 0.75rem; color: #6b6b6b;">Ch9: Language, Terms, Burger i18n coverage</div>
+                        </div>
+                        <span style="color: #933a35;">→</span>
+                    </a>
+                </div>
+            </div>
 
             <!-- App snapshot -->
             <div class="stats">
