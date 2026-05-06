@@ -130,6 +130,7 @@ Rails.application.routes.draw do
     get :notification_morning, on: :collection
     get :notification_period, on: :collection
     get :notification_birth_control, on: :collection
+    get :language, on: :collection
     patch :update_avatar, on: :collection
     patch :update_profile, on: :collection
     patch :update_calendar, on: :collection
