@@ -10,6 +10,18 @@ en:
     track: "Track"
     streaks: "Streaks"
     settings: "Settings"
+    menu:
+      coming_soon: "Coming soon"
+      premium_now: "Get Season Premium now"
+      premium_benefits: "for even more benefits!"
+      schedule_overview: "Schedule Overview"
+      day_view: "Day-View"
+      weekly_view: "Weekly-View"
+      monthly_view: "Monthly-View"
+      email_partner: "E-Mail to your partner"
+      feedback: "Feedback"
+      bug_report: "Bug Report"
+      log_out: "Log out"
     registrations:
       new:
         subtitle: "Create an account, so we can save your tracked data and app settings."

@@ -33,7 +33,7 @@
 
         <%# "Coming soon" badge — Figma: left-[214px] top-[190px] %>
         <div class="absolute left-[214px] top-[190px] w-24 h-4 bg-[#ede1d5] rounded-lg flex items-center justify-center z-20">
-          <span class="text-[#933a35] text-xs font-normal tracking-wide">Coming soon</span>
+          <span class="text-[#933a35] text-xs font-normal tracking-wide"><%= t("nav.menu.coming_soon") %></span>
         </div>
 
         <%# Premium box — Figma: left-[30px] top-[197px] w-64 h-20 %>
@@ -42,8 +42,8 @@
             <path d="M1.5 8L3 3.5l2.5 3L8 2l2.5 4.5L13 3.5l-1.5 4.5H1.5z" />
             <line x1="3" y1="11" x2="9" y2="11" />
           </svg>
-          <p class="absolute left-[28px] top-[11px] w-48 text-white text-base font-medium tracking-wide leading-snug">Get Season Premium now</p>
-          <p class="absolute left-[28px] top-[51px] text-white text-xs font-light tracking-wide">for even more benefits!</p>
+          <p class="absolute left-[28px] top-[11px] w-48 text-white text-base font-medium tracking-wide leading-snug"><%= t("nav.menu.premium_now") %></p>
+          <p class="absolute left-[28px] top-[51px] text-white text-xs font-light tracking-wide"><%= t("nav.menu.premium_benefits") %></p>
         </div>
 
         <%# Schedule Overview — Figma: top-[299px] %>
@@ -53,7 +53,7 @@
             <div class="flex gap-[1px] items-center"><div class="w-[3px] h-[4.5px] bg-[#933a35] rounded-[0.8px]"></div><div class="w-[15px] h-[4.5px] bg-[#933a35] rounded-[0.8px]"></div></div>
             <div class="flex gap-[1px] items-center"><div class="w-[3px] h-[4px] bg-[#933a35] rounded-[0.8px]"></div><div class="w-[15px] h-[4px] bg-[#933a35] rounded-[0.8px]"></div></div>
           </div>
-          <span class="absolute left-[71px] top-[10px] text-[#933a35] text-base font-medium tracking-wide">Schedule Overview</span>
+          <span class="absolute left-[71px] top-[10px] text-[#933a35] text-base font-medium tracking-wide"><%= t("nav.menu.schedule_overview") %></span>
         <% end %>
 
         <%# Day-View — Figma: top-[339px] %>
@@ -63,7 +63,7 @@
             <div class="w-[19px] h-[8px] bg-[#933a35] rounded-[0.8px]"></div>
             <div class="w-[19px] h-[2.5px] bg-[#933a35] rounded-[0.8px]"></div>
           </div>
-          <span class="absolute left-[71px] top-[10px] text-[#933a35] text-base font-medium tracking-wide">Day-View</span>
+          <span class="absolute left-[71px] top-[10px] text-[#933a35] text-base font-medium tracking-wide"><%= t("nav.menu.day_view") %></span>
         <% end %>
 
         <%# Weekly-View — Figma: top-[380px] %>
@@ -73,7 +73,7 @@
             <div class="w-[5.5px] h-[16px] bg-[#933a35] rounded-[0.8px]"></div>
             <div class="w-[5.5px] h-[16px] bg-[#933a35] rounded-[0.8px]"></div>
           </div>
-          <span class="absolute left-[71px] top-[10px] text-[#933a35] text-base font-medium tracking-wide">Weekly-View</span>
+          <span class="absolute left-[71px] top-[10px] text-[#933a35] text-base font-medium tracking-wide"><%= t("nav.menu.weekly_view") %></span>
         <% end %>
 
         <%# Monthly-View — Figma: top-[420px] %>
@@ -84,7 +84,7 @@
             <div class="border border-[#933a35] rounded-[0.8px]"></div>
             <div class="border border-[#933a35] rounded-[0.8px]"></div>
           </div>
-          <span class="absolute left-[71px] top-[10px] text-[#933a35] text-base font-medium tracking-wide">Monthly-View</span>
+          <span class="absolute left-[71px] top-[10px] text-[#933a35] text-base font-medium tracking-wide"><%= t("nav.menu.monthly_view") %></span>
         <% end %>
 
         <%# Divider Line 20 %>
@@ -92,13 +92,13 @@
 
         <%# "Coming soon" badge 2 %>
         <div class="absolute left-[214px] top-[508px] w-24 h-4 bg-[#ede1d5] rounded-lg flex items-center justify-center z-10">
-          <span class="text-[#933a35] text-xs font-normal tracking-wide">Coming soon</span>
+          <span class="text-[#933a35] text-xs font-normal tracking-wide"><%= t("nav.menu.coming_soon") %></span>
         </div>
 
         <%# E-Mail to partner %>
         <a href="#" class="absolute left-0 top-[511px] w-full h-[38px] flex items-center hover:bg-stone-50">
           <%= vuesax_icon "sms", size: 20, class: "absolute left-[30px] top-[7px]" %>
-          <span class="absolute left-[71px] top-[10px] text-[#933a35] text-base font-medium tracking-wide">E-Mail to your partner</span>
+          <span class="absolute left-[71px] top-[10px] text-[#933a35] text-base font-medium tracking-wide"><%= t("nav.menu.email_partner") %></span>
         </a>
 
         <%# Divider Line 23 %>
@@ -107,7 +107,7 @@
         <%# Settings %>
         <%= link_to edit_settings_path, class: "absolute left-0 top-[564px] w-full h-[49px] flex items-center hover:bg-stone-50", "data-turbo-action": "replace" do %>
           <%= vuesax_icon "settings", size: 20, class: "absolute left-[30px] top-[10px]" %>
-          <span class="absolute left-[71px] top-[15px] text-[#933a35] text-base font-medium tracking-wide">Settings</span>
+          <span class="absolute left-[71px] top-[15px] text-[#933a35] text-base font-medium tracking-wide"><%= t("nav.menu.settings") %></span>
         <% end %>
 
         <%# Feedback %>
@@ -116,7 +116,7 @@
                 data-action="click->menu#openFeedback"
                 class="absolute left-0 top-[613px] w-full h-[49px] flex items-center hover:bg-stone-50 cursor-pointer">
           <%= vuesax_icon "document-text", size: 20, class: "absolute left-[31px] top-[10px]" %>
-          <span class="absolute left-[71px] top-[15px] text-[#933a35] text-base font-medium tracking-wide">Feedback</span>
+          <span class="absolute left-[71px] top-[15px] text-[#933a35] text-base font-medium tracking-wide"><%= t("nav.menu.feedback") %></span>
         </button>
 
         <%# Bugreport %>
@@ -125,7 +125,7 @@
                 data-action="click->menu#openFeedback"
                 class="absolute left-0 top-[661px] w-full h-[49px] flex items-center hover:bg-stone-50 cursor-pointer">
           <%= vuesax_icon "message", size: 20, class: "absolute left-[31px] top-[10px]" %>
-          <span class="absolute left-[71px] top-[15px] text-[#933a35] text-base font-medium tracking-wide">Bug Report</span>
+          <span class="absolute left-[71px] top-[15px] text-[#933a35] text-base font-medium tracking-wide"><%= t("nav.menu.bug_report") %></span>
         </button>
 
         <%# Log out %>
@@ -137,7 +137,7 @@
             <polyline points="16 17 21 12 16 7" />
             <line x1="21" y1="12" x2="9" y2="12" />
           </svg>
-          <span class="absolute left-[71px] top-[13px] text-[#933a35] text-base font-medium tracking-wide">Log out</span>
+          <span class="absolute left-[71px] top-[13px] text-[#933a35] text-base font-medium tracking-wide"><%= t("nav.menu.log_out") %></span>
         <% end %>
 
       </div>
