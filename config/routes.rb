@@ -130,7 +130,7 @@ Rails.application.routes.draw do
     get :notification_morning, on: :collection
     get :notification_period, on: :collection
     get :notification_birth_control, on: :collection
-    get :language, on: :collection
+    get :language, to: 'settings/language#show', on: :collection
     patch :update_avatar, on: :collection
     patch :update_profile, on: :collection
     patch :update_calendar, on: :collection
@@ -139,6 +139,9 @@ Rails.application.routes.draw do
     patch :save_period_reminder, on: :collection
     patch :save_birth_control_reminder, on: :collection
   end
+
+  get "settings/language", to: "settings/language#show", as: :settings_language
+  patch "settings/language", to: "settings/language#update"
 
   get "settings/consent", to: "settings#consent", as: nil
   post "settings/consent", to: "settings#save_consents", as: nil
