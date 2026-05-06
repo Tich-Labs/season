@@ -43,6 +43,8 @@ de:
         or_email: "...oder melde dich mit deiner E-Mail an:"
         submit: "Konto erstellen"
         have_account: "Ich habe bereits ein Konto"
+        terms_html: "Ich akzeptiere die %{terms} und die %{privacy}"
+        terms_required: "Du musst die Nutzungsbedingungen und Datenschutzbestimmungen akzeptieren."
     sessions:
       new:
         title: "Anmelden"

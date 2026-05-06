@@ -125,11 +125,16 @@
       <!-- Terms -->
       <div class="flex items-start gap-[17px] mt-[19px]">
         <input type="checkbox" required name="terms_accepted"
-               class="mt-1 w-[31px] h-[27px] accent-brand-primary rounded-lg shrink-0">
+               class="mt-1 w-[31px] h-[27px] accent-brand-primary rounded-lg shrink-0 <%= 'border-2 border-brand-primary' if @error_type == :terms_not_accepted %>">
         <span class="text-brand-primary text-base font-normal leading-snug">
-          I'll accept the <%= link_to "terms of use", terms_path, class: "text-brand-primary underline" %> and the <%= link_to "privacy policy", privacy_path, class: "text-brand-primary underline" %>
+          <%= t('devise.registrations.new.terms_html',
+                terms: link_to("terms of use", terms_path, class: "text-brand-primary underline"),
+                privacy: link_to("privacy policy", privacy_path, class: "text-brand-primary underline")) %>
         </span>
       </div>
+      <% if @error_type == :terms_not_accepted %>
+        <p class="text-brand-primary text-sm mt-2"><%= t('devise.registrations.new.terms_required') %></p>
+      <% end %>
 
       <!-- Submit -->
       <div class="flex justify-center mt-[75px]">

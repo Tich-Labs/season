@@ -15,6 +15,13 @@ class RegistrationsController < ApplicationController
     email = user_params[:email].to_s.downcase
     name = user_params[:name].presence || email.split("@").first
 
+    unless params[:terms_accepted] == "1"
+      @user = User.new(user_params)
+      @error_type = :terms_not_accepted
+      render :new, status: :unprocessable_content
+      return
+    end
+
     if User.exists?(email: email)
       @error_type = :already_registered
       @user = User.new(user_params)

@@ -49,6 +49,8 @@ en:
         or_email: "...or sign up with your E-mail:"
         submit: "Create account"
         have_account: "I already have an account"
+        terms_html: "I'll accept the %{terms} and the %{privacy}"
+        terms_required: "You must accept the terms and privacy policy to continue."
     sessions:
       new:
         title: "Log In"
