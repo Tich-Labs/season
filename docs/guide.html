@@ -1303,6 +1303,20 @@
                 <div class="step"><div class="step-num">✓</div><div>iOS meta tags added (apple-mobile-web-app-capable, apple-mobile-web-app-status-bar-style)</div></div>
                 <div class="step"><div class="step-num">✓</div><div>PWA install banner working (iOS + Android)</div></div>
             </div>
+            <div class="card" style="margin-top: 20px;">
+                <div class="card-header">
+                    <div class="icon">📱</div>
+                    <div class="card-title">Turbo Native Roadmap</div>
+                </div>
+                <p style="margin: 10px 0;">Wrap PWA in native shell for App Store distribution using Hotwire Native (formerly Turbo Native).</p>
+                <div class="step"><div class="step-num">1</div><div><strong>Add Hotwire Native</strong> - iOS: <code>pod 'HotwireNative'</code> | Android: <code>implementation 'dev.hotwire:native:1.0.0'</code></div></div>
+                <div class="step"><div class="step-num">2</div><div><strong>Configure paths</strong> - Set <code>config.hotwire.native_paths</code> for native-only screens (onboarding, tracking)</div></div>
+                <div class="step"><div class="step-num">3</div><div><strong>Native bridges</strong> - Bridge JavaScript ↔ Native for: push notifications, haptic feedback, biometric auth</div></div>
+                <div class="step"><div class="step-num">4</div><div><strong>iOS app</strong> - Create Xcode project, wire <code>HotwireNavigator</code>, configure <code>WKWebView</code></div></div>
+                <div class="step"><div class="step-num">5</div><div><strong>Android app</strong> - Create Android project, wire <code>HotwireActivity</code>, configure <code>WebView</code></div></div>
+                <div class="step"><div class="step-num">6</div><div><strong>App Store</strong> - iOS: Apple Developer account ($99/yr) | Android: Google Play ($25 one-time)</div></div>
+                <div class="step"><div class="step-num">📦</div><div><strong>Timeline:</strong> Post-launch (Q3 2026) - PWA sufficient for beta testers</div></div>
+            </div>
         </div>
 
         <!-- Chapter 6 Audit Section -->
