@@ -1,0 +1,1925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Codebase Guide - Rails & React Course</title>
+    <style>
+        * { margin:0; padding:0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+        }
+        /* Sidebar */
+        .sidebar {
+            width: 300px;
+            background: #1e293b;
+            border-right: 1px solid #334155;
+            padding: 20px 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 100;
+        }
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid #334155;
+            margin-bottom: 15px;
+        }
+        .sidebar-header h2 {
+            font-size: 1.3rem;
+            color: #38bdf8;
+            margin: 0;
+            border: none;
+            padding: 0;
+        }
+        .sidebar-header p {
+            color: #94a3b8;
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+        .nav-section {
+            padding: 10px 20px;
+
+        }
+        .nav-section-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: #64748b;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+        .nav-item {
+            display: block;
+            padding: 6px 12px;
+            color: #cbd5e1;
+            text-decoration: none;
+            border-radius: 6px;
+            margin-bottom: 2px;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+        .nav-item:hover {
+            background: #334155;
+            color: #f1f5f9;
+        }
+        .nav-item.active {
+            background: #1e40af;
+            color: #bfdbfe;
+        }
+        .nav-item-icon {
+            margin-right: 8px;
+        }
+        .chapter-count {
+            float: right;
+            background: #334155;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            color: #94a3b8;
+        }
+        /* Main Content */
+        .main-content {
+            margin-left: 300px;
+            flex: 1;
+            padding: 40px;
+            max-width: 1400px;
+        }
+        h1 {
+            font-size: 2.5rem;
+            color: #38bdf8;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #38bdf8;
+            padding-bottom: 15px;
+        }
+        .subtitle { color: #94a3b8; margin-bottom: 40px; font-size: 1.1rem; }
+        h2 {
+            font-size: 1.8rem;
+            color: #60a5fa;
+            margin: 40px 0 20px;
+            padding-left: 15px;
+            border-left: 4px solid #60a5fa;
+        }
+        h3 {
+            font-size: 1.3rem;
+            color: #a78bfa;
+            margin: 25px 0 15px;
+        }
+        .section-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        .rails-badge { background: #9a3412; color: #fed7aa; }
+        .react-badge { background: #093545; color: #7dd3fc; }
+        .shared-badge { background: #581c87; color: #e9d5ff; }
+        .card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        .icon {
+            font-size: 1.8rem;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #0f172a;
+            border-radius: 8px;
+        }
+        .card-title { font-size: 1.2rem; font-weight: 600; color: #f1f5f9; }
+        code {
+            background: #0f172a;
+            color: #38bdf8;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+        pre {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 20px;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+        pre code {
+            background: none;
+            color: #e2e8f0;
+            padding: 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #334155;
+        }
+        th {
+            background: #0f172a;
+            color: #60a5fa;
+            font-weight: 600;
+        }
+        tr:hover { background: #263548; }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .chapter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 10px;
+            margin: 15px 0;
+        }
+        .chapter-item {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            padding: 10px;
+            text-align: center;
+            font-size: 0.85rem;
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        .chapter-item:hover {
+            background: #1e40af;
+            color: #bfdbfe;
+            border-color: #3b82f6;
+        }
+        .chapter-item.has-mobile {
+            border-left: 3px solid #a78bfa;
+        }
+        .step {
+            display: flex;
+            gap: 15px;
+            margin: 15px 0;
+            align-items: flex-start;
+        }
+        .step-num {
+            background: #38bdf8;
+            color: #0f172a;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .command-box {
+            background: #0f172a;
+            border-left: 4px solid #38bdf8;
+            padding: 15px 20px;
+            margin: 10px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .command-box code { font-size: 0.95rem; }
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(to right, #38bdf8, transparent);
+            margin: 40px 0;
+        }
+        .footer {
+            text-align: center;
+            padding: 40px 0;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+        .tag-list { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
+        .tag {
+            background: #334155;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: #cbd5e1;
+        }
+        a { color: #38bdf8; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        .content-section { display: none; }
+        .content-section.active { display: block; }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .stat-card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #38bdf8;
+        }
+        .stat-label {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        .badge-blue { background: #1e40af; color: #bfdbfe; }
+        .badge-green { background: #166534; color: #bbf7d0; }
+        .badge-purple { background: #581c87; color: #e9d5ff; }
+        .badge-orange { background: #9a3412; color: #fed7aa; }
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .sidebar { width: 100%; height: auto; position: relative; }
+            .main-content { margin-left: 0; padding: 20px; }
+            body { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <h2>📖 Codebase Guide</h2>
+            <p>Rails & React Course</p>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Overview</div>
+            <a href="#overview" class="nav-item active" onclick="showSection('overview')">
+                <span class="nav-item-icon">🏠</span> Overview
+            </a>
+            <a href="#stack" class="nav-item" onclick="showSection('stack')">
+                <span class="nav-item-icon">🛠️</span> Tech Stack
+            </a>
+            <a href="#structure" class="nav-item" onclick="showSection('structure')">
+                <span class="nav-item-icon">📁</span> Structure
+            </a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Codebase Chapters (259 Steps)</div>
+            <a href="#ch1" class="nav-item" onclick="showSection('ch1')">
+                <span class="nav-item-icon">1</span> Ch1: Foundation
+                <span class="chapter-count">25</span>
+            </a>
+            <a href="#ch2" class="nav-item" onclick="showSection('ch2')">
+                <span class="nav-item-icon">2</span> Ch2: Core Features
+                <span class="chapter-count">23</span>
+            </a>
+            <a href="#ch3" class="nav-item" onclick="showSection('ch3')">
+                <span class="nav-item-icon">3</span> Ch3: Views & Styling
+                <span class="chapter-count">16</span>
+            </a>
+            <a href="#ch4" class="nav-item" onclick="showSection('ch4')">
+                <span class="nav-item-icon">4</span> Ch4: Authentication
+                <span class="chapter-count">17</span>
+            </a>
+            <a href="#ch5" class="nav-item" onclick="showSection('ch5')">
+                <span class="nav-item-icon">5</span> Ch5: Mobile
+                <span class="chapter-count">22</span>
+            </a>
+            <a href="#ch6" class="nav-item" onclick="showSection('ch6')">
+                <span class="nav-item-icon">6</span> Ch6: Advanced
+                <span class="chapter-count">32</span>
+            </a>
+            <a href="#ch7" class="nav-item" onclick="showSection('ch7')">
+                <span class="nav-item-icon">7</span> Ch7: API
+                <span class="chapter-count">23</span>
+            </a>
+            <a href="#ch8" class="nav-item" onclick="showSection('ch8')">
+                <span class="nav-item-icon">8</span> Ch8: Integration
+                <span class="chapter-count">23</span>
+            </a>
+            <a href="#ch9" class="nav-item" onclick="showSection('ch9')">
+                <span class="nav-item-icon">9</span> Ch9: Testing
+                <span class="chapter-count">9</span>
+            </a>
+            <a href="#ch10" class="nav-item" onclick="showSection('ch10')">
+                <span class="nav-item-icon">10</span> Ch10: Production
+                <span class="chapter-count">68</span>
+            </a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Applications</div>
+            <a href="#season" class="nav-item" onclick="showSection('season')">
+                <span class="nav-item-icon">🌸</span> Season V2
+                <span class="chapter-count">PWA</span>
+            </a>
+            <div style="padding-left: 20px; margin-top: 5px;">
+                <div style="font-size: 0.75rem; color: #64748b; margin: 5px 0 8px;">Audits (Chapters)</div>
+                <a href="#ch1audit" class="nav-item" style="font-size: 0.8rem; padding: 4px 12px;" onclick="showSection('ch1audit')">
+                    <span class="nav-item-icon" style="font-size: 0.7rem;">1</span> Ch1: Foundation
+                    <span class="chapter-count" style="font-size: 0.7rem;">95%</span>
+                </a>
+                <a href="#ch2audit" class="nav-item" style="font-size: 0.8rem; padding: 4px 12px;" onclick="showSection('ch2audit')">
+                    <span class="nav-item-icon" style="font-size: 0.7rem;">2</span> Ch2: Core
+                    <span class="chapter-count" style="font-size: 0.7rem;">100%</span>
+                </a>
+                <a href="#ch3audit" class="nav-item" style="font-size: 0.8rem; padding: 4px 12px;" onclick="showSection('ch3audit')">
+                    <span class="nav-item-icon" style="font-size: 0.7rem;">3</span> Ch3: Views
+                    <span class="chapter-count" style="font-size: 0.7rem;">95%</span>
+                </a>
+                <a href="#ch4audit" class="nav-item" style="font-size: 0.8rem; padding: 4px 12px;" onclick="showSection('ch4audit')">
+                    <span class="nav-item-icon" style="font-size: 0.7rem;">4</span> Ch4: Auth
+                    <span class="chapter-count" style="font-size: 0.7rem;">85.7%</span>
+                </a>
+                <a href="#ch5audit" class="nav-item" style="font-size: 0.8rem; padding: 4px 12px;" onclick="showSection('ch5audit')">
+                    <span class="nav-item-icon" style="font-size: 0.7rem;">5</span> Ch5: Mobile
+                    <span class="chapter-count" style="font-size: 0.7rem;">60%</span>
+                </a>
+                <a href="#ch6audit" class="nav-item" style="font-size: 0.8rem; padding: 4px 12px;" onclick="showSection('ch6audit')">
+                    <span class="nav-item-icon" style="font-size: 0.7rem;">6</span> Ch6: Advanced
+                    <span class="chapter-count" style="font-size: 0.7rem;">85%</span>
+                </a>
+                <a href="#ch8audit" class="nav-item" style="font-size: 0.8rem; padding: 4px 12px;" onclick="showSection('ch8audit')">
+                    <span class="nav-item-icon" style="font-size: 0.7rem;">8</span> Ch8: Integration
+                    <span class="chapter-count" style="font-size: 0.7rem;">75%</span>
+                </a>
+                <a href="#ch10audit" class="nav-item" style="font-size: 0.8rem; padding: 4px 12px;" onclick="showSection('ch10audit')">
+                    <span class="nav-item-icon" style="font-size: 0.7rem;">10</span> Ch10: Production
+                    <span class="chapter-count" style="font-size: 0.7rem;">75%</span>
+                </a>
+            </div>
+        </div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Resources</div>
+            <a href="#tools" class="nav-item" onclick="showSection('tools')">
+                <span class="nav-item-icon">🤖</span> AI Tools
+            </a>
+            <a href="#audit" class="nav-item" onclick="showSection('audit')">
+                <span class="nav-item-icon">🔍</span> Audit System
+            </a>
+            <a href="#resources" class="nav-item" onclick="showSection('resources')">
+                <span class="nav-item-icon">📚</span> All Resources
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        
+        <!-- Overview Section -->
+        <div id="overview" class="content-section active">
+            <h1>Codebase Guide</h1>
+            <p class="subtitle">Complete Rails 8 + React/Next.js Course Reference</p>
+
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number">259</div>
+                    <div class="stat-label">Total Chapters</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">10</div>
+                    <div class="stat-label">Main Chapters</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">68</div>
+                    <div class="stat-label">Steps in Ch 10</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">Platforms (Web/Mobile)</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="icon">📖</div>
+                    <div class="card-title">About This Course</div>
+                </div>
+                <p>This is a comprehensive development course covering <strong>Rails 8 + React/Next.js</strong> application development with a focus on:</p>
+                <ul style="padding-left: 20px; margin-top: 10px; line-height: 2;">
+                    <li><strong>37signals/One Person Framework</strong> patterns</li>
+                    <li><strong>Maquina</strong> tools (generators, UI components)</li>
+                    <li><strong>Claude Code</strong> AI-assisted development</li>
+                    <li><strong>Tailwind CSS</strong> for styling</li>
+                    <li><strong>Mobile development</strong> (Android/iOS) alongside web</li>
+                </ul>
+            </div>
+
+            <div class="card" style="margin-top: 20px;">
+                <div class="card-header">
+                    <div class="icon">🗺️</div>
+                    <div class="card-title">Learning Path</div>
+                </div>
+                <div class="step">
+                    <div class="step-num">1</div>
+                    <div><strong>Foundation:</strong> Rails setup, basic app structure (ch01)</div>
+                </div>
+                <div class="step">
+                    <div class="step-num">2</div>
+                    <div><strong>Core Features:</strong> Models, controllers, business logic (ch02)</div>
+                </div>
+                <div class="step">
+                    <div class="step-num">3</div>
+                    <div><strong>Views & Styling:</strong> Tailwind CSS, ERB templates (ch03)</div>
+                </div>
+                <div class="step">
+                    <div class="step-num">4</div>
+                    <div><strong>Authentication:</strong> User management, security (ch04)</div>
+                </div>
+                <div class="step">
+                    <div class="step-num">5</div>
+                    <div><strong>Mobile:</strong> Android/iOS app development (ch05)</div>
+                </div>
+                <div class="step">
+                    <div class="step-num">6</div>
+                    <div><strong>Advanced:</strong> Complex features, optimization (ch06)</div>
+                </div>
+                <div class="step">
+                    <div class="step-num">7</div>
+                    <div><strong>API:</strong> REST/GraphQL API development (ch07)</div>
+                </div>
+                <div class="step">
+                    <div class="step-num">8</div>
+                    <div><strong>Integration:</strong> Third-party services, payments (ch08)</div>
+                </div>
+                <div class="step">
+                    <div class="step-num">9</div>
+                    <div><strong>Testing:</strong> Quality assurance, test coverage (ch09)</div>
+                </div>
+                <div class="step">
+                    <div class="step-num">10</div>
+                    <div><strong>Production:</strong> Deployment, monitoring, scale (ch10)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tech Stack Section -->
+        <div id="stack" class="content-section">
+            <h1>Technology Stack</h1>
+            <p class="subtitle">Tools and frameworks used throughout the course</p>
+
+            <div class="grid">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="icon">💎</div>
+                        <div class="card-title">Backend (Rails) <span class="section-badge rails-badge">Rails 8</span></div>
+                    </div>
+                    <ul style="padding-left: 20px; line-height: 2;">
+                        <li>Ruby 3.3+ (managed via asdf/rtx)</li>
+                        <li>Ruby on Rails 8.0+</li>
+                        <li>SQLite (with Solid Queue, Solid Errors)</li>
+                        <li>Tailwind CSS 4</li>
+                        <li>StimulusJS for interactivity</li>
+                        <li>Maquina Generators & Components</li>
+                        <li>Rack Attack (security)</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="icon">⚛️</div>
+                        <div class="card-title">Frontend (React) <span class="section-badge react-badge">Next.js 15</span></div>
+                    </div>
+                    <ul style="padding-left: 20px; line-height: 2;">
+                        <li>Next.js 15</li>
+                        <li>TypeScript (strict mode)</li>
+                        <li>Tailwind CSS</li>
+                        <li>React 19+</li>
+                        <li>ES7+ React Snippets</li>
+                        <li>ESLint + Prettier</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="icon">📱</div>
+                        <div class="card-title">Mobile <span class="section-badge shared-badge">Cross-platform</span></div>
+                    </div>
+                    <ul style="padding-left: 20px; line-height: 2;">
+                        <li>Android (native or React Native)</li>
+                        <li>iOS (native or React Native)</li>
+                        <li>Shared business logic</li>
+                        <li>Mobile-specific UI patterns</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="icon">🤖</div>
+                        <div class="card-title">AI Development <span class="section-badge shared-badge">Claude Code</span></div>
+                    </div>
+                    <ul style="padding-left: 20px; line-height: 2;">
+                        <li>Claude Code CLI</li>
+                        <li>rails-simplifier (37signals patterns)</li>
+                        <li>rails-security-auditor</li>
+                        <li>mvp-creator (MVP docs)</li>
+                        <li>better-stimulus</li>
+                        <li>codewarden (React security)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Structure Section -->
+        <div id="structure" class="content-section">
+            <h1>Project Structure</h1>
+            <p class="subtitle">How the codebase is organized</p>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="icon">📁</div>
+                    <div class="card-title">Directory Layout</div>
+                </div>
+                <pre><code>/Users/tichlabs/Documents/codebase/
+├── guide.html              # This guide
+├── GUIDE.md                # Markdown version
+├── dev-setup.html          # Dev environment setup
+├── assets/
+│   └── AppIcon.png         # App icon
+└── code/
+    ├── ch01_00/ to ch01_24/  # Chapter 1 (25 steps)
+    ├── ch02_01/ to ch02_23/  # Chapter 2 (23 steps)
+    ├── ch03_01/ to ch03_16/  # Chapter 3 (16 steps)
+    ├── ch04_01/ to ch04_17/  # Chapter 4 (17 steps)
+    ├── ch05_01/ to ch05_22/  # Chapter 5 (22 steps)
+    ├── ch06_01/ to ch06_32/  # Chapter 6 (32 steps)
+    ├── ch07_01/ to ch07_23/  # Chapter 7 (23 steps)
+    ├── ch08_00/ to ch08_22/  # Chapter 8 (23 steps)
+    ├── ch09_01/ to ch09_09/  # Chapter 9 (9 steps)
+    └── ch10_01/ to ch10_68/  # Chapter 10 (68 steps)</code></pre>
+            </div>
+
+            <div class="card" style="margin-top: 20px;">
+                <div class="card-header">
+                    <div class="icon">📦</div>
+                    <div class="card-title">Each Chapter Folder Contains</div>
+                </div>
+                <table>
+                    <tr><th>File/Folder</th><th>Description</th></tr>
+                    <tr><td><code>.gitignore</code></td><td>Git ignore rules</td></tr>
+                    <tr><td><code>.tool-versions</code></td><td>asdf/rtx tool version manager config</td></tr>
+                    <tr><td><code>bin/</code></td><td>Scripts (e.g., android.sh)</td></tr>
+                    <tr><td><code>rails/</code></td><td>Rails 8 application</td></tr>
+                    <tr><td><code>android/</code></td><td>Android mobile app (ch05+)</td></tr>
+                    <tr><td><code>ios/</code></td><td>iOS mobile app (ch05+)</td></tr>
+                </table>
+            </div>
+
+            <div class="card" style="margin-top: 20px;">
+                <div class="card-header">
+                    <div class="icon">💎</div>
+                    <div class="card-title">Rails App Structure</div>
+                </div>
+                <pre><code>rails/
+├── app/              # Controllers, models, views, assets
+├── config/           # Application configuration
+├── db/               # Database schema and migrations
+├── vendor/           # Third-party code
+├── Dockerfile        # Container configuration
+├── Gemfile           # Ruby dependencies
+├── Gemfile.lock      # Locked dependencies
+└── .ruby-version     # Ruby version (3.3+)</code></pre>
+            </div>
+        </div>
+
+        <!-- Chapter 1 -->
+        <div id="ch1" class="content-section">
+            <h1>Chapter 1: Foundation</h1>
+            <p class="subtitle">Rails setup, basic app structure (25 steps)</p>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="icon">1</div>
+                    <div class="card-title">Steps: ch01_00 to ch01_24</div>
+                </div>
+                <p><strong>Topics covered:</strong> Initial Rails setup, project structure, basic configuration, first models and controllers.</p>
+            </div>
+
+            <h3>Chapter Steps</h3>
+            <div class="chapter-grid">
+                <div class="chapter-item">ch01_00</div>
+                <div class="chapter-item">ch01_01</div>
+                <div class="chapter-item">ch01_02</div>
+                <div class="chapter-item">ch01_03</div>
+                <div class="chapter-item">ch01_04</div>
+                <div class="chapter-item">ch01_05</div>
+                <div class="chapter-item">ch01_06</div>
+                <div class="chapter-item">ch01_07</div>
+                <div class="chapter-item">ch01_08</div>
+                <div class="chapter-item">ch01_09</div>
+                <div class="chapter-item">ch01_10</div>
+                <div class="chapter-item">ch01_11</div>
+                <div class="chapter-item">ch01_12</div>
+                <div class="chapter-item">ch01_13</div>
+                <div class="chapter-item">ch01_14</div>
+                <div class="chapter-item">ch01_15</div>
+                <div class="chapter-item">ch01_16</div>
+                <div class="chapter-item">ch01_17</div>
+                <div class="chapter-item">ch01_18</div>
+                <div class="chapter-item">ch01_19</div>
+                <div class="chapter-item">ch01_20</div>
+                <div class="chapter-item">ch01_21</div>
+                <div class="chapter-item">ch01_22</div>
+                <div class="chapter-item">ch01_23</div>
+                <div class="chapter-item">ch01_24</div>
+            </div>
+
+            <div class="command-box" style="margin-top: 20px;">
+                <strong>Quick Start:</strong><br>
+                <code>cd code/ch01_00/rails && bin/rails server</code>
+            </div>
+        </div>
+
+        <!-- Chapter 2 -->
+        <div id="ch2" class="content-section">
+            <h1>Chapter 2: Core Features</h1>
+            <p class="subtitle">Models, controllers, business logic (23 steps)</p>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="icon">2</div>
+                    <div class="card-title">Steps: ch02_01 to ch02_23</div>
+                </div>
+                <p><strong>Topics covered:</strong> Active Record models, controllers with actions, routing, form handling, validations.</p>
+            </div>
+
+            <h3>Chapter Steps</h3>
+            <div class="chapter-grid">
+                <div class="chapter-item">ch02_01</div>
+                <div class="chapter-item">ch02_02</div>
+                <div class="chapter-item">ch02_03</div>
+                <div class="chapter-item">ch02_04</div>
+                <div class="chapter-item">ch02_05</div>
+                <div class="chapter-item">ch02_06</div>
+                <div class="chapter-item">ch02_07</div>
+                <div class="chapter-item">ch02_08</div>
+                <div class="chapter-item">ch02_09</div>
+                <div class="chapter-item">ch02_10</div>
+                <div class="chapter-item">ch02_11</div>
+                <div class="chapter-item">ch02_12</div>
+                <div class="chapter-item">ch02_13</div>
+                <div class="chapter-item">ch02_14</div>
+                <div class="chapter-item">ch02_15</div>
+                <div class="chapter-item">ch02_16</div>
+                <div class="chapter-item">ch02_17</div>
+                <div class="chapter-item">ch02_18</div>
+                <div class="chapter-item">ch02_19</div>
+                <div class="chapter-item">ch02_20</div>
+                <div class="chapter-item">ch02_21</div>
+                <div class="chapter-item">ch02_22</div>
+                <div class="chapter-item">ch02_23</div>
+            </div>
+        </div>
+
+        <!-- Chapter 3 -->
+        <div id="ch3" class="content-section">
+            <h1>Chapter 3: Views & Styling</h1>
+            <p class="subtitle">Tailwind CSS, ERB templates (16 steps)</p>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="icon">3</div>
+                    <div class="card-title">Steps: ch03_01 to ch03_16</div>
+                </div>
+                <p><strong>Topics covered:</strong> Tailwind CSS integration, ERB templates, partials, layouts, responsive design.</p>
+            </div>
+
+            <h3>Chapter Steps</h3>
+            <div class="chapter-grid">
+                <div class="chapter-item">ch03_01</div>
+                <div class="chapter-item">ch03_02</div>
+                <div class="chapter-item">ch03_03</div>
+                <div class="chapter-item">ch03_04</div>
+                <div class="chapter-item">ch03_05</div>
+                <div class="chapter-item">ch03_06</div>
+                <div class="chapter-item">ch03_07</div>
+                <div class="chapter-item">ch03_08</div>
+                <div class="chapter-item">ch03_09</div>
+                <div class="chapter-item">ch03_10</div>
+                <div class="chapter-item">ch03_11</div>
+                <div class="chapter-item">ch03_12</div>
+                <div class="chapter-item">ch03_13</div>
+                <div class="chapter-item">ch03_14</div>
+                <div class="chapter-item">ch03_15</div>
+                <div class="chapter-item">ch03_16</div>
+            </div>
+        </div>
+
+        <!-- Chapter 4 -->
+        <div id="ch4" class="content-section">
+            <h1>Chapter 4: Authentication</h1>
+            <p class="subtitle">User management, security (17 steps)</p>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="icon">4</div>
+                    <div class="card-title">Steps: ch04_01 to ch04_17</div>
+                </div>
+                <p><strong>Topics covered:</strong> User authentication, registration, roles, multi-tenancy, security best practices.</p>
+            </div>
+
+            <h3>Chapter Steps</h3>
+            <div class="chapter-grid">
+                <div class="chapter-item">ch04_01</div>
+                <div class="chapter-item">ch04_02</div>
+                <div class="chapter-item">ch04_03</div>
+                <div class="chapter-item">ch04_04</div>
+                <div class="chapter-item">ch04_05</div>
+                <div class="chapter-item">ch04_06</div>
+                <div class="chapter-item">ch04_07</div>
+                <div class="chapter-item">ch04_08</div>
+                <div class="chapter-item">ch04_09</div>
+                <div class="chapter-item">ch04_10</div>
+                <div class="chapter-item">ch04_11</div>
+                <div class="chapter-item">ch04_12</div>
+                <div class="chapter-item">ch04_13</div>
+                <div class="chapter-item">ch04_14</div>
+                <div class="chapter-item">ch04_15</div>
+                <div class="chapter-item">ch04_16</div>
+                <div class="chapter-item">ch04_17</div>
+            </div>
+        </div>
+
+        <!-- Chapter 5 -->
+        <div id="ch5" class="content-section">
+            <h1>Chapter 5: Mobile Development</h1>
+            <p class="subtitle">Android/iOS app development (22 steps)</p>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="icon">5</div>
+                    <div class="card-title">Steps: ch05_01 to ch05_22</div>
+                </div>
+                <p><strong>Topics covered:</strong> Android and iOS app setup, mobile-specific features, cross-platform patterns.</p>
+                <p style="margin-top: 10px;"><strong>Note:</strong> These chapters include <code>android/</code> and <code>ios/</code> folders.</p>
+            </div>
+
+            <h3>Chapter Steps</h3>
+            <div class="chapter-grid">
+                <div class="chapter-item has-mobile">ch05_01</div>
+                <div class="chapter-item has-mobile">ch05_02</div>
+                <div class="chapter-item has-mobile">ch05_03</div>
+                <div class="chapter-item has-mobile">ch05_04</div>
+                <div class="chapter-item has-mobile">ch05_05</div>
+                <div class="chapter-item has-mobile">ch05_06</div>
+                <div class="chapter-item has-mobile">ch05_07</div>
+                <div class="chapter-item has-mobile">ch05_08</div>
+                <div class="chapter-item has-mobile">ch05_09</div>
+                <div class="chapter-item has-mobile">ch05_10</div>
+                <div class="chapter-item has-mobile">ch05_11</div>
+                <div class="chapter-item has-mobile">ch05_12</div>
+                <div class="chapter-item has-mobile">ch05_13</div>
+                <div class="chapter-item has-mobile">ch05_14</div>
+                <div class="chapter-item has-mobile">ch05_15</div>
+                <div class="chapter-item has-mobile">ch05_16</div>
+                <div class="chapter-item has-mobile">ch05_17</div>
+                <div class="chapter-item has-mobile">ch05_18</div>
+                <div class="chapter-item has-mobile">ch05_19</div>
+                <div class="chapter-item has-mobile">ch05_20</div>
+                <div class="chapter-item has-mobile">ch05_21</div>
+                <div class="chapter-item has-mobile">ch05_22</div>
+            </div>
+        </div>
+
+        <!-- Chapter 6 -->
+        <div id="ch6" class="content-section">
+            <h1>Chapter 6: Advanced Features</h1>
+            <p class="subtitle">Complex features, optimization (32 steps)</p>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="icon">6</div>
+                    <div class="card-title">Steps: ch06_01 to ch06_32</div>
+                </div>
+                <p><strong>Topics covered:</strong> Background jobs, caching, advanced queries, performance optimization, complex business logic.</p>
+            </div>
+
+            <h3>Chapter Steps</h3>
+            <div class="chapter-grid">
+                <div class="chapter-item has-mobile">ch06_01</div>
+                <div class="chapter-item has-mobile">ch06_02</div>
+                <div class="chapter-item has-mobile">ch06_03</div>
+                <div class="chapter-item has-mobile">ch06_04</div>
+                <div class="chapter-item has-mobile">ch06_05</div>
+                <div class="chapter-item has-mobile">ch06_06</div>
+                <div class="chapter-item has-mobile">ch06_07</div>
+                <div class="chapter-item has-mobile">ch06_08</div>
+                <div class="chapter-item has-mobile">ch06_09</div>
+                <div class="chapter-item has-mobile">ch06_10</div>
+                <div class="chapter-item has-mobile">ch06_11</div>
+                <div class="chapter-item has-mobile">ch06_12</div>
+                <div class="chapter-item has-mobile">ch06_13</div>
+                <div class="chapter-item has-mobile">ch06_14</div>
+                <div class="chapter-item has-mobile">ch06_15</div>
+                <div class="chapter-item has-mobile">ch06_16</div>
+                <div class="chapter-item has-mobile">ch06_17</div>
+                <div class="chapter-item has-mobile">ch06_18</div>
+                <div class="chapter-item has-mobile">ch06_19</div>
+                <div class="chapter-item has-mobile">ch06_20</div>
+                <div class="chapter-item has-mobile">ch06_21</div>
+                <div class="chapter-item has-mobile">ch06_22</div>
+                <div class="chapter-item has-mobile">ch06_23</div>
+                <div class="chapter-item has-mobile">ch06_24</div>
+                <div class="chapter-item has-mobile">ch06_25</div>
+                <div class="chapter-item has-mobile">ch06_26</div>
+                <div class="chapter-item has-mobile">ch06_27</div>
+                <div class="chapter-item has-mobile">ch06_28</div>
+                <div class="chapter-item has-mobile">ch06_29</div>
+                <div class="chapter-item has-mobile">ch06_30</div>
+                <div class="chapter-item has-mobile">ch06_31</div>
+                <div class="chapter-item has-mobile">ch06_32</div>
+            </div>
+        </div>
+
+        <!-- Chapter 7 -->
+        <div id="ch7" class="content-section">
+            <h1>Chapter 7: API Development</h1>
+            <p class="subtitle">REST/GraphQL API development (23 steps)</p>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="icon">7</div>
+                    <div class="card-title">Steps: ch07_01 to ch07_23</div>
+                </div>
+                <p><strong>Topics covered:</strong> RESTful APIs, JSON responses, API versioning, documentation, authentication for APIs.</p>
+            </div>
+
+            <h3>Chapter Steps</h3>
+            <div class="chapter-grid">
+                <div class="chapter-item has-mobile">ch07_01</div>
+                <div class="chapter-item has-mobile">ch07_02</div>
+                <div class="chapter-item has-mobile">ch07_03</div>
+                <div class="chapter-item has-mobile">ch07_04</div>
+                <div class="chapter-item has-mobile">ch07_05</div>
+                <div class="chapter-item has-mobile">ch07_06</div>
+                <div class="chapter-item has-mobile">ch07_07</div>
+                <div class="chapter-item has-mobile">ch07_08</div>
+                <div class="chapter-item has-mobile">ch07_09</div>
+                <div class="chapter-item has-mobile">ch07_10</div>
+                <div class="chapter-item has-mobile">ch07_11</div>
+                <div class="chapter-item has-mobile">ch07_12</div>
+                <div class="chapter-item has-mobile">ch07_13</div>
+                <div class="chapter-item has-mobile">ch07_14</div>
+                <div class="chapter-item has-mobile">ch07_15</div>
+                <div class="chapter-item has-mobile">ch07_16</div>
+                <div class="chapter-item has-mobile">ch07_17</div>
+                <div class="chapter-item has-mobile">ch07_18</div>
+                <div class="chapter-item has-mobile">ch07_19</div>
+                <div class="chapter-item has-mobile">ch07_20</div>
+                <div class="chapter-item has-mobile">ch07_21</div>
+                <div class="chapter-item has-mobile">ch07_22</div>
+                <div class="chapter-item has-mobile">ch07_23</div>
+            </div>
+        </div>
+
+        <!-- Chapter 8 -->
+        <div id="ch8" class="content-section">
+            <h1>Chapter 8: Integration</h1>
+            <p class="subtitle">Third-party services, payments (23 steps)</p>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="icon">8</div>
+                    <div class="card-title">Steps: ch08_00 to ch08_22</div>
+                </div>
+                <p><strong>Topics covered:</strong> Payment gateways, email services, external APIs, webhooks, OAuth integration.</p>
+            </div>
+
+            <h3>Chapter Steps</h3>
+            <div class="chapter-grid">
+                <div class="chapter-item has-mobile">ch08_00</div>
+                <div class="chapter-item has-mobile">ch08_01</div>
+                <div class="chapter-item has-mobile">ch08_02</div>
+                <div class="chapter-item has-mobile">ch08_03</div>
+                <div class="chapter-item has-mobile">ch08_04</div>
+                <div class="chapter-item has-mobile">ch08_05</div>
+                <div class="chapter-item has-mobile">ch08_06</div>
+                <div class="chapter-item has-mobile">ch08_07</div>
+                <div class="chapter-item has-mobile">ch08_08</div>
+                <div class="chapter-item has-mobile">ch08_09</div>
+                <div class="chapter-item has-mobile">ch08_10</div>
+                <div class="chapter-item has-mobile">ch08_11</div>
+                <div class="chapter-item has-mobile">ch08_12</div>
+                <div class="chapter-item has-mobile">ch08_13</div>
+                <div class="chapter-item has-mobile">ch08_14</div>
+                <div class="chapter-item has-mobile">ch08_15</div>
+                <div class="chapter-item has-mobile">ch08_16</div>
+                <div class="chapter-item has-mobile">ch08_17</div>
+                <div class="chapter-item has-mobile">ch08_18</div>
+                <div class="chapter-item has-mobile">ch08_19</div>
+                <div class="chapter-item has-mobile">ch08_20</div>
+                <div class="chapter-item has-mobile">ch08_21</div>
+                <div class="chapter-item has-mobile">ch08_22</div>
+            </div>
+        </div>
+
+        <!-- Chapter 9 -->
+        <div id="ch9" class="content-section">
+            <h1>Chapter 9: Testing</h1>
+            <p class="subtitle">Quality assurance, test coverage (9 steps)</p>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="icon">9</div>
+                    <div class="card-title">Steps: ch09_01 to ch09_09</div>
+                </div>
+                <p><strong>Topics covered:</strong> Unit tests, integration tests, system tests, test coverage, TDD practices.</p>
+            </div>
+
+            <h3>Chapter Steps</h3>
+            <div class="chapter-grid">
+                <div class="chapter-item has-mobile">ch09_01</div>
+                <div class="chapter-item has-mobile">ch09_02</div>
+                <div class="chapter-item has-mobile">ch09_03</div>
+                <div class="chapter-item has-mobile">ch09_04</div>
+                <div class="chapter-item has-mobile">ch09_05</div>
+                <div class="chapter-item has-mobile">ch09_06</div>
+                <div class="chapter-item has-mobile">ch09_07</div>
+                <div class="chapter-item has-mobile">ch09_08</div>
+                <div class="chapter-item has-mobile">ch09_09</div>
+            </div>
+        </div>
+
+        <!-- Chapter 10 -->
+        <div id="ch10" class="content-section">
+            <h1>Chapter 10: Production</h1>
+            <p class="subtitle">Deployment, monitoring, scale (68 steps - Main Project)</p>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="icon">10</div>
+                    <div class="card-title">Steps: ch10_01 to ch10_68 <span class="badge badge-orange">Main Project</span></div>
+                </div>
+                <p><strong>Topics covered:</strong> Production deployment, Docker, monitoring, error tracking, performance, scaling strategies.</p>
+                <p style="margin-top: 10px;"><strong>Note:</strong> This is the most comprehensive chapter with 68 steps, representing the complete production application.</p>
+            </div>
+
+            <h3>Chapter Steps (68 total)</h3>
+            <div class="chapter-grid">
+                <div class="chapter-item has-mobile">ch10_01</div>
+                <div class="chapter-item has-mobile">ch10_02</div>
+                <div class="chapter-item has-mobile">ch10_03</div>
+                <div class="chapter-item has-mobile">ch10_04</div>
+                <div class="chapter-item has-mobile">ch10_05</div>
+                <div class="chapter-item has-mobile">ch10_06</div>
+                <div class="chapter-item has-mobile">ch10_07</div>
+                <div class="chapter-item has-mobile">ch10_08</div>
+                <div class="chapter-item has-mobile">ch10_09</div>
+                <div class="chapter-item has-mobile">ch10_10</div>
+                <div class="chapter-item has-mobile">ch10_11</div>
+                <div class="chapter-item has-mobile">ch10_12</div>
+                <div class="chapter-item has-mobile">ch10_13</div>
+                <div class="chapter-item has-mobile">ch10_14</div>
+                <div class="chapter-item has-mobile">ch10_15</div>
+                <div class="chapter-item has-mobile">ch10_16</div>
+                <div class="chapter-item has-mobile">ch10_17</div>
+                <div class="chapter-item has-mobile">ch10_18</div>
+                <div class="chapter-item has-mobile">ch10_19</div>
+                <div class="chapter-item has-mobile">ch10_20</div>
+                <div class="chapter-item has-mobile">ch10_21</div>
+                <div class="chapter-item has-mobile">ch10_22</div>
+                <div class="chapter-item has-mobile">ch10_23</div>
+                <div class="chapter-item has-mobile">ch10_24</div>
+                <div class="chapter-item has-mobile">ch10_25</div>
+                <div class="chapter-item has-mobile">ch10_26</div>
+                <div class="chapter-item has-mobile">ch10_27</div>
+                <div class="chapter-item has-mobile">ch10_28</div>
+                <div class="chapter-item has-mobile">ch10_29</div>
+                <div class="chapter-item has-mobile">ch10_30</div>
+                <div class="chapter-item has-mobile">ch10_31</div>
+                <div class="chapter-item has-mobile">ch10_32</div>
+                <div class="chapter-item has-mobile">ch10_33</div>
+                <div class="chapter-item has-mobile">ch10_34</div>
+                <div class="chapter-item has-mobile">ch10_35</div>
+                <div class="chapter-item has-mobile">ch10_36</div>
+                <div class="chapter-item has-mobile">ch10_37</div>
+                <div class="chapter-item has-mobile">ch10_39</div>
+                <div class="chapter-item has-mobile">ch10_40</div>
+                <div class="chapter-item has-mobile">ch10_41</div>
+                <div class="chapter-item has-mobile">ch10_42</div>
+                <div class="chapter-item has-mobile">ch10_43</div>
+                <div class="chapter-item has-mobile">ch10_44</div>
+                <div class="chapter-item has-mobile">ch10_45</div>
+                <div class="chapter-item has-mobile">ch10_46</div>
+                <div class="chapter-item has-mobile">ch10_47</div>
+                <div class="chapter-item has-mobile">ch10_48</div>
+                <div class="chapter-item has-mobile">ch10_49</div>
+                <div class="chapter-item has-mobile">ch10_50</div>
+                <div class="chapter-item has-mobile">ch10_51</div>
+                <div class="chapter-item has-mobile">ch10_52</div>
+                <div class="chapter-item has-mobile">ch10_53</div>
+                <div class="chapter-item has-mobile">ch10_54</div>
+                <div class="chapter-item has-mobile">ch10_55</div>
+                <div class="chapter-item has-mobile">ch10_56</div>
+                <div class="chapter-item has-mobile">ch10_57</div>
+                <div class="chapter-item has-mobile">ch10_58</div>
+                <div class="chapter-item has-mobile">ch10_59</div>
+                <div class="chapter-item has-mobile">ch10_60</div>
+                <div class="chapter-item has-mobile">ch10_61</div>
+                <div class="chapter-item has-mobile">ch10_62</div>
+                <div class="chapter-item has-mobile">ch10_63</div>
+                <div class="chapter-item has-mobile">ch10_64</div>
+                <div class="chapter-item has-mobile">ch10_65</div>
+                <div class="chapter-item has-mobile">ch10_66</div>
+                <div class="chapter-item has-mobile">ch10_67</div>
+                <div class="chapter-item has-mobile">ch10_68</div>
+            </div>
+
+            <div class="card" style="margin-top: 20px; background: #0f172a; border-color: #38bdf8;">
+                <div class="card-header">
+                    <div class="icon">⚠️</div>
+                    <div class="card-title">Note: Missing Chapter</div>
+                </div>
+                <p><code>ch10_38</code> is missing from the sequence. This may be intentional or an oversight.</p>
+            </div>
+        </div>
+
+        <!-- AI Tools Section -->
+        <div id="tools" class="content-section">
+            <h1>AI Development Tools</h1>
+            <p class="subtitle">Claude Code plugins and AI-assisted development tools</p>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="icon">💎</div>
+                    <div class="card-title">Rails Claude Code Plugins</div>
+                </div>
+                <table>
+                    <tr><th>Plugin</th><th>Description</th><th>Commands</th></tr>
+                    <tr>
+                        <td><strong>rails-simplifier</strong></td>
+                        <td>37signals/One Person Framework patterns</td>
+                        <td><code>> Simplify recent changes</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>rails-security-auditor</strong></td>
+                        <td>Security audit for Rails 8.0-8.2</td>
+                        <td><code>> audit-security</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>mvp-creator</strong></td>
+                        <td>MVP docs: PRD, tech stack, plans</td>
+                        <td><code>> Create MVP documentation</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>better-stimulus</strong></td>
+                        <td>StimulusJS best practices</td>
+                        <td><code>> Review with better-stimulus</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>maquina-ui-standards</strong></td>
+                        <td>UI components with Tailwind</td>
+                        <td><code>> Create view with maquina</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>spec-driven-development</strong></td>
+                        <td>Spec-driven workflow for Rails</td>
+                        <td><code>> Start spec-driven dev</code></td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="card" style="margin-top: 20px;">
+                <div class="card-header">
+                    <div class="icon">⚛️</div>
+                    <div class="card-title">React/Next.js Claude Code Plugins</div>
+                </div>
+                <table>
+                    <tr><th>Plugin</th><th>Description</th><th>Commands</th></tr>
+                    <tr>
+                        <td><strong>codewarden</strong></td>
+                        <td>Security + code quality for React/Next.js</td>
+                        <td><code>/security-audit</code><br><code>/code-review</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>vibe-coding-plugin</strong></td>
+                        <td>77 skills, 18 auditors for Next.js 15</td>
+                        <td><code>/flow full-audit</code><br><code>/harden</code></td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="card" style="margin-top: 20px;">
+                <div class="card-header">
+                    <div class="icon">🔄</div>
+                    <div class="card-title">Complete Development Workflow</div>
+                </div>
+                <pre><code>💡 Idea/Prompt
+    ↓
+[MVP Creator] Research + Business Plan + User Journeys
+    ↓
+[Spec-Driven Dev] Shape Specs → Create Tasks
+    ↓
+[Maquina Generators] rails g maquina:app
+    ↓
+[Claude Code] Build with 37signals patterns
+    ↓
+[rails-security-auditor] Validate before deploy</code></pre>
+            </div>
+        </div>
+
+        <!-- Chapter 1 Audit Section -->
+        <div id="ch1audit" class="content-section">
+            <h1>Chapter 1 Audit - Foundation</h1>
+            <p class="subtitle">Season V2 - Based on Codebase Chapter 1 (25 steps)</p>
+            <div class="card">
+                <div class="card-header">
+                    <div class="icon">1</div>
+                    <div class="card-title">Audit Summary <span class="badge badge-green">95%</span></div>
+                </div>
+                <p><strong>Status:</strong> ✅ Complete - CI/CD, linting, PostgreSQL configured</p>
+                <p style="margin-top: 10px;"><strong>Improvements:</strong> Complete CI/CD pipeline, verify credentials work</p>
+            </div>
+            <div class="card" style="margin-top: 20px;">
+                <div class="card-header">
+                    <div class="icon">✅</div>
+                    <div class="card-title">Passed Items</div>
+                </div>
+                <div class="step"><div class="step-num">✓</div><div>Ruby version 3.4.7 defined</div></div>
+                <div class="step"><div class="step-num">✓</div><div>Rails 8.1.3 current</div></div>
+                <div class="step"><div class="step-num">✓</div><div>PostgreSQL configured (no SQLite)</div></div>
+                <div class="step"><div class="step-num">✓</div><div>Environment configs present</div></div>
+                <div class="step"><div class="step-num">✓</div><div>Rubocop linting configured</div></div>
+                <div class="step"><div class="step-num">✓</div><div>ERB linting configured</div></div>
+            </div>
+        </div>
+
+        <!-- Chapter 2 Audit Section -->
+        <div id="ch2audit" class="content-section">
+            <h1>Chapter 2 Audit - Core Features</h1>
+            <p class="subtitle">Season V2 - Based on Codebase Chapter 2 (23 steps)</p>
+            <div class="card">
+                <div class="card-header">
+                    <div class="icon">2</div>
+                    <div class="card-title">Audit Summary <span class="badge badge-green">100%</span></div>
+                </div>
+                <p><strong>Status:</strong> ✅ Complete - 28 controllers, 12 models, full CRUD</p>
+            </div>
+        </div>
+
+        <!-- Chapter 3 Audit Section -->
+        <div id="ch3audit" class="content-section">
+            <h1>Chapter 3 Audit - Views & Styling</h1>
+            <p class="subtitle">Season V2 - Based on Codebase Chapter 3 (16 steps)</p>
+            <div class="card">
+                <div class="card-header">
+                    <div class="icon">3</div>
+                    <div class="card-title">Audit Summary <span class="badge badge-green">95%</span></div>
+                </div>
+                <p><strong>Status:</strong> ✅ Complete - Brand colors, Tailwind config, mobile container</p>
+                <p style="margin-top: 10px;"><strong>TODO:</strong> Burger menu text hardcoded (t() needed), onboarding strings hardcoded</p>
+            </div>
+        </div>
+
+        <!-- Chapter 5 Audit Section -->
+        <div id="ch5audit" class="content-section">
+            <h1>Chapter 5 Audit - Mobile PWA</h1>
+            <p class="subtitle">Season V2 - Based on Codebase Chapter 5 (22 steps)</p>
+            <div class="card">
+                <div class="card-header">
+                    <div class="icon">5</div>
+                    <div class="card-title">Audit Summary <span class="badge badge-orange">60%</span></div>
+                </div>
+                <p><strong>Status:</strong> ⚠️ In Progress - PWA manifest, service worker needed</p>
+            </div>
+            <div class="card" style="margin-top: 20px;">
+                <div class="card-header">
+                    <div class="icon">✅</div>
+                    <div class="card-title">Completed</div>
+                </div>
+                <div class="step"><div class="step-num">✓</div><div>Mobile-first CSS (390px base, 430px max)</div></div>
+                <div class="step"><div class="step-num">✓</div><div>Viewport meta tag correct</div></div>
+                <div class="step"><div class="step-num">✓</div><div>Touch targets adequate (min 44px)</div></div>
+                <div class="step"><div class="step-num">✓</div><div>Turbo Native roadmap documented</div></div>
+            </div>
+            <div class="card" style="margin-top: 20px;">
+                <div class="card-header">
+                    <div class="icon">🔴</div>
+                    <div class="card-title">TODO (40% remaining)</div>
+                </div>
+                <div class="step"><div class="step-num">1</div><div><strong>PWA manifest</strong> - Create <code>public/manifest.json</code> or <code>app/views/pwa/manifest.json</code></div></div>
+                <div class="step"><div class="step-num">2</div><div><strong>Service worker</strong> - Configure offline support (<code>app/javascript/service-worker.js</code>)</div></div>
+                <div class="step"><div class="step-num">3</div><div><strong>Offline mode</strong> - Cache assets for offline viewing</div></div>
+                <div class="step"><div class="step-num">4</div><div><strong>PWA install</strong> - Test installing on mobile devices</div></div>
+            </div>
+        </div>
+
+        <!-- Chapter 6 Audit Section -->
+        <div id="ch6audit" class="content-section">
+            <h1>Chapter 6 Audit - Advanced Features</h1>
+            <p class="subtitle">Season V2 - Based on Codebase Chapter 6 (32 steps)</p>
+            <div class="card">
+                <div class="card-header">
+                    <div class="icon">6</div>
+                    <div class="card-title">Audit Summary <span class="badge badge-green">85%</span></div>
+                </div>
+                <p><strong>Status:</strong> ✅ Mostly Complete - Background jobs, CycleCalculatorService working</p>
+            </div>
+            <div class="card" style="margin-top: 20px;">
+                <div class="card-header">
+                    <div class="icon">🟡</div>
+                    <div class="card-title">TODO (15% remaining)</div>
+                </div>
+                <div class="step"><div class="step-num">1</div><div><strong>MEDIUM: Active Storage S3/R2</strong> - Switch production from local disk<br><code>config/storage.yml</code> → Set S3/R2 credentials in Render</div></div>
+            </div>
+        </div>
+
+        <!-- Chapter 8 Audit Section -->
+        <div id="ch8audit" class="content-section">
+            <h1>Chapter 8 Audit - Integration</h1>
+            <p class="subtitle">Season V2 - Based on Codebase Chapter 8 (23 steps)</p>
+            <div class="card">
+                <div class="card-header">
+                    <div class="icon">8</div>
+                    <div class="card-title">Audit Summary <span class="badge badge-orange">75%</span></div>
+                </div>
+                <p><strong>Status:</strong> ⚠️ Partial - Stripe wired, Resend working, Sentry/Auth pending</p>
+            </div>
+            <div class="card" style="margin-top: 20px;">
+                <div class="card-header">
+                    <div class="icon">✅</div>
+                    <div class="card-title">Completed</div>
+                </div>
+                <div class="step"><div class="step-num">✓</div><div>Payment gateway wired (Stripe gem present)</div></div>
+                <div class="step"><div class="step-num">✓</div><div>Email delivery (Resend adapter)</div></div>
+                <div class="step"><div class="step-num">✓</div><div>Environment variables documented</div></div>
+            </div>
+            <div class="card" style="margin-top: 20px;">
+                <div class="card-header">
+                    <div class="icon">🔴</div>
+                    <div class="card-title">HIGH Priority TODO</div>
+                </div>
+                <div class="step"><div class="step-num">1</div><div><strong>Google OAuth</strong> ✅ Ready - Add credentials to Render<br>Callback: <code>https://seasonv2.onrender.com/users/auth/google_oauth2/callback</code></div></div>
+                <div class="step"><div class="step-num">2</div><div><strong>Facebook OAuth</strong> ⚠️ Pending - Add credentials + update console URL<br>Callback: <code>https://seasonv2.onrender.com/users/auth/facebook/callback</code></div></div>
+            </div>
+            <div class="card" style="margin-top: 20px;">
+                <div class="card-header">
+                    <div class="icon">🟡</div>
+                    <div class="card-title">MEDIUM Priority TODO</div>
+                </div>
+                <div class="step"><div class="step-num">3</div><div><strong>Sentry DSN</strong> - Set <code>SENTRY_DSN</code> in Render dashboard</div></div>
+            </div>
+        </div>
+
+        <!-- Chapter 10 Audit Section -->
+        <div id="ch10audit" class="content-section">
+            <h1>Chapter 10 Audit - Production</h1>
+            <p class="subtitle">Season V2 - Based on Codebase Chapter 10 (68 steps)</p>
+            <div class="card">
+                <div class="card-header">
+                    <div class="icon">10</div>
+                    <div class="card-title">Audit Summary <span class="badge badge-orange">75%</span></div>
+                </div>
+                <p><strong>Status:</strong> ⚠️ Partial - Deployed on Render, HIGH priority fixes needed</p>
+            </div>
+            <div class="card" style="margin-top: 20px;">
+                <div class="card-header">
+                    <div class="icon">✅</div>
+                    <div class="card-title">Completed</div>
+                </div>
+                <div class="step"><div class="step-num">✓</div><div>Deployment platform configured (Render)</div></div>
+                <div class="step"><div class="step-num">✓</div><div>Build script present (<code>bin/render-build.sh</code>)</div></div>
+                <div class="step"><div class="step-num">✓</div><div>Production database (PostgreSQL on Render)</div></div>
+                <div class="step"><div class="step-num">✓</div><div>HTTPS enforced, error pages customized</div></div>
+            </div>
+            <div class="card" style="margin-top: 20px;">
+                <div class="card-header">
+                    <div class="icon">🔴</div>
+                    <div class="card-title">HIGH Priority TODO</div>
+                </div>
+                <div class="step"><div class="step-num">1</div><div><strong>config.hosts</strong> - Uncomment in <code>config/environments/production.rb</code><br><code>config.hosts << "seasonv2.onrender.com"</code></div></div>
+                <div class="step"><div class="step-num">2</div><div><strong>config.load_defaults 8.1</strong> - Run <code>bin/rails app:update</code></div></div>
+                <div class="step"><div class="step-num">3</div><div><strong>Rack::Attack</strong> - Create <code>config/initializers/rack_attack.rb</code> with rate limiting</div></div>
+            </div>
+            <div class="card" style="margin-top: 20px;">
+                <div class="card-header">
+                    <div class="icon">🟡</div>
+                    <div class="card-title">MEDIUM Priority TODO</div>
+                </div>
+                <div class="step"><div class="step-num">4</div><div><strong>CSP enforcement</strong> - Flip <code>report_only</code> to <code>false</code> in production.rb</div></div>
+            </div>
+        </div>
+
+        <!-- Season App Section -->
+        <div id="season" class="content-section">
+            <h1>Applications: Season V2</h1>
+            <p class="subtitle">Women's cycle tracking PWA - Audit progress & chapter completion</p>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="icon">🌸</div>
+                    <div class="card-title">Season V2 <span class="badge badge-orange">In Progress</span></div>
+                </div>
+                <p><strong>Description:</strong> Women's cycle tracking progressive web app (PWA) built on Rails 8 with Hotwire.</p>
+                <p style="margin-top: 10px;"><strong>Path:</strong> <code>/Users/tichlabs/Documents/onlyCode/season</code></p>
+                <p style="margin-top: 5px;"><strong>Tech Stack:</strong> Rails 8.1.3, PostgreSQL, Hotwire (Turbo + Stimulus), Tailwind CSS, Resend, Sentry</p>
+                <p style="margin-top: 5px;"><strong>Status:</strong> M1-M5, M7 complete (Launch ready after TODOs)</p>
+                <p style="margin-top: 5px;"><strong>Milestones:</strong> M1 (Signing In/Onboarding) ✅ | M2 (Calendar) ✅ | M3 (Tracking/Learn) ✅ | M4 (Forecasting) ✅ | M5 (Reminders) ✅ | M6 (Gamification) ❌ | M7 (Feedback) ✅</p>
+            </div>
+
+            <div class="card" style="margin-top: 20px;">
+                <div class="card-header">
+                    <div class="icon">📊</div>
+                    <div class="card-title">Chapter Completion Status</div>
+                </div>
+                <table>
+                    <tr>
+                        <th>Chapter</th>
+                        <th>Topic</th>
+                        <th>Completion</th>
+                        <th>What's Left</th>
+                    </tr>
+                    <tr>
+                        <td><strong>1</strong></td>
+                        <td>Foundation</td>
+                        <td><span style="color: #4ade80;">95%</span></td>
+                        <td>
+                            <span class="tag">CI/CD fully configured</span>
+                            <span class="tag">Linting passing</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>2</strong></td>
+                        <td>Core Features</td>
+                        <td><span style="color: #4ade80;">100%</span></td>
+                        <td><span class="tag">Complete</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>3</strong></td>
+                        <td>Views & Styling</td>
+                        <td><span style="color: #4ade80;">95%</span></td>
+                        <td>
+                            <span class="tag">Burger menu text hardcoded (t() needed)</span>
+                            <span class="tag">Onboarding strings hardcoded</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>4</strong></td>
+                        <td>Authentication</td>
+                        <td><span style="color: #4ade80;">90%</span></td>
+                        <td>
+                            <span class="tag">Devise paranoid mode (medium)</span>
+                            <span class="tag">OAuth credentials on Render (HIGH)</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>5</strong></td>
+                        <td>Mobile PWA</td>
+                        <td><span style="color: #fbbf24;">60%</span></td>
+                        <td>
+                            <span class="tag">Service worker (offline mode)</span>
+                            <span class="tag">PWA manifest valid</span>
+                            <span class="tag">Turbo Native roadmap</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>6</strong></td>
+                        <td>Advanced Features</td>
+                        <td><span style="color: #4ade80;">85%</span></td>
+                        <td>
+                            <span class="tag">Active Storage S3/R2 (medium)</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>7</strong></td>
+                        <td>API Development</td>
+                        <td><span style="color: #94a3b8;">N/A</span></td>
+                        <td><span class="tag">Not applicable (PWA with Hotwire)</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>8</strong></td>
+                        <td>Integration</td>
+                        <td><span style="color: #fbbf24;">70%</span></td>
+                        <td>
+                            <span class="tag">OAuth credentials (HIGH)</span>
+                            <span class="tag">Sentry DSN (medium)</span>
+                            <span class="tag">Stripe wired (post-launch)</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>9</strong></td>
+                        <td>Testing</td>
+                        <td><span style="color: #4ade80;">100%</span></td>
+                        <td><span class="tag">76 tests passing</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>10</strong></td>
+                        <td>Production</td>
+                        <td><span style="color: #fbbf24;">75%</span></td>
+                        <td>
+                            <span class="tag">config.hosts (HIGH)</span>
+                            <span class="tag">config.load_defaults 8.1 (HIGH)</span>
+                            <span class="tag">Rack::Attack (HIGH)</span>
+                            <span class="tag">CSP enforcement (medium)</span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="card" style="margin-top: 20px;">
+                <div class="card-header">
+                    <div class="icon">🔴</div>
+                    <div class="card-title">Critical Pre-Launch Items (HIGH Priority)</div>
+                </div>
+                <div class="step">
+                    <div class="step-num">1</div>
+                    <div>
+                        <strong>OAuth credentials on Render</strong> (Google, Facebook, Apple)<br>
+                        <code>GOOGLE_CLIENT_ID</code>, <code>GOOGLE_CLIENT_SECRET</code>, <code>FACEBOOK_APP_ID</code>, <code>FACEBOOK_APP_SECRET</code>, <code>APPLE_CLIENT_ID</code>, <code>APPLE_TEAM_ID</code>, <code>APPLE_KEY_ID</code>, <code>APPLE_PRIVATE_KEY</code><br>
+                        <span style="color: #f87171;">Status: ⚠️ Not set</span>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-num">2</div>
+                    <div>
+                        <strong>config.hosts uncomment</strong> (DNS rebinding protection)<br>
+                        <code>config.hosts << "yourapp.onrender.com"</code> in <code>config/environments/production.rb</code><br>
+                        <span style="color: #f87171;">Status: ⚠️ Commented out</span>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-num">3</div>
+                    <div>
+                        <strong>Rack::Attack on login endpoints</strong> (rate limiting)<br>
+                        Create <code>config/initializers/rack_attack.rb</code> with rate limits on <code>/session</code> and <code>/launch-signup</code><br>
+                        <span style="color: #f87171;">Status: ⚠️ Not configured</span>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-num">4</div>
+                    <div>
+                        <strong>config.load_defaults 8.1</strong><br>
+                        Run <code>bin/rails app:update</code> to update <code>config/application.rb</code><br>
+                        <span style="color: #f87171;">Status: ⚠️ Still on 8.0 defaults</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" style="margin-top: 20px;">
+                <div class="card-header">
+                    <div class="icon">🟡</div>
+                    <div class="card-title">Medium Priority Items</div>
+                </div>
+                <div class="step">
+                    <div class="step-num">5</div>
+                    <div>
+                        <strong>Devise config.paranoid = true</strong> (prevent account enumeration)<br>
+                        Uncomment in <code>config/initializers/devise.rb</code> line 93<br>
+                        <span style="color: #fbbf24;">Status: ⚠️ Off</span>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-num">6</div>
+                    <div>
+                        <strong>CSP enforcement</strong> (flip report_only to false)<br>
+                        Update <code>config/environments/production.rb</code><br>
+                        <span style="color: #fbbf24;">Status: ⚠️ Report-only only</span>
+                    </div>
+                </div>
+                <div class="step-num">7</div>
+                    <div>
+                        <strong>Active Storage S3/R2</strong> (avatars lost on redeploy)<br>
+                        Update <code>config/storage.yml</code> for production<br>
+                        <span style="color: #fbbf24;">Status: ⚠️ Local disk in prod</span>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-num">8</div>
+                    <div>
+                        <strong>Sentry DSN on Render</strong><br>
+                        Set <code>SENTRY_DSN</code> in Render dashboard<br>
+                        <span style="color: #fbbf24;">Status: ⚠️ Not wired</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" style="margin-top: 20px;">
+                <div class="card-header">
+                    <div class="icon">🛠️</div>
+                    <div class="card-title">How to Use Audit Tools</div>
+                </div>
+                <h3 style="margin-top: 0;">Method 1: Quick Audit Runner</h3>
+                <pre><code># Run all chapter audits
+/Users/tichlabs/Documents/onlyCode/season/audit_runner.sh all
+
+# Run single chapter audit
+/Users/tichlabs/Documents/onlyCode/season/audit_runner.sh chapter1
+/Users/tichlabs/Documents/onlyCode/season/audit_runner.sh 5
+
+# Check pre-launch items
+/Users/tichlabs/Documents/onlyCode/season/audit_runner.sh pre-launch</code></pre>
+
+                <h3 style="margin-top: 20px;">Method 2: Agent Skills (OpenCode / Claude Code)</h3>
+                <p>Use Task tool with skills from <code>audit_skills.md</code>:</p>
+                <pre><code>Task(
+  description: "Audit Season Chapter 5",
+  prompt: "<from audit_skills.md - audit-chapter-5>",
+  subagent_type: "explore"
+)</code></pre>
+
+                <h3 style="margin-top: 20px;">Method 3: Read Checklists</h3>
+                <ul style="padding-left: 20px; margin-top: 10px; line-height: 2;">
+                    <li><code>/Users/tichlabs/Documents/onlyCode/season/audit_checklist.md</code> - Full checklist</li>
+                    <li><code>/Users/tichlabs/Documents/onlyCode/season/audit_skills.md</code> - Agent skills</li>
+                    <li><code>/Users/tichlabs/Documents/onlyCode/season/OAuth_FIX.md</code> - OAuth fix (applied)</li>
+                    <li><code>/Users/tichlabs/Documents/onlyCode/season/README.md</code> - Season status</li>
+                </ul>
+            </div>
+
+            <div class="card" style="margin-top: 20px;">
+                <div class="card-header">
+                    <div class="icon">📈</div>
+                    <div class="card-title">Progress Tracking</div>
+                </div>
+                <p>Update completion percentages as you fix items:</p>
+                <table>
+                    <tr>
+                        <th>Chapter</th>
+                        <th>Current</th>
+                        <th>Target</th>
+                        <th>Actions</th>
+                    </tr>
+                    <tr>
+                        <td>1 (Foundation)</td>
+                        <td>95%</td>
+                        <td>100%</td>
+                        <td><span class="tag">Run audit_runner.sh 1</span></td>
+                    </tr>
+                    <tr>
+                        <td>4 (Auth)</td>
+                        <td>90%</td>
+                        <td>100%</td>
+                        <td><span class="tag">Set OAuth credentials</span> <span class="tag">Enable paranoid mode</span></td>
+                    </tr>
+                    <tr>
+                        <td>5 (Mobile)</td>
+                        <td>60%</td>
+                        <td>80%</td>
+                        <td><span class="tag">Add service worker</span> <span class="tag">Test PWA install</span></td>
+                    </tr>
+                    <tr>
+                        <td>8 (Integration)</td>
+                        <td>70%</td>
+                        <td>95%</td>
+                        <td><span class="tag">Set Sentry DSN</span> <span class="tag">Verify OAuth</span></td>
+                    </tr>
+                    <tr>
+                        <td>10 (Production)</td>
+                        <td>75%</td>
+                        <td>100%</td>
+                        <td><span class="tag">Uncomment config.hosts</span> <span class="tag">Add Rack::Attack</span> <span class="tag">Run app:update</span></td>
+                    </tr>
+                </table>
+                <p style="margin-top: 15px;"><strong>Overall Progress:</strong> <span style="color: #fbbf24; font-size: 1.2rem;">80% → 95% (after HIGH priority fixes)</span></p>
+            </div>
+
+            <div class="card" style="margin-top: 20px; background: #0f172a; border-color: #38bdf8;">
+                <div class="card-header">
+                    <div class="icon">💡</div>
+                    <div class="card-title">Next Steps for Season</div>
+                </div>
+                <div class="step">
+                    <div class="step-num">1</div>
+                    <div>Fix OAuth (DONE) - Removed conflicting custom controller, now uses Devise OmniAuth only</div>
+                </div>
+                <div class="step">
+                    <div class="step-num">2</div>
+                    <div>Set OAuth credentials in Render dashboard (HIGH)</div>
+                </div>
+                <div class="step">
+                    <div class="step-num">3</div>
+                    <div>Uncomment config.hosts in production.rb (HIGH)</div>
+                </div>
+                <div class="step">
+                    <div class="step-num">4</div>
+                    <div>Add Rack::Attack rate limiting (HIGH)</div>
+                </div>
+                <div class="step">
+                    <div class="step-num">5</div>
+                    <div>Run bin/rails app:update for Rails 8.1 defaults (HIGH)</div>
+                </div>
+                <div class="step">
+                    <div class="step-num">6</div>
+                    <div>Re-run audit: ./audit_runner.sh all</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Audit System Section -->
+        <div id="audit" class="content-section">
+            <h1>Audit System</h1>
+            <p class="subtitle">Systematic checklist for each chapter - audit your app against the codebase</p>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="icon">🔍</div>
+                    <div class="card-title">What is the Audit System?</div>
+                </div>
+                <p>This system allows you to audit your app (Season) against the 259-step codebase chapters. It includes:</p>
+                <ul style="padding-left: 20px; margin-top: 10px; line-height: 2;">
+                    <li><strong>Chapter Checklists</strong> - Detailed checklist for each chapter (ch01-ch10)</li>
+                    <li><strong>Agent Skills</strong> - Reusable audit tasks for Claude Code / OpenCode agents</li>
+                    <li><strong>Audit Runner</strong> - Bash script to run quick checks</li>
+                </ul>
+            </div>
+
+            <div class="card" style="margin-top: 20px;">
+                <div class="card-header">
+                    <div class="icon">📊</div>
+                    <div class="card-title">Season App Audit Status <span class="badge badge-orange">Current</span></div>
+                </div>
+                <table>
+                    <tr><th>Chapter</th><th>Topic</th><th>Status</th><th>Completion</th></tr>
+                    <tr><td>1</td><td>Foundation</td><td>✅ Complete</td><td>95%</td></tr>
+                    <tr><td>2</td><td>Core Features</td><td>✅ Complete</td><td>100%</td></tr>
+                    <tr><td>3</td><td>Views & Styling</td><td>✅ Complete</td><td>95%</td></tr>
+                    <tr><td>4</td><td>Authentication</td><td>✅ Complete</td><td>90%</td></tr>
+                    <tr><td>5</td><td>Mobile PWA</td><td>⚠️ In Progress</td><td>60%</td></tr>
+                    <tr><td>6</td><td>Advanced Features</td><td>✅ Mostly Complete</td><td>85%</td></tr>
+                    <tr><td>7</td><td>API Development</td><td>❌ Not Applicable</td><td>N/A</td></tr>
+                    <tr><td>8</td><td>Integration</td><td>⚠️ Partial</td><td>70%</td></tr>
+                    <tr><td>9</td><td>Testing</td><td>✅ Complete</td><td>100%</td></tr>
+                    <tr><td>10</td><td>Production</td><td>⚠️ Partial</td><td>75%</td></tr>
+                </table>
+            </div>
+
+            <div class="card" style="margin-top: 20px;">
+                <div class="card-header">
+                    <div class="icon">⚠️</div>
+                    <div class="card-title">Critical Pre-Launch Items</div>
+                </div>
+                <div class="command-box">
+                    <strong>From Season README.md:</strong><br>
+                    1. OAuth credentials on Render (Google, Facebook, Apple) - <span style="color: #FDF0EE;">HIGH TODO</span><br>
+                    2. <code>config.hosts</code> uncomment (DNS rebinding protection) - <span style="color: #FDF0EE;">HIGH TODO</span><br>
+                    3. Rack::Attack on login endpoints - <span style="color: #FDF0EE;">HIGH TODO</span><br>
+                    4. <code>config.load_defaults 8.1</code> run - <span style="color: #FDF0EE;">HIGH TODO</span><br>
+                    5. Devise <code>config.paranoid = true</code> - <span style="color: #D18D83;">MEDIUM TODO</span><br>
+                    6. CSP enforcement (flip <code>report_only</code> to <code>false</code>) - <span style="color: #D18D83;">MEDIUM TODO</span><br>
+                    7. Active Storage switch to S3/R2 - <span style="color: #D18D83;">MEDIUM TODO</span><br>
+                    8. Sentry <code>SENTRY_DSN</code> on Render - <span style="color: #D18D83;">MEDIUM TODO</span>
+                </div>
+            </div>
+
+            <div class="card" style="margin-top: 20px;">
+                <div class="card-header">
+                    <div class="icon">🛠️</div>
+                    <div class="card-title">How to Run Audits</div>
+                </div>
+                <h3 style="margin-top: 0;">Method 1: Quick Audit Runner (Bash)</h3>
+                <pre><code># Run all chapter audits
+/Users/tichlabs/Documents/onlyCode/season/audit_runner.sh all
+
+# Run single chapter audit
+/Users/tichlabs/Documents/onlyCode/season/audit_runner.sh chapter1
+/Users/tichlabs/Documents/onlyCode/season/audit_runner.sh 3
+
+# Run security audit
+/Users/tichlabs/Documents/onlyCode/season/audit_runner.sh security
+
+# Check pre-launch items
+/Users/tichlabs/Documents/onlyCode/season/audit_runner.sh pre-launch</code></pre>
+
+                <h3 style="margin-top: 20px;">Method 2: Agent Skills (Claude Code / OpenCode)</h3>
+                <p>Use the Task tool with skills defined in <code>audit_skils.md</code>:</p>
+                <pre><code># Chapter audit example
+Task(
+  description: "Audit Chapter 3",
+  prompt: "<from audit_skills.md - audit-chapter-3>",
+  subagent_type: "explore"
+)
+
+# Security audit
+Task(
+  description: "Security Audit",
+  prompt: "<from audit_skills.md - audit-security>",
+  subagent_type: "explore"
+)</code></pre>
+
+                <h3 style="margin-top: 20px;">Method 3: Read the Checklists</h3>
+                <p>Open these files in your editor:</p>
+                <ul style="padding-left: 20px; margin-top: 10px; line-height: 2;">
+                    <li><code>/Users/tichlabs/Documents/onlyCode/season/audit_checklist.md</code> - Full checklist (all chapters)</li>
+                    <li><code>/Users/tichlabs/Documents/onlyCode/season/audit_skills.md</code> - Agent skills (copy-paste prompts)</li>
+                    <li><code>/Users/tichlabs/Documents/onlyCode/season/README.md</code> - Season status & TODOs</li>
+                </ul>
+            </div>
+
+            <div class="card" style="margin-top: 20px;">
+                <div class="card-header">
+                    <div class="icon">📝</div>
+                    <div class="card-title">Audit Checklist Files</div>
+                </div>
+                <table>
+                    <tr><th>File</th><th>Description</th><th>Location</th></tr>
+                    <tr>
+                        <td><strong>audit_checklist.md</strong></td>
+                        <td>Full checklist based on 10 chapters (259 steps)</td>
+                        <td><code>season/audit_checklist.md</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>audit_skills.md</strong></td>
+                        <td>Agent skills for Claude Code / OpenCode</td>
+                        <td><code>season/audit_skills.md</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>audit_runner.sh</strong></td>
+                        <td>Bash script for quick audits</td>
+                        <td><code>season/audit_runner.sh</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>README.md</strong></td>
+                        <td>Season app status, milestones, TODOs</td>
+                        <td><code>season/README.md</code></td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="card" style="margin-top: 20px; background: #0f172a; border-color: #38bdf8;">
+                <div class="card-header">
+                    <div class="icon">💡</div>
+                    <div class="card-title">Pro Tip: Automate with Agents</div>
+                </div>
+                <p>Since you're using <strong>OpenCode</strong> (or Claude Code), you can create a custom command or skill that runs the full audit automatically:</p>
+                <pre><code># Example: Add to CLAUDE.md or AGENTS.md
+## Audit Command
+To audit Season against the codebase chapters, run:
+/bin/bash audit_runner.sh all
+
+Or use agent skills from audit_skills.md for detailed chapter audits.</code></pre>
+            </div>
+        </div>
+
+        <!-- Resources Section -->
+        <div id="resources" class="content-section">
+            <h1>All Resources</h1>
+            <p class="subtitle">Links to documentation, GitHub repos, and tools</p>
+
+            <div class="grid">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="icon">💎</div>
+                        <div class="card-title">Rails / Maquina</div>
+                    </div>
+                    <ul style="padding-left: 20px; line-height: 2;">
+                        <li><a href="https://maquina.app" target="_blank">Maquina App</a></li>
+                        <li><a href="https://github.com/maquina-app/rails-claude-code" target="_blank">Rails Claude Code Plugins</a></li>
+                        <li><a href="https://github.com/maquina-app/maquina_generators" target="_blank">Maquina Generators</a></li>
+                        <li><a href="https://github.com/maquina-app/maquina_components" target="_blank">Maquina Components</a></li>
+                        <li><a href="https://rubyonrails.org" target="_blank">Ruby on Rails</a></li>
+                        <li><a href="https://37signals.com" target="_blank">37signals Patterns</a></li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="icon">⚛️</div>
+                        <div class="card-title">React / Next.js</div>
+                    </div>
+                    <ul style="padding-left: 20px; line-height: 2;">
+                        <li><a href="https://nextjs.org/docs" target="_blank">Next.js Documentation</a></li>
+                        <li><a href="https://react.dev" target="_blank">React Documentation</a></li>
+                        <li><a href="https://tailwindcss.com/docs" target="_blank">Tailwind CSS Docs</a></li>
+                        <li><a href="https://github.com/tylerbryy/codewarden" target="_blank">CodeWarden Plugin</a></li>
+                        <li><a href="https://github.com/soilmass/vibe-coding-plugin" target="_blank">Vibe Coding Plugin</a></li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="icon">🤖</div>
+                        <div class="card-title">Claude Code</div>
+                    </div>
+                    <ul style="padding-left: 20px; line-height: 2;">
+                        <li><a href="https://docs.anthropic.com/en/docs/claude-code" target="_blank">Claude Code Docs</a></li>
+                        <li><a href="https://github.com/anthropics/claude-code" target="_blank">GitHub Repository</a></li>
+                        <li><a href="https://github.com/anthropics/claude-plugins-official" target="_blank">Official Plugins</a></li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="icon">📚</div>
+                        <div class="card-title">Course Files</div>
+                    </div>
+                    <ul style="padding-left: 20px; line-height: 2;">
+                        <li><a href="dev-setup.html">Dev Environment Setup</a></li>
+                        <li><a href="GUIDE.md">Markdown Guide</a></li>
+                        <li><a href="guide.html">This HTML Guide</a></li>
+                        <li><code>/code/chXX_YY/rails/</code> - Rails apps</li>
+                        <li><code>/code/chXX_YY/android/</code> - Android apps</li>
+                        <li><code>/code/chXX_YY/ios/</code> - iOS apps</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Generated for ~/Documents/codebase</p>
+            <p>Rails 8 + React/Next.js Course | 259 Chapters | 10 Main Sections</p>
+            <p style="margin-top: 10px;"><a href="https://maquina.app" target="_blank">maquina.app</a> — Tools extracted from production Rails apps</p>
+        </div>
+    </div>
+
+    <script>
+        function showSection(sectionId) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => section.classList.remove('active'));
+            
+            // Show selected section
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
+            
+            // Update nav items
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => item.classList.remove('active'));
+            
+            // Find and activate the clicked nav item
+            const clickedItem = document.querySelector(`.nav-item[href="#${sectionId}"]`);
+            if (clickedItem) {
+                clickedItem.classList.add('active');
+            }
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+        
+        // Handle initial hash in URL
+        window.addEventListener('load', function() {
+            if (window.location.hash) {
+                const sectionId = window.location.hash.substring(1);
+                showSection(sectionId);
+            }
+        });
+    </script>
+</body>
+</html>
