@@ -1357,7 +1357,7 @@
                     <div class="card-title">HIGH Priority TODO</div>
                 </div>
                 <div class="step"><div class="step-num">1</div><div><strong>Google OAuth</strong> ✅ Ready - Add credentials to Render<br>Callback: <code>https://seasonv2.onrender.com/users/auth/google_oauth2/callback</code></div></div>
-                <div class="step"><div class="step-num">2</div><div><strong>Facebook OAuth</strong> ⚠️ Pending - Add credentials + update console URL<br>Callback: <code>https://seasonv2.onrender.com/users/auth/facebook/callback</code></div></div>
+                <div class="step"><div class="step-num">2</div><div><strong>Facebook OAuth</strong> ✅ Ready - Credentials obtained, callback URL updated<br>Callback: <code>https://seasonv2.onrender.com/users/auth/facebook/callback</code></div></div>
             </div>
             <div class="card" style="margin-top: 20px;">
                 <div class="card-header">
@@ -1470,10 +1470,10 @@
                     <tr>
                         <td><strong>4</strong></td>
                         <td>Authentication</td>
-                        <td><span style="color: #4ade80;">90%</span></td>
+                        <td><span style="color: #4ade80;">95%</span></td>
                         <td>
-                            <span class="tag">Devise paranoid mode (medium)</span>
-                            <span class="tag">OAuth credentials on Render (HIGH)</span>
+                            <span class="tag">Devise paranoid mode ✅</span>
+                            <span class="tag">OAuth: Facebook ✅, Google ✅, Apple ⏳</span>
                         </td>
                     </tr>
                     <tr>
@@ -1489,9 +1489,9 @@
                     <tr>
                         <td><strong>6</strong></td>
                         <td>Advanced Features</td>
-                        <td><span style="color: #4ade80;">85%</span></td>
+                        <td><span style="color: #4ade80;">90%</span></td>
                         <td>
-                            <span class="tag">Active Storage S3/R2 (medium)</span>
+                            <span class="tag">Active Storage: local (beta) → Cloudflare R2 (launch)</span>
                         </td>
                     </tr>
                     <tr>
@@ -1503,10 +1503,10 @@
                     <tr>
                         <td><strong>8</strong></td>
                         <td>Integration</td>
-                        <td><span style="color: #fbbf24;">70%</span></td>
+                        <td><span style="color: #4ade80;">85%</span></td>
                         <td>
-                            <span class="tag">OAuth credentials (HIGH)</span>
-                            <span class="tag">Sentry DSN (medium)</span>
+                            <span class="tag">OAuth: Facebook ✅, Google ✅, Apple ⏳</span>
+                            <span class="tag">Sentry DSN (medium - parked)</span>
                             <span class="tag">Stripe wired (post-launch)</span>
                         </td>
                     </tr>
@@ -1519,12 +1519,12 @@
                     <tr>
                         <td><strong>10</strong></td>
                         <td>Production</td>
-                        <td><span style="color: #fbbf24;">75%</span></td>
+                        <td><span style="color: #4ade80;">90%</span></td>
                         <td>
-                            <span class="tag">config.hosts (HIGH)</span>
-                            <span class="tag">config.load_defaults 8.1 (HIGH)</span>
-                            <span class="tag">Rack::Attack (HIGH)</span>
-                            <span class="tag">CSP enforcement (medium)</span>
+                            <span class="tag">config.hosts ✅</span>
+                            <span class="tag">config.load_defaults 8.1 ✅</span>
+                            <span class="tag">Rack::Attack ✅</span>
+                            <span class="tag">CSP enforcement ✅</span>
                         </td>
                     </tr>
                 </table>
@@ -1607,52 +1607,6 @@
                 </div>
             </div>
 
-            <div class="card" style="margin-top: 20px;">
-                <div class="card-header">
-                    <div class="icon">📈</div>
-                    <div class="card-title">Progress Tracking</div>
-                </div>
-                <p>Update completion percentages as you fix items:</p>
-                <table>
-                    <tr>
-                        <th>Chapter</th>
-                        <th>Current</th>
-                        <th>Target</th>
-                        <th>Actions</th>
-                    </tr>
-                    <tr>
-                        <td>1 (Foundation)</td>
-                        <td>95%</td>
-                        <td>100%</td>
-                        <td><span class="tag">Run audit_runner.sh 1</span></td>
-                    </tr>
-                    <tr>
-                        <td>4 (Auth)</td>
-                        <td>90%</td>
-                        <td>100%</td>
-                        <td><span class="tag">Set OAuth credentials</span> <span class="tag">Enable paranoid mode</span></td>
-                    </tr>
-                    <tr>
-                        <td>5 (Mobile)</td>
-                        <td>60%</td>
-                        <td>80%</td>
-                        <td><span class="tag">Add service worker</span> <span class="tag">Test PWA install</span></td>
-                    </tr>
-                    <tr>
-                        <td>8 (Integration)</td>
-                        <td>70%</td>
-                        <td>95%</td>
-                        <td><span class="tag">Set Sentry DSN</span> <span class="tag">Verify OAuth</span></td>
-                    </tr>
-                    <tr>
-                        <td>10 (Production)</td>
-                        <td>75%</td>
-                        <td>100%</td>
-                        <td><span class="tag">Uncomment config.hosts</span> <span class="tag">Add Rack::Attack</span> <span class="tag">Run app:update</span></td>
-                    </tr>
-                </table>
-                <p style="margin-top: 15px;"><strong>Overall Progress:</strong> <span style="color: #fbbf24; font-size: 1.2rem;">80% → 95% (after HIGH priority fixes)</span></p>
-            </div>
         </div>
 
         <!-- Audit System Section -->
