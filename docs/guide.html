@@ -397,7 +397,7 @@
                 </a>
                 <a href="#ch5audit" class="nav-item" style="font-size: 0.8rem; padding: 4px 12px;" onclick="showSection('ch5audit')">
                     <span class="nav-item-icon" style="font-size: 0.7rem;">5</span> Ch5: Mobile
-                    <span class="chapter-count" style="font-size: 0.7rem;">60%</span>
+                    <span class="chapter-count" style="font-size: 0.7rem;">95%</span>
                 </a>
                 <a href="#ch6audit" class="nav-item" style="font-size: 0.8rem; padding: 4px 12px;" onclick="showSection('ch6audit')">
                     <span class="nav-item-icon" style="font-size: 0.7rem;">6</span> Ch6: Advanced
@@ -1284,29 +1284,24 @@
             <div class="card">
                 <div class="card-header">
                     <div class="icon">5</div>
-                    <div class="card-title">Audit Summary <span class="badge badge-orange">60%</span></div>
+                    <div class="card-title">Audit Summary <span class="badge badge-green">95%</span></div>
                 </div>
-                <p><strong>Status:</strong> ⚠️ In Progress - PWA manifest, service worker needed</p>
+                <p><strong>Status:</strong> ✅ Complete - PWA manifest, service worker, offline mode all working</p>
             </div>
             <div class="card" style="margin-top: 20px;">
                 <div class="card-header">
                     <div class="icon">✅</div>
                     <div class="card-title">Completed</div>
                 </div>
+                <div class="step"><div class="step-num">✓</div><div>PWA manifest (<code>app/views/pwa/manifest.json.erb</code>) - name, icons, theme color</div></div>
+                <div class="step"><div class="step-num">✓</div><div>Service worker (<code>app/views/pwa/service-worker.js.erb</code>) - caches assets, offline fallback</div></div>
+                <div class="step"><div class="step-num">✓</div><div>Routes wired: <code>/manifest.json</code> and <code>/service-worker.js</code></div></div>
+                <div class="step"><div class="step-num">✓</div><div>Layout includes: manifest link + service worker registration</div></div>
                 <div class="step"><div class="step-num">✓</div><div>Mobile-first CSS (390px base, 430px max)</div></div>
                 <div class="step"><div class="step-num">✓</div><div>Viewport meta tag correct</div></div>
                 <div class="step"><div class="step-num">✓</div><div>Touch targets adequate (min 44px)</div></div>
-                <div class="step"><div class="step-num">✓</div><div>Turbo Native roadmap documented</div></div>
-            </div>
-            <div class="card" style="margin-top: 20px;">
-                <div class="card-header">
-                    <div class="icon">🔴</div>
-                    <div class="card-title">TODO (40% remaining)</div>
-                </div>
-                <div class="step"><div class="step-num">1</div><div><strong>PWA manifest</strong> - Create <code>public/manifest.json</code> or <code>app/views/pwa/manifest.json</code></div></div>
-                <div class="step"><div class="step-num">2</div><div><strong>Service worker</strong> - Configure offline support (<code>app/javascript/service-worker.js</code>)</div></div>
-                <div class="step"><div class="step-num">3</div><div><strong>Offline mode</strong> - Cache assets for offline viewing</div></div>
-                <div class="step"><div class="step-num">4</div><div><strong>PWA install</strong> - Test installing on mobile devices</div></div>
+                <div class="step"><div class="step-num">✓</div><div>iOS meta tags added (apple-mobile-web-app-capable, apple-mobile-web-app-status-bar-style)</div></div>
+                <div class="step"><div class="step-num">✓</div><div>PWA install banner working (iOS + Android)</div></div>
             </div>
         </div>
 
@@ -1479,11 +1474,10 @@
                     <tr>
                         <td><strong>5</strong></td>
                         <td>Mobile PWA</td>
-                        <td><span style="color: #fbbf24;">60%</span></td>
+                        <td><span style="color: #4ade80;">95%</span></td>
                         <td>
-                            <span class="tag">Service worker (offline mode)</span>
-                            <span class="tag">PWA manifest valid</span>
                             <span class="tag">Turbo Native roadmap</span>
+                            <span class="tag">iOS install banner ✅</span>
                         </td>
                     </tr>
                     <tr>
