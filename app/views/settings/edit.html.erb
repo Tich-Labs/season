@@ -70,7 +70,7 @@
         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
       </svg>
       <div class="flex-1">
-        <span class="text-brand-primary text-base font-medium"><%= t("settings.language.title") %></span>
+        <span class="text-brand-primary text-base font-medium"><%= t("settings.language.title", default: "Language") %></span>
         <span class="block text-brand-muted text-sm mt-1"><%= current_user.language == "de" ? "Deutsch" : "English" %></span>
       </div>
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="text-brand-primary">
