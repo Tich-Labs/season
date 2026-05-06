@@ -1,8 +1,8 @@
 # M2 OAuth Credentials Setup — Render Deployment
 
-**Version:** 2.0 (2026-05-06)  
-**Updated:** 2026-05-06 09:26  
-**Changes:** Switched to Devise-only OAuth (removed custom OmniauthController), updated callback URLs to `/users/auth/:provider/callback`, set Render URL to `seasonv2.onrender.com`
+**Version:** 2.1 (2026-05-06)  
+**Updated:** 2026-05-06 12:15  
+**Changes:** Facebook OAuth ✅ working, updated status table, all credentials ready
 
 ---
 
@@ -181,14 +181,14 @@ If any ENV var is missing, OmniAuth will skip that provider silently.
 ✅ **Callbacks wired** — `Users::OmniauthCallbacksController` ready (Devise OmniAuth)
 ✅ **Custom OAuth removed** — Now using only Devise (no conflicts)
 ✅ **Google credentials** — ✅ Ready to add to Render (Client ID & Secret obtained)
-⏳ **Facebook credentials** — ⏳ Pending (credentials identified, need to add to Render)
+✅ **Facebook credentials** — ✅ Ready to add to Render (credentials obtained, callback URL updated)
 ❌ **Apple credentials** — ❌ Waiting for Apple Developer Account approval
 
 ### Current Progress:
 | Provider | Credentials | Render Dashboard | Provider Console |
 |----------|---------------|---------------|------------------|
 | **Google** | ✅ Obtained | ✅ Ready to add | ✅ URL updated to `/users/auth/google_oauth2/callback` |
-| **Facebook** | ✅ Obtained | ⏳ Need to add | ⏳ Need to update URL to `/users/auth/facebook/callback` |
+| **Facebook** | ✅ Obtained | ✅ Ready to add | ✅ URL updated to `/users/auth/facebook/callback` |
 | **Apple** | ❌ Waiting | ❌ Waiting | ❌ Waiting for Dev Account |
 
 **Callback pattern:** `/users/auth/:provider/callback` (Devise default)

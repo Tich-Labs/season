@@ -1609,39 +1609,6 @@
 
             <div class="card" style="margin-top: 20px;">
                 <div class="card-header">
-                    <div class="icon">🛠️</div>
-                    <div class="card-title">How to Use Audit Tools</div>
-                </div>
-                <h3 style="margin-top: 0;">Method 1: Quick Audit Runner</h3>
-                <pre><code># Run all chapter audits
-./audit_runner.sh all
-
-# Run single chapter audit
-./audit_runner.sh chapter1
-./audit_runner.sh 5
-
-# Check pre-launch items
-./audit_runner.sh pre-launch</code></pre>
-
-                <h3 style="margin-top: 20px;">Method 2: Agent Skills (OpenCode / Claude Code)</h3>
-                <p>Use Task tool with skills from <code>audit_skills.md</code>:</p>
-                <pre><code>Task(
-  description: "Audit Season V2 Chapter 5",
-  prompt: "<from audit_skills.md - audit-chapter-5>",
-  subagent_type: "explore"
-)</code></pre>
-
-                <h3 style="margin-top: 20px;">Method 3: Read Checklists</h3>
-                <ul style="padding-left: 20px; margin-top: 10px; line-height: 2;">
-                    <li><code>audit_checklist.md</code> - Full checklist</li>
-                    <li><code>audit_skills.md</code> - Agent skills</li>
-                    <li><code>OAuth_FIX.md</code> - OAuth fix (applied)</li>
-                    <li><code>README.md</code> - Season status &amp; TODOs</li>
-                </ul>
-            </div>
-
-            <div class="card" style="margin-top: 20px;">
-                <div class="card-header">
                     <div class="icon">📈</div>
                     <div class="card-title">Progress Tracking</div>
                 </div>
