@@ -204,6 +204,9 @@ en:
     rate_limit_login:
       too_many_attempts: "Too many login attempts. Please try again later."
   settings:
+    language:
+      title: "Language"
+      updated: "Language updated successfully."
     update:
       saved: "Settings saved"
     update_profile:

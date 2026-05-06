@@ -195,6 +195,9 @@ de:
     rate_limit_login:
       too_many_attempts: "Zu viele Anmeldeversuche. Bitte versuche es später erneut."
   settings:
+    language:
+      title: "Sprache"
+      updated: "Sprache erfolgreich aktualisiert."
     update:
       saved: "Einstellungen gespeichert"
     update_profile:
