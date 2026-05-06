@@ -199,6 +199,7 @@ de:
   settings:
     language:
       title: "Sprache"
+      save: "Sprache speichern"
       updated: "Sprache erfolgreich aktualisiert."
     update:
       saved: "Einstellungen gespeichert"

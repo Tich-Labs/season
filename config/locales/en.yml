@@ -208,6 +208,7 @@ en:
   settings:
     language:
       title: "Language"
+      save: "Save Language"
       updated: "Language updated successfully."
     update:
       saved: "Settings saved"

@@ -1,5 +1,5 @@
 class Settings::LanguageController < ApplicationController
-  layout "launch"
+  before_action :authenticate_user!
 
   def show
     @user = current_user
