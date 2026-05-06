@@ -69,11 +69,22 @@ https://seasonv2.onrender.com/users/auth/apple/callback
 
 Go to **Render Dashboard** → **seasonv2** → **Environment**:
 
+### ✅ Google (Ready to Add)
 ```
 GOOGLE_CLIENT_ID=your_google_client_id
 GOOGLE_CLIENT_SECRET=your_google_client_secret
+```
+**Status:** ✅ Credentials ready - adding to Render now
+
+### ⏳ Facebook (Pending)
+```
 FACEBOOK_APP_ID=your_facebook_app_id
 FACEBOOK_APP_SECRET=your_facebook_app_secret
+```
+**Status:** ⏳ Credentials identified - need to add to Render
+
+### ❌ Apple (Waiting for Dev Account)
+```
 APPLE_CLIENT_ID=your_apple_service_id
 APPLE_TEAM_ID=your_team_id
 APPLE_KEY_ID=your_key_id
@@ -81,6 +92,9 @@ APPLE_PRIVATE_KEY=-----BEGIN PRIVATE KEY-----
 your_private_key_here
 -----END PRIVATE KEY-----
 ```
+**Status:** ❌ Waiting for Apple Developer Account approval
+
+---
 
 **Important:** For `APPLE_PRIVATE_KEY`, paste the entire key including `-----BEGIN/END-----` lines.
 
@@ -119,20 +133,23 @@ Visit `https://seasonv2.onrender.com/session/new` and click the OAuth buttons.
 
 ## Quick Copy-Paste URLs
 
-### For Facebook Developers Console:
-```
-https://seasonv2.onrender.com/users/auth/facebook/callback
-```
-
-### For Google Cloud Console:
+### For Google Cloud Console: ✅ Ready
 ```
 https://seasonv2.onrender.com/users/auth/google_oauth2/callback
 ```
+**Status:** ✅ Add to Google Cloud Console → APIs & Services → Credentials → OAuth 2.0 Client → Authorized redirect URIs
 
-### For Apple Developer:
+### For Facebook Developers Console: ⏳ Pending
+```
+https://seasonv2.onrender.com/users/auth/facebook/callback
+```
+**Status:** ⏳ Update in Facebook Developers → Your App → Facebook Login → Settings → Valid OAuth Redirect URIs
+
+### For Apple Developer: ❌ Waiting for Dev Account
 ```
 https://seasonv2.onrender.com/users/auth/apple/callback
 ```
+**Status:** ❌ Add once Apple Developer Account is approved
 
 ---
 

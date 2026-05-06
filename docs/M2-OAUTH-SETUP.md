@@ -180,9 +180,17 @@ If any ENV var is missing, OmniAuth will skip that provider silently.
 ✅ **Rails configuration complete** — `devise.rb` ready
 ✅ **Callbacks wired** — `Users::OmniauthCallbacksController` ready (Devise OmniAuth)
 ✅ **Custom OAuth removed** — Now using only Devise (no conflicts)
-⏳ **Render env vars** — *Pending manual setup on Render dashboard*
-⏳ **Update provider consoles** — Need to add `/users/` prefix to callback URLs
+✅ **Google credentials** — ✅ Ready to add to Render (Client ID & Secret obtained)
+⏳ **Facebook credentials** — ⏳ Pending (credentials identified, need to add to Render)
+❌ **Apple credentials** — ❌ Waiting for Apple Developer Account approval
 
-Once Render env vars are set and provider consoles updated, M2 OAuth is complete.
+### Current Progress:
+| Provider | Credentials | Render Dashboard | Provider Console |
+|----------|---------------|---------------|------------------|
+| **Google** | ✅ Obtained | ✅ Ready to add | ✅ URL updated to `/users/auth/google_oauth2/callback` |
+| **Facebook** | ✅ Obtained | ⏳ Need to add | ⏳ Need to update URL to `/users/auth/facebook/callback` |
+| **Apple** | ❌ Waiting | ❌ Waiting | ❌ Waiting for Dev Account |
 
-**Current callback pattern:** `/users/auth/:provider/callback` (Devise default)
+**Callback pattern:** `/users/auth/:provider/callback` (Devise default)
+
+Once Render env vars are added, OAuth will be fully functional for Google & Facebook.

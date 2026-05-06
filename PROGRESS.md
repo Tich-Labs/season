@@ -213,11 +213,11 @@ Update this file as you complete audit items. Check off items to track progress 
 | 1 | Foundation | 95% | 100% | CI/CD |
 | 2 | Core Features | 100% ✅ | 100% | - |
 | 3 | Views & Styling | 95% | 100% | i18n fixes |
-| 4 | Authentication | 90% | 100% | OAuth credentials (HIGH) |
+| 4 | Authentication | 95% | 100% | Google ✅ ready, Facebook ⚠️ pending, Apple ❌ waiting for Dev Account |
 | 5 | Mobile PWA | 60% | 80% | Service worker, manifest |
 | 6 | Advanced | 85% | 95% | Active Storage S3 |
 | 7 | API | N/A | N/A | Not applicable |
-| 8 | Integration | 70% | 95% | OAuth, Sentry DSN |
+| 8 | Integration | 75% | 95% | Google OAuth ✅ ready, Facebook ⚠️ pending, Sentry DSN (medium), Stripe wired (post-launch) |
 | 9 | Testing | 100% ✅ | 100% | - |
 | 10 | Production | 75% | 100% | config.hosts, Rack::Attack |
 
