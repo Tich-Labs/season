@@ -124,7 +124,7 @@
 
       <!-- Terms -->
       <div class="flex items-start gap-[17px] mt-[19px]">
-        <input type="checkbox" required name="terms_accepted"
+        <input type="checkbox" required name="terms_accepted" value="1"
                class="mt-1 w-[31px] h-[27px] accent-brand-primary rounded-lg shrink-0 <%= 'border-2 border-brand-primary' if @error_type == :terms_not_accepted %>">
         <span class="text-brand-primary text-base font-normal leading-snug">
           <%= t('devise.registrations.new.terms_html',
