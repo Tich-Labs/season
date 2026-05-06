@@ -471,7 +471,7 @@ Standard Rails 8 Active Storage tables (`active_storage_blobs`, `active_storage_
 | GET | `/password/error/inbox-full` | `passwords#error_inbox_full` | Delivery error info |
 | GET | `/password/error/contact` | `passwords#error_contact` | Generic delivery failure |
 | GET | `/auth/failure` | `omniauth#failure` | OAuth failure handler |
-| GET/POST | `/auth/:provider/callback` | `omniauth#callback` | OAuth callback |
+| GET/POST | `/users/auth/:provider/callback` | `users/omniauth_callbacks#(provider)` | OAuth callback (Devise) |
 
 ### Onboarding Routes
 
@@ -634,7 +634,7 @@ The app uses a **hybrid approach**: Devise for its recoverable/confirmable/omnia
 This means:
 - Sign up, sign in, sign out are handled entirely by custom controllers (`RegistrationsController`, `SessionsController`).
 - Password reset uses a custom `PasswordsController` that wraps Devise's token logic (`User.with_reset_password_token`, `user.send_reset_password_instructions`).
-- OmniAuth callbacks go through a custom `OmniauthController`.
+- OmniAuth callbacks go through Devise's `Users::OmniauthCallbacksController`. Custom `OmniauthController` was removed.
 - Devise handles confirmable emails, token generation/validation, and OmniAuth middleware mounting.
 
 ---
@@ -748,7 +748,7 @@ Devise's `expire_all_remember_me_on_sign_out = true` is configured but only appl
 
 ### OmniAuth (Google / Facebook / Apple)
 
-**Controller:** `OmniauthController#callback`
+**Controller:** `Users::OmniauthCallbacksController` (Devise default)
 
 All three providers are configured in `devise.rb`:
 

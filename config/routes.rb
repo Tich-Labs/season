@@ -93,10 +93,6 @@ Rails.application.routes.draw do
   get "password/error/wrong-email", to: "passwords#error_wrong_email", as: :password_error_wrong_email
   get "password/error/contact", to: "passwords#error_contact", as: :password_error_contact
 
-  # OmniAuth routes
-  get "/auth/failure", to: "omniauth#failure"
-  match "/auth/:provider/callback", to: "omniauth#callback", via: [:get, :post]
-
   get "manifest.json", to: "pwa#manifest", format: :json, as: :pwa_manifest
   get "service-worker.js", to: "pwa#service_worker", format: :js
 
