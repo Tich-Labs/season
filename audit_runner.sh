@@ -1,6 +1,7 @@
 #!/bin/bash
 # Season App Audit Runner
-# Usage: ./audit_runner.sh [chapter|all|security|pre-launch]
+# Version: 1.0 (2026-05-06)
+# Updated: 2026-05-06 08:56
 
 APP_PATH="/Users/tichlabs/Documents/onlyCode/season"
 SKILLS_FILE="$APP_PATH/audit_skills.md"

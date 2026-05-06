@@ -1,4 +1,11 @@
 # OAuth Callback URLs - Season V2
+
+**Version:** 1.0 (2026-05-06)  
+**Updated:** 2026-05-06 09:26  
+**Changes:** Initial version with correct Devise OAuth callback URLs for seasonv2.onrender.com
+
+---
+
 ## Render URL: `https://seasonv2.onrender.com/`
 
 ---

@@ -1,10 +1,7 @@
-# Audit Skills for Season App
-## Based on Codebase Chapters (ch01_00 to ch10_68)
-
-These skills define reusable audit tasks that can be run against the Season app.
-Use the Task tool or Claude Code to invoke these skills.
-
 ---
+**Version:** 1.0 (2026-05-06)  
+**Updated:** 2026-05-06 09:26  
+**Purpose:** Agent skills for OpenCode/Claude Code audits
 
 ## SKILL: audit-chapter-1
 **Description**: Audit Chapter 1 - Foundation (Rails setup, config, basic structure)

@@ -1,4 +1,11 @@
 # Season App - Audit Checklist
+
+**Version:** 1.0 (2026-05-06)  
+**Updated:** 2026-05-06 08:56  
+**Based on:** Codebase Chapters (ch01_00 to ch10_68)
+
+---
+
 ## Based on Codebase Chapters (ch01_00 to ch10_68)
 
 ### App Info

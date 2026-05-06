@@ -1,5 +1,11 @@
 # M2 OAuth Credentials Setup — Render Deployment
 
+**Version:** 2.0 (2026-05-06)  
+**Updated:** 2026-05-06 09:26  
+**Changes:** Switched to Devise-only OAuth (removed custom OmniauthController), updated callback URLs to `/users/auth/:provider/callback`, set Render URL to `seasonv2.onrender.com`
+
+---
+
 ## Overview
 
 OAuth social login (Google, Facebook, Apple) is fully configured in the Rails app via **Devise OmniAuth**. This document covers the **Render dashboard configuration** required to complete M2.
