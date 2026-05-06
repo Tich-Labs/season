@@ -282,7 +282,7 @@ From security audit 2026-04-25. Items resolved on 2026-04-28 are marked.
 | CSP-01 | CSP was report-only with no enforcement | `config/initializers/content_security_policy.rb` | ✅ Fixed 2026-04-28 — `report_only = false` |
 | HDR-01 | No Permissions Policy | missing file | ✅ Fixed 2026-04-28 — `permissions_policy.rb` created |
 | PROD-04 | Devise password minimum is 6 chars (below NIST 8-char minimum) | `config/initializers/devise.rb` | ⏳ Open |
-| DATA-01 | Active Storage on local disk in production — avatars lost on every Render redeploy | `config/environments/production.rb` | ⏳ Open |
+| DATA-01 | Active Storage on local disk in production — avatars lost on every Render redeploy | `config/environments/production.rb` | ⏳ Open — Cloudflare R2 planned for launch |
 
 ### 🟢 Info
 

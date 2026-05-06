@@ -427,6 +427,9 @@ cycle_phase_contents
 
 Standard Rails 8 Active Storage tables (`active_storage_blobs`, `active_storage_attachments`, `active_storage_variant_records`). Storage service: `:local` in all environments (configured in `production.rb`). Used for user avatar uploads and feedback media attachments.
 
+**Beta:** Local storage (avatars stored on user devices via Hotwire Native).
+**Launch:** Switch to Cloudflare R2 (10GB free, no egress fees).
+
 ---
 
 ## 4. Routes & Controller Structure
@@ -989,7 +992,7 @@ Single web service + one PostgreSQL database, both on Render free tier.
 | Ruby version | `3.4.7` |
 | Concurrency | `WEB_CONCURRENCY=1` (single Puma worker) |
 | Solid Queue | In-process via `SOLID_QUEUE_IN_PUMA=true` |
-| Active Storage | `:local` (ephemeral on Render — **files lost on redeploy**) |
+| Active Storage | `:local` (beta: on-device) → Cloudflare R2 at launch |
 
 ### Build Script (`bin/render-build.sh`)
 
