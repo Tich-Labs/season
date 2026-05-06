@@ -49,7 +49,7 @@
       <% bar_color   = dark_header ? "bg-white"     : "bg-[#933a35]" %>
       <% hdr_fg      = dark_header ? "text-white"   : "text-[#933a35]" %>
       <% hdr_inline  = content_for?(:header_color) ? "style=\"background:#{yield(:header_color)};\"" : "" %>
-      <header class="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-md h-20 <%= hdr_bg %> z-40 flex items-center px-4" <%= hdr_inline.html_safe %>>
+      <header class="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-app h-20 <%= hdr_bg %> z-40 flex items-center px-4" <%= hdr_inline.html_safe %>>
 
         <%# Left: custom back-arrow OR default hamburger %>
         <% if content_for?(:header_left) %>
@@ -102,7 +102,7 @@
 
     <%# PWA update banner — shown by update_prompt_controller when a new SW is waiting %>
     <div data-update-prompt-target="banner"
-         class="fixed bottom-24 left-1/2 -translate-x-1/2 w-full max-w-md px-4 z-50 hidden">
+         class="fixed bottom-24 left-1/2 -translate-x-1/2 w-full max-w-app px-4 z-50 hidden">
       <div class="bg-[#3d2b28] text-white rounded-2xl px-4 py-3 flex items-center justify-between shadow-xl">
         <span class="text-sm font-medium">New version of Season available</span>
         <button data-action="click->update-prompt#updateApp"
@@ -114,7 +114,7 @@
 
     <%# PWA install banner — shown by install_controller when app is installable %>
     <div data-install-target="banner"
-         class="fixed bottom-24 left-1/2 -translate-x-1/2 w-full max-w-md px-4 z-50 hidden">
+         class="fixed bottom-24 left-1/2 -translate-x-1/2 w-full max-w-app px-4 z-50 hidden">
       <div class="bg-white border border-[#ede1d5] rounded-2xl px-4 py-3 flex items-center justify-between shadow-xl">
         <span class="text-sm font-medium text-[#3d2b28]">Add Season to your home screen</span>
         <div class="flex gap-2 ml-3 shrink-0">
