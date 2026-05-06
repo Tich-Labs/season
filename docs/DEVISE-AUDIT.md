@@ -158,10 +158,24 @@ If someone registered but never confirmed, then tries to log in:
 | `:confirmable` enabled but bypassed | 🟡 MEDIUM | ✅ FIXED — fully implemented |
 | Rate limiting on IP not user | 🟡 MEDIUM | ✅ Acceptable (custom sessions) |
 | Custom sessions replace Devise | 🟡 MEDIUM | ✅ Working well |
+| User enumeration possible | 🟡 MEDIUM | ✅ FIXED — paranoid mode enabled (5 May 2026) |
 
 ---
 
-## F. Cleanup Opportunities (Completed)
+## F. Paranoid Mode (5 May 2026)
+
+**What:** Enabled `config.paranoid = true` in `config/initializers/devise.rb:93`
+
+**Effect:**
+- Password reset: Always shows "Reset email sent" (hides if email exists)
+- Confirmation resend: Always shows "Confirmation email sent"
+- Prevents user enumeration attacks (cannot detect registered emails)
+
+**Location:** `config/initializers/devise.rb:93`
+
+---
+
+## G. Cleanup Opportunities (Completed)
 
 | Action | Effort | Status |
 |--------|--------|--------|

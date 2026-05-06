@@ -272,13 +272,13 @@ From security audit 2026-04-25. Items resolved on 2026-04-28 are marked.
 |----|-------|------|--------|
 | PROD-05 | `config.hosts` is commented out — DNS rebinding protection disabled | `config/environments/production.rb` | ✅ Fixed 2026-04-28 |
 | RATE-02 | Login rate limiter keyed on `request.ip` — bypassable via `X-Forwarded-For` spoofing | `sessions_controller.rb` | ⏳ Open |
-| FWKD-01 | `config.load_defaults 8.0` but app runs Rails 8.1.3 — missing 8.1 security defaults | `config/application.rb` | ⏳ Open |
+| FWKD-01 | `config.load_defaults 8.0` but app runs Rails 8.1.3 — missing 8.1 security defaults | `config/application.rb` | ✅ Fixed 2026-05-06 |
 
 ### 🟠 Medium
 
 | ID | Issue | File | Status |
 |----|-------|------|--------|
-| AUTH-02 | Devise paranoid mode off — account enumeration possible via password reset/confirm responses | `config/initializers/devise.rb` | ⏳ Open |
+| AUTH-02 | Devise paranoid mode off — account enumeration possible via password reset/confirm responses | `config/initializers/devise.rb` | ✅ Fixed 2026-05-06 |
 | CSP-01 | CSP was report-only with no enforcement | `config/initializers/content_security_policy.rb` | ✅ Fixed 2026-04-28 — `report_only = false` |
 | HDR-01 | No Permissions Policy | missing file | ✅ Fixed 2026-04-28 — `permissions_policy.rb` created |
 | PROD-04 | Devise password minimum is 6 chars (below NIST 8-char minimum) | `config/initializers/devise.rb` | ⏳ Open |
