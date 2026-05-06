@@ -2,7 +2,12 @@
 
 ## Overview
 
-OAuth social login (Google, Facebook, Apple) is fully configured in the Rails app via Devise/OmniAuth. This document covers the **Render dashboard configuration** required to complete M2.
+OAuth social login (Google, Facebook, Apple) is fully configured in the Rails app via **Devise OmniAuth**. This document covers the **Render dashboard configuration** required to complete M2.
+
+**Important:** Season uses **Devise OmniAuth only** (custom `OmniauthController` was removed). All callback URLs follow the Devise pattern:
+```
+/users/auth/:provider/callback
+```
 
 All OAuth environment variables are configured in `config/initializers/devise.rb` and already reference the correct ENV vars. They just need values set on Render.
 
@@ -31,9 +36,8 @@ All OAuth environment variables are configured in `config/initializers/devise.rb
 4. Click **Create Credentials > OAuth 2.0 Client ID**
 5. Choose **Web Application**
 6. Under **Authorized redirect URIs**, add:
-   - `https://season.vision/auth/google_oauth2/callback`
-   - `https://app.season.vision/auth/google_oauth2/callback` (if applicable)
-   - `http://localhost:3000/auth/google_oauth2/callback` (local dev)
+   - `https://seasonv2.onrender.com/users/auth/google_oauth2/callback`
+   - `http://localhost:3000/users/auth/google_oauth2/callback` (local dev)
 7. Copy **Client ID** → `GOOGLE_CLIENT_ID`
 8. Copy **Client Secret** → `GOOGLE_CLIENT_SECRET`
 
@@ -47,9 +51,8 @@ All OAuth environment variables are configured in `config/initializers/devise.rb
 4. Copy **App ID** → `FACEBOOK_APP_ID`
 5. Copy **App Secret** → `FACEBOOK_APP_SECRET`
 6. Under **Facebook Login > Settings**, add redirect URIs:
-   - `https://season.vision/auth/facebook/callback`
-   - `https://app.season.vision/auth/facebook/callback`
-   - `http://localhost:3000/auth/facebook/callback`
+   - `https://seasonv2.onrender.com/users/auth/facebook/callback`
+   - `http://localhost:3000/users/auth/facebook/callback`
 7. Ensure "Email" permission is enabled in Login Scopes
 
 ---
@@ -61,9 +64,8 @@ All OAuth environment variables are configured in `config/initializers/devise.rb
 3. Create or use an existing Service ID (e.g., `com.seasonapp.web`)
 4. Configure **Sign in with Apple**:
    - Add **Return URLs**:
-     - `https://season.vision/auth/apple/callback`
-     - `https://app.season.vision/auth/apple/callback`
-     - `http://localhost:3000/auth/apple/callback`
+     - `https://seasonv2.onrender.com/users/auth/apple/callback`
+     - `http://localhost:3000/users/auth/apple/callback`
 5. Create a **Private Key** for the Service ID
 6. Download the key and generate JWT token:
    - Use Team ID, Key ID, and private key to create JWT
@@ -115,7 +117,7 @@ Run `bin/dev` and test login buttons at `/session/new`.
 After setting env vars on Render:
 
 1. Check **Logs** for any Devise/OmniAuth initialization errors
-2. Test sign-in flow at `https://season.vision/session/new`
+2. Test sign-in flow at `https://seasonv2.onrender.com/session/new`
 3. Click each provider button and verify:
    - Redirect to provider login
    - Callback returns user to `/calendar` or `/onboarding`
@@ -170,7 +172,11 @@ If any ENV var is missing, OmniAuth will skip that provider silently.
 ## Status
 
 ✅ **Rails configuration complete** — `devise.rb` ready
-✅ **Callbacks wired** — `OmniauthController` ready
+✅ **Callbacks wired** — `Users::OmniauthCallbacksController` ready (Devise OmniAuth)
+✅ **Custom OAuth removed** — Now using only Devise (no conflicts)
 ⏳ **Render env vars** — *Pending manual setup on Render dashboard*
+⏳ **Update provider consoles** — Need to add `/users/` prefix to callback URLs
 
-Once Render env vars are set, M2 OAuth is complete.
+Once Render env vars are set and provider consoles updated, M2 OAuth is complete.
+
+**Current callback pattern:** `/users/auth/:provider/callback` (Devise default)
