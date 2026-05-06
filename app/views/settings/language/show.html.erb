@@ -7,7 +7,7 @@
     </div>
     <div class="border-b border-[#DDD0CB]"></div>
 
-    <%= form_with model: @user, url: language_settings_path, method: :patch, local: true do |f| %>
+    <%= form_with model: @user, url: settings_language_path, method: :patch, local: true do |f| %>
       <div class="py-6 space-y-4">
         <%# English %>
         <label class="flex items-center gap-4 py-3 cursor-pointer">
