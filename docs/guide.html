@@ -1237,6 +1237,46 @@
             </div>
         </div>
 
+        <!-- Chapter 4 Audit Section -->
+        <div id="ch4audit" class="content-section">
+            <h1>Chapter 4 Audit - Authentication</h1>
+            <p class="subtitle">Season V2 - Based on Codebase Chapter 4 (17 steps)</p>
+            <div class="card">
+                <div class="card-header">
+                    <div class="icon">4</div>
+                    <div class="card-title">Audit Summary <span class="badge badge-green">90%</span></div>
+                </div>
+                <p><strong>Status:</strong> ✅ Mostly Complete - Devise, OmniAuth, confirmable, rate limiting guards in place</p>
+                <p style="margin-top: 10px;"><strong>Improvements:</strong> Enable paranoid mode, verify OAuth credentials are set in Render</p>
+            </div>
+            <div class="card" style="margin-top: 20px;">
+                <div class="card-header">
+                    <div class="icon">✅</div>
+                    <div class="card-title">Completed</div>
+                </div>
+                <div class="step"><div class="step-num">✓</div><div>Devise configured with confirmable, lockable, recoverable</div></div>
+                <div class="step"><div class="step-num">✓</div><div>OmniAuth (Google, Facebook, Apple) wired via Devise</div></div>
+                <div class="step"><div class="step-num">✓</div><div><strong>Fix OAuth (DONE)</strong> - Removed conflicting custom OmniAuth controller; now uses Devise OmniAuth only</div></div>
+                <div class="step"><div class="step-num">✓</div><div>Email confirmation flow implemented (check_email → confirm → onboarding)</div></div>
+                <div class="step"><div class="step-num">✓</div><div>Password reset with custom error pages (link-expired, already-reset)</div></div>
+                <div class="step"><div class="step-num">✓</div><div>Rate limiting: 5 attempts / 15 min in production (disabled in dev)</div></div>
+            </div>
+            <div class="card" style="margin-top: 20px;">
+                <div class="card-header">
+                    <div class="icon">🔴</div>
+                    <div class="card-title">HIGH Priority TODO</div>
+                </div>
+                <div class="step"><div class="step-num">1</div><div><strong>OAuth credentials on Render</strong> - Set <code>GOOGLE_CLIENT_ID</code>, <code>GOOGLE_CLIENT_SECRET</code>, <code>FACEBOOK_APP_ID</code>, <code>FACEBOOK_APP_SECRET</code>, <code>APPLE_CLIENT_ID</code>, <code>APPLE_TEAM_ID</code>, <code>APPLE_KEY_ID</code>, <code>APPLE_PRIVATE_KEY</code> in Render dashboard → See Ch8 audit for callback URLs</div></div>
+            </div>
+            <div class="card" style="margin-top: 20px;">
+                <div class="card-header">
+                    <div class="icon">🟡</div>
+                    <div class="card-title">MEDIUM Priority TODO</div>
+                </div>
+                <div class="step"><div class="step-num">2</div><div><strong>Devise config.paranoid = true</strong> - Prevents account enumeration attacks<br>Uncomment line 93 in <code>config/initializers/devise.rb</code></div></div>
+            </div>
+        </div>
+
         <!-- Chapter 5 Audit Section -->
         <div id="ch5audit" class="content-section">
             <h1>Chapter 5 Audit - Mobile PWA</h1>
@@ -1309,6 +1349,7 @@
                 <div class="step"><div class="step-num">✓</div><div>Payment gateway wired (Stripe gem present)</div></div>
                 <div class="step"><div class="step-num">✓</div><div>Email delivery (Resend adapter)</div></div>
                 <div class="step"><div class="step-num">✓</div><div>Environment variables documented</div></div>
+                <div class="step"><div class="step-num">✓</div><div><strong>Fix OAuth (DONE)</strong> - Removed conflicting custom OmniAuth controller; Devise OmniAuth handles all provider callbacks</div></div>
             </div>
             <div class="card" style="margin-top: 20px;">
                 <div class="card-header">
@@ -1363,6 +1404,13 @@
                     <div class="card-title">MEDIUM Priority TODO</div>
                 </div>
                 <div class="step"><div class="step-num">4</div><div><strong>CSP enforcement</strong> - Flip <code>report_only</code> to <code>false</code> in production.rb</div></div>
+            </div>
+            <div class="card" style="margin-top: 20px;">
+                <div class="card-header">
+                    <div class="icon">🔁</div>
+                    <div class="card-title">Final Action</div>
+                </div>
+                <div class="step"><div class="step-num">→</div><div><strong>Re-run audit after completing HIGH priority items</strong><br><code>./audit_runner.sh all</code> — verifies config.hosts, Rack::Attack, load_defaults, and OAuth</div></div>
             </div>
         </div>
 
@@ -1566,29 +1614,29 @@
                 </div>
                 <h3 style="margin-top: 0;">Method 1: Quick Audit Runner</h3>
                 <pre><code># Run all chapter audits
-/Users/tichlabs/Documents/onlyCode/season/audit_runner.sh all
+./audit_runner.sh all
 
 # Run single chapter audit
-/Users/tichlabs/Documents/onlyCode/season/audit_runner.sh chapter1
-/Users/tichlabs/Documents/onlyCode/season/audit_runner.sh 5
+./audit_runner.sh chapter1
+./audit_runner.sh 5
 
 # Check pre-launch items
-/Users/tichlabs/Documents/onlyCode/season/audit_runner.sh pre-launch</code></pre>
+./audit_runner.sh pre-launch</code></pre>
 
                 <h3 style="margin-top: 20px;">Method 2: Agent Skills (OpenCode / Claude Code)</h3>
                 <p>Use Task tool with skills from <code>audit_skills.md</code>:</p>
                 <pre><code>Task(
-  description: "Audit Season Chapter 5",
+  description: "Audit Season V2 Chapter 5",
   prompt: "<from audit_skills.md - audit-chapter-5>",
   subagent_type: "explore"
 )</code></pre>
 
                 <h3 style="margin-top: 20px;">Method 3: Read Checklists</h3>
                 <ul style="padding-left: 20px; margin-top: 10px; line-height: 2;">
-                    <li><code>/Users/tichlabs/Documents/onlyCode/season/audit_checklist.md</code> - Full checklist</li>
-                    <li><code>/Users/tichlabs/Documents/onlyCode/season/audit_skills.md</code> - Agent skills</li>
-                    <li><code>/Users/tichlabs/Documents/onlyCode/season/OAuth_FIX.md</code> - OAuth fix (applied)</li>
-                    <li><code>/Users/tichlabs/Documents/onlyCode/season/README.md</code> - Season status</li>
+                    <li><code>audit_checklist.md</code> - Full checklist</li>
+                    <li><code>audit_skills.md</code> - Agent skills</li>
+                    <li><code>OAuth_FIX.md</code> - OAuth fix (applied)</li>
+                    <li><code>README.md</code> - Season status &amp; TODOs</li>
                 </ul>
             </div>
 
@@ -1638,37 +1686,6 @@
                 </table>
                 <p style="margin-top: 15px;"><strong>Overall Progress:</strong> <span style="color: #fbbf24; font-size: 1.2rem;">80% → 95% (after HIGH priority fixes)</span></p>
             </div>
-
-            <div class="card" style="margin-top: 20px; background: #0f172a; border-color: #38bdf8;">
-                <div class="card-header">
-                    <div class="icon">💡</div>
-                    <div class="card-title">Next Steps for Season</div>
-                </div>
-                <div class="step">
-                    <div class="step-num">1</div>
-                    <div>Fix OAuth (DONE) - Removed conflicting custom controller, now uses Devise OmniAuth only</div>
-                </div>
-                <div class="step">
-                    <div class="step-num">2</div>
-                    <div>Set OAuth credentials in Render dashboard (HIGH)</div>
-                </div>
-                <div class="step">
-                    <div class="step-num">3</div>
-                    <div>Uncomment config.hosts in production.rb (HIGH)</div>
-                </div>
-                <div class="step">
-                    <div class="step-num">4</div>
-                    <div>Add Rack::Attack rate limiting (HIGH)</div>
-                </div>
-                <div class="step">
-                    <div class="step-num">5</div>
-                    <div>Run bin/rails app:update for Rails 8.1 defaults (HIGH)</div>
-                </div>
-                <div class="step">
-                    <div class="step-num">6</div>
-                    <div>Re-run audit: ./audit_runner.sh all</div>
-                </div>
-            </div>
         </div>
 
         <!-- Audit System Section -->
@@ -1681,7 +1698,7 @@
                     <div class="icon">🔍</div>
                     <div class="card-title">What is the Audit System?</div>
                 </div>
-                <p>This system allows you to audit your app (Season) against the 259-step codebase chapters. It includes:</p>
+                <p>This system allows you to audit your app against the 259-step codebase chapters. It includes:</p>
                 <ul style="padding-left: 20px; margin-top: 10px; line-height: 2;">
                     <li><strong>Chapter Checklists</strong> - Detailed checklist for each chapter (ch01-ch10)</li>
                     <li><strong>Agent Skills</strong> - Reusable audit tasks for Claude Code / OpenCode agents</li>
@@ -1691,60 +1708,22 @@
 
             <div class="card" style="margin-top: 20px;">
                 <div class="card-header">
-                    <div class="icon">📊</div>
-                    <div class="card-title">Season App Audit Status <span class="badge badge-orange">Current</span></div>
-                </div>
-                <table>
-                    <tr><th>Chapter</th><th>Topic</th><th>Status</th><th>Completion</th></tr>
-                    <tr><td>1</td><td>Foundation</td><td>✅ Complete</td><td>95%</td></tr>
-                    <tr><td>2</td><td>Core Features</td><td>✅ Complete</td><td>100%</td></tr>
-                    <tr><td>3</td><td>Views & Styling</td><td>✅ Complete</td><td>95%</td></tr>
-                    <tr><td>4</td><td>Authentication</td><td>✅ Complete</td><td>90%</td></tr>
-                    <tr><td>5</td><td>Mobile PWA</td><td>⚠️ In Progress</td><td>60%</td></tr>
-                    <tr><td>6</td><td>Advanced Features</td><td>✅ Mostly Complete</td><td>85%</td></tr>
-                    <tr><td>7</td><td>API Development</td><td>❌ Not Applicable</td><td>N/A</td></tr>
-                    <tr><td>8</td><td>Integration</td><td>⚠️ Partial</td><td>70%</td></tr>
-                    <tr><td>9</td><td>Testing</td><td>✅ Complete</td><td>100%</td></tr>
-                    <tr><td>10</td><td>Production</td><td>⚠️ Partial</td><td>75%</td></tr>
-                </table>
-            </div>
-
-            <div class="card" style="margin-top: 20px;">
-                <div class="card-header">
-                    <div class="icon">⚠️</div>
-                    <div class="card-title">Critical Pre-Launch Items</div>
-                </div>
-                <div class="command-box">
-                    <strong>From Season README.md:</strong><br>
-                    1. OAuth credentials on Render (Google, Facebook, Apple) - <span style="color: #FDF0EE;">HIGH TODO</span><br>
-                    2. <code>config.hosts</code> uncomment (DNS rebinding protection) - <span style="color: #FDF0EE;">HIGH TODO</span><br>
-                    3. Rack::Attack on login endpoints - <span style="color: #FDF0EE;">HIGH TODO</span><br>
-                    4. <code>config.load_defaults 8.1</code> run - <span style="color: #FDF0EE;">HIGH TODO</span><br>
-                    5. Devise <code>config.paranoid = true</code> - <span style="color: #D18D83;">MEDIUM TODO</span><br>
-                    6. CSP enforcement (flip <code>report_only</code> to <code>false</code>) - <span style="color: #D18D83;">MEDIUM TODO</span><br>
-                    7. Active Storage switch to S3/R2 - <span style="color: #D18D83;">MEDIUM TODO</span><br>
-                    8. Sentry <code>SENTRY_DSN</code> on Render - <span style="color: #D18D83;">MEDIUM TODO</span>
-                </div>
-            </div>
-
-            <div class="card" style="margin-top: 20px;">
-                <div class="card-header">
                     <div class="icon">🛠️</div>
                     <div class="card-title">How to Run Audits</div>
                 </div>
                 <h3 style="margin-top: 0;">Method 1: Quick Audit Runner (Bash)</h3>
                 <pre><code># Run all chapter audits
-/Users/tichlabs/Documents/onlyCode/season/audit_runner.sh all
+./audit_runner.sh all
 
 # Run single chapter audit
-/Users/tichlabs/Documents/onlyCode/season/audit_runner.sh chapter1
-/Users/tichlabs/Documents/onlyCode/season/audit_runner.sh 3
+./audit_runner.sh chapter1
+./audit_runner.sh 3
 
 # Run security audit
-/Users/tichlabs/Documents/onlyCode/season/audit_runner.sh security
+./audit_runner.sh security
 
 # Check pre-launch items
-/Users/tichlabs/Documents/onlyCode/season/audit_runner.sh pre-launch</code></pre>
+./audit_runner.sh pre-launch</code></pre>
 
                 <h3 style="margin-top: 20px;">Method 2: Agent Skills (Claude Code / OpenCode)</h3>
                 <p>Use the Task tool with skills defined in <code>audit_skils.md</code>:</p>
@@ -1765,9 +1744,9 @@ Task(
                 <h3 style="margin-top: 20px;">Method 3: Read the Checklists</h3>
                 <p>Open these files in your editor:</p>
                 <ul style="padding-left: 20px; margin-top: 10px; line-height: 2;">
-                    <li><code>/Users/tichlabs/Documents/onlyCode/season/audit_checklist.md</code> - Full checklist (all chapters)</li>
-                    <li><code>/Users/tichlabs/Documents/onlyCode/season/audit_skills.md</code> - Agent skills (copy-paste prompts)</li>
-                    <li><code>/Users/tichlabs/Documents/onlyCode/season/README.md</code> - Season status & TODOs</li>
+                    <li><code>audit_checklist.md</code> - Full checklist (all chapters)</li>
+                    <li><code>audit_skills.md</code> - Agent skills (copy-paste prompts)</li>
+                    <li><code>README.md</code> - App status &amp; TODOs</li>
                 </ul>
             </div>
 
@@ -1781,22 +1760,22 @@ Task(
                     <tr>
                         <td><strong>audit_checklist.md</strong></td>
                         <td>Full checklist based on 10 chapters (259 steps)</td>
-                        <td><code>season/audit_checklist.md</code></td>
+                        <td><code>your-app/audit_checklist.md</code></td>
                     </tr>
                     <tr>
                         <td><strong>audit_skills.md</strong></td>
                         <td>Agent skills for Claude Code / OpenCode</td>
-                        <td><code>season/audit_skills.md</code></td>
+                        <td><code>your-app/audit_skills.md</code></td>
                     </tr>
                     <tr>
                         <td><strong>audit_runner.sh</strong></td>
                         <td>Bash script for quick audits</td>
-                        <td><code>season/audit_runner.sh</code></td>
+                        <td><code>your-app/audit_runner.sh</code></td>
                     </tr>
                     <tr>
                         <td><strong>README.md</strong></td>
-                        <td>Season app status, milestones, TODOs</td>
-                        <td><code>season/README.md</code></td>
+                        <td>App status, milestones, TODOs</td>
+                        <td><code>your-app/README.md</code></td>
                     </tr>
                 </table>
             </div>
@@ -1809,7 +1788,7 @@ Task(
                 <p>Since you're using <strong>OpenCode</strong> (or Claude Code), you can create a custom command or skill that runs the full audit automatically:</p>
                 <pre><code># Example: Add to CLAUDE.md or AGENTS.md
 ## Audit Command
-To audit Season against the codebase chapters, run:
+To audit your app against the codebase chapters, run:
 /bin/bash audit_runner.sh all
 
 Or use agent skills from audit_skills.md for detailed chapter audits.</code></pre>

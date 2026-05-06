@@ -4,6 +4,9 @@
     <title><%= content_for(:title) || "Season" %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Season">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
@@ -19,29 +22,21 @@
     <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
     <script nonce="<%= content_security_policy_nonce %>">
-      const clearOldServiceWorkers = async () => {
-        if (!('serviceWorker' in navigator)) return;
-
-        const registrations = await navigator.serviceWorker.getRegistrations();
-        await Promise.all(registrations.map((registration) => registration.unregister()));
-        if ('caches' in window) {
-          const names = await caches.keys();
-          await Promise.all(names.map((name) => caches.delete(name)));
-        }
-
-        if (navigator.serviceWorker.controller && !sessionStorage.getItem('swCleanupReloaded')) {
-          sessionStorage.setItem('swCleanupReloaded', '1');
-          window.location.reload();
-        }
-      };
-      clearOldServiceWorkers();
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('/service-worker.js').then(function(reg) {
+            reg.update();
+          }).catch(function() {});
+        });
+      }
     </script>
   </head>
 
   <%# Logic check: Only show App Bar/Menu if user is logged in and past the splash/auth screens %>
   <% is_authenticated_view = authenticated? && !controller_name.in?(%w[sessions registrations home onboarding]) %>
 
-  <body class="bg-[#FCF9F7] font-['Montserrat'] antialiased h-full overflow-x-hidden">
+  <body class="bg-[#FCF9F7] font-['Montserrat'] antialiased h-full overflow-x-hidden"
+        data-controller="update-prompt install">
 
     <% if is_authenticated_view %>
     <div data-controller="menu">
@@ -104,6 +99,39 @@
       <%= render "layouts/burger_menu" %>
     </div>
     <% end %>
+
+    <%# PWA update banner — shown by update_prompt_controller when a new SW is waiting %>
+    <div data-update-prompt-target="banner"
+         class="fixed bottom-24 left-1/2 -translate-x-1/2 w-full max-w-md px-4 z-50 hidden">
+      <div class="bg-[#3d2b28] text-white rounded-2xl px-4 py-3 flex items-center justify-between shadow-xl">
+        <span class="text-sm font-medium">New version of Season available</span>
+        <button data-action="click->update-prompt#updateApp"
+                class="bg-brand-primary text-white text-sm font-semibold px-4 py-1.5 rounded-xl ml-3 shrink-0">
+          Refresh
+        </button>
+      </div>
+    </div>
+
+    <%# PWA install banner — shown by install_controller when app is installable %>
+    <div data-install-target="banner"
+         class="fixed bottom-24 left-1/2 -translate-x-1/2 w-full max-w-md px-4 z-50 hidden">
+      <div class="bg-white border border-[#ede1d5] rounded-2xl px-4 py-3 flex items-center justify-between shadow-xl">
+        <span class="text-sm font-medium text-[#3d2b28]">Add Season to your home screen</span>
+        <div class="flex gap-2 ml-3 shrink-0">
+          <button data-action="click->install#install"
+                  data-install-target="button"
+                  class="bg-brand-primary text-white text-sm font-semibold px-4 py-1.5 rounded-xl">
+            Add
+          </button>
+          <button data-action="click->install#dismiss"
+                  class="text-[#6b6b6b] text-sm px-2 py-1.5">✕</button>
+        </div>
+      </div>
+      <div data-install-target="iosHint"
+           class="hidden mt-2 bg-white border border-[#ede1d5] rounded-xl px-4 py-3 text-sm text-[#3d2b28]">
+        Tap <strong>Share</strong> then <strong>"Add to Home Screen"</strong>
+      </div>
+    </div>
 
     <main class="w-full flex-1 <%= is_authenticated_view ? 'pt-24' : '' %>">
       <div class="max-w-md mx-auto h-full">
