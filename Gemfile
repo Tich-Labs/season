@@ -52,7 +52,7 @@ gem "solid_queue"
 # Database
 gem "pg", "~> 1.5"
 
-gem "tzinfo-data", platforms: %i[windows jruby]
+gem "tzinfo-data", platforms: %i[jruby]
 gem "bootsnap", require: false
 gem "kamal", require: false
 gem "thruster", require: false
