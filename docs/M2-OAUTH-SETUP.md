@@ -187,8 +187,8 @@ If any ENV var is missing, OmniAuth will skip that provider silently.
 ### Current Progress:
 | Provider | Credentials | Render Dashboard | Provider Console |
 |----------|---------------|---------------|------------------|
-| **Google** | ✅ Obtained | ✅ Ready to add | ✅ URL updated to `/users/auth/google_oauth2/callback` |
-| **Facebook** | ✅ Obtained | ✅ Ready to add | ✅ URL updated to `/users/auth/facebook/callback` |
+| **Google** | ✅ Obtained | ✅ Ready to add | ✅ URL updated to `https://seasonv2.onrender.com/users/auth/google_oauth2/callback` |
+| **Facebook** | ✅ Obtained | ✅ Ready to add | ✅ URL updated to `https://seasonv2.onrender.com/users/auth/facebook/callback` |
 | **Apple** | ❌ Waiting | ❌ Waiting | ❌ Waiting for Dev Account |
 
 **Callback pattern:** `/users/auth/:provider/callback` (Devise default)
