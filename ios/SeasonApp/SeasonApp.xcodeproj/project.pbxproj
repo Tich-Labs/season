@@ -1,0 +1,3 @@
+// Minimal Xcode project - open in Xcode to fully generate
+// Run: cd ios/SeasonApp && pod install
+// Then open SeasonApp.xcworkspace
