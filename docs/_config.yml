@@ -1,0 +1,10 @@
+title: Season Documentation
+baseurl: "/season"
+url: "https://tich-labs.github.io"
+
+defaults:
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "default"
