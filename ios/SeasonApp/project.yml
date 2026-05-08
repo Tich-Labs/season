@@ -1,0 +1,17 @@
+name: SeasonApp
+options:
+  bundleIdPrefix: com.season-app
+  deploymentTarget:
+    iOS: "15.0"
+targets:
+  SeasonApp:
+    type: application
+    platform: iOS
+    sources:
+      - path: SeasonApp/Sources
+      - path: SeasonApp/Resources
+    settings:
+      PRODUCT_BUNDLE_IDENTIFIER: com.season-app.ios
+      INFOPLIST_FILE: SeasonApp/Resources/Info.plist
+      MARKETING_VERSION: "1.0"
+      CURRENT_PROJECT_VERSION: "1"
