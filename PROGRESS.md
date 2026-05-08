@@ -77,15 +77,17 @@ Update this file as you complete audit items. Check off items to track progress 
 - [x] Protected routes redirect to login
 - [x] Admin auth gated by `User#admin?`
 
-### TODO (10% remaining)
-- [ ] **HIGH: OAuth credentials on Render** (Google, Facebook, Apple)
-  - Set `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`
-  - Set `FACEBOOK_APP_ID`, `FACEBOOK_APP_SECRET`
+### Completed ✅ (continued)
+- [x] **Google OAuth credentials on Render** (`GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`) ✅ 2026-05-08
+- [x] **Facebook OAuth credentials on Render** (`FACEBOOK_APP_ID`, `FACEBOOK_APP_SECRET`) ✅ 2026-05-08
+
+### TODO (5% remaining)
+- [ ] **MEDIUM: Apple OAuth credentials on Render**
   - Set `APPLE_CLIENT_ID`, `APPLE_TEAM_ID`, `APPLE_KEY_ID`, `APPLE_PRIVATE_KEY`
 - [ ] **MEDIUM: Devise `config.paranoid = true`** (prevent account enumeration)
   - Uncomment line 93 in `config/initializers/devise.rb`
 
-**Target: 100% | Status: 90%**
+**Target: 100% | Status: 95%**
 
 ---
 
@@ -149,9 +151,10 @@ Update this file as you complete audit items. Check off items to track progress 
 - [x] Email delivery (Resend adapter)
 - [x] Environment variables documented
 - [x] Third-party gems configured
+- [x] **Google + Facebook OAuth credentials on Render** ✅ 2026-05-08
 
-### TODO (30% remaining)
-- [ ] **HIGH: OAuth credentials on Render** (see Chapter 4)
+### TODO (20% remaining)
+- [ ] **MEDIUM: Apple OAuth credentials on Render** (see Chapter 4)
 - [ ] **MEDIUM: Sentry `SENTRY_DSN` on Render**
   - Set `SENTRY_DSN` in Render dashboard
   - Verify `config/initializers/sentry.rb` is correct
