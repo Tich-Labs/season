@@ -177,20 +177,30 @@ If any ENV var is missing, OmniAuth will skip that provider silently.
 
 ## Status
 
-✅ **Rails configuration complete** — `devise.rb` ready
-✅ **Callbacks wired** — `Users::OmniauthCallbacksController` ready (Devise OmniAuth)
-✅ **Custom OAuth removed** — Now using only Devise (no conflicts)
-✅ **Google credentials** — ✅ Ready to add to Render (Client ID & Secret obtained)
-✅ **Facebook credentials** — ✅ Ready to add to Render (credentials obtained, callback URL updated)
-❌ **Apple credentials** — ❌ Waiting for Apple Developer Account approval
+> **Updated 8 May 2026** — Google and Facebook are live on Render. Apple pending.
 
-### Current Progress:
-| Provider | Credentials | Render Dashboard | Provider Console |
-|----------|---------------|---------------|------------------|
-| **Google** | ✅ Obtained | ✅ Ready to add | ✅ URL updated to `https://seasonv2.onrender.com/users/auth/google_oauth2/callback` |
-| **Facebook** | ✅ Obtained | ✅ Ready to add | ✅ URL updated to `https://seasonv2.onrender.com/users/auth/facebook/callback` |
-| **Apple** | ❌ Waiting | ❌ Waiting | ❌ Waiting for Dev Account |
+| Area | Status |
+|------|--------|
+| Rails config (`devise.rb`) | ✅ Complete |
+| Callbacks controller | ✅ Complete |
+| Custom OAuth conflicts | ✅ Removed — Devise only |
+| Google on Render | ✅ Live |
+| Facebook on Render | ✅ Live |
+| Apple on Render | ⏳ Waiting for Apple Developer Account |
+
+---
+
+### Provider Detail
+
+| Provider | Credentials | On Render | Callback URL |
+|----------|-------------|-----------|--------------|
+| **Google** | ✅ Obtained | ✅ Set | `https://seasonv2.onrender.com/users/auth/google_oauth2/callback` |
+| **Facebook** | ✅ Obtained | ✅ Set | `https://seasonv2.onrender.com/users/auth/facebook/callback` |
+| **Apple** | ⏳ Pending | ⏳ Pending | `https://seasonv2.onrender.com/users/auth/apple/callback` |
 
 **Callback pattern:** `/users/auth/:provider/callback` (Devise default)
 
-Once Render env vars are added, OAuth will be fully functional for Google & Facebook.
+### What's left
+
+- [ ] Apple Developer Account approval → obtain `APPLE_CLIENT_ID` + `APPLE_CLIENT_SECRET`
+- [ ] Set Apple vars on Render → OAuth fully complete across all three providers
