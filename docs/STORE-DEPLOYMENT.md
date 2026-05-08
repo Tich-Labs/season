@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 # App Store & Play Store — Deployment Setup Guide
 
 **Last updated:** 2026-05-19  

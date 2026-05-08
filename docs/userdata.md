@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 # Season — User Data Map & Privacy Architecture
 
 **Last updated:** 21 April 2026 (P1 items implemented — see Implementation Log)

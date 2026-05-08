@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 # Season App — Developer Documentation & Auth Security Review
 
 **Generated:** 2026-04-24 — **Last updated:** 2026-05-03 (physical/mental symptom trackers, profile avatar fix, email modal fix)

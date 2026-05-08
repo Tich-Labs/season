@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 # Season — Project Overview
 
 **Read this first. Everything else in this docs folder assumes you've read this.**

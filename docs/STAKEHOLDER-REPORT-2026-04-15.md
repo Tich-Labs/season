@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 # Season App — Stakeholder Report
 **Original Date:** 15 April 2026  
 **Last Updated:** 6 May 2026  

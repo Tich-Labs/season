@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 # Figma Nodes — All Milestones
 
 This file lists all Figma node links for each milestone, clearly separated for easy mapping to coded screens.

@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 # Turbo Native iOS Integration - Audit & Roadmap
 
 ## Hotwire Native iOS Progress Checklist

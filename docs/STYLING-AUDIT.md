@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 # Styling Audit & Standardization Status
 
 **Last Updated:** 2026-04-16
