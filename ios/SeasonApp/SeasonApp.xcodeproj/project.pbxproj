@@ -6,24 +6,18 @@
 	objectVersion = 56;
 	objects = {
 
-/* Begin PBXApplicationSessionGuidetransaction */
-		12345678-1234-1234-1234-123456789012 /* Session Guidetransaction */ = {
-			isa = PBXSessionGuidetransaction;
-		};
-/* End PBXApplicationSessionGuidetransaction */
-
 /* Begin PBXBuildFile section */
-		AAAAAAAA01000000000000000000001 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBBB00010100000000000000000001 /* AppDelegate.swift */; };
+		BBBB00010100000000000000000001 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBBB00020100000000000000000002 /* AppDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		BBBB00010100000000000000000001 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		BBBB00020100000000000000000002 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		BBBB00030100000000000000000003 /* SeasonApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SeasonApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BBBB00020100000000000000000002 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		BBBB00030100000000000000000003 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BBBB00040100000000000000000004 /* SeasonApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SeasonApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		BBBB00040100000000000000000004 /* Frameworks */ = {
+		BBBB00050100000000000000000005 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -33,27 +27,27 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		BBBB00050100000000000000000005 = {
+		BBBB00060100000000000000000006 = {
 			isa = PBXGroup;
 			children = (
-				BBBB00060100000000000000000006 /* SeasonApp */,
-				BBBB00070100000000000000000007 /* Products */,
+				BBBB00070100000000000000000007 /* SeasonApp */,
+				BBBB00080100000000000000000008 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		BBBB00060100000000000000000006 /* SeasonApp */ = {
+		BBBB00070100000000000000000007 /* SeasonApp */ = {
 			isa = PBXGroup;
 			children = (
-				BBBB00010100000000000000000001 /* AppDelegate.swift */,
-				BBBB00020100000000000000000002 /* Info.plist */,
+				BBBB00020100000000000000000002 /* AppDelegate.swift */,
+				BBBB00030100000000000000000003 /* Info.plist */,
 			);
 			path = SeasonApp;
 			sourceTree = "<group>";
 		};
-		BBBB00070100000000000000000007 /* Products */ = {
+		BBBB00080100000000000000000008 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				BBBB00030100000000000000000003 /* SeasonApp.app */,
+				BBBB00040100000000000000000004 /* SeasonApp.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -61,12 +55,12 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		BBBB00080100000000000000000008 /* SeasonApp */ = {
+		BBBB00090100000000000000000009 /* SeasonApp */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = BBBB000B010000000000000000000B /* Build configuration list for PBXNativeTarget "SeasonApp" */;
+			buildConfigurationList = BBBB000C010000000000000000000C /* Build configuration list for PBXNativeTarget "SeasonApp" */;
 			buildPhases = (
-				BBBB00090100000000000000000009 /* Sources */,
-				BBBB00040100000000000000000004 /* Frameworks */,
+				BBBB000A010000000000000000000A /* Sources */,
+				BBBB00050100000000000000000005 /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -74,19 +68,19 @@
 			);
 			name = SeasonApp;
 			productName = SeasonApp;
-			productReference = BBBB00030100000000000000000003 /* SeasonApp.app */;
+			productReference = BBBB00040100000000000000000004 /* SeasonApp.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		BBBB000C0100000000000000000000C /* Project object */ = {
+		BBBB000D0100000000000000000000D /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1420;
 			};
-			buildConfigurationList = BBBB000D0100000000000000000000D /* Build configuration list for PBXProject "SeasonApp" */;
+			buildConfigurationList = BBBB000E010000000000000000000E /* Build configuration list for PBXProject "SeasonApp" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -94,29 +88,29 @@
 				en,
 				Base,
 			);
-			mainGroup = BBBB00050100000000000000000005;
-			productRefGroup = BBBB00070100000000000000000007 /* Products */;
+			mainGroup = BBBB00060100000000000000000006;
+			productRefGroup = BBBB00080100000000000000000008 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				BBBB00080100000000000000000008 /* SeasonApp */,
+				BBBB00090100000000000000000009 /* SeasonApp */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
-		BBBB00090100000000000000000009 /* Sources */ = {
+		BBBB000A010000000000000000000A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AAAAAAAA01000000000000000000001 /* AppDelegate.swift in Sources */,
+				BBBB00010100000000000000000001 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		BBBB000E0100000000000000000000E /* Debug */ = {
+		BBBB000F0100000000000000000000F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -128,6 +122,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
@@ -137,7 +132,7 @@
 			};
 			name = Debug;
 		};
-		BBBB000F0100000000000000000000F /* Release */ = {
+		BBBB00100100000000000000000010 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -149,6 +144,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -158,32 +154,30 @@
 			};
 			name = Release;
 		};
-		BBBB00100100000000000000000010 /* Debug */ = {
+		BBBB00110100000000000000000011 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "-";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = SeasonApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.season-app.ios;
 				PRODUCT_NAME = SeasonApp;
-				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 			};
 			name = Debug;
 		};
-		BBBB00110100000000000000000011 /* Release */ = {
+		BBBB00120100000000000000000012 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "-";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = SeasonApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.season-app.ios;
 				PRODUCT_NAME = SeasonApp;
-				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 			};
 			name = Release;
@@ -191,25 +185,25 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		BBBB000D0100000000000000000000D /* Build configuration list for PBXProject "SeasonApp" */ = {
+		BBBB000E010000000000000000000E /* Build configuration list for PBXProject "SeasonApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				BBBB000E0100000000000000000000E /* Debug */,
-				BBBB000F0100000000000000000000F /* Release */,
+				BBBB000F0100000000000000000000F /* Debug */,
+				BBBB00100100000000000000000010 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		BBBB000B0100000000000000000000B /* Build configuration list for PBXNativeTarget "SeasonApp" */ = {
+		BBBB000C010000000000000000000C /* Build configuration list for PBXNativeTarget "SeasonApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				BBBB00100100000000000000000010 /* Debug */,
-				BBBB00110100000000000000000011 /* Release */,
+				BBBB00110100000000000000000011 /* Debug */,
+				BBBB00120100000000000000000012 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = BBBB000C0100000000000000000000C /* Project object */;
+	rootObject = BBBB000D0100000000000000000000D /* Project object */;
 }
