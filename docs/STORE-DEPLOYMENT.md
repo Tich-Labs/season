@@ -1,6 +1,6 @@
 # App Store & Play Store — Deployment Setup Guide
 
-**Last updated:** 2026-05-08  
+**Last updated:** 2026-05-19  
 **App:** Season (Hotwire Native wrapper around the Rails PWA)  
 **Strategy:** The web app runs on Render. iOS and Android are thin native shells using Hotwire Native that load the web app inside a `WKWebView` / `WebView`.
 
@@ -41,7 +41,7 @@
    - **Platform:** iOS
    - **Name:** Season
    - **Primary Language:** English
-   - **Bundle ID:** `com.seasonapp.ios` (must match Xcode project — create as a new explicit App ID first at developer.apple.com → Identifiers)
+   - **Bundle ID:** `com.season-app.ios` (must match Xcode project — create as a new explicit App ID first at developer.apple.com → Identifiers)
    - **SKU:** `season-ios-v1` (any unique identifier)
 4. Click **Create**
 
@@ -54,7 +54,7 @@
 3. Choose **App IDs** → **App** → Continue
 4. Fill in:
    - **Description:** Season
-   - **Bundle ID:** Explicit → `com.seasonapp.ios`
+   - **Bundle ID:** Explicit → `com.season-app.ios`
 5. Under **Capabilities**, enable:
    - ✅ Push Notifications (for reminders)
    - ✅ Sign In with Apple (required if using Apple OAuth)
@@ -64,37 +64,26 @@
 
 ### Step 4 — Build the iOS App (Hotwire Native)
 
-1. Install [Xcode](https://developer.apple.com/xcode/) from the Mac App Store (free)
-2. Create a new Xcode project:
-   - **Template:** App (iOS)
-   - **Bundle Identifier:** `com.seasonapp.ios`
-3. Add the Hotwire Native package:
-   - In Xcode: **File → Add Package Dependencies**
-   - URL: `https://github.com/hotwired/hotwire-native-ios`
-   - Version: latest stable
-4. Replace the default `ViewController.swift` with:
+The iOS project is already set up at `ios/SeasonApp/`. It uses **XcodeGen** (`project.yml`) and **turbo-ios** via SPM.
 
-```swift
-import UIKit
-import HotwireNative
-
-class SceneDelegate: UIResponder, UIWindowSceneDelegate {
-    var window: UIWindow?
-    let navigator = Navigator()
-
-    func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options: UIScene.ConnectionOptions) {
-        guard let windowScene = scene as? UIWindowScene else { return }
-        window = UIWindow(windowScene: windowScene)
-        window?.rootViewController = navigator.rootViewController
-        window?.makeKeyAndVisible()
-        navigator.route(URL(string: "https://seasonv2.onrender.com")!)
-    }
-}
-```
-
+1. Install [Xcode](https://developer.apple.com/xcode/) from the Mac App Store (free) — requires Xcode 15.3+
+2. Install XcodeGen: `brew install xcodegen`
+3. Regenerate the `.xcodeproj`:
+   ```bash
+   cd ios/SeasonApp
+   xcodegen generate
+   ```
+4. Open `SeasonApp.xcodeproj` in Xcode
 5. Set the app icon and splash screen (export from Figma — 1024×1024 PNG for the icon)
 6. In Xcode: **Product → Archive** to build a release version
 7. In the Organizer window: **Distribute App → App Store Connect → Upload**
+
+**Current project structure:**
+- `ios/SeasonApp/project.yml` — XcodeGen spec (target iOS 15.0)
+- `ios/SeasonApp/SeasonApp/SceneDelegate.swift` — Entry point (TurboNavigator + tab bar)
+- `ios/SeasonApp/SeasonApp/Tabs.swift` — Tab model
+- `ios/SeasonApp/SeasonApp/HotwireTabBarController.swift` — Tab bar controller
+- SPM: `turbo-ios` v1.4.0 from `https://github.com/hotwired/turbo-ios.git`
 
 ---
 
@@ -211,8 +200,8 @@ Fill in before submitting (Play Console → **Main store listing**):
 |------|-----|---------|
 | Developer account created | ⬜ | ⬜ |
 | App registered in console | ⬜ | ⬜ |
-| Xcode / Android Studio project created | ⬜ | ⬜ |
-| Hotwire Native integrated | ⬜ | ⬜ |
+| Xcode / Android Studio project created | ✅ | ⬜ |
+| Hotwire Native integrated | ✅ | ⬜ |
 | App icon + splash screen added | ⬜ | ⬜ |
 | Store listing filled in | ⬜ | ⬜ |
 | First build uploaded | ⬜ | ⬜ |
@@ -228,7 +217,7 @@ Fill in before submitting (Play Console → **Main store listing**):
 | Apple Developer Portal | https://developer.apple.com/account |
 | App Store Connect | https://appstoreconnect.apple.com |
 | Google Play Console | https://play.google.com/console |
-| Hotwire Native iOS | https://github.com/hotwired/hotwire-native-ios |
+| Hotwire Native iOS | https://github.com/hotwired/turbo-ios |
 | Hotwire Native Android | https://github.com/hotwired/hotwire-native-android |
 | Season Render URL | https://seasonv2.onrender.com |
 | Privacy data declarations | docs/userdata.md |

@@ -8,10 +8,13 @@ targets:
     type: application
     platform: iOS
     sources:
-      - path: SeasonApp/Sources
-      - path: SeasonApp/Resources
+      - path: SeasonApp
     settings:
       PRODUCT_BUNDLE_IDENTIFIER: com.season-app.ios
-      INFOPLIST_FILE: SeasonApp/Resources/Info.plist
+      INFOPLIST_FILE: SeasonApp/Info.plist
       MARKETING_VERSION: "1.0"
       CURRENT_PROJECT_VERSION: "1"
+spm:
+  turbo-ios:
+    url: https://github.com/hotwired/turbo-ios.git
+    from: 1.4.0

@@ -16,6 +16,18 @@ class User < ApplicationRecord
   has_many :user_consents, dependent: :destroy
   has_one :streak, dependent: :destroy
 
+  has_secure_token :native_auth_token
+
+  def valid_native_auth_token?
+    native_auth_token.present?
+  end
+
+  def regenerate_native_auth_token!
+    regenerate_native_auth_token
+    save!
+    native_auth_token
+  end
+
   def self.ransackable_attributes(auth_object = nil)
     %w[email name created_at onboarding_completed language public_id]
   end

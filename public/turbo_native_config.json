@@ -1,0 +1,17 @@
+{
+  "rules": [
+    {
+      "patterns": ["/calendar", "/daily/*"],
+      "properties": {
+        "presentation": "default",
+        "pull_to_refresh": true
+      }
+    },
+    {
+      "patterns": ["/settings/*", "/symptoms/new", "/symptoms/edit"],
+      "properties": {
+        "presentation": "modal"
+      }
+    }
+  ]
+}

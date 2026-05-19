@@ -3,8 +3,8 @@
 # Version: 1.0 (2026-05-06)
 # Updated: 2026-05-06 08:56
 
-APP_PATH="/Users/tichlabs/Documents/onlyCode/season"
-SKILLS_FILE="$APP_PATH/audit_skills.md"
+APP_PATH="/Users/tichlabs/Documents/onlyCode/season-temp"
+SKILLS_FILE="$APP_PATH/docs/audit_skills.md"
 
 echo "======================================"
 echo "  Season App Audit Runner"

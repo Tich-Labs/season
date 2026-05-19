@@ -1,7 +1,7 @@
 # Season App - Audit System Summary
 
-**Version:** 1.0 (2026-05-06)  
-**Updated:** 2026-05-06 09:05  
+**Version:** 1.1 (2026-05-19)  
+**Updated:** 2026-05-19  
 **Status:** Active
 
 ## Overview
@@ -15,9 +15,9 @@ This audit system allows you to systematically check your Season app against the
 |------|----------|---------|
 | `guide.html` | `/Users/tichlabs/Documents/codebase/guide.html` | Book-style HTML guide with chapter navigation & audit section |
 | `GUIDE.md` | `/Users/tichlabs/Documents/codebase/GUIDE.md` | Markdown version of the guide |
-| `audit_checklist.md` | `/Users/tichlabs/Documents/onlyCode/season/audit_checklist.md` | Detailed checklist for all 10 chapters |
-| `audit_skills.md` | `/Users/tichlabs/Documents/onlyCode/season/audit_skills.md` | Agent skills (prompts for Claude Code/OpenCode) |
-| `audit_runner.sh` | `/Users/tichlabs/Documents/onlyCode/season/audit_runner.sh` | Bash script for quick audits |
+| `audit_checklist.md` | `/Users/tichlabs/Documents/onlyCode/season-temp/docs/audit_checklist.md` | Detailed checklist for all 10 chapters |
+| `audit_skills.md` | `/Users/tichlabs/Documents/onlyCode/season-temp/docs/audit_skills.md` | Agent skills (prompts for Claude Code/OpenCode) |
+| `audit_runner.sh` | `/Users/tichlabs/Documents/onlyCode/season-temp/audit_runner.sh` | Bash script for quick audits |
 
 ---
 
@@ -27,9 +27,9 @@ This audit system allows you to systematically check your Season app against the
 |-----------|-------|
 | **Name** | Season V2 |
 | **Type** | Women's cycle tracking PWA |
-| **Path** | `/Users/tichlabs/Documents/onlyCode/season` |
-| **Stack** | Rails 8.1.3, PostgreSQL, Hotwire (Turbo + Stimulus), Tailwind CSS |
-| **Status** | M1-M5, M7 complete, M6 not in scope |
+| **Path** | `/Users/tichlabs/Documents/onlyCode/season-temp` |
+| **Stack** | Rails 8.1.3, PostgreSQL, Hotwire (Turbo + Stimulus), Tailwind CSS, turbo-ios |
+| **Status** | M1-M5, M7 complete, M6 not in scope, iOS shell built |
 
 ---
 
@@ -37,7 +37,7 @@ This audit system allows you to systematically check your Season app against the
 
 ### Method 1: Quick Audit Runner (Bash)
 ```bash
-cd /Users/tichlabs/Documents/onlyCode/season
+cd /Users/tichlabs/Documents/onlyCode/season-temp
 
 # Run all chapter audits
 ./audit_runner.sh all
@@ -86,12 +86,12 @@ Open these files in your editor:
 | 2 | Core Features | ✅ Complete | 100% | - |
 | 3 | Views & Styling | ✅ Complete | 95% | Check hardcoded English in burger menu |
 | 4 | Authentication | ✅ Complete | 90% | Devise paranoid mode (medium priority) |
-| 5 | Mobile PWA | ⚠️ In Progress | 60% | PWA manifest, service worker, offline mode |
+| 5 | Mobile PWA | ✅ Nearly Complete | 97% | Push, pin, biometrics, pull-to-refresh, haptic done |
 | 6 | Advanced Features | ✅ Mostly Complete | 85% | - |
 | 7 | API Development | ❌ Not Applicable | N/A | Season is PWA (no API needed) |
 | 8 | Integration | ⚠️ Partial | 70% | OAuth credentials, Sentry DSN |
 | 9 | Testing | ✅ Complete | 100% | 76 tests passing |
-| 10 | Production | ⚠️ Partial | 75% | config.hosts, CSP, Rack::Attack |
+| 10 | Production | ⚠️ Partial | 90% | config.hosts ✅, Rack::Attack ✅, SSL ✅, CSP ✅, VAPID ⏳, Sentry ⏳ |
 
 ---
 
@@ -99,17 +99,19 @@ Open these files in your editor:
 
 From `README.md`:
 
-1. **OAuth credentials on Render** (Google, Facebook, Apple) - **HIGH**
-2. **`config.hosts` uncomment** (DNS rebinding protection) - **HIGH**
-3. **Rack::Attack on login endpoints** (rate limiting) - **HIGH**
-4. **`config.load_defaults 8.1`** (run `bin/rails app:update`) - **HIGH**
+1. **OAuth credentials on Render** (Google, Facebook, Apple) - **HIGH** — _Blocked by Apple Dev Account_
+2. ~~**`config.hosts` uncomment** (DNS rebinding protection) - **HIGH** — ✅ Done~~
+3. ~~**Rack::Attack on login endpoints** (rate limiting) - **HIGH** — ✅ Done~~
+4. ~~**`config.load_defaults 8.1`** (run `bin/rails app:update`) - **HIGH** — ✅ Already set~~
+5. ~~**SSL enforcement** (assume_ssl, force_ssl) - **HIGH** — ✅ Done~~
 
 ## Medium Priority Items
 
-5. **Devise `config.paranoid = true`** (prevent account enumeration)
-6. **CSP enforcement** (flip `report_only` to `false`)
-7. **Active Storage switch to S3/R2** (avatars lost on redeploy)
-8. **Sentry `SENTRY_DSN` on Render** (error tracking)
+6. **Devise `config.paranoid = true`** (prevent account enumeration)
+7. ~~**CSP enforcement** (flip `report_only` to `false`) — ✅ Done~~
+8. **Active Storage switch to S3/R2** (avatars lost on redeploy)
+9. **Set `SENTRY_DSN` on Render** (initializer created, needs env var)
+10. **VAPID keys in credentials** (`rails credentials:edit`, keys pre-generated)
 
 ---
 
@@ -117,7 +119,7 @@ From `README.md`:
 
 ```bash
 # Step 1: Run all audits to see current status
-cd /Users/tichlabs/Documents/onlyCode/season
+cd /Users/tichlabs/Documents/onlyCode/season-temp
 ./audit_runner.sh all
 
 # Step 2: Run detailed agent audit for a specific chapter
@@ -178,14 +180,31 @@ The audit system is based on the **259 chapters** in `/Users/tichlabs/Documents/
 ├── dev-setup.html          # Dev environment setup
 └── code/                  # 259 chapters (ch01_00 - ch10_68)
 
-/Users/tichlabs/Documents/onlyCode/season/
-├── audit_checklist.md      # Detailed checklist (all chapters)
-├── audit_skills.md         # Agent skills (for Claude Code/OpenCode)
-├── audit_runner.sh         # Bash audit script (executable)
+/Users/tichlabs/Documents/onlyCode/season-temp/
 ├── README.md               # Season status & TODOs
 ├── CLAUDE.md               # AI agent instructions
-└── AGENTS.md               # Agent commands & gotchas
-```
+├── AGENTS.md               # Agent commands & gotchas
+├── audit_runner.sh         # Bash audit script (executable)
+├── docs/                   # Documentation & audit reports
+│   ├── overview.md         # Project overview (read first)
+│   ├── screenslist.md      # Screen inventory & routes
+│   ├── userjourney.md      # User journey map
+│   ├── BACKLOG.md          # Task backlog & resolved items
+│   ├── PROGRESS.md         # Chapter-by-chapter progress tracking
+│   ├── AUDIT_SUMMARY.md    # Audit system summary (this file)
+│   ├── AUDIT-2026-04-10.md # Full technical audit
+│   ├── audit_checklist.md  # Detailed checklist (all chapters)
+│   ├── audit_skills.md     # Agent skills for audits
+│   ├── ios.md              # iOS Turbo Native integration roadmap
+│   ├── testing_steps.md    # PWA & iOS test checklist
+│   ├── STORE-DEPLOYMENT.md # App Store / Play Store setup guide
+│   ├── M2-OAUTH-SETUP.md   # OAuth credentials setup for Render
+│   ├── app_documentation.md # Full app documentation
+│   ├── figma_nodes.md      # Figma node reference
+│   └── userdata.md         # Privacy & data handling
+└── ios/SeasonApp/          # iOS app (Turbo Native)
+    ├── project.yml         # XcodeGen spec
+    └── SeasonApp/          # Swift sources
 
 ---
 

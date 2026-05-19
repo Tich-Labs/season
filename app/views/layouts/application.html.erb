@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="h-full" lang="<%= I18n.locale %>">
+<html class="h-full" lang="<%= I18n.locale %>" data-hotwire-native="<%= request.headers['HTTP_X_HOTWIRE_NATIVE'] || nil %>">
   <head>
     <title><%= content_for(:title) || "Season" %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -9,6 +9,9 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
+    <% if turbo_native_app? && authenticated? %>
+      <meta name="native-auth-token" content="<%= current_user.native_auth_token %>">
+    <% end %>
 
     <%= yield :head %>
 
@@ -33,7 +36,8 @@
   </head>
 
   <%# Logic check: Only show App Bar/Menu if user is logged in and past the splash/auth screens %>
-  <% is_authenticated_view = authenticated? && !controller_name.in?(%w[sessions registrations home onboarding]) %>
+  <% is_native_app = request.headers['HTTP_X_HOTWIRE_NATIVE'].present? %>
+  <% is_authenticated_view = authenticated? && !controller_name.in?(%w[sessions registrations home onboarding]) && !is_native_app %>
 
   <body class="bg-[#FCF9F7] font-['Montserrat'] antialiased h-full overflow-x-hidden"
         data-controller="update-prompt install">

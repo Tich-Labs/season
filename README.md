@@ -58,13 +58,15 @@ Based on Figma file: [SEASON.Vision-App-2026--Copy-](https://www.figma.com/desig
 | Item | Priority | Status |
 | ---- | -------- | ------ |
 | OAuth credentials on Render (Google, Facebook, Apple) | High | Credentials not set |
-| `config.hosts` — uncomment DNS rebinding protection | High | Disabled in production |
-| Rack::Attack on login + launch-signup endpoints | High | No rate limiting on login IP spoof vector |
-| `config.load_defaults 8.1` — run `bin/rails app:update` | High | Still on 8.0 defaults |
+| `config.hosts` — uncomment DNS rebinding protection | High | ✅ Done |
+| Rack::Attack on login + launch-signup endpoints | High | ✅ Done |
+| `config.load_defaults 8.1` — run `bin/rails app:update` | High | ✅ Already set |
+| SSL enforcement (assume_ssl, force_ssl) | High | ✅ Done |
 | Devise `config.paranoid = true` — prevent account enumeration | Medium | Off |
-| CSP enforcement — flip `report_only` to `false`, add `report-uri` | Medium | Report-only only |
+| CSP enforcement — nonces for scripts, inline styles allowed | Medium | ✅ Done |
 | Active Storage: switch production to S3/R2 — avatars lost on redeploy | Medium | Local disk in prod |
-| Sentry initializer + `SENTRY_DSN` on Render | Medium | Not wired |
+| `SENTRY_DSN` on Render + initializer created | Medium | ✅ Initializer created, set env var on Render |
+| VAPID keys in credentials — `rails credentials:edit` then paste generated keys | Medium | ✅ Keys generated, documented in `.env.template` and `config/credentials.example.yml` |
 | Stripe paywall (launch as free first month) | Low | Planned post-launch |
 
 ---
@@ -113,7 +115,9 @@ bin/dev
 | `APPLE_TEAM_ID` | OAuth | For Apple Sign-In |
 | `APPLE_KEY_ID` | OAuth | For Apple Sign-In |
 | `APPLE_PRIVATE_KEY` | OAuth | PEM format |
-| `SENTRY_DSN` | Production | Error tracking |
+| `SENTRY_DSN` | Production | Error tracking via Sentry initializer |
+| `VAPID_PUBLIC_KEY` | Fallback | Web Push notifications (if not in credentials) |
+| `VAPID_PRIVATE_KEY` | Fallback | Web Push notifications (if not in credentials) |
 | `STRIPE_SECRET_KEY` | Post-launch | Payments (not yet active) |
 
 > `SECRET_KEY_BASE` and local dev: Rails reads it from `credentials.yml.enc` locally. On Render it reads `ENV['SECRET_KEY_BASE']` which takes priority. The two values do not need to match.
@@ -219,6 +223,9 @@ bin/dev
 - `LaunchController` — Launch/countdown page
 - `LegalController` — Terms, privacy
 - `FeedbacksController` — In-app user feedback submission
+- `PinController` — Access code lock/unlock
+- `PushController` — Web Push subscription + VAPID key
+- `WebauthnController` — Biometric (Face ID / Touch ID) registration + authentication
 - `PWAController` — Manifest, service worker
 - `DebugController` — Dev endpoints
 - `Admin::BaseController` — Admin auth + shared stats
@@ -226,7 +233,7 @@ bin/dev
 - `Admin::InboxController` — Feedback/bugs/support inbox
 - `Admin::LaunchSignupsController` — Waitlist signups list + CSV export
 
-### Models (12 total)
+### Models (14 total)
 
 - `User` — User accounts
 - `CycleEntry` — Daily cycle tracking
@@ -238,6 +245,8 @@ bin/dev
 - `Reminder` — User reminders (morning, period, birth control)
 - `Feedback` — User feedback (type: feedback / bug_report / support)
 - `LaunchSignup` — Waitlist email signups
+- `PushSubscription` — Web Push notification subscriptions (endpoint, p256dh, auth keys)
+- `WebauthnCredential` — WebAuthn credentials for biometric auth
 - `Current` — Request-scoped current user
 - `ApplicationRecord` — Base model
 

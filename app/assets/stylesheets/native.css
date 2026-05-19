@@ -1,0 +1,32 @@
+/* native.css — styles for d-hotwire-native-* classes (for Turbo Native)
+   Only loaded in native app context. */
+
+.d-hotwire-native-hide {
+  display: none !important;
+}
+
+.d-hotwire-native-block {
+  display: block !important;
+}
+
+.d-hotwire-native-flex {
+  display: flex !important;
+}
+
+.d-hotwire-native-visible {
+  visibility: visible !important;
+}
+
+.d-hotwire-native-invisible {
+  visibility: hidden !important;
+}
+
+.d-hotwire-native-bg {
+  background: #EDE1D5 !important;
+}
+
+.d-hotwire-native-text {
+  color: #933a35 !important;
+}
+
+/* Add more as needed for native-specific overrides */

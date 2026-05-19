@@ -137,8 +137,15 @@ docs/              — You are here
 | [User Journey](userjourney.md) | You want to understand what a user actually experiences, screen by screen |
 | [Screens & Routes](screenslist.md) | You're building or debugging a specific screen and need the route, controller, and Figma node |
 | [Backlog](BACKLOG.md) | You're picking up a task or need to understand what's left to build |
+| [Progress](PROGRESS.md) | You want to see chapter-by-chapter completion percentages and remaining TODO items |
 | [User Data & Privacy](userdata.md) | You're touching anything that handles personal or health data |
+| [iOS Integration](ios.md) | You're working on the Turbo Native iOS app |
+| [Testing Steps](testing_steps.md) | You need a checklist for PWA and iOS native feature testing |
+| [Store Deployment](STORE-DEPLOYMENT.md) | You're preparing for App Store / Play Store submission |
+| [OAuth Setup](M2-OAUTH-SETUP.md) | You're setting up Google/Facebook/Apple OAuth credentials on Render |
 | [Stakeholder Report](STAKEHOLDER-REPORT-2026-04-15.md) | You need a non-technical summary of what's built and what's next |
 | [Audit Report](AUDIT-2026-04-10.md) | You want a full technical audit: accessibility, security, lint, test results |
+| [Audit Summary](AUDIT_SUMMARY.md) | You want an overview of the audit system and how to use it |
+| [Audit Checklist](audit_checklist.md) | You're running a manual audit against all 10 chapters |
 | [Styling Audit](STYLING-AUDIT.md) | You're writing CSS or Tailwind classes and need to know the standards |
 | [Figma Nodes](figma_nodes.md) | You're mapping a screen to its Figma design source |

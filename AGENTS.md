@@ -31,6 +31,10 @@ bundle exec erb_lint --lint-all --format compact  # NOT erblint
 - `Admin::FeedbacksController` was deleted → use `Admin::InboxController`
 - `config/master.key` is gitignored → get from team password manager
 - ERB lint warnings are false positives (parser vs Ruby version)
+- `PinProtection` concern auto-locks after 5 min → `skip_before_action :require_pin_unlock` for pin settings
+- `PushNotificationService.send_to_user` silently skips users with no subscriptions
+- WebAuthn requires HTTPS (localhost exempt); falls back to pin unlock if unavailable
+- VAPID keys not in credentials → set `VAPID_PUBLIC_KEY` + `VAPID_PRIVATE_KEY` env vars as fallback
 
 ## Asset Rules
 
@@ -45,8 +49,24 @@ bundle exec erb_lint --lint-all --format compact  # NOT erblint
 - Field error: `border border-brand-primary`
 - No page redirects → use inline errors with Turbo Stream
 
+## iOS (Turbo Native)
+
+- **Project file**: `ios/SeasonApp/project.yml` — XcodeGen spec
+- **Regenerate `.xcodeproj`**: `xcodegen generate` (run from `ios/SeasonApp/`)
+- **Base URL**: set `SEASON_BASE_URL` in `Info.plist` (not hardcoded in Swift)
+- **Tab model**: `Tabs.swift` (`Tab` struct: title, systemImageName, urlPath)
+- **Tab bar controller**: `HotwireTabBarController.swift` — uses `TurboNavigator`
+- **Entry point**: `SceneDelegate.swift` — creates `HotwireTabBarController`
+- **AppDelegate**: minimal stub — do NOT create `WKWebView` or window there
+- **Path rules endpoint**: `GET /configurations/ios_v1.json` (`ConfigurationsController#ios_v1`)
+- **SPM**: turbo-ios 1.4.0 from GitHub/hotwired
+- **xcodegen** requires Xcode 15.3+ (macOS 13+)
+
 ## Docs
 - Figma: `docs/figma_nodes.md`
 - Full instructions: `CLAUDE.md`
+- iOS integration: `docs/ios.md`
+- Progress tracking: `docs/PROGRESS.md`
+- Audit system: `docs/AUDIT_SUMMARY.md`, `docs/audit_checklist.md`
 - Calendar preferences: `app/helpers/calendar_helper.rb`
 - Internal docs: `/docs` (GitHub Pages)

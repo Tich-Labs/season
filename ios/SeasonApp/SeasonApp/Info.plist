@@ -30,6 +30,8 @@
     <array>
         <string>UIInterfaceOrientationPortrait</string>
     </array>
+    <key>SEASON_BASE_URL</key>
+    <string>https://seasonv2.onrender.com</string>
     <key>NSAppTransportSecurity</key>
     <dict>
         <key>NSAllowsArbitraryLoads</key>
