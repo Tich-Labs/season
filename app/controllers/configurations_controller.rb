@@ -1,4 +1,6 @@
 class ConfigurationsController < ApplicationController
+  allow_unauthenticated_access only: [:ios_v1]
+
   def ios_v1
     render json: {
       settings: {},
