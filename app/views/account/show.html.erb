@@ -12,7 +12,7 @@
   <div class="max-w-app mx-auto px-4 pb-20">
 
     <div class="py-5 pb-2">
-      <h2 class="text-brand-primary text-base font-bold">Delete Account</h2>
+      <h2 class="text-brand-primary text-base font-bold"><%= t('accounts.show.title') %></h2>
     </div>
     <div class="border-b border-brand-divider"></div>
 
@@ -21,9 +21,9 @@
         <polyline points="3 6 5 6 21 6" />
         <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
       </svg>
-      <h3 class="text-brand-primary text-xl font-semibold mb-3">Delete Account</h3>
+      <h3 class="text-brand-primary text-xl font-semibold mb-3"><%= t('accounts.show.title') %></h3>
       <p class="text-brand-secondary text-sm leading-relaxed mb-6">
-        This will permanently delete your account and all associated data including:
+        <%= t('accounts.show.warning') %>
       </p>
 
       <ul class="text-left text-brand-secondary text-sm leading-loose mb-6 pl-5">
@@ -38,18 +38,18 @@
 
       <div class="bg-brand-error rounded-xl px-4 py-3 mb-6">
         <p class="text-brand-primary text-sm font-medium">
-          This action cannot be undone.
+          <%= t('accounts.show.irreversible') %>
         </p>
       </div>
     </div>
 
-    <%= form_with url: account_path, method: :delete, data: { turbo_confirm: "Are you sure you want to delete your account? This cannot be undone." } do %>
+    <%= form_with url: account_path, method: :delete, data: { turbo_confirm: t('accounts.show.confirm') } do %>
       <button type="submit" class="w-full bg-brand-primary text-white rounded-xl py-4 text-base font-medium cursor-pointer border-none">
-        Delete My Account
+        <%= t('accounts.show.delete_button') %>
       </button>
     <% end %>
 
-    <%= link_to "Cancel", edit_settings_path,
+    <%= link_to t('accounts.show.cancel'), edit_settings_path,
         class: "block w-full text-center text-brand-primary border border-brand-divider rounded-xl py-4 text-base font-medium mt-3 no-underline" %>
 
   </div>

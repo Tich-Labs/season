@@ -8,12 +8,12 @@
         <polyline points="20 6 9 17 4 12" />
       </svg>
     </div>
-    <p class="text-brand-primary text-lg font-semibold mb-2">Thank you!</p>
-    <p class="text-brand-secondary text-sm mb-6">Your message has been received.</p>
+    <p class="text-brand-primary text-lg font-semibold mb-2"><%= t('feedback.success.thank_you') %></p>
+    <p class="text-brand-secondary text-sm mb-6"><%= t('feedback.success.message_received') %></p>
     <button type="button"
             data-action="click->feedback-modal#close"
             class="bg-brand-primary text-white rounded-xl py-3 px-8 text-[15px] font-semibold font-['Montserrat']">
-      Close
+      <%= t('feedback.success.close') %>
     </button>
   </div>
 </div>

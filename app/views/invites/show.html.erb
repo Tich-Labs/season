@@ -7,10 +7,10 @@
 
   <div class="w-full">
     <p class="text-brand-primary text-[22px] font-medium text-center mb-2">
-      Welcome to Season!
+      <%= t('invites.show.welcome') %>
     </p>
     <p class="text-brand-secondary text-base text-center mb-8">
-      Create your password to get started
+      <%= t('invites.show.create_password') %>
     </p>
 
     <%= form_with url: invite_path(params[:token]), method: :patch do |f| %>
@@ -22,7 +22,7 @@
 
       <div class="relative mb-4" data-controller="password-visibility">
         <%= f.password_field :password,
-            placeholder: "Create password...",
+            placeholder: t('invites.show.password_placeholder'),
             required: true,
             autocomplete: "new-password",
             class: "w-full bg-brand-field rounded-lg py-3.5 pr-[50px] pl-[21px] h-[52px] border-none text-lg text-brand-primary outline-none box-border",
@@ -35,7 +35,7 @@
 
       <div class="relative mb-6" data-controller="password-visibility">
         <%= f.password_field :password_confirmation,
-            placeholder: "Confirm password...",
+            placeholder: t('invites.show.confirm_placeholder'),
             required: true,
             autocomplete: "new-password",
             class: "w-full bg-brand-field rounded-lg py-3.5 pr-[50px] pl-[21px] h-[52px] border-none text-lg text-brand-primary outline-none box-border",
@@ -46,7 +46,7 @@
         </button>
       </div>
 
-      <%= f.submit "GET STARTED",
+      <%= f.submit t('invites.show.submit'),
           class: "w-full h-[52px] bg-brand-primary text-white text-lg font-medium rounded-lg border-none cursor-pointer" %>
     <% end %>
   </div>
