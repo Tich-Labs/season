@@ -1,59 +1,53 @@
-<div style="background:#ffffff; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:60px 32px 48px; max-width:430px; margin:0 auto;">
+<div class="bg-white min-h-screen flex flex-col items-center justify-between pt-[60px] pb-12 px-8 max-w-app mx-auto">
 
-  <!-- Logo -->
-  <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;">
-    <%= image_tag "screen1logo.png",
-        style: "width:180px; height:auto;",
-        alt: "Season" %>
-    <%= image_tag "season-wortmarke-1.svg",
-        style: "width:200px; height:auto; margin-top:16px;",
-        alt: "Season" %>
+  <div class="flex-1 flex flex-col items-center justify-center">
+    <%= image_tag "screen1logo.png", class: "w-[180px] h-auto", alt: "Season" %>
+    <%= image_tag "season-wortmarke-1.svg", class: "w-[200px] h-auto mt-4", alt: "Season" %>
   </div>
 
-  <!-- Invite form -->
-  <div style="width:100%;">
-    <p style="color:#933a35; font-size:22px; font-weight:500; text-align:center; margin-bottom:8px;">
+  <div class="w-full">
+    <p class="text-brand-primary text-[22px] font-medium text-center mb-2">
       Welcome to Season!
     </p>
-    <p style="color:#6B6B6B; font-size:16px; text-align:center; margin-bottom:32px;">
+    <p class="text-brand-secondary text-base text-center mb-8">
       Create your password to get started
     </p>
 
     <%= form_with url: invite_path(params[:token]), method: :patch do |f| %>
       <% if @user&.errors.any? %>
-        <div style="background:#FDF0EE; border-radius:8px; padding:12px; margin-bottom:16px;">
-          <p style="color:#933a35; font-size:14px;"><%= @user.errors.full_messages.join(", ") %></p>
+        <div class="bg-brand-error rounded-lg p-3 mb-4">
+          <p class="text-brand-primary text-sm"><%= @user.errors.full_messages.join(", ") %></p>
         </div>
       <% end %>
 
-      <div style="position:relative; margin-bottom:16px;" data-controller="password-visibility">
+      <div class="relative mb-4" data-controller="password-visibility">
         <%= f.password_field :password,
             placeholder: "Create password...",
             required: true,
             autocomplete: "new-password",
-            style: "width:100%; background:#EDE1D5; border-radius:8px; padding:14px 50px 14px 21px; height:52px; border:none; font-size:18px; color:#933a35; outline:none; box-sizing:border-box;",
+            class: "w-full bg-brand-field rounded-lg py-3.5 pr-[50px] pl-[21px] h-[52px] border-none text-lg text-brand-primary outline-none box-border",
             data: { "password-visibility-target": "input" } %>
-        <button type="button" aria-label="Toggle password visibility" data-action="click->password-visibility#toggle" style="position:absolute; right:16px; top:50%; transform:translateY(-50%); background:none; border:none; padding:0; cursor:pointer;">
+        <button type="button" aria-label="Toggle password visibility" data-action="click->password-visibility#toggle" class="absolute right-4 top-1/2 -translate-y-1/2 bg-none border-none p-0 cursor-pointer">
           <svg data-password-visibility-target="eyeOpen" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(147,58,53,0.5)" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
           <svg data-password-visibility-target="eyeClosed" class="hidden" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(147,58,53,0.5)" stroke-width="1.5"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" /><line x1="1" y1="1" x2="23" y2="23" /></svg>
         </button>
       </div>
 
-      <div style="position:relative; margin-bottom:24px;" data-controller="password-visibility">
+      <div class="relative mb-6" data-controller="password-visibility">
         <%= f.password_field :password_confirmation,
             placeholder: "Confirm password...",
             required: true,
             autocomplete: "new-password",
-            style: "width:100%; background:#EDE1D5; border-radius:8px; padding:14px 50px 14px 21px; height:52px; border:none; font-size:18px; color:#933a35; outline:none; box-sizing:border-box;",
+            class: "w-full bg-brand-field rounded-lg py-3.5 pr-[50px] pl-[21px] h-[52px] border-none text-lg text-brand-primary outline-none box-border",
             data: { "password-visibility-target": "input" } %>
-        <button type="button" aria-label="Toggle password visibility" data-action="click->password-visibility#toggle" style="position:absolute; right:16px; top:50%; transform:translateY(-50%); background:none; border:none; padding:0; cursor:pointer;">
+        <button type="button" aria-label="Toggle password visibility" data-action="click->password-visibility#toggle" class="absolute right-4 top-1/2 -translate-y-1/2 bg-none border-none p-0 cursor-pointer">
           <svg data-password-visibility-target="eyeOpen" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(147,58,53,0.5)" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
           <svg data-password-visibility-target="eyeClosed" class="hidden" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(147,58,53,0.5)" stroke-width="1.5"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" /><line x1="1" y1="1" x2="23" y2="23" /></svg>
         </button>
       </div>
 
       <%= f.submit "GET STARTED",
-          style: "width:100%; height:52px; background:#933a35; color:#ffffff; font-size:18px; font-weight:500; border-radius:8px; border:none; cursor:pointer;" %>
+          class: "w-full h-[52px] bg-brand-primary text-white text-lg font-medium rounded-lg border-none cursor-pointer" %>
     <% end %>
   </div>
 
