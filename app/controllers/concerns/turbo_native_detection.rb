@@ -15,8 +15,16 @@ module TurboNativeDetection
     authenticate_native_token if request.headers["X-Turbo-Native-Token"].present?
   end
 
+  def _layout
+    if turbo_native_app? && lookup_context.exists?("turbo_native", "layouts")
+      "turbo_native"
+    else
+      super
+    end
+  end
+
   def authenticate_native_token
-    token = request.headers["X-Turbo-Native-Token"]
+    token = request.headers["X-Turbo-Native-Token"] || cookies[:native_auth_token]
     user = User.find_by(native_auth_token: token)
     Current.user ||= user if user&.valid_native_auth_token?
   end

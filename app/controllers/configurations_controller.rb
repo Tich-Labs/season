@@ -1,18 +1,17 @@
 class ConfigurationsController < ApplicationController
-  # GET /configurations/ios_v1.json
   def ios_v1
-    config = {
+    render json: {
+      settings: {},
       rules: [
         {
           patterns: ["/calendar", "/daily/*"],
-          properties: {presentation: "default", pull_to_refresh: true}
+          properties: {pull_to_refresh_enabled: true}
         },
         {
           patterns: ["/settings/*", "/symptoms/new", "/symptoms/edit"],
-          properties: {presentation: "modal"}
+          properties: {context: "modal"}
         }
       ]
     }
-    render json: config
   end
 end

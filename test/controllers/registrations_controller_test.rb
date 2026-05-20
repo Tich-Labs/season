@@ -11,7 +11,8 @@ class RegistrationsControllerTest < ActionDispatch::IntegrationTest
     post registration_path, params: {
       email: "newuser@example.com",
       password: "securepassword1",
-      password_confirmation: "securepassword1"
+      password_confirmation: "securepassword1",
+      terms_accepted: "1"
     }
     assert_response :redirect
   end
@@ -21,7 +22,8 @@ class RegistrationsControllerTest < ActionDispatch::IntegrationTest
       post registration_path, params: {
         email: "newuser2@example.com",
         password: "securepassword1",
-        password_confirmation: "securepassword1"
+        password_confirmation: "securepassword1",
+        terms_accepted: "1"
       }
     end
   end

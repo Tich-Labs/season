@@ -1,298 +1,182 @@
-# Season App - Audit Checklist
+---
+layout: default
+---
 
-**Version:** 1.0 (2026-05-06)  
-**Updated:** 2026-05-06 08:56  
-**Based on:** Codebase Chapters (ch01_00 to ch10_68)
+# Hotwire Native Audit — Book Patterns vs Our Implementation
+
+Audited against *"Hotwire Native for Rails Developers"* (PragProg, code companion in `docs/code/`).
+
+**Key note:** The book uses the newer `HotwireNative` framework (turbo-ios + Strada merged). We use `turbo-ios` 1.4.0 standalone. API names differ (`Navigator` vs `TurboNavigator`, `HotwireTab` vs `Tab`, etc.) but the architecture is the same: WKWebView wrapping server-rendered HTML.
 
 ---
 
-## Based on Codebase Chapters (ch01_00 to ch10_68)
+## 1. Rails Server-Side Patterns
 
-### App Info
-- **App**: Season V2 - Women's cycle tracking PWA
-- **Path**: `/Users/tichlabs/Documents/onlyCode/season`
-- **Stack**: Rails 8.1.3, PostgreSQL, Hotwire (Turbo + Stimulus), Tailwind CSS
-- **Status**: M1-M5, M7 complete, M6 not in scope
-
----
-
-## CHAPTER 1: Foundation (ch01_00 - ch01_24) - 25 steps
-### Code Quality
-- [ ] Ruby version defined (.ruby-version = 3.4.7)
-- [ ] Rails version current (8.1.3)
-- [ ] Gemfile organized with comments
-- [ ] .gitignore properly configured
-- [ ] Database config uses PostgreSQL (not SQLite)
-- [ ] Environment configs (development, production, test) present
-- [ ] CI/CD configured (.github/workflows)
-- [ ] Linting configured (Rubocop)
-- [ ] ERB linting configured
-
-### Features & Implementation
-- [ ] App boots successfully (`bin/rails s`)
-- [ ] Root route defined
-- [ ] Basic layout with Tailwind CSS
-- [ ] Asset pipeline working (Propshaft)
-- [ ] Database connection working (PostgreSQL)
-- [ ] Schema migrations present
-- [ ] Seeds file present and working
-- [ ] Master key configured (gitignored)
-- [ ] Credentials encrypted properly
-
-**Season Status**: ✅ Complete - Rails 8.1.3, PostgreSQL, Tailwind working
+| # | Pattern (Book) | Our Status | Gap |
+|---|---|---|---|
+| 1.1 | `Authentication` concern — cookie-based, `sign_in(user)`, `sign_out(user)`, `cookies.permanent.encrypted[:user_id]` | ✅ Done | Same pattern (we use `Authentication#login` + `cookies.encrypted[:user_id]`). We extend with `native_auth_token` which book doesn't have. |
+| 1.2 | `ApplicationController` includes `Authentication` only | ✅ Done | We also include `TurboNativeDetection` (our extension for native auth header). |
+| 1.3 | `hotwire_native_app?` helper — checks `request.user_agent` for "Hotwire Native" | ✅ Done | We use `turbo_native_app?` (checks header + UA). Same pattern, different name. |
+| 1.4 | Native CSS loaded conditionally: `<%= stylesheet_link_tag "native" if hotwire_native_app? %>` | ⚠️ Partial | We load native.css unconditionally in `turbo_native` layout. Book loads it conditionally in `application` layout. Both work. |
+| 1.5 | `d-hotwire-native-none` class on web-only elements (navbar, headings) | ✅ Done | Used in `turbo_native` layout (hides PWA banners, service worker). Book uses on Bootstrap navbar. |
+| 1.6 | `d-hotwire-native-block` for native-only elements | ✅ Done | Defined in `native.css`, same pattern. |
+| 1.7 | `content_for(:title)` in layout `<head>` | ✅ Done | Same pattern in both layouts. |
 
 ---
 
-## CHAPTER 2: Core Features (ch02_01 - ch02_23) - 23 steps
-### Code Quality
-- [ ] Models follow naming conventions
-- [ ] Controllers follow REST patterns
-- [ ] Routes properly defined (resources, custom routes)
-- [ ] Strong parameters used in controllers
-- [ ] Callbacks kept to minimum (use service objects)
-- [ ] Validations in models (presence, uniqueness, format)
-- [ ] Associations properly defined (belongs_to, has_many, etc.)
-- [ ] Scopes used for complex queries
-- [ ] Error handling (rescue, flash messages)
+## 2. Path Configuration
 
-### Features & Implementation
-- [ ] User model with authentication
-- [ ] CRUD operations for main resources
-- [ ] Form helpers used (form_with, fields_for)
-- [ ] Flash messages working
-- [ ] Redirects after create/update/destroy
-- [ ] Before_action filters for auth/login checks
-- [ ] Pundit/Policy permissions (if applicable)
-- [ ] Pagination (if many records)
-
-**Season Status**: ✅ Complete - 28 controllers, 12 models, CRUD for all resources
+| # | Pattern (Book) | Our Status | Gap |
+|---|---|---|---|
+| 2.1 | `GET /configurations/ios_v1.json` endpoint | ✅ Done | `ConfigurationsController#ios_v1` |
+| 2.2 | Modal patterns: `/new$`, `/edit$` → `context: "modal"` | ⚠️ Diff | Book uses `context: "modal"`, we use `properties: {"presentation": "modal"}`. Both are valid — our format matches `turbo-ios` 1.x, book matches `HotwireNative`. |
+| 2.3 | Pull-to-refresh: `pull_to_refresh_enabled: true` on list patterns | ✅ Done | Enabled for `/calendar`, `/daily/*` in our config. |
+| 2.4 | Custom native view controllers: `view_controller: "map"` in path rules | ❌ Missing | Book maps `/hikes/[0-9]+/map` to a native `MapController`. We have no custom native view controllers. **Not needed yet** — our app doesn't have native-only views. |
+| 2.5 | Android path config also served (`android_v1`) | ❌ Missing | We have no Android app. **Out of scope.** |
+| 2.6 | Path config loaded in iOS via `Hotwire.loadPathConfiguration(from:)` | ✅ Done | We load via `session.pathConfiguration` (turbo-ios API). Same concept, different API. |
 
 ---
 
-## CHAPTER 3: Views & Styling (ch03_01 - ch03_16) - 16 steps
-### Code Quality
-- [ ] ERB templates use `<%= %>` correctly
-- [ ] Partials extracted for reusable components
-- [ ] No inline styles (use Tailwind classes)
-- [ ] Brand colors defined in Tailwind config
-- [ ] Responsive design (mobile-first)
-- [ ] i18n used for all user-facing strings (`t()` helpers)
-- [ ] No hardcoded English (except onboarding - known debt)
-- [ ] Image_tag used (not `<img src>`)
-- [ ] Asset filenames lowercase with hyphens
+## 3. Native CSS (`native.css`)
 
-### Features & Implementation
-- [ ] Layout renders correctly
-- [ ] Navigation (top bar, burger menu) working
-- [ ] Forms styled with Tailwind
-- [ ] Error messages styled (inline, no redirects)
-- [ ] Flash messages styled
-- [ ] Buttons consistently styled
-- [ ] Cards/sections use consistent padding
-- [ ] Mobile container (max-w-[430px]) applied
-
-**Season Status**: ✅ Complete - Brand colors in Tailwind config, max-w-app container, no inline styles
+| # | Pattern (Book) | Our Status | Gap |
+|---|---|---|---|
+| 3.1 | `.d-hotwire-native-none { display: none !important; }` | ✅ Done | Exact match |
+| 3.2 | `.d-hotwire-native-block { display: block !important; }` | ✅ Done | Exact match |
+| 3.3 | Hide bridge button elements in web: `[data-bridge-components~="button"] [data-controller~="bridge--button"] { display: none !important; }` | ❌ Missing | We don't use bridge components yet. **Optional phase 3.** |
+| 3.4 | Web navbar hidden with `d-hotwire-native-none` class | ✅ Done | App bar hidden via layout conditional (`is_native_app`), not CSS class. Same effect. |
+| 3.5 | Additional visibility classes (`.d-hotwire-native-flex`, `.d-hotwire-native-visible`, etc.) | ✅ Extra | We have MORE utility classes than the book. Good. |
 
 ---
 
-## CHAPTER 4: Authentication (ch04_01 - ch04_17) - 17 steps
-### Code Quality
-- [ ] Authentication concern extracted (`app/controllers/concerns/authentication.rb`)
-- [ ] Sessions controller (login/logout)
-- [ ] Registrations controller (sign up)
-- [ ] Password recovery (Devise or custom)
-- [ ] OmniAuth configured (Google, Facebook, Apple)
-- [ ] Cookie-based sessions with expiry
-- [ ] CSRF protection enabled
-- [ ] Rate limiting configured (Rack::Attack)
-- [ ] Paranoid mode (prevent account enumeration)
+## 4. Stimulus / JavaScript
 
-### Features & Implementation
-- [ ] Login page works
-- [ ] Sign up page works
-- [ ] Logout clears session
-- [ ] Remember me functionality (if applicable)
-- [ ] Password reset emails sent
-- [ ] OAuth callbacks working
-- [ ] Protected routes redirect to login
-- [ ] Admin auth gated by `User#admin?`
-
-**Season Status**: ✅ Complete - Custom cookie auth, Devise for passwords only, OAuth built, admin gated
+| # | Pattern (Book) | Our Status | Gap |
+|---|---|---|---|
+| 4.1 | Stimulus auto-loading via `eagerLoadControllersFrom` | ✅ Done | Identical pattern in `controllers/index.js` |
+| 4.2 | `controllers/application.js` — Stimulus bootstrap | ✅ Done | Identical |
+| 4.3 | Bridge button controller (`bridge/button_controller.js` extending `BridgeComponent`) | ❌ Missing | Book uses `@hotwired/hotwire-native-bridge` for native nav bar buttons (Add, Save, Sign in). We don't use Strada/bridge yet. **Optional phase 3.** |
+| 4.4 | Bridge notification token controller (`bridge/notification_token_controller.js`) | ❌ Missing | Book requests push permission via bridge. We use our own `NativeDevicesController`. Different approach. |
+| 4.5 | Native detection Stimulus controller | ⚠️ Diff | Book doesn't have one. We created `native_controller.js` — our own extension for client-side Turbo Native class + PWA cleanup. |
+| 4.6 | Import map pins for `@hotwired/turbo`, `@hotwired/stimulus`, `@hotwired/hotwire-native-bridge` | ⚠️ Diff | We don't pin `hotwire-native-bridge` (no bridge components). **Optional phase 3.** |
 
 ---
 
-## CHAPTER 5: Mobile Development (ch05_01 - ch05_22) - 22 steps
-### Code Quality
-- [ ] PWA manifest present (`/manifest.json` or `pwa/` controller)
-- [ ] Service worker configured (offline support)
-- [ ] Viewport meta tag correct
-- [ ] Mobile-first CSS (390px base, 430px max)
-- [ ] Touch targets adequate (min 44px)
-- [ ] Turbo Native compatible (no full page reloads)
-- [ ] Camera/File upload working (if applicable)
-- [ ] Push notifications configured (if applicable)
-- [ ] Deep linking working (if applicable)
+## 5. iOS Swift Patterns
 
-### Features & Implementation
-- [ ] PWA installs correctly on mobile
-- [ ] Offline mode works (cached assets)
-- [ ] Bottom navigation working
-- [ ] Safe area insets handled (iPhone X+)
-- [ ] iOS/Android specific styles
-- [ ] Turbo Native roadmap documented
-
-**Season Status**: ⚠️ In Progress - PWA mobile-first (390px), Turbo Native roadmap, needs offline/SW
+| # | Pattern (Book) | Our Status | Gap |
+|---|---|---|---|
+| 5.1 | `AppDelegate` — minimal stub OR `Hotwire.loadPathConfiguration(from:)` + `registerBridgeComponents([])` | ✅ Done | Our `AppDelegate` is a minimal stub. Path config loaded in `HotwireTabBarController`. Book does it in `AppDelegate`. Both valid. |
+| 5.2 | `SceneDelegate` — creates tab bar controller, sets as root, calls `load(HotwireTab.all)` | ✅ Done | Our `SceneDelegate` creates `HotwireTabBarController()` and sets as root. |
+| 5.3 | `Tab` model — title, image, path per tab | ✅ Done | `Tabs.swift` with `Tab` struct. Book uses `HotwireTab` from the framework. Same concept. |
+| 5.4 | `TabBarController` — creates `Navigator` per tab, routes URLs | ✅ Done | Our `HotwireTabBarController` uses `TurboNavigator` (turbo-ios). Book uses `Navigator` (HotwireNative). Same pattern. |
+| 5.5 | `NavigatorDelegate` / `NavigatorDelegate` — handles `VisitProposal` for custom view controllers | ⚠️ Partial | We have `SessionDelegate` (turbo-ios) but don't implement the visit proposal handler for custom controllers. We don't have any custom native view controllers yet. **Not needed yet.** |
+| 5.6 | `BridgeComponent` subclasses — native side of Strada bridge | ❌ Missing | Book has `ButtonComponent` (adds native UIBarButtonItem) and `NotificationTokenComponent`. We don't use bridge components. **Optional phase 3.** |
+| 5.7 | `WKWebViewConfiguration` with user agent set to `"Hotwire Native iOS"` | ✅ Done | We set `"Turbo Native iOS"` — ours matches turbo-ios convention. |
+| 5.8 | `URLSession` for native API calls (e.g., notification token POST) | ❌ Missing | Book POSTs notification tokens via native `URLSession`. Our `NativeDevicesController` is a web endpoint. Different architecture. |
+| 5.9 | Native SwiftUI views (`MapView.swift`) + `UIHostingController` wrapper | ❌ Missing | Book has a native `MapView` (SwiftUI) for showing hike locations on a map. We have no native SwiftUI views. **By design** — our architecture is pure Turbo Native, no native views. |
 
 ---
 
-## CHAPTER 6: Advanced Features (ch06_01 - ch06_32) - 32 steps
-### Code Quality
-- [ ] Background jobs configured (Solid Queue)
-- [ ] Job classes have descriptive names
-- [ ] Active Job configured correctly
-- [ ] Service objects for complex business logic
-- [ ] Decorators/Presenters (if needed)
-- [ ] Concerns used for shared behavior
-- [ ] Caching strategy (Solid Cache, fragment caching)
-- [ ] Database indexes on foreign keys
-- [ ] N+1 queries eliminated (includes/preload)
+## 6. Authentication Bridge
 
-### Features & Implementation
-- [ ] Email reminders working (Resend)
-- [ ] Background jobs processed (SendMorningRemindersJob, etc.)
-- [ ] Cycle calculation service (CycleCalculatorService)
-- [ ] Calendar events CRUD
-- [ ] Symptom/superpower tracking
-- [ ] Streaks calculation
-- [ ] Multi-tenancy (if applicable)
-- [ ] API endpoints (if needed)
-
-**Season Status**: ✅ Mostly Complete - Solid Queue jobs, CycleCalculatorService, tracking features
+| # | Pattern (Book) | Our Status | Gap |
+|---|---|---|---|
+| 6.1 | Cookie-based auth only (`cookies.encrypted[:user_id]`) | ✅ Done | Same. |
+| 6.2 | No native auth token / no header injection | ❌ N/A | Book doesn't use token-based auth. Our `native_auth_token` + `X-Turbo-Native-Token` header + Keychain is **our own extension beyond the book**. |
+| 6.3 | `WKUserScript` for meta tag extraction | ❌ N/A | Book doesn't do this. Our `nativeAuth` script message handler is our own implementation. |
+| 6.4 | `sign_in(user)` → sets `Current.user` + cookie | ✅ Done | Our `login(user)` does the same + regenerates native auth token for native apps. |
+| 6.5 | `sign_out(user)` → clears `Current.user` + resets session + deletes cookie | ✅ Done | Our `logout` does the same. |
+| 6.6 | `before_action :authenticate_user!` on protected controllers | ✅ Done | Via `Authentication` concern. |
+| 6.7 | `allow_unauthenticated_access` for public pages | ✅ Done | Via `Authentication` concern's `allow_unauthenticated_access`. |
 
 ---
 
-## CHAPTER 7: API Development (ch07_01 - ch07_23) - 23 steps
-### Code Quality
-- [ ] API namespace (if applicable)
-- [ ] JSON responses (jbuilder or render json:)
-- [ ] API versioning (if multiple versions)
-- [ ] Authentication for API (tokens)
-- [ ] Rate limiting on API endpoints
-- [ ] API documentation (Swagger/OpenAPI)
-- [ ] Serializers (blueprinter, active_model_serializers)
-- [ ] CORS configured
-- [ ] Test coverage for API endpoints
+## 7. Push Notifications
 
-### Features & Implementation
-- [ ] API endpoints return correct JSON
-- [ ] Authentication required for protected endpoints
-- [ ] Error responses follow convention
-- [ ] Pagination for collections
-- [ ] Filtering/sorting (if applicable)
-
-**Season Status**: ❌ Not applicable - Season is PWA with Hotwire, no API needed currently
+| # | Pattern (Book) | Our Status | Gap |
+|---|---|---|---|
+| 7.1 | `NotificationToken` model — stores device tokens per user per platform (iOS / FCM) | ✅ Done | `NativeDevice` model, similar concept. |
+| 7.2 | `NotificationTokensController` — `POST /notification_tokens` | ✅ Done | `NativeDevicesController#register`. Different endpoint name, same purpose. |
+| 7.3 | `skip_before_action :verify_authenticity_token` for token registration | ✅ Done | Same. |
+| 7.4 | APNs via `Noticed` gem (`deliver_by :ios`) | ❌ Diff | Book uses `Noticed` gem for push. We use `ApnsPushService` + `apnotic` gem directly. Both valid. |
+| 7.5 | FCM for Android via `Noticed` gem (`deliver_by :fcm`) | ❌ Missing | **Out of scope** (no Android app). |
+| 7.6 | `NotificationRouter` for deep linking from push tap | ❌ Missing | Book routes to URL path from push notification `userInfo["path"]`. We don't handle push tap deep linking yet. **Gap for phase 3.** |
+| 7.7 | Request notification permission via bridge component | ❌ Missing | Book requests push permission through the bridge. We haven't implemented push permission flow. **Gap for phase 3.** |
 
 ---
 
-## CHAPTER 8: Integration (ch08_00 - ch08_22) - 23 steps
-### Code Quality
-- [ ] Payment gateway configured (Stripe wired, not active)
-- [ ] Email delivery (Resend adapter)
-- [ ] Error tracking (Sentry configured)
-- [ ] Analytics (if applicable)
-- [ ] Webhooks handled (Stripe, etc.)
-- [ ] OAuth providers configured
-- [ ] Environment variables documented
-- [ ] Secrets in credentials or ENV
-- [ ] Third-party gems configured correctly
+## 8. Native App Shell (Tab Bar)
 
-### Features & Implementation
-- [ ] Emails delivered (ReminderMailer, SupportMailer)
-- [ ] Stripe ready for post-launch
-- [ ] Sentry wired (needs SENTRY_DSN on Render)
-- [ ] Resend API key set on Render
-- [ ] OAuth credentials set on Render (TODO)
-- [ ] Webhooks verified (if applicable)
-
-**Season Status**: ⚠️ Partial - Resend working, Stripe wired, Sentry not wired, OAuth needs credentials
+| # | Pattern (Book) | Our Status | Gap |
+|---|---|---|---|
+| 8.1 | Tab bar with 2 tabs (Hikes, Hikers) | ✅ Done | 3 tabs (Calendar, Daily, Tracking). |
+| 8.2 | `UITabBarController` subclass | ✅ Done | `HotwireTabBarController` (custom, not framework subclass). Book uses `HotwireTabBarController` from `HotwireNative` framework. |
+| 8.3 | One `Navigator` per tab (book) vs single shared `TurboNavigator` (us) | ⚠️ Diff | Book creates separate `Navigator` per tab for independent navigation stacks. We share one `TurboNavigator`. Both approaches valid — shared navigator matches turbo-ios docs. |
+| 8.4 | Tab bar styled with system images | ✅ Done | SF Symbols used. |
+| 8.5 | Brand tint color on tab bar | ✅ Done | `#933a35` applied. |
+| 8.6 | `Router` protocol for post-notification navigation | ❌ Missing | Book's `TabBarController` conforms to `Router` for deep linking after push tap. We don't implement this. **Gap for phase 3.** |
 
 ---
 
-## CHAPTER 9: Testing (ch09_01 - ch09_09) - 9 steps
-### Code Quality
-- [ ] Test framework configured (Minitest - 76 tests passing)
-- [ ] Model tests (validations, associations)
-- [ ] Controller tests (responses, redirects)
-- [ ] Integration tests (user flows)
-- [ ] System tests (Capybara, if applicable)
-- [ ] Test coverage > 80%
-- [ ] Factories/fixtures defined
-- [ ] Mocks/stubs used appropriately
-- [ ] CI runs tests automatically
+## 9. Bridge Components (Strada / hotwire-native-bridge)
 
-### Features & Implementation
-- [ ] `bin/rails test` passes (76 tests)
-- [ ] Critical paths tested (login, signup, tracking)
-- [ ] Edge cases tested (nil values, invalid input)
-- [ ] Mailer tests present
-- [ ] Job tests present
-
-**Season Status**: ✅ Complete - 76 tests passing, Minitest setup
+| # | Pattern (Book) | Our Status | Gap |
+|---|---|---|---|
+| 9.1 | `@hotwired/hotwire-native-bridge` pinned in import map | ❌ Missing | **Optional phase 3.** |
+| 9.2 | `BridgeComponent` JS base class used for button + notification components | ❌ Missing | **Optional phase 3.** |
+| 9.3 | `data-controller="bridge--button"` with `data-bridge-title`, `data-bridge-ios-image-name` | ❌ Missing | **Optional phase 3.** |
+| 9.4 | Native `ButtonComponent` (Swift) adding `UIBarButtonItem` to nav bar | ❌ Missing | **Optional phase 3.** |
+| 9.5 | Bridge button used for: Add hike, Save form, Sign in | ❌ Missing | **Optional phase 3.** |
+| 9.6 | `data-controller="bridge--notification-token"` for push permission | ❌ Missing | **Optional phase 3.** |
+| 9.7 | `Hotwire.registerBridgeComponents([...])` in AppDelegate | ❌ Missing | **Optional phase 3.** |
+| 9.8 | Bridge component hidden in web via CSS | ❌ Missing | **Optional phase 3.** |
 
 ---
 
-## CHAPTER 10: Production (ch10_01 - ch10_68) - 68 steps
-### Code Quality
-- [ ] Deployment platform configured (Render)
-- [ ] Build script present (`bin/render-build.sh`)
-- [ ] Production database (PostgreSQL on Render)
-- [ ] Assets precompiled in build
-- [ ] Logs configured (stdout for PaaS)
-- [ ] Error pages customized (404, 500)
-- [ ] Health check endpoint (`/up`)
-- [ ] Security headers (CSP, HSTS)
-- [ ] Config.hosts set (DNS rebinding protection)
+## 10. Layout & View Variants
 
-### Features & Implementation
-- [ ] App deploys successfully to Render
-- [ ] Auto-deploy on push to main
-- [ ] Database migrations run on deploy
-- [ ] Assets serve correctly in production
-- [ ] Error tracking works (Sentry)
-- [ ] Email delivery works in production
-- [ ] HTTPS enforced
-- [ ] Performance monitoring (if applicable)
-
-**Season Status**: ⚠️ Partial - Render deployed, needs config.hosts, Sentry DSN, CSP enforcement
+| # | Pattern (Book) | Our Status | Gap |
+|---|---|---|---|
+| 10.1 | Single `application.html.erb` layout with conditional native CSS loading | ⚠️ Diff | We have both `application.html.erb` and `turbo_native.html.erb`. Book uses one layout with CSS toggles. We use separate layouts via `_layout` override. **Both valid.** |
+| 10.2 | `hotwire_native_app?` used in layout for conditional rendering | ✅ Done | We use `turbo_native_app?` (same concept, different name). |
+| 10.3 | No `+turbo_native.erb` view variants — book uses `d-hotwire-native-*` CSS classes instead | ⚠️ Diff | We created `+turbo_native.erb` variants for calendar + sessions. Book uses CSS toggles within a single template. **Both valid** — our approach gives more control per-view. |
+| 10.4 | `_navbar.html.erb` partial with `d-hotwire-native-none` | ✅ Done | Our app bar is conditionally rendered, not CSS-hidden. Same effect. |
+| 10.5 | `turbo_refreshes_with method: :morph, scroll: :preserve` | ❌ Missing | Book uses Turbo 8 morph refresh. We're on an older Turbo version. **Not critical.** |
 
 ---
 
-## SUMMARY STATUS (Season App)
+## Summary
 
-| Chapter | Topic | Status | Completion |
-|---------|--------|--------|------------|
-| 1 | Foundation | ✅ Complete | 95% |
-| 2 | Core Features | ✅ Complete | 100% |
-| 3 | Views & Styling | ✅ Complete | 95% |
-| 4 | Authentication | ✅ Complete | 90% |
-| 5 | Mobile | ⚠️ In Progress | 60% |
-| 6 | Advanced | ✅ Mostly Complete | 85% |
-| 7 | API | ❌ Not Applicable | N/A |
-| 8 | Integration | ⚠️ Partial | 70% |
-| 9 | Testing | ✅ Complete | 100% |
-| 10 | Production | ⚠️ Partial | 75% |
+### Matches Book (Done — 35 items)
+Core architecture ✅ — cookie auth, path configuration, native CSS, tab bar, user agent, Stimulus, `hotwire_native_app?` helper, layout conditionals.
 
-### Critical Pre-Launch Items (from README)
-- [ ] OAuth credentials on Render (Google, Facebook, Apple)
-- [ ] `config.hosts` uncomment (DNS rebinding protection)
-- [ ] `config.load_defaults 8.1` run (currently 8.0 defaults)
-- [ ] Devise `config.paranoid = true` (prevent account enumeration)
-- [ ] CSP enforcement (flip `report_only` to `false`)
-- [ ] Active Storage switch to S3/R2 (avatars lost on redeploy)
-- [ ] Sentry `SENTRY_DSN` set on Render
-- [ ] Rack::Attack on login endpoints
+### Extends Book (Our Own Additions — 4 items)
+- `native_auth_token` + `X-Turbo-Native-Token` header + Keychain cookie bridge
+- `TurboNativeDetection` concern with `_layout` override
+- `native_controller.js` Stimulus controller
+- `+turbo_native.erb` view variants (calendar, sessions)
 
-### Known Issues
-1. Burger menu text labels not using `t()` (hardcoded English)
-2. Onboarding screens have hardcoded English strings
-3. OAuth credentials not yet set on Render
+### Different by Design (API version — 4 items)
+- `turbo-ios` API vs `HotwireNative` API (`TurboNavigator` vs `Navigator`, `Tab` vs `HotwireTab`)
+- Shared `TurboNavigator` vs per-tab `Navigator` instances
+- Separate native layout vs single layout with CSS toggles
+- `APNSPushService` + `apnotic` vs `Noticed` gem for push
+
+### Missing / Optional Phase 3 (10 items)
+1. Bridge components (button, notification token) — Strada integration
+2. `@hotwired/hotwire-native-bridge` import map pin
+3. Native `ButtonComponent.swift` + `NotificationTokenComponent.swift`
+4. Native `Router` protocol for push notification deep linking
+5. `NotificationRouter` for handling push taps → URL routing
+6. Bridge button CSS hiding rule in `native.css`
+7. Custom native view controllers (`view_controller:` path rules) — not needed yet
+8. `Turbo 8` morph refresh
+9. Push permission request flow (via bridge)
+10. Per-tab navigators (separate navigation stacks)
+
+---
+
+### Bottom Line
+
+**We match the book on all core patterns.** The auth token bridge, native layout, and view variants are our own extensions that go beyond the book. The missing items are all Strada/bridge components and push deep linking — both are phase 3 features, not required for a working Turbo Native app. The architectural differences are due to API version (`turbo-ios` 1.4.0 vs `HotwireNative`) and are functionally equivalent.

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_04_091822) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_19_170000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -102,6 +102,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_04_091822) do
     t.datetime "created_at", null: false
     t.string "email"
     t.datetime "updated_at", null: false
+  end
+
+  create_table "native_devices", force: :cascade do |t|
+    t.string "app_version"
+    t.datetime "created_at", null: false
+    t.string "device_token", null: false
+    t.string "platform", default: "ios", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id"
+    t.index ["device_token"], name: "index_native_devices_on_device_token", unique: true
+    t.index ["user_id"], name: "index_native_devices_on_user_id"
   end
 
   create_table "reminders", force: :cascade do |t|
@@ -209,6 +220,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_04_091822) do
     t.date "last_period_start"
     t.string "life_stage", default: "menstrual"
     t.string "name", null: false
+    t.string "native_auth_token"
     t.boolean "onboarding_completed", default: false, null: false
     t.integer "period_length"
     t.string "plan", default: "free"
@@ -232,6 +244,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_04_091822) do
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["invite_token"], name: "index_users_on_invite_token"
     t.index ["language"], name: "index_users_on_language"
+    t.index ["native_auth_token"], name: "index_users_on_native_auth_token", unique: true
     t.index ["public_id"], name: "index_users_on_public_id", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
@@ -241,6 +254,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_04_091822) do
   add_foreign_key "calendar_events", "users"
   add_foreign_key "cycle_entries", "users"
   add_foreign_key "feedbacks", "users"
+  add_foreign_key "native_devices", "users"
   add_foreign_key "reminders", "users"
   add_foreign_key "streaks", "users"
   add_foreign_key "superpower_logs", "users"

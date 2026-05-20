@@ -28,9 +28,15 @@ class RegistrationsController < ApplicationController
       render :new, status: :unprocessable_content
     else
       @user = User.new(user_params.merge(email: email, name: name))
+      @user.skip_confirmation! if turbo_native_app?
 
       if @user.save
-        redirect_to check_email_registration_path
+        if turbo_native_app?
+          login(@user)
+          redirect_to after_sign_in_path
+        else
+          redirect_to check_email_registration_path
+        end
       else
         render :new, status: :unprocessable_content
       end

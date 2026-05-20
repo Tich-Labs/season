@@ -20,13 +20,22 @@ layout: default
 | 10 | Fix project.yml source paths and Info.plist location | ✅ Complete | Sources: SeasonApp, Info.plist: SeasonApp/Info.plist |
 | 11 | Wait for Apple Dev Account — needed to build + install on device     | ⏳ Pending  | External dependency |
 | 12 | Regenerate .xcodeproj from updated project.yml (xcodegen requires Xcode 15.3+) | ⏳ Pending  | Blocked by macOS 12 on current machine |
-| 13 | APNs Push (optional phase 2) — replace Web Push with APNs for native app users, keep both paths | ⏳ Pending  | Not started |
+| 13 | APNs Push (optional phase 2) — APNs push service, device registration, apnotic gem | ✅ Complete | APNSPushService, NativeDevicesController, native_devices migration |
+| 14 | Token-based auth bridge — native_auth_token, TurboNativeDetection concern, meta tag injection | ✅ Complete | User model + migration + concern + Swift KeychainHelper + WKUserScript + cookie bridge |
+| 15 | Turbo Native layout — lightweight layout without PWA banners, service worker, app bar | ✅ Complete | turbo_native.html.erb + _layout override in concern |
+| 16 | +turbo_native.erb view variants — calendar, sessions (with social OAuth buttons) | ✅ Complete | 2 variants; onboarding uses layout switch only |
+| 17 | Native Stimulus controller — client-side Turbo Native detection, PWA controller cleanup | ✅ Complete | native_controller.js auto-loaded via import map |
+| 18 | Turbo Native initializer + helper — config docs, web_only?, native_auth_token_meta | ✅ Complete | config/initializers/turbo_native.rb, turbo_native_helper.rb |
+| 19 | TurboSession + PathConfiguration — WKUserAgent, modal/pull-to-refresh rules, SessionDelegate | ✅ Complete | HotwireTabBarController init, path config from ios_v1 endpoint |
+| 20 | Auth token bridge (Swift) — WKUserScript extraction, Keychain storage, cookie injection | ✅ Complete | KeychainHelper.swift + WKScriptMessageHandler + injectAuthCookie |
 
 ---
 
 ## Executive Summary
 
 The Season app is **well-positioned** for Turbo Native integration. It's already built as a mobile-first PWA with Hotwire (Turbo + Stimulus), has a max-width 430px container design, and uses server-rendered HTML—the exact architecture Turbo Native is designed to wrap.
+
+**Architecture:** This is a pure Turbo Native (`turbo-ios`) implementation. All views are server-rendered ERB templates delivered through `WKWebView`. The Swift layer provides only the native chrome — `TurboNavigator`, `UITabBar`, and app lifecycle delegates. **No native SwiftUI views are used.** Social login buttons (Apple, Facebook, Google) render in the web view and work through OmniAuth.
 
 **Estimated Effort:** 3-5 weeks for a production-ready iOS app using Turbo Native.
 

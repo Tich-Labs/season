@@ -58,8 +58,11 @@ bundle exec erb_lint --lint-all --format compact  # NOT erblint
 - **Tab bar controller**: `HotwireTabBarController.swift` — uses `TurboNavigator`
 - **Entry point**: `SceneDelegate.swift` — creates `HotwireTabBarController`
 - **AppDelegate**: minimal stub — do NOT create `WKWebView` or window there
+- **Keychain**: `KeychainHelper.swift` — stores/retrieves native auth token
 - **Path rules endpoint**: `GET /configurations/ios_v1.json` (`ConfigurationsController#ios_v1`)
 - **SPM**: turbo-ios 1.4.0 from GitHub/hotwired
+- **Architecture**: Pure Turbo Native — all views are server-rendered ERB via WKWebView. No SwiftUI views.
+- **Auth bridge**: `Session` → WKUserScript extracts `<meta name="native-auth-token">` → Keychain → cookie injected on launch → `TurboNativeDetection` checks header + cookie
 - **xcodegen** requires Xcode 15.3+ (macOS 13+)
 
 ## Docs
