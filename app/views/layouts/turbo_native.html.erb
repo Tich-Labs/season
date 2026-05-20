@@ -11,7 +11,7 @@
       <meta name="native-auth-token" content="<%= current_user.native_auth_token %>">
     <% end %>
     <%= yield :head %>
-    <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload", preload_links_header: false %>
     <%= stylesheet_link_tag "native" %>
     <%= javascript_importmap_tags %>
   </head>
