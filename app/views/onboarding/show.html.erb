@@ -33,7 +33,7 @@
             name: "user[name]",
             placeholder: t('onboarding.step1.name_placeholder'),
             autocomplete: "name",
-            class: "w-80 h-12 bg-brand-field opacity-50 rounded-lg px-4 text-brand-primary text-xl font-medium placeholder-[#933a35]/50 tracking-wide" %>
+            class: "w-80 h-12 bg-brand-field opacity-50 rounded-lg px-4 text-brand-primary text-xl font-medium placeholder-brand-primary/50 tracking-wide" %>
       <% end %>
 
       <%= button_tag t('onboarding.step1.submit'),
@@ -54,17 +54,17 @@
           <div class="flex flex-col items-start gap-2">
             <label for="birthday_day" class="text-brand-primary text-xs font-normal tracking-wide"><%= t('onboarding.step2.label_day') %></label>
             <input type="number" name="birthday_day" id="birthday_day" min="1" max="31" placeholder="<%= t('onboarding.step2.placeholder_day') %>" autocomplete="bday-day"
-                   class="w-16 h-[52px] bg-brand-field opacity-50 rounded-lg px-3 text-brand-primary text-[22px] font-medium text-center placeholder-[#933a35]/50 tracking-[0.66px]">
+                   class="w-16 h-[52px] bg-brand-field opacity-50 rounded-lg px-3 text-brand-primary text-[22px] font-medium text-center placeholder-brand-primary/50 tracking-[0.66px]">
           </div>
           <div class="flex flex-col items-start gap-2">
             <label for="birthday_month" class="text-brand-primary text-xs font-normal tracking-wide"><%= t('onboarding.step2.label_month') %></label>
             <input type="number" name="birthday_month" id="birthday_month" min="1" max="12" placeholder="<%= t('onboarding.step2.placeholder_month') %>" autocomplete="bday-month"
-                   class="w-16 h-[52px] bg-brand-field opacity-50 rounded-lg px-3 text-brand-primary text-[22px] font-medium text-center placeholder-[#933a35]/50 tracking-[0.66px]">
+                   class="w-16 h-[52px] bg-brand-field opacity-50 rounded-lg px-3 text-brand-primary text-[22px] font-medium text-center placeholder-brand-primary/50 tracking-[0.66px]">
           </div>
           <div class="flex flex-col items-start gap-2">
             <label for="birthday_year" class="text-brand-primary text-xs font-normal tracking-wide"><%= t('onboarding.step2.label_year') %></label>
             <input type="number" name="birthday_year" id="birthday_year" min="1900" max="<%= Time.zone.today.year %>" placeholder="<%= t('onboarding.step2.placeholder_year') %>" autocomplete="bday-year"
-                   class="w-24 h-[52px] bg-brand-field opacity-50 rounded-lg px-3 text-brand-primary text-[22px] font-medium text-center placeholder-[#933a35]/50 tracking-[0.66px]">
+                   class="w-24 h-[52px] bg-brand-field opacity-50 rounded-lg px-3 text-brand-primary text-[22px] font-medium text-center placeholder-brand-primary/50 tracking-[0.66px]">
           </div>
         </div>
       <% end %>
