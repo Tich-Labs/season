@@ -6,7 +6,7 @@
   <div class="flex items-center justify-between">
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 px-5 py-4 w-48">
       <p class="text-xs text-gray-500 uppercase tracking-wide">Total signups</p>
-      <p class="text-2xl font-bold text-[#933a35] mt-1"><%= @total %></p>
+      <p class="text-2xl font-bold text-brand-primary mt-1"><%= @total %></p>
     </div>
     <a class="px-3 py-1.5 rounded-full text-xs font-medium bg-green-700 text-white hover:bg-green-800 transition-colors"
        href="<%= admin_launch_signups_export_csv_path(format: :csv) %>">↓ CSV</a>
@@ -27,7 +27,7 @@
           <% @signups.each_with_index do |signup, i| %>
             <tr class="hover:bg-gray-50">
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-400"><%= @total - i %></td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-[#933a35]"><%= signup.email %></td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-brand-primary"><%= signup.email %></td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><%= signup.created_at.strftime("%Y-%m-%d %H:%M") %></td>
             </tr>
           <% end %>

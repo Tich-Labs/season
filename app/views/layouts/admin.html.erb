@@ -17,7 +17,7 @@
     <div class="min-h-full flex">
 
       <%# ── Sidebar ── %>
-      <aside class="w-56 flex-shrink-0 bg-[#933a35] flex flex-col">
+      <aside class="w-56 flex-shrink-0 bg-brand-primary flex flex-col">
         <%# Logo / wordmark %>
         <div class="h-16 flex items-center px-6 border-b border-[#7a2f2a]">
           <%= link_to admin_root_path, class: "text-white text-xl font-semibold tracking-wide" do %>
@@ -69,7 +69,7 @@
               <span aria-hidden="true">&#128140;</span>
               Launch Signups
             </span>
-            <span class="inline-flex items-center justify-center min-w-[20px] h-5 px-2 rounded-full text-[10px] font-bold leading-none bg-[#ede1d5] text-[#933a35]"><%= LaunchSignup.count %></span>
+            <span class="inline-flex items-center justify-center min-w-[20px] h-5 px-2 rounded-full text-[10px] font-bold leading-none bg-brand-field text-brand-primary"><%= LaunchSignup.count %></span>
           <% end %>
 
           <%# Inbox — clicking goes to all messages; sub-items always visible below %>
@@ -82,7 +82,7 @@
                 <span aria-hidden="true">&#128229;</span>
                 Inbox
               </span>
-              <span class="inline-flex items-center justify-center min-w-[20px] h-5 px-2 rounded-full text-[10px] font-bold leading-none <%= @stats[:total].to_i > 0 ? 'bg-[#ede1d5] text-[#933a35]' : 'bg-[#7a2f2a] text-[#f5ede8]' %>"><%= @stats[:total] %></span>
+              <span class="inline-flex items-center justify-center min-w-[20px] h-5 px-2 rounded-full text-[10px] font-bold leading-none <%= @stats[:total].to_i > 0 ? 'bg-brand-field text-brand-primary' : 'bg-[#7a2f2a] text-[#f5ede8]' %>"><%= @stats[:total] %></span>
             <% end %>
 
             <div class="ml-4 space-y-0.5">

@@ -4,12 +4,12 @@
     <div class="flex items-center gap-1">
       <%= link_to calendar_appointments_path(date: @prev_month.to_s),
             aria: { label: "Previous month" },
-            class: "w-10 h-10 flex items-center justify-center text-[#933a35]" do %>
+            class: "w-10 h-10 flex items-center justify-center text-brand-primary" do %>
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><polyline points="15 18 9 12 15 6" /></svg>
       <% end %>
       <%= link_to calendar_appointments_path(date: @next_month.to_s),
             aria: { label: "Next month" },
-            class: "w-10 h-10 flex items-center justify-center text-[#933a35]" do %>
+            class: "w-10 h-10 flex items-center justify-center text-brand-primary" do %>
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 18 15 12 9 6" /></svg>
       <% end %>
     </div>

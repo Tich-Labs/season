@@ -12,7 +12,7 @@
   <div class="max-w-app mx-auto px-4 pb-20">
 
     <%# Header %>
-    <div class="py-5 border-b border-[#DDD0CB] mb-4">
+    <div class="py-5 border-b border-brand-divider mb-4">
       <h2 class="text-brand-primary text-lg font-bold">Data & Privacy</h2>
     </div>
 
@@ -26,7 +26,7 @@
     <%# Consent Form %>
     <%= form_with url: consent_settings_path, method: :post, local: true do %>
       <%# Health Data Processing %>
-      <label class="flex items-start gap-3 p-4 bg-white border border-[#DDD0CB] rounded-xl mb-3 cursor-pointer">
+      <label class="flex items-start gap-3 p-4 bg-white border border-brand-divider rounded-xl mb-3 cursor-pointer">
         <input type="checkbox" name="consents[health_data_processing]"
                <%= current_user.consent?("health_data_processing") ? "checked" : "" %>
                class="w-5 h-5 accent-brand-primary mt-0.5 flex-shrink-0">
@@ -39,7 +39,7 @@
       </label>
 
       <%# Symptom Tracking %>
-      <label class="flex items-start gap-3 p-4 bg-white border border-[#DDD0CB] rounded-xl mb-3 cursor-pointer">
+      <label class="flex items-start gap-3 p-4 bg-white border border-brand-divider rounded-xl mb-3 cursor-pointer">
         <input type="checkbox" name="consents[symptom_tracking]"
                <%= current_user.consent?("symptom_tracking") ? "checked" : "" %>
                class="w-5 h-5 accent-brand-primary mt-0.5 flex-shrink-0">
@@ -52,7 +52,7 @@
       </label>
 
       <%# Cycle Tracking %>
-      <label class="flex items-start gap-3 p-4 bg-white border border-[#DDD0CB] rounded-xl mb-3 cursor-pointer">
+      <label class="flex items-start gap-3 p-4 bg-white border border-brand-divider rounded-xl mb-3 cursor-pointer">
         <input type="checkbox" name="consents[cycle_tracking]"
                <%= current_user.consent?("cycle_tracking") ? "checked" : "" %>
                class="w-5 h-5 accent-brand-primary mt-0.5 flex-shrink-0">
@@ -65,7 +65,7 @@
       </label>
 
       <%# Menstrual Data %>
-      <label class="flex items-start gap-3 p-4 bg-white border border-[#DDD0CB] rounded-xl mb-5 cursor-pointer">
+      <label class="flex items-start gap-3 p-4 bg-white border border-brand-divider rounded-xl mb-5 cursor-pointer">
         <input type="checkbox" name="consents[menstrual_data]"
                <%= current_user.consent?("menstrual_data") ? "checked" : "" %>
                class="w-5 h-5 accent-brand-primary mt-0.5 flex-shrink-0">

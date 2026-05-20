@@ -39,7 +39,7 @@
   <% is_native_app = request.headers['HTTP_X_HOTWIRE_NATIVE'].present? %>
   <% is_authenticated_view = authenticated? && !controller_name.in?(%w[sessions registrations home onboarding]) && !is_native_app %>
 
-  <body class="bg-[#FCF9F7] font-['Montserrat'] antialiased h-full overflow-x-hidden"
+  <body class="bg-brand-background font-['Montserrat'] antialiased h-full overflow-x-hidden"
         data-controller="update-prompt install">
 
     <% if is_authenticated_view %>
@@ -49,9 +49,9 @@
       <%# Views can also pass content_for(:header_color) with a hex string for a phase-specific bg color %>
       <% is_settings = controller_name == 'settings' %>
       <% dark_header = is_settings || content_for?(:header_dark) %>
-      <% hdr_bg      = dark_header ? "bg-[#933a35]" : "bg-[#ede1d5]" %>
-      <% bar_color   = dark_header ? "bg-white"     : "bg-[#933a35]" %>
-      <% hdr_fg      = dark_header ? "text-white"   : "text-[#933a35]" %>
+      <% hdr_bg      = dark_header ? "bg-brand-primary" : "bg-brand-field" %>
+      <% bar_color   = dark_header ? "bg-white"     : "bg-brand-primary" %>
+      <% hdr_fg      = dark_header ? "text-white"   : "text-brand-primary" %>
       <% hdr_inline  = content_for?(:header_color) ? "style=\"background:#{yield(:header_color)};\"" : "" %>
       <header class="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-app h-20 <%= hdr_bg %> z-40 flex items-center px-4" <%= hdr_inline.html_safe %>>
 
@@ -107,7 +107,7 @@
     <%# PWA update banner — shown by update_prompt_controller when a new SW is waiting %>
     <div data-update-prompt-target="banner"
          class="fixed bottom-24 left-1/2 -translate-x-1/2 w-full max-w-app px-4 z-50 hidden">
-      <div class="bg-[#3d2b28] text-white rounded-2xl px-4 py-3 flex items-center justify-between shadow-xl">
+      <div class="bg-brand-dark text-white rounded-2xl px-4 py-3 flex items-center justify-between shadow-xl">
         <span class="text-sm font-medium">New version of Season available</span>
         <button data-action="click->update-prompt#updateApp"
                 class="bg-brand-primary text-white text-sm font-semibold px-4 py-1.5 rounded-xl ml-3 shrink-0">
@@ -119,8 +119,8 @@
     <%# PWA install banner — shown by install_controller when app is installable %>
     <div data-install-target="banner"
          class="fixed bottom-24 left-1/2 -translate-x-1/2 w-full max-w-app px-4 z-50 hidden">
-      <div class="bg-white border border-[#ede1d5] rounded-2xl px-4 py-3 flex items-center justify-between shadow-xl">
-        <span class="text-sm font-medium text-[#3d2b28]">Add Season to your home screen</span>
+      <div class="bg-white border border-brand-field rounded-2xl px-4 py-3 flex items-center justify-between shadow-xl">
+        <span class="text-sm font-medium text-brand-dark">Add Season to your home screen</span>
         <div class="flex gap-2 ml-3 shrink-0">
           <button data-action="click->install#install"
                   data-install-target="button"
@@ -128,17 +128,17 @@
             Add
           </button>
           <button data-action="click->install#dismiss"
-                  class="text-[#6b6b6b] text-sm px-2 py-1.5">✕</button>
+                  class="text-brand-secondary text-sm px-2 py-1.5">✕</button>
         </div>
       </div>
       <div data-install-target="iosHint"
-           class="hidden mt-2 bg-white border border-[#ede1d5] rounded-xl px-4 py-3 text-sm text-[#3d2b28]">
+           class="hidden mt-2 bg-white border border-brand-field rounded-xl px-4 py-3 text-sm text-brand-dark">
         Tap <strong>Share</strong> then <strong>"Add to Home Screen"</strong>
       </div>
     </div>
 
     <main class="w-full flex-1 <%= is_authenticated_view ? 'pt-24' : '' %>">
-      <div class="max-w-md mx-auto h-full">
+      <div class="max-w-app mx-auto h-full">
         <%= yield %>
       </div>
     </main>

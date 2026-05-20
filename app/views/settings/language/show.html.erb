@@ -5,7 +5,7 @@
     <div class="py-5 pb-2">
       <h2 class="text-brand-primary text-base font-bold"><%= t("settings.language.title") %></h2>
     </div>
-    <div class="border-b border-[#DDD0CB]"></div>
+    <div class="border-b border-brand-divider"></div>
 
     <%= form_with model: @user, url: settings_language_path, method: :patch, local: true do |f| %>
       <div class="py-6 space-y-4">
@@ -14,14 +14,14 @@
           <%= f.radio_button :language, "en", class: "w-5 h-5 accent-[#933a35]", checked: @user.language == "en" || @user.language.blank? %>
           <span class="text-brand-primary text-base font-medium">English</span>
         </label>
-        <div class="border-b border-[#EDE1D5]"></div>
+        <div class="border-b border-brand-field"></div>
 
         <%# German %>
         <label class="flex items-center gap-4 py-3 cursor-pointer">
           <%= f.radio_button :language, "de", class: "w-5 h-5 accent-[#933a35]", checked: @user.language == "de" %>
           <span class="text-brand-primary text-base font-medium">Deutsch</span>
         </label>
-        <div class="border-b border-[#EDE1D5]"></div>
+        <div class="border-b border-brand-field"></div>
       </div>
 
       <%= f.submit t("settings.language.save"),

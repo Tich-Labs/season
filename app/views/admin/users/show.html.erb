@@ -4,7 +4,7 @@
 
   <%# Back %>
   <%= link_to "\u2190 Back to Users", admin_users_path,
-      class: "inline-flex items-center text-sm text-[#933a35] hover:underline" %>
+      class: "inline-flex items-center text-sm text-brand-primary hover:underline" %>
 
   <%# Profile card %>
   <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
@@ -16,14 +16,14 @@
         </div>
       </div>
       <% if @user.admin? %>
-        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#933a35] text-white">Admin</span>
+        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-brand-primary text-white">Admin</span>
       <% end %>
     </div>
 
     <dl class="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-4">
       <div class="bg-gray-50 rounded-lg px-4 py-3">
         <dt class="text-xs text-gray-500">Language</dt>
-        <dd class="text-base font-semibold text-[#933a35] mt-0.5 uppercase"><%= @user.language || "en" %></dd>
+        <dd class="text-base font-semibold text-brand-primary mt-0.5 uppercase"><%= @user.language || "en" %></dd>
       </div>
       <div class="bg-gray-50 rounded-lg px-4 py-3">
         <dt class="text-xs text-gray-500">Onboarding</dt>
@@ -31,7 +31,7 @@
           <% if @user.onboarding_completed? %>
             <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">Complete</span>
           <% else %>
-            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-50 text-[#933a35]">Pending</span>
+            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-50 text-brand-primary">Pending</span>
           <% end %>
         </dd>
       </div>
@@ -41,7 +41,7 @@
       </div>
       <div class="bg-gray-50 rounded-lg px-4 py-3">
         <dt class="text-xs text-gray-500">Current Streak</dt>
-        <dd class="text-base font-bold text-[#933a35] mt-0.5"><%= @user.streak&.current_streak || 0 %> 🔥</dd>
+        <dd class="text-base font-bold text-brand-primary mt-0.5"><%= @user.streak&.current_streak || 0 %> 🔥</dd>
       </div>
     </dl>
   </div>
@@ -59,7 +59,7 @@
           <% if @user.consent?("health_data_processing") %>
             <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">Granted</span>
           <% else %>
-            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-50 text-[#933a35]">Not Granted</span>
+            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-50 text-brand-primary">Not Granted</span>
           <% end %>
         </dd>
       </div>
@@ -69,7 +69,7 @@
           <% if @user.consent?("symptom_tracking") %>
             <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">Granted</span>
           <% else %>
-            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-50 text-[#933a35]">Not Granted</span>
+            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-50 text-brand-primary">Not Granted</span>
           <% end %>
         </dd>
       </div>
@@ -79,7 +79,7 @@
           <% if @user.consent?("cycle_tracking") %>
             <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">Granted</span>
           <% else %>
-            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-50 text-[#933a35]">Not Granted</span>
+            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-50 text-brand-primary">Not Granted</span>
           <% end %>
         </dd>
       </div>
@@ -89,7 +89,7 @@
           <% if @user.consent?("menstrual_data") %>
             <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">Granted</span>
           <% else %>
-            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-50 text-[#933a35]">Not Granted</span>
+            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-50 text-brand-primary">Not Granted</span>
           <% end %>
         </dd>
       </div>
@@ -125,19 +125,19 @@
     <div class="grid grid-cols-2 gap-2 text-xs">
       <div class="bg-gray-50 rounded px-2 py-1">
         <span class="text-gray-500">Cycle Entries:</span>
-        <span class="font-medium text-[#933a35] ml-1"><%= @user.cycle_entries.count %></span>
+        <span class="font-medium text-brand-primary ml-1"><%= @user.cycle_entries.count %></span>
       </div>
       <div class="bg-gray-50 rounded px-2 py-1">
         <span class="text-gray-500">Symptom Logs:</span>
-        <span class="font-medium text-[#933a35] ml-1"><%= @user.symptom_logs.count %></span>
+        <span class="font-medium text-brand-primary ml-1"><%= @user.symptom_logs.count %></span>
       </div>
       <div class="bg-gray-50 rounded px-2 py-1">
         <span class="text-gray-500">Superpowers:</span>
-        <span class="font-medium text-[#933a35] ml-1"><%= @user.superpower_logs.count %></span>
+        <span class="font-medium text-brand-primary ml-1"><%= @user.superpower_logs.count %></span>
       </div>
       <div class="bg-gray-50 rounded px-2 py-1">
         <span class="text-gray-500">Calendar Events:</span>
-        <span class="font-medium text-[#933a35] ml-1"><%= @user.calendar_events.count %></span>
+        <span class="font-medium text-brand-primary ml-1"><%= @user.calendar_events.count %></span>
       </div>
     </div>
   </div>
@@ -148,31 +148,31 @@
     <dl class="grid grid-cols-2 sm:grid-cols-4 gap-4">
       <div>
         <dt class="text-xs text-gray-500">Cycle Length</dt>
-        <dd class="text-sm font-medium text-[#933a35] mt-0.5"><%= @user.cycle_length ? "#{@user.cycle_length} days" : "\u2014" %></dd>
+        <dd class="text-sm font-medium text-brand-primary mt-0.5"><%= @user.cycle_length ? "#{@user.cycle_length} days" : "\u2014" %></dd>
       </div>
       <div>
         <dt class="text-xs text-gray-500">Period Length</dt>
-        <dd class="text-sm font-medium text-[#933a35] mt-0.5"><%= @user.period_length ? "#{@user.period_length} days" : "\u2014" %></dd>
+        <dd class="text-sm font-medium text-brand-primary mt-0.5"><%= @user.period_length ? "#{@user.period_length} days" : "\u2014" %></dd>
       </div>
       <div>
         <dt class="text-xs text-gray-500">Avg Cycle (actual)</dt>
-        <dd class="text-sm font-bold text-[#933a35] mt-0.5"><%= @avg_cycle_length ? "#{@avg_cycle_length} days" : "\u2014" %></dd>
+        <dd class="text-sm font-bold text-brand-primary mt-0.5"><%= @avg_cycle_length ? "#{@avg_cycle_length} days" : "\u2014" %></dd>
       </div>
       <div>
         <dt class="text-xs text-gray-500">Last Period</dt>
-        <dd class="text-sm font-medium text-[#933a35] mt-0.5"><%= @user.last_period_start || "\u2014" %></dd>
+        <dd class="text-sm font-medium text-brand-primary mt-0.5"><%= @user.last_period_start || "\u2014" %></dd>
       </div>
       <div>
         <dt class="text-xs text-gray-500">Current Phase</dt>
-        <dd class="text-sm font-medium text-[#933a35] mt-0.5 capitalize"><%= @user.current_phase || "Unknown" %></dd>
+        <dd class="text-sm font-medium text-brand-primary mt-0.5 capitalize"><%= @user.current_phase || "Unknown" %></dd>
       </div>
       <div>
         <dt class="text-xs text-gray-500">Cycle Day</dt>
-        <dd class="text-sm font-bold text-[#933a35] mt-0.5"><%= @user.current_cycle_day || "\u2014" %></dd>
+        <dd class="text-sm font-bold text-brand-primary mt-0.5"><%= @user.current_cycle_day || "\u2014" %></dd>
       </div>
       <div>
         <dt class="text-xs text-gray-500">Next Period</dt>
-        <dd class="text-sm font-medium text-[#933a35] mt-0.5">
+        <dd class="text-sm font-medium text-brand-primary mt-0.5">
           <% if @user.last_period_start && @user.cycle_length %>
             <%= begin (@user.last_period_start.to_date + @user.cycle_length.days).strftime("%Y-%m-%d") rescue "\u2014" end %>
           <% else %>
@@ -187,7 +187,7 @@
       <h4 class="text-xs font-semibold text-gray-500 uppercase tracking-wide mt-6 mb-2">Recent Periods (<%= @period_dates.size %>)</h4>
       <div class="flex flex-wrap gap-2">
         <% @period_dates.each do |date| %>
-          <span class="inline-flex px-2 py-1 rounded-md bg-[#f5ede8] text-[#933a35] text-xs"><%= date.strftime("%Y-%m-%d") %></span>
+          <span class="inline-flex px-2 py-1 rounded-md bg-brand-field text-brand-primary text-xs"><%= date.strftime("%Y-%m-%d") %></span>
         <% end %>
       </div>
     <% end %>
@@ -198,15 +198,15 @@
     <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-4">Activity</h3>
     <div class="grid grid-cols-3 gap-4 text-center">
       <div>
-        <p class="text-2xl font-bold text-[#933a35]"><%= @user.cycle_entries.count %></p>
+        <p class="text-2xl font-bold text-brand-primary"><%= @user.cycle_entries.count %></p>
         <p class="text-xs text-gray-500 mt-0.5">Entries</p>
       </div>
       <div>
-        <p class="text-2xl font-bold text-[#933a35]"><%= @user.symptom_logs.count %></p>
+        <p class="text-2xl font-bold text-brand-primary"><%= @user.symptom_logs.count %></p>
         <p class="text-xs text-gray-500 mt-0.5">Symptoms</p>
       </div>
       <div>
-        <p class="text-2xl font-bold text-[#933a35]"><%= @user.calendar_events.count %></p>
+        <p class="text-2xl font-bold text-brand-primary"><%= @user.calendar_events.count %></p>
         <p class="text-xs text-gray-500 mt-0.5">Events</p>
       </div>
     </div>
