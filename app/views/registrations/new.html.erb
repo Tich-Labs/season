@@ -45,7 +45,7 @@
             method: :post,
             data: { turbo: false },
             aria: { label: "Sign up with Google" },
-            class: "w-[59px] h-[52px] bg-white border border-[#dddddd] rounded-lg flex items-center justify-center p-0 cursor-pointer" do %>
+            class: "w-[59px] h-[52px] bg-white border border-gray-200 rounded-lg flex items-center justify-center p-0 cursor-pointer" do %>
         <%= image_tag "google.png", alt: "Google", class: "w-[34px] h-[34px] object-contain" %>
       <% end %>
 
@@ -66,8 +66,8 @@
 
       <% if @error_type == :already_registered %>
         <div id="reg-error" role="alert" class="bg-brand-error rounded-lg px-4 py-3 mt-[29px]">
-          <p class="text-brand-primary text-[28px] font-bold mb-2">OOPS!</p>
-          <p class="text-brand-primary text-base font-normal mb-4">This email is already registered. Try logging in instead.</p>
+          <p class="text-brand-primary text-[28px] font-bold mb-2"><%= t('registrations.new.errors.oops') %></p>
+          <p class="text-brand-primary text-base font-normal mb-4"><%= t('registrations.new.errors.already_registered') %></p>
           <%= link_to "Log In", new_session_path,
               class: "block w-full bg-brand-primary text-white text-center py-[14px] rounded-lg text-lg font-medium no-underline" %>
         </div>

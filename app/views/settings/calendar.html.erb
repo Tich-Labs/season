@@ -40,7 +40,7 @@
       </svg>
       <span class="text-brand-primary text-lg font-bold">My Calendar</span>
     </div>
-    <div class="border-b border-[#DDD0CB]"></div>
+    <div class="border-b border-brand-divider"></div>
 
     <%# Show features title %>
     <div class="flex items-center gap-3 pt-5 pb-2">
@@ -56,8 +56,8 @@
     <div class="space-y-0">
       <div class="flex items-center justify-between py-3">
         <div>
-          <div class="text-[#d18d83] text-sm font-medium">Appointments</div>
-          <div class="text-[#999] text-xs mt-1">Show scheduled appointments on your calendar</div>
+          <div class="text-brand-muted text-sm font-medium">Appointments</div>
+          <div class="text-gray-400 text-xs mt-1">Show scheduled appointments on your calendar</div>
         </div>
         <button type="button" class="toggle-btn <%= "active" if @user.show_appointments? %>" data-action="click->calendar-toggle#toggle" data-field="show_appointments">
           <div class="toggle-track">
@@ -68,8 +68,8 @@
 
       <div class="flex items-center justify-between py-3">
         <div>
-          <div class="text-[#d18d83] text-sm font-medium">Cycle Days</div>
-          <div class="text-[#999] text-xs mt-1">Show your menstrual cycle days</div>
+          <div class="text-brand-muted text-sm font-medium">Cycle Days</div>
+          <div class="text-gray-400 text-xs mt-1">Show your menstrual cycle days</div>
         </div>
         <button type="button" class="toggle-btn <%= "active" if @user.show_cycledays? %>" data-action="click->calendar-toggle#toggle" data-field="show_cycledays">
           <div class="toggle-track">
@@ -80,8 +80,8 @@
 
       <div class="flex items-center justify-between py-3">
         <div>
-          <div class="text-[#d18d83] text-sm font-medium">Moon Phases</div>
-          <div class="text-[#999] text-xs mt-1">Show moon phase information</div>
+          <div class="text-brand-muted text-sm font-medium">Moon Phases</div>
+          <div class="text-gray-400 text-xs mt-1">Show moon phase information</div>
         </div>
         <button type="button" class="toggle-btn <%= "active" if @user.show_moonphases? %>" data-action="click->calendar-toggle#toggle" data-field="show_moonphases">
           <div class="toggle-track">
@@ -92,8 +92,8 @@
 
       <div class="flex items-center justify-between py-3">
         <div>
-          <div class="text-[#d18d83] text-sm font-medium">Holidays</div>
-          <div class="text-[#999] text-xs mt-1">Show national holidays and observances</div>
+          <div class="text-brand-muted text-sm font-medium">Holidays</div>
+          <div class="text-gray-400 text-xs mt-1">Show national holidays and observances</div>
         </div>
         <button type="button" class="toggle-btn <%= "active" if @user.show_holidays? %>" data-action="click->calendar-toggle#toggle" data-field="show_holidays">
           <div class="toggle-track">
@@ -104,8 +104,8 @@
 
       <div class="flex items-center justify-between py-3">
         <div>
-          <div class="text-[#d18d83] text-sm font-medium">Week Numbers</div>
-          <div class="text-[#999] text-xs mt-1">Display ISO week numbers on the calendar</div>
+          <div class="text-brand-muted text-sm font-medium">Week Numbers</div>
+          <div class="text-gray-400 text-xs mt-1">Display ISO week numbers on the calendar</div>
         </div>
         <button type="button" class="toggle-btn <%= "active" if @user.show_week_numbers? %>" data-action="click->calendar-toggle#toggle" data-field="show_week_numbers">
           <div class="toggle-track">
@@ -125,7 +125,7 @@
     <input type="hidden" name="microsoft_sync" value="0">
     <input type="hidden" name="icloud_sync" value="0">
 
-    <div class="border-b border-[#DDD0CB] my-2"></div>
+    <div class="border-b border-brand-divider my-2"></div>
 
     <%# Day of the Week %>
     <div class="flex items-center gap-3 pt-5 pb-2">
@@ -146,7 +146,7 @@
       </select>
     </div>
 
-    <div class="border-b border-[#DDD0CB] my-2"></div>
+    <div class="border-b border-brand-divider my-2"></div>
 
     <%# Time Zone %>
     <div class="flex items-center gap-3 pt-5 pb-2">
@@ -171,7 +171,7 @@
       </select>
     </div>
 
-    <div class="border-b border-[#DDD0CB] my-2"></div>
+    <div class="border-b border-brand-divider my-2"></div>
 
     <%# Links & Syncs %>
     <div class="flex items-center gap-3 pt-5 pb-2">
@@ -184,7 +184,7 @@
 
     <div>
       <div class="py-3">
-        <span class="text-[#d18d83] text-sm font-medium">user@gmail.com</span>
+        <span class="text-brand-muted text-sm font-medium">user@gmail.com</span>
       </div>
       <div class="flex items-center justify-between py-2">
         <span class="text-brand-primary/60 text-xs">Gmail Calendar Sync</span>
@@ -196,7 +196,7 @@
       </div>
 
       <div class="py-3">
-        <span class="text-[#d18d83] text-sm font-medium">user@outlook.com</span>
+        <span class="text-brand-muted text-sm font-medium">user@outlook.com</span>
       </div>
       <div class="flex items-center justify-between py-2">
         <span class="text-brand-primary/60 text-xs">Microsoft Outlook Sync</span>
@@ -208,7 +208,7 @@
       </div>
 
       <div class="py-3">
-        <span class="text-[#d18d83] text-sm font-medium">user@icloud.com</span>
+        <span class="text-brand-muted text-sm font-medium">user@icloud.com</span>
       </div>
       <div class="flex items-center justify-between py-2">
         <span class="text-brand-primary/60 text-xs">Apple iCloud Sync</span>
@@ -221,7 +221,7 @@
     </div>
 
     <%# Auto-save status %>
-    <div class="mt-8 pt-4 text-center text-xs text-[#999]" data-notification="auto-save" style="display:none;">
+    <div class="mt-8 pt-4 text-center text-xs text-gray-400" data-notification="auto-save" style="display:none;">
       Saving...
     </div>
 

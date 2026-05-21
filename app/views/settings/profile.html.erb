@@ -1,5 +1,4 @@
 <%# My Profile screen - matches Figma node 12048-37877 %>
-<%# Dark header auto-applied by layout; only back arrow override needed %>
 <% content_for(:header_left) do %>
   <%= link_to edit_settings_path, class: "p-2 flex items-center" do %>
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
@@ -9,111 +8,104 @@
   <% end %>
 <% end %>
 
-<div style="background:#ffffff; min-height:100%;" data-controller="profile-modal" data-action="click@window->profile-modal#clickOutside">
+<div class="bg-white min-h-full" data-controller="profile-modal" data-action="click@window->profile-modal#clickOutside">
 
-  <%# Content - max-width 430px centered %>
-  <div style="max-width:430px; margin:0 auto; padding:0 16px 80px;">
+  <div class="max-w-app mx-auto px-4 pb-20">
 
-    <%# ── My profile ── %>
-    <div style="padding:20px 0 8px;">
-      <h2 style="color:#933a35; font-size:16px; font-weight:700;">My profile</h2>
+    <div class="py-5 pb-2">
+      <h2 class="text-brand-primary text-base font-bold">My profile</h2>
     </div>
-    <div style="border-bottom:1px solid #DDD0CB;"></div>
+    <div class="border-b border-brand-divider"></div>
 
     <%# Profile Picture %>
     <button data-action="click->profile-modal#openAvatarModal" aria-haspopup="dialog"
-            style="display:flex; align-items:center; gap:16px; padding:16px 0; width:100%; background:none; border:none; cursor:pointer; text-align:left;">
+            class="flex items-center gap-4 py-4 w-full bg-transparent border-none cursor-pointer text-left">
       <% if @user.avatar_preset.present? %>
         <% preset = AvatarService.find_by_id(@user.avatar_preset) %>
         <% if preset %>
-          <%= image_tag "avatars/#{preset[:file]}", style: "width:48px; height:48px; border-radius:50%; object-fit:cover; flex-shrink:0;", alt: preset[:name] %>
+          <%= image_tag "avatars/#{preset[:file]}", class: "w-12 h-12 rounded-full object-cover shrink-0", alt: preset[:name] %>
         <% end %>
       <% elsif @user.avatar.attached? %>
-        <%= image_tag @user.avatar, style: "width:48px; height:48px; border-radius:50%; object-fit:cover; flex-shrink:0;", alt: "Profile" %>
+        <%= image_tag @user.avatar, class: "w-12 h-12 rounded-full object-cover shrink-0", alt: "Profile" %>
       <% elsif @user.avatar_url.present? %>
-        <%= image_tag @user.avatar_url, alt: "Profile",
-              style: "width:48px; height:48px; border-radius:50%; object-fit:cover; flex-shrink:0;" %>
+        <%= image_tag @user.avatar_url, alt: "Profile", class: "w-12 h-12 rounded-full object-cover shrink-0" %>
       <% else %>
-        <div style="width:48px; height:48px; border-radius:50%; background:#EDE1D5; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+        <div class="w-12 h-12 rounded-full bg-brand-field flex items-center justify-center shrink-0">
           <%= vuesax_icon "user", size: 24 %>
         </div>
       <% end %>
-      <span style="flex:1; color:#933a35; font-size:16px; font-weight:500;">Profile Picture</span>
+      <span class="flex-1 text-brand-primary text-base font-medium">Profile Picture</span>
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
         <polyline points="9 18 15 12 9 6" />
       </svg>
     </button>
 
     <%# Avatar Modal %>
-    <div id="avatar-modal" role="dialog" aria-modal="true" aria-labelledby="avatar-modal-title" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:100; align-items:center; justify-content:center;">
-      <div style="background:#FAF7F4; border-radius:16px; padding:24px; width:90%; max-width:340px; margin:16px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-          <h3 id="avatar-modal-title" style="color:#933a35; font-size:18px; font-weight:600; margin:0;">Profile Picture</h3>
-          <button id="avatar-modal-close" data-action="click->profile-modal#closeAvatarModal" style="background:none; border:none; cursor:pointer;">
+    <div id="avatar-modal" role="dialog" aria-modal="true" aria-labelledby="avatar-modal-title" class="hidden fixed inset-0 bg-black/50 z-[100] items-center justify-center">
+      <div class="bg-brand-background rounded-2xl p-6 w-[90%] max-w-[340px] mx-4">
+        <div class="flex justify-between items-center mb-5">
+          <h3 id="avatar-modal-title" class="text-brand-primary text-lg font-semibold m-0">Profile Picture</h3>
+          <button data-action="click->profile-modal#closeAvatarModal" class="bg-transparent border-none cursor-pointer">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
               <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
             </svg>
           </button>
         </div>
 
-        <%# Preset Avatars %>
-        <div style="margin-bottom:20px;">
-          <label style="display:block; color:#933a35; font-size:13px; font-weight:500; margin-bottom:12px;">Choose a cat avatar</label>
-          <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:12px;">
+        <div class="mb-5">
+          <label class="block text-brand-primary text-[13px] font-medium mb-3">Choose a cat avatar</label>
+          <div class="grid grid-cols-4 gap-3">
             <% AvatarService.all.each do |preset| %>
               <%= form_with url: update_avatar_settings_path, method: :patch, data: { turbo: false }, local: true do %>
                 <input type="hidden" name="avatar_preset" value="<%= preset[:id] %>">
                 <button type="submit" title="<%= preset[:name] %>" aria-label="<%= preset[:name] %>"
-                        style="display:flex; align-items:center; justify-content:center; width:100%; aspect-ratio:1; background:white; border:<%= @user.avatar_preset == preset[:id] ? '3px solid #933a35' : '1px solid #DDD0CB' %>; border-radius:12px; padding:8px; cursor:pointer; transition:all 0.2s;">
-                  <%= image_tag "avatars/#{preset[:file]}", alt: preset[:name], style: "width:100%; height:100%; object-fit:cover; border-radius:8px;" %>
+                        class="<%= @user.avatar_preset == preset[:id] ? 'border-[3px] border-brand-primary' : 'border border-brand-divider' %> flex items-center justify-center w-full aspect-square bg-white rounded-xl p-2 cursor-pointer transition-all">
+                  <%= image_tag "avatars/#{preset[:file]}", alt: preset[:name], class: "w-full h-full object-cover rounded-lg" %>
                 </button>
               <% end %>
             <% end %>
           </div>
         </div>
 
-        <hr style="border:none; border-top:1px solid #DDD0CB; margin:20px 0;">
+        <hr class="border-none border-t border-brand-divider my-5">
 
-        <%# Option 1: Upload from device %>
         <%= form_with url: update_avatar_settings_path, method: :patch, multipart: true, data: { turbo: false }, id: "avatar-upload-form" do %>
           <input type="file" id="avatar-file" name="avatar" accept="image/*"
                  data-action="change->profile-modal#submitAvatarForm"
-                 style="position:absolute; left:-9999px; width:1px; height:1px; opacity:0;">
+                 class="absolute -left-[9999px] w-px h-px opacity-0">
           <button type="button" data-action="click->profile-modal#clickAvatarUpload"
-                  style="display:flex; align-items:center; gap:12px; width:100%; background:#FFFFFF; border:1px solid #DDD0CB; border-radius:12px; padding:16px; margin-bottom:12px; cursor:pointer; text-align:left;">
+                  class="flex items-center gap-3 w-full bg-white border border-brand-divider rounded-xl p-4 mb-3 cursor-pointer text-left">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#933a35" stroke-width="1.5" viewBox="0 0 24 24">
               <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
               <circle cx="8.5" cy="8.5" r="1.5" />
               <polyline points="21 15 16 10 5 21" />
             </svg>
-            <span style="color:#933a35; font-size:16px; font-weight:500;">Upload from device</span>
+            <span class="text-brand-primary text-base font-medium">Upload from device</span>
           </button>
         <% end %>
 
-        <%# Option 2: Enter image URL %>
         <%= form_with url: update_avatar_settings_path, method: :patch, data: { turbo: false } do %>
-          <label for="avatar-url-input" style="display:block; color:#933a35; font-size:13px; font-weight:500; margin-bottom:6px;">Or paste image URL</label>
+          <label for="avatar-url-input" class="block text-brand-primary text-[13px] font-medium mb-1.5">Or paste image URL</label>
           <input type="text" id="avatar-url-input" name="avatar_url" placeholder="https://..." autocomplete="url"
-                 style="width:100%; background:#FFFFFF; border:1px solid #DDD0CB; border-radius:12px; padding:16px; font-size:16px; color:#933a35; box-sizing:border-box; margin-bottom:12px;">
-          <button type="submit" style="width:100%; background:#933a35; color:white; border:none; border-radius:12px; padding:14px; font-size:16px; font-weight:500; cursor:pointer;">
+                 class="w-full bg-white border border-brand-divider rounded-xl p-4 text-base text-brand-primary box-border mb-3">
+          <button type="submit" class="w-full bg-brand-primary text-white border-none rounded-xl py-3.5 text-base font-medium cursor-pointer">
             Add Photo
           </button>
         <% end %>
 
-        <%# Cancel button %>
         <button data-action="click->profile-modal#closeAvatarModal"
-                style="width:100%; background:transparent; color:#933a35; border:1px solid #DDD0CB; border-radius:12px; padding:14px; font-size:16px; font-weight:500; cursor:pointer; margin-top:8px;">
+                class="w-full bg-transparent text-brand-primary border border-brand-divider rounded-xl py-3.5 text-base font-medium cursor-pointer mt-2">
           Cancel
         </button>
       </div>
     </div>
 
     <%# E-Mail Address %>
-    <button data-action="click->profile-modal#openEmailModal" style="background:none; border:none; width:100%; display:flex; align-items:center; gap:16px; padding:16px 0; cursor:pointer;">
+    <button data-action="click->profile-modal#openEmailModal" class="bg-transparent border-none w-full flex items-center gap-4 py-4 cursor-pointer">
       <%= vuesax_icon "sms", size: 24 %>
-      <div style="flex:1; text-align:left;">
-        <span style="color:#933a35; font-size:16px; font-weight:500;">E-Mail Address</span>
-        <span style="display:block; color:#D18D83; font-size:14px; margin-top:4px;"><%= @user.email %></span>
+      <div class="flex-1 text-left">
+        <span class="text-brand-primary text-base font-medium">E-Mail Address</span>
+        <span class="block text-brand-muted text-sm mt-1"><%= @user.email %></span>
       </div>
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
         <polyline points="9 18 15 12 9 6" />
@@ -121,118 +113,85 @@
     </button>
 
     <%# Change password %>
-    <%= link_to edit_user_password_path, style: "display:flex; align-items:center; gap:16px; padding:16px 0; text-decoration:none;" do %>
+    <%= link_to edit_user_password_path, class: "flex items-center gap-4 py-4 no-underline" do %>
       <%= vuesax_icon "lock", size: 24 %>
-      <span style="flex:1; color:#933a35; font-size:16px; font-weight:500;">Change password</span>
+      <span class="flex-1 text-brand-primary text-base font-medium">Change password</span>
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
         <polyline points="9 18 15 12 9 6" />
       </svg>
     <% end %>
 
     <%# Access code %>
-    <%= link_to pin_settings_path, style: "display:flex; align-items:center; gap:16px; padding:16px 0; text-decoration:none;" do %>
-      <svg style="width:24px; height:24px;" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#933a35" stroke-width="1.5" viewBox="0 0 24 24">
+    <div class="flex items-center gap-4 py-4">
+      <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#933a35" stroke-width="1.5" viewBox="0 0 24 24">
         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
       </svg>
-      <span style="flex:1; color:#933a35; font-size:16px; font-weight:500;">Access code</span>
-      <div style="display:flex; align-items:center; gap:8px;">
-        <span style="color:#D18D83; font-size:14px;">
-          <%= current_user.pin_set? ? t("settings.profile.pin_on", default: "ON") : t("settings.profile.pin_off", default: "OFF") %>
-        </span>
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
-          <polyline points="9 18 15 12 9 6" />
-        </svg>
+      <span class="flex-1 text-brand-primary text-base font-medium">Access code</span>
+      <div class="flex items-center gap-2">
+        <span class="text-brand-muted text-sm" id="access-code-label">FaceID</span>
+        <button role="switch" aria-checked="true" aria-labelledby="access-code-label"
+                tabindex="0"
+                class="w-10 h-5 bg-brand-primary rounded-[25px] p-0.5 border-none cursor-pointer">
+          <div class="toggle-thumb w-4 h-4 bg-white rounded-full ml-auto"></div>
+        </button>
       </div>
-    <% end %>
-
-    <%# Face ID / Touch ID (requires access code) %>
-    <div data-controller="webauthn" style="display:flex; align-items:center; justify-content:space-between; padding:16px 0;">
-      <div>
-        <span style="color:#933a35; font-size:16px; font-weight:500;">Face ID / Touch ID</span>
-        <span style="display:block; color:#D18D83; font-size:14px; margin-top:4px;">
-          <%= current_user.webauthn_credentials.any? ? "ON" : "OFF" %>
-        </span>
-      </div>
-      <% if current_user.pin_set? %>
-        <% if current_user.webauthn_credentials.any? %>
-          <label style="position:relative; width:41px; height:20px; cursor:pointer; flex-shrink:0;">
-            <input type="checkbox" checked aria-label="Disable Face ID / Touch ID"
-                   data-action="change->webauthn#remove"
-                   style="opacity:0; width:0; height:0;">
-            <span style="position:absolute; inset:0; background:#933a35; border-radius:20px; transition:0.2s;"></span>
-            <span style="position:absolute; top:1px; left:22px; width:18px; height:18px; background:white; border-radius:50%; transition:0.2s;"></span>
-          </label>
-        <% else %>
-          <button data-action="webauthn#register"
-                  style="background:#933a35; color:white; border:none; border-radius:12px; padding:8px 16px; font-size:14px; font-weight:500; cursor:pointer;">
-            Enable
-          </button>
-        <% end %>
-      <% else %>
-        <span style="color:#D18D83; font-size:13px;">Set access code first</span>
-      <% end %>
-      <span data-webauthn-target="status" style="color:#D18D83; font-size:12px; margin-left:8px;"></span>
     </div>
 
-    <div style="border-bottom:1px solid #DDD0CB; padding-top: 16px;"></div>
+    <div class="border-b border-brand-divider pt-4"></div>
 
-    <%# ── Personal information ── %>
-    <button data-action="click->profile-modal#openPersonalInfoModal" style="background:none; border:none; width:100%; display:flex; align-items:center; gap:8px; padding:24px 0 8px; cursor:pointer;">
-      <svg style="width:24px; height:24px;" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#933a35" stroke-width="1.5" viewBox="0 0 24 24">
+    <%# Personal information %>
+    <button data-action="click->profile-modal#openPersonalInfoModal" class="bg-transparent border-none w-full flex items-center gap-2 pt-6 pb-2 cursor-pointer">
+      <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#933a35" stroke-width="1.5" viewBox="0 0 24 24">
         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
         <circle cx="12" cy="7" r="4" />
       </svg>
-      <h2 style="color:#933a35; font-size:16px; font-weight:700; flex:1; text-align:left;">Personal information</h2>
+      <h2 class="text-brand-primary text-base font-bold flex-1 text-left">Personal information</h2>
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
         <polyline points="9 18 15 12 9 6" />
       </svg>
     </button>
 
-    <%# Personal info items %>
-    <button data-action="click->profile-modal#openPersonalInfoModal" style="background:none; border:none; width:100%; display:flex; align-items:center; padding:8px 0 8px 32px; cursor:pointer;">
-      <span style="flex:1; color:#D18D83; font-size:14px; text-align:left;">Name: <%= @user.first_name %></span>
-      <svg style="width:6px; height:12px;" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
+    <button data-action="click->profile-modal#openPersonalInfoModal" class="bg-transparent border-none w-full flex items-center py-2 pl-8 cursor-pointer">
+      <span class="flex-1 text-brand-muted text-sm text-left">Name: <%= @user.first_name %></span>
+      <svg class="w-1.5 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
         <polyline points="9 18 15 12 9 6" />
       </svg>
     </button>
 
-    <div style="display:flex; align-items:center; padding:8px 0 8px 32px;">
-      <span style="flex:1; color:#D18D83; font-size:14px;">Age: <%= @user.birthday ? ((Time.zone.today - @user.birthday).to_i / 365) : "—" %></span>
+    <div class="flex items-center py-2 pl-8">
+      <span class="flex-1 text-brand-muted text-sm">Age: <%= @user.birthday ? ((Time.zone.today - @user.birthday).to_i / 365) : "—" %></span>
     </div>
 
-    <div style="display:flex; align-items:center; padding:8px 0 8px 32px;">
-      <span style="flex:1; color:#D18D83; font-size:14px;">Cycle days: <%= @user.cycle_length || "—" %></span>
+    <div class="flex items-center py-2 pl-8">
+      <span class="flex-1 text-brand-muted text-sm">Cycle days: <%= @user.cycle_length || "—" %></span>
     </div>
 
-    <div style="display:flex; align-items:center; padding:8px 0 8px 32px;">
-      <span style="flex:1; color:#D18D83; font-size:14px;">Last Menstruation: <%= @user.last_period_start&.strftime("%d %b %Y") || "—" %></span>
+    <div class="flex items-center py-2 pl-8">
+      <span class="flex-1 text-brand-muted text-sm">Last Menstruation: <%= @user.last_period_start&.strftime("%d %b %Y") || "—" %></span>
     </div>
 
-    <div style="border-bottom:1px solid #DDD0CB; padding-top: 16px;"></div>
+    <div class="border-b border-brand-divider pt-4"></div>
 
-<%# ── Delete Account ── %>
-
-    <%# Delete Account link %>
-    <%= link_to account_path, style: "display:flex; align-items:center; gap:16px; padding:16px 0; text-decoration:none;" do %>
-      <svg style="width:24px; height:24px;" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#933a35" stroke-width="1.5" viewBox="0 0 24 24">
+    <%# Delete Account %>
+    <%= link_to account_path, class: "flex items-center gap-4 py-4 no-underline" do %>
+      <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#933a35" stroke-width="1.5" viewBox="0 0 24 24">
         <polyline points="3 6 5 6 21 6" />
         <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
       </svg>
-      <span style="flex:1; color:#933a35; font-size:16px; font-weight:500;">Delete Account</span>
+      <span class="flex-1 text-brand-primary text-base font-medium">Delete Account</span>
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
         <polyline points="9 18 15 12 9 6" />
       </svg>
     <% end %>
-    </div>
   </div>
 </div>
 
 <%# ── Email Modal ── %>
-<div id="email-modal" role="dialog" aria-modal="true" aria-labelledby="email-modal-title" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:100; align-items:center; justify-content:center;">
-  <div style="background:#FAF7F4; border-radius:16px; padding:24px; width:90%; max-width:340px; margin:16px;">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-      <h3 id="email-modal-title" style="color:#933a35; font-size:18px; font-weight:600; margin:0;">Change Email</h3>
-      <button data-action="click->profile-modal#closeEmailModal" style="background:none; border:none; cursor:pointer;">
+<div id="email-modal" role="dialog" aria-modal="true" aria-labelledby="email-modal-title" class="hidden fixed inset-0 bg-black/50 z-[100] items-center justify-center">
+  <div class="bg-brand-background rounded-2xl p-6 w-[90%] max-w-[340px] mx-4">
+    <div class="flex justify-between items-center mb-5">
+      <h3 id="email-modal-title" class="text-brand-primary text-lg font-semibold m-0">Change Email</h3>
+      <button data-action="click->profile-modal#closeEmailModal" class="bg-transparent border-none cursor-pointer">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
           <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
         </svg>
@@ -240,31 +199,31 @@
     </div>
 
     <%= form_with url: update_profile_settings_path, method: :patch, local: true do %>
-      <label style="display:block; color:#933a35; font-size:13px; font-weight:500; margin-bottom:6px;">New email address</label>
+      <label class="block text-brand-primary text-[13px] font-medium mb-1.5">New email address</label>
       <input type="email" name="email" value="<%= @user.email %>" required autocomplete="email"
-             style="width:100%; background:#FFFFFF; border:1px solid #DDD0CB; border-radius:12px; padding:16px; font-size:16px; color:#933a35; box-sizing:border-box; margin-bottom:12px;">
-      <label style="display:block; color:#933a35; font-size:13px; font-weight:500; margin-bottom:6px;">Current password</label>
+             class="w-full bg-white border border-brand-divider rounded-xl p-4 text-base text-brand-primary box-border mb-3">
+      <label class="block text-brand-primary text-[13px] font-medium mb-1.5">Current password</label>
       <input type="password" name="current_password" required autocomplete="current-password"
              placeholder="Enter your password to confirm"
-             style="width:100%; background:#FFFFFF; border:1px solid #DDD0CB; border-radius:12px; padding:16px; font-size:16px; color:#933a35; box-sizing:border-box; margin-bottom:16px;">
-      <button type="submit" style="width:100%; background:#933a35; color:white; border:none; border-radius:12px; padding:14px; font-size:16px; font-weight:500; cursor:pointer;">
+             class="w-full bg-white border border-brand-divider rounded-xl p-4 text-base text-brand-primary box-border mb-4">
+      <button type="submit" class="w-full bg-brand-primary text-white border-none rounded-xl py-3.5 text-base font-medium cursor-pointer">
         Save
       </button>
     <% end %>
 
     <button data-action="click->profile-modal#closeEmailModal"
-            style="width:100%; background:transparent; color:#933a35; border:1px solid #DDD0CB; border-radius:12px; padding:14px; font-size:16px; font-weight:500; cursor:pointer; margin-top:8px;">
+            class="w-full bg-transparent text-brand-primary border border-brand-divider rounded-xl py-3.5 text-base font-medium cursor-pointer mt-2">
       Cancel
     </button>
   </div>
 </div>
 
 <%# ── Personal Information Edit Modal ── %>
-<div id="personal-info-modal" role="dialog" aria-modal="true" aria-labelledby="personal-info-modal-title" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:100; align-items:center; justify-content:center;">
-  <div style="background:#FAF7F4; border-radius:16px; padding:24px; width:90%; max-width:340px; margin:16px;">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-      <h3 id="personal-info-modal-title" style="color:#933a35; font-size:18px; font-weight:600; margin:0;">Personal Information</h3>
-      <button data-action="click->profile-modal#closePersonalInfoModal" style="background:none; border:none; cursor:pointer;">
+<div id="personal-info-modal" role="dialog" aria-modal="true" aria-labelledby="personal-info-modal-title" class="hidden fixed inset-0 bg-black/50 z-[100] items-center justify-center">
+  <div class="bg-brand-background rounded-2xl p-6 w-[90%] max-w-[340px] mx-4">
+    <div class="flex justify-between items-center mb-5">
+      <h3 id="personal-info-modal-title" class="text-brand-primary text-lg font-semibold m-0">Personal Information</h3>
+      <button data-action="click->profile-modal#closePersonalInfoModal" class="bg-transparent border-none cursor-pointer">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
           <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
         </svg>
@@ -272,31 +231,31 @@
     </div>
 
     <%= form_with url: update_profile_settings_path, method: :patch, local: true do %>
-      <div style="margin-bottom:12px;">
-        <label style="display:block; color:#933a35; font-size:14px; font-weight:500; margin-bottom:4px;">Name</label>
+      <div class="mb-3">
+        <label class="block text-brand-primary text-sm font-medium mb-1">Name</label>
         <input type="text" name="name" value="<%= @user.first_name %>" required autocomplete="name"
-               style="width:100%; background:#FFFFFF; border:1px solid #DDD0CB; border-radius:12px; padding:16px; font-size:16px; color:#933a35; box-sizing:border-box;">
+               class="w-full bg-white border border-brand-divider rounded-xl p-4 text-base text-brand-primary box-border">
       </div>
 
-      <div style="margin-bottom:12px;">
-        <label style="display:block; color:#933a35; font-size:14px; font-weight:500; margin-bottom:4px;">Cycle Length (days)</label>
+      <div class="mb-3">
+        <label class="block text-brand-primary text-sm font-medium mb-1">Cycle Length (days)</label>
         <input type="number" name="cycle_length" value="<%= @user.cycle_length || 28 %>" min="20" max="45" autocomplete="off"
-               style="width:100%; background:#FFFFFF; border:1px solid #DDD0CB; border-radius:12px; padding:16px; font-size:16px; color:#933a35; box-sizing:border-box;">
+               class="w-full bg-white border border-brand-divider rounded-xl p-4 text-base text-brand-primary box-border">
       </div>
 
-      <div style="margin-bottom:16px;">
-        <label style="display:block; color:#933a35; font-size:14px; font-weight:500; margin-bottom:4px;">Period Length (days)</label>
+      <div class="mb-4">
+        <label class="block text-brand-primary text-sm font-medium mb-1">Period Length (days)</label>
         <input type="number" name="period_length" value="<%= @user.period_length || 5 %>" min="1" max="14" autocomplete="off"
-               style="width:100%; background:#FFFFFF; border:1px solid #DDD0CB; border-radius:12px; padding:16px; font-size:16px; color:#933a35; box-sizing:border-box;">
+               class="w-full bg-white border border-brand-divider rounded-xl p-4 text-base text-brand-primary box-border">
       </div>
 
-      <button type="submit" style="width:100%; background:#933a35; color:white; border:none; border-radius:12px; padding:14px; font-size:16px; font-weight:500; cursor:pointer;">
+      <button type="submit" class="w-full bg-brand-primary text-white border-none rounded-xl py-3.5 text-base font-medium cursor-pointer">
         Save
       </button>
     <% end %>
 
     <button data-action="click->profile-modal#closePersonalInfoModal"
-            style="width:100%; background:transparent; color:#933a35; border:1px solid #DDD0CB; border-radius:12px; padding:14px; font-size:16px; font-weight:500; cursor:pointer; margin-top:8px;">
+            class="w-full bg-transparent text-brand-primary border border-brand-divider rounded-xl py-3.5 text-base font-medium cursor-pointer mt-2">
       Cancel
     </button>
   </div>

@@ -257,3 +257,88 @@ en:
     create_appointment: "Create appointment"
     quick_actions_label: "Open quick actions"
     close: "Close"
+  consent:
+    index:
+      title: "Data & Privacy"
+      health_consent: "I consent to Season processing my health data (cycle dates, symptoms, moods, and related tracking data) to provide personalised insights."
+      health_consent_note: "Includes cycle dates, symptom logs, mood tracking, and superpower entries. Required for the app to function."
+      marketing_consent: "I consent to receiving occasional emails about Season features, tips, and updates."
+      marketing_consent_note: "You can unsubscribe at any time. We never share your data with third parties."
+      save: "Save Preferences"
+      rights: "Your Rights:"
+      rights_access: "Access your data"
+      rights_portability: "Export your data (JSON)"
+      rights_erasure: "Delete your account and data"
+      rights_withdraw: "Withdraw consent at any time"
+  registrations:
+    check_email:
+      title: "Check your inbox"
+      description: "We sent a confirmation link to your email. Click it to activate your account."
+      resend: "Resend confirmation email"
+    new:
+      errors:
+        oops: "OOPS!"
+        already_registered: "This email is already registered. Please log in instead."
+        terms_not_accepted: "You must accept the terms and privacy policy to continue."
+  sessions:
+    new:
+      errors:
+        oops: "OOPS!"
+        wrong_password: "Wrong E-mail or password."
+        wrong_email: "Wrong E-mail or password."
+        unconfirmed: "Please confirm your email first. Check your inbox or request a new confirmation link."
+  tracking:
+    index:
+      current_phase: "You are in your:"
+      log_period: "Log your last period start date to see your cycle phase and predictions."
+      my_symptoms: "My Symptoms"
+      give_feedback: "Give feedback"
+  symptoms:
+    index:
+      mood: "Mood"
+      physical: "Physical"
+      mental: "Mental"
+      sexual_intercourse: "Sexual Intercourse"
+      cravings: "Cravings"
+      sleep: "Sleep"
+      temperature: "Temperature"
+      weight: "Weight"
+      notes: "Notes regarding today"
+      add_note: "Add a note..."
+      submit: "Submit"
+  streaks:
+    index:
+      current_streak: "Current Streak"
+      best_streak: "Best streak"
+      milestones: "Milestones"
+      track_today: "Track today to keep streak"
+      days: "days"
+  superpowers:
+    index:
+      title: "Today's superpowers"
+      save: "Save Superpowers"
+      recent_logs: "Recent logs"
+      no_logs: "No superpowers logged for this day."
+    show:
+      no_logs: "No superpowers logged for this day."
+      view_day: "View day"
+  feedback:
+    success:
+      thank_you: "Thank you!"
+      message_received: "Your message has been received."
+      close: "Close"
+  accounts:
+    show:
+      title: "Delete Account"
+      warning: "This will permanently delete your account and all associated data including:"
+      irreversible: "This action cannot be undone."
+      delete_button: "Delete My Account"
+      cancel: "Cancel"
+      confirm: "Are you sure you want to delete your account? This cannot be undone."
+  invites:
+    show:
+      welcome: "Welcome to Season!"
+      create_password: "Create your password to get started"
+      password_placeholder: "Create password..."
+      confirm_placeholder: "Confirm password..."
+      submit: "GET STARTED"

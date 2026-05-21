@@ -5,11 +5,11 @@ default: &default
 
 development:
   <<: *default
-  database: season_development
+  url: <%= ENV.fetch("DATABASE_URL", "postgresql://localhost/season_development") %>
 
 test:
   <<: *default
-  database: season_test
+  url: <%= ENV.fetch("DATABASE_URL_TEST", "postgresql://localhost/season_test") %>
 
 production: &production
   primary:

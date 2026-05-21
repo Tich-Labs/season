@@ -281,3 +281,41 @@ Example:
 <div class="rounded-xl p-4" style="background:<%= phase_colour %>;">
 ```
 This is acceptable because the color is dynamic and comes from a service.
+
+## iOS / Turbo Native
+
+### Architecture
+- The iOS app wraps the Rails app using [turbo-ios](https://github.com/hotwired/turbo-ios) (SPM, v1.4.0)
+- Entry point: `SceneDelegate.swift` creates `HotwireTabBarController`
+- `AppDelegate.swift` is a minimal stub — do NOT add `WKWebView` or window creation there
+- Tabs are defined in `Tabs.swift` (`Tab` struct) and used by `HotwireTabBarController.swift`
+- Base URL is read from `Info.plist` key `SEASON_BASE_URL` — not hardcoded in Swift
+
+### Files
+| File | Purpose |
+|---|---|
+| `ios/SeasonApp/project.yml` | XcodeGen spec (target iOS 15.0, SPM turbo-ios) |
+| `ios/SeasonApp/SeasonApp/SceneDelegate.swift` | Entry point, creates tab bar |
+| `ios/SeasonApp/SeasonApp/AppDelegate.swift` | Minimal stub (do not add WKWebView) |
+| `ios/SeasonApp/SeasonApp/Tabs.swift` | Tab model (title, systemImageName, urlPath) |
+| `ios/SeasonApp/SeasonApp/HotwireTabBarController.swift` | Tab bar using TurboNavigator |
+| `ios/SeasonApp/SeasonApp/Info.plist` | App config (set SEASON_BASE_URL here) |
+| `app/controllers/configurations_controller.rb` | iOS path rules endpoint |
+
+### Regenerating Xcode project
+```bash
+cd ios/SeasonApp
+xcodegen generate
+```
+Requires Xcode 15.3+ (macOS 13+). If unavailable, manually add/remove Swift files from `.xcodeproj`.
+
+### Configurations endpoint
+`GET /configurations/ios_v1.json` returns path rules:
+- `/calendar`, `/daily/*` → `presentation: default`, `pull_to_refresh: true`
+- `/settings/*`, `/symptoms/new`, `/symptoms/edit` → `presentation: modal`
+
+### Gotchas
+- `AppDelegate` must be a minimal stub — window creation is handled by `SceneDelegate`
+- Hardcoded URLs in Swift are forbidden — use `SEASON_BASE_URL` from `Info.plist`
+- `xcodegen` requires Xcode 15.3+; falls back to manual `.xcodeproj` edits on older macOS
+- Tab names must match the `Tab` struct in `Tabs.swift` (title, systemImageName, urlPath)

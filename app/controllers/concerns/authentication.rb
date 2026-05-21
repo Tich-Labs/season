@@ -38,6 +38,7 @@ module Authentication
       secure: Rails.env.production?,
       same_site: :lax
     }
+    user.regenerate_native_auth_token! if turbo_native_app?
     Current.user = user
   end
 

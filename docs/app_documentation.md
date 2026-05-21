@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 # Season App — Developer Documentation & Auth Security Review
 
 **Generated:** 2026-04-24 — **Last updated:** 2026-05-03 (physical/mental symptom trackers, profile avatar fix, email modal fix)
@@ -1494,3 +1498,41 @@ Eight pre-existing test failures were fixed. No logic changes to production beha
 ---
 
 *End of documentation.*
+
+---
+
+## Hotwire Native iOS & PWA Integration (2026-05-18)
+
+### Recent Native Additions
+- **Turbo Native SPM**: iOS project uses turbo-ios via Swift Package Manager (`project.yml`).
+- **SceneDelegate**: Uses TurboNavigator for native navigation; creates `HotwireTabBarController`.
+- **Tab bar**: 3 tabs (Calendar, Daily, Tracking) using `Tab` struct in `Tabs.swift`.
+- **Base URL**: Set in `Info.plist` key `SEASON_BASE_URL` — read at runtime, not hardcoded.
+- **AppDelegate**: Minimal stub — all UI is scene-based via `SceneDelegate`.
+- **/configurations/ios_v1.json**: Endpoint for native path rules (modal, pull-to-refresh).
+- **native.css**: Utility classes for d-hotwire-native-* (hide/show native-only elements).
+- **data-hotwire-native**: Attribute on <html> for native detection.
+- **Burger menu hidden in native**: Conditional logic in layout.
+- **Device token registration**: POST /native_devices/register for APNs.
+- **APNs push service**: Backend service (apnotic) ready for Apple credentials.
+
+### iOS Project Structure
+```
+ios/SeasonApp/
+├── project.yml              # XcodeGen spec (target iOS 15.0)
+├── SeasonApp/
+│   ├── SceneDelegate.swift  # Entry point (TurboNavigator + tab bar)
+│   ├── AppDelegate.swift    # Minimal stub
+│   ├── Tabs.swift           # Tab struct (title, systemImageName, urlPath)
+│   ├── HotwireTabBarController.swift  # UITabBar + TurboNavigator
+│   └── Info.plist           # SEASON_BASE_URL + app config
+└── SeasonApp.xcodeproj/     # Generated (xcodegen)
+```
+
+### Testing
+See docs/testing_steps.md for a full checklist covering PWA and iOS native features.
+
+### Next Steps
+- Complete Apple Developer setup for APNs.
+- Implement token-based native authentication.
+- Add more native-specific view variants as needed.

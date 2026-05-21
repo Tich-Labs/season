@@ -18,12 +18,12 @@
       value="<%= @user.email %>"
       autocomplete="email"
       readonly
-      class="w-full bg-[#F5EDE8] rounded-2xl p-4 border-none text-base text-brand-primary opacity-70 mb-3">
+      class="w-full bg-brand-field rounded-2xl p-4 border-none text-base text-brand-primary opacity-70 mb-3">
 
     <!-- Password field -->
     <%= f.password_field :password,
         placeholder: 'Set your password...',
-        class: "w-full bg-[#F5EDE8] rounded-2xl p-4 border-none text-base mb-8" %>
+        class: "w-full bg-brand-field rounded-2xl p-4 border-none text-base mb-8" %>
 
     <%= f.submit 'Get started',
         class: "w-full bg-brand-primary text-white border-none rounded-2xl p-4 text-base font-semibold cursor-pointer" %>

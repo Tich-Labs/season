@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 # Season — User Journey
 
 This document traces the full experience of a Season user from the moment they land on the app to daily tracking. It is written as a narrative walkthrough, not a feature checklist. The goal is to give any new team member a clear mental model of what the app does and why it is designed the way it is.

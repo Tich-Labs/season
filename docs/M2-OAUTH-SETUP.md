@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 # M2 OAuth Credentials Setup — Render Deployment
 
 **Version:** 2.1 (2026-05-06)  

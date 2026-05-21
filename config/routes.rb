@@ -130,7 +130,7 @@ Rails.application.routes.draw do
     get :notification_morning, on: :collection
     get :notification_period, on: :collection
     get :notification_birth_control, on: :collection
-    get :language, to: 'settings/language#show', on: :collection
+    get :language, to: "settings/language#show", on: :collection
     patch :update_avatar, on: :collection
     patch :update_profile, on: :collection
     patch :update_calendar, on: :collection
@@ -222,6 +222,12 @@ Rails.application.routes.draw do
   # Legal pages (to be built)
   get "/terms", to: "legal#terms", as: :terms
   get "/privacy", to: "legal#privacy", as: :privacy
+
+  # Turbo Native iOS configuration endpoint
+  get "/configurations/ios_v1", to: "configurations#ios_v1", defaults: {format: :json}
+
+  # Native device registration for APNs
+  post "/native_devices/register", to: "native_devices#register", defaults: {format: :json}
 
   root "home#welcome"
 end

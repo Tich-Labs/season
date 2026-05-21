@@ -4,12 +4,12 @@
   <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
     <div class="flex items-center justify-between gap-4 flex-wrap">
       <div>
-        <h2 class="text-lg font-bold text-[#933a35]">Content management</h2>
+        <h2 class="text-lg font-bold text-brand-primary">Content management</h2>
         <p class="text-sm text-gray-500 mt-1">Manage the Informations page content records for each phase and locale.</p>
       </div>
       <div class="flex items-center gap-2">
-        <span class="inline-flex items-center px-3 py-1.5 rounded-full bg-[#ede1d5] text-[#933a35] text-xs font-semibold">Informations</span>
-        <%= link_to "New content", new_admin_cycle_phase_content_path, class: "inline-flex items-center px-4 py-2 rounded-xl bg-[#933a35] text-white text-sm font-semibold hover:bg-[#7a2f2a] transition-colors" %>
+        <span class="inline-flex items-center px-3 py-1.5 rounded-full bg-brand-field text-brand-primary text-xs font-semibold">Informations</span>
+        <%= link_to "New content", new_admin_cycle_phase_content_path, class: "inline-flex items-center px-4 py-2 rounded-xl bg-brand-primary text-white text-sm font-semibold hover:bg-[#7a2f2a] transition-colors" %>
       </div>
     </div>
   </div>
@@ -29,15 +29,15 @@
       <tbody class="bg-white divide-y divide-gray-200">
         <% @contents.each do |content| %>
           <tr class="hover:bg-gray-50">
-            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-[#933a35] capitalize"><%= content.phase %></td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-brand-primary capitalize"><%= content.phase %></td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 uppercase"><%= content.locale %></td>
             <td class="px-6 py-4 max-w-xl text-sm text-gray-700"><%= truncate([content.mood_text, content.take_care_text].compact.join(" — "), length: 90) %></td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700"><%= content.season_name %></td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><%= content.updated_at.strftime("%Y-%m-%d") %></td>
             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
               <div class="flex items-center justify-end gap-3">
-                <%= link_to "Edit", edit_admin_cycle_phase_content_path(content), class: "text-[#933a35] hover:underline" %>
-                <%= button_to "Delete", admin_cycle_phase_content_path(content), method: :delete, data: { confirm: "Delete this content?" }, class: "text-sm text-[#933a35] hover:underline bg-transparent border-0 p-0" %>
+                <%= link_to "Edit", edit_admin_cycle_phase_content_path(content), class: "text-brand-primary hover:underline" %>
+                <%= button_to "Delete", admin_cycle_phase_content_path(content), method: :delete, data: { confirm: "Delete this content?" }, class: "text-sm text-brand-primary hover:underline bg-transparent border-0 p-0" %>
               </div>
             </td>
           </tr>

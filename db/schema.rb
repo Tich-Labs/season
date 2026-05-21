@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_18_060000) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_19_170000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -104,6 +104,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_18_060000) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "native_devices", force: :cascade do |t|
+    t.string "app_version"
+    t.datetime "created_at", null: false
+    t.string "device_token", null: false
+    t.string "platform", default: "ios", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id"
+    t.index ["device_token"], name: "index_native_devices_on_device_token", unique: true
+    t.index ["user_id"], name: "index_native_devices_on_user_id"
+  end
+
   create_table "reminders", force: :cascade do |t|
     t.boolean "active", default: false, null: false
     t.integer "advance_days"
@@ -181,18 +192,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_18_060000) do
     t.index ["user_id"], name: "index_user_consents_on_user_id"
   end
 
-  create_table "push_subscriptions", force: :cascade do |t|
-    t.string "auth_key", null: false
-    t.datetime "created_at", null: false
-    t.string "device_type", default: "browser"
-    t.string "endpoint", null: false
-    t.string "p256dh_key", null: false
-    t.datetime "updated_at", null: false
-    t.bigint "user_id", null: false
-    t.index ["endpoint"], name: "index_push_subscriptions_on_endpoint", unique: true
-    t.index ["user_id"], name: "index_push_subscriptions_on_user_id"
-  end
-
   create_table "users", force: :cascade do |t|
     t.boolean "admin", default: false, null: false
     t.string "apple_uid"
@@ -222,8 +221,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_18_060000) do
     t.string "life_stage", default: "menstrual"
     t.string "name", null: false
     t.string "native_auth_token"
-    t.string "pin_digest"
-    t.datetime "native_auth_token_created_at"
     t.boolean "onboarding_completed", default: false, null: false
     t.integer "period_length"
     t.string "plan", default: "free"
@@ -252,27 +249,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_18_060000) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  create_table "webauthn_credentials", force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.string "credential_id", null: false
-    t.text "public_key", null: false
-    t.string "label", default: "Default"
-    t.bigint "sign_count", default: 0, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["credential_id"], name: "index_webauthn_credentials_on_credential_id", unique: true
-    t.index ["user_id"], name: "index_webauthn_credentials_on_user_id"
-  end
-
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "calendar_events", "users"
   add_foreign_key "cycle_entries", "users"
   add_foreign_key "feedbacks", "users"
+  add_foreign_key "native_devices", "users"
   add_foreign_key "reminders", "users"
   add_foreign_key "streaks", "users"
   add_foreign_key "superpower_logs", "users"
   add_foreign_key "symptom_logs", "users"
   add_foreign_key "user_consents", "users"
-  add_foreign_key "webauthn_credentials", "users"
 end

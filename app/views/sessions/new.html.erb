@@ -3,7 +3,7 @@
   <!-- Title -->
   <div class="w-full text-center">
     <h1 class="text-brand-primary text-[36px] font-bold uppercase tracking-[3.24px] text-center">
-      LOG IN
+      Log In
     </h1>
   </div>
 
@@ -38,7 +38,7 @@
             method: :post,
             data: { turbo: false },
             aria: { label: "Sign in with Google" },
-            class: "w-[59px] h-[52px] bg-white border border-[#dddddd] rounded-lg flex items-center justify-center p-0 cursor-pointer" do %>
+            class: "w-[59px] h-[52px] bg-white border border-gray-200 rounded-lg flex items-center justify-center p-0 cursor-pointer" do %>
         <%= image_tag "google.png", alt: "Google", class: "w-[34px] h-[34px] object-contain" %>
       <% end %>
 
@@ -97,7 +97,7 @@
           <span class="text-brand-primary text-xl font-bold leading-none shrink-0">!</span>
           <div>
             <% if @error_type == :wrong_password %>
-              <p class="text-brand-primary text-[15px] font-medium">Wrong E-mail or password.</p>
+              <p class="text-brand-primary text-[15px] font-medium"><%= t('sessions.new.errors.wrong_password') %></p>
               <p class="text-brand-primary text-[15px] font-normal">Please try again.</p>
             <% else %>
               <p class="text-brand-primary text-[15px] font-medium">Hmm... we don't recognize this email.</p>
@@ -109,7 +109,7 @@
         <div id="auth-error" role="alert" class="flex items-start gap-[10px] bg-brand-error rounded-lg px-[14px] py-3 mt-4">
           <span class="text-brand-primary text-xl font-bold leading-none shrink-0">!</span>
           <div>
-            <p class="text-brand-primary text-[15px] font-medium">Please confirm your email first.</p>
+            <p class="text-brand-primary text-[15px] font-medium"><%= t('sessions.new.errors.unconfirmed') %></p>
             <p class="text-brand-primary text-[15px] font-normal">
               Check your inbox, or <%= link_to "resend the confirmation email", new_user_confirmation_path, class: "underline" %>.
             </p>

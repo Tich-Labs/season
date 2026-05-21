@@ -17,7 +17,7 @@
   <% breadcrumb_items.each_with_index do |item, idx| %>
     <% if idx > 0 %><span class="text-gray-400">/</span><% end %>
     <% if item[:url] %>
-      <a href="<%= item[:url] %>" class="text-[#933a35] hover:underline"><%= item[:label] %></a>
+      <a href="<%= item[:url] %>" class="text-brand-primary hover:underline"><%= item[:label] %></a>
     <% else %>
       <span class="text-gray-600 font-medium"><%= item[:label] %></span>
     <% end %>
@@ -28,7 +28,7 @@
 <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
   <div class="bg-white rounded-xl shadow-sm border border-gray-200 px-5 py-4">
     <p class="text-xs text-gray-500 uppercase tracking-wide">Total</p>
-    <p class="text-2xl font-bold text-[#933a35] mt-1"><%= @stats[:total] %></p>
+    <p class="text-2xl font-bold text-brand-primary mt-1"><%= @stats[:total] %></p>
   </div>
   <div class="bg-white rounded-xl shadow-sm border border-gray-200 px-5 py-4">
     <p class="text-xs text-gray-500 uppercase tracking-wide">Feedback</p>
@@ -75,7 +75,7 @@
               <% badge = case msg.type
                          when 'feedback'  then { label: 'Feedback', bg: 'bg-blue-100',        text: 'text-blue-700' }
                          when 'bug_report' then { label: 'Bug',      bg: 'bg-red-100',         text: 'text-red-700' }
-                         when 'support'   then { label: 'Support',   bg: 'bg-[#ede1d5]',       text: 'text-[#933a35]' }
+                         when 'support'   then { label: 'Support',   bg: 'bg-brand-field',       text: 'text-brand-primary' }
                          end %>
               <span class="px-2.5 py-0.5 rounded-full text-xs font-medium <%= badge[:bg] %> <%= badge[:text] %>"><%= badge[:label] %></span>
             </td>

@@ -45,6 +45,9 @@ gem "stripe"
 gem "httparty"
 gem "resend"
 
+# Push notifications
+gem "apnotic"
+
 # Background jobs & caching
 gem "solid_cache"
 gem "solid_queue"

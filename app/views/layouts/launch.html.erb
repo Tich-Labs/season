@@ -1,12 +1,9 @@
 <!DOCTYPE html>
-<html<%= " data-hotwire-native" if turbo_native_app? %>>
+<html data-hotwire-native="<%= request.headers['HTTP_X_HOTWIRE_NATIVE'] || nil %>">
   <head>
     <title>Season</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-title" content="Season">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%= tag.link rel: "manifest", href: pwa_manifest_path %>
@@ -16,7 +13,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
-    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload", preload_links_header: false %>
     <%= javascript_importmap_tags %>
     <script nonce="<%= content_security_policy_nonce %>">
       const clearOldServiceWorkers = async () => {
@@ -39,6 +36,8 @@
   </head>
   <body class="bg-brand-background font-sans">
     <%= yield %>
-    <%= render "shared/feedback_modal" %>
+    <% unless turbo_native_app? %>
+      <%= render "shared/feedback_modal" %>
+    <% end %>
   </body>
 </html>

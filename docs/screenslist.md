@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 # Screens & Routes Mapping Table
 
 This table maps coded screens to Figma design nodes. Use `docs/figma_nodes.md` as the source of truth.

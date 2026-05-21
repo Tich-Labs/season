@@ -8,29 +8,25 @@
   <% end %>
 <% end %>
 
-<div style="background:#ffffff; min-height:100vh;">
+<div class="bg-white min-h-screen">
+  <div class="max-w-app mx-auto px-4 pb-20">
 
-  <div style="max-width:430px; margin:0 auto; padding:0 16px 80px;">
-
-    <%# Header %>
-    <div style="padding:20px 0 8px;">
-      <h2 style="color:#933a35; font-size:16px; font-weight:700;">Delete Account</h2>
+    <div class="py-5 pb-2">
+      <h2 class="text-brand-primary text-base font-bold"><%= t('accounts.show.title') %></h2>
     </div>
-    <div style="border-bottom:1px solid #DDD0CB;"></div>
+    <div class="border-b border-brand-divider"></div>
 
-    <%# Info %>
-    <div style="text-align:center; padding:40px 20px;">
-      <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="none" stroke="#933a35" stroke-width="1.5" viewBox="0 0 24 24" style="margin:0 auto 16px;">
+    <div class="text-center py-10 px-5">
+      <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="none" stroke="#933a35" stroke-width="1.5" viewBox="0 0 24 24" class="mx-auto mb-4">
         <polyline points="3 6 5 6 21 6" />
         <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
       </svg>
-      <h3 style="color:#933a35; font-size:20px; font-weight:600; margin:0 0 12px;">Delete Account</h3>
-      <p style="color:#6B6B6B; font-size:14px; line-height:1.5; margin:0 0 24px;">
-        This will permanently delete your account and all associated data including:
+      <h3 class="text-brand-primary text-xl font-semibold mb-3"><%= t('accounts.show.title') %></h3>
+      <p class="text-brand-secondary text-sm leading-relaxed mb-6">
+        <%= t('accounts.show.warning') %>
       </p>
 
-      <%# Data list %>
-      <ul style="text:left; color:#6B6B6B; font-size:14px; line-height:1.8; margin:0 0 24px; padding-left:20px;">
+      <ul class="text-left text-brand-secondary text-sm leading-loose mb-6 pl-5">
         <li>Cycle tracking history</li>
         <li>Symptom logs</li>
         <li>Superpower entries</li>
@@ -40,26 +36,21 @@
         <li>Profile picture</li>
       </ul>
 
-      <div style="background:#FDF0EE; border-radius:12px; padding:16px; margin-bottom:24px;">
-        <p style="color:#933a35; font-size:14px; font-weight:500; margin:0;">
-          This action cannot be undone.
+      <div class="bg-brand-error rounded-xl px-4 py-3 mb-6">
+        <p class="text-brand-primary text-sm font-medium">
+          <%= t('accounts.show.irreversible') %>
         </p>
       </div>
     </div>
 
-    <%# Delete Form %>
-    <%= form_with url: account_path, method: :delete, data: { turbo_confirm: "Are you sure you want to delete your account? This cannot be undone." } do %>
-      <button type="submit"
-              style="width:100%; background:#933a35; color:white; border:none; border-radius:12px; padding:16px; font-size:16px; font-weight:500; cursor:pointer;">
-        Delete My Account
+    <%= form_with url: account_path, method: :delete, data: { turbo_confirm: t('accounts.show.confirm') } do %>
+      <button type="submit" class="w-full bg-brand-primary text-white rounded-xl py-4 text-base font-medium cursor-pointer border-none">
+        <%= t('accounts.show.delete_button') %>
       </button>
     <% end %>
 
-     <%= link_to edit_settings_path,
-              style: "display:block; width:100%; text-align:center; color:#933a35; border:1px solid #DDD0CB; border-radius:12px; padding:16px; font-size:16px; font-weight:500; margin-top:12px; text-decoration:none;" do %>
-        Cancel
-      <% end %>
+    <%= link_to t('accounts.show.cancel'), edit_settings_path,
+        class: "block w-full text-center text-brand-primary border border-brand-divider rounded-xl py-4 text-base font-medium mt-3 no-underline" %>
 
   </div>
-
 </div>

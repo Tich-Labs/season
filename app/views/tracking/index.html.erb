@@ -68,13 +68,13 @@
     <%# ── Phase text ──────────────────────────────────────────────────── %>
     <div class="text-center mb-6">
       <% if phase_label %>
-        <p class="text-2xl font-medium text-brand-primary font-['Montserrat']">You are in your:</p>
+        <p class="text-2xl font-medium text-brand-primary font-['Montserrat']"><%= t('tracking.index.current_phase') %></p>
         <h1 class="text-3xl font-extrabold leading-tight" style="color:<%= phase_colour %>;">
           <%= phase_label %> Phase
         </h1>
       <% else %>
         <div class="rounded-2xl px-4 py-3 text-sm bg-brand-error text-brand-primary">
-          Log your last period to see your current phase.
+          <%= t('tracking.index.log_period') %>
         </div>
       <% end %>
     </div>
@@ -102,7 +102,7 @@
 
       <%= link_to symptoms_path,
             class: "flex justify-between items-center rounded-lg px-5 h-12 bg-white no-underline" do %>
-        <span class="text-xl font-medium text-brand-primary font-['Montserrat']">My Symptoms</span>
+        <span class="text-xl font-medium text-brand-primary font-['Montserrat']"><%= t('tracking.index.my_symptoms') %></span>
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none"
              stroke="<%= phase_colour %>" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
           <polyline points="9 18 15 12 9 6" />
@@ -132,7 +132,7 @@
               data-open-feedback-type-value="feedback"
               data-action="click->open-feedback#open"
               class="flex justify-between items-center rounded-lg px-5 h-12 bg-white/50 w-full text-left">
-        <span class="text-xl font-medium text-brand-primary font-['Montserrat']">Give feedback</span>
+        <span class="text-xl font-medium text-brand-primary font-['Montserrat']"><%= t('tracking.index.give_feedback') %></span>
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none"
              stroke="<%= phase_colour %>" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
           <polyline points="9 18 15 12 9 6" />

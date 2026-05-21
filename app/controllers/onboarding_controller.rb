@@ -8,7 +8,6 @@ class OnboardingController < ApplicationController
   def invite
     @token = params[:token]
     @hide_nav = true
-    render layout: "application"
   end
 
   def show
@@ -19,8 +18,6 @@ class OnboardingController < ApplicationController
     if authenticated? && current_user.profile_complete?
       redirect_to user_root_path and return
     end
-
-    render layout: "application"
   end
 
   def update
