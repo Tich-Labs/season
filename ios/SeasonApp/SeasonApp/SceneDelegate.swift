@@ -1,7 +1,7 @@
 import UIKit
 import Turbo
 
-private let baseURL = URL(string: "https://seasonv2.onrender.com")!
+private let baseURL = URL(string: "https://season.vision")!
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
