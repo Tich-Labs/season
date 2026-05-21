@@ -4,6 +4,10 @@ class User < ApplicationRecord
     :confirmable,
     :omniauthable, omniauth_providers: [:google_oauth2, :facebook, :apple]
 
+  has_secure_token :native_auth_token
+
+  before_create -> { self.native_auth_token_created_at = Time.current }
+
   validates :name, presence: true, if: :onboarding_completed?
 
   has_one_attached :avatar
@@ -14,7 +18,18 @@ class User < ApplicationRecord
   has_many :reminders, dependent: :destroy
   has_many :feedbacks, dependent: :destroy
   has_many :user_consents, dependent: :destroy
+  has_many :push_subscriptions, dependent: :destroy
+  has_many :webauthn_credentials, dependent: :destroy
   has_one :streak, dependent: :destroy
+
+  def native_auth_token_valid?
+    native_auth_token_created_at.present? && native_auth_token_created_at > 30.days.ago
+  end
+
+  def rotate_native_auth_token!
+    regenerate_native_auth_token
+    touch(:native_auth_token_created_at)
+  end
 
   def self.ransackable_attributes(auth_object = nil)
     %w[email name created_at onboarding_completed language public_id]
@@ -62,6 +77,23 @@ class User < ApplicationRecord
 
   def first_name
     name&.split&.first || name
+  end
+
+  def set_pin(code)
+    update(pin_digest: BCrypt::Password.create(code.to_s))
+  end
+
+  def verify_pin(code)
+    return false unless pin_digest.present?
+    BCrypt::Password.new(pin_digest) == code.to_s
+  end
+
+  def pin_set?
+    pin_digest.present?
+  end
+
+  def remove_pin
+    update(pin_digest: nil)
   end
 
   def consent?(consent_type)

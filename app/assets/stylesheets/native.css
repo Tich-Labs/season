@@ -1,0 +1,18 @@
+/* Hotwire Native styles — only loaded when the app is rendered inside the native iOS shell */
+
+/* Hide elements that are replaced by native UI (header, burger menu, FAB, banners) */
+.d-hotwire-native-none {
+  display: none !important;
+}
+
+/* Show elements that are hidden in the web layout but needed in native */
+.d-hotwire-native-block {
+  display: block !important;
+}
+
+/* Header is visible in native — no main padding override needed */
+
+/* Remove pull-to-refresh in native app (native UIRefreshControl handles it) */
+[data-hotwire-native] [data-controller="pull-to-refresh"] {
+  overscroll-behavior: auto;
+}

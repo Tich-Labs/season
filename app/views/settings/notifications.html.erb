@@ -132,15 +132,19 @@
     <div style="border-bottom:1px solid #DDD0CB; margin-top:8px;"></div>
 
     <%# General Push-Notifications %>
-    <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 0 8px;">
-      <span style="color:#933a35; font-size:16px; font-weight:500;">General Push-Notifications</span>
+    <div data-controller="push-subscription"
+         data-vapid-key="<%= Rails.application.credentials.dig(:vapid, :public_key) %>"
+         style="display:flex; align-items:center; justify-content:space-between; padding:14px 0 8px;">
+      <div>
+        <span style="color:#933a35; font-size:16px; font-weight:500;">General Push-Notifications</span>
+        <span data-push-subscription-target="status" style="color:#D18D83; font-size:12px; margin-left:8px;"></span>
+      </div>
       <label style="position:relative; width:41px; height:20px; cursor:pointer; flex-shrink:0;">
-        <input type="checkbox" id="push_notifications" <%= @notifications.push_notifications ? 'checked' : '' %>
-               aria-label="General Push-Notifications"
-               onchange="toggleSetting('push_notifications')"
+        <input type="checkbox" aria-label="General Push-Notifications"
+               data-action="change->push-subscription#subscribe"
                style="opacity:0; width:0; height:0;">
-        <span style="position:absolute; inset:0; background:<%= @notifications.push_notifications ? '#933a35' : '#ccc' %>; border-radius:20px; transition:0.2s;"></span>
-        <span style="position:absolute; top:1px; left:<%= @notifications.push_notifications ? '22px' : '2px' %>; width:18px; height:18px; background:white; border-radius:50%; transition:0.2s;"></span>
+        <span style="position:absolute; inset:0; background:#ccc; border-radius:20px; transition:0.2s;"></span>
+        <span style="position:absolute; top:1px; left:2px; width:18px; height:18px; background:white; border-radius:50%; transition:0.2s;"></span>
       </label>
     </div>
     <% [

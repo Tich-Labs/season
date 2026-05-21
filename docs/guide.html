@@ -426,6 +426,9 @@
             <a href="#resources" class="nav-item" onclick="showSection('resources')">
                 <span class="nav-item-icon">📚</span> All Resources
             </a>
+            <a href="#ios-dev" class="nav-item" onclick="showSection('ios-dev')">
+                <span class="nav-item-icon">🍎</span> iOS Local Dev
+            </a>
             <a href="#publishing" class="nav-item" onclick="showSection('publishing')">
                 <span class="nav-item-icon">📱</span> App Store Publishing
             </a>
@@ -1314,13 +1317,26 @@
             <div class="card" style="margin-top: 20px;">
                 <div class="card-header">
                     <div class="icon">📱</div>
-                    <div class="card-title">Turbo Native Roadmap</div>
+                    <div class="card-title">iOS App — Current State</div>
+                </div>
+                <p style="margin: 10px 0;">A basic iOS app exists at <code>ios/SeasonApp/</code> — a <strong>WKWebView wrapper</strong> loading the production PWA. <code>SceneDelegate.swift</code> (HotwireNative) is a placeholder, not yet wired.</p>
+                <div class="step"><div class="step-num">✅</div><div>Xcode project opens, builds, and signs with a free personal team (team ID: <code>CH4G9T6ZHP</code>)</div></div>
+                <div class="step"><div class="step-num">✅</div><div>Runs on simulator and physical iPhone (enable Developer Mode on device)</div></div>
+                <div class="step"><div class="step-num">✅</div><div>Auto-generated Info.plist via <code>GENERATE_INFOPLIST_FILE = YES</code></div></div>
+                <div class="step"><div class="step-num">✅</div><div>NSAllowsArbitraryLoads enabled for dev HTTP access</div></div>
+                <div class="step"><div class="step-num">⬜</div><div>Hotwire Native integration not yet active — <code>SceneDelegate.swift</code> and <code>Podfile</code> are placeholders</div></div>
+                <div class="step"><div class="step-num">⬜</div><div>App icon image not committed — slot exists in Assets.xcassets</div></div>
+            </div>
+            <div class="card" style="margin-top: 20px;">
+                <div class="card-header">
+                    <div class="icon">🗺️</div>
+                    <div class="card-title">Hotwire Native Roadmap</div>
                 </div>
                 <p style="margin: 10px 0;">Wrap PWA in native shell for App Store distribution using Hotwire Native (formerly Turbo Native).</p>
-                <div class="step"><div class="step-num">1</div><div><strong>Add Hotwire Native</strong> - iOS: <code>pod 'HotwireNative'</code> | Android: <code>implementation 'dev.hotwire:native:1.0.0'</code></div></div>
-                <div class="step"><div class="step-num">2</div><div><strong>Configure paths</strong> - Set <code>config.hotwire.native_paths</code> for native-only screens (onboarding, tracking)</div></div>
-                <div class="step"><div class="step-num">3</div><div><strong>Native bridges</strong> - Bridge JavaScript ↔ Native for: push notifications, haptic feedback, biometric auth</div></div>
-                <div class="step"><div class="step-num">4</div><div><strong>iOS app</strong> - Create Xcode project, wire <code>HotwireNavigator</code>, configure <code>WKWebView</code></div></div>
+                <div class="step"><div class="step-num">1</div><div><strong>Activate SceneDelegate</strong> - Remove <code>@main</code> from <code>AppDelegate.swift</code>, add <code>UISceneConfiguration</code> to build settings, add <code>SceneDelegate.swift</code> to target</div></div>
+                <div class="step"><div class="step-num">2</div><div><strong>Install CocoaPods</strong> - <code>sudo gem install cocoapods && cd ios/SeasonApp && pod install</code>, then open <code>.xcworkspace</code></div></div>
+                <div class="step"><div class="step-num">3</div><div><strong>Configure paths</strong> - Set <code>config.hotwire.native_paths</code> for native-only screens (onboarding, tracking)</div></div>
+                <div class="step"><div class="step-num">4</div><div><strong>Native bridges</strong> - Bridge JavaScript ↔ Native for: push notifications, haptic feedback, biometric auth</div></div>
                 <div class="step"><div class="step-num">5</div><div><strong>Android app</strong> - Create Android project, wire <code>HotwireActivity</code>, configure <code>WebView</code></div></div>
                 <div class="step"><div class="step-num">6</div><div><strong>App Store</strong> - iOS: Apple Developer account ($99/yr) | Android: Google Play ($25 one-time)</div></div>
                 <div class="step"><div class="step-num">📦</div><div><strong>Timeline:</strong> Post-launch (Q3 2026) - PWA sufficient for beta testers</div></div>
@@ -1846,6 +1862,139 @@ Or use agent skills from audit_skills.md for detailed chapter audits.</code></pr
                         <li><code>/code/chXX_YY/ios/</code> - iOS apps</li>
                     </ul>
                 </div>
+            </div>
+        </div>
+
+        <!-- iOS Local Development Section -->
+        <div id="ios-dev" class="content-section">
+            <h1>iOS Local Development</h1>
+            <p class="subtitle">Running the Season iOS app on simulator and your iPhone</p>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="icon">🍎</div>
+                    <div class="card-title">Current State: Basic WKWebView (not Hotwire Native)</div>
+                </div>
+                <p>The iOS app at <code>ios/SeasonApp/</code> is a thin wrapper that loads <code>https://seasonv2.onrender.com</code> in a <code>WKWebView</code>. It does <strong>not</strong> use Hotwire Native yet — the <code>SceneDelegate.swift</code> and <code>Podfile</code> are placeholders for future Hotwire Native integration.</p>
+                <p style="margin-top: 8px;"><strong>No CocoaPods needed.</strong> Only <code>AppDelegate.swift</code> (basic WKWebView) is active. <code>SceneDelegate.swift</code> (HotwireNative) is not included in the Xcode project.</p>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="icon">📋</div>
+                    <div class="card-title">Prerequisites</div>
+                </div>
+                <div class="step"><div class="step-num">1</div><div><strong>macOS</strong> with Xcode 15+ installed (from Mac App Store, free)</div></div>
+                <div class="step"><div class="step-num">2</div><div><strong>Apple ID</strong> signed into Xcode → Preferences → Accounts (free, no $99 needed for device testing)</div></div>
+                <div class="step"><div class="step-num">3</div><div><strong>iPhone</strong> with Developer Mode enabled — <strong>Settings → Privacy & Security → Developer Mode → ON</strong> (requires restart)</div></div>
+            </div>
+
+            <h2>Project Structure</h2>
+            <div class="card">
+                <pre><code>ios/SeasonApp/
+├── Podfile                          # For future Hotwire Native (not used yet)
+├── project.yml                      # XcodeGen spec (not in sync — use .xcodeproj)
+└── SeasonApp.xcodeproj/             # ✅ Use this to open in Xcode
+    └── project.pbxproj              # Xcode project file
+    └── SeasonApp/
+        ├── AppDelegate.swift         # ✅ Active entry point — WKWebView wrapper
+        ├── SceneDelegate.swift       # ❌ Placeholder — HotwireNative, not compiled
+        ├── Info.plist                # Not used by Xcode (GENERATE_INFOPLIST_FILE = YES)
+        ├── LaunchScreen.storyboard   # Splash screen ("Season" text)
+        └── Assets.xcassets/          # App icon slot (no image committed yet)</code></pre>
+            </div>
+
+            <h2>Step-by-Step: First Run</h2>
+
+            <div class="card">
+                <h3>1. Open Project in Xcode</h3>
+                <div class="command-box">
+                    <code>open ios/SeasonApp/SeasonApp.xcodeproj</code>
+                </div>
+                <p style="margin-top: 8px;">Or open Xcode → File → Open → select <code>ios/SeasonApp/SeasonApp.xcodeproj</code></p>
+            </div>
+
+            <div class="card" style="margin-top: 20px;">
+                <h3>2. Configure Signing</h3>
+                <div class="step"><div class="step-num">1</div><div>Click <strong>SeasonApp</strong> in the project navigator (left sidebar)</div></div>
+                <div class="step"><div class="step-num">2</div><div>Select the <strong>SeasonApp target</strong> (under TARGETS)</div></div>
+                <div class="step"><div class="step-num">3</div><div>Go to <strong>Signing & Capabilities</strong> tab</div></div>
+                <div class="step"><div class="step-num">4</div><div>Under <strong>Team</strong>, select your name (e.g. "Naijeria Toweett (Personal Team)")</div></div>
+                <div class="step"><div class="step-num">5</div><div>Bundle Identifier: <code>com.season-app.ios</code></div></div>
+                <div class="step"><div class="step-num">6</div><div>Xcode will auto-generate a provisioning profile</div></div>
+                <div class="command-box" style="margin-top: 12px;">
+                    <strong>No team shown?</strong> Go to Xcode → Preferences → Accounts → <strong>+</strong> → Add your Apple ID first.
+                </div>
+            </div>
+
+            <div class="card" style="margin-top: 20px;">
+                <h3>3. Run on Simulator</h3>
+                <div class="step"><div class="step-num">1</div><div>Select an iPhone simulator from the scheme toolbar (e.g. iPhone 14 Pro)</div></div>
+                <div class="step"><div class="step-num">2</div><div>Press <strong>Cmd+R</strong> or click the Play button</div></div>
+                <div class="step"><div class="step-num">3</div><div>The app opens and loads <code>https://seasonv2.onrender.com</code></div></div>
+                <p style="margin-top: 10px;"><strong>Note:</strong> The simulator loads the production URL. To test against your local Rails server, update line 17 in <code>AppDelegate.swift</code> to <code>http://localhost:3000</code> (you'll also need <code>NSAppTransportSecurity</code> to allow HTTP — this is already configured).</p>
+            </div>
+
+            <div class="card" style="margin-top: 20px;">
+                <h3>4. Run on Your iPhone</h3>
+                <div class="step"><div class="step-num">1</div><div>Connect your iPhone via USB (or use wireless debugging)</div></div>
+                <div class="step"><div class="step-num">2</div><div>Select your iPhone from the scheme toolbar</div></div>
+                <div class="step"><div class="step-num">3</div><div>Press <strong>Cmd+R</strong></div></div>
+                <div class="step"><div class="step-num">4</div><div>Xcode may prompt "Register device" — click <strong>OK</strong></div></div>
+                <div class="step"><div class="step-num">5</div><div>Xcode builds, signs, and installs the app on your iPhone</div></div>
+                <div class="step"><div class="step-num">6</div><div>On your iPhone: <strong>Settings → General → VPN & Device Management</strong> → tap your developer profile → <strong>Trust</strong></div></div>
+                <p style="margin-top: 10px; color: #f87171;"><strong>Important:</strong> If you see "Developer Mode is disabled" on your iPhone, go to <strong>Settings → Privacy & Security → Developer Mode → toggle ON</strong>. Your iPhone will restart.</p>
+            </div>
+
+            <h2>Common Issues & Fixes</h2>
+            <div class="card">
+                <table>
+                    <tr><th>Error</th><th>Cause</th><th>Fix</th></tr>
+                    <tr>
+                        <td><code>Cannot code sign — no Info.plist</code></td>
+                        <td>Xcode can't find <code>Info.plist</code></td>
+                        <td>Project now uses <code>GENERATE_INFOPLIST_FILE = YES</code> — clean build (<strong>Product → Clean Build Folder</strong>)</td>
+                    </tr>
+                    <tr>
+                        <td><code>No profiles for 'com.season-app.ios'</code></td>
+                        <td>No development team selected</td>
+                        <td>Set <strong>Team</strong> in Signing & Capabilities — must match your Apple ID</td>
+                    </tr>
+                    <tr>
+                        <td><code>Failed to create provisioning profile</code></td>
+                        <td>No devices registered</td>
+                        <td>Connect your iPhone and build from Xcode — it auto-registers the device</td>
+                    </tr>
+                    <tr>
+                        <td><code>App won't open on iPhone</code></td>
+                        <td>Developer not trusted</td>
+                        <td>Settings → General → VPN & Device Management → Trust your profile</td>
+                    </tr>
+                    <tr>
+                        <td><code>Xcode: "iPhone is busy"</code></td>
+                        <td>Device locked or in use</td>
+                        <td>Unlock your iPhone, keep it on the home screen during build</td>
+                    </tr>
+                    <tr>
+                        <td><code>Bundle identifier is missing</code></td>
+                        <td>Target UUID mismatch in pbxproj</td>
+                        <td>Fixed in project — target's <code>buildConfigurationList</code> must match the actual <code>XCConfigurationList</code> UUID</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="card" style="margin-top: 20px; background: #0f172a; border-color: #38bdf8;">
+                <div class="card-header">
+                    <div class="icon">ℹ️</div>
+                    <div class="card-title">Important Notes</div>
+                </div>
+                <ul style="padding-left: 20px; line-height: 2;">
+                    <li><strong>No CocoaPods needed.</strong> The <code>Podfile</code> is for future Hotwire Native integration. Currently only <code>AppDelegate.swift</code> is compiled.</li>
+                    <li><strong>SceneDelegate.swift</strong> uses <code>HotwireNative</code> but is not included in the Xcode target. When you implement Hotwire Native, add it to the project and run <code>pod install</code>.</li>
+                    <li><strong>App icon:</strong> The asset catalog has a slot for 1024×1024 but no image file committed. Add an icon in <code>Assets.xcassets/AppIcon.appiconset/</code>.</li>
+                    <li><strong>Production URL:</strong> Currently points to <code>https://seasonv2.onrender.com</code>. Change in <code>AppDelegate.swift</code> line 17 for local dev.</li>
+                    <li><strong>No $99 needed</strong> for device testing — a free Apple ID (Personal Team) works with automatic signing.</li>
+                </ul>
             </div>
         </div>
 

@@ -1021,6 +1021,9 @@ Steps 5 and 6 are necessary because `db:prepare` only processes the primary data
 | `GOOGLE_CLIENT_ID/SECRET` | Not in render.yaml — **manual** | Must be added for Google OAuth |
 | `FACEBOOK_APP_ID/SECRET` | Not in render.yaml — **manual** | Must be added for Facebook OAuth |
 | `APPLE_CLIENT_ID/SECRET` | Not in render.yaml — **manual** | Must be added for Apple Sign In |
+| `SENTRY_DSN` | `sync: false` — **manual** | Error tracking. Get from [sentry.io](https://sentry.io) project → Settings → Client Keys → DSN |
+| `VAPID_PUBLIC_KEY` | `sync: false` — **manual** | Web Push notifications (fallback if not in `credentials.yml.enc`) |
+| `VAPID_PRIVATE_KEY` | `sync: false` — **manual** | Web Push notifications (fallback if not in `credentials.yml.enc`) |
 
 ### OAuth Setup (How To)
 
@@ -1047,6 +1050,45 @@ Steps 5 and 6 are necessary because `db:prepare` only processes the primary data
 6. Add to Render Dashboard → Environment Variables
 
 > **Important:** After adding each set of credentials, test the login flow in production before launching.
+
+### Sentry Setup (How To)
+
+1. Go to [sentry.io](https://sentry.io) → Create account / sign in
+2. Create a new project → Select **Rails** / **Ruby**
+3. Copy the DSN from Project Settings → Client Keys (looks like `https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx@oXXXXX.ingest.sentry.io/XXXXXX`)
+4. Add to Render Dashboard → Environment → `SENTRY_DSN` = `<your DSN>`
+5. Re-deploy (Render auto-deploys on push, or click Manual Deploy → Deploy with latest image)
+
+The initializer is already in place at `config/initializers/sentry.rb`. It:
+- Enables breadcrumbs for ActiveSupport logger + HTTP requests
+- Sets traces_sample_rate to 0.1 (10% of requests — adjust as needed)
+- Enables PII capture for user context
+- Silences `RoutingError` and `RecordNotFound` (common production noise)
+
+To verify Sentry is working after deploy, trigger a test error:
+```bash
+# In production console or via Rails runner
+Sentry.capture_message("Test error from Season — verify Sentry setup")
+```
+
+### VAPID Keys Setup (How To)
+
+VAPID keys are needed for Web Push notifications. The app supports two methods (checked in order):
+
+**Method 1 — Rails credentials (preferred):**
+```bash
+# On a machine with the DB running (local or production console):
+rails vapid:generate     # Outputs public + private key
+rails credentials:edit   # Paste under the `vapid:` key
+```
+
+**Method 2 — Environment variables (fallback):**
+1. Keys are pre-generated and available in:
+   - `config/credentials.example.yml` (for reference)
+   - `.env.template` (for local dev)
+2. Set on Render Dashboard → Environment:
+   - `VAPID_PUBLIC_KEY` = `BLYger3zOrm7sWU9E3JzInLn5G8YiXmGzEGXENXHJeIxZwJDC6xdcYs6dxjFCcMFMwG8SBc9woFJGOyCYmpEl90`
+   - `VAPID_PRIVATE_KEY` = `Fb-NrBegIX_OUaN_y04Rr6Ka5nibvuDqIEZ28Utq6fA`
 
 ### SSL / HTTPS
 

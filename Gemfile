@@ -48,6 +48,7 @@ gem "resend"
 # Background jobs & caching
 gem "solid_cache"
 gem "solid_queue"
+gem "webpush", "~> 1.3"
 
 # Database
 gem "pg", "~> 1.5"

@@ -1,4 +1,6 @@
 class SettingsController < ApplicationController
+  skip_before_action :require_pin_unlock, only: [:pin, :update_pin, :remove_pin]
+
   def edit
     @user = current_user
   end
@@ -131,6 +133,35 @@ class SettingsController < ApplicationController
     save_single_reminder("pill", "21:00", notification_birth_control_settings_path, "birth_control_saved")
   end
 
+  def pin
+    @user = current_user
+  end
+
+  def update_pin
+    @user = current_user
+    code = params[:pin].to_s
+    if code.length < 4 || code.length > 6 || !code.match?(/\A\d+\z/)
+      redirect_to pin_settings_path, alert: t("settings.pin.invalid", default: "Code must be 4-6 digits")
+    elsif params[:pin_confirmation] != code
+      redirect_to pin_settings_path, alert: t("settings.pin.mismatch", default: "Codes do not match")
+    else
+      @user.set_pin(code)
+      session[:pin_verified_at] = Time.current.to_i
+      redirect_to profile_settings_path, notice: t("settings.pin.saved", default: "Access code saved")
+    end
+  end
+
+  def remove_pin
+    @user = current_user
+    if @user.pin_set? && @user.verify_pin(params[:pin])
+      @user.remove_pin
+      session.delete(:pin_verified_at)
+      redirect_to profile_settings_path, notice: t("settings.pin.removed", default: "Access code removed")
+    else
+      redirect_to profile_settings_path, alert: t("settings.pin.incorrect", default: "Incorrect code")
+    end
+  end
+
   def consent
     @consent_types = UserConsent::VALID_CONSENT_TYPES
   end
@@ -153,12 +184,7 @@ class SettingsController < ApplicationController
   end
 
   def update_notifications
-    notification_keys = [:cycle_reminder, :period_prediction, :ovulation_alert, :push_notifications, :email_notifications, :newsletter]
-    updates = {}
-    notification_keys.each do |key|
-      updates[key] = params[key] == "true" || params[key] == true
-    end
-    current_user.notification_settings&.update(updates)
+    notification_keys = [:cycle_reminder, :period_prediction, :ovulation_alert, :email_notifications, :newsletter]
     render json: {success: true}
   end
 

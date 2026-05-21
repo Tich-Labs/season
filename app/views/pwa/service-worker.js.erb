@@ -1,9 +1,11 @@
 const CACHE_NAME = 'season-v2-v1';
+const OFFLINE_URL = '/offline.html';
 const ASSETS_TO_CACHE = [
   '/',
   '/manifest.json',
   '/icon.png',
-  '/favicon.png'
+  '/favicon.png',
+  OFFLINE_URL
 ];
 
 // Install event - cache assets
@@ -51,18 +53,19 @@ self.addEventListener('fetch', (event) => {
     '/favicon.png'
   ].includes(url.pathname) || url.pathname.startsWith('/assets/');
 
-  const networkOnly = () =>
-    fetch(request).catch((error) => {
-      console.warn('Service worker fetch failed:', request.url, error);
-      return new Response('Service unavailable', {
-        status: 503,
-        statusText: 'Service unavailable',
+  if (request.method !== 'GET' || !isSameOrigin || !staticAsset) {
+    if (request.mode === 'navigate') {
+      event.respondWith(
+        fetch(request).catch(() => caches.match(OFFLINE_URL))
+      );
+      return;
+    }
+    event.respondWith(
+      fetch(request).catch(() => new Response('Service unavailable', {
+        status: 503, statusText: 'Service unavailable',
         headers: { 'Content-Type': 'text/plain' }
-      });
-    });
-
-  if (request.method !== 'GET' || !isSameOrigin || request.mode === 'navigate' || !staticAsset) {
-    event.respondWith(networkOnly());
+      }))
+    );
     return;
   }
 
@@ -75,14 +78,39 @@ self.addEventListener('fetch', (event) => {
           caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
           return networkResponse;
         })
-        .catch((error) => {
-          console.warn('Service worker fetch failed:', request.url, error);
-          return new Response('Service unavailable', {
-            status: 503,
-            statusText: 'Service unavailable',
-            headers: { 'Content-Type': 'text/plain' }
-          });
-        });
+        .catch(() => caches.match(OFFLINE_URL));
+    })
+  );
+});
+
+// Listen for push events
+self.addEventListener('push', (event) => {
+  if (!event.data) return;
+  try {
+    const data = event.data.json();
+    const options = {
+      body: data.body || '',
+      icon: data.icon || '/icon.png',
+      badge: data.badge || '/favicon.png',
+      vibrate: [200, 100, 200],
+      data: { url: data.data?.url || '/' }
+    };
+    event.waitUntil(self.registration.showNotification(data.title || 'Season', options));
+  } catch (_) {}
+});
+
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  const url = event.notification.data?.url || '/';
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((windowClients) => {
+      const existing = windowClients.find((c) => c.url.includes(self.location.origin));
+      if (existing) {
+        existing.focus();
+        existing.navigate(url);
+      } else {
+        clients.openWindow(url);
+      }
     })
   );
 });

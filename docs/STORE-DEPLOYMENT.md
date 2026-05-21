@@ -1,8 +1,29 @@
 # App Store & Play Store — Deployment Setup Guide
 
-**Last updated:** 2026-05-08  
-**App:** Season (Hotwire Native wrapper around the Rails PWA)  
-**Strategy:** The web app runs on Render. iOS and Android are thin native shells using Hotwire Native that load the web app inside a `WKWebView` / `WebView`.
+**Last updated:** 2026-05-21
+**App:** Season (Turbo Native wrapper around the Rails PWA)
+**Strategy:** The web app runs on Render. iOS and Android are thin shells using turbo-ios / turbo-android that load the web app in a web view. The web app handles all navigation (burger menu, FAB, calendar icon) — the wrappers just load the URL, pass auth tokens, and open external links in the system browser.
+
+---
+
+## What's Already Done (in code — no account needed)
+
+| Item | iOS | Android |
+|------|-----|---------|
+| Xcode / Android Studio project | ✅ (`ios/SeasonApp/`) | ❌ |
+| Turbo Native integrated | ✅ (turbo-ios v8.0.0 via SPM) | ❌ |
+| Auth token flow | ✅ (X-Turbo-Native-Token header) | ❌ |
+| Header + burger menu visible in native | ✅ (May 21) | ❌ |
+| FAB + quick actions visible in native | ✅ (May 21) | ❌ |
+| External URLs → Safari | ✅ (SceneDelegate `isInternalURL`) | ❌ |
+| Error handling with retry | ✅ (NavigatorDelegate) | ❌ |
+| App icon (1024×1024) | ✅ | ❌ |
+| Launch screen (storyboard) | ✅ | ❌ |
+| PrivacyInfo.xcprivacy | ✅ (May 21) | ❌ |
+| ITSAppUsesNonExemptEncryption | ✅ | ❌ |
+| Bundle ID | `com.season-app.ios` | `com.seasonapp.android` (planned) |
+
+**What's left is entirely account/console work** — no code changes needed.
 
 ---
 
@@ -13,7 +34,7 @@
 | Developer account | Apple Developer ($99/yr) | Google Play Console ($25 one-time) |
 | Computer | Mac with Xcode 15+ | Mac or Windows with Android Studio |
 | App URL | `https://seasonv2.onrender.com` | same |
-| Time to create account | 24–48 hrs (Apple review) | ~1 hr (instant) |
+| Time to create account | 24–48 hrs (Apple reviews new enrollments) | ~1 hr (instant) |
 
 ---
 
@@ -21,93 +42,142 @@
 
 ### Step 1 — Create Apple Developer Account
 
-1. Go to [developer.apple.com](https://developer.apple.com)
-2. Click **Account** → sign in with your Apple ID (or create one)
-3. Click **Join the Apple Developer Program**
-4. Choose **Individual** (or **Organization** if registering as a company)
-5. Pay the **$99/year** fee
-6. Wait for confirmation email — Apple reviews new accounts in **24–48 hours**
-7. Once approved, you'll see a full dashboard at [developer.apple.com/account](https://developer.apple.com/account)
+This is the first and most important step. Everything else depends on it.
 
-> **Tip:** Use the same Apple ID you'll use for Xcode. Don't create a separate account.
+**Prerequisites:**
+- An Apple ID (create one at [appleid.apple.com](https://appleid.apple.com) if you don't have one)
+- Two-factor authentication enabled on the Apple ID
+- A credit/debit card for the $99/year fee
+- The Apple ID should match the one you'll sign into Xcode with
+
+**Steps:**
+
+1. Go to [developer.apple.com](https://developer.apple.com)
+2. Click **Account** (top right) → sign in with your Apple ID
+3. Click **Join the Apple Developer Program**
+4. Choose your entity type:
+   - **Individual** — easiest. Uses your legal name as the seller name on the App Store.
+   - **Organization** — requires a D-U-N-S number (free, but takes 5+ business days to obtain). The company name appears as the seller.
+5. Fill in your personal/entity information
+6. Pay the **$99/year** fee
+7. **Wait.** Apple manually reviews new enrollments. This takes **24–48 hours** (sometimes longer for organizations).
+8. You'll receive a confirmation email when approved
+9. Once approved, your dashboard is at [developer.apple.com/account](https://developer.apple.com/account)
+
+**Common issues:**
+- Organization enrollment requires a D-U-N-S number. Get one free at [dnb.com](https://www.dnb.com/duns-number.html). This adds 5-10 business days.
+- If the enrollment is rejected, check that your legal name matches your Apple ID exactly.
+- The Apple ID must have two-factor authentication enabled. You cannot enroll without it.
+
+> **Tip:** Use the same Apple ID you'll sign into Xcode with. Don't create a separate account just for the developer program.
 
 ---
 
 ### Step 2 — Register the App in App Store Connect
 
 1. Go to [appstoreconnect.apple.com](https://appstoreconnect.apple.com)
-2. Click **Apps** → **+** → **New App**
-3. Fill in:
+2. Sign in with your developer Apple ID
+3. Click **Apps** → **+** (top left) → **New App**
+4. Fill in:
    - **Platform:** iOS
    - **Name:** Season
    - **Primary Language:** English
-   - **Bundle ID:** `com.seasonapp.ios` (must match Xcode project — create as a new explicit App ID first at developer.apple.com → Identifiers)
-   - **SKU:** `season-ios-v1` (any unique identifier)
-4. Click **Create**
+   - **Bundle ID:** `com.season-app.ios` (must match the Xcode project — you'll create this App ID in Step 3)
+   - **SKU:** `season-ios-v1` (any unique string, used internally)
+   - **User Access:** Full Access
+5. Click **Create**
 
 ---
 
-### Step 3 — Set Up App ID in Apple Developer Portal
+### Step 3 — Set Up App ID & Capabilities
 
-1. Go to [developer.apple.com](https://developer.apple.com) → **Certificates, Identifiers & Profiles**
-2. Click **Identifiers** → **+**
+1. Go to [developer.apple.com/account](https://developer.apple.com/account) → **Certificates, Identifiers & Profiles**
+2. Click **Identifiers** → **+** (top left)
 3. Choose **App IDs** → **App** → Continue
 4. Fill in:
    - **Description:** Season
-   - **Bundle ID:** Explicit → `com.seasonapp.ios`
+   - **Bundle ID:** Explicit → `com.season-app.ios`
 5. Under **Capabilities**, enable:
-   - ✅ Push Notifications (for reminders)
-   - ✅ Sign In with Apple (required if using Apple OAuth)
+   - ✅ **Push Notifications** — for cycle/period reminder push notifications
+   - ✅ **Sign In with Apple** — required if using Apple OAuth (future)
 6. Click **Register**
 
 ---
 
-### Step 4 — Build the iOS App (Hotwire Native)
+### Step 4 — Build & Upload from Xcode
 
-1. Install [Xcode](https://developer.apple.com/xcode/) from the Mac App Store (free)
-2. Create a new Xcode project:
-   - **Template:** App (iOS)
-   - **Bundle Identifier:** `com.seasonapp.ios`
-3. Add the Hotwire Native package:
-   - In Xcode: **File → Add Package Dependencies**
-   - URL: `https://github.com/hotwired/hotwire-native-ios`
-   - Version: latest stable
-4. Replace the default `ViewController.swift` with:
+The iOS project already exists at `ios/SeasonApp/`. It uses **XcodeGen** (`project.yml`) and **turbo-ios** via Swift Package Manager.
 
-```swift
-import UIKit
-import HotwireNative
+**One-time setup:**
 
-class SceneDelegate: UIResponder, UIWindowSceneDelegate {
-    var window: UIWindow?
-    let navigator = Navigator()
+```bash
+# Install XcodeGen (if not already)
+brew install xcodegen
 
-    func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options: UIScene.ConnectionOptions) {
-        guard let windowScene = scene as? UIWindowScene else { return }
-        window = UIWindow(windowScene: windowScene)
-        window?.rootViewController = navigator.rootViewController
-        window?.makeKeyAndVisible()
-        navigator.route(URL(string: "https://seasonv2.onrender.com")!)
-    }
-}
+# Regenerate the Xcode project from project.yml
+cd ios/SeasonApp
+xcodegen generate
+
+# Open in Xcode
+open SeasonApp.xcodeproj
 ```
 
-5. Set the app icon and splash screen (export from Figma — 1024×1024 PNG for the icon)
-6. In Xcode: **Product → Archive** to build a release version
-7. In the Organizer window: **Distribute App → App Store Connect → Upload**
+When Xcode opens, it will resolve the turbo-ios SPM package. Once resolved, commit the generated `Package.resolved`:
+
+```bash
+git add ios/SeasonApp/SeasonApp.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
+git commit -m "Add Package.resolved for turbo-ios SPM dependency"
+```
+
+**Every release build:**
+
+1. In Xcode, select **Product → Scheme → SeasonApp** (set to "Any iOS Device", not a simulator)
+2. Select **Product → Archive**
+3. When the Organizer opens, select the archive → **Distribute App**
+4. Choose **App Store Connect** → **Upload**
+5. Follow the prompts (Xcode handles code signing automatically with your developer account)
 
 ---
 
 ### Step 5 — Submit for Review
 
-1. Back in [appstoreconnect.apple.com](https://appstoreconnect.apple.com), go to your Season app
-2. Fill in the **App Information** tab:
-   - Category: **Health & Fitness**
-   - Age Rating: 4+
-3. Under **Pricing and Availability**: Free, all territories
-4. Under **App Privacy**: declare data types (see `docs/userdata.md`)
-5. Click **Add for Review** → **Submit to App Review**
-6. Apple review takes **1–3 days** for first submission
+1. Go back to [appstoreconnect.apple.com](https://appstoreconnect.apple.com) → your Season app
+2. Select the uploaded build under **App Store** → **iOS App** → **Build**
+3. Fill in the remaining metadata:
+
+**App Information:**
+- Category: **Health & Fitness**
+- Age Rating: 4+
+- Copyright: Your name/company
+
+**Pricing and Availability:**
+- Free, all territories
+
+**App Privacy:**
+- Declare data types (see `docs/userdata.md` for the full data map):
+  - Health & Fitness (cycle data, symptoms) — linked to identity
+  - Contact Info (email, name) — linked to identity
+  - User Content (symptom logs, notes) — linked to identity
+  - Diagnostics (crash data via Sentry) — not linked
+
+**App Review Information:**
+- Sign-in required: Yes (provide a demo account or note that reviewers should create one)
+- Contact info: `info@season.vision`
+- Notes for reviewer: "This app tracks menstrual cycles. All health data is self-reported by the user and stored encrypted. No HealthKit integration."
+
+4. Click **Add for Review** → **Submit to App Review**
+5. Apple review takes **1–3 days** for first submissions (cycle tracking apps may get additional scrutiny)
+
+---
+
+### Step 6 — TestFlight (Recommended Before App Store)
+
+Before submitting for full App Store review, use TestFlight for internal testing:
+
+1. In App Store Connect, go to **TestFlight** → **Internal Testing**
+2. Add your team (up to 100 internal testers, no review needed)
+3. Select the build and start testing
+4. Testers install the TestFlight app from the App Store and redeem your invitation
 
 ---
 
@@ -209,15 +279,21 @@ Fill in before submitting (Play Console → **Main store listing**):
 
 | Task | iOS | Android |
 |------|-----|---------|
-| Developer account created | ⬜ | ⬜ |
-| App registered in console | ⬜ | ⬜ |
-| Xcode / Android Studio project created | ⬜ | ⬜ |
-| Hotwire Native integrated | ⬜ | ⬜ |
-| App icon + splash screen added | ⬜ | ⬜ |
-| Store listing filled in | ⬜ | ⬜ |
-| First build uploaded | ⬜ | ⬜ |
-| Submitted for review | ⬜ | ⬜ |
-| Approved & live | ⬜ | ⬜ |
+| Developer account created | ⚠️ (team ID CH4G9T6ZHP in pbxproj — status unconfirmed) | ❌ |
+| App registered in console | ❌ | ❌ |
+| Xcode / Android Studio project created | ✅ | ❌ |
+| Turbo Native integrated | ✅ (turbo-ios v8.0.0 via SPM) | ❌ |
+| Auth token flow (X-Turbo-Native-Token) | ✅ | ❌ |
+| Header/FAB visible in native context | ✅ (May 21) | N/A |
+| External URLs → system browser | ✅ (May 21) | ❌ |
+| App icon + splash screen | ✅ | ❌ |
+| PrivacyInfo.xcprivacy | ✅ (May 21) | ❌ |
+| ITSAppUsesNonExemptEncryption | ✅ (May 21) | ❌ |
+| Package.resolved committed | ⏳ (open Xcode → resolve packages → commit) | ❌ |
+| Store listing filled in | ❌ | ❌ |
+| First build uploaded | ❌ | ❌ |
+| Submitted for review | ❌ | ❌ |
+| Approved & live | ❌ | ❌ |
 
 ---
 
@@ -228,7 +304,9 @@ Fill in before submitting (Play Console → **Main store listing**):
 | Apple Developer Portal | https://developer.apple.com/account |
 | App Store Connect | https://appstoreconnect.apple.com |
 | Google Play Console | https://play.google.com/console |
-| Hotwire Native iOS | https://github.com/hotwired/hotwire-native-ios |
+| Turbo iOS (SPM package) | https://github.com/hotwired/turbo-ios |
 | Hotwire Native Android | https://github.com/hotwired/hotwire-native-android |
 | Season Render URL | https://seasonv2.onrender.com |
+| Season Source (iOS project) | `ios/SeasonApp/` |
 | Privacy data declarations | docs/userdata.md |
+| iOS Integration docs | docs/ios.md |

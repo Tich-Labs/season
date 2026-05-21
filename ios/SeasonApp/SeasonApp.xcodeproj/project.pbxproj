@@ -7,11 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		AAAAAAAA010000000000000000000001 = {isa = PBXBuildFile; fileRef = BBBB00020100000000000000000002; };
+		AAAAAAAA010000000000000000000001 = {isa = PBXBuildFile; fileRef = BBBB00010100000000000000000001; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		BBBB00010100000000000000000001 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		BBBB00020100000000000000000002 = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BBBB00030100000000000000000003 = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		BBBB00040100000000000000000004 = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BBBB00050100000000000000000005 = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SeasonApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -60,7 +61,7 @@
 /* Begin PBXNativeTarget section */
 		BBB0000A01000000000000000000A = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = BBBB000C010000000000000000000C;
+			buildConfigurationList = BBBC000C010000000000000000000C;
 			buildPhases = (
 				BBBB00060100000000000000000006,
 				BBBB000A010000000000000000000A,
@@ -146,11 +147,16 @@
 		BBBB00100100000000000000000010 = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
-				INFOPLIST_FILE = SeasonApp/Info.plist;
+				DEVELOPMENT_TEAM = "CH4G9T6ZHP";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSAppTransportSecurity = "{NSAllowsArbitraryLoads = YES;}";
+				INFOPLIST_KEY_UIRequiredDeviceCapabilities = armv7;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = "1.0";
+				CURRENT_PROJECT_VERSION = 1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.season-app.ios;
 				PRODUCT_NAME = SeasonApp;
 			};
@@ -159,11 +165,16 @@
 		BBBB00110100000000000000000011 = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
-				INFOPLIST_FILE = SeasonApp/Info.plist;
+				DEVELOPMENT_TEAM = "CH4G9T6ZHP";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSAppTransportSecurity = "{NSAllowsArbitraryLoads = YES;}";
+				INFOPLIST_KEY_UIRequiredDeviceCapabilities = armv7;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = "1.0";
+				CURRENT_PROJECT_VERSION = 1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.season-app.ios;
 				PRODUCT_NAME = SeasonApp;
 			};

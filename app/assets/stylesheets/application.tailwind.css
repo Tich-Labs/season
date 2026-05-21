@@ -3,6 +3,29 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --pull-distance: 0px;
+  }
+
+  @keyframes ptr-spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* Haptic press feedback for touch devices */
+  @media (hover: none) and (pointer: coarse) {
+    button:active, a:active, label:active, [role="button"]:active {
+      opacity: 0.7;
+      transition: opacity 0.05s;
+    }
+  }
+
+  /* Prevent pull-to-refresh on scrollable containers */
+  .no-ptr {
+    overscroll-behavior: contain;
+  }
+}
+
+@layer base {
   *:focus-visible {
     outline: 2px solid #933a35;
     outline-offset: 2px;

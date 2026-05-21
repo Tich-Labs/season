@@ -138,7 +138,23 @@ Rails.application.routes.draw do
     patch :save_morning_reminder, on: :collection
     patch :save_period_reminder, on: :collection
     patch :save_birth_control_reminder, on: :collection
+    get :pin, on: :collection
+    post :pin, on: :collection, action: :update_pin
+    delete :pin, on: :collection, action: :remove_pin
   end
+
+  get "unlock", to: "pin#show", as: :pin_unlock
+  post "unlock", to: "pin#verify"
+
+  get "push/vapid-key", to: "push#vapid_public_key", as: :vapid_key
+  post "push/subscribe", to: "push#subscribe"
+  delete "push/unsubscribe", to: "push#unsubscribe"
+
+  get "webauthn/registration-challenge", to: "webauthn#registration_challenge"
+  post "webauthn/register", to: "webauthn#register"
+  get "webauthn/authentication-challenge", to: "webauthn#authentication_challenge"
+  post "webauthn/authenticate", to: "webauthn#authenticate"
+  delete "webauthn/credentials/:id", to: "webauthn#destroy"
 
   get "settings/language", to: "settings/language#show", as: :settings_language
   patch "settings/language", to: "settings/language#update"

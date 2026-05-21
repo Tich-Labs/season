@@ -45,5 +45,11 @@ services:
         value: info@season.vision
       - key: APP_HOST
         value: seasonv2.onrender.com
+      - key: SENTRY_DSN
+        sync: false
+      - key: VAPID_PUBLIC_KEY
+        sync: false
+      - key: VAPID_PRIVATE_KEY
+        sync: false
       - key: TRELLO_EMAIL
         value: nashthecoder+hsngtakttwswmszkpwsa@boards.trello.com

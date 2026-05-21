@@ -219,6 +219,12 @@ en:
       morning_saved: "Morning reminder saved."
       period_saved: "Period reminder saved."
       birth_control_saved: "Birth control reminder saved."
+  pin:
+    title: "Enter Access Code"
+    subtitle: "Enter your code to unlock Season"
+    unlock: "Unlock"
+    incorrect: "Incorrect code"
+    logout: "Sign out"
   reminder_mailer:
     morning_summary:
       subject: "Good morning, %{name} 🌸 Your Season summary"

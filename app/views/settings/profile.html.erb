@@ -130,21 +130,48 @@
     <% end %>
 
     <%# Access code %>
-    <div style="display:flex; align-items:center; gap:16px; padding:16px 0;">
+    <%= link_to pin_settings_path, style: "display:flex; align-items:center; gap:16px; padding:16px 0; text-decoration:none;" do %>
       <svg style="width:24px; height:24px;" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#933a35" stroke-width="1.5" viewBox="0 0 24 24">
         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
       </svg>
       <span style="flex:1; color:#933a35; font-size:16px; font-weight:500;">Access code</span>
       <div style="display:flex; align-items:center; gap:8px;">
-        <span style="color:#D18D83; font-size:14px;" id="access-code-label">FaceID</span>
-        <%# Toggle switch — keyboard accessible %>
-        <button role="switch" aria-checked="true" aria-labelledby="access-code-label"
-                tabindex="0"
-                onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();var c=this.getAttribute('aria-checked')==='true';this.setAttribute('aria-checked',String(!c));this.style.background=c?'#DDD0CB':'#933a35';this.querySelector('.toggle-thumb').style.marginLeft=c?'0':'auto';}"
-                style="width:40px; height:20px; background:#933a35; border-radius:25px; padding:2px; border:none; cursor:pointer;">
-          <div class="toggle-thumb" style="width:16px; height:16px; background:white; border-radius:50%; margin-left:auto;"></div>
-        </button>
+        <span style="color:#D18D83; font-size:14px;">
+          <%= current_user.pin_set? ? t("settings.profile.pin_on", default: "ON") : t("settings.profile.pin_off", default: "OFF") %>
+        </span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
+          <polyline points="9 18 15 12 9 6" />
+        </svg>
       </div>
+    <% end %>
+
+    <%# Face ID / Touch ID (requires access code) %>
+    <div data-controller="webauthn" style="display:flex; align-items:center; justify-content:space-between; padding:16px 0;">
+      <div>
+        <span style="color:#933a35; font-size:16px; font-weight:500;">Face ID / Touch ID</span>
+        <span style="display:block; color:#D18D83; font-size:14px; margin-top:4px;">
+          <%= current_user.webauthn_credentials.any? ? "ON" : "OFF" %>
+        </span>
+      </div>
+      <% if current_user.pin_set? %>
+        <% if current_user.webauthn_credentials.any? %>
+          <label style="position:relative; width:41px; height:20px; cursor:pointer; flex-shrink:0;">
+            <input type="checkbox" checked aria-label="Disable Face ID / Touch ID"
+                   data-action="change->webauthn#remove"
+                   style="opacity:0; width:0; height:0;">
+            <span style="position:absolute; inset:0; background:#933a35; border-radius:20px; transition:0.2s;"></span>
+            <span style="position:absolute; top:1px; left:22px; width:18px; height:18px; background:white; border-radius:50%; transition:0.2s;"></span>
+          </label>
+        <% else %>
+          <button data-action="webauthn#register"
+                  style="background:#933a35; color:white; border:none; border-radius:12px; padding:8px 16px; font-size:14px; font-weight:500; cursor:pointer;">
+            Enable
+          </button>
+        <% end %>
+      <% else %>
+        <span style="color:#D18D83; font-size:13px;">Set access code first</span>
+      <% end %>
+      <span data-webauthn-target="status" style="color:#D18D83; font-size:12px; margin-left:8px;"></span>
     </div>
 
     <div style="border-bottom:1px solid #DDD0CB; padding-top: 16px;"></div>

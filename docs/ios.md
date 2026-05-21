@@ -4,7 +4,21 @@
 
 The Season app is **well-positioned** for Turbo Native integration. It's already built as a mobile-first PWA with Hotwire (Turbo + Stimulus), has a max-width 430px container design, and uses server-rendered HTML—the exact architecture Turbo Native is designed to wrap.
 
-**Estimated Effort:** 3-5 weeks for a production-ready iOS app using the Frost framework approach.
+**Completed:**
+- ✅ Token-based auth system (TurboNativeDetection concern + User model)
+- ✅ Safe area insets on all key elements (header, content, banners, FAB)
+- ✅ Touch target minimums (44pt on interactive elements)
+- ✅ Offline fallback page (`/offline.html`)
+- ✅ App icon (1024x1024 for iOS asset catalog)
+- ✅ iOS meta tags on all layouts (incl. admin)
+- ✅ iOS Xcode project (turbo-ios v8.0.0 via SPM, Navigator + VisitableViewController)
+- ✅ Push notifications (Web Push API via `webpush` gem + Stimulus controller)
+- ✅ Access code (pin) lock screen with 5-min auto-lock
+- ✅ Biometrics (WebAuthn — Face ID / Touch ID registration + auth)
+- ✅ Pull-to-refresh (custom touch-based Stimulus controller)
+- ✅ Haptic feedback (`navigator.vibrate()` + CSS `:active` effects)
+
+**Remaining:** Turbo Native view variants, Turbo Frames, path configuration, navigation bridging.
 
 ---
 
@@ -16,17 +30,24 @@ The Season app is **well-positioned** for Turbo Native integration. It's already
 |-----------|--------|-------|
 | **Rails 8.1.3** | ✅ Ready | Modern Rails with Hotwire built-in |
 | **Turbo Rails** | ✅ Installed | v2.0.23, fully integrated |
-| **Stimulus** | ✅ Active | 17 controllers (incl. `calendar_toggle_controller`) |
+| **Stimulus** | ✅ Active | 17 controllers |
 | **Import Maps** | ✅ Configured | No Node/build dependencies |
 | **Mobile-First CSS** | ✅ Excellent | Tailwind, max-w-[430px] container |
-| **PWA Infrastructure** | ✅ Present | Manifest, service worker, meta tags |
-| **Cookie Auth** | ⚠️ Needs Work | Must be adapted for native |
+| **PWA Infrastructure** | ✅ Present | Manifest, service worker, offline page, meta tags |
+| **Cookie Auth** | ✅ Web | Cookie-based for regular browser users |
+| **Native Auth Token** | ✅ Built | `has_secure_token` on User, `TurboNativeDetection` concern, `X-Turbo-Native-Token` header flow |
+| **Safe Area Insets** | ✅ Done | `env(safe-area-inset-*)` on header, content, banners, FAB, feedback modal |
+| **Touch Targets** | ✅ Done | `min-w-11 min-h-11` on all interactive elements |
+| **iOS Project** | ✅ Integrated | turbo-ios v8.0.0 via SPM, Navigator + VisitableViewController |
 | **Calendar Preferences** | ✅ Complete | 5 toggles: appointments, cycle days, moon phases, holidays, week numbers |
 
 ### Key Files
 - `Gemfile` (lines 15-16: turbo-rails, stimulus-rails)
 - `config/importmap.rb` (Turbo + Stimulus pinned)
 - `app/javascript/application.js` (imports Turbo and controllers)
+- `app/controllers/concerns/turbo_native_detection.rb` (native token auth)
+- `app/views/pwa/service-worker.js.erb` (offline page caching)
+- `public/offline.html` (branded offline fallback)
 
 ---
 
@@ -41,33 +62,40 @@ gem "stimulus-rails" # Line 16
 
 **Current Usage:**
 - **Turbo Drive:** Active (default for all links/forms)
-- **Turbo Streams:** Used in `FeedbacksController#create`
+- **Turbo Streams:** NOT used (no `.turbo_stream.erb` files exist)
 - **Turbo Frames:** NOT currently used (none found in views)
-- **Stimulus Controllers:** 16 controllers in `app/javascript/controllers/`
+- **Stimulus Controllers:** 25 controllers in `app/javascript/controllers/`
 
-**Stimulus Controllers Available:**
+**Stimulus Controllers Available (23 active):**
 1. `menu_controller.js` - Burger menu (open/close/slider)
 2. `quick_actions_controller.js` - Modal management
-3. `calendar_index_controller.js` - Dropdown toggle
-4. `symptom_controller.js` - Symptom logging
-5. `date_picker_controller.js` - Date selection
-6. `feedback_modal_controller.js` - Feedback forms
-7. `open_feedback_controller.js` - Feedback triggers
-8. `loader_controller.js` - Loading states
-9. `launch_signup_controller.js` - Waitlist signup
-10. `install_controller.js` - PWA installation (iOS/Android)
-11. `password_visibility_controller.js` - Password toggle
-12. `countdown_controller.js` - Launch countdown
-13. `feature_slides_controller.js` - Feature carousel
-14. `update_prompt_controller.js` - Update prompts
-15. `coming_soon_controller.js` - Coming soon features
-16. `hello_controller.js` - Sample controller
+3. `calendar_index_controller.js` - Calendar dropdown toggle
+4. `calendar_toggle_controller.js` - Calendar view switching
+5. `symptom_controller.js` - Symptom logging
+6. `date_picker_controller.js` - Date selection
+7. `feedback_modal_controller.js` - Feedback form modal
+8. `open_feedback_controller.js` - Feedback triggers
+9. `loader_controller.js` - Loading states
+10. `launch_signup_controller.js` - Waitlist signup
+11. `install_controller.js` - PWA installation (iOS/Android)
+12. `password_visibility_controller.js` - Password toggle
+13. `countdown_controller.js` - Launch countdown
+14. `feature_slides_controller.js` - Feature carousel
+15. `update_prompt_controller.js` - PWA update prompts
+16. `coming_soon_controller.js` - Coming soon features
+17. `hello_controller.js` - Sample controller
+18. `profile_modal_controller.js` - Profile editing modal
+19. `haptic_controller.js` - Haptic feedback (`navigator.vibrate()`)
+20. `pull_to_refresh_controller.js` - Touch-based pull-to-refresh
+21. `push_subscription_controller.js` - Web Push subscription flow
+22. `webauthn_controller.js` - Biometric auth (Face ID / Touch ID)
+23. `pin_entry_controller.js` - Access code lock screen
 
 ---
 
-## Authentication System - Critical Gap
+## Authentication System — Built ✅
 
-### Current Implementation
+### Web Auth (Cookie-based)
 ```ruby
 # app/controllers/concerns/authentication.rb
 def login(user)
@@ -80,48 +108,65 @@ def login(user)
     secure: Rails.env.production?,
     same_site: :lax
   }
+  Current.user = user
 end
 ```
 
-### Issues for Turbo Native:
-1. **Cookie-based auth won't work directly** - Turbo Native uses `WKWebView` which handles cookies differently
-2. **No token-based auth** - No JWT or API tokens for native app authentication
-3. **Session storage** - Uses both `session[:user_id]` and `cookies.encrypted[:user_id]`
-
-### Recommended Solution: Token-Based Auth
-
+### Native Auth (Token-based)
 ```ruby
-# Add to User model
-class User < ApplicationRecord
-  has_secure_token :native_auth_token
+# app/models/user.rb
+has_secure_token :native_auth_token
+before_create -> { self.native_auth_token_created_at = Time.current }
 
-  def native_auth_token_valid?
-    native_auth_token_updated_at > 30.days.ago
-  end
+def native_auth_token_valid?
+  native_auth_token_created_at.present? && native_auth_token_created_at > 30.days.ago
 end
 
-# In ApplicationController or new concern
-class ApplicationController < ActionController::Base
-  before_action :authenticate_for_turbo_native
+def rotate_native_auth_token!
+  regenerate_native_auth_token
+  touch(:native_auth_token_created_at)
+end
+```
+
+```ruby
+# app/controllers/concerns/turbo_native_detection.rb
+module TurboNativeDetection
+  extend ActiveSupport::Concern
+
+  included do
+    helper_method :turbo_native_app?
+    before_action :authenticate_via_token, if: :turbo_native_app?
+  end
 
   private
 
-  def authenticate_for_turbo_native
-    if turbo_native_app?
-      token = request.headers['X-Turbo-Native-Token']
-      user = User.find_by(native_auth_token: token)
-      if user&.native_auth_token_valid?
-        Current.user = user
-      else
-        render json: {error: 'Unauthorized'}, status: :unauthorized
-      end
+  def authenticate_via_token
+    token = request.headers["X-Turbo-Native-Token"]
+    user = User.find_by(native_auth_token: token)
+    if user&.native_auth_token_valid?
+      Current.user = user
+      session[:user_id] = user.id
+    elsif request.format.json?
+      render json: { error: "Unauthorized" }, status: :unauthorized
+    else
+      redirect_to new_session_path
     end
   end
 
   def turbo_native_app?
-    request.user_agent&.include?('Turbo Native')
+    request.user_agent&.match?(/Turbo Native|Season iOS/i)
   end
 end
+```
+
+### Login Flow for Native Apps
+The `SessionsController` detects Turbo Native requests via user-agent and returns a JSON response with the auth token:
+
+```json
+{
+  "turbo_native_token": "abc123...",
+  "user": { "id": 1, "email": "user@example.com", "name": "Alice" }
+}
 ```
 
 ---
@@ -130,9 +175,8 @@ end
 
 ### Mobile-First Design ✅
 ```erb
-<!-- app/views/layouts/application.html.erb -->
 <body class="bg-[#FCF9F7] font-['Montserrat'] antialiased h-full overflow-x-hidden">
-  <main class="w-full flex-1 <%= is_authenticated_view ? 'pt-24' : '' %>">
+  <main class="w-full flex-1" style="padding-top: calc(6rem + env(safe-area-inset-top, 0px));">
     <div class="max-w-md mx-auto h-full">
       <%= yield %>
     </div>
@@ -142,12 +186,18 @@ end
 
 ### Key Observations:
 1. **Already constrained to mobile viewport** - `max-w-md` (approx 430px-480px)
-2. **Meta tags present:**
+2. **Safe area insets applied** — header, main content, banners, FAB, feedback modal all use `env(safe-area-inset-*)` with 0px fallback
+3. **Touch targets ≥44pt** — hamburger, settings dots, banner CTAs all have `min-w-11 min-h-11`
+4. **Meta tags present:**
    - `mobile-web-app-capable`
-   - `apple-mobile-web-app-capable` (launch.html.erb)
-   - Viewport meta with `viewport-fit=cover` (important for iPhone X+ notch)
-3. **Top App Bar** - Fixed position header with hamburger menu
-4. **No Turbo Native specific layout** - Would need a variant or conditional rendering
+   - `apple-mobile-web-app-capable` (all layouts)
+   - `apple-mobile-web-app-title`
+   - `apple-mobile-web-app-status-bar-style="black-translucent"`
+   - Viewport meta with `viewport-fit=cover`
+   - `theme-color="#933a35"`
+   - `apple-touch-icon`
+5. **Top App Bar** — Fixed position header with hamburger menu
+6. **No Turbo Native specific layout** — Would need a variant or conditional rendering
 
 ---
 
@@ -156,8 +206,8 @@ end
 | Format | Usage | Turbo Native Compatibility |
 |--------|-------|---------------------------|
 | HTML | Primary | ✅ Native support via Turbo |
-| Turbo Stream | FeedbacksController | ✅ Works with Turbo Native |
-| JSON | Symptoms#create, Account#show | ⚠️ Need to add format detection |
+| Turbo Stream | None | ❌ Not yet used |
+| JSON | SessionsController (native login) | ✅ Returns auth token + user data |
 | Turbo Frame | None | ❌ Should add for native-specific partials |
 
 ---
@@ -183,49 +233,29 @@ Settings: /settings/edit, /settings/notifications, etc.
 
 ### PWA Install Controller (`install_controller.js`):
 ```javascript
-// Detects iOS vs Android for PWA installation
 this._isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream
 ```
 
-### iOS Meta Tags:
-- `apple-mobile-web-app-capable` (launch.html.erb)
-- `apple-touch-icon` links in both layouts
-- `theme-color` set to `#933a35` (brand primary)
+### iOS Meta Tags (all layouts):
+- `apple-mobile-web-app-capable`
+- `apple-mobile-web-app-title="Season"`
+- `apple-mobile-web-app-status-bar-style="black-translucent"`
+- `mobile-web-app-capable`
+- `apple-touch-icon` links
+- `theme-color="#933a35"`
+- `viewport-fit=cover`
+
+### Offline Support:
+- `public/offline.html` — branded offline page with retry button + auto-reload on reconnect
+- Service worker caches `/offline.html` during install
+- Navigation requests fall back to offline page when network fails
+- Static assets use cache-first strategy with network fallback
 
 ---
 
-## Gaps to Fill
+## Remaining Gaps
 
-### A. Authentication Bridge (Critical - 1-2 weeks)
-
-**Problem:** Cookie-based auth doesn't work well with Turbo Native's WKWebView
-
-**Solution:** Implement token-based auth system (see Authentication section above)
-
-### B. Request Variant Detection (1-2 days)
-
-```ruby
-# app/controllers/concerns/turbo_native_detection.rb
-module TurboNativeDetection
-  extend ActiveSupport::Concern
-
-  included do
-    before_action :set_request_variant
-  end
-
-  private
-
-  def set_request_variant
-    request.variant = :turbo_native if turbo_native_app?
-  end
-
-  def turbo_native_app?
-    request.user_agent&.match?(/Turbo Native|Season iOS/i)
-  end
-end
-```
-
-### C. Native-Specific Views (3-5 days)
+### A. Native-Specific Views (3-5 days)
 
 Create Turbo Native specific view variants:
 ```
@@ -241,57 +271,11 @@ Or use Turbo Frames to wrap content:
 <% end %>
 ```
 
-### D. iOS App Setup with Frost (1-2 weeks)
+### B. Turbo Frames (2-3 days)
 
-**Frost Framework Integration:**
+Wrap key content areas in `<turbo-frame>` tags to enable native-specific partial replacements. Currently zero turbo frames exist.
 
-```swift
-// AppDelegate.swift
-import UIKit
-import Turbo
-
-class AppDelegate: UIResponder, UIApplicationDelegate {
-    var window: UIWindow?
-    var session: Session!
-
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-
-        session = Session()
-
-        let rootViewController = RootViewController()
-        window = UIWindow(frame: UIScreen.main.bounds)
-        window?.rootViewController = rootViewController
-        window?.makeKeyAndVisible()
-
-        // Navigate to your Rails app
-        let url = URL(string: "https://season.vision")!
-        session.visit(url)
-
-        return true
-    }
-}
-```
-
-**Handle Authentication in iOS App:**
-```swift
-// After login success, capture auth token
-func handleLoginSuccess(authToken: String) {
-    UserDefaults.standard.set(authToken, forKey: "native_auth_token")
-    // Store in Keychain for production
-}
-
-// Inject token into requests
-extension URLRequest {
-    mutating func addTurboNativeHeaders() {
-        if let token = UserDefaults.standard.string(forKey: "native_auth_token") {
-            setValue(token, forHTTPHeaderField: "X-Turbo-Native-Token")
-        }
-        setValue("Season iOS Turbo Native", forHTTPHeaderField: "User-Agent")
-    }
-}
-```
-
-### E. Navigation Bridging (3-5 days)
+### C. iOS Navigation Bridging (3-5 days)
 
 Turbo Native needs to handle:
 1. **Modal presentations** - Some screens should present as modals
@@ -324,44 +308,76 @@ session.pathConfiguration = PathConfiguration(sources: [
 }
 ```
 
+### D. Push Notifications
+- Implemented via Web Push API (cross-platform, works on iOS 16.4+)
+- `webpush` gem, `PushSubscription` model, `PushController` (subscribe/unsubscribe)
+- Stimulus controller for browser permission flow
+- PushNotificationService integrated with SendMorningRemindersJob
+
+### E. Biometric (Face ID / Touch ID)
+- Implemented via WebAuthn browser API (works on iOS 14.5+)
+- `WebauthnCredential` model, `WebauthnController` (registration + authentication)
+- Platform authenticator with `userVerification: "required"`
+- Pin unlock screen shows "Use Face ID / Touch ID" button
+- Profile settings toggle to enable/disable
+
+### F. App Store Compliance
+- **No `PrivacyInfo.xcprivacy` file** — mandatory for all App Store submissions since Spring 2024 (blocker)
+- No `ITSAppUsesNonExemptEncryption` in Info.plist
+- No privacy usage descriptions (not needed currently, but HealthKit would require them)
+- `Package.resolved` not committed — SPM dependency versions not tracked in git
+
+### G. Splash Screen
+- Manifest has no splash config; LaunchScreen is basic centered label
+
+### G. Momentum Scrolling
+- `-webkit-overflow-scrolling: touch` not broadly applied to scrollable containers
+
+### H. Pull-to-Refresh
+- Implemented via custom Stimulus controller with touch events
+- Elastic resistance, indicator text, spinner on release, Turbo.visit refresh
+- `overscroll-behavior: contain` on main content
+
+### I. Haptic Feedback
+- Implemented via Stimulus controller wrapping `navigator.vibrate()`
+- Actions: light/medium/heavy/selection/success/error
+- CSS `:active` opacity reduction on touch devices as tactile fallback
+
 ---
 
-## Key Files to Modify/Create
+## Files Created/Modified
 
-### New Files to Create:
+### New Files:
 ```
-1. app/controllers/concerns/turbo_native_detection.rb
-2. app/models/user_native_token.rb (or add to User model)
-3. config/initializers/turbo_native.rb
-4. app/views/layouts/turbo_native.html.erb (optional variant)
-5. public/turbo_native_config.json (for iOS app path config)
-6. app/helpers/turbo_native_helper.rb
+1. app/controllers/concerns/turbo_native_detection.rb  — Token auth for native
+2. db/migrate/20260518120000_add_native_auth_token_to_users.rb
+3. public/offline.html                                  — Branded offline page
+4. ios/SeasonApp/SeasonApp/Assets.xcassets/AppIcon.appiconset/icon-1024.png
 ```
 
-### Files to Modify:
+### Modified Files:
 ```
-1. app/controllers/application_controller.rb
-   - Include TurboNativeDetection concern
-
-2. app/controllers/sessions_controller.rb
-   - Return auth token for native app after login
-
-3. app/controllers/registrations_controller.rb
-   - Return auth token for native app after signup
-
-4. app/views/layouts/application.html.erb
-   - Add conditional for native app (hide burger menu if native handles it)
-
-5. config/routes.rb
-   - Add native auth endpoint if using token approach
-
-6. app/javascript/controllers/menu_controller.js
-   - Disable or adapt for native (native app has its own nav)
+1. app/models/user.rb                — Added has_secure_token + token methods
+2. app/controllers/application_controller.rb — Include TurboNativeDetection
+3. app/controllers/sessions_controller.rb   — Return token for native login
+4. app/controllers/pwa_controller.rb        — Skip auth for offline/manifest
+5. app/views/layouts/application.html.erb   — Safe area insets + touch targets
+6. app/views/layouts/launch.html.erb        — Added missing iOS meta tags
+7. app/views/layouts/admin.html.erb         — Added iOS/PWA meta tags
+8. app/views/layouts/admin_auth.html.erb    — Added iOS/PWA meta tags
+9. app/views/shared/_quick_actions.html.erb — Safe area bottom on FAB
+10. app/views/shared/_feedback_modal.html.erb — Safe area bottom padding
+11. app/views/pwa/service-worker.js.erb     — Offline page caching
+12. db/schema.rb                            — Added native_auth_token columns
+13. ios/SeasonApp/SeasonApp/SceneDelegate.swift — Turbo Navigator (push/replace nav + error handling)
+14. ios/SeasonApp/SeasonApp/AppDelegate.swift     — UIApplicationDelegate entry point
+15. ios/SeasonApp/project.yml                     — XcodeGen config, turbo-ios v8.0.0 SPM
+16. ios/SeasonApp/Assets.xcassets/AppIcon.appiconset/Contents.json — Added icon ref
 ```
 
 ---
 
-## Architectural Recommendations
+## Architectural Recommendations (Remaining)
 
 ### 1. Use Turbo Frames for Native-Specific Content
 ```erb
@@ -389,7 +405,6 @@ export default class extends Controller {
   connect() {
     if (this.isTurboNative()) {
       document.body.classList.add('turbo-native')
-      // Disable web-only features
     }
   }
 
@@ -403,15 +418,23 @@ export default class extends Controller {
 
 ## Estimated Effort Breakdown
 
-| Task | Effort | Priority |
-|------|--------|----------|
-| **Authentication Token System** | 1-2 weeks | 🔴 Critical |
-| **Request Variant Detection** | 1-2 days | 🔴 Critical |
-| **Native-Specific Views** | 3-5 days | 🟡 High |
-| **iOS App (Frost/Turbo Native)** | 1-2 weeks | 🔴 Critical |
-| **Navigation Configuration** | 3-5 days | 🟡 High |
-| **Testing & Polish** | 1 week | 🟢 Medium |
-| **Total** | **3-5 weeks** | |
+| Task | Effort | Priority | Status |
+|------|--------|----------|--------|
+| **Authentication Token System** | 1-2 weeks | 🔴 Critical | ✅ Done |
+| **Safe Area Insets** | 1 day | 🔴 Critical | ✅ Done |
+| **Touch Target Minimums** | 1 day | 🔴 Critical | ✅ Done |
+| **iOS Meta Tags (all layouts)** | 0.5 day | 🔴 Critical | ✅ Done |
+| **Offline Fallback Page** | 1 day | 🟡 High | ✅ Done |
+| **App Icon** | 0.5 day | 🟡 High | ✅ Done |
+| **Turbo Native View Variants** | 3-5 days | 🟡 High | ❌ Pending |
+| **Turbo Frames** | 2-3 days | 🟡 High | ❌ Pending |
+| **Navigation Configuration** | 3-5 days | 🟡 High | ❌ Pending |
+| **Push Notifications** | 1 week | 🟢 Medium | ✅ Done |
+| **Biometric Login** | 2-3 days | 🟢 Medium | ✅ Done |
+| **Pull-to-refresh** | 1 day | 🟢 Medium | ✅ Done |
+| **Haptic Feedback** | 0.5 day | 🟢 Medium | ✅ Done |
+| **Testing & Polish** | 1 week | 🟢 Medium | ❌ Pending |
+| **Total Remaining** | **1-2 weeks** | | |
 
 ---
 
@@ -421,25 +444,39 @@ export default class extends Controller {
 |-------------|--------|-------|
 | Mobile-first HTML | ✅ Ready | 430px max-width |
 | Turbo/Gem | ✅ Ready | turbo-rails installed |
-| Stimulus Controllers | ✅ Ready | 16 controllers exist |
-| PWA Meta Tags | ✅ Ready | iOS/Android tags present |
-| Auth Token System | ❌ Missing | Must build for native |
-| Native Detection | ❌ Missing | Need request variant |
-| iOS App Shell | ❌ Missing | Need to build in Swift |
-| Path Configuration | ❌ Missing | JSON config for native |
-| Offline Support | ❌ Optional | Service worker exists but basic |
+| Stimulus Controllers | ✅ Ready | 23 controllers exist |
+| PWA Meta Tags | ✅ Ready | All layouts, iOS+Android |
+| Auth Token System | ✅ Built | `has_secure_token` + `TurboNativeDetection` |
+| Native Detection | ✅ Built | User-agent check in concern |
+| Safe Area Insets | ✅ Applied | Header, content, banners, FAB, modal |
+| Touch Targets | ✅ Applied | All interactive elements ≥44pt |
+| Offline Support | ✅ Built | Branded offline page + SW caching |
+| App Icon | ✅ Set | 1024x1024 PNG in asset catalog |
+| Header + Burger Menu in Native | ✅ Built | Visible in native context (May 21 fix) |
+| FAB + Quick Actions in Native | ✅ Built | Visible in native context (May 21 fix) |
+| External URLs → Safari | ✅ Built | SceneDelegate `isInternalURL()` check (May 21) |
+| PrivacyInfo.xcprivacy | ✅ Built | App Store compliance manifest (May 21) |
+| ITSAppUsesNonExemptEncryption | ✅ Built | Info.plist entry (May 21) |
+| iOS App Shell | ✅ Integrated | turbo-ios v8.0.0 via SPM, Navigator + VisitableViewController |
+| Path Configuration | ❌ Missing | JSON config for native nav (future polish) |
+| Turbo Frames | ❌ Missing | None in views (future polish) |
+| Native View Variants | ❌ Missing | No `+turbo_native.erb` files (future polish) |
+| Push Notifications | ✅ Built | Web Push API + Stimulus controller |
+| Biometric Auth | ✅ Built | WebAuthn platform authenticator |
+| Pull-to-refresh | ✅ Built | Touch-based Stimulus controller + spinner |
+| Haptic Feedback | ✅ Built | `navigator.vibrate()` + CSS `:active` |
 
 ---
 
 ## Conclusion
 
-The Season app is **architecturally well-suited** for Turbo Native integration. The primary work involves:
+The Season app is **architecturally well-suited** for Turbo Native integration. The critical infrastructure is in place: token-based auth, safe area handling, touch targets, offline support, external URL routing, PrivacyInfo manifest, and the iOS app shell with turbo-ios.
 
-1. **Building a token-based auth bridge** (biggest gap)
-2. **Creating an iOS app shell** with Frost/Turbo Native
-3. **Adding request variant detection** for native-specific responses
-4. **Configuring native navigation** patterns
+The iOS wrapper is code-complete for TestFlight. The only remaining blockers are external: Apple Developer account enrollment and App Store Connect registration (see `docs/STORE-DEPLOYMENT.md`).
 
-The Hotwire foundation is solid, the mobile-first design is excellent, and the Stimulus controllers provide the interactivity needed. With 3-5 weeks of focused effort, you could have a production-ready iOS app in the App Store using Turbo Native.
+**Future polish (post-launch):**
+1. Adding Turbo Frames and native view variants for a more polished native feel
+2. Path configuration JSON for modal/sheet presentation rules
+3. Native push notification bridge (APNs)
 
-**Recommendation:** Start with the authentication token system first, then build a minimal iOS wrapper to test the integration before investing in native-specific views and navigation polish.
+**Recommendation:** Ship the current wrapper to TestFlight. The web app's header + FAB navigation works well in the native context — no native tab bar needed per Figma.

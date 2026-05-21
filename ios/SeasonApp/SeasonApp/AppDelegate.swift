@@ -1,28 +1,12 @@
 import UIKit
-import WebKit
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
-    var window: UIWindow?
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        true
+    }
 
-        window = UIWindow(frame: UIScreen.main.bounds)
-        guard let window = window else { return false }
-
-        let webView = WKWebView(frame: window.bounds)
-        webView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-
-        let url = URL(string: "https://seasonv2.onrender.com")!
-        webView.load(URLRequest(url: url))
-
-        let viewController = UIViewController()
-        viewController.view.addSubview(webView)
-
-        window.rootViewController = viewController
-        window.makeKeyAndVisible()
-
-        return true
+    func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
+        UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
     }
 }

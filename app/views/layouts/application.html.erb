@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="h-full" lang="<%= I18n.locale %>">
+<html class="h-full" lang="<%= I18n.locale %>"<%= " data-hotwire-native" if turbo_native_app? %>>
   <head>
     <title><%= content_for(:title) || "Season" %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -20,6 +20,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
     <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
+    <% if turbo_native_app? %>
+      <%= stylesheet_link_tag "native", "data-turbo-track": "reload" %>
+    <% end %>
     <%= javascript_importmap_tags %>
     <script nonce="<%= content_security_policy_nonce %>">
       if ('serviceWorker' in navigator) {
@@ -36,7 +39,7 @@
   <% is_authenticated_view = authenticated? && !controller_name.in?(%w[sessions registrations home onboarding]) %>
 
   <body class="bg-[#FCF9F7] font-['Montserrat'] antialiased h-full overflow-x-hidden"
-        data-controller="update-prompt install">
+        data-controller="update-prompt install haptic">
 
     <% if is_authenticated_view %>
     <div data-controller="menu">
@@ -48,14 +51,13 @@
       <% hdr_bg      = dark_header ? "bg-[#933a35]" : "bg-[#ede1d5]" %>
       <% bar_color   = dark_header ? "bg-white"     : "bg-[#933a35]" %>
       <% hdr_fg      = dark_header ? "text-white"   : "text-[#933a35]" %>
-      <% hdr_inline  = content_for?(:header_color) ? "style=\"background:#{yield(:header_color)};\"" : "" %>
-      <header class="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-app h-20 <%= hdr_bg %> z-40 flex items-center px-4" <%= hdr_inline.html_safe %>>
+      <header class="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-app <%= hdr_bg %> z-40 flex items-center px-4" style="padding-top: env(safe-area-inset-top, 0px); min-height: calc(5rem + env(safe-area-inset-top, 0px));<%= content_for?(:header_color) ? " background:#{yield(:header_color)};" : '' %>">
 
         <%# Left: custom back-arrow OR default hamburger %>
         <% if content_for?(:header_left) %>
           <%= yield(:header_left) %>
         <% else %>
-          <button class="p-2" data-action="click->menu#open">
+          <button class="min-w-11 min-h-11 flex flex-col items-center justify-center" data-action="click->menu#open">
             <div class="w-6 h-0.5 <%= bar_color %> mb-1.5 pointer-events-none"></div>
             <div class="w-6 h-0.5 <%= bar_color %> mb-1.5 pointer-events-none"></div>
             <div class="w-6 h-0.5 <%= bar_color %> pointer-events-none"></div>
@@ -84,7 +86,7 @@
         <% if content_for?(:header_right) %>
           <%= yield(:header_right) %>
         <% elsif is_settings %>
-          <button class="p-2">
+          <button class="min-w-11 min-h-11 flex flex-col items-center justify-center">
             <svg xmlns="http://www.w3.org/2000/svg" width="4" height="20" fill="white" viewBox="0 0 4 20">
               <circle cx="2" cy="2" r="1.5" />
               <circle cx="2" cy="10" r="1.5" />
@@ -101,12 +103,13 @@
     <% end %>
 
     <%# PWA update banner — shown by update_prompt_controller when a new SW is waiting %>
+    <% unless turbo_native_app? %>
     <div data-update-prompt-target="banner"
-         class="fixed bottom-24 left-1/2 -translate-x-1/2 w-full max-w-app px-4 z-50 hidden">
+         class="fixed left-1/2 -translate-x-1/2 w-full max-w-app px-4 z-50 hidden" style="bottom: calc(6rem + env(safe-area-inset-bottom, 0px));">
       <div class="bg-[#3d2b28] text-white rounded-2xl px-4 py-3 flex items-center justify-between shadow-xl">
         <span class="text-sm font-medium">New version of Season available</span>
         <button data-action="click->update-prompt#updateApp"
-                class="bg-brand-primary text-white text-sm font-semibold px-4 py-1.5 rounded-xl ml-3 shrink-0">
+                class="bg-brand-primary text-white text-sm font-semibold min-w-11 min-h-11 flex items-center justify-center px-4 rounded-xl ml-3 shrink-0">
           Refresh
         </button>
       </div>
@@ -114,17 +117,17 @@
 
     <%# PWA install banner — shown by install_controller when app is installable %>
     <div data-install-target="banner"
-         class="fixed bottom-24 left-1/2 -translate-x-1/2 w-full max-w-app px-4 z-50 hidden">
+         class="fixed left-1/2 -translate-x-1/2 w-full max-w-app px-4 z-50 hidden" style="bottom: calc(6rem + env(safe-area-inset-bottom, 0px));">
       <div class="bg-white border border-[#ede1d5] rounded-2xl px-4 py-3 flex items-center justify-between shadow-xl">
         <span class="text-sm font-medium text-[#3d2b28]">Add Season to your home screen</span>
         <div class="flex gap-2 ml-3 shrink-0">
           <button data-action="click->install#install"
                   data-install-target="button"
-                  class="bg-brand-primary text-white text-sm font-semibold px-4 py-1.5 rounded-xl">
+                  class="bg-brand-primary text-white text-sm font-semibold min-w-11 min-h-11 flex items-center justify-center px-4 rounded-xl">
             Add
           </button>
           <button data-action="click->install#dismiss"
-                  class="text-[#6b6b6b] text-sm px-2 py-1.5">✕</button>
+                  class="text-[#6b6b6b] text-sm min-w-11 min-h-11 flex items-center justify-center">✕</button>
         </div>
       </div>
       <div data-install-target="iosHint"
@@ -132,8 +135,9 @@
         Tap <strong>Share</strong> then <strong>"Add to Home Screen"</strong>
       </div>
     </div>
+    <% end %>
 
-    <main class="w-full flex-1 <%= is_authenticated_view ? 'pt-24' : '' %>">
+    <main class="w-full flex-1 no-ptr" data-controller="pull-to-refresh" style="<%= is_authenticated_view ? "padding-top: calc(6rem + env(safe-area-inset-top, 0px));" : '' %>">
       <div class="max-w-md mx-auto h-full">
         <%= yield %>
       </div>
