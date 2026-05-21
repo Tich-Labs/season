@@ -2,7 +2,7 @@
 
 **Last updated:** 2026-05-21
 **App:** Season (Turbo Native wrapper around the Rails PWA)
-**Strategy:** The web app runs on Render. iOS and Android are thin shells using turbo-ios / turbo-android that load the web app in a web view. The web app handles all navigation (burger menu, FAB, calendar icon) — the wrappers just load the URL, pass auth tokens, and open external links in the system browser.
+**Strategy:** The web app runs on Render at `https://seasonv2.onrender.com` (custom domain `season.vision` planned). iOS and Android are thin shells using turbo-ios / turbo-android that load the web app in a web view.
 
 ---
 
@@ -33,8 +33,9 @@
 |------|-----|---------|
 | Developer account | Apple Developer ($99/yr) | Google Play Console ($25 one-time) |
 | Computer | Mac with Xcode 15+ | Mac or Windows with Android Studio |
-| App URL | `https://seasonv2.onrender.com` | same |
+| App URL | `https://seasonv2.onrender.com` (custom domain `season.vision` planned) | same |
 | Time to create account | 24–48 hrs (Apple reviews new enrollments) | ~1 hr (instant) |
+| App Store name | ⚠️ "Season" may be taken — have a backup ready (e.g. "Season App", "Season Tracker") | same check |
 
 ---
 
@@ -80,7 +81,7 @@ This is the first and most important step. Everything else depends on it.
 3. Click **Apps** → **+** (top left) → **New App**
 4. Fill in:
    - **Platform:** iOS
-   - **Name:** Season
+   - **Name:** Season (⚠️ if "Season" is taken, try "Season App", "Season Tracker", or "Season Cycle")
    - **Primary Language:** English
    - **Bundle ID:** `com.season-app.ios` (must match the Xcode project — you'll create this App ID in Step 3)
    - **SKU:** `season-ios-v1` (any unique string, used internally)
