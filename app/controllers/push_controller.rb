@@ -1,6 +1,5 @@
 class PushController < ApplicationController
   skip_before_action :verify_authenticity_token, only: [:subscribe, :unsubscribe]
-  skip_before_action :require_pin_unlock, only: [:vapid_public_key]
 
   def vapid_public_key
     key = Rails.application.credentials.dig(:vapid, :public_key) ||

@@ -1,6 +1,4 @@
 class SettingsController < ApplicationController
-  skip_before_action :require_pin_unlock, only: [:pin, :update_pin, :remove_pin]
-
   def edit
     @user = current_user
   end
