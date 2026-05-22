@@ -131,7 +131,7 @@ jobs:
         continue-on-error: true
       - name: Run database consistency
         env:
-          DATABASE_URL: postgres://postgres:postgres@localhost:5432/season_test
+          DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/season_test
         run: |
           bundle exec rails db:test:prepare
           bundle exec database_consistency -c .database_consistency.todo.yml
@@ -162,13 +162,13 @@ jobs:
           bundler-cache: true
       - name: Set up database
         env:
-          DATABASE_URL: postgres://postgres:postgres@localhost:5432/season_test
+          DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/season_test
           RAILS_ENV: test
         run: bundle exec rails db:create db:schema:load
       - name: Run tests
         env:
           RAILS_ENV: test
-          DATABASE_URL: postgres://postgres:postgres@localhost:5432/season_test
+          DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/season_test
         run: bundle exec rails test
       - name: Upload screenshots
         if: failure()

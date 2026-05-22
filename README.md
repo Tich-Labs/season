@@ -1,343 +1,190 @@
-# Season V2
+# typos
 
-## What is Season
+> **Source code spell checker**
 
-Season is a women's cycle tracking progressive web app (PWA) built on Rails 8 with Hotwire. It helps users understand their menstrual cycle through a seasonal metaphor (Winter/Spring/Summer/Autumn), track symptoms and superpowers daily, view their cycle calendar, and build tracking streaks.
+Finds and corrects spelling mistakes among source code:
+- Fast enough to run on monorepos
+- Low false positives so you can run on PRs
 
----
+![Screenshot](./docs/screenshot.png)
 
-## Tech Stack
 
-| Layer | Tech | Version |
-|-------|------|---------|
-| Language | Ruby | 3.4.7 |
-| Framework | Rails | 8.1.3 |
-| Database | PostgreSQL | latest |
-| CSS | Tailwind CSS | ~3.3.1 (via tailwindcss-rails) |
-| JS | Hotwire (Turbo + Stimulus) | turbo-rails / stimulus-rails |
-| Auth | Custom cookie session + Devise (passwords only) | devise |
-| Background Jobs | Solid Queue | solid_queue |
-| Caching | Solid Cache | solid_cache |
-| WebSockets | Solid Cable | solid_cable |
-| Email | Resend (via resend gem) | resend |
-| Error tracking | Sentry | sentry-ruby / sentry-rails |
-| Payments | Stripe | stripe (wired, not active) |
-| Admin | Ransack | ransack |
-| OmniAuth | Google, Facebook, Apple | omniauth-google-oauth2, omniauth-facebook, omniauth-apple |
+[![Downloads](https://img.shields.io/github/downloads/crate-ci/typos/total.svg)](https://github.com/crate-ci/typos/releases)
+[![codecov](https://codecov.io/gh/crate-ci/typos/branch/master/graph/badge.svg)](https://codecov.io/gh/crate-ci/typos)
+[![Documentation](https://img.shields.io/badge/docs-master-blue.svg)][Documentation]
+![License](https://img.shields.io/crates/l/typos.svg)
+[![Crates Status](https://img.shields.io/crates/v/typos.svg)][Crates.io]
 
----
+Dual-licensed under [MIT](LICENSE-MIT) or [Apache 2.0](LICENSE-APACHE)
 
-## Architecture
+## Documentation
 
-- **PWA mobile-first** — 390px base, max-w-[430px] layout container throughout. Turbo Native (iOS/Android) roadmap.
-- **Auth** — Custom cookie-based `Authentication` concern in `app/controllers/concerns/authentication.rb`. Devise is used only for password recovery emails. Sessions are encrypted cookies with 7-day expiry.
-- **Cycle logic** — `CycleCalculatorService` (`app/services/cycle_calculator_service.rb`). Single source of truth for phase, season, cycle day, and calendar colour data.
-- **Phase content** — `CyclePhaseContent` model, seeded for en/de x 4 phases. Stores superpower, mood, sport, nutrition, and care text per phase/locale.
-- **Background jobs** — Solid Queue runs `SendMorningRemindersJob`, `SendPeriodRemindersJob`, and `SendBirthControlRemindersJob`. All email delivered via Resend.
-- **i18n** — English default, German available. All user-facing strings must go through `t()` helpers. Locales: `config/locales/en.yml` + `config/locales/de.yml`.
-- **Admin** — `admin/` namespace, gated by `User#admin?` boolean. Users, Inbox (feedback/bugs/support), Launch Signups.
+- [Installation](#install)
+- [Getting Started](#getting-started)
+  - [False Positives](#false-positives)
+  - [Integrations](#integrations)
+    - [GitHub Action](docs/github-action.md)
+    - [pre-commit](docs/pre-commit.md)
+    - [Custom](#custom)
+  - [Debugging](#debugging)
+- [Reference](docs/reference.md)
+- [FAQ](#faq)
+- [Comparison with other spell checkers](docs/comparison.md)
+- [Projects using typos](https://github.com/crate-ci/typos/wiki)
+- [Benchmarks](benchsuite/runs)
+- [Design](docs/design.md)
+- [Contribute](CONTRIBUTING.md)
+- [CHANGELOG](CHANGELOG.md)
 
----
+## Install
 
-## Milestone Status
+[Download](https://github.com/crate-ci/typos/releases) a pre-built binary
+(installable via [gh-install](https://github.com/crate-ci/gh-install)).
 
-Based on Figma file: [SEASON.Vision-App-2026--Copy-](https://www.figma.com/design/Vi7qdepuk2lWGl4TWXbedb/SEASON.Vision-App-2026--Copy-)
-
-| Milestone | Screens | Description | Status |
-| --------- | ------- | ----------- | ------ |
-| **M1** | 43 | Signing In and Onboarding | ✅ Complete |
-| **M2** | 32 | Calendar with Basic Cycle & Display | ✅ Complete |
-| **M3** | 64 | Tracking / Learn | ✅ Complete |
-| **M4** | 60 | Forecasting and Appointments | ✅ Complete |
-| **M5** | 60 | Birth Control and Other Reminders | ✅ Complete |
-| **M6** | 24 | Gamification & Scoring Flames | ❌ Not in scope for launch |
-| **M7** | 17 | Onboarding & Feedback | ✅ Complete |
-
-### What's Left Before Launch
-
-| Item | Priority | Status |
-| ---- | -------- | ------ |
-| OAuth credentials on Render (Google, Facebook, Apple) | High | Credentials not set |
-| `config.hosts` — uncomment DNS rebinding protection | High | ✅ Done |
-| Rack::Attack on login + launch-signup endpoints | High | ✅ Done |
-| `config.load_defaults 8.1` — run `bin/rails app:update` | High | ✅ Already set |
-| SSL enforcement (assume_ssl, force_ssl) | High | ✅ Done |
-| Devise `config.paranoid = true` — prevent account enumeration | Medium | Off |
-| CSP enforcement — nonces for scripts, inline styles allowed | Medium | ✅ Done |
-| Active Storage: switch production to S3/R2 — avatars lost on redeploy | Medium | Local disk in prod |
-| `SENTRY_DSN` on Render + initializer created | Medium | ✅ Initializer created, set env var on Render |
-| VAPID keys in credentials — `rails credentials:edit` then paste generated keys | Medium | ✅ Keys generated, documented in `.env.template` and `config/credentials.example.yml` |
-| Stripe paywall (launch as free first month) | Low | Planned post-launch |
-
----
-
-## Setup
-
-### Prerequisites
-
-- Ruby 3.4.7 (use rbenv or asdf)
-- PostgreSQL running locally
-- Node.js (for Tailwind build watcher)
-
-### Installation
-
-```bash
-git clone <repo>
-cd season
-
-# Install Ruby deps
-bundle install
-
-# Add master key (get from team password manager)
-echo "YOUR_MASTER_KEY" > config/master.key
-
-# Create DB, load schema, seed phase content
-bin/rails db:create db:schema:load db:seed
-
-# Start dev server
-bin/dev
+Or use rust to install:
+```console
+$ cargo install typos-cli
 ```
 
-### Environment Variables
-
-| Variable | Required | Notes |
-|----------|----------|-------|
-| `RAILS_MASTER_KEY` | Yes | Decrypts `config/credentials.yml.enc`. Never commit this file. |
-| `DATABASE_URL` | Production only | Render PostgreSQL URL (auto-set by Render) |
-| `SECRET_KEY_BASE` | Production only | Auto-generated by Render (`generateValue: true`) |
-| `RESEND_API_KEY` | Production | Email delivery via Resend. All mailers will fail without this. |
-| `RESEND_FROM_EMAIL` | Production | Sender address, e.g. `hello@seasonapp.co` |
-| `GOOGLE_CLIENT_ID` | OAuth | For Google Sign-In |
-| `GOOGLE_CLIENT_SECRET` | OAuth | For Google Sign-In |
-| `FACEBOOK_APP_ID` | OAuth | For Facebook Sign-In |
-| `FACEBOOK_APP_SECRET` | OAuth | For Facebook Sign-In |
-| `APPLE_CLIENT_ID` | OAuth | For Apple Sign-In |
-| `APPLE_TEAM_ID` | OAuth | For Apple Sign-In |
-| `APPLE_KEY_ID` | OAuth | For Apple Sign-In |
-| `APPLE_PRIVATE_KEY` | OAuth | PEM format |
-| `SENTRY_DSN` | Production | Error tracking via Sentry initializer |
-| `VAPID_PUBLIC_KEY` | Fallback | Web Push notifications (if not in credentials) |
-| `VAPID_PRIVATE_KEY` | Fallback | Web Push notifications (if not in credentials) |
-| `STRIPE_SECRET_KEY` | Post-launch | Payments (not yet active) |
-
-> `SECRET_KEY_BASE` and local dev: Rails reads it from `credentials.yml.enc` locally. On Render it reads `ENV['SECRET_KEY_BASE']` which takes priority. The two values do not need to match.
-
----
-
-## Screens
-
-### Auth Flow (no bottom nav)
-
-| Screen | Route |
-|--------|-------|
-| Loader / Splash | `/` and `/loader` |
-| Welcome | `/welcome` |
-| Sign Up | `/registration/new` |
-| Log In | `/session/new` |
-| Forgot Password | `/users/password/new` |
-| Reset Password | `/users/password/edit` |
-| Password Done | `/password/done` |
-| Password Error States | `/password/error/*` |
-| Invite Landing | `/invite/:token` |
-| Onboarding Steps 1–11 | `/onboarding/:id` |
-| Onboarding Finish | `/onboarding/finish` |
-
-### Main App (with top bar + burger menu)
-
-| Screen | Route |
-|--------|-------|
-| Calendar (Monthly) | `/calendar` |
-| Calendar (Weekly) | `/calendar/weekly` |
-| Calendar Appointments | `/calendar/appointments` |
-| Add Calendar Event | `/calendar_events/new` |
-| Edit Calendar Event | `/calendar_events/:id/edit` |
-| Daily View | `/daily/:date` |
-| Phase Overview | `/informations` |
-| Phase Detail | `/informations/:phase` (menstrual, follicular, ovulation, luteal) |
-| Tracking (self analysis) | `/tracking` |
-| Period entry / edit | `/tracking/period` |
-| Symptom Logs | `/symptoms` |
-| Symptom Detail | `/symptoms/:id` |
-| Discharge guide | `/symptoms/discharge` |
-| Superpowers | `/superpowers` |
-| Superpower Detail | `/superpowers/:id` |
-| Streaks | `/streaks` |
-| Settings (main) | `/settings/edit` |
-| Settings Profile | `/settings/profile` |
-| Settings Subscriptions | `/settings/subscriptions` |
-| Settings Calendar | `/settings/calendar` |
-| Settings Notifications | `/settings/notifications` |
-| Settings Notification — Morning | `/settings/notification_morning` |
-| Settings Notification — Period | `/settings/notification_period` |
-| Settings Notification — Birth Control | `/settings/notification_birth_control` |
-
-### Admin (gated by `User#admin?`)
-
-| Screen | Route |
-|--------|-------|
-| Users list | `/admin` |
-| User detail | `/admin/users/:id` |
-| Inbox (all) | `/admin/inbox` |
-| Inbox — Feedback | `/admin/inbox/feedback` |
-| Inbox — Bugs | `/admin/inbox/bugs` |
-| Inbox — Support | `/admin/inbox/support` |
-| Inbox CSV export | `/admin/inbox/export_csv` |
-| Launch Signups list | `/admin/launch_signups` |
-| Launch Signups CSV | `/admin/launch_signups/export_csv` |
-| Admin login | `/admin/login` |
-
-### Public / Legal
-
-| Screen | Route |
-|--------|-------|
-| Launch / Countdown | `/launch` |
-| Terms | `/terms` |
-| Privacy | `/privacy` |
-| Health Check | `/up` |
-
----
-
-## App Structure
-
-### Controllers (28 total)
-
-- `ApplicationController` — Base controller
-- `Authentication` concern — Cookie-based auth
-- `HomeController` — Landing, loader, countdown, welcome
-- `SessionsController` — Login
-- `RegistrationsController` — Sign up
-- `OnboardingController` — 11-step onboarding flow
-- `CalendarController` — Monthly/weekly/appointments views
-- `CalendarEventsController` — CRUD for events
-- `DailyViewController` — Day detail view
-- `InformationsController` — Phase overview + detail (4 phases)
-- `TrackingController` — Self analysis + period entry
-- `SymptomsController` — Symptom logging
-- `SuperpowersController` — Superpower tracking
-- `StreaksController` — Tracking streaks
-- `SettingsController` — All settings routes including notification detail screens
-- `PasswordsController` — Password recovery
-- `OmniauthController` — OAuth callbacks
-- `InvitesController` — Invite flow
-- `LaunchSignupsController` — Waitlist signup (public)
-- `LaunchController` — Launch/countdown page
-- `LegalController` — Terms, privacy
-- `FeedbacksController` — In-app user feedback submission
-- `PinController` — Access code lock/unlock
-- `PushController` — Web Push subscription + VAPID key
-- `WebauthnController` — Biometric (Face ID / Touch ID) registration + authentication
-- `PWAController` — Manifest, service worker
-- `DebugController` — Dev endpoints
-- `Admin::BaseController` — Admin auth + shared stats
-- `Admin::UsersController` — User list + detail
-- `Admin::InboxController` — Feedback/bugs/support inbox
-- `Admin::LaunchSignupsController` — Waitlist signups list + CSV export
-
-### Models (14 total)
-
-- `User` — User accounts
-- `CycleEntry` — Daily cycle tracking
-- `CyclePhaseContent` — Phase content (en/de)
-- `CalendarEvent` — Calendar events
-- `SymptomLog` — Daily symptom logs
-- `SuperpowerLog` — Daily superpower logs
-- `Streak` — Tracking streaks
-- `Reminder` — User reminders (morning, period, birth control)
-- `Feedback` — User feedback (type: feedback / bug_report / support)
-- `LaunchSignup` — Waitlist email signups
-- `PushSubscription` — Web Push notification subscriptions (endpoint, p256dh, auth keys)
-- `WebauthnCredential` — WebAuthn credentials for biometric auth
-- `Current` — Request-scoped current user
-- `ApplicationRecord` — Base model
-
-### Mailers (4 total)
-
-- `ApplicationMailer` — Base mailer (Resend adapter)
-- `ReminderMailer` — Morning check-in, period, birth control reminder emails
-- `SupportMailer` — Forwards user support/feedback messages
-- `TrelloMailer` — Bug reports forwarded to Trello inbox
-
-### Jobs (4 total)
-
-- `ApplicationJob` — Base job (Solid Queue)
-- `SendMorningRemindersJob` — Sends daily morning check-in emails to opted-in users
-- `SendPeriodRemindersJob` — Sends period start warning emails based on cycle prediction
-- `SendBirthControlRemindersJob` — Sends birth control pill/break reminders
-
-### Services (1)
-
-- `CycleCalculatorService` — Phase/season/cycle day calculations
-
----
-
-## Design
-
-- **Figma:** https://www.figma.com/design/Vi7qdepuk2lWGl4TWXbedb/SEASON.Vision-App-2026--Copy-
-- **Primary colour:** `#933a35`
-- **Secondary:** `#6B6B6B`
-- **Background:** `#FAF7F4`
-- **Field background:** `#EDE1D5`
-- **Error background:** `#FDF0EE`
-- **Muted pink:** `#D18D83`
-- **Font:** Montserrat (loaded via Google Fonts in layout)
-- **Mobile base:** 390px, max-w-[430px] container
-
----
-
-## Deployment
-
-- **Platform:** Render (auto-deploys on push to `main`)
-- **Database:** Render PostgreSQL (pure PostgreSQL — no SQLite anywhere)
-- **Build command:** `bin/render-build.sh`
-- **Production cable adapter:** Solid Cable
-- **Email:** Resend (set `RESEND_API_KEY` and `RESEND_FROM_EMAIL` in Render dashboard)
-- **Error tracking:** Sentry
-
-### Build Script (`bin/render-build.sh`)
-
-```bash
-bundle install
-bundle exec rails assets:precompile
-bundle exec rails assets:clean
-bundle exec rails db:prepare
+Or use [Homebrew](https://brew.sh/) to install:
+```console
+$ brew install typos-cli
 ```
 
-### Render Environment Variables to Set Manually
+Or use [Conda](https://conda.io/) to install:
+```console
+$ conda install typos
+```
 
-`RAILS_MASTER_KEY`, `RESEND_API_KEY`, and `RESEND_FROM_EMAIL` must be entered manually in the Render dashboard. All others are either auto-generated or set via `render.yaml`.
+Or use [Pacman](https://wiki.archlinux.org/title/pacman) to install:
+```console
+$ sudo pacman -S typos
+```
 
----
+## Getting Started
 
-## Development Notes
+Most commonly, you'll either want to see what typos are available with
+```console
+$ typos
+```
 
-- `CLAUDE.md` contains full AI agent instructions — read before making changes
-- All user-facing strings must use `t()` i18n helpers — never hardcode English
-- Figma is the source of truth for all colours, spacing, and copy
-- Brand primary is `#933a35` — no substitutions
-- `CycleCalculatorService` is the single source of truth for all cycle calculations
-- `Authentication` concern is included once in `ApplicationController` — do not re-include in subclasses
-- App is PostgreSQL only — no SQLite in any environment
-- Resend is the email provider — do not configure raw SMTP. Delivery method is `:resend` via the gem adapter.
+Or have them fixed
+```console
+$ typos --write-changes
+$ typos -w
+```
+If there is any ambiguity (multiple possible corrections), `typos` will just report it to the user and move on.
 
----
+### False Positives
 
-## Database Engineering Standards
+Sometimes, what looks like a typo is intentional, like with people's names, acronyms, or localized content.
 
-We follow high-integrity migration patterns to ensure 100% uptime and data safety.
+To mark a word or an identifier (grouping of words) as valid, add it to your [`_typos.toml`](docs/reference.md) by declaring itself as the valid spelling:
+```toml
+[default]
+extend-ignore-identifiers-re = [
+    # *sigh* this just isn't worth the cost of fixing
+    "AttributeID.*Supress.*",
+]
 
-### Core Rules
+[default.extend-identifiers]
+# *sigh* this just isn't worth the cost of fixing
+AttributeIDSupressMenu = "AttributeIDSupressMenu"
 
-1. **Reversibility** — Every migration must be reversible (`change` or `up/down`).
-2. **Schema Integrity** — Use null constraints and defaults at the DB level, not just Rails.
-3. **No Downtime** — Avoid destructive actions without a two-step deployment.
-4. **Data vs Schema** — Keep data manipulation in Rake tasks, not migrations.
+[default.extend-words]
+# Don't correct the surname "Teh"
+teh = "teh"
+```
+For more ways to ignore or extend the dictionary with examples, see the [config reference](docs/reference.md).
 
----
+For cases like localized content, you can disable spell checking of file contents while still checking the file name:
+```toml
+[type.po]
+extend-glob = ["*.po"]
+check-file = false
+```
+(run `typos --type-list` to see configured file types)
 
-## Known Issues / Technical Debt
+If you need some more flexibility, you can completely exclude some files from consideration:
+```toml
+[files]
+extend-exclude = ["localized/*.po"]
+```
 
-| # | Severity | Issue | Target |
-| - | -------- | ----- | ------ |
-| 1 | Medium | Burger menu text labels not using `t()` — hardcoded English | Pre-launch |
-| 2 | Medium | Onboarding screens have hardcoded English strings | Pre-launch |
-| 3 | Low | OAuth credentials not yet set on Render — social login unavailable | Pre-launch |
+### Integrations
+
+- [GitHub Actions](docs/github-action.md)
+- [pre-commit](docs/pre-commit.md)
+- [🐊Putout Processor](https://github.com/putoutjs/putout-processor-typos)
+- [Visual Studio Code](https://github.com/tekumara/typos-vscode)
+- [typos-lsp (Language Server Protocol server)](https://github.com/tekumara/typos-vscode)
+
+#### Custom
+
+`typos` provides several building blocks for custom native integrations
+- `-` reads from `stdin`, `--write-changes` will be written to `stdout`
+- `--diff` to provide a diff
+- `--format json` to get jsonlines with exit code 0 on no errors, code 2 on typos, anything else is an error.
+
+Examples:
+```console
+$ # Read file from stdin, write corrected version to stdout
+$ typos - --write-changes
+$ # Creates a diff of what would change
+$ typos dir/file --diff
+$ # Fully programmatic control
+$ typos dir/file --format json
+```
+
+### Debugging
+
+You can see what the effective config looks like by running
+```console
+$ typos --dump-config -
+```
+
+You can then see how typos is processing your project with
+```console
+$ typos --files
+$ typos --identifiers
+$ typos --words
+```
+
+If you need to dig in more, you can enable debug logging with `-v`
+
+## FAQ
+
+### Why was ... not corrected?
+
+**Does the file show up in `typos --files`?**
+If not, check your config with `typos --dump-config -`.
+The `[files]` table controls how we walk files.
+If you are using `files.extend-exclude`,
+are you running into [#593](https://github.com/crate-ci/typos/issues/593)?
+If you are using `files.ignore-vcs = true`,
+is the file in your `.gitignore` but git tracks it anyways?
+Prefer allowing the file explicitly (see [#909](https://github.com/crate-ci/typos/issues/909)).
+
+**Does the identifier show up in `typos --identifiers` or the word show up in `typos --words`?**
+If not, it might be subject to one of typos' heuristics for
+detecting non-words (like hashes) or
+unambiguous words (like words after a `\` escape).
+
+If it is showing up, likely `typos` doesn't know about it yet.
+
+`typos` maintains a list of known typo corrections to keep the false positive
+count low so it can safely run unassisted.
+
+This is in contrast to most spell checking UIs people use where there is a
+known list of valid words.  In this case, the spell checker tries to guess your
+intent by finding the closest-looking word.  It then has a gauge for when a
+word isn't close enough and assumes you know best.  The user has the
+opportunity to verify these corrections and explicitly allow or reject them.
+
+For more on the trade offs of these approaches, see [Design](docs/design.md).
+
+- To correct it locally, see also our [False Positives documentation](#false-positives).
+- To contribute your correction, see [Contribute](CONTRIBUTING.md)
+
+[Crates.io]: https://crates.io/crates/typos-cli
+[Documentation]: https://docs.rs/typos
