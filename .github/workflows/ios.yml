@@ -38,11 +38,14 @@ jobs:
 
       - name: Export IPA
         run: |
+          echo "${{ secrets.APPSTORE_KEY_BASE64 }}" | base64 -d > /tmp/AuthKey.p8
           xcodebuild -exportArchive \
             -archivePath SeasonApp.xcarchive \
             -exportPath . \
             -exportOptionsPlist ios/SeasonApp/ExportOptions.plist \
-            DEVELOPMENT_TEAM="${{ secrets.DEVELOPMENT_TEAM }}" \
+            -authenticationKeyPath /tmp/AuthKey.p8 \
+            -authenticationKeyID "${{ secrets.APPSTORE_KEY_ID }}" \
+            -authenticationKeyIssuerID "${{ secrets.APPSTORE_ISSUER_ID }}" \
             -allowProvisioningUpdates
 
       - name: Upload to TestFlight
@@ -50,5 +53,5 @@ jobs:
           xcrun altool --upload-app \
             -f SeasonApp.ipa \
             -t ios \
-            -u "${{ secrets.APPLE_ID }}" \
-            -p "${{ secrets.APP_SPECIFIC_PASSWORD }}"
+            --apiKey "${{ secrets.APPSTORE_KEY_ID }}" \
+            --apiIssuer "${{ secrets.APPSTORE_ISSUER_ID }}"
