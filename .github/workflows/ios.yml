@@ -40,7 +40,7 @@ jobs:
         run: |
           python3 -c "import base64,os;f=open('/tmp/dist.p12','wb');f.write(base64.b64decode(os.environ['DIST_CERT_BASE64'].strip()))"
           openssl pkcs12 -in /tmp/dist.p12 -passin "pass:${DIST_CERT_PASSWORD}" -clcerts -nokeys -out /tmp/dist_cert.pem
-          openssl pkcs12 -in /tmp/dist.p12 -passin "pass:${DIST_CERT_PASSWORD}" -nocerts -out /tmp/dist_key.pem
+          openssl pkcs12 -in /tmp/dist.p12 -passin "pass:${DIST_CERT_PASSWORD}" -nocerts -nodes -out /tmp/dist_key.pem
           security create-keychain -p temp123 build.keychain
           security default-keychain -s build.keychain
           security unlock-keychain -p temp123 build.keychain
