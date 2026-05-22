@@ -85,7 +85,7 @@ class User < ApplicationRecord
   end
 
   def self.find_or_create_from_oauth(provider, auth)
-    uid_column = "#{provider}_uid"
+    uid_column = resolve_oauth_uid_column(provider)
     email = auth.info.email&.downcase
 
     # UID-first lookup handles Apple repeat logins where email is absent after first auth
@@ -108,5 +108,14 @@ class User < ApplicationRecord
     user
   rescue ActiveRecord::RecordInvalid
     user || User.new
+  end
+
+  def self.resolve_oauth_uid_column(provider)
+    case provider
+    when "google_oauth2" then "google_oauth2_uid"
+    when "facebook" then "facebook_uid"
+    when "apple" then "apple_uid"
+    else raise ArgumentError, "Unknown OAuth provider: #{provider}"
+    end
   end
 end

@@ -14,7 +14,7 @@ module PinProtection
     return unless current_user.pin_set?
     return if session[:pin_verified_at] && session[:pin_verified_at] > PIN_TIMEOUT.ago.to_i
 
-    session[:return_to_after_unlock] = request.fullpath if request.get?
+    session[:return_to_after_unlock] = request.fullpath if request.get? || request.head?
     redirect_to pin_unlock_path
   end
 
