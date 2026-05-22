@@ -39,10 +39,11 @@ jobs:
           DIST_CERT_PASSWORD: ${{ secrets.DIST_CERT_PASSWORD }}
         run: |
           python3 -c "import base64,os;f=open('/tmp/dist.p12','wb');f.write(base64.b64decode(os.environ['DIST_CERT_BASE64'].strip()))"
-          echo "P12 size: $(stat -f%z /tmp/dist.p12) bytes"
-          security import /tmp/dist.p12 -P "$DIST_CERT_PASSWORD" -A -T /usr/bin/codesign
+          echo "P12 size: $(wc -c < /tmp/dist.p12) bytes"
+          openssl pkcs12 -in /tmp/dist.p12 -passin "pass:${DIST_CERT_PASSWORD}" -noout 2>&1
+          echo "Importing to keychain..."
+          security import /tmp/dist.p12 -P "${DIST_CERT_PASSWORD}" -A
           security find-identity -v -p codesigning
-          security list-keychains -d user -s build.keychain login.keychain
           rm /tmp/dist.p12
 
       - name: Export IPA
