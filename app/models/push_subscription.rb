@@ -13,10 +13,10 @@ class PushSubscription < ApplicationRecord
       endpoint: endpoint,
       p256dh: p256dh_key,
       auth: auth_key,
-      message: { title: title, body: body, icon: "/icon.png", badge: "/favicon.png", data: { url: url } }.to_json,
+      message: {title: title, body: body, icon: "/icon.png", badge: "/favicon.png", data: {url: url}}.to_json,
       vapid: vapid_keys
     )
-  rescue WebPush::ExpiredSubscription, WebPush::InvalidSubscription => e
+  rescue WebPush::ExpiredSubscription, WebPush::InvalidSubscription
     destroy
   end
 
@@ -27,7 +27,7 @@ class PushSubscription < ApplicationRecord
     if creds.present?
       pub = creds[:public_key] || creds["public_key"]
       priv = creds[:private_key] || creds["private_key"]
-      return { subject: "mailto:hello@season.app", public_key: pub, private_key: priv } if pub && priv
+      return {subject: "mailto:hello@season.app", public_key: pub, private_key: priv} if pub && priv
     end
 
     if ENV["VAPID_PUBLIC_KEY"] && ENV["VAPID_PRIVATE_KEY"]

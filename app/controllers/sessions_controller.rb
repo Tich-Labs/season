@@ -17,7 +17,7 @@ class SessionsController < ApplicationController
     if @user&.valid_password?(params[:password])
       unless @user.confirmed?
         if turbo_native_app?
-          render json: { error: "unconfirmed" }, status: :unprocessable_content
+          render json: {error: "unconfirmed"}, status: :unprocessable_content
         else
           @error_type = :unconfirmed
           @user = User.new
@@ -31,14 +31,12 @@ class SessionsController < ApplicationController
       else
         redirect_to after_sign_in_path
       end
+    elsif turbo_native_app?
+      render json: {error: email.present? ? "wrong_password" : "wrong_email"}, status: :unauthorized
     else
-      if turbo_native_app?
-        render json: { error: email.present? ? "wrong_password" : "wrong_email" }, status: :unauthorized
-      else
-        @error_type = email.present? ? :wrong_password : :wrong_email
-        @user = User.new
-        render :new, status: :unprocessable_content
-      end
+      @error_type = email.present? ? :wrong_password : :wrong_email
+      @user = User.new
+      render :new, status: :unprocessable_content
     end
   end
 

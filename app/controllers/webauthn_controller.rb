@@ -10,13 +10,13 @@ class WebauthnController < ApplicationController
 
     render json: {
       challenge: session[:webauthn_challenge],
-      rp: { name: "Season", id: request.host },
+      rp: {name: "Season", id: request.host},
       user: {
         id: user_id,
         name: current_user.email,
         displayName: current_user.first_name
       },
-      pubKeyCredParams: [{ type: "public-key", alg: -7 }],
+      pubKeyCredParams: [{type: "public-key", alg: -7}],
       authenticatorSelection: {
         authenticatorAttachment: "platform",
         userVerification: "required"
@@ -30,7 +30,7 @@ class WebauthnController < ApplicationController
     session[:webauthn_challenge] = nil
 
     unless challenge.present? && params[:credential].present?
-      return render json: { error: "Invalid registration" }, status: :unprocessable_content
+      return render json: {error: "Invalid registration"}, status: :unprocessable_content
     end
 
     cred = params[:credential]
@@ -42,14 +42,14 @@ class WebauthnController < ApplicationController
     )
 
     if existing.persisted?
-      render json: { success: true }
+      render json: {success: true}
     else
-      render json: { error: existing.errors.full_messages }, status: :unprocessable_content
+      render json: {error: existing.errors.full_messages}, status: :unprocessable_content
     end
   end
 
   def authentication_challenge
-    return render json: { error: "No credentials" }, status: :not_found unless current_user.webauthn_credentials.any?
+    return render json: {error: "No credentials"}, status: :not_found unless current_user.webauthn_credentials.any?
 
     challenge = SecureRandom.random_bytes(32)
     session[:webauthn_challenge] = Base64.urlsafe_encode64(challenge)
@@ -75,16 +75,16 @@ class WebauthnController < ApplicationController
     session[:webauthn_challenge] = nil
 
     unless challenge.present? && params[:credential].present?
-      return render json: { error: "Invalid authentication" }, status: :unprocessable_content
+      return render json: {error: "Invalid authentication"}, status: :unprocessable_content
     end
 
     credential = current_user.webauthn_credentials.find_by(credential_id: params[:credential][:id])
     unless credential
-      return render json: { error: "Credential not found" }, status: :not_found
+      return render json: {error: "Credential not found"}, status: :not_found
     end
 
     session[:pin_verified_at] = Time.current.to_i
-    render json: { success: true, redirect: session.delete(:return_to_after_unlock) || user_root_path }
+    render json: {success: true, redirect: session.delete(:return_to_after_unlock) || user_root_path}
   end
 
   def destroy

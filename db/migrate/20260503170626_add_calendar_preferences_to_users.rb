@@ -10,4 +10,3 @@ class AddCalendarPreferencesToUsers < ActiveRecord::Migration[8.1]
     add_column :users, :hide_past_events, :boolean, default: false
   end
 end
-end

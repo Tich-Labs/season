@@ -4,9 +4,9 @@ class PushController < ApplicationController
 
   def vapid_public_key
     key = Rails.application.credentials.dig(:vapid, :public_key) ||
-          Rails.application.credentials.dig(:vapid, "public_key") ||
-          ENV["VAPID_PUBLIC_KEY"]
-    render json: { public_key: key }
+      Rails.application.credentials.dig(:vapid, "public_key") ||
+      ENV["VAPID_PUBLIC_KEY"]
+    render json: {public_key: key}
   end
 
   def subscribe
@@ -23,13 +23,13 @@ class PushController < ApplicationController
       )
     end
 
-    render json: { success: true }
+    render json: {success: true}
   rescue ActiveRecord::RecordNotUnique
-    render json: { success: true }
+    render json: {success: true}
   end
 
   def unsubscribe
     current_user.push_subscriptions.destroy_all
-    render json: { success: true }
+    render json: {success: true}
   end
 end

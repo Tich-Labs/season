@@ -184,7 +184,6 @@ class SettingsController < ApplicationController
   end
 
   def update_notifications
-    notification_keys = [:cycle_reminder, :period_prediction, :ovulation_alert, :email_notifications, :newsletter]
     render json: {success: true}
   end
 
