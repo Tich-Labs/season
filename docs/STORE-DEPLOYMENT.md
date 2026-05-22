@@ -187,16 +187,9 @@ GitHub Actions handles the build on a cloud Mac (latest Xcode, no local setup ne
 
 ---
 
-### Step 3 — Build the Android App (WKWebView)
+### Step 3 — Build the Android App (thin WKWebView mirror)
 
-1. Install [Android Studio](https://developer.android.com/studio) (free)
-2. Create a new project:
-   - **Template:** Empty Activity
-   - **Package name:** `com.seasonapp.android`
-   - **Language:** Kotlin
-   - **Min SDK:** API 26 (Android 8.0)
-3. Replace `MainActivity.kt` with a WebView loading `https://seasonv2.onrender.com` (mirrors the iOS WKWebView approach)
-4. Build release AAB: **Build → Generate Signed Bundle / APK** → **Android App Bundle**
+**Not yet implemented.** Planned approach mirrors iOS: thin `WebView` wrapper loading `https://seasonv2.onrender.com`, same external URL routing pattern. ~30 lines of Kotlin in `MainActivity.kt`, zero native UI.
 
 ---
 
@@ -230,7 +223,7 @@ Fill in before submitting (Play Console → **Main store listing**):
 | Developer account created | ✅ | ❌ |
 | App registered in console | ❌ | ❌ |
 | Xcode / Android Studio project created | ✅ | ❌ |
-| WKWebView wrapper built | ✅ (plain WKWebView) | ❌ |
+| WKWebView / WebView wrapper built | ✅ (plain WKWebView, 2 Swift files) | ⏳ (planned — thin WebView, ~30 lines Kotlin) |
 | Auth token flow (X-Turbo-Native-Token) | ✅ | ❌ |
 | Header/FAB visible in native context | ✅ | N/A |
 | External URLs → system browser | ✅ | ❌ |
