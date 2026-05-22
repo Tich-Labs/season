@@ -44,6 +44,7 @@ jobs:
             -archivePath SeasonApp.xcarchive \
             -exportPath . \
             -exportOptionsPlist ios/SeasonApp/ExportOptions.plist \
+            DEVELOPMENT_TEAM="${{ secrets.DEVELOPMENT_TEAM }}" \
             -authenticationKeyPath /tmp/AuthKey.p8 \
             -authenticationKeyID "$APPSTORE_KEY_ID" \
             -authenticationKeyIssuerID "$APPSTORE_ISSUER_ID" \
