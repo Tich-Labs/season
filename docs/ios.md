@@ -1,24 +1,25 @@
-# Turbo Native iOS Integration - Audit & Roadmap
+# iOS WKWebView Wrapper — Implementation Status
 
 ## Executive Summary
 
-The Season app is **well-positioned** for Turbo Native integration. It's already built as a mobile-first PWA with Hotwire (Turbo + Stimulus), has a max-width 430px container design, and uses server-rendered HTML—the exact architecture Turbo Native is designed to wrap.
+The Season app has an **iOS wrapper** built as a thin WKWebView shell with no external dependencies. The web app handles all navigation (burger menu, FAB, calendar icon) — the wrapper loads the URL, passes auth tokens, and opens external links in Safari. The approach prioritizes shipping speed: native app = web app in a WebView + token auth + external URL routing.
 
 **Completed:**
 - ✅ Token-based auth system (TurboNativeDetection concern + User model)
+- ✅ Header + burger menu visible in native context
+- ✅ FAB + quick actions visible in native context
+- ✅ External URL routing (WKWebView → Safari for OAuth/external links)
 - ✅ Safe area insets on all key elements (header, content, banners, FAB)
 - ✅ Touch target minimums (44pt on interactive elements)
 - ✅ Offline fallback page (`/offline.html`)
-- ✅ App icon (1024x1024 for iOS asset catalog)
+- ✅ App icon (all sizes in asset catalog)
 - ✅ iOS meta tags on all layouts (incl. admin)
-- ✅ iOS Xcode project (turbo-ios v8.0.0 via SPM, Navigator + VisitableViewController)
-- ✅ Push notifications (Web Push API via `webpush` gem + Stimulus controller)
-- ✅ Access code (pin) lock screen with 5-min auto-lock
-- ✅ Biometrics (WebAuthn — Face ID / Touch ID registration + auth)
-- ✅ Pull-to-refresh (custom touch-based Stimulus controller)
-- ✅ Haptic feedback (`navigator.vibrate()` + CSS `:active` effects)
-
-**Remaining:** Turbo Native view variants, Turbo Frames, path configuration, navigation bridging.
+- ✅ Plain WKWebView project (zero dependencies)
+- ✅ PrivacyInfo.xcprivacy (App Store compliance)
+- ✅ Scene manifest in Info.plist
+- ✅ CI workflow (GitHub Actions: xcodegen → archive → sign → upload)
+- ✅ Push notifications (Web Push API)
+- ✅ Pin lock screen + biometrics (WebAuthn)
 
 ---
 
@@ -38,7 +39,7 @@ The Season app is **well-positioned** for Turbo Native integration. It's already
 | **Native Auth Token** | ✅ Built | `has_secure_token` on User, `TurboNativeDetection` concern, `X-Turbo-Native-Token` header flow |
 | **Safe Area Insets** | ✅ Done | `env(safe-area-inset-*)` on header, content, banners, FAB, feedback modal |
 | **Touch Targets** | ✅ Done | `min-w-11 min-h-11` on all interactive elements |
-| **iOS Project** | ✅ Integrated | turbo-ios v8.0.0 via SPM, Navigator + VisitableViewController |
+| **iOS Project** | ✅ WKWebView | Plain WKWebView, zero dependencies, 2 Swift files |
 | **Calendar Preferences** | ✅ Complete | 5 toggles: appointments, cycle days, moon phases, holidays, week numbers |
 
 ### Key Files
@@ -457,10 +458,17 @@ export default class extends Controller {
 | External URLs → Safari | ✅ Built | SceneDelegate `isInternalURL()` check (May 21) |
 | PrivacyInfo.xcprivacy | ✅ Built | App Store compliance manifest (May 21) |
 | ITSAppUsesNonExemptEncryption | ✅ Built | Info.plist entry (May 21) |
-| iOS App Shell | ✅ Integrated | turbo-ios v8.0.0 via SPM, Navigator + VisitableViewController |
-| Path Configuration | ❌ Missing | JSON config for native nav (future polish) |
-| Turbo Frames | ❌ Missing | None in views (future polish) |
-| Native View Variants | ❌ Missing | No `+turbo_native.erb` files (future polish) |
+| WKWebView Shell | ✅ Built | Plain WKWebView, no dependencies, WKNavigationDelegate |
+| Header + Burger Menu in Native | ✅ Built | Visible in native context (May 21 fix) |
+| FAB + Quick Actions in Native | ✅ Built | Visible in native context (May 21 fix) |
+| External URLs → Safari | ✅ Built | WKNavigationDelegate `decidePolicyFor` (May 21) |
+| PrivacyInfo.xcprivacy | ✅ Built | App Store compliance manifest (May 21) |
+| ITSAppUsesNonExemptEncryption | ✅ Built | Info.plist entry (May 21) |
+| Scene Manifest | ✅ Built | UIApplicationSceneManifest in Info.plist |
+| CI Workflow | ✅ Built | GitHub Actions: xcodegen → archive → sign → upload |
+| All Icon Sizes | ✅ Built | Generated from 1024x1024 source |
+| Path Configuration | ⏳ Future | JSON config for modal/sheet rules (post-launch) |
+| Native Push Bridge (APNs) | ⏳ Future | Currently Web Push API only |
 | Push Notifications | ✅ Built | Web Push API + Stimulus controller |
 | Biometric Auth | ✅ Built | WebAuthn platform authenticator |
 | Pull-to-refresh | ✅ Built | Touch-based Stimulus controller + spinner |
@@ -470,13 +478,11 @@ export default class extends Controller {
 
 ## Conclusion
 
-The Season app is **architecturally well-suited** for Turbo Native integration. The critical infrastructure is in place: token-based auth, safe area handling, touch targets, offline support, external URL routing, PrivacyInfo manifest, and the iOS app shell with turbo-ios.
+The Season iOS wrapper is **code-complete**. It's a thin WKWebView shell with zero dependencies — the web app handles all UI and navigation. External URLs (OAuth, privacy policy, terms) route to Safari. Auth tokens persist via X-Turbo-Native-Token header.
 
-The iOS wrapper is code-complete for TestFlight. The only remaining blockers are external: Apple Developer account enrollment and App Store Connect registration (see `docs/STORE-DEPLOYMENT.md`).
+**The only blockers for TestFlight are external:**
+1. App Store Connect API Key (for CI signing)
+2. GitHub secrets (6 values)
+3. Run the iOS Build workflow
 
-**Future polish (post-launch):**
-1. Adding Turbo Frames and native view variants for a more polished native feel
-2. Path configuration JSON for modal/sheet presentation rules
-3. Native push notification bridge (APNs)
-
-**Recommendation:** Ship the current wrapper to TestFlight. The web app's header + FAB navigation works well in the native context — no native tab bar needed per Figma.
+See `docs/STORE-DEPLOYMENT.md` for the step-by-step setup guide.

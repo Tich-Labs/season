@@ -1,8 +1,8 @@
 # App Store & Play Store — Deployment Setup Guide
 
-**Last updated:** 2026-05-21
-**App:** Season (Turbo Native wrapper around the Rails PWA)
-**Strategy:** The web app runs on Render at `https://seasonv2.onrender.com` (custom domain `season.vision` planned). iOS and Android are thin shells using turbo-ios / turbo-android that load the web app in a web view.
+**Last updated:** 2026-05-22
+**App:** Season (thin WKWebView wrapper around the Rails PWA)
+**Strategy:** The web app runs on Render at `https://seasonv2.onrender.com` (custom domain `season.vision` planned). iOS and Android are thin native shells using plain WKWebView / WebView that load the web app. The web app handles all navigation (burger menu, FAB, calendar icon). External URLs (OAuth providers) open in the system browser.
 
 ---
 
@@ -11,16 +11,17 @@
 | Item | iOS | Android |
 |------|-----|---------|
 | Xcode / Android Studio project | ✅ (`ios/SeasonApp/`) | ❌ |
-| Turbo Native integrated | ✅ (turbo-ios v8.0.0 via SPM) | ❌ |
+| WKWebView shell | ✅ (plain WKWebView, no dependencies) | ❌ |
 | Auth token flow | ✅ (X-Turbo-Native-Token header) | ❌ |
-| Header + burger menu visible in native | ✅ (May 21) | ❌ |
-| FAB + quick actions visible in native | ✅ (May 21) | ❌ |
-| External URLs → Safari | ✅ (SceneDelegate `isInternalURL`) | ❌ |
-| Error handling with retry | ✅ (NavigatorDelegate) | ❌ |
-| App icon (1024×1024) | ✅ | ❌ |
+| Header + burger menu visible in native | ✅ | N/A |
+| FAB + quick actions visible in native | ✅ | N/A |
+| External URLs → system browser | ✅ (WKNavigationDelegate) | ❌ |
+| App icon (all sizes) | ✅ | ❌ |
 | Launch screen (storyboard) | ✅ | ❌ |
-| PrivacyInfo.xcprivacy | ✅ (May 21) | ❌ |
+| PrivacyInfo.xcprivacy | ✅ | ❌ |
 | ITSAppUsesNonExemptEncryption | ✅ | ❌ |
+| Scene manifest in Info.plist | ✅ | ❌ |
+| CI workflow (xcodegen + xcodebuild) | ✅ | ❌ |
 | Bundle ID | `com.season-app.ios` | `com.seasonapp.android` (planned) |
 
 **What's left is entirely account/console work** — no code changes needed.
@@ -31,60 +32,33 @@
 
 | Item | iOS | Android |
 |------|-----|---------|
-| Developer account | Apple Developer ($99/yr) | Google Play Console ($25 one-time) |
-| Computer | Mac with Xcode 15+ | Mac or Windows with Android Studio |
+| Developer account | Apple Developer ($99/yr) ✅ | Google Play Console ($25 one-time) |
 | App URL | `https://seasonv2.onrender.com` (custom domain `season.vision` planned) | same |
 | Time to create account | 24–48 hrs (Apple reviews new enrollments) | ~1 hr (instant) |
-| App Store name | ⚠️ "Season" may be taken — have a backup ready (e.g. "Season App", "Season Tracker") | same check |
+| App Store name | ⚠️ "Season" may be taken — have backups ready | same check |
+| CI signing | App Store Connect API Key (free, set up once) | N/A |
 
 ---
 
 ## Part 1 — Apple App Store (iOS)
 
-### Step 1 — Create Apple Developer Account
+### Step 1 — Create Apple Developer Account ✅ DONE
 
-This is the first and most important step. Everything else depends on it.
-
-**Prerequisites:**
-- An Apple ID (create one at [appleid.apple.com](https://appleid.apple.com) if you don't have one)
-- Two-factor authentication enabled on the Apple ID
-- A credit/debit card for the $99/year fee
-- The Apple ID should match the one you'll sign into Xcode with
-
-**Steps:**
-
-1. Go to [developer.apple.com](https://developer.apple.com)
-2. Click **Account** (top right) → sign in with your Apple ID
-3. Click **Join the Apple Developer Program**
-4. Choose your entity type:
-   - **Individual** — easiest. Uses your legal name as the seller name on the App Store.
-   - **Organization** — requires a D-U-N-S number (free, but takes 5+ business days to obtain). The company name appears as the seller.
-5. Fill in your personal/entity information
-6. Pay the **$99/year** fee
-7. **Wait.** Apple manually reviews new enrollments. This takes **24–48 hours** (sometimes longer for organizations).
-8. You'll receive a confirmation email when approved
-9. Once approved, your dashboard is at [developer.apple.com/account](https://developer.apple.com/account)
-
-**Common issues:**
-- Organization enrollment requires a D-U-N-S number. Get one free at [dnb.com](https://www.dnb.com/duns-number.html). This adds 5-10 business days.
-- If the enrollment is rejected, check that your legal name matches your Apple ID exactly.
-- The Apple ID must have two-factor authentication enabled. You cannot enroll without it.
-
-> **Tip:** Use the same Apple ID you'll sign into Xcode with. Don't create a separate account just for the developer program.
+Already completed. Apple Developer account active — team ID `CH4G9T6ZHP`.
 
 ---
 
 ### Step 2 — Register the App in App Store Connect
 
 1. Go to [appstoreconnect.apple.com](https://appstoreconnect.apple.com)
-2. Sign in with your developer Apple ID
+2. Sign in with the developer Apple ID
 3. Click **Apps** → **+** (top left) → **New App**
 4. Fill in:
    - **Platform:** iOS
    - **Name:** Season (⚠️ if "Season" is taken, try "Season App", "Season Tracker", or "Season Cycle")
    - **Primary Language:** English
-   - **Bundle ID:** `com.season-app.ios` (must match the Xcode project — you'll create this App ID in Step 3)
-   - **SKU:** `season-ios-v1` (any unique string, used internally)
+   - **Bundle ID:** `com.season-app.ios`
+   - **SKU:** `season-ios-v1`
    - **User Access:** Full Access
 5. Click **Create**
 
@@ -93,7 +67,7 @@ This is the first and most important step. Everything else depends on it.
 ### Step 3 — Set Up App ID & Capabilities
 
 1. Go to [developer.apple.com/account](https://developer.apple.com/account) → **Certificates, Identifiers & Profiles**
-2. Click **Identifiers** → **+** (top left)
+2. Click **Identifiers** → **+**
 3. Choose **App IDs** → **App** → Continue
 4. Fill in:
    - **Description:** Season
@@ -105,80 +79,86 @@ This is the first and most important step. Everything else depends on it.
 
 ---
 
-### Step 4 — Build & Upload from Xcode
+### Step 4 — App Store Connect API Key (for CI)
 
-The iOS project already exists at `ios/SeasonApp/`. It uses **XcodeGen** (`project.yml`) and **turbo-ios** via Swift Package Manager.
+Required for GitHub Actions to sign and upload builds. One-time setup.
 
-**One-time setup:**
-
-```bash
-# Install XcodeGen (if not already)
-brew install xcodegen
-
-# Regenerate the Xcode project from project.yml
-cd ios/SeasonApp
-xcodegen generate
-
-# Open in Xcode
-open SeasonApp.xcodeproj
-```
-
-When Xcode opens, it will resolve the turbo-ios SPM package. Once resolved, commit the generated `Package.resolved`:
-
-```bash
-git add ios/SeasonApp/SeasonApp.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
-git commit -m "Add Package.resolved for turbo-ios SPM dependency"
-```
-
-**Every release build:**
-
-1. In Xcode, select **Product → Scheme → SeasonApp** (set to "Any iOS Device", not a simulator)
-2. Select **Product → Archive**
-3. When the Organizer opens, select the archive → **Distribute App**
-4. Choose **App Store Connect** → **Upload**
-5. Follow the prompts (Xcode handles code signing automatically with your developer account)
+1. Go to [appstoreconnect.apple.com](https://appstoreconnect.apple.com) → **Users and Access** → **Integrations** → **App Store Connect API**
+2. Click **+** → name it "GitHub Actions" → Access: **Developer**
+3. Click **Generate** → copy and save:
+   - **Issuer ID** (e.g., `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`)
+   - **Key ID** (e.g., `ABC123XYZ`)
+4. Download the `.p8` key file — **you can only download it once**
+5. Add as GitHub secrets (Settings → Secrets → Actions):
+   - `APPSTORE_KEY_ID` = the Key ID
+   - `APPSTORE_ISSUER_ID` = the Issuer ID
+   - `APPSTORE_KEY_BASE64` = run `base64 -i ~/Downloads/AuthKey_XXXX.p8` and paste the output
 
 ---
 
-### Step 5 — Submit for Review
+### Step 5 — Set GitHub Secrets
+
+All 5 secrets needed in GitHub → Settings → Secrets → Actions:
+
+| Secret | Value | Source |
+|--------|-------|--------|
+| `DEVELOPMENT_TEAM` | `CH4G9T6ZHP` | Apple Developer account |
+| `APPLE_ID` | Developer Apple ID email | Apple ID |
+| `APP_SPECIFIC_PASSWORD` | App-specific password | [appleid.apple.com](https://appleid.apple.com) → Sign-In & Security |
+| `APPSTORE_KEY_ID` | Key ID from Step 4 | App Store Connect API |
+| `APPSTORE_ISSUER_ID` | Issuer ID from Step 4 | App Store Connect API |
+| `APPSTORE_KEY_BASE64` | Base64 encoded .p8 file | Step 4 |
+
+---
+
+### Step 6 — Run iOS Build via CI
+
+GitHub Actions handles the build on a cloud Mac (latest Xcode, no local setup needed).
+
+1. Go to GitHub → **Actions** → **iOS Build** → **Run workflow**
+2. The workflow:
+   - Installs xcodegen → generates `.xcodeproj` from `project.yml`
+   - Archives the app (no signing, just compilation)
+   - Exports IPA with App Store signing
+   - Uploads to App Store Connect
+3. After success (~10 min), the build appears in [appstoreconnect.apple.com](https://appstoreconnect.apple.com) → **TestFlight**
+
+---
+
+### Step 7 — TestFlight
+
+1. In App Store Connect → **TestFlight** → **iOS Builds** — the uploaded build appears
+2. Click the build → **Internal Testing** → add testers (up to 100, no review needed)
+3. Testers install the TestFlight app from the App Store and redeem the invitation
+
+---
+
+### Step 8 — Submit for Review (after TestFlight)
 
 1. Go back to [appstoreconnect.apple.com](https://appstoreconnect.apple.com) → your Season app
-2. Select the uploaded build under **App Store** → **iOS App** → **Build**
-3. Fill in the remaining metadata:
+2. Fill in metadata:
 
 **App Information:**
 - Category: **Health & Fitness**
 - Age Rating: 4+
-- Copyright: Your name/company
 
 **Pricing and Availability:**
 - Free, all territories
 
 **App Privacy:**
-- Declare data types (see `docs/userdata.md` for the full data map):
+- Declare data types (see `docs/userdata.md`):
   - Health & Fitness (cycle data, symptoms) — linked to identity
   - Contact Info (email, name) — linked to identity
   - User Content (symptom logs, notes) — linked to identity
   - Diagnostics (crash data via Sentry) — not linked
 
 **App Review Information:**
-- Sign-in required: Yes (provide a demo account or note that reviewers should create one)
+- Sign-in required: Yes
 - Contact info: `info@season.vision`
-- Notes for reviewer: "This app tracks menstrual cycles. All health data is self-reported by the user and stored encrypted. No HealthKit integration."
+- Notes for reviewer: "This app tracks menstrual cycles. All health data is self-reported by the user. No HealthKit integration. The app is a thin WKWebView wrapper around a PWA."
 
-4. Click **Add for Review** → **Submit to App Review**
-5. Apple review takes **1–3 days** for first submissions (cycle tracking apps may get additional scrutiny)
-
----
-
-### Step 6 — TestFlight (Recommended Before App Store)
-
-Before submitting for full App Store review, use TestFlight for internal testing:
-
-1. In App Store Connect, go to **TestFlight** → **Internal Testing**
-2. Add your team (up to 100 internal testers, no review needed)
-3. Select the build and start testing
-4. Testers install the TestFlight app from the App Store and redeem your invitation
+3. Click **Add for Review** → **Submit to App Review**
+4. Apple review takes **1–3 days** for first submissions
 
 ---
 
@@ -187,12 +167,11 @@ Before submitting for full App Store review, use TestFlight for internal testing
 ### Step 1 — Create Google Play Developer Account
 
 1. Go to [play.google.com/console](https://play.google.com/console)
-2. Sign in with a **Google account** (use the company Google account)
+2. Sign in with a **Google account**
 3. Click **Get Started**
 4. Choose **Individual** or **Organization**
 5. Pay the **$25 one-time** registration fee
-6. Verify your identity (Google asks for name + address)
-7. Account is activated **immediately** after payment
+6. Account is activated **immediately** after payment
 
 ---
 
@@ -201,14 +180,14 @@ Before submitting for full App Store review, use TestFlight for internal testing
 1. In Play Console, click **Create App**
 2. Fill in:
    - **App name:** Season
-   - **Default language:** English (United Kingdom) or English (United States)
+   - **Default language:** English
    - **App or Game:** App
    - **Free or Paid:** Free
 3. Accept the declarations and click **Create App**
 
 ---
 
-### Step 3 — Build the Android App (Hotwire Native)
+### Step 3 — Build the Android App (WKWebView)
 
 1. Install [Android Studio](https://developer.android.com/studio) (free)
 2. Create a new project:
@@ -216,47 +195,17 @@ Before submitting for full App Store review, use TestFlight for internal testing
    - **Package name:** `com.seasonapp.android`
    - **Language:** Kotlin
    - **Min SDK:** API 26 (Android 8.0)
-3. Add Hotwire Native to `build.gradle.kts` (app level):
-
-```kotlin
-dependencies {
-    implementation("dev.hotwire:hotwire-native-android:1.0.0")
-}
-```
-
-4. Replace `MainActivity.kt` with:
-
-```kotlin
-import dev.hotwire.core.turbo.session.TurboSessionNavHostFragment
-import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-
-class MainActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        // Load Season web app in Hotwire Native shell
-        // Full setup: https://github.com/hotwired/hotwire-native-android
-    }
-}
-```
-
-> **Note:** Full Hotwire Native Android setup is documented in the [official repo](https://github.com/hotwired/hotwire-native-android). The above is the shell; follow their quickstart for the nav host fragment wiring.
-
-5. In Android Studio: **Build → Generate Signed Bundle / APK**
-   - Choose **Android App Bundle** (AAB) — Play Store requires this
-   - Create a new keystore (keep this file safe — you can never lose it)
-   - Build release AAB
+3. Replace `MainActivity.kt` with a WebView loading `https://seasonv2.onrender.com` (mirrors the iOS WKWebView approach)
+4. Build release AAB: **Build → Generate Signed Bundle / APK** → **Android App Bundle**
 
 ---
 
 ### Step 4 — Upload and Publish
 
-1. In Play Console, go to your Season app → **Release** → **Production**
-2. Click **Create new release**
-3. Upload the `.aab` file
-4. Fill in the **Release notes** (what's new)
-5. Click **Review release** → **Start rollout to Production**
-6. First app review takes **3–7 days**; subsequent updates are faster
+1. Play Console → **Release** → **Production** → **Create new release**
+2. Upload the `.aab` file
+3. Fill in release notes
+4. Start rollout — first review takes **3–7 days**
 
 ---
 
@@ -268,10 +217,8 @@ Fill in before submitting (Play Console → **Main store listing**):
 |-------|-------|
 | App name | Season |
 | Short description | Track your cycle, understand your body. |
-| Full description | (see marketing copy) |
 | Category | Health & Fitness |
-| Screenshots | Minimum 2 phone screenshots (export from Figma) |
-| Feature graphic | 1024×500 JPG |
+| Screenshots | Minimum 2 phone screenshots |
 | App icon | 512×512 PNG |
 
 ---
@@ -280,17 +227,18 @@ Fill in before submitting (Play Console → **Main store listing**):
 
 | Task | iOS | Android |
 |------|-----|---------|
-| Developer account created | ⚠️ (team ID CH4G9T6ZHP in pbxproj — status unconfirmed) | ❌ |
+| Developer account created | ✅ | ❌ |
 | App registered in console | ❌ | ❌ |
 | Xcode / Android Studio project created | ✅ | ❌ |
-| Turbo Native integrated | ✅ (turbo-ios v8.0.0 via SPM) | ❌ |
+| WKWebView wrapper built | ✅ (plain WKWebView) | ❌ |
 | Auth token flow (X-Turbo-Native-Token) | ✅ | ❌ |
-| Header/FAB visible in native context | ✅ (May 21) | N/A |
-| External URLs → system browser | ✅ (May 21) | ❌ |
+| Header/FAB visible in native context | ✅ | N/A |
+| External URLs → system browser | ✅ | ❌ |
 | App icon + splash screen | ✅ | ❌ |
-| PrivacyInfo.xcprivacy | ✅ (May 21) | ❌ |
-| ITSAppUsesNonExemptEncryption | ✅ (May 21) | ❌ |
-| Package.resolved committed | ⏳ (open Xcode → resolve packages → commit) | ❌ |
+| PrivacyInfo.xcprivacy | ✅ | ❌ |
+| CI workflow setup | ✅ | ❌ |
+| App Store Connect API Key | ❌ (needed for CI signing) | N/A |
+| GitHub secrets set | ❌ (needs 6 secrets) | ❌ |
 | Store listing filled in | ❌ | ❌ |
 | First build uploaded | ❌ | ❌ |
 | Submitted for review | ❌ | ❌ |
@@ -305,9 +253,9 @@ Fill in before submitting (Play Console → **Main store listing**):
 | Apple Developer Portal | https://developer.apple.com/account |
 | App Store Connect | https://appstoreconnect.apple.com |
 | Google Play Console | https://play.google.com/console |
-| Turbo iOS (SPM package) | https://github.com/hotwired/turbo-ios |
-| Hotwire Native Android | https://github.com/hotwired/hotwire-native-android |
 | Season Render URL | https://seasonv2.onrender.com |
 | Season Source (iOS project) | `ios/SeasonApp/` |
-| Privacy data declarations | docs/userdata.md |
-| iOS Integration docs | docs/ios.md |
+| CI workflow | `.github/workflows/ios.yml` |
+| Project config | `ios/SeasonApp/project.yml` |
+| Privacy data declarations | `docs/userdata.md` |
+| iOS Integration docs | `docs/ios.md` |
