@@ -23,6 +23,7 @@ jobs:
 
       - name: Archive
         run: |
+          xcodebuild -list -project ios/SeasonApp/SeasonApp.xcodeproj
           xcodebuild archive \
             -project ios/SeasonApp/SeasonApp.xcodeproj \
             -scheme SeasonApp \
@@ -30,7 +31,8 @@ jobs:
             -destination "generic/platform=iOS" \
             DEVELOPMENT_TEAM="${{ secrets.DEVELOPMENT_TEAM }}" \
             CODE_SIGN_STYLE=Automatic \
-            -allowProvisioningUpdates
+            -allowProvisioningUpdates \
+            -verbose 2>&1 | tail -100
 
       - name: Export IPA
         run: |
