@@ -1,36 +1,36 @@
-import { Controller } from "@hotwired/stimulus"
+import { Controller } from '@hotwired/stimulus'
 
 export default class extends Controller {
-  connect() {
-    this.supportsVibration = "vibrate" in navigator
-    this.supportsTouch = "ontouchstart" in window
+  connect () {
+    this.supportsVibration = 'vibrate' in navigator
+    this.supportsTouch = 'ontouchstart' in window
   }
 
-  light(event) {
+  light (event) {
     this._vibrate(10)
   }
 
-  medium(event) {
+  medium (event) {
     this._vibrate(20)
   }
 
-  heavy(event) {
+  heavy (event) {
     this._vibrate([30, 20, 30])
   }
 
-  selection(event) {
+  selection (event) {
     this._vibrate(5)
   }
 
-  success(event) {
+  success (event) {
     this._vibrate([15, 10, 15])
   }
 
-  error(event) {
+  error (event) {
     this._vibrate([30, 30, 30])
   }
 
-  _vibrate(pattern) {
+  _vibrate (pattern) {
     if (!this.supportsVibration) return
     try {
       navigator.vibrate(pattern)

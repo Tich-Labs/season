@@ -1,24 +1,24 @@
-import { Controller } from "@hotwired/stimulus"
+import { Controller } from '@hotwired/stimulus'
 
 export default class extends Controller {
-  static targets = ["status"]
+  static targets = ['status']
 
-  connect() {
+  connect () {
     this.supported = window.PublicKeyCredential !== undefined
   }
 
-  async register(event) {
+  async register (event) {
     event.preventDefault()
 
     if (!this.supported) {
-      this._status("Biometrics not supported on this device")
+      this._status('Biometrics not supported on this device')
       return
     }
 
     try {
-      const challengeResp = await fetch("/webauthn/registration-challenge")
+      const challengeResp = await fetch('/webauthn/registration-challenge')
       if (!challengeResp.ok) {
-        this._status("Failed to start registration")
+        this._status('Failed to start registration')
         return
       }
       const options = await challengeResp.json()
@@ -27,7 +27,7 @@ export default class extends Controller {
 
       const cred = await navigator.credentials.create({ publicKey: options })
       if (!cred) {
-        this._status("Registration cancelled")
+        this._status('Registration cancelled')
         return
       }
 
@@ -39,30 +39,30 @@ export default class extends Controller {
         }
       }
 
-      const resp = await fetch("/webauthn/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "X-CSRF-Token": this._csrf() },
+      const resp = await fetch('/webauthn/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': this._csrf() },
         body: JSON.stringify({ credential })
       })
 
       if (resp.ok) {
-        this._status("Face ID / Touch ID enabled")
+        this._status('Face ID / Touch ID enabled')
         window.location.reload()
       } else {
-        this._status("Registration failed")
+        this._status('Registration failed')
       }
     } catch (e) {
       this._status(e.message)
     }
   }
 
-  async authenticate(event) {
+  async authenticate (event) {
     event.preventDefault()
 
     if (!this.supported) return
 
     try {
-      const challengeResp = await fetch("/webauthn/authentication-challenge")
+      const challengeResp = await fetch('/webauthn/authentication-challenge')
       if (!challengeResp.ok) return
       const options = await challengeResp.json()
       options.challenge = this._base64url(options.challenge)
@@ -88,48 +88,48 @@ export default class extends Controller {
         }
       }
 
-      const resp = await fetch("/webauthn/authenticate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "X-CSRF-Token": this._csrf() },
+      const resp = await fetch('/webauthn/authenticate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': this._csrf() },
         body: JSON.stringify({ credential })
       })
 
       if (resp.ok) {
         const data = await resp.json()
-        window.location.href = data.redirect || "/calendar"
+        window.location.href = data.redirect || '/calendar'
       }
     } catch (e) {
-      console.warn("WebAuthn auth failed:", e.message)
+      console.warn('WebAuthn auth failed:', e.message)
     }
   }
 
-  async remove(event) {
+  async remove (event) {
     event.preventDefault()
-    const id = this.data.get("credentialId")
+    const id = this.data.get('credentialId')
     if (!id) return
 
     await fetch(`/webauthn/credentials/${id}`, {
-      method: "DELETE",
-      headers: { "X-CSRF-Token": this._csrf() }
+      method: 'DELETE',
+      headers: { 'X-CSRF-Token': this._csrf() }
     })
     window.location.reload()
   }
 
-  _status(msg) {
+  _status (msg) {
     if (this.hasStatusTarget) {
       this.statusTarget.textContent = msg
     }
   }
 
-  _base64url(str) {
-    return Uint8Array.from(atob(str.replace(/-/g, "+").replace(/_/g, "/")), c => c.charCodeAt(0))
+  _base64url (str) {
+    return Uint8Array.from(atob(str.replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0))
   }
 
-  _ab2str(buf) {
+  _ab2str (buf) {
     return btoa(String.fromCharCode(...new Uint8Array(buf)))
   }
 
-  _csrf() {
-    return document.querySelector("[name='csrf-token']")?.content || ""
+  _csrf () {
+    return document.querySelector("[name='csrf-token']")?.content || ''
   }
 }

@@ -1,66 +1,66 @@
-import { Controller } from "@hotwired/stimulus"
+import { Controller } from '@hotwired/stimulus'
 
 export default class extends Controller {
-  connect() {
+  connect () {
     // Trap focus in modals using keyboard navigation
     this.setupKeyboardTraps()
   }
 
-  openAvatarModal() {
+  openAvatarModal () {
     const modal = document.getElementById('avatar-modal')
     if (!modal) return
     modal.style.display = 'flex'
     this.trapFocusIn(modal)
   }
 
-  closeAvatarModal() {
+  closeAvatarModal () {
     const modal = document.getElementById('avatar-modal')
     if (!modal) return
     modal.style.display = 'none'
     modal.removeEventListener('keydown', this.handleAvatarKeydown)
   }
 
-  openPersonalInfoModal() {
+  openPersonalInfoModal () {
     const modal = document.getElementById('personal-info-modal')
     if (!modal) return
     modal.style.display = 'flex'
     this.trapFocusIn(modal)
   }
 
-  closePersonalInfoModal() {
+  closePersonalInfoModal () {
     const modal = document.getElementById('personal-info-modal')
     if (!modal) return
     modal.style.display = 'none'
     modal.removeEventListener('keydown', this.handlePersonalInfoKeydown)
   }
 
-  openEmailModal() {
+  openEmailModal () {
     const modal = document.getElementById('email-modal')
     if (!modal) return
     modal.style.display = 'flex'
     this.trapFocusIn(modal)
   }
 
-  closeEmailModal() {
+  closeEmailModal () {
     const modal = document.getElementById('email-modal')
     if (!modal) return
     modal.style.display = 'none'
     modal.removeEventListener('keydown', this.handleEmailKeydown)
   }
 
-  clickAvatarUpload() {
+  clickAvatarUpload () {
     const fileInput = document.getElementById('avatar-file')
     if (fileInput) fileInput.click()
   }
 
-  submitAvatarForm() {
+  submitAvatarForm () {
     const form = document.getElementById('avatar-upload-form')
     if (form) form.submit()
   }
 
   // ── private ────────────────────────────────────────────────────────────
 
-  setupKeyboardTraps() {
+  setupKeyboardTraps () {
     // Setup Escape key handling for all modals
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
@@ -75,7 +75,7 @@ export default class extends Controller {
     })
   }
 
-  trapFocusIn(modal) {
+  trapFocusIn (modal) {
     const focusable = Array.from(
       modal.querySelectorAll('button, input, a[href], [tabindex]:not([tabindex="-1"])')
     )
@@ -104,7 +104,7 @@ export default class extends Controller {
     first.focus()
   }
 
-  clickOutside(event) {
+  clickOutside (event) {
     if (event.target.id === 'avatar-modal') this.closeAvatarModal()
     if (event.target.id === 'personal-info-modal') this.closePersonalInfoModal()
     if (event.target.id === 'email-modal') this.closeEmailModal()

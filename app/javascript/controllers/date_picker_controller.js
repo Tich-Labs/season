@@ -1,28 +1,29 @@
-import { Controller } from "@hotwired/stimulus"
+/* global requestAnimationFrame */
+import { Controller } from '@hotwired/stimulus'
 
 export default class extends Controller {
-  static targets = ["dropdown"]
+  static targets = ['dropdown']
 
-  connect() {
+  connect () {
     this._closeHandler = (e) => {
       if (!this.element.contains(e.target)) this.close()
     }
-    document.addEventListener("click", this._closeHandler)
+    document.addEventListener('click', this._closeHandler)
   }
 
-  disconnect() {
-    document.removeEventListener("click", this._closeHandler)
+  disconnect () {
+    document.removeEventListener('click', this._closeHandler)
   }
 
-  toggle(e) {
+  toggle (e) {
     e.stopPropagation()
-    const hidden = this.dropdownTarget.classList.toggle("hidden")
+    const hidden = this.dropdownTarget.classList.toggle('hidden')
     if (!hidden) {
       requestAnimationFrame(() => {
-        const ul  = this.dropdownTarget.querySelector("ul")
-        const sel = this.dropdownTarget.querySelector("[data-selected]")
+        const ul = this.dropdownTarget.querySelector('ul')
+        const sel = this.dropdownTarget.querySelector('[data-selected]')
         if (ul && sel) {
-          const li = sel.closest("li")
+          const li = sel.closest('li')
           // Center the selected li in the visible scroll area
           const liTop = li.offsetTop
           const liHeight = li.offsetHeight
@@ -33,7 +34,7 @@ export default class extends Controller {
     }
   }
 
-  close() {
-    this.dropdownTarget.classList.add("hidden")
+  close () {
+    this.dropdownTarget.classList.add('hidden')
   }
 }

@@ -1,18 +1,18 @@
-import { Controller } from "@hotwired/stimulus"
+import { Controller } from '@hotwired/stimulus'
 
 export default class extends Controller {
-  static targets = ["toast"]
+  static targets = ['toast']
 
-  show() {
+  show () {
     if (!this.hasToastTarget) return
-    this.toastTarget.style.display = "block"
+    this.toastTarget.style.display = 'block'
     clearTimeout(this._timer)
     this._timer = setTimeout(() => {
-      this.toastTarget.style.display = "none"
+      this.toastTarget.style.display = 'none'
     }, 3000)
   }
 
-  disconnect() {
+  disconnect () {
     clearTimeout(this._timer)
   }
 }

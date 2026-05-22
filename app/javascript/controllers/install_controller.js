@@ -1,11 +1,12 @@
-import { Controller } from "@hotwired/stimulus"
+/* global sessionStorage */
+import { Controller } from '@hotwired/stimulus'
 
 export default class extends Controller {
-  static targets = ["banner", "button", "iosHint"]
+  static targets = ['banner', 'button', 'iosHint']
 
-  connect() {
+  connect () {
     // Already running as installed PWA — nothing to show
-    if (window.matchMedia("(display-mode: standalone)").matches || navigator.standalone) {
+    if (window.matchMedia('(display-mode: standalone)').matches || navigator.standalone) {
       return
     }
 
@@ -20,19 +21,19 @@ export default class extends Controller {
     }
 
     // Android / Chrome / Edge: wait for browser install event
-    window.addEventListener("beforeinstallprompt", (e) => {
+    window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault()
       this._deferredPrompt = e
       this._showBanner()
     })
 
-    window.addEventListener("appinstalled", () => {
+    window.addEventListener('appinstalled', () => {
       this._deferredPrompt = null
       this._hideBanner()
     })
   }
 
-  async install() {
+  async install () {
     if (this._isIOS) {
       if (this.hasIosHintTarget) {
         this.iosHintTarget.classList.toggle('hidden')
@@ -48,16 +49,16 @@ export default class extends Controller {
     }
   }
 
-  dismiss() {
+  dismiss () {
     sessionStorage.setItem('pwaInstallDismissed', '1')
     this._hideBanner()
   }
 
-  _showBanner() {
+  _showBanner () {
     if (this.hasBannerTarget) this.bannerTarget.classList.remove('hidden')
   }
 
-  _hideBanner() {
+  _hideBanner () {
     if (this.hasBannerTarget) this.bannerTarget.classList.add('hidden')
   }
 }

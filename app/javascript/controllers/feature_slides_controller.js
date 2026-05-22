@@ -1,10 +1,11 @@
-import { Controller } from "@hotwired/stimulus"
+/* global requestAnimationFrame */
+import { Controller } from '@hotwired/stimulus'
 
 export default class extends Controller {
-  static targets = ["track", "dot"]
+  static targets = ['track', 'dot']
   static values = { current: { type: Number, default: 0 }, autoplay: { type: Boolean, default: true } }
 
-  connect() {
+  connect () {
     this._boundResize = () => this._sizeSlides()
     window.addEventListener('resize', this._boundResize)
     requestAnimationFrame(() => {
@@ -17,12 +18,12 @@ export default class extends Controller {
     })
   }
 
-  disconnect() {
+  disconnect () {
     clearInterval(this._timer)
     window.removeEventListener('resize', this._boundResize)
   }
 
-  _sizeSlides() {
+  _sizeSlides () {
     const w = this.trackTarget.parentElement.clientWidth
     const count = this.trackTarget.children.length || 1
     this.trackTarget.style.width = (w * count) + 'px'
@@ -31,26 +32,26 @@ export default class extends Controller {
     })
   }
 
-  next() {
+  next () {
     this._show((this.currentValue + 1) % this.dotTargets.length)
   }
 
-  prev() {
+  prev () {
     const len = this.dotTargets.length
     this._show((this.currentValue - 1 + len) % len)
   }
 
-  goTo(event) {
+  goTo (event) {
     const idx = Number(event.currentTarget.dataset.featureSlidesIndex)
     this._pauseAutoplay()
     this._show(idx)
   }
 
-  touchStart(event) {
+  touchStart (event) {
     this._touchX = event.changedTouches[0].screenX
   }
 
-  touchEnd(event) {
+  touchEnd (event) {
     if (this._touchX == null) return
     const dx = event.changedTouches[0].screenX - this._touchX
     if (Math.abs(dx) > 40) {
@@ -60,24 +61,24 @@ export default class extends Controller {
     this._touchX = null
   }
 
-  _show(idx, animate = true) {
+  _show (idx, animate = true) {
     console.debug('[feature-slides] show', idx)
     this.currentValue = idx
     const slideW = this.trackTarget.parentElement.clientWidth
-    this.trackTarget.style.transition = animate ? "transform 0.35s ease" : "none"
+    this.trackTarget.style.transition = animate ? 'transform 0.35s ease' : 'none'
     this.trackTarget.style.transform = `translateX(-${idx * slideW}px)`
     this.dotTargets.forEach((dot, i) => {
       if (i === idx) {
-        dot.classList.remove("opacity-30", "w-3")
-        dot.classList.add("w-[52px]")
+        dot.classList.remove('opacity-30', 'w-3')
+        dot.classList.add('w-[52px]')
       } else {
-        dot.classList.remove("w-[52px]")
-        dot.classList.add("opacity-30", "w-3")
+        dot.classList.remove('w-[52px]')
+        dot.classList.add('opacity-30', 'w-3')
       }
     })
   }
 
-  _pauseAutoplay() {
+  _pauseAutoplay () {
     clearInterval(this._timer)
     this._timer = null
   }

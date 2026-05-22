@@ -1,14 +1,14 @@
-import { Controller } from "@hotwired/stimulus"
+import { Controller } from '@hotwired/stimulus'
 
 export default class extends Controller {
-  static targets = ["banner"]
+  static targets = ['banner']
 
-  connect() {
+  connect () {
     if (!('serviceWorker' in navigator)) return
     this._listenForUpdates()
   }
 
-  async _listenForUpdates() {
+  async _listenForUpdates () {
     try {
       const registration = await navigator.serviceWorker.getRegistration()
       if (!registration) return
@@ -30,7 +30,7 @@ export default class extends Controller {
     } catch (_) {}
   }
 
-  updateApp() {
+  updateApp () {
     navigator.serviceWorker.getRegistration().then(registration => {
       if (registration && registration.waiting) {
         navigator.serviceWorker.addEventListener('controllerchange', () => {
@@ -43,7 +43,7 @@ export default class extends Controller {
     })
   }
 
-  _showBanner() {
+  _showBanner () {
     if (this.hasBannerTarget) this.bannerTarget.classList.remove('hidden')
   }
 }

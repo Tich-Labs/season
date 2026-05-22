@@ -1,19 +1,19 @@
-import { Controller } from "@hotwired/stimulus"
+import { Controller } from '@hotwired/stimulus'
 
 export default class extends Controller {
-  static targets = ["days", "hours", "minutes", "seconds"]
+  static targets = ['days', 'hours', 'minutes', 'seconds']
   static values = { targetDate: String }
 
-  connect() {
+  connect () {
     this.tick()
     this.interval = window.setInterval(() => this.tick(), 1000)
   }
 
-  disconnect() {
+  disconnect () {
     window.clearInterval(this.interval)
   }
 
-  tick() {
+  tick () {
     const targetTime = new Date(this.targetDateValue).getTime()
     const remainingMilliseconds = Math.max(targetTime - Date.now(), 0)
 
@@ -29,7 +29,7 @@ export default class extends Controller {
     this.secondsTarget.textContent = this.formatUnit(seconds)
   }
 
-  formatUnit(value) {
-    return value.toString().padStart(2, "0")
+  formatUnit (value) {
+    return value.toString().padStart(2, '0')
   }
 }

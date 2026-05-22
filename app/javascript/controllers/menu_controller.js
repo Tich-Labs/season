@@ -1,34 +1,35 @@
-import { Controller } from "@hotwired/stimulus"
+/* global requestAnimationFrame */
+import { Controller } from '@hotwired/stimulus'
 
 export default class extends Controller {
-  static targets = ["slider", "panel"]
+  static targets = ['slider', 'panel']
 
-  open() {
-    this.sliderTarget.classList.remove("hidden")
-    this.sliderTarget.classList.add("flex")
+  open () {
+    this.sliderTarget.classList.remove('hidden')
+    this.sliderTarget.classList.add('flex')
     requestAnimationFrame(() => {
-      this.panelTarget.style.transform = "translateX(0%)"
+      this.panelTarget.style.transform = 'translateX(0%)'
     })
   }
 
-  close() {
-    this.panelTarget.style.transform = "translateX(-100%)"
+  close () {
+    this.panelTarget.style.transform = 'translateX(-100%)'
     setTimeout(() => {
-      this.sliderTarget.classList.remove("flex")
-      this.sliderTarget.classList.add("hidden")
+      this.sliderTarget.classList.remove('flex')
+      this.sliderTarget.classList.add('hidden')
     }, 300)
   }
 
-  connect() {
+  connect () {
     if (this.hasPanelTarget) {
-      this.panelTarget.style.transform = "translateX(-100%)"
+      this.panelTarget.style.transform = 'translateX(-100%)'
     }
-    this.element.addEventListener("close-menu", () => this.close())
+    this.element.addEventListener('close-menu', () => this.close())
   }
 
-  openFeedback(event) {
+  openFeedback (event) {
     const type = event.currentTarget.dataset.type
-    this.element.dispatchEvent(new CustomEvent("close-menu", { bubbles: true }))
+    this.element.dispatchEvent(new CustomEvent('close-menu', { bubbles: true }))
     setTimeout(() => window.openFeedbackModal?.(type), 350)
   }
 }

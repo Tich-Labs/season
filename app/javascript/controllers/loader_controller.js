@@ -1,4 +1,4 @@
-import { Controller } from "@hotwired/stimulus"
+import { Controller } from '@hotwired/stimulus'
 
 export default class extends Controller {
   static values = {
@@ -7,7 +7,7 @@ export default class extends Controller {
     welcomeUrl: String
   }
 
-  connect() {
+  connect () {
     setTimeout(() => {
       if (this.signedInValue) {
         window.location.href = this.calendarUrlValue

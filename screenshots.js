@@ -1,4 +1,4 @@
-const { chromium } = require('playwright');
+const { chromium } = require('playwright')
 
 const SCREENS = [
   { url: '/', name: '01-loader' },
@@ -11,22 +11,22 @@ const SCREENS = [
   { url: '/symptoms', name: '08-symptoms' },
   { url: '/superpowers', name: '09-superpowers' },
   { url: '/streaks', name: '10-streaks' },
-  { url: '/settings/edit', name: '11-settings' },
+  { url: '/settings/edit', name: '11-settings' }
 ];
 
 (async () => {
-  const browser = await chromium.launch();
-  const page = await browser.newPage({ viewport: { width: 430, height: 932 } });
-  
+  const browser = await chromium.launch()
+  const page = await browser.newPage({ viewport: { width: 430, height: 932 } })
+
   for (const screen of SCREENS) {
     try {
-      await page.goto(`http://localhost:3000${screen.url}`, { waitUntil: 'networkidle', timeout: 10000 });
-      await page.screenshot({ path: `test/screenshots/${screen.name}.png`, fullPage: true });
-      console.log(`✓ ${screen.name}`);
+      await page.goto(`http://localhost:3000${screen.url}`, { waitUntil: 'networkidle', timeout: 10000 })
+      await page.screenshot({ path: `test/screenshots/${screen.name}.png`, fullPage: true })
+      console.log(`✓ ${screen.name}`)
     } catch (e) {
-      console.log(`✗ ${screen.name}: ${e.message}`);
+      console.log(`✗ ${screen.name}: ${e.message}`)
     }
   }
-  
-  await browser.close();
-})();
+
+  await browser.close()
+})()

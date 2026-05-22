@@ -1,5 +1,8 @@
 {
   "standard": {
+    "env": {
+      "browser": true
+    },
     "ignore": [
       "season-audit-checklist.jsx"
     ]
