@@ -33,6 +33,20 @@ jobs:
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO
 
+      - name: Install Signing Certificate
+        env:
+          DIST_CERT_BASE64: ${{ secrets.DIST_CERT_BASE64 }}
+          DIST_CERT_PASSWORD: ${{ secrets.DIST_CERT_PASSWORD }}
+          KEYCHAIN_PASSWORD: tempkeychain123
+        run: |
+          security create-keychain -p "$KEYCHAIN_PASSWORD" build.keychain
+          security default-keychain -s build.keychain
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" build.keychain
+          echo "$DIST_CERT_BASE64" | base64 -d > /tmp/dist.p12
+          security import /tmp/dist.p12 -k build.keychain -P "$DIST_CERT_PASSWORD" -T /usr/bin/codesign -T /usr/bin/security
+          security set-key-partition-list -S apple-tool:,apple: -k "$KEYCHAIN_PASSWORD" build.keychain
+          rm /tmp/dist.p12
+
       - name: Export IPA
         env:
           APPSTORE_KEY_BASE64: ${{ secrets.APPSTORE_KEY_BASE64 }}
