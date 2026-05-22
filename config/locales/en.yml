@@ -29,7 +29,7 @@ en:
         password_placeholder: "Password..."
         confirm_password_placeholder: "Repeat password..."
         fast_lane: "Use the fast lane:"
-        or_email: "...or sign in with your E-Mail adress:"
+        or_email: "...or sign in with your E-Mail address:"
         submit: "Sign in"
         have_account: "I already have an account"
         terms_html: "I'll accept the %{terms} and the %{privacy}"
