@@ -1,12 +1,9 @@
 name: iOS Build
 
 on:
+  workflow_dispatch:
   push:
     tags: ["v*"]
-  workflow_dispatch:
-
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   build:
@@ -24,7 +21,7 @@ jobs:
       - name: List schemes
         run: xcodebuild -list -project ios/SeasonApp/SeasonApp.xcodeproj
 
-      - name: Build and Archive
+      - name: Archive
         run: |
           xcodebuild archive \
             -project ios/SeasonApp/SeasonApp.xcodeproj \
@@ -37,37 +34,28 @@ jobs:
             CODE_SIGNING_REQUIRED=NO
 
       - name: Export IPA
+        env:
+          APPSTORE_KEY_BASE64: ${{ secrets.APPSTORE_KEY_BASE64 }}
+          APPSTORE_KEY_ID: ${{ secrets.APPSTORE_KEY_ID }}
+          APPSTORE_ISSUER_ID: ${{ secrets.APPSTORE_ISSUER_ID }}
         run: |
-          cat > /tmp/decode_key.py << 'PYEOF'
-import base64, os
-data = os.environ['APPSTORE_KEY_BASE64'].strip()
-with open('/tmp/AuthKey.p8', 'wb') as f:
-    f.write(base64.b64decode(data))
-PYEOF
-          python3 /tmp/decode_key.py
-          echo "Key decoded: $(wc -c < /tmp/AuthKey.p8) bytes"
+          python3 -c "import base64,os;f=open('/tmp/AuthKey.p8','wb');f.write(base64.b64decode(os.environ['APPSTORE_KEY_BASE64'].strip()))"
           xcodebuild -exportArchive \
             -archivePath SeasonApp.xcarchive \
             -exportPath . \
             -exportOptionsPlist ios/SeasonApp/ExportOptions.plist \
             -authenticationKeyPath /tmp/AuthKey.p8 \
-            -authenticationKeyID "${{ secrets.APPSTORE_KEY_ID }}" \
-            -authenticationKeyIssuerID "${{ secrets.APPSTORE_ISSUER_ID }}" \
-            -allowProvisioningUpdates
-        env:
-          APPSTORE_KEY_BASE64: ${{ secrets.APPSTORE_KEY_BASE64 }}
-            -archivePath SeasonApp.xcarchive \
-            -exportPath . \
-            -exportOptionsPlist ios/SeasonApp/ExportOptions.plist \
-            -authenticationKeyPath /tmp/AuthKey.p8 \
-            -authenticationKeyID "${{ secrets.APPSTORE_KEY_ID }}" \
-            -authenticationKeyIssuerID "${{ secrets.APPSTORE_ISSUER_ID }}" \
+            -authenticationKeyID "$APPSTORE_KEY_ID" \
+            -authenticationKeyIssuerID "$APPSTORE_ISSUER_ID" \
             -allowProvisioningUpdates
 
       - name: Upload to TestFlight
+        env:
+          APPSTORE_KEY_ID: ${{ secrets.APPSTORE_KEY_ID }}
+          APPSTORE_ISSUER_ID: ${{ secrets.APPSTORE_ISSUER_ID }}
         run: |
           xcrun altool --upload-app \
             -f SeasonApp.ipa \
             -t ios \
-            --apiKey "${{ secrets.APPSTORE_KEY_ID }}" \
-            --apiIssuer "${{ secrets.APPSTORE_ISSUER_ID }}"
+            --apiKey "$APPSTORE_KEY_ID" \
+            --apiIssuer "$APPSTORE_ISSUER_ID"
