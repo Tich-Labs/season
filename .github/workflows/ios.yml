@@ -38,9 +38,11 @@ jobs:
 
       - name: Export IPA
         run: |
-          echo "${{ secrets.APPSTORE_KEY_BASE64 }}" | tr -d '\n\r ' | base64 -d -i - > /tmp/AuthKey.p8 2>/dev/null
-          if [ ! -s /tmp/AuthKey.p8 ]; then echo "Error: AuthKey.p8 is empty — check APPSTORE_KEY_BASE64 secret"; exit 1; fi
+          printf '%s' "$APPSTORE_KEY_BASE64" | base64 -d > /tmp/AuthKey.p8
+          if [ ! -s /tmp/AuthKey.p8 ]; then echo "Error: AuthKey.p8 is empty"; exit 1; fi
           xcodebuild -exportArchive \
+        env:
+          APPSTORE_KEY_BASE64: ${{ secrets.APPSTORE_KEY_BASE64 }}
             -archivePath SeasonApp.xcarchive \
             -exportPath . \
             -exportOptionsPlist ios/SeasonApp/ExportOptions.plist \
