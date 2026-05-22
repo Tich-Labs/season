@@ -38,12 +38,14 @@ jobs:
 
       - name: Export IPA
         run: |
-          python3 -c "
+          cat > /tmp/decode_key.py << 'PYEOF'
 import base64, os
 data = os.environ['APPSTORE_KEY_BASE64'].strip()
 with open('/tmp/AuthKey.p8', 'wb') as f:
     f.write(base64.b64decode(data))
-" && echo "Key decoded: $(wc -c < /tmp/AuthKey.p8) bytes"
+PYEOF
+          python3 /tmp/decode_key.py
+          echo "Key decoded: $(wc -c < /tmp/AuthKey.p8) bytes"
           xcodebuild -exportArchive \
             -archivePath SeasonApp.xcarchive \
             -exportPath . \
