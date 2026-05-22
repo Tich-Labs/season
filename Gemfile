@@ -51,7 +51,7 @@ gem "apnotic"
 # Background jobs & caching
 gem "solid_cache"
 gem "solid_queue"
-gem "webpush", "~> 1.3"
+gem "webpush", "~> 1.1"
 
 # Database
 gem "pg", "~> 1.5"
