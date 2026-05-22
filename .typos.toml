@@ -1,9 +1,14 @@
 [default.extend-words]
-# Rails naming conventions
 informations = "informations"
+Informations = "Informations"
 rememberable = "rememberable"
-
-# German words
+rememberable = "rememberable"
+Tich = "Tich"
+tich = "tich"
+TichLabs = "TichLabs"
+Supress = "Supress"
+Teh = "Teh"
+teh = "teh"
 ein = "ein"
 deine = "deine"
 deines = "deines"
@@ -21,34 +26,7 @@ Periode = "Periode"
 periode = "periode"
 Adresse = "Adresse"
 Optimistisch = "Optimistisch"
-
-# Company / username
-Tich = "Tich"
-tich = "tich"
-TichLabs = "TichLabs"
-
-# Timezone
 IST = "IST"
-
-# SVG variable names
 iy = "iy"
-
-# Devise config
-rememberable = "rememberable"
-
-# Intentionally descriptive
-Supress = "Supress"
-Teh = "Teh"
-teh = "teh"
-
-# URL fragment
 bund = "bund"
-
-# Slide filename
 youre = "youre"
-
-[files]
-extend-exclude = [
-  "README.md",
-  "node_modules/",
-]

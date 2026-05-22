@@ -14,6 +14,8 @@ class User < ApplicationRecord
   has_many :reminders, dependent: :destroy
   has_many :feedbacks, dependent: :destroy
   has_many :user_consents, dependent: :destroy
+  has_many :push_subscriptions, dependent: :destroy
+  has_many :webauthn_credentials, dependent: :destroy
   has_one :streak, dependent: :destroy
 
   has_secure_token :native_auth_token
