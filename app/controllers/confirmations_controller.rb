@@ -4,10 +4,10 @@ class ConfirmationsController < Devise::ConfirmationsController
 
     if resource.errors.empty?
       login(resource)
-      redirect_to after_sign_in_path, notice: "Email confirmed! Welcome to Season."
+      redirect_to after_sign_in_path, notice: t("confirmations.success")
     else
       redirect_to new_user_confirmation_path,
-        alert: "That confirmation link has expired or already been used. Request a new one below."
+        alert: t("confirmations.expired")
     end
   end
 end

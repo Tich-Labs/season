@@ -6,7 +6,7 @@ class AddInviteTokenExpiryToUsers < ActiveRecord::Migration[8.0]
     reversible do |dir|
       dir.up do
         User.where("invite_token IS NOT NULL AND invite_accepted_at IS NULL")
-          .update_all(invite_token_expires_at: 7.days.from_now)
+          .update_all(invite_token_expires_at: 7.days.from_now) # rubocop:disable Rails/SkipsModelValidations
       end
     end
   end

@@ -11,7 +11,7 @@ class CleanupExpiredInvitesJob < ApplicationJob
     # Clear expired tokens that were never used
     deleted_count = User.where.not(invite_token: nil)
       .where(invite_token_expires_at: ...Time.zone.now)
-      .update_all(invite_token: nil)
+      .update_all(invite_token: nil) # rubocop:disable Rails/SkipsModelValidations
 
     Rails.logger.info "[CleanupExpiredInvitesJob] Cleared #{deleted_count} expired invite tokens"
   rescue => e
