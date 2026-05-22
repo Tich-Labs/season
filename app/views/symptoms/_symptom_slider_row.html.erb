@@ -15,7 +15,7 @@
 
   <%# Slider + tick dots + level label %>
   <div class="relative flex-1" style="padding-bottom:22px;">
-    <input type="range" min="0" max="3" step="1" value="<%= val %>"
+    <input type="range" min="0" max="3" step="1" value="<%= val %>" autocomplete="off"
            class="symptom-slider"
            data-action="input->symptom#saveSymptomSlider"
            data-symptom-key="<%= symptom[:key] %>"
