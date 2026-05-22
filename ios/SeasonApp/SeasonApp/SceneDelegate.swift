@@ -1,67 +1,64 @@
 import UIKit
-import Turbo
-
-private let baseURL = URL(string: "https://season.vision")!
+import WebKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
-    private var navigator: Navigator!
-    private lazy var navigationController = UINavigationController()
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
 
-        let window = UIWindow(windowScene: windowScene)
-        self.window = window
-
+        let viewController = ViewController()
+        let navigationController = UINavigationController(rootViewController: viewController)
         navigationController.setNavigationBarHidden(true, animated: false)
-        navigator = Navigator(delegate: self)
-        navigator.transientViewControllers = [navigationController]
 
-        let root = VisitableViewController(url: baseURL)
-        navigationController.viewControllers = [root]
-
-        window.rootViewController = navigationController
-        window.makeKeyAndVisible()
+        window = UIWindow(windowScene: windowScene)
+        window?.rootViewController = navigationController
+        window?.makeKeyAndVisible()
     }
 }
 
-extension SceneDelegate: NavigatorDelegate {
-    func navigator(_ navigator: Navigator, didProposeVisit proposal: VisitProposal) {
-        guard isInternalURL(proposal.url) else {
-            UIApplication.shared.open(proposal.url)
+class ViewController: UIViewController, WKNavigationDelegate {
+    private var webView: WKWebView!
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        let config = WKWebViewConfiguration()
+        config.applicationNameForUserAgent = "Season iOS"
+
+        webView = WKWebView(frame: .zero, configuration: config)
+        webView.translatesAutoresizingMaskIntoConstraints = false
+        webView.navigationDelegate = self
+        view.addSubview(webView)
+
+        NSLayoutConstraint.activate([
+            webView.topAnchor.constraint(equalTo: view.topAnchor),
+            webView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            webView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            webView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+        ])
+
+        DispatchQueue.main.async { [weak self] in
+            self?.webView.load(URLRequest(url: URL(string: "https://seasonv2.onrender.com")!))
+        }
+    }
+
+    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+        guard let url = navigationAction.request.url, let host = url.host else {
+            decisionHandler(.allow)
             return
         }
 
-        let viewController = VisitableViewController(url: proposal.url)
-        if proposal.properties?.action == "replace" {
-            navigationController.setViewControllers([viewController], animated: false)
+        let isInternal = host == "seasonv2.onrender.com"
+            || host.hasSuffix(".onrender.com")
+            || host.hasSuffix(".season.vision")
+            || host.hasSuffix(".seasonapp.co")
+
+        if isInternal {
+            decisionHandler(.allow)
         } else {
-            navigationController.pushViewController(viewController, animated: true)
+            UIApplication.shared.open(url)
+            decisionHandler(.cancel)
         }
-    }
-
-    func navigator(_ navigator: Navigator, didFailVisit visit: Visit, error: Error) {
-        let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Retry", style: .default) { _ in
-            visit.reload()
-        })
-        navigationController.present(alert, animated: true)
-    }
-
-    func navigator(_ navigator: Navigator, didFinishRequestForVisit visit: Visit) {
-        let viewController = navigationController.topViewController as? VisitableViewController
-        viewController?.presentedVisitable?.updateVisitableView()
-    }
-
-    private func isInternalURL(_ url: URL) -> Bool {
-        guard let host = url.host else { return false }
-
-        if host == baseURL.host { return true }
-        if host.hasSuffix(".onrender.com") { return true }
-        if host.hasSuffix(".season.vision") { return true }
-        if host.hasSuffix(".seasonapp.co") { return true }
-
-        return false
     }
 }
