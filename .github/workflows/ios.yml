@@ -21,18 +21,18 @@ jobs:
         working-directory: ios/SeasonApp
         run: xcodegen generate
 
-      - name: Archive
+      - name: List schemes
+        run: xcodebuild -list -project ios/SeasonApp/SeasonApp.xcodeproj
+
+      - name: Build and Archive
         run: |
-          xcodebuild -list -project ios/SeasonApp/SeasonApp.xcodeproj
           xcodebuild archive \
             -project ios/SeasonApp/SeasonApp.xcodeproj \
             -scheme SeasonApp \
             -archivePath SeasonApp.xcarchive \
             -destination "generic/platform=iOS" \
             DEVELOPMENT_TEAM="${{ secrets.DEVELOPMENT_TEAM }}" \
-            CODE_SIGN_STYLE=Automatic \
-            -allowProvisioningUpdates \
-            -verbose 2>&1 | tail -100
+            -allowProvisioningUpdates
 
       - name: Export IPA
         run: |
