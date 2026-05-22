@@ -1,7 +1,6 @@
 class PinController < ApplicationController
   allow_unauthenticated_access only: [:show, :verify]
   skip_onboarding_requirement
-  allow_pin_bypass
 
   def show
     if authenticated? && current_user.pin_set?

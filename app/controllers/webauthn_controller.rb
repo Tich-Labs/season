@@ -1,6 +1,4 @@
 class WebauthnController < ApplicationController
-  allow_pin_bypass
-
   def registration_challenge
     challenge = SecureRandom.random_bytes(32)
     session[:webauthn_challenge] = Base64.urlsafe_encode64(challenge)
