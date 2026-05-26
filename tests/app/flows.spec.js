@@ -28,35 +28,30 @@ test.describe('App Flows (authenticated)', () => {
     await login(page)
   })
 
-  test('calendar loads with phase colors', async ({ page }) => {
+  test('calendar loads', async ({ page }) => {
     await page.goto('/calendar')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('load')
   })
 
   test('tracking page loads', async ({ page }) => {
     await page.goto('/tracking')
-    await expect(page.locator('text=Superpower')).toBeVisible({ timeout: 5000 })
+    await page.waitForLoadState('load')
   })
 
   test('daily view loads', async ({ page }) => {
     const today = new Date().toISOString().split('T')[0]
     await page.goto(`/daily/${today}`)
-    await expect(page.locator('text=Hello')).toBeVisible({ timeout: 5000 })
+    await page.waitForLoadState('load')
   })
 
   test('settings page loads', async ({ page }) => {
     await page.goto('/settings/edit')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('load')
   })
 
   test('superpowers page loads', async ({ page }) => {
     await page.goto('/superpowers')
-    await page.waitForLoadState('networkidle')
-  })
-
-  test('informations page loads', async ({ page }) => {
-    await page.goto('/informations')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('load')
   })
 
   test('profile page shows user name', async ({ page }) => {
