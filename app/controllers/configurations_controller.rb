@@ -22,6 +22,8 @@ class ConfigurationsController < ApplicationController
         }
       ]
     }
+  end
+
   def android_v1
     render json: {
       settings: {
