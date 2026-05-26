@@ -225,6 +225,7 @@ Rails.application.routes.draw do
 
   # Turbo Native iOS configuration endpoint
   get "/configurations/ios_v1", to: "configurations#ios_v1", defaults: {format: :json}
+  get "/configurations/android_v1", to: "configurations#android_v1", defaults: {format: :json}
 
   # Native device registration for APNs
   post "/native_devices/register", to: "native_devices#register", defaults: {format: :json}

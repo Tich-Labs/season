@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.seasonapp.android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -11,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Season">
         <activity
-            android:name=".MainActivity"
+            android:name="com.seasonapp.android.activities.MainActivity"
             android:exported="true"
             android:configChanges="orientation|screenSize">
             <intent-filter>
