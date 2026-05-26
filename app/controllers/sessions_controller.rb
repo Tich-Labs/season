@@ -47,6 +47,13 @@ class SessionsController < ApplicationController
 
   private
 
+  def respond_with_token(user)
+    {
+      turbo_native_token: user.native_auth_token,
+      user: {id: user.id, email: user.email, name: user.name}
+    }
+  end
+
   def rate_limited
     flash.now[:alert] = t(".too_many_attempts")
     render :new, status: :too_many_requests
