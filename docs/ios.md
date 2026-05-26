@@ -6,8 +6,13 @@ The Season app has an **iOS wrapper** built with **Hotwire Native** (hotwire-nat
 
 **Completed:**
 - ✅ Hotwire Native tab bar — Calendar, Tracking, Settings
-- ✅ Path configuration (`/configurations/ios_v1.json`) — modal rules for Settings/Account
+- ✅ Path configuration (`/configurations/ios_v1.json`) — modal rules, tab bar hidden on auth screens
 - ✅ Token-based auth (TurboNativeDetection + X-Turbo-Native-Token)
+- ✅ CI workflow: archive → manual codesign → zip IPA → altool upload
+- ✅ Distribution cert + provisioning profile for headless CI signing
+- ✅ 9 GitHub secrets documented
+- ✅ Pre-push hook (rubocop + erb_lint + standard)
+- ✅ 32 Playwright E2E smoke tests
 - ✅ Safe area insets on all key elements (header, content, banners, FAB)
 - ✅ Touch target minimums (44pt on interactive elements)
 - ✅ Offline fallback page (`/offline.html`)

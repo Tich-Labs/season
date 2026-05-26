@@ -38,9 +38,13 @@ open SeasonApp.xcodeproj
 
 ## CI
 
-GitHub Actions cloud Mac (Xcode 16): xcodegen → SPM resolve → archive → manual codesign → zip IPA → altool upload.
+GitHub Actions cloud Mac (Xcode 26): xcodegen → SPM resolve → archive → manual codesign → zip IPA → altool upload.
 
-**9 GitHub secrets required** — see `docs/STORE-DEPLOYMENT.md` for the full setup guide.
+**9 GitHub secrets required** — see `docs/STORE-DEPLOYMENT.md`.
+
+## Pre-Push Hook
+
+Runs rubocop + erb_lint + JS standard before every `git push`. Setup: `bin/setup-hooks`.
 
 ---
 
