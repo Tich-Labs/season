@@ -69,9 +69,12 @@ jobs:
 
       - name: Upload to TestFlight
         env:
+          APPSTORE_KEY_BASE64: ${{ secrets.APPSTORE_KEY_BASE64 }}
           APPSTORE_KEY_ID: ${{ secrets.APPSTORE_KEY_ID }}
           APPSTORE_ISSUER_ID: ${{ secrets.APPSTORE_ISSUER_ID }}
         run: |
+          mkdir -p ~/private_keys
+          python3 -c "import base64,os;f=open(os.path.expanduser('~/private_keys/AuthKey_${APPSTORE_KEY_ID}.p8'),'wb');f.write(base64.b64decode(os.environ['APPSTORE_KEY_BASE64'].strip()))"
           xcrun altool --upload-app \
             -f SeasonApp.ipa \
             -t ios \
