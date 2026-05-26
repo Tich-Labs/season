@@ -9,6 +9,13 @@ class ConfigurationsController < ApplicationController
       },
       rules: [
         {
+          patterns: ["/", "/welcome", "/session/*", "/registration/*", "/onboarding/*", "/launch-signup", "/password/*", "/invite/*"],
+          properties: {
+            "presentation" => "default",
+            "tab_bar_hidden" => true
+          }
+        },
+        {
           patterns: ["/calendar", "/tracking", "/daily/*", "/symptoms", "/superpowers"],
           properties: {
             "presentation" => "default"
@@ -31,6 +38,13 @@ class ConfigurationsController < ApplicationController
         "tab_bar_tint_color" => "#933a35"
       },
       rules: [
+        {
+          patterns: ["/", "/welcome", "/session/*", "/registration/*", "/onboarding/*", "/launch-signup", "/password/*", "/invite/*"],
+          properties: {
+            "presentation" => "default",
+            "tab_bar_hidden" => true
+          }
+        },
         {
           patterns: ["/calendar", "/tracking", "/daily/*", "/symptoms", "/superpowers"],
           properties: {
