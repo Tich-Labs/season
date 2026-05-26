@@ -1,8 +1,6 @@
 import HotwireNative
 import UIKit
 
-let baseURL = URL(string: "https://seasonv2.onrender.com")!
-
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
 
@@ -16,8 +14,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         options connectionOptions: UIScene.ConnectionOptions
     ) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
-
-        Hotwire.appConfiguration.userAgentSuffix = "Season iOS"
 
         window = UIWindow(windowScene: windowScene)
         window?.rootViewController = tabBarController
