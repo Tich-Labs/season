@@ -7,9 +7,14 @@ on:
 
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
+
+      - name: Select latest Xcode
+        run: |
+          sudo xcode-select -s /Applications/Xcode_$(ls /Applications/ | grep Xcode | sort -V | tail -1 | sed 's/Xcode_//;s/.app//').app 2>/dev/null || true
+          xcodebuild -version
 
       - name: Install xcodegen
         run: brew install xcodegen
