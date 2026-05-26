@@ -59,8 +59,11 @@ jobs:
           IDENTITY=$(security find-identity -v -p codesigning build.keychain | head -1 | awk '{print $2}')
           echo "Signing identity: $IDENTITY"
           APP_PATH=SeasonApp.xcarchive/Products/Applications/SeasonApp.app
-          cp ~/Library/MobileDevice/Provisioning\ Profiles/*.mobileprovision "$APP_PATH/embedded.mobileprovision"
-          /usr/bin/codesign --force --sign "$IDENTITY" --timestamp=none "$APP_PATH" 2>&1
+          PROFILE=$(ls ~/Library/MobileDevice/Provisioning\ Profiles/*.mobileprovision | head -1)
+          cp "$PROFILE" "$APP_PATH/embedded.mobileprovision"
+          security cms -D -i "$PROFILE" > /tmp/profile.plist
+          /usr/libexec/PlistBuddy -x -c 'Print :Entitlements' /tmp/profile.plist > /tmp/entitlements.plist
+          /usr/bin/codesign --force --sign "$IDENTITY" --entitlements /tmp/entitlements.plist --timestamp=none "$APP_PATH" 2>&1
           mkdir Payload
           cp -r "$APP_PATH" Payload/
           zip -r SeasonApp.ipa Payload/
