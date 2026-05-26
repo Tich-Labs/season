@@ -187,18 +187,40 @@ GitHub Actions handles the build on a cloud Mac (latest Xcode, no local setup ne
 
 ---
 
-### Step 3 — Build the Android App (thin WKWebView mirror)
+### Step 3 — Build the Android App (WebView wrapper)
 
-**Not yet implemented.** Planned approach mirrors iOS: thin `WebView` wrapper loading `https://seasonv2.onrender.com`, same external URL routing pattern. ~30 lines of Kotlin in `MainActivity.kt`, zero native UI.
+✅ **Scaffolded** at `android/`. Thin `WebView` wrapper mirroring iOS — 1 Kotlin file, standard AndroidX dependencies, no native UI.
+
+1. Install [Android Studio](https://developer.android.com/studio) (free)
+2. Open `android/` as the project root
+3. Let Gradle sync (first time downloads Android SDK + dependencies)
+4. **Build → Generate Signed Bundle / APK → Android App Bundle (AAB)**
+5. Create a keystore (keep this file safe — you can never lose it)
+
+**Project structure:**
+
+| File | Purpose |
+|------|---------|
+| `app/src/main/java/.../MainActivity.kt` | WebView + external URL routing |
+| `app/src/main/AndroidManifest.xml` | INTERNET permission, activity declaration |
+| `app/build.gradle.kts` | Android SDK 34, Kotlin 2.0, AppCompat |
+| `build.gradle.kts` | Root project plugins |
+| `settings.gradle.kts` | Module includes |
+| `gradle.properties` | JVM heap, AndroidX flag |
 
 ---
 
-### Step 4 — Upload and Publish
+### Step 6 — Internal Testing (Android TestFlight equivalent)
 
-1. Play Console → **Release** → **Production** → **Create new release**
+Google Play Console has **Internal Testing** — identical to TestFlight:
+
+1. Play Console → **Testing** → **Internal Testing** → **Create new release**
 2. Upload the `.aab` file
-3. Fill in release notes
-4. Start rollout — first review takes **3–7 days**
+3. Add testers by email (up to 100, immediate — no review needed)
+4. Testers get an email with a Play Store install link
+5. App installs via Google Play (not sideloaded)
+
+This is the Android equivalent of TestFlight. Same flow: build → upload → invite testers → they install from the store.
 
 ---
 
@@ -223,7 +245,7 @@ Fill in before submitting (Play Console → **Main store listing**):
 | Developer account created | ✅ | ❌ |
 | App registered in console | ❌ | ❌ |
 | Xcode / Android Studio project created | ✅ | ❌ |
-| WKWebView / WebView wrapper built | ✅ (plain WKWebView, 2 Swift files) | ⏳ (planned — thin WebView, ~30 lines Kotlin) |
+| WKWebView / WebView wrapper built | ✅ (plain WKWebView, 2 Swift files) | ✅ (`android/`, 1 Kotlin file) |
 | Auth token flow (X-Turbo-Native-Token) | ✅ | ❌ |
 | Header/FAB visible in native context | ✅ | N/A |
 | External URLs → system browser | ✅ | ❌ |
