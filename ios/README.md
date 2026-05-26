@@ -23,10 +23,14 @@ Native iOS wrapper using **Hotwire Native** (`hotwire-native-ios` via SPM).
 - **Auth** via `X-Turbo-Native-Token` header → `TurboNativeDetection` concern
 - **External URLs** routed to system browser by Hotwire Native SDK
 
+## Development
+
+**⚠️ macOS 12 users:** Hotwire Native requires Swift 5.9+ (Xcode 15+). Build via CI (`macos-latest` runner). Local testing: use plain WKWebView on Xcode 14.2.
+
 ## Setup
 
 ```bash
-brew install xcodegen
+brew install xcodegen   # macOS 13+ only
 cd ios/SeasonApp
 xcodegen generate
 open SeasonApp.xcodeproj
@@ -34,8 +38,9 @@ open SeasonApp.xcodeproj
 
 ## CI
 
-GitHub Actions: `xcodegen generate` → SPM resolve → archive → sign → upload to TestFlight.
-See `.github/workflows/ios.yml` and `docs/STORE-DEPLOYMENT.md`.
+GitHub Actions cloud Mac (Xcode 16): xcodegen → SPM resolve → archive → manual codesign → zip IPA → altool upload.
+
+**9 GitHub secrets required** — see `docs/STORE-DEPLOYMENT.md` for the full setup guide.
 
 ---
 

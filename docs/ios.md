@@ -477,11 +477,19 @@ export default class extends Controller {
 
 ## Conclusion
 
-The Season iOS wrapper is **code-complete**. It's a thin WKWebView shell with zero dependencies — the web app handles all UI and navigation. External URLs (OAuth, privacy policy, terms) route to Safari. Auth tokens persist via X-Turbo-Native-Token header.
+## Development Constraints
 
-**The only blockers for TestFlight are external:**
-1. App Store Connect API Key (for CI signing)
-2. GitHub secrets (6 values)
-3. Run the iOS Build workflow
+| Constraint | Impact | Solution |
+|-----------|--------|----------|
+| macOS 12 (Monterey) | Max Xcode 14.2, Swift 5.7 | Hotwire Native needs Swift 5.9+ → **use CI** |
+| 2015 MacBook Pro | Can't upgrade past macOS 12 | CI builds Hotwire Native, local tests with plain WKWebView |
+| xcodebuild export | Requires Xcode Accounts on headless CI | **Manual codesign + altool upload** (see CI workflow) |
 
-See `docs/STORE-DEPLOYMENT.md` for the step-by-step setup guide.
+**Local development path:**
+1. Make web app changes in Rails — test at `localhost:3000`
+2. Push → CI compiles Hotwire Native iOS app (Xcode 16.4 cloud Mac)
+3. CI signs manually → uploads to TestFlight
+4. Test on physical device via TestFlight
+
+**7 GitHub secrets required** (see `docs/STORE-DEPLOYMENT.md` for setup):
+`DEVELOPMENT_TEAM`, `APPLE_ID`, `APP_SPECIFIC_PASSWORD`, `APPSTORE_KEY_ID`, `APPSTORE_ISSUER_ID`, `APPSTORE_KEY_BASE64`, `DIST_CERT_BASE64`, `DIST_CERT_PASSWORD`, `PROVISIONING_PROFILE_BASE64`

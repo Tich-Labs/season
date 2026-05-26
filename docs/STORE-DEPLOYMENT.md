@@ -1,113 +1,165 @@
 # App Store & Play Store — Deployment Setup Guide
 
-**Last updated:** 2026-05-22
+**Last updated:** 2026-05-26
 **App:** Season (Hotwire Native wrappers around the Rails PWA)
-**Architecture:** The web app runs on Render at `https://seasonv2.onrender.com`. iOS and Android use **Hotwire Native** — native tab bars replace the web burger menu. The web app handles all content (calendar, tracking, symptoms, daily view). External URLs open in the system browser.
 
 ---
 
-## What's Already Done (in code — no account needed)
+## Architecture
+
+The web app runs on Render at `https://seasonv2.onrender.com`. iOS and Android use Hotwire Native — native tab bars (Calendar / Tracking / Settings) replace the web burger menu. All content is server-rendered HTML.
+
+---
+
+## Machine Requirements
+
+| Task | Minimum | What We Have |
+|------|---------|-------------|
+| **Local iOS dev** | macOS 13+ with Xcode 15+ | macOS 12 with Xcode 14.2 ❌ |
+| **Local iOS build** | macOS 13+ (hotwire-native-ios needs Swift 5.9+) | Can't compile ❌ |
+| **CI iOS build** | GitHub Actions `macos-latest` (free) | Xcode 16.4, works ✅ |
+| **Local Android dev** | Android Studio 2023.1+ (any OS) | Works on macOS 12 ✅ |
+| **Rails dev** | Ruby 3.4, PostgreSQL | Works ✅ |
+
+**Key takeaway:** A 2015 MacBook Pro (macOS 12) CAN do Rails + Android dev + plain WKWebView iOS testing. For Hotwire Native iOS builds, use CI (free GitHub Actions cloud Mac).
+
+---
+
+## What's Already Done (in code)
 
 | Item | iOS | Android |
 |------|-----|---------|
 | Hotwire Native integrated | ✅ (`hotwire-native-ios` via SPM) | ✅ (`hotwire-native-android` via Gradle) |
 | Native tab bar (3 tabs) | ✅ Calendar / Tracking / Settings | ✅ Calendar / Tracking / Settings |
-| Auth token flow | ✅ `X-Turbo-Native-Token` header | ✅ Same token flow |
+| Auth token flow | ✅ `X-Turbo-Native-Token` header | ✅ Same |
 | Path configuration | ✅ `/configurations/ios_v1.json` | ✅ `/configurations/android_v1.json` |
-| Web nav hidden in native | ✅ Burger menu + FAB hidden, tab bar replaces | ✅ Same |
-| App icon | ✅ All sizes | ❌ (needs mipmap resources) |
+| Web nav hidden in native | ✅ Burger + FAB hidden, tab bar replaces | ✅ Same |
+| App icon (all sizes) | ✅ | ❌ |
 | Launch screen | ✅ Storyboard | ❌ |
 | PrivacyInfo.xcprivacy | ✅ | N/A |
-| CI workflow | ✅ GitHub Actions (xcodegen → SPM → archive → sign → upload) | ❌ |
+| CI workflow | ✅ (archive → manual sign → IPA → upload) | ❌ |
 | Bundle ID | `com.season-app.ios` | `com.seasonapp.android` |
-
-**What's left is account/console work + first build** — no code changes needed.
 
 ---
 
 ## Part 1 — Apple App Store (iOS)
 
-### Step 1 — Create Apple Developer Account ✅ DONE
+### Secrets Setup (one-time, 7 secrets)
 
-### Step 2 — Register the App in App Store Connect
+All set at GitHub → repo → **Settings** → **Secrets and variables** → **Actions**:
 
-1. Go to [appstoreconnect.apple.com](https://appstoreconnect.apple.com)
-2. **Apps** → **+** → New App → Bundle ID: `com.season-app.ios`
+#### Developer Account Secrets
 
-### Step 3 — App Store Connect API Key
+| Secret | Source | Notes |
+|--------|--------|-------|
+| `DEVELOPMENT_TEAM` | Apple Developer → Membership | `28NDQR5JC4` (Shanel Chien individual account) |
+| `APPLE_ID` | Developer Apple ID | `shanel@season.vision` |
+| `APP_SPECIFIC_PASSWORD` | appleid.apple.com → App-Specific Passwords | Required for altool upload |
 
-1. App Store Connect → **Users and Access** → **Integrations** → **App Store Connect API** → **+**
-2. Name "GitHub Actions", Access: **App Manager**
-3. Save the **Key ID**, **Issuer ID**, and download the `.p8` file
+#### App Store Connect API Key
 
-### Step 4 — GitHub Secrets
+| Secret | Source |
+|--------|--------|
+| `APPSTORE_KEY_ID` | App Store Connect → Users & Access → Integrations → API Key ID |
+| `APPSTORE_ISSUER_ID` | Same page, Issuer ID at top |
+| `APPSTORE_KEY_BASE64` | `base64 -i ~/Downloads/AuthKey_XXX.p8` |
 
-All 6 secrets at GitHub → Settings → Secrets → Actions:
+**API key setup steps:**
+1. [appstoreconnect.apple.com](https://appstoreconnect.apple.com) → Users and Access → Integrations → App Store Connect API
+2. Click **+** → Name "GitHub Actions" → Access: **App Manager**
+3. Copy the **Issuer ID** (top of page) and **Key ID** (next to key name)
+4. Download the `.p8` file — you can only download it once
+5. Base64 encode it: `base64 -i ~/Downloads/AuthKey_XXX.p8`
 
-| Secret | Value |
-|--------|-------|
-| `DEVELOPMENT_TEAM` | `CH4G9T6ZHP` |
-| `APPLE_ID` | Developer Apple ID |
-| `APP_SPECIFIC_PASSWORD` | From appleid.apple.com |
-| `APPSTORE_KEY_ID` | From API Key (Step 3) |
-| `APPSTORE_ISSUER_ID` | From API Key (Step 3) |
-| `APPSTORE_KEY_BASE64` | `base64 AuthKey_XXX.p8` output |
-| `DIST_CERT_BASE64` | Distribution certificate p12 (base64) |
-| `DIST_CERT_PASSWORD` | p12 password |
+#### Signing Certificate + Provisioning Profile
 
-### Step 5 — Run CI
+| Secret | Source |
+|--------|--------|
+| `DIST_CERT_BASE64` | Generated from distribution certificate .p12 |
+| `DIST_CERT_PASSWORD` | Password used when creating the .p12 |
+| `PROVISIONING_PROFILE_BASE64` | `base64 -i ~/Downloads/Season_App_Store.mobileprovision` |
 
-GitHub → **Actions** → **iOS Build** → **Run workflow**. Cloud Mac: xcodegen → SPM resolve → archive → sign → upload to TestFlight.
+**Creating the distribution certificate (one-time):**
+```bash
+# 1. Generate private key + CSR
+openssl genrsa -out season_dist_key.pem 2048
+openssl req -new -key season_dist_key.pem -out season_dist.csr \
+  -subj "/emailAddress=shanel@season.vision/CN=Season Distribution"
 
-### Step 6 — TestFlight
+# 2. Upload season_dist.csr at developer.apple.com → Certificates → + → Apple Distribution
+# 3. Download distribution.cer
+# 4. Convert to .p12
+openssl x509 -in ~/Downloads/distribution.cer -inform DER -out season_cert.pem
+openssl pkcs12 -export -inkey season_dist_key.pem -in season_cert.pem \
+  -out season_dist.p12 -passout pass:season123
 
-App Store Connect → **TestFlight** → select build → add testers.
+# 5. Base64 for CI
+base64 season_dist.p12  # → DIST_CERT_BASE64
+```
+
+**Creating the provisioning profile:**
+1. [developer.apple.com/account](https://developer.apple.com/account) → **Profiles** → **+**
+2. **App Store Connect** → Continue
+3. Select **com.season-app.ios** → Continue
+4. Select the distribution certificate (Shanel Chien) → Continue
+5. Name: "Season App Store" → Generate → Download
+6. `base64 -i ~/Downloads/Season_App_Store.mobileprovision` → `PROVISIONING_PROFILE_BASE64`
+
+### How CI Build Works
+
+```
+Generate Xcode project  (xcodegen + SPM resolve)
+        ↓
+Archive                 (xcodebuild, CODE_SIGNING_REQUIRED=NO)
+        ↓
+Import cert + profile   (security import + keychain)
+        ↓
+Manual codesign         (/usr/bin/codesign --force --sign)
+        ↓
+Create IPA              (zip Payload/)
+        ↓
+Upload to TestFlight    (xcrun altool --apiKey --apiIssuer)
+```
+
+**Why manual signing:** `xcodebuild -exportArchive` with `method: app-store-connect` always contacts Apple servers — impossible on headless CI without Xcode Accounts. Manual `codesign` + `altool` upload bypasses this.
+
+### Register the App in App Store Connect
+
+1. [appstoreconnect.apple.com](https://appstoreconnect.apple.com) → **Apps** → **+** → New App
+2. Platform: iOS, Name: Season, Bundle ID: `com.season-app.ios`, SKU: `season-ios-v1`
+
+### Run
+
+GitHub → **Actions** → **iOS Build** → **Run workflow**. The IPA auto-uploads to App Store Connect. Then **TestFlight** → select build → add testers.
 
 ---
 
 ## Part 2 — Google Play Store (Android)
 
-### Step 1 — Create Google Play Developer Account
+### Setup
 
-1. Go to [play.google.com/console](https://play.google.com/console)
-2. Pay **$25 one-time** fee
-3. Account activated immediately
+| Step | Details |
+|------|---------|
+| Developer account | [play.google.com/console](https://play.google.com/console) → $25 one-time |
+| Register app | Package: `com.seasonapp.android`, Free |
+| Build | Open `android/` in Android Studio → Gradle sync → Build → Generate Signed Bundle → AAB |
+| Test | Internal Testing track — add testers by email, install via Google Play link |
 
-### Step 2 — Create App in Play Console
+### Android CI (future)
 
-Play Console → **Create App** → Name "Season" → Free → package `com.seasonapp.android`
-
-### Step 3 — Build (Android Studio)
-
-```bash
-# Open android/ in Android Studio
-# Sync Gradle → Build → Generate Signed Bundle → Android App Bundle (AAB)
-# Create keystore (save securely — never lose it)
-```
-
-### Step 4 — Internal Testing (TestFlight equivalent)
-
-1. Play Console → **Testing** → **Internal Testing** → upload AAB
-2. Add testers by email
-3. Testers install via Google Play link
+Same pattern as iOS: GitHub Actions with `ubuntu-latest` → Gradle build → sign with keystore → upload via Google Play Publishing API.
 
 ---
 
-## Status Tracker
+## Developing on Older Machines
 
-| Task | iOS | Android |
-|------|-----|---------|
-| Developer account created | ✅ | ❌ |
-| Hotwire Native integrated | ✅ | ✅ |
-| Native tab bar | ✅ Calendar/Tracking/Settings | ✅ Calendar/Tracking/Settings |
-| App registered in console | ❌ | ❌ |
-| App icon | ✅ | ❌ |
-| Path configuration | ✅ | ✅ |
-| CI workflow | ✅ | ❌ |
-| API Key configured | ⚠️ (needs regen) | N/A |
-| GitHub secrets set | ⚠️ (needs API key update) | N/A |
-| First build | ❌ | ❌ |
-| TestFlight / Internal Testing | ❌ | ❌ |
+| What | How |
+|------|-----|
+| **Hotwire Native iOS can't compile locally** | Use GitHub Actions `macos-latest` (free tier: 2000 min/month) |
+| **iOS testing** | Build with plain WKWebView locally (works on Xcode 14.2), use simulator |
+| **Android** | Android Studio 2023.1.1 (Hedgehog) — last version for macOS 12 |
+| **Rails** | Works fine — `rbenv` with Ruby 3.4.7 |
+| **Cross-platform testing** | Web app at `localhost:3000` or `seasonv2.onrender.com` on any browser |
 
 ---
 
@@ -123,4 +175,4 @@ Play Console → **Create App** → Name "Season" → Free → package `com.seas
 | Season Render URL | https://seasonv2.onrender.com |
 | iOS project | `ios/SeasonApp/` |
 | Android project | `android/` |
-| CI iOS workflow | `.github/workflows/ios.yml` |
+| CI workflow | `.github/workflows/ios.yml` |
