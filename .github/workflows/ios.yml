@@ -39,10 +39,14 @@ jobs:
         env:
           DIST_CERT_BASE64: ${{ secrets.DIST_CERT_BASE64 }}
           DIST_CERT_PASSWORD: ${{ secrets.DIST_CERT_PASSWORD }}
+          APPSTORE_KEY_BASE64: ${{ secrets.APPSTORE_KEY_BASE64 }}
+          APPSTORE_KEY_ID: ${{ secrets.APPSTORE_KEY_ID }}
+          APPSTORE_ISSUER_ID: ${{ secrets.APPSTORE_ISSUER_ID }}
         run: |
           python3 -c "import base64,os;f=open('/tmp/dist.p12','wb');f.write(base64.b64decode(os.environ['DIST_CERT_BASE64'].strip()))"
           openssl pkcs12 -in /tmp/dist.p12 -passin "pass:${DIST_CERT_PASSWORD}" -clcerts -nokeys -out /tmp/dist_cert.pem
           openssl pkcs12 -in /tmp/dist.p12 -passin "pass:${DIST_CERT_PASSWORD}" -nocerts -nodes -out /tmp/dist_key.pem
+          python3 -c "import base64,os;f=open('/tmp/AuthKey.p8','wb');f.write(base64.b64decode(os.environ['APPSTORE_KEY_BASE64'].strip()))"
           security create-keychain -p temp123 build.keychain
           security default-keychain -s build.keychain
           security unlock-keychain -p temp123 build.keychain
@@ -54,6 +58,9 @@ jobs:
             -exportPath . \
             -exportOptionsPlist ios/SeasonApp/ExportOptions.plist \
             DEVELOPMENT_TEAM="${{ secrets.DEVELOPMENT_TEAM }}" \
+            -authenticationKeyPath /tmp/AuthKey.p8 \
+            -authenticationKeyID "$APPSTORE_KEY_ID" \
+            -authenticationKeyIssuerID "$APPSTORE_ISSUER_ID" \
             -allowProvisioningUpdates
 
       - name: Upload to TestFlight
