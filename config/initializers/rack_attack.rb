@@ -2,7 +2,7 @@
 # Protects authentication endpoints from brute force attacks
 
 if defined?(Rack::Attack)
-  Rack::Attack.enabled = !Rails.env.test?
+  Rack::Attack.enabled = Rails.env.production?
 
   Rack::Attack.throttle("logins/ip", limit: 10, period: 60) do |req|
     req.ip if req.post? && req.path == "/session"
