@@ -1501,38 +1501,61 @@ Eight pre-existing test failures were fixed. No logic changes to production beha
 
 ---
 
-## Hotwire Native iOS & PWA Integration (2026-05-18)
+## iOS & Android Wrappers (2026-05-22)
 
-### Recent Native Additions
-- **Turbo Native SPM**: iOS project uses turbo-ios via Swift Package Manager (`project.yml`).
-- **SceneDelegate**: Uses TurboNavigator for native navigation; creates `HotwireTabBarController`.
-- **Tab bar**: 3 tabs (Calendar, Daily, Tracking) using `Tab` struct in `Tabs.swift`.
-- **Base URL**: Set in `Info.plist` key `SEASON_BASE_URL` — read at runtime, not hardcoded.
-- **AppDelegate**: Minimal stub — all UI is scene-based via `SceneDelegate`.
-- **/configurations/ios_v1.json**: Endpoint for native path rules (modal, pull-to-refresh).
-- **native.css**: Utility classes for d-hotwire-native-* (hide/show native-only elements).
-- **data-hotwire-native**: Attribute on <html> for native detection.
-- **Burger menu hidden in native**: Conditional logic in layout.
-- **Device token registration**: POST /native_devices/register for APNs.
-- **APNs push service**: Backend service (apnotic) ready for Apple credentials.
+### Approach
+
+Thin wrappers — the web app IS the app. Both iOS and Android load `https://seasonv2.onrender.com` in a WebView. The Rails app handles all navigation (burger menu, FAB, calendar icon). External URLs (OAuth, privacy) open in the system browser.
+
+### iOS Wrapper (`ios/SeasonApp/`)
+
+- **Plain WKWebView** — zero external dependencies, 2 Swift files
+- **SceneDelegate** — WKWebView + ViewController + WKNavigationDelegate
+- **AppDelegate** — minimal UIApplicationDelegate entry point
+- **External URL routing** — `WKWebView.decidePolicyFor` routes non-Season domains to Safari
+- **User-Agent** — `Season iOS` string identifies native context to Rails backend
+- **Token auth** — `X-Turbo-Native-Token` header via `TurboNativeDetection` concern
+- **Project config** — XcodeGen (`project.yml`) with `GENERATE_INFOPLIST_FILE: NO`
+- **CI** — GitHub Actions workflow (xcodegen → archive → sign → upload to TestFlight)
 
 ### iOS Project Structure
 ```
 ios/SeasonApp/
-├── project.yml              # XcodeGen spec (target iOS 15.0)
+├── project.yml              # XcodeGen spec (iOS 15.0, no dependencies)
+├── ExportOptions.plist      # App Store export signing config
 ├── SeasonApp/
-│   ├── SceneDelegate.swift  # Entry point (TurboNavigator + tab bar)
+│   ├── SceneDelegate.swift  # WKWebView + ViewController + URL routing
 │   ├── AppDelegate.swift    # Minimal stub
-│   ├── Tabs.swift           # Tab struct (title, systemImageName, urlPath)
-│   ├── HotwireTabBarController.swift  # UITabBar + TurboNavigator
-│   └── Info.plist           # SEASON_BASE_URL + app config
+│   ├── Info.plist           # Bundle ID, scene manifest, ATS, encryption
+│   ├── PrivacyInfo.xcprivacy # App Store compliance
+│   ├── LaunchScreen.storyboard # Branded splash
+│   └── Assets.xcassets/     # App icons (all sizes)
 └── SeasonApp.xcodeproj/     # Generated (xcodegen)
 ```
 
-### Testing
-See docs/testing_steps.md for a full checklist covering PWA and iOS native features.
+### Android Wrapper (`android/`)
 
-### Next Steps
-- Complete Apple Developer setup for APNs.
-- Implement token-based native authentication.
-- Add more native-specific view variants as needed.
+- **Thin WebView** — 1 Kotlin file (`MainActivity.kt`), standard AppCompat
+- **External URL routing** — `WebViewClient.shouldOverrideUrlLoading` routes to system browser
+- **User-Agent** — `Season Android` string for native detection
+- **Zero native UI** — no tab bars, no navigation chrome
+
+### Android Project Structure
+```
+android/
+├── build.gradle.kts         # Root plugins (Android 8.7, Kotlin 2.0)
+├── settings.gradle.kts      # Module includes
+├── gradle.properties        # JVM config
+└── app/
+    ├── build.gradle.kts     # SDK 34, AppCompat, Core KTX
+    └── src/main/
+        ├── AndroidManifest.xml  # INTERNET permission, activity
+        ├── java/.../MainActivity.kt  # WebView wrapper
+        └── res/values/       # Theme (#933a35), strings
+```
+
+### Testing
+- **iOS**: TestFlight via App Store Connect (build uploaded from CI or Xcode)
+- **Android**: Internal Testing via Google Play Console (upload AAB, invite testers by email)
+
+See `docs/STORE-DEPLOYMENT.md` for step-by-step setup guides.
