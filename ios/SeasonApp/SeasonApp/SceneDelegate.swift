@@ -19,6 +19,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.rootViewController = tabBarController
         window?.makeKeyAndVisible()
 
+        tabBarController.tabBar.isHidden = true
         tabBarController.load(HotwireTab.all)
     }
 
