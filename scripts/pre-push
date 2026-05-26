@@ -2,6 +2,7 @@
 # Pre-push hook — runs lint checks before every push
 
 set -e
+eval "$(rbenv init -)" 2>/dev/null
 
 echo "🔍 Checking Ruby..."
 bundle exec rubocop --format simple 2>&1
