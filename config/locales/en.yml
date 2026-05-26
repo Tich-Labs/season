@@ -203,7 +203,7 @@ en:
       password_updated_notice: "Password updated successfully"
       unable_to_update: "Unable to update password"
   sessions:
-    rate_limit_login:
+    rate_limited:
       too_many_attempts: "Too many login attempts. Please try again later."
   settings:
     language:
