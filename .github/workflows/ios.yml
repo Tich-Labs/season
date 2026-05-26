@@ -39,29 +39,23 @@ jobs:
         env:
           DIST_CERT_BASE64: ${{ secrets.DIST_CERT_BASE64 }}
           DIST_CERT_PASSWORD: ${{ secrets.DIST_CERT_PASSWORD }}
-          APPSTORE_KEY_BASE64: ${{ secrets.APPSTORE_KEY_BASE64 }}
-          APPSTORE_KEY_ID: ${{ secrets.APPSTORE_KEY_ID }}
-          APPSTORE_ISSUER_ID: ${{ secrets.APPSTORE_ISSUER_ID }}
         run: |
           python3 -c "import base64,os;f=open('/tmp/dist.p12','wb');f.write(base64.b64decode(os.environ['DIST_CERT_BASE64'].strip()))"
-          openssl pkcs12 -in /tmp/dist.p12 -passin "pass:${DIST_CERT_PASSWORD}" -clcerts -nokeys -out /tmp/dist_cert.pem
-          openssl pkcs12 -in /tmp/dist.p12 -passin "pass:${DIST_CERT_PASSWORD}" -nocerts -nodes -out /tmp/dist_key.pem
-          python3 -c "import base64,os;f=open('/tmp/AuthKey.p8','wb');f.write(base64.b64decode(os.environ['APPSTORE_KEY_BASE64'].strip()))"
           security create-keychain -p temp123 build.keychain
           security default-keychain -s build.keychain
           security unlock-keychain -p temp123 build.keychain
-          security import /tmp/dist_cert.pem -k build.keychain -A
-          security import /tmp/dist_key.pem -k build.keychain -A
+          security import /tmp/dist.p12 -k build.keychain -P "$DIST_CERT_PASSWORD" -T /usr/bin/codesign -T /usr/bin/security -A -f pkcs12 2>/dev/null || \
+            security import /tmp/dist.p12 -P "$DIST_CERT_PASSWORD" -A -f pkcs12
           security set-key-partition-list -S apple-tool:,apple: -k temp123 build.keychain 2>/dev/null || true
+          IDENTITY=$(security find-identity -v -p codesigning build.keychain | head -1 | awk '{print $2}')
+          echo "Signing identity: $IDENTITY"
+          /usr/bin/codesign --force --sign "$IDENTITY" --timestamp=none SeasonApp.xcarchive/Products/Applications/SeasonApp.app 2>&1
           xcodebuild -exportArchive \
             -archivePath SeasonApp.xcarchive \
             -exportPath . \
             -exportOptionsPlist ios/SeasonApp/ExportOptions.plist \
             DEVELOPMENT_TEAM="${{ secrets.DEVELOPMENT_TEAM }}" \
-            -authenticationKeyPath /tmp/AuthKey.p8 \
-            -authenticationKeyID "$APPSTORE_KEY_ID" \
-            -authenticationKeyIssuerID "$APPSTORE_ISSUER_ID" \
-            -allowProvisioningUpdates
+            CODE_SIGN_STYLE=Manual
 
       - name: Upload to TestFlight
         env:
