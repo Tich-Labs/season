@@ -25,7 +25,7 @@ module Authentication
     return if authenticated?
 
     store_location_for(:user, request.fullpath) if request.get? || request.head?
-    redirect_to new_session_path
+    redirect_to turbo_native_app? ? root_path : new_session_path
   end
 
   def login(user)
