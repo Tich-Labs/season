@@ -53,21 +53,12 @@ jobs:
           rm /tmp/dist.p12
 
       - name: Export IPA
-        env:
-          APPSTORE_KEY_BASE64: ${{ secrets.APPSTORE_KEY_BASE64 }}
-          APPSTORE_KEY_ID: ${{ secrets.APPSTORE_KEY_ID }}
-          APPSTORE_ISSUER_ID: ${{ secrets.APPSTORE_ISSUER_ID }}
         run: |
-          python3 -c "import base64,os;f=open('/tmp/AuthKey.p8','wb');f.write(base64.b64decode(os.environ['APPSTORE_KEY_BASE64'].strip()))"
           xcodebuild -exportArchive \
             -archivePath SeasonApp.xcarchive \
             -exportPath . \
             -exportOptionsPlist ios/SeasonApp/ExportOptions.plist \
-            DEVELOPMENT_TEAM="${{ secrets.DEVELOPMENT_TEAM }}" \
-            -authenticationKeyPath /tmp/AuthKey.p8 \
-            -authenticationKeyID "$APPSTORE_KEY_ID" \
-            -authenticationKeyIssuerID "$APPSTORE_ISSUER_ID" \
-            -allowProvisioningUpdates
+            DEVELOPMENT_TEAM="${{ secrets.DEVELOPMENT_TEAM }}"
 
       - name: Upload to TestFlight
         env:
