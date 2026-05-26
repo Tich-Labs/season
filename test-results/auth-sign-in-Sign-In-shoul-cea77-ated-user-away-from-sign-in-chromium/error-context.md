@@ -6,8 +6,8 @@
 
 # Test info
 
-- Name: auth/sign-in.spec.js >> Sign In >> should sign in with valid credentials
-- Location: tests/auth/sign-in.spec.js:12:7
+- Name: auth/sign-in.spec.js >> Sign In >> should redirect authenticated user away from sign in
+- Location: tests/auth/sign-in.spec.js:36:7
 
 # Error details
 
@@ -77,8 +77,7 @@ Received string:  "http://localhost:3000/session"
   16 |     // Wait for navigation via Turbo
   17 |     await page.waitForTimeout(3000)
   18 |     const url = page.url()
-> 19 |     expect(url).toMatch(/\/calendar|\/onboarding/)
-     |                 ^ Error: expect(received).toMatch(expected)
+  19 |     expect(url).toMatch(/\/calendar|\/onboarding/)
   20 |   })
   21 | 
   22 |   test('should show error for wrong password', async ({ page }) => {
@@ -101,7 +100,8 @@ Received string:  "http://localhost:3000/session"
   39 |     await page.click('input[type="submit"]')
   40 |     await page.waitForTimeout(3000)
   41 |     const url = page.url()
-  42 |     expect(url).toMatch(/\/calendar|\/onboarding/)
+> 42 |     expect(url).toMatch(/\/calendar|\/onboarding/)
+     |                 ^ Error: expect(received).toMatch(expected)
   43 |     await page.goto('/session/new')
   44 |     await expect(page).toHaveURL(/\/calendar|\/onboarding/)
   45 |   })

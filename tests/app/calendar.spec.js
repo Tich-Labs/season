@@ -1,31 +1,33 @@
-import { test, expect } from '@playwright/test'
+const { test, expect } = require('@playwright/test')
+
+const TEST_EMAIL = 'alice@example.com'
+const TEST_PASSWORD = 'password123'
 
 test.describe('Calendar', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/session/new')
-    await page.fill('input[name="email"]', 'test@season.vision')
-    await page.fill('input[name="password"]', 'password123')
-    await page.click('button[type="submit"]')
-    await page.waitForURL('**/calendar')
+    await page.fill('#email', TEST_EMAIL)
+    await page.fill('#password_field', TEST_PASSWORD)
+    await page.click('input[type="submit"]')
+    await page.waitForURL('**/calendar', { timeout: 10000 })
   })
 
   test('shows calendar after login', async ({ page }) => {
-    await expect(page.locator('text=Season')).toBeVisible()
+    await expect(page.locator('text=Season')).toBeVisible({ timeout: 5000 })
   })
 })
 
 test.describe('Onboarding', () => {
   test('shows onboarding for new user', async ({ page }) => {
-    // Sign up as a new user (uses random email to ensure fresh state)
-    const email = `test-${Date.now()}@season.vision`
+    const email = `e2e-${Date.now()}@season.vision`
     await page.goto('/registration/new')
-    await page.fill('input[name="name"]', 'Test User')
-    await page.fill('input[name="email"]', email)
-    await page.fill('input[name="password"]', 'password123')
-    await page.fill('input[name="password_confirmation"]', 'password123')
-    await page.check('input[name="terms_accepted"]')
-    await page.click('button[type="submit"]')
-    await page.waitForURL('**/onboarding/**')
-    await expect(page.locator('text=Name')).toBeVisible()
+    await page.fill('#user_name', 'E2E User')
+    await page.fill('#user_email', email)
+    await page.fill('#user_password', TEST_PASSWORD)
+    await page.fill('#user_password_confirmation', TEST_PASSWORD)
+    await page.check('#terms_accepted')
+    await page.click('input[type="submit"]')
+    await page.waitForURL('**/onboarding/**', { timeout: 10000 })
+    await expect(page.locator('text=Name, Birthday')).toBeVisible({ timeout: 5000 })
   })
 })

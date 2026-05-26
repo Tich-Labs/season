@@ -6,54 +6,66 @@
 
 # Test info
 
-- Name: auth/sign-in.spec.js >> Sign In >> should sign in with valid credentials
-- Location: tests/auth/sign-in.spec.js:12:7
+- Name: auth/sign-in.spec.js >> Sign In >> should display sign in page
+- Location: tests/auth/sign-in.spec.js:8:7
 
 # Error details
 
 ```
-Error: expect(received).toMatch(expected)
+Error: expect(locator).toContainText(expected) failed
 
-Expected pattern: /\/calendar|\/onboarding/
-Received string:  "http://localhost:3000/session"
+Locator: locator('h1')
+Timeout: 5000ms
+Expected pattern: /LOG IN/
+Received string:  "
+      Log In
+    "
+
+Call log:
+  - Expect "toContainText" with timeout 5000ms
+  - waiting for locator('h1')
+    9 × locator resolved to <h1 class="text-brand-primary text-[36px] font-bold uppercase tracking-[3.24px] text-center">↵      Log In↵    </h1>
+      - unexpected value "
+      Log In
+    "
+
 ```
 
 # Page snapshot
 
 ```yaml
-- generic [ref=e2]:
-  - heading "Log In" [level=1] [ref=e4]
-  - generic [ref=e5]:
-    - paragraph [ref=e6]: "Use the fast lane:"
-    - generic [ref=e7]:
-      - button "Sign in with Apple" [ref=e9] [cursor=pointer]:
-        - img "Apple" [ref=e10]
-      - button "Sign in with Facebook" [ref=e12] [cursor=pointer]:
-        - img "Facebook" [ref=e13]
-      - button "Sign in with Google" [ref=e15] [cursor=pointer]:
-        - img "Google" [ref=e16]
-  - generic [ref=e17]: ... or login with your E-mail
-  - generic [ref=e19]:
-    - generic [ref=e20]:
-      - generic [ref=e21]: Email
-      - textbox "Email" [active] [ref=e22]:
-        - /placeholder: E-mail...
-    - generic [ref=e23]:
-      - generic [ref=e24]: Password
-      - textbox "Password" [ref=e25]:
-        - /placeholder: Password...
-      - button "Toggle password visibility" [ref=e26] [cursor=pointer]:
-        - img [ref=e27]
-    - link "I forgot my password..." [ref=e31] [cursor=pointer]:
-      - /url: /users/password/new
-    - alert [ref=e32]:
-      - generic [ref=e33]: "!"
-      - generic [ref=e34]:
-        - paragraph [ref=e35]: Wrong E-mail or password.
-        - paragraph [ref=e36]: Please try again.
-    - button "Log In" [ref=e38] [cursor=pointer]
-  - link "I am new... Sign up!" [ref=e40] [cursor=pointer]:
-    - /url: /registration/new
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - heading "Log In" [level=1] [ref=e4]
+    - generic [ref=e5]:
+      - paragraph [ref=e6]: "Use the fast lane:"
+      - generic [ref=e7]:
+        - button "Sign in with Apple" [ref=e9] [cursor=pointer]:
+          - img "Apple" [ref=e10]
+        - button "Sign in with Facebook" [ref=e12] [cursor=pointer]:
+          - img "Facebook" [ref=e13]
+        - button "Sign in with Google" [ref=e15] [cursor=pointer]:
+          - img "Google" [ref=e16]
+    - generic [ref=e17]: ... or login with your E-mail
+    - generic [ref=e19]:
+      - generic [ref=e20]:
+        - generic [ref=e21]: Email
+        - textbox "Email" [active] [ref=e22]:
+          - /placeholder: E-mail...
+      - generic [ref=e23]:
+        - generic [ref=e24]: Password
+        - textbox "Password" [ref=e25]:
+          - /placeholder: Password...
+        - button "Toggle password visibility" [ref=e26] [cursor=pointer]:
+          - img [ref=e27]
+      - link "I forgot my password..." [ref=e31] [cursor=pointer]:
+        - /url: /users/password/new
+      - button "Log In" [ref=e33] [cursor=pointer]
+    - link "I am new... Sign up!" [ref=e35] [cursor=pointer]:
+      - /url: /registration/new
+  - generic [ref=e38] [cursor=pointer]:
+    - generic [ref=e39]: "37.2"
+    - text: ms
 ```
 
 # Test source
@@ -67,7 +79,8 @@ Received string:  "http://localhost:3000/session"
   6  |   })
   7  | 
   8  |   test('should display sign in page', async ({ page }) => {
-  9  |     await expect(page.locator('h1')).toContainText(/LOG IN/)
+> 9  |     await expect(page.locator('h1')).toContainText(/LOG IN/)
+     |                                      ^ Error: expect(locator).toContainText(expected) failed
   10 |   })
   11 | 
   12 |   test('should sign in with valid credentials', async ({ page }) => {
@@ -77,8 +90,7 @@ Received string:  "http://localhost:3000/session"
   16 |     // Wait for navigation via Turbo
   17 |     await page.waitForTimeout(3000)
   18 |     const url = page.url()
-> 19 |     expect(url).toMatch(/\/calendar|\/onboarding/)
-     |                 ^ Error: expect(received).toMatch(expected)
+  19 |     expect(url).toMatch(/\/calendar|\/onboarding/)
   20 |   })
   21 | 
   22 |   test('should show error for wrong password', async ({ page }) => {

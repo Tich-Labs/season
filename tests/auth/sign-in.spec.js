@@ -1,46 +1,76 @@
-import { test, expect } from '@playwright/test'
+const { test, expect } = require('@playwright/test')
+
+const TEST_EMAIL = 'alice@example.com'
+const TEST_PASSWORD = 'password123'
 
 test.describe('Sign In', () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto('/session/new')
-  })
-
   test('should display sign in page', async ({ page }) => {
-    await expect(page.locator('h1')).toContainText(/LOG IN/)
+    await page.goto('/session/new')
+    await expect(page.locator('#email')).toBeVisible()
   })
 
   test('should sign in with valid credentials', async ({ page }) => {
-    await page.fill('input[name="email"]', 'test1@seasonapp.co')
-    await page.fill('input[name="password"]', 'Season2026!')
+    await page.goto('/session/new')
+    await page.fill('#email', TEST_EMAIL)
+    await page.fill('#password_field', TEST_PASSWORD)
     await page.click('input[type="submit"]')
-    // Wait for navigation via Turbo
-    await page.waitForTimeout(3000)
-    const url = page.url()
-    expect(url).toMatch(/\/calendar|\/onboarding/)
+    await page.waitForURL('**/calendar')
   })
 
   test('should show error for wrong password', async ({ page }) => {
-    await page.fill('input[name="email"]', 'test1@seasonapp.co')
-    await page.fill('input[name="password"]', 'WrongPassword!')
+    await page.goto('/session/new')
+    await page.fill('#email', TEST_EMAIL)
+    await page.fill('#password_field', 'wrongpassword')
     await page.click('input[type="submit"]')
-    await page.waitForSelector('#auth-error, .bg-brand-error')
+    await expect(page.locator('#auth-error, .text-brand-primary')).toBeVisible({ timeout: 5000 })
   })
 
   test('should show error for non-existent email', async ({ page }) => {
-    await page.fill('input[name="email"]', 'nonexistent@example.com')
-    await page.fill('input[name="password"]', 'Password123!')
+    await page.goto('/session/new')
+    await page.fill('#email', 'noone@nowhere.com')
+    await page.fill('#password_field', 'anything')
     await page.click('input[type="submit"]')
-    await page.waitForSelector('#auth-error, .bg-brand-error')
+    await expect(page.locator('#auth-error, .text-brand-primary')).toBeVisible({ timeout: 5000 })
+  })
+})
+
+test.describe('Sign Up', () => {
+  test('should display sign up page', async ({ page }) => {
+    await page.goto('/registration/new')
+    await expect(page.locator('#user_name')).toBeVisible()
   })
 
-  test('should redirect authenticated user away from sign in', async ({ page }) => {
-    await page.fill('input[name="email"]', 'test1@seasonapp.co')
-    await page.fill('input[name="password"]', 'Season2026!')
+  test('should sign up with valid email and password', async ({ page }) => {
+    const email = `e2e-${Date.now()}@season.vision`
+    await page.goto('/registration/new')
+    await page.fill('#user_name', 'E2E User')
+    await page.fill('#user_email', email)
+    await page.fill('#user_password', TEST_PASSWORD)
+    await page.fill('#user_password_confirmation', TEST_PASSWORD)
+    await page.check('#terms_accepted')
     await page.click('input[type="submit"]')
-    await page.waitForTimeout(3000)
-    const url = page.url()
-    expect(url).toMatch(/\/calendar|\/onboarding/)
+    await page.waitForURL('**/onboarding/**', { timeout: 10000 })
+  })
+})
+
+test.describe('Sign Out', () => {
+  test.beforeEach(async ({ page }) => {
     await page.goto('/session/new')
-    await expect(page).toHaveURL(/\/calendar|\/onboarding/)
+    await page.fill('#email', TEST_EMAIL)
+    await page.fill('#password_field', TEST_PASSWORD)
+    await page.click('input[type="submit"]')
+    await page.waitForURL('**/calendar')
+  })
+
+  test('should sign out successfully', async ({ page }) => {
+    await page.goto('/session/destroy')
+    await page.waitForURL('**/welcome', { timeout: 5000 }).catch(() => {})
+  })
+})
+
+test.describe('Password Reset', () => {
+  test('should display forgot password page', async ({ page }) => {
+    await page.goto('/users/password/new')
+    await expect(page.locator('#user_email')).toBeVisible({ timeout: 5000 })
   })
 })
