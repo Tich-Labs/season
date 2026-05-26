@@ -1,4 +1,4 @@
-const { test, expect } = require('@playwright/test')
+import { test, expect } from '@playwright/test'
 
 const TEST_EMAIL = 'alice@example.com'
 const TEST_PASSWORD = 'password123'
