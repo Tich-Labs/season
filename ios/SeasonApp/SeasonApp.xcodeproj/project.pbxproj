@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		AAAAAAAA010000000000000000000001 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBBB00010100000000000000000001 /* AppDelegate.swift */; };
+		F968AC4A2FC5CE8000FE97E4 /* Tabs.swift in Sources */ = {isa = PBXBuildFile; fileRef = F968AC492FC5CE8000FE97E4 /* Tabs.swift */; };
 		F9D67FC32FC03D3B0026BF96 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9D67FC22FC03D3B0026BF96 /* SceneDelegate.swift */; };
 /* End PBXBuildFile section */
 
@@ -17,6 +18,7 @@
 		BBBB00030100000000000000000003 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		BBBB00040100000000000000000004 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BBBB00050100000000000000000005 /* SeasonApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SeasonApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F968AC492FC5CE8000FE97E4 /* Tabs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Tabs.swift; path = SeasonApp/Tabs.swift; sourceTree = "<group>"; };
 		F9D67FC22FC03D3B0026BF96 /* SceneDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SceneDelegate.swift; path = SeasonApp/SceneDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -53,6 +55,7 @@
 		BBBB00090100000000000000000009 = {
 			isa = PBXGroup;
 			children = (
+				F968AC492FC5CE8000FE97E4 /* Tabs.swift */,
 				F9D67FC22FC03D3B0026BF96 /* SceneDelegate.swift */,
 				BBBB00070100000000000000000007 /* SeasonApp */,
 				BBBB00080100000000000000000008 /* Products */,
@@ -99,6 +102,7 @@
 			);
 			mainGroup = BBBB00090100000000000000000009;
 			packageReferences = (
+				F968AC4B2FC5CEB900FE97E4 /* XCRemoteSwiftPackageReference "hotwire-native-ios" */,
 			);
 			productRefGroup = BBBB00080100000000000000000008 /* Products */;
 			projectDirPath = "";
@@ -116,6 +120,7 @@
 			files = (
 				AAAAAAAA010000000000000000000001 /* AppDelegate.swift in Sources */,
 				F9D67FC32FC03D3B0026BF96 /* SceneDelegate.swift in Sources */,
+				F968AC4A2FC5CE8000FE97E4 /* Tabs.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -214,6 +219,17 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		F968AC4B2FC5CEB900FE97E4 /* XCRemoteSwiftPackageReference "hotwire-native-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/hotwired/hotwire-native-ios";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
 	};
 	rootObject = BBBB000B010000000000000000000B /* Project object */;
 }
