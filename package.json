@@ -2,7 +2,8 @@
   "scripts": {
     "test:e2e": "npx playwright test",
     "test:e2e:ui": "npx playwright test --ui",
-    "test:server": "RAILS_ENV=test bin/rails server -p 3001"
+    "test:server": "RAILS_ENV=test bin/rails server -p 3001",
+    "check": "bundle exec rubocop && bundle exec erb_lint --lint-all && npx standard tests/ && npx playwright test"
   },
   "standard": {
     "env": {
