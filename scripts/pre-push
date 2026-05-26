@@ -1,0 +1,18 @@
+#!/bin/bash
+# Pre-push hook — runs lint checks before every push
+
+set -e
+
+echo "🔍 Checking Ruby..."
+bundle exec rubocop --format simple 2>&1
+echo "✅ Ruby OK"
+
+echo "🔍 Checking ERB..."
+bundle exec erb_lint --lint-all --format compact 2>&1
+echo "✅ ERB OK"
+
+echo "🔍 Checking JS..."
+npx standard tests/ 2>&1
+echo "✅ JS OK"
+
+echo "🎉 All checks passed — pushing"

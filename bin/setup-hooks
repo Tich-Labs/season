@@ -1,0 +1,5 @@
+#!/bin/bash
+# Install pre-push hook that runs lint checks
+cp "$(dirname "$0")/scripts/pre-push" .git/hooks/pre-push
+chmod +x .git/hooks/pre-push
+echo "✅ Pre-push hook installed"
