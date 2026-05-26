@@ -35,7 +35,7 @@ jobs:
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO
 
-      - name: Install Signing Certificate
+      - name: Export IPA
         env:
           DIST_CERT_BASE64: ${{ secrets.DIST_CERT_BASE64 }}
           DIST_CERT_PASSWORD: ${{ secrets.DIST_CERT_PASSWORD }}
@@ -49,16 +49,12 @@ jobs:
           security import /tmp/dist_cert.pem -k build.keychain -A
           security import /tmp/dist_key.pem -k build.keychain -A
           security set-key-partition-list -S apple-tool:,apple: -k temp123 build.keychain 2>/dev/null || true
-          security find-identity -v -p codesigning build.keychain
-          rm /tmp/dist.p12
-
-      - name: Export IPA
-        run: |
           xcodebuild -exportArchive \
             -archivePath SeasonApp.xcarchive \
             -exportPath . \
             -exportOptionsPlist ios/SeasonApp/ExportOptions.plist \
-            DEVELOPMENT_TEAM="${{ secrets.DEVELOPMENT_TEAM }}"
+            DEVELOPMENT_TEAM="${{ secrets.DEVELOPMENT_TEAM }}" \
+            -allowProvisioningUpdates
 
       - name: Upload to TestFlight
         env:
