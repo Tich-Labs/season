@@ -1,14 +1,13 @@
-# iOS WKWebView Wrapper — Implementation Status
+# iOS Hotwire Native Wrapper — Implementation Status
 
 ## Executive Summary
 
-The Season app has an **iOS wrapper** built as a thin WKWebView shell with no external dependencies. The web app handles all navigation (burger menu, FAB, calendar icon) — the wrapper loads the URL, passes auth tokens, and opens external links in Safari. The approach prioritizes shipping speed: native app = web app in a WebView + token auth + external URL routing.
+The Season app has an **iOS wrapper** built with **Hotwire Native** (hotwire-native-ios SPM). The web app handles all content — the wrapper provides a native tab bar (Calendar / Tracking / Settings), path configuration for modal presentation, and token-based auth persistence. The web app's burger menu and FAB are hidden in native context, replaced by the native tab bar.
 
 **Completed:**
-- ✅ Token-based auth system (TurboNativeDetection concern + User model)
-- ✅ Header + burger menu visible in native context
-- ✅ FAB + quick actions visible in native context
-- ✅ External URL routing (WKWebView → Safari for OAuth/external links)
+- ✅ Hotwire Native tab bar — Calendar, Tracking, Settings
+- ✅ Path configuration (`/configurations/ios_v1.json`) — modal rules for Settings/Account
+- ✅ Token-based auth (TurboNativeDetection + X-Turbo-Native-Token)
 - ✅ Safe area insets on all key elements (header, content, banners, FAB)
 - ✅ Touch target minimums (44pt on interactive elements)
 - ✅ Offline fallback page (`/offline.html`)
@@ -458,11 +457,11 @@ export default class extends Controller {
 | External URLs → Safari | ✅ Built | SceneDelegate `isInternalURL()` check (May 21) |
 | PrivacyInfo.xcprivacy | ✅ Built | App Store compliance manifest (May 21) |
 | ITSAppUsesNonExemptEncryption | ✅ Built | Info.plist entry (May 21) |
-| WKWebView Shell | ✅ Built | Plain WKWebView, no dependencies, WKNavigationDelegate |
-| Header + Burger Menu in Native | ✅ Built | Visible in native context (May 21 fix) |
-| FAB + Quick Actions in Native | ✅ Built | Visible in native context (May 21 fix) |
-| External URLs → Safari | ✅ Built | WKNavigationDelegate `decidePolicyFor` (May 21) |
-| PrivacyInfo.xcprivacy | ✅ Built | App Store compliance manifest (May 21) |
+| Hotwire Native App Shell | ✅ Built | hotwire-native-ios via SPM, HotwireTabBarController, 3 tabs |
+| Native Tab Bar | ✅ Built | Calendar / Tracking / Settings (May 22) |
+| Path Configuration | ✅ Built | `/configurations/ios_v1.json` (settings/account → modal) |
+| Web Nav Hidden in Native | ✅ Built | Burger menu + FAB hidden, tab bar replaces |
+| PrivacyInfo.xcprivacy | ✅ Built | App Store compliance manifest |
 | ITSAppUsesNonExemptEncryption | ✅ Built | Info.plist entry (May 21) |
 | Scene Manifest | ✅ Built | UIApplicationSceneManifest in Info.plist |
 | CI Workflow | ✅ Built | GitHub Actions: xcodegen → archive → sign → upload |

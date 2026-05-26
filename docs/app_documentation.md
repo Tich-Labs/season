@@ -1535,10 +1535,12 @@ ios/SeasonApp/
 
 ### Android Wrapper (`android/`)
 
-- **Thin WebView** — 1 Kotlin file (`MainActivity.kt`), standard AppCompat
-- **External URL routing** — `WebViewClient.shouldOverrideUrlLoading` routes to system browser
+- **Hotwire Native** — `hotwire-native-android` via Gradle, 1 activity + tab model
+- **Bottom nav** — 3 tabs (Calendar, Tracking, Settings) via `HotwireBottomNavigationController`
+- **Path configuration** — `/configurations/android_v1.json` served by Rails
+- **External URL routing** — handled by Hotwire Native SDK
 - **User-Agent** — `Season Android` string for native detection
-- **Zero native UI** — no tab bars, no navigation chrome
+- **Zero custom views** — all content is server-rendered HTML
 
 ### Android Project Structure
 ```
@@ -1547,10 +1549,12 @@ android/
 ├── settings.gradle.kts      # Module includes
 ├── gradle.properties        # JVM config
 └── app/
-    ├── build.gradle.kts     # SDK 34, AppCompat, Core KTX
+    ├── build.gradle.kts     # SDK 34, hotwire-native-android, Material
     └── src/main/
         ├── AndroidManifest.xml  # INTERNET permission, activity
-        ├── java/.../MainActivity.kt  # WebView wrapper
+        ├── java/.../activities/MainActivity.kt  # HotwireActivity + bottom nav
+        ├── java/.../models/Tabs.kt  # Calendar, Tracking, Settings
+        ├── res/layout/activity_main.xml  # BottomNavigationView + fragment hosts
         └── res/values/       # Theme (#933a35), strings
 ```
 
