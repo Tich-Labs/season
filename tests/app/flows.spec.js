@@ -64,4 +64,3 @@ test.describe('App Flows (authenticated)', () => {
     await page.waitForLoadState('networkidle')
   })
 })
-})
