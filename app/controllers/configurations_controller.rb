@@ -1,17 +1,24 @@
 class ConfigurationsController < ApplicationController
-  allow_unauthenticated_access only: [:ios_v1]
+  allow_unauthenticated_access
 
   def ios_v1
     render json: {
-      settings: {},
+      settings: {
+        "tab_bar_background_color" => "#FAF7F4",
+        "tab_bar_tint_color" => "#933a35"
+      },
       rules: [
         {
-          patterns: ["/calendar", "/daily/*"],
-          properties: {pull_to_refresh_enabled: true}
+          patterns: ["/calendar", "/tracking", "/daily/*", "/symptoms", "/superpowers"],
+          properties: {
+            "presentation" => "default"
+          }
         },
         {
-          patterns: ["/settings/*", "/symptoms/new", "/symptoms/edit"],
-          properties: {context: "modal"}
+          patterns: ["/settings/*", "/account/*"],
+          properties: {
+            "presentation" => "modal"
+          }
         }
       ]
     }

@@ -16,7 +16,9 @@ jobs:
 
       - name: Generate Xcode project
         working-directory: ios/SeasonApp
-        run: xcodegen generate
+        run: |
+          xcodegen generate
+          xcodebuild -resolvePackageDependencies -project SeasonApp.xcodeproj -scheme SeasonApp
 
       - name: List schemes
         run: xcodebuild -list -project ios/SeasonApp/SeasonApp.xcodeproj

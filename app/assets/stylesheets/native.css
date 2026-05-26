@@ -10,7 +10,10 @@
   display: block !important;
 }
 
-/* Header is visible in native — no main padding override needed */
+/* Native tab bar takes ~49pt + safe area at bottom — pad web content */
+[data-hotwire-native] main {
+  padding-bottom: calc(49pt + env(safe-area-inset-bottom, 0px));
+}
 
 /* Remove pull-to-refresh in native app (native UIRefreshControl handles it) */
 [data-hotwire-native] [data-controller="pull-to-refresh"] {

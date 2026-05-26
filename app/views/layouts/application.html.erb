@@ -41,7 +41,7 @@
   <body class="bg-[#FCF9F7] font-['Montserrat'] antialiased h-full overflow-x-hidden"
         data-controller="update-prompt install haptic">
 
-    <% if is_authenticated_view %>
+    <% if is_authenticated_view && !turbo_native_app? %>
     <div data-controller="menu">
       <%# --- TOP APP BAR — constrained to mobile viewport --- %>
       <%# Settings controller auto-applies dark theme; any view can opt in via content_for(:header_dark) %>
@@ -137,13 +137,13 @@
     </div>
     <% end %>
 
-    <main class="w-full flex-1 no-ptr" data-controller="pull-to-refresh" style="<%= is_authenticated_view ? "padding-top: calc(6rem + env(safe-area-inset-top, 0px));" : '' %>">
+    <main class="w-full flex-1 no-ptr" data-controller="pull-to-refresh" style="<%= is_authenticated_view && !turbo_native_app? ? "padding-top: calc(6rem + env(safe-area-inset-top, 0px));" : is_authenticated_view ? "padding-top: env(safe-area-inset-top, 0px);" : '' %>">
       <div class="max-w-md mx-auto h-full">
         <%= yield %>
       </div>
     </main>
 
-    <% if is_authenticated_view %>
+    <% if is_authenticated_view && !turbo_native_app? %>
       <%= render "shared/feedback_modal" %>
       <%= render "shared/quick_actions" %>
     <% end %>
