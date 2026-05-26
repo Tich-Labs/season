@@ -1,6 +1,8 @@
 import HotwireNative
 import UIKit
 
+let baseURL = URL(string: "https://seasonv2.onrender.com")!
+
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
 
@@ -15,6 +17,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     ) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
 
+        Hotwire.appConfiguration.userAgentSuffix = "Season iOS"
+
         window = UIWindow(windowScene: windowScene)
         window?.rootViewController = tabBarController
         window?.makeKeyAndVisible()
@@ -28,6 +32,13 @@ extension SceneDelegate: NavigatorDelegate {
         proposal: VisitProposal,
         from navigator: Navigator
     ) -> ProposalResult {
-        .accept
+        guard let host = proposal.url.host else { return .accept }
+
+        if host == baseURL.host || host.hasSuffix(".onrender.com") || host.hasSuffix(".season.vision") {
+            return .accept
+        }
+
+        UIApplication.shared.open(proposal.url)
+        return .reject
     }
 }
