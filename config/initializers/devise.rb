@@ -276,7 +276,11 @@ Devise.setup do |config|
   # up on your models and hooks.
   config.omniauth :google_oauth2, ENV["GOOGLE_CLIENT_ID"], ENV["GOOGLE_CLIENT_SECRET"], scope: "email,profile", prompt: "select_account"
   config.omniauth :facebook, ENV["FACEBOOK_APP_ID"], ENV["FACEBOOK_APP_SECRET"], scope: "public_profile,email", info_fields: "email,name"
-  config.omniauth :apple, ENV["APPLE_CLIENT_ID"], ENV["APPLE_CLIENT_SECRET"], scope: "email, name"
+  config.omniauth :apple, ENV["APPLE_CLIENT_ID"], "",
+    scope: "email name",
+    team_id: ENV["APPLE_TEAM_ID"],
+    key_id: ENV["APPLE_KEY_ID"],
+    pem: ENV["APPLE_PRIVATE_KEY"]&.gsub("\\n", "\n")
 
   # ==> Warden configuration
   # Point Warden's failure app at our custom Season login page so any
