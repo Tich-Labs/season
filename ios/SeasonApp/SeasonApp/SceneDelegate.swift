@@ -21,6 +21,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         tabBarController.load(HotwireTab.all)
     }
+
+    private func isAuthURL(_ url: URL) -> Bool {
+        let path = url.path
+        return path == "/" ||
+            path.hasPrefix("/welcome") ||
+            path.hasPrefix("/session") ||
+            path.hasPrefix("/registration") ||
+            path.hasPrefix("/onboarding") ||
+            path.hasPrefix("/password") ||
+            path.hasPrefix("/users") ||
+            path.hasPrefix("/invite")
+    }
 }
 
 extension SceneDelegate: NavigatorDelegate {
@@ -31,6 +43,7 @@ extension SceneDelegate: NavigatorDelegate {
         guard let host = proposal.url.host else { return .accept }
 
         if host == baseURL.host || host.hasSuffix(".onrender.com") || host.hasSuffix(".season.vision") {
+            tabBarController.tabBar.isHidden = isAuthURL(proposal.url)
             return .accept
         }
 
