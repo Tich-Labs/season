@@ -55,3 +55,5 @@ docs/railsworld.html
 Archive SeasonApp_2026-05-22T09-06-50.txt
 *.bak
 node_modules/
+test-results/
+playwright-report/
