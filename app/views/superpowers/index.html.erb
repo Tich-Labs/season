@@ -52,7 +52,10 @@
     <div class="bg-white rounded-xl p-5 mb-3"
          data-controller="superpower"
          data-superpower-url-value="<%= superpowers_path %>">
-      <h2 class="text-brand-primary text-lg font-bold mb-5">Today's superpowers</h2>
+      <h2 class="text-brand-primary font-medium text-2xl text-center font-['Montserrat'] mb-1">My Superpowers</h2>
+      <p class="text-brand-primary font-extrabold text-[29px] text-center font-['Montserrat'] mb-6" style="color:<%= @phase_colour %>;">
+        <%= @phase.capitalize %> Phase
+      </p>
 
       <div class="flex flex-col">
         <% @superpowers.each do |sp| %>
@@ -66,7 +69,7 @@
           %>
           <div class="sp-row flex items-center gap-3" style="margin-bottom:25px;">
             <span class="shrink-0 font-medium font-['Montserrat']"
-                  style="min-width:70px; font-size:14px; color:#933a35; letter-spacing:0.5px;">
+                  style="min-width:198px; font-size:16px; color:#933a35; letter-spacing:0.07em;">
               <%= sp %>
             </span>
 
@@ -98,7 +101,7 @@
       <%# Submit button %>
       <div class="mt-6">
         <%= link_to "Submit", tracking_index_path,
-              class: "block w-full text-white text-center rounded-lg py-4 text-xl font-medium tracking-wide font-['Montserrat'] no-underline",
+              class: "block w-[253px] mx-auto text-white text-center rounded-lg py-4 text-xl font-medium tracking-wide font-['Montserrat'] no-underline",
               style: "background:#933a35;" %>
       </div>
     </div>

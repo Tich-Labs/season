@@ -26,6 +26,8 @@ class SuperpowersController < ApplicationController
 
   def index
     @date = params[:date] ? Date.parse(params[:date]) : Time.zone.today
+    @phase = current_user.current_phase || "follicular"
+    @phase_colour = CycleCalculatorService::PHASE_META[@phase]&.dig(:colour) || "#933a35"
     @superpowers = SUPERPOWERS
     @superpower_logs = current_user.superpower_logs.order(date: :desc).limit(10)
     @log = current_user.superpower_logs.find_or_initialize_by(date: @date)
