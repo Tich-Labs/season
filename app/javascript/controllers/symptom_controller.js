@@ -19,6 +19,25 @@ export default class extends Controller {
     this.#applyMoodVisuals()
   }
 
+  toggleCheckbox (event) {
+    const { field } = event.currentTarget.dataset
+    const value = event.currentTarget.checked
+
+    this.#post(this.urlValue, { symptom_log: { date: this.#date, [field]: value } })
+
+    const row = event.currentTarget.closest('.intercourse-row')
+    if (row) {
+      const toggleBg = row.querySelector('.toggle-bg')
+      const toggleKnob = row.querySelector('.toggle-knob')
+      const checkmark = row.querySelector('.intercourse-check')
+      if (toggleBg) toggleBg.style.background = value ? this.#phaseColor : '#EDE1D5'
+      if (toggleKnob) {
+        if (value) { toggleKnob.classList.add('translate-x-5') } else { toggleKnob.classList.remove('translate-x-5') }
+      }
+      if (checkmark) checkmark.style.display = value ? '' : 'none'
+    }
+  }
+
   save (event) {
     const { field, value } = event.currentTarget.dataset
     this.#post(this.urlValue, { symptom_log: { date: this.#date, [field]: value } })
@@ -104,6 +123,10 @@ export default class extends Controller {
   }
 
   // ── private ──────────────────────────────────────────────────────────────
+
+  get #phaseColor () {
+    return this.element.dataset.phaseColor || '#933a35'
+  }
 
   get #date () {
     return this.element.dataset.date

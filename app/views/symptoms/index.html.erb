@@ -28,7 +28,8 @@
      data-controller="symptom"
      data-symptom-url-value="<%= symptoms_path %>"
      data-date="<%= @date %>"
-     data-active-moods="<%= (@log.moods || []).to_json %>">
+     data-active-moods="<%= (@log.moods || []).to_json %>"
+     data-phase-color="<%= phase_colour %>">
 
   <%# ── Date picker drum ──────────────────────────────────────────────── %>
   <div class="relative flex justify-center pt-6 pb-2" data-controller="date-picker">
@@ -275,8 +276,8 @@
       </div>
     </details>
 
-    <%# 5. Sexual intercourse %>
-    <div class="border-b border-brand-field py-4 flex justify-between items-center">
+     <%# 5. Sexual intercourse %>
+    <div class="border-b border-brand-field py-4 flex justify-between items-center intercourse-row">
       <div class="flex items-center gap-3">
         <svg class="shrink-0" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
              fill="none" stroke="<%= phase_colour %>" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
@@ -289,17 +290,16 @@
         tog_bg = tog_on ? phase_colour : "#EDE1D5"
         tog_tx = tog_on ? "translate-x-5" : "translate-x-0"
       %>
-      <% if intercourse_done %><%= render 'symptoms/bi_check', colour: phase_colour %><% end %>
+      <span class="intercourse-check" style="display:<%= intercourse_done ? '' : 'none' %>;"><%= render 'symptoms/bi_check', colour: phase_colour %></span>
       <label class="relative inline-flex items-center cursor-pointer" aria-label="Sexual intercourse">
         <input type="checkbox" class="sr-only"
-               data-action="change->symptom#save"
+               data-action="change->symptom#toggleCheckbox"
                data-field="sexual_intercourse"
-               data-value="true"
                <%= tog_on ? "checked" : "" %>>
-        <div class="relative w-11 h-6 rounded-full transition-colors duration-200"
+        <div class="relative w-11 h-6 rounded-full transition-colors duration-200 toggle-bg"
              style="background:<%= tog_bg %>;">
           <span class="absolute top-[2px] left-[2px] w-5 h-5 bg-white rounded-full
-                       shadow transition-transform duration-200 <%= tog_tx %>"></span>
+                       shadow transition-transform duration-200 <%= tog_tx %> toggle-knob"></span>
         </div>
       </label>
     </div>
