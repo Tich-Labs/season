@@ -13,9 +13,9 @@
   mental_done       = @log.any_mental_symptom?
   discharge_done    = @log.discharge.present?
   bleeding_done     = @log.bleeding.present?
-  intercourse_list = @log.intercourse_tags.present? ? @log.intercourse_tags.split(',').reject(&:blank?) : []
+  intercourse_list = @log.intercourse_tags.present? ? @log.intercourse_tags.to_s.split(',').reject(&:blank?) : []
   intercourse_done  = intercourse_list.any?
-  cravings_list    = @log.cravings.present? ? @log.cravings.split(',').reject { |c| c.blank? || c.match?(/\A\d+\z/) } : []
+  cravings_list    = @log.cravings.present? ? @log.cravings.to_s.split(',').reject { |c| c.blank? || c.match?(/\A\d+\z/) } : []
   cravings_done     = cravings_list.any?
   sleep_done        = @log.sleep.present?
   temperature_done  = @log.temperature.present?
