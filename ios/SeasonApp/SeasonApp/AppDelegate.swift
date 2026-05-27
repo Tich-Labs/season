@@ -1,3 +1,4 @@
+import HotwireNative
 import UIKit
 
 @main
@@ -6,7 +7,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
-        true
+        loadPathConfiguration()
+        return true
+    }
+
+    private func loadPathConfiguration() {
+        guard let localURL = Bundle.main.url(forResource: "path-configuration", withExtension: "json"),
+              let remoteURL = URL(string: "https://seasonv2.onrender.com/configurations/ios_v1.json") else {
+            return
+        }
+
+        Hotwire.loadPathConfiguration(from: [
+            .file(localURL),
+            .server(remoteURL)
+        ])
     }
 
     func application(

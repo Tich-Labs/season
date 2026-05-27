@@ -4,8 +4,11 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
 
-    private var navigator: Navigator!
-    private lazy var navigationController = UINavigationController()
+    private lazy var navigator = Navigator(
+        configuration: .init(name: "SeasonApp", startLocation: baseURL),
+        delegate: self
+    )
+
     private lazy var tabBarController = HotwireTabBarController(
         navigatorDelegate: self
     )
@@ -18,14 +21,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     ) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
 
-        navigationController.setNavigationBarHidden(true, animated: false)
-        navigator = Navigator(configuration: .init(name: "SeasonApp", startLocation: baseURL), delegate: self)
-
-        let welcome = VisitableViewController(url: baseURL)
-        navigationController.viewControllers = [welcome]
+        navigator.start()
 
         window = UIWindow(windowScene: windowScene)
-        window?.rootViewController = navigationController
+        window?.rootViewController = navigator.rootViewController
         window?.makeKeyAndVisible()
     }
 

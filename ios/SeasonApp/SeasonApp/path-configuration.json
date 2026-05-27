@@ -1,0 +1,44 @@
+{
+  "settings": {
+    "tab_bar_background_color": "#FAF7F4",
+    "tab_bar_tint_color": "#933a35"
+  },
+  "rules": [
+    {
+      "patterns": [
+        "/session/new",
+        "/registration/new",
+        "/password/new",
+        "/password/edit",
+        "/"
+      ],
+      "properties": {
+        "presentation": "default",
+        "pull_to_refresh_enabled": false
+      }
+    },
+    {
+      "patterns": [
+        "/calendar",
+        "/tracking",
+        "/daily/*",
+        "/symptoms",
+        "/superpowers"
+      ],
+      "properties": {
+        "presentation": "default",
+        "pull_to_refresh_enabled": true
+      }
+    },
+    {
+      "patterns": [
+        "/settings/*",
+        "/account/*"
+      ],
+      "properties": {
+        "presentation": "modal",
+        "pull_to_refresh_enabled": false
+      }
+    }
+  ]
+}
