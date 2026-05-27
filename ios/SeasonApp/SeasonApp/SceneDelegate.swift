@@ -19,8 +19,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.rootViewController = tabBarController
         window?.makeKeyAndVisible()
 
-        tabBarController.tabBar.isHidden = true
         tabBarController.load(HotwireTab.all)
+        tabBarController.tabBar.isHidden = true
     }
 
     private func isAuthURL(_ url: URL) -> Bool {
@@ -44,7 +44,10 @@ extension SceneDelegate: NavigatorDelegate {
         guard let host = proposal.url.host else { return .accept }
 
         if host == baseURL.host || host.hasSuffix(".onrender.com") || host.hasSuffix(".season.vision") {
-            tabBarController.tabBar.isHidden = isAuthURL(proposal.url)
+            let hide = isAuthURL(proposal.url)
+            DispatchQueue.main.async {
+                self.tabBarController.tabBar.isHidden = hide
+            }
             return .accept
         }
 
