@@ -104,6 +104,12 @@ export default class extends Controller {
     this.#debouncedSave({ [field]: value })
   }
 
+  // Receive value from scroll picker (temperature / weight)
+  saveFromPicker (event) {
+    const { field, value } = event.detail
+    this.#debouncedSave({ [field]: value.toString() })
+  }
+
   // Handle bleeding flow selection (Light, Medium, Heavy, Disaster)
   saveBleedingFlow (event) {
     const button = event.currentTarget

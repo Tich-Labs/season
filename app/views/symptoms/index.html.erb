@@ -365,13 +365,20 @@
         </div>
         <% if temperature_done %><%= render 'symptoms/bi_check', colour: phase_colour %><% end %>
       </summary>
-      <div class="pb-5">
-        <input id="symptom_temperature" type="number" step="0.1" min="35" max="42" autocomplete="off"
-               name="symptom_log[temperature]" data-field="temperature"
-               data-action="input->symptom#saveNumber"
-               value="<%= @log.temperature %>" placeholder="36.5 °C"
-               class="w-full rounded-xl px-4 py-3 text-lg font-semibold border-0 outline-none font-['Montserrat']"
-               style="background:#EDE1D5; color:#933a35;">
+      <div class="pb-5" data-controller="scroll-picker"
+           data-scroll-picker-min-value="35.0"
+           data-scroll-picker-max-value="42.0"
+           data-scroll-picker-step-value="0.1"
+           data-scroll-picker-value-value="<%= @log.temperature || 36.5 %>"
+           data-scroll-picker-unit-value="°C"
+           data-scroll-picker-field-value="temperature"
+           data-action="scroll-picker:change->symptom#saveFromPicker">
+        <div data-scroll-picker-target="display" class="picker-display">36.5°C</div>
+        <div class="picker-wrap">
+          <div class="picker-indicator"></div>
+          <div data-scroll-picker-target="track" class="picker-track"
+               data-action="scroll->scroll-picker#scroll"></div>
+        </div>
       </div>
     </details>
 
@@ -388,13 +395,20 @@
         </div>
         <% if weight_done %><%= render 'symptoms/bi_check', colour: phase_colour %><% end %>
       </summary>
-      <div class="pb-5">
-        <input id="symptom_weight" type="number" step="0.1" min="30" max="200" autocomplete="off"
-               name="symptom_log[weight]" data-field="weight"
-               data-action="input->symptom#saveNumber"
-               value="<%= @log.weight %>" placeholder="65.0 kg"
-               class="w-full rounded-xl px-4 py-3 text-lg font-semibold border-0 outline-none font-['Montserrat']"
-               style="background:#EDE1D5; color:#933a35;">
+      <div class="pb-5" data-controller="scroll-picker"
+           data-scroll-picker-min-value="30.0"
+           data-scroll-picker-max-value="200.0"
+           data-scroll-picker-step-value="0.5"
+           data-scroll-picker-value-value="<%= @log.weight || 65.0 %>"
+           data-scroll-picker-unit-value=" kg"
+           data-scroll-picker-field-value="weight"
+           data-action="scroll-picker:change->symptom#saveFromPicker">
+        <div data-scroll-picker-target="display" class="picker-display">65.0 kg</div>
+        <div class="picker-wrap">
+          <div class="picker-indicator"></div>
+          <div data-scroll-picker-target="track" class="picker-track"
+               data-action="scroll->scroll-picker#scroll"></div>
+        </div>
       </div>
     </details>
 

@@ -81,3 +81,87 @@
   border-radius: 47px;
   background: transparent;
 }
+
+/* ── Scroll Picker ──────────────────────────────────────────────────────── */
+.picker-display {
+  text-align: center;
+  font-weight: 700;
+  font-size: 36px;
+  color: #933a35;
+  padding: 8px 0 4px;
+  font-family: 'Montserrat', sans-serif;
+  min-height: 52px;
+  line-height: 1;
+}
+.picker-track {
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  padding: 0 calc(50% - 15px);
+  scrollbar-width: none;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.picker-track:active {
+  cursor: grabbing;
+}
+.picker-track::-webkit-scrollbar {
+  display: none;
+}
+.picker-tick {
+  flex: 0 0 30px;
+  height: 44px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  scroll-snap-align: center;
+  position: relative;
+  font-family: 'Montserrat', sans-serif;
+}
+.picker-tick::before {
+  content: '';
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1px;
+  height: 6px;
+  background: #D18D83;
+  border-radius: 1px;
+}
+.picker-tick--mid::before {
+  height: 12px;
+  width: 1.5px;
+  background: #933a35;
+}
+.picker-tick--major {
+  font-size: 11px;
+  font-weight: 500;
+  color: #6B6B6B;
+  padding-bottom: 20px;
+}
+.picker-tick--major::before {
+  height: 18px;
+  width: 2px;
+  background: #933a35;
+}
+.picker-indicator {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 0;
+  top: 0;
+  width: 2px;
+  background: #933a35;
+  border-radius: 1px;
+  pointer-events: none;
+  z-index: 1;
+}
+.picker-wrap {
+  position: relative;
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%);
+}
