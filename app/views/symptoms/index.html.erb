@@ -317,7 +317,7 @@
           </svg>
           <span class="font-medium text-[22px] tracking-[0.66px]" style="color:<%= phase_colour %>;">Cravings</span>
         </div>
-        <span id="section-cravings-check" style="<%= 'display:none' unless cravings_done %>"><%= render 'symptoms/bi_check', colour: phase_colour %></span>
+        <span id="section-cravings-check" style="display:<%= cravings_done ? '' : 'none' %>"><%= render 'symptoms/bi_check', colour: phase_colour %></span>
       </summary>
       <div class="pb-5">
         <div class="flex justify-around text-center mb-3">
@@ -328,39 +328,67 @@
         <div class="flex justify-around">
           <%# Salty column %>
           <div class="flex-1 flex flex-col items-center gap-3">
+            <% sel = cravings_list.include?('salty') %>
             <button class="craving-btn" data-craving="salty" data-action="click->symptom#toggleCravings"
-                    aria-pressed="false" aria-label="Salty craving">
-              <%= image_tag "cravings/fries-and-burger 1.svg", alt: "Fries and burger" %>
+                    aria-pressed="<%= sel %>" aria-label="Salty craving"
+                    style="opacity:<%= sel ? 1 : 0.35 %>;transform:scale(<%= sel ? 1.08 : 1 %>);filter:<%= sel ? '' : 'grayscale(0.6)' %>;">
+              <div class="w-14 h-14 flex items-center justify-center">
+                <%= image_tag "cravings/fries-and-burger 1.svg", alt: "Fries and burger" %>
+              </div>
             </button>
           </div>
           <%# Sweet column %>
           <div class="flex-1 flex flex-col items-center gap-3">
+            <% sel = cravings_list.include?('sweet-chocolate') %>
             <button class="craving-btn" data-craving="sweet-chocolate" data-action="click->symptom#toggleCravings"
-                    aria-pressed="false" aria-label="Chocolate craving">
-              <%= image_tag "cravings/chocolate 1.svg", alt: "Chocolate" %>
+                    aria-pressed="<%= sel %>" aria-label="Chocolate craving"
+                    style="opacity:<%= sel ? 1 : 0.35 %>;transform:scale(<%= sel ? 1.08 : 1 %>);filter:<%= sel ? '' : 'grayscale(0.6)' %>;">
+              <div class="w-14 h-14 flex items-center justify-center">
+                <%= image_tag "cravings/chocolate 1.svg", alt: "Chocolate" %>
+              </div>
             </button>
+            <% sel = cravings_list.include?('sweet-doughnut') %>
             <button class="craving-btn" data-craving="sweet-doughnut" data-action="click->symptom#toggleCravings"
-                    aria-pressed="false" aria-label="Doughnut craving">
-              <%= image_tag "cravings/doughnut-sprinkles 1.svg", alt: "Doughnut with sprinkles" %>
+                    aria-pressed="<%= sel %>" aria-label="Doughnut craving"
+                    style="opacity:<%= sel ? 1 : 0.35 %>;transform:scale(<%= sel ? 1.08 : 1 %>);filter:<%= sel ? '' : 'grayscale(0.6)' %>;">
+              <div class="w-14 h-14 flex items-center justify-center">
+                <%= image_tag "cravings/doughnut-sprinkles 1.svg", alt: "Doughnut with sprinkles" %>
+              </div>
             </button>
+            <% sel = cravings_list.include?('sweet-donut') %>
             <button class="craving-btn" data-craving="sweet-donut" data-action="click->symptom#toggleCravings"
-                    aria-pressed="false" aria-label="Donut craving">
-              <%= image_tag "cravings/005-donut 1.png", alt: "Donut" %>
+                    aria-pressed="<%= sel %>" aria-label="Donut craving"
+                    style="opacity:<%= sel ? 1 : 0.35 %>;transform:scale(<%= sel ? 1.08 : 1 %>);filter:<%= sel ? '' : 'grayscale(0.6)' %>;">
+              <div class="w-14 h-14 flex items-center justify-center">
+                <%= image_tag "cravings/005-donut 1.png", alt: "Donut" %>
+              </div>
             </button>
           </div>
           <%# Carbs column %>
           <div class="flex-1 flex flex-col items-center gap-3">
+            <% sel = cravings_list.include?('carbs-macarons') %>
             <button class="craving-btn" data-craving="carbs-macarons" data-action="click->symptom#toggleCravings"
-                    aria-pressed="false" aria-label="Macarons craving">
-              <%= image_tag "cravings/macarons 1.svg", alt: "Macarons" %>
+                    aria-pressed="<%= sel %>" aria-label="Macarons craving"
+                    style="opacity:<%= sel ? 1 : 0.35 %>;transform:scale(<%= sel ? 1.08 : 1 %>);filter:<%= sel ? '' : 'grayscale(0.6)' %>;">
+              <div class="w-14 h-14 flex items-center justify-center">
+                <%= image_tag "cravings/macarons 1.svg", alt: "Macarons" %>
+              </div>
             </button>
+            <% sel = cravings_list.include?('carbs-snacks') %>
             <button class="craving-btn" data-craving="carbs-snacks" data-action="click->symptom#toggleCravings"
-                    aria-pressed="false" aria-label="Snacks craving">
-              <%= image_tag "cravings/024-snacks 1.png", alt: "Snacks" %>
+                    aria-pressed="<%= sel %>" aria-label="Snacks craving"
+                    style="opacity:<%= sel ? 1 : 0.35 %>;transform:scale(<%= sel ? 1.08 : 1 %>);filter:<%= sel ? '' : 'grayscale(0.6)' %>;">
+              <div class="w-14 h-14 flex items-center justify-center">
+                <%= image_tag "cravings/024-snacks 1.png", alt: "Snacks" %>
+              </div>
             </button>
+            <% sel = cravings_list.include?('carbs-noodles') %>
             <button class="craving-btn" data-craving="carbs-noodles" data-action="click->symptom#toggleCravings"
-                    aria-pressed="false" aria-label="Noodles craving">
-              <%= image_tag "cravings/noodles 1.svg", alt: "Noodles" %>
+                    aria-pressed="<%= sel %>" aria-label="Noodles craving"
+                    style="opacity:<%= sel ? 1 : 0.35 %>;transform:scale(<%= sel ? 1.08 : 1 %>);filter:<%= sel ? '' : 'grayscale(0.6)' %>;">
+              <div class="w-14 h-14 flex items-center justify-center">
+                <%= image_tag "cravings/noodles 1.svg", alt: "Noodles" %>
+              </div>
             </button>
           </div>
         </div>

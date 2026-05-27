@@ -167,30 +167,16 @@
 }
 
 /* ── Craving button grid ────────────────────────────────────────────────── */
+/* Icon-selection follow the same opacity/grayscale pattern as moods */
 .craving-btn {
-  background: #EDE1D5;
-  border: 2px solid transparent;
-  border-radius: 50%;
-  width: 56px;
-  height: 56px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background: transparent;
+  border: none;
   cursor: pointer;
-  transition: background 0.15s, transform 0.15s, border-color 0.15s;
-  padding: 8px;
-  position: relative;
+  padding: 0;
+  transition: opacity 0.15s, transform 0.15s, filter 0.15s;
 }
 .craving-btn img {
   width: 100%;
   height: 100%;
   object-fit: contain;
-}
-.craving-btn--selected {
-  background: #933a35;
-  border-color: #933a35;
-  transform: scale(1.1);
-}
-.craving-btn--selected img {
-  filter: brightness(0) invert(1);
 }

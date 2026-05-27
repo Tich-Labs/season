@@ -49,6 +49,40 @@ bundle exec erb_lint --lint-all --format compact  # NOT erblint
 - Field error: `border border-brand-primary`
 - No page redirects → use inline errors with Turbo Stream
 
+## Icon Selection Pattern (standard for all icon grids)
+
+When building tappable icon-selectors (moods, cravings, etc.), follow this pattern consistently:
+
+**Visual state** — use inline opacity + grayscale, NOT background color changes:
+- **Selected**: `opacity: 1; transform: scale(1.08);` (full color, slight pop)
+- **Unselected**: `opacity: 0.35; transform: scale(1); filter: grayscale(0.6);` (faded, desaturated)
+
+**Server-render initial state** via inline styles:
+```erb
+<% sel = list.include?('item-key') %>
+<button data-action="click->symptom#toggleMethod" data-item-key="item-key"
+        style="opacity:<%= sel ? 1 : 0.35 %>;transform:scale(<%= sel ? 1.08 : 1 %>);filter:<%= sel ? '' : 'grayscale(0.6)' %>;">
+  <div class="w-14 h-14 flex items-center justify-center">
+    <%= image_tag "path/to/icon.svg", alt: "Label" %>
+  </div>
+</button>
+```
+
+**JS toggles** via direct style manipulation (match `#applyMoodVisuals` / `#applyCravingVisuals`):
+```js
+#applyVisuals () {
+  this.element.querySelectorAll('[data-item-key]').forEach(btn => {
+    const selected = this.#activeItems.includes(btn.dataset.itemKey)
+    btn.style.opacity = selected ? '1' : '0.35'
+    btn.style.transform = selected ? 'scale(1.08)' : 'scale(1)'
+    btn.style.filter = selected ? '' : 'grayscale(0.6)'
+    btn.setAttribute('aria-pressed', selected.toString())
+  })
+}
+```
+
+**Do NOT** use background-color circles, border highlights, or CSS class toggling for selected state. The opacity/grayscale pattern keeps the native icon colors and works uniformly on any background.
+
 ## iOS (Turbo Native)
 
 - **Project file**: `ios/SeasonApp/project.yml` — XcodeGen spec

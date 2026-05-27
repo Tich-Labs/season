@@ -99,8 +99,10 @@ export default class extends Controller {
   #applyCravingVisuals () {
     this.element.querySelectorAll('[data-craving]').forEach(btn => {
       const selected = this.#activeCravings.includes(btn.dataset.craving)
+      btn.style.opacity = selected ? '1' : '0.35'
+      btn.style.transform = selected ? 'scale(1.08)' : 'scale(1)'
       btn.setAttribute('aria-pressed', selected.toString())
-      btn.classList.toggle('craving-btn--selected', selected)
+      btn.style.filter = selected ? '' : 'grayscale(0.6)'
     })
   }
 
