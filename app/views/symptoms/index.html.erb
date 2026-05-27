@@ -398,77 +398,66 @@
         <span id="section-cravings-check" style="display:<%= cravings_done ? '' : 'none' %>"><%= render 'symptoms/bi_check', colour: phase_colour %></span>
       </summary>
       <div class="pb-5">
-        <div class="flex justify-around text-center mb-3">
-          <span class="flex-1 text-brand-primary font-medium text-base tracking-[0.07em]">Salty</span>
-          <span class="flex-1 text-brand-primary font-medium text-base tracking-[0.07em]">Sweet</span>
-          <span class="flex-1 text-brand-primary font-medium text-base tracking-[0.07em]">Carbs</span>
+        <%# Row 1 — 3 items %>
+        <div class="flex justify-around mb-4">
+          <% sel = cravings_list.include?('fatty-fried') %>
+          <button class="craving-btn flex flex-col items-center gap-2" data-craving="fatty-fried"
+                  data-action="click->symptom#toggleCravings"
+                  aria-pressed="<%= sel %>" aria-label="Fatty and fried food"
+                  style="opacity:<%= sel ? 1 : 0.35 %>;transform:scale(<%= sel ? 1.08 : 1 %>);filter:<%= sel ? '' : 'grayscale(0.6)' %>;">
+            <div class="w-[65px] h-[65px] flex items-center justify-center">
+              <%= image_tag "cravings/fries.svg", alt: "Fries and burger" %>
+            </div>
+            <span class="text-brand-primary font-medium text-xs tracking-[0.07em] text-center w-[80px] leading-tight">Fatty and fried food</span>
+          </button>
+
+          <% sel = cravings_list.include?('salty-food') %>
+          <button class="craving-btn flex flex-col items-center gap-2" data-craving="salty-food"
+                  data-action="click->symptom#toggleCravings"
+                  aria-pressed="<%= sel %>" aria-label="Salty food"
+                  style="opacity:<%= sel ? 1 : 0.35 %>;transform:scale(<%= sel ? 1.08 : 1 %>);filter:<%= sel ? '' : 'grayscale(0.6)' %>;">
+            <div class="w-[65px] h-[65px] flex items-center justify-center">
+              <%= image_tag "cravings/macarons.svg", alt: "Macarons / Salty food" %>
+            </div>
+            <span class="text-brand-primary font-medium text-xs tracking-[0.07em] text-center w-[80px] leading-tight">Salty food</span>
+          </button>
+
+          <% sel = cravings_list.include?('bread-noodles') %>
+          <button class="craving-btn flex flex-col items-center gap-2" data-craving="bread-noodles"
+                  data-action="click->symptom#toggleCravings"
+                  aria-pressed="<%= sel %>" aria-label="Bread and noodles"
+                  style="opacity:<%= sel ? 1 : 0.35 %>;transform:scale(<%= sel ? 1.08 : 1 %>);filter:<%= sel ? '' : 'grayscale(0.6)' %>;">
+            <div class="w-[65px] h-[65px] flex items-center justify-center">
+              <%= image_tag "cravings/noodles.svg", alt: "Noodles bowl" %>
+            </div>
+            <span class="text-brand-primary font-medium text-xs tracking-[0.07em] text-center w-[80px] leading-tight">Bread &amp; noodles</span>
+          </button>
         </div>
+
+        <%# Row 2 — 2 items %>
         <div class="flex justify-around">
-          <%# Salty column %>
-          <div class="flex-1 flex flex-col items-center gap-3">
-            <% sel = cravings_list.include?('salty') %>
-            <button class="craving-btn" data-craving="salty" data-action="click->symptom#toggleCravings"
-                    aria-pressed="<%= sel %>" aria-label="Salty craving"
-                    style="opacity:<%= sel ? 1 : 0.35 %>;transform:scale(<%= sel ? 1.08 : 1 %>);filter:<%= sel ? '' : 'grayscale(0.6)' %>;">
-              <div class="w-[65px] h-[65px] flex items-center justify-center">
-                <%= image_tag "cravings/fries.svg", alt: "Fries and burger" %>
-              </div>
-            </button>
-          </div>
-          <%# Sweet column %>
-          <div class="flex-1 flex flex-col items-center gap-3">
-            <% sel = cravings_list.include?('sweet-chocolate') %>
-            <button class="craving-btn" data-craving="sweet-chocolate" data-action="click->symptom#toggleCravings"
-                    aria-pressed="<%= sel %>" aria-label="Chocolate craving"
-                    style="opacity:<%= sel ? 1 : 0.35 %>;transform:scale(<%= sel ? 1.08 : 1 %>);filter:<%= sel ? '' : 'grayscale(0.6)' %>;">
-              <div class="w-[65px] h-[65px] flex items-center justify-center">
-                <%= image_tag "cravings/chocolate.svg", alt: "Chocolate" %>
-              </div>
-            </button>
-            <% sel = cravings_list.include?('sweet-doughnut') %>
-            <button class="craving-btn" data-craving="sweet-doughnut" data-action="click->symptom#toggleCravings"
-                    aria-pressed="<%= sel %>" aria-label="Doughnut craving"
-                    style="opacity:<%= sel ? 1 : 0.35 %>;transform:scale(<%= sel ? 1.08 : 1 %>);filter:<%= sel ? '' : 'grayscale(0.6)' %>;">
-              <div class="w-[65px] h-[65px] flex items-center justify-center">
-                <%= image_tag "cravings/doughnut.svg", alt: "Doughnut with sprinkles" %>
-              </div>
-            </button>
-            <% sel = cravings_list.include?('sweet-donut') %>
-            <button class="craving-btn" data-craving="sweet-donut" data-action="click->symptom#toggleCravings"
-                    aria-pressed="<%= sel %>" aria-label="Donut craving"
-                    style="opacity:<%= sel ? 1 : 0.35 %>;transform:scale(<%= sel ? 1.08 : 1 %>);filter:<%= sel ? '' : 'grayscale(0.6)' %>;">
-              <div class="w-[65px] h-[65px] flex items-center justify-center">
-                <%= image_tag "cravings/donut.png", alt: "Donut" %>
-              </div>
-            </button>
-          </div>
-          <%# Carbs column %>
-          <div class="flex-1 flex flex-col items-center gap-3">
-            <% sel = cravings_list.include?('carbs-macarons') %>
-            <button class="craving-btn" data-craving="carbs-macarons" data-action="click->symptom#toggleCravings"
-                    aria-pressed="<%= sel %>" aria-label="Macarons craving"
-                    style="opacity:<%= sel ? 1 : 0.35 %>;transform:scale(<%= sel ? 1.08 : 1 %>);filter:<%= sel ? '' : 'grayscale(0.6)' %>;">
-              <div class="w-[65px] h-[65px] flex items-center justify-center">
-                <%= image_tag "cravings/macarons.svg", alt: "Macarons" %>
-              </div>
-            </button>
-            <% sel = cravings_list.include?('carbs-snacks') %>
-            <button class="craving-btn" data-craving="carbs-snacks" data-action="click->symptom#toggleCravings"
-                    aria-pressed="<%= sel %>" aria-label="Snacks craving"
-                    style="opacity:<%= sel ? 1 : 0.35 %>;transform:scale(<%= sel ? 1.08 : 1 %>);filter:<%= sel ? '' : 'grayscale(0.6)' %>;">
-              <div class="w-[65px] h-[65px] flex items-center justify-center">
-                <%= image_tag "cravings/snacks.png", alt: "Snacks" %>
-              </div>
-            </button>
-            <% sel = cravings_list.include?('carbs-noodles') %>
-            <button class="craving-btn" data-craving="carbs-noodles" data-action="click->symptom#toggleCravings"
-                    aria-pressed="<%= sel %>" aria-label="Noodles craving"
-                    style="opacity:<%= sel ? 1 : 0.35 %>;transform:scale(<%= sel ? 1.08 : 1 %>);filter:<%= sel ? '' : 'grayscale(0.6)' %>;">
-              <div class="w-[65px] h-[65px] flex items-center justify-center">
-                <%= image_tag "cravings/noodles.svg", alt: "Noodles" %>
-              </div>
-            </button>
-          </div>
+          <% sel = cravings_list.include?('chocolate') %>
+          <button class="craving-btn flex flex-col items-center gap-2" data-craving="chocolate"
+                  data-action="click->symptom#toggleCravings"
+                  aria-pressed="<%= sel %>" aria-label="Chocolate"
+                  style="opacity:<%= sel ? 1 : 0.35 %>;transform:scale(<%= sel ? 1.08 : 1 %>);filter:<%= sel ? '' : 'grayscale(0.6)' %>;">
+            <div class="w-[65px] h-[65px] flex items-center justify-center">
+              <%= image_tag "cravings/chocolate.svg", alt: "Chocolate bar" %>
+            </div>
+            <span class="text-brand-primary font-medium text-xs tracking-[0.07em] text-center w-[80px] leading-tight">Chocolate</span>
+          </button>
+
+          <% sel = cravings_list.include?('sugar') %>
+          <button class="craving-btn flex flex-col items-center gap-2" data-craving="sugar"
+                  data-action="click->symptom#toggleCravings"
+                  aria-pressed="<%= sel %>" aria-label="Sugar drinks and food"
+                  style="opacity:<%= sel ? 1 : 0.35 %>;transform:scale(<%= sel ? 1.08 : 1 %>);filter:<%= sel ? '' : 'grayscale(0.6)' %>;">
+            <div class="relative w-[70px] h-[65px]">
+              <%= image_tag "cravings/doughnut.svg", alt: "", class: "absolute left-0 top-0 w-[55px] h-[55px]" %>
+              <%= image_tag "cravings/donut.png", alt: "", class: "absolute right-0 bottom-0 w-[45px] h-[45px]" %>
+            </div>
+            <span class="text-brand-primary font-medium text-xs tracking-[0.07em] text-center w-[90px] leading-tight">Sugar drinks &amp; food</span>
+          </button>
         </div>
       </div>
     </details>
