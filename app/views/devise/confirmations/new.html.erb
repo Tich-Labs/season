@@ -1,0 +1,39 @@
+<div class="bg-white min-h-screen flex flex-col items-center justify-center py-[60px] px-8 max-w-app mx-auto">
+
+  <div class="w-full">
+    <%= link_to "‹ back", new_session_path, class: "text-brand-primary text-base font-medium no-underline" %>
+  </div>
+
+  <div class="w-full max-w-[384px] mx-auto">
+
+    <h1 class="text-brand-primary text-[36px] font-bold uppercase tracking-[3.24px] text-center leading-tight">
+      Resend<br>confirmation
+    </h1>
+
+    <div class="mt-20">
+      <%= form_with url: user_confirmation_path, method: :post do |f| %>
+        <label for="email" class="sr-only">Email</label>
+        <%= f.email_field :email,
+            id: "email",
+            name: "user[email]",
+            value: (resource.present? ? resource.email : ""),
+            autofocus: true,
+            autocomplete: "email",
+            placeholder: "E–mail...",
+            class: "w-full h-14 rounded-2xl bg-brand-field px-5 text-[22px] font-medium text-brand-primary placeholder:text-brand-primary/50 placeholder:text-xl outline-none border-0" %>
+
+        <div class="mt-10">
+          <%= f.submit "Resend confirmation",
+              class: "w-full h-12 bg-brand-primary rounded-lg text-white text-xl font-medium tracking-wide border-0 cursor-pointer",
+              data: { disable_with: "Sending..." } %>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="mt-6 text-center">
+      <%= link_to "Back to Log in", new_session_path, class: "text-brand-primary text-base font-normal no-underline" %>
+    </div>
+
+  </div>
+
+</div>
