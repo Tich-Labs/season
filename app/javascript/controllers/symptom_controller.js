@@ -39,10 +39,12 @@ export default class extends Controller {
     this.#post(this.urlValue, { symptom_log: { date: this.#date, moods: this.#activeMoods } })
     this.#applyMoodVisuals()
 
-    if (checkEl) checkEl.style.display = this.#activeMoods.length > 0 ? '' : 'none'
-    if (summary) summary.textContent = this.#activeMoods.length > 0
-      ? `Mood (${this.#activeMoods.length})`
-      : 'Mood'
+    if (checkEl) { checkEl.style.display = this.#activeMoods.length > 0 ? '' : 'none' }
+    if (summary) {
+      summary.textContent = this.#activeMoods.length > 0
+        ? `Mood (${this.#activeMoods.length})`
+        : 'Mood'
+    }
   }
 
   #applyMoodVisuals () {
