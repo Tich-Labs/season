@@ -36,41 +36,43 @@
      data-phase-color="<%= phase_colour %>">
 
   <%# ── Date picker drum ──────────────────────────────────────────────── %>
-  <div class="relative flex justify-center pt-6 pb-2" data-controller="date-picker">
-    <button class="bg-brand-field rounded-full px-6 py-2 text-brand-primary font-medium text-base
-                   flex items-center gap-2 focus:outline-none"
-            data-action="click->date-picker#toggle"
-            aria-label="Select date">
-      <%= @date.strftime("%-d %B") %>
-      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none"
-           stroke="currentColor" stroke-width="3" viewBox="0 0 24 24" aria-hidden="true">
-        <polyline points="6 9 12 15 18 9" />
-      </svg>
-    </button>
+  <div class="flex justify-center pt-6 pb-2" data-controller="date-picker">
+    <div class="relative bg-brand-field overflow-hidden transition-all duration-300 ease-out"
+         style="width:155px; height:31px; border-radius:133px;"
+         data-date-picker-target="drum">
 
-    <%# Dropdown drum list %>
-    <div class="hidden absolute top-12 z-50 bg-brand-field rounded-2xl shadow-xl w-48"
-         data-date-picker-target="dropdown">
-      <%# Close chevron %>
-      <div class="flex justify-end px-4 pt-3 pb-0">
-        <button data-action="click->date-picker#close" aria-label="Close date picker"
-                class="text-brand-primary focus:outline-none">
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none"
-               stroke="currentColor" stroke-width="3" viewBox="0 0 24 24" aria-hidden="true">
-            <polyline points="18 15 12 9 6 15" />
-          </svg>
-        </button>
+      <%# Collapsed pill header %>
+      <button class="w-full h-[31px] flex items-center justify-center gap-2 text-brand-primary font-medium text-base font-['Montserrat'] focus:outline-none"
+              data-action="click->date-picker#toggle"
+              aria-label="Select date">
+        <%= @date.strftime("%-d %B") %>
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none"
+             stroke="currentColor" stroke-width="3" viewBox="0 0 24 24" aria-hidden="true">
+          <polyline points="6 9 12 15 18 9" />
+        </svg>
+      </button>
+
+      <%# Expanded content %>
+      <div class="hidden" data-date-picker-target="content">
+        <div class="flex justify-end px-4 pt-3 pb-0">
+          <button data-action="click->date-picker#close" aria-label="Close date picker"
+                  class="text-brand-primary focus:outline-none">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none"
+                 stroke="currentColor" stroke-width="3" viewBox="0 0 24 24" aria-hidden="true">
+              <polyline points="18 15 12 9 6 15" />
+            </svg>
+          </button>
+        </div>
+        <ul class="overflow-y-auto text-center pb-3 scrollbar-hide" style="max-height:160px; scroll-snap-type:y mandatory;">
+          <% ((Date.today - 29)..Date.today).each do |d| %>
+            <li class="<%= d == @date ? 'bg-white/60 rounded-lg mx-2' : '' %>" style="scroll-snap-align:center;">
+              <%= link_to d.strftime("%-d %B"), symptoms_path(date: d),
+                    class: "block py-2 font-['Montserrat'] #{d == @date ? 'font-bold text-base text-brand-primary' : 'font-normal text-sm text-brand-primary opacity-50'}",
+                    data: (d == @date ? { selected: true } : {}) %>
+            </li>
+          <% end %>
+        </ul>
       </div>
-      <%# Scrollable date list — 30 days back through today %>
-      <ul class="overflow-y-auto max-h-48 text-center pb-3 scrollbar-hide" data-date-picker-target="list" style="scroll-snap-type:y mandatory;">
-        <% ((Date.today - 29)..Date.today).each do |d| %>
-          <li class="<%= d == @date ? 'bg-white/60 rounded-lg mx-2' : '' %>" style="scroll-snap-align:center;">
-            <%= link_to d.strftime("%-d %B"), symptoms_path(date: d),
-                  class: "block py-2 font-['Montserrat'] #{d == @date ? 'font-bold text-base text-brand-primary' : 'font-normal text-sm text-brand-primary opacity-50'}",
-                  data: (d == @date ? { selected: true } : {}) %>
-          </li>
-        <% end %>
-      </ul>
     </div>
   </div>
 

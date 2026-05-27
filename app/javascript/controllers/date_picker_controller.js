@@ -1,8 +1,7 @@
-/* global requestAnimationFrame */
 import { Controller } from '@hotwired/stimulus'
 
 export default class extends Controller {
-  static targets = ['dropdown']
+  static targets = ['drum', 'content']
 
   connect () {
     this._closeHandler = (e) => {
@@ -17,24 +16,39 @@ export default class extends Controller {
 
   toggle (e) {
     e.stopPropagation()
-    const hidden = this.dropdownTarget.classList.toggle('hidden')
-    if (!hidden) {
-      requestAnimationFrame(() => {
-        const ul = this.dropdownTarget.querySelector('ul')
-        const sel = this.dropdownTarget.querySelector('[data-selected]')
-        if (ul && sel) {
-          const li = sel.closest('li')
-          // Center the selected li in the visible scroll area
-          const liTop = li.offsetTop
-          const liHeight = li.offsetHeight
-          const visibleHeight = ul.clientHeight
-          ul.scrollTop = liTop - (visibleHeight - liHeight) / 2
-        }
-      })
+    if (this.#expanded) {
+      this.close()
+    } else {
+      this.open()
     }
   }
 
-  close () {
-    this.dropdownTarget.classList.add('hidden')
+  open () {
+    this.drumTarget.style.height = '215px'
+    this.drumTarget.style.borderRadius = '25px'
+    this.contentTarget.classList.remove('hidden')
+    this.#expanded = true
+
+    // Scroll selected date into view
+    requestAnimationFrame(() => {
+      const ul = this.contentTarget.querySelector('ul')
+      const sel = this.contentTarget.querySelector('[data-selected]')
+      if (ul && sel) {
+        const li = sel.closest('li')
+        const liTop = li.offsetTop
+        const liHeight = li.offsetHeight
+        const visibleHeight = ul.clientHeight
+        ul.scrollTop = liTop - (visibleHeight - liHeight) / 2
+      }
+    })
   }
+
+  close () {
+    this.drumTarget.style.height = '31px'
+    this.drumTarget.style.borderRadius = '133px'
+    this.contentTarget.classList.add('hidden')
+    this.#expanded = false
+  }
+
+  #expanded = false
 }
