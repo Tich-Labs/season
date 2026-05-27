@@ -268,15 +268,15 @@
           <%# Vaginal discharge icon grid for non-menstrual phases %>
           <%
             discharge_grid = [
-              { key: 'dry',           img: 'IMG_4488 3.png',             label: 'Dry' },
-              { key: 'creamy-light',  img: 'IMG_77CE646C6EB4-1 3.png',   label: 'Creamy' },
-              { key: 'creamy',        img: 'IMG_4488 4.png',             label: 'Creamy' },
-              { key: 'egg-white',     img: 'IMG_4488 1.png',             label: 'Egg White' },
-              { key: 'stretchy',      img: 'IMG_77CE646C6EB4-1 4.png',   label: 'Stretchy' },
-              { key: 'thick',         img: 'IMG_77CE646C6EB4-1 1.png',   label: 'Thick' },
-              { key: 'watery',        img: 'Group 316.png',              label: 'Watery' },
-              { key: 'spotting',      img: 'IMG_77CE646C6EB4-1 5.png',   label: 'Spotting' },
-              { key: 'period',        img: 'IMG_77CE646C6EB4-1 6.png',   label: 'Period' },
+              { key: 'dry',           img: 'dry.png',             label: 'Dry' },
+              { key: 'creamy-light',  img: 'creamy-light.png',    label: 'Creamy' },
+              { key: 'creamy',        img: 'creamy.png',          label: 'Creamy' },
+              { key: 'egg-white',     img: 'egg-white.png',       label: 'Egg White' },
+              { key: 'stretchy',      img: 'stretchy.png',        label: 'Stretchy' },
+              { key: 'thick',         img: 'thick.png',           label: 'Thick' },
+              { key: 'watery',        img: 'watery.png',          label: 'Watery' },
+              { key: 'spotting',      img: 'spotting.png',        label: 'Spotting' },
+              { key: 'period',        img: 'period.png',          label: 'Period' },
             ]
           %>
           <div class="grid grid-cols-3 gap-3" role="group" aria-label="Vaginal discharge type">
@@ -291,7 +291,7 @@
                   <%= image_tag "icons/varginal_discharge/#{item[:img]}", alt: item[:label], class: "w-full h-full object-contain rounded-full" %>
                   <span class="discharge-check absolute bottom-0 right-0 w-5 h-5 flex items-center justify-center"
                         style="display:<%= sel ? '' : 'none' %>;">
-                    <%= image_tag "icons/varginal_discharge/Group 34511.png", alt: "", class: "w-full h-full" %>
+                    <%= image_tag "icons/varginal_discharge/check-11.png", alt: "", class: "w-full h-full" %>
                   </span>
                 </div>
                 <span class="text-[11px] font-medium text-center leading-tight text-brand-primary tracking-[0.07em]"
@@ -328,7 +328,7 @@
                   aria-pressed="<%= sel %>" aria-label="No intercourse"
                   style="opacity:<%= sel ? 1 : 0.35 %>;transform:scale(<%= sel ? 1.08 : 1 %>);filter:<%= sel ? '' : 'grayscale(0.6)' %>;">
             <div class="w-14 h-14 flex items-center justify-center">
-              <%= image_tag "sexual_intercourse/Keiner.png", alt: "No intercourse" %>
+              <%= image_tag "sexual_intercourse/keiner.png", alt: "No intercourse" %>
             </div>
           </button>
           <% sel = intercourse_list.include?('ungeschuetzt') %>
@@ -336,7 +336,7 @@
                   aria-pressed="<%= sel %>" aria-label="Unprotected intercourse"
                   style="opacity:<%= sel ? 1 : 0.35 %>;transform:scale(<%= sel ? 1.08 : 1 %>);filter:<%= sel ? '' : 'grayscale(0.6)' %>;">
             <div class="w-14 h-14 flex items-center justify-center">
-              <%= image_tag "sexual_intercourse/Ungeschützt.png", alt: "Unprotected" %>
+              <%= image_tag "sexual_intercourse/ungeschuetzt.png", alt: "Unprotected" %>
             </div>
           </button>
           <% sel = intercourse_list.include?('geschuetzt') %>
@@ -344,7 +344,7 @@
                   aria-pressed="<%= sel %>" aria-label="Protected intercourse"
                   style="opacity:<%= sel ? 1 : 0.35 %>;transform:scale(<%= sel ? 1.08 : 1 %>);filter:<%= sel ? '' : 'grayscale(0.6)' %>;">
             <div class="w-14 h-14 flex items-center justify-center">
-              <%= image_tag "sexual_intercourse/Geschützt.png", alt: "Protected" %>
+              <%= image_tag "sexual_intercourse/geschuetzt.png", alt: "Protected" %>
             </div>
           </button>
         </div>
@@ -359,7 +359,7 @@
                   aria-pressed="<%= sel %>" aria-label="Orgasm"
                   style="opacity:<%= sel ? 1 : 0.35 %>;transform:scale(<%= sel ? 1.08 : 1 %>);filter:<%= sel ? '' : 'grayscale(0.6)' %>;">
             <div class="w-14 h-14 flex items-center justify-center">
-              <%= image_tag "sexual_intercourse/Orgasmus.png", alt: "Orgasm" %>
+              <%= image_tag "sexual_intercourse/orgasmus.png", alt: "Orgasm" %>
             </div>
           </button>
           <% sel = intercourse_list.include?('kein-orgasmus') %>
@@ -367,7 +367,7 @@
                   aria-pressed="<%= sel %>" aria-label="No orgasm"
                   style="opacity:<%= sel ? 1 : 0.35 %>;transform:scale(<%= sel ? 1.08 : 1 %>);filter:<%= sel ? '' : 'grayscale(0.6)' %>;">
             <div class="w-14 h-14 flex items-center justify-center">
-              <%= image_tag "sexual_intercourse/Kein-Orgasmus.png", alt: "No orgasm" %>
+              <%= image_tag "sexual_intercourse/kein-orgasmus.png", alt: "No orgasm" %>
             </div>
           </button>
           <% sel = intercourse_list.include?('masturbation') %>
@@ -375,7 +375,7 @@
                   aria-pressed="<%= sel %>" aria-label="Masturbation"
                   style="opacity:<%= sel ? 1 : 0.35 %>;transform:scale(<%= sel ? 1.08 : 1 %>);filter:<%= sel ? '' : 'grayscale(0.6)' %>;">
             <div class="w-14 h-14 flex items-center justify-center">
-              <%= image_tag "sexual_intercourse/Group 431.png", alt: "Vibrator / Masturbation" %>
+              <%= image_tag "sexual_intercourse/masturbation.png", alt: "Vibrator / Masturbation" %>
             </div>
           </button>
         </div>
@@ -409,7 +409,7 @@
                     aria-pressed="<%= sel %>" aria-label="Salty craving"
                     style="opacity:<%= sel ? 1 : 0.35 %>;transform:scale(<%= sel ? 1.08 : 1 %>);filter:<%= sel ? '' : 'grayscale(0.6)' %>;">
               <div class="w-14 h-14 flex items-center justify-center">
-                <%= image_tag "cravings/fries-and-burger 1.svg", alt: "Fries and burger" %>
+                <%= image_tag "cravings/fries.svg", alt: "Fries and burger" %>
               </div>
             </button>
           </div>
@@ -420,7 +420,7 @@
                     aria-pressed="<%= sel %>" aria-label="Chocolate craving"
                     style="opacity:<%= sel ? 1 : 0.35 %>;transform:scale(<%= sel ? 1.08 : 1 %>);filter:<%= sel ? '' : 'grayscale(0.6)' %>;">
               <div class="w-14 h-14 flex items-center justify-center">
-                <%= image_tag "cravings/chocolate 1.svg", alt: "Chocolate" %>
+                <%= image_tag "cravings/chocolate.svg", alt: "Chocolate" %>
               </div>
             </button>
             <% sel = cravings_list.include?('sweet-doughnut') %>
@@ -428,7 +428,7 @@
                     aria-pressed="<%= sel %>" aria-label="Doughnut craving"
                     style="opacity:<%= sel ? 1 : 0.35 %>;transform:scale(<%= sel ? 1.08 : 1 %>);filter:<%= sel ? '' : 'grayscale(0.6)' %>;">
               <div class="w-14 h-14 flex items-center justify-center">
-                <%= image_tag "cravings/doughnut-sprinkles 1.svg", alt: "Doughnut with sprinkles" %>
+                <%= image_tag "cravings/doughnut.svg", alt: "Doughnut with sprinkles" %>
               </div>
             </button>
             <% sel = cravings_list.include?('sweet-donut') %>
@@ -436,7 +436,7 @@
                     aria-pressed="<%= sel %>" aria-label="Donut craving"
                     style="opacity:<%= sel ? 1 : 0.35 %>;transform:scale(<%= sel ? 1.08 : 1 %>);filter:<%= sel ? '' : 'grayscale(0.6)' %>;">
               <div class="w-14 h-14 flex items-center justify-center">
-                <%= image_tag "cravings/005-donut 1.png", alt: "Donut" %>
+                <%= image_tag "cravings/donut.png", alt: "Donut" %>
               </div>
             </button>
           </div>
@@ -447,7 +447,7 @@
                     aria-pressed="<%= sel %>" aria-label="Macarons craving"
                     style="opacity:<%= sel ? 1 : 0.35 %>;transform:scale(<%= sel ? 1.08 : 1 %>);filter:<%= sel ? '' : 'grayscale(0.6)' %>;">
               <div class="w-14 h-14 flex items-center justify-center">
-                <%= image_tag "cravings/macarons 1.svg", alt: "Macarons" %>
+                <%= image_tag "cravings/macarons.svg", alt: "Macarons" %>
               </div>
             </button>
             <% sel = cravings_list.include?('carbs-snacks') %>
@@ -455,7 +455,7 @@
                     aria-pressed="<%= sel %>" aria-label="Snacks craving"
                     style="opacity:<%= sel ? 1 : 0.35 %>;transform:scale(<%= sel ? 1.08 : 1 %>);filter:<%= sel ? '' : 'grayscale(0.6)' %>;">
               <div class="w-14 h-14 flex items-center justify-center">
-                <%= image_tag "cravings/024-snacks 1.png", alt: "Snacks" %>
+                <%= image_tag "cravings/snacks.png", alt: "Snacks" %>
               </div>
             </button>
             <% sel = cravings_list.include?('carbs-noodles') %>
@@ -463,7 +463,7 @@
                     aria-pressed="<%= sel %>" aria-label="Noodles craving"
                     style="opacity:<%= sel ? 1 : 0.35 %>;transform:scale(<%= sel ? 1.08 : 1 %>);filter:<%= sel ? '' : 'grayscale(0.6)' %>;">
               <div class="w-14 h-14 flex items-center justify-center">
-                <%= image_tag "cravings/noodles 1.svg", alt: "Noodles" %>
+                <%= image_tag "cravings/noodles.svg", alt: "Noodles" %>
               </div>
             </button>
           </div>
