@@ -180,7 +180,7 @@
           </svg>
           <span class="font-medium text-[22px] tracking-[0.66px]" style="color:<%= phase_colour %>;"><%= discharge_label %></span>
         </div>
-        <% if discharge_done || bleeding_done %><%= render 'symptoms/bi_check', colour: phase_colour %><% end %>
+        <span id="section-discharge-check" style="display:<%= (discharge_done || bleeding_done) ? '' : 'none' %>"><%= render 'symptoms/bi_check', colour: phase_colour %></span>
       </summary>
       <div class="pb-5">
         <% if @phase == "menstrual" %>
@@ -265,18 +265,38 @@
             <% end %>
           </div>
         <% else %>
-          <%# Vaginal discharge scale (1-5) for non-menstrual phases %>
-          <div class="flex justify-end mb-2">
-            <%= link_to "Detail →", symptom_discharge_path,
-                  class: "text-xs font-medium", style: "color:#{phase_colour}; text-decoration:none;" %>
-          </div>
-          <div class="flex gap-2" role="group" aria-label="Vaginal discharge 1 to 5">
-            <% (1..5).each do |i| %>
-              <% selected = @log.discharge == i; bg = selected ? phase_colour : "#EDE1D5"; fg = selected ? "#ffffff" : "#6B6B6B" %>
-              <button class="dot flex-1 py-2.5 rounded-xl text-sm font-bold transition-colors duration-150"
-                      data-action="click->symptom#save" data-field="discharge" data-value="<%= i %>"
-                      aria-label="Vaginal discharge <%= i %>" aria-pressed="<%= selected %>"
-                      style="background:<%= bg %>; color:<%= fg %>; border:none; cursor:pointer;"><%= i %></button>
+          <%# Vaginal discharge icon grid for non-menstrual phases %>
+          <%
+            discharge_grid = [
+              { key: 'dry',           img: 'IMG_4488 3.png',             label: 'Dry' },
+              { key: 'creamy-light',  img: 'IMG_77CE646C6EB4-1 3.png',   label: 'Creamy' },
+              { key: 'creamy',        img: 'IMG_4488 4.png',             label: 'Creamy' },
+              { key: 'egg-white',     img: 'IMG_4488 1.png',             label: 'Egg White' },
+              { key: 'stretchy',      img: 'IMG_77CE646C6EB4-1 4.png',   label: 'Stretchy' },
+              { key: 'thick',         img: 'IMG_77CE646C6EB4-1 1.png',   label: 'Thick' },
+              { key: 'watery',        img: 'Group 316.png',              label: 'Watery' },
+              { key: 'spotting',      img: 'IMG_77CE646C6EB4-1 5.png',   label: 'Spotting' },
+              { key: 'period',        img: 'IMG_77CE646C6EB4-1 6.png',   label: 'Period' },
+            ]
+          %>
+          <div class="grid grid-cols-3 gap-3" role="group" aria-label="Vaginal discharge type">
+            <% discharge_grid.each do |item| %>
+              <% sel = @log.discharge == item[:key] %>
+              <button class="flex flex-col items-center gap-2 transition-all duration-150 focus:outline-none"
+                      data-action="click->symptom#toggleDischarge"
+                      data-discharge="<%= item[:key] %>"
+                      aria-label="<%= item[:label] %>" aria-pressed="<%= sel %>"
+                      style="cursor:pointer; opacity: <%= sel ? 1 : 0.35 %>; transform: scale(<%= sel ? 1.08 : 1 %>); filter: <%= sel ? '' : 'grayscale(0.6)' %>; border: none; background: none;">
+                <div class="relative w-[75px] h-[75px] flex items-center justify-center">
+                  <%= image_tag "icons/varginal_discharge/#{item[:img]}", alt: item[:label], class: "w-full h-full object-contain rounded-full" %>
+                  <span class="discharge-check absolute bottom-0 right-0 w-5 h-5 flex items-center justify-center"
+                        style="display:<%= sel ? '' : 'none' %>;">
+                    <%= image_tag "icons/varginal_discharge/Group 34511.png", alt: "", class: "w-full h-full" %>
+                  </span>
+                </div>
+                <span class="text-[11px] font-medium text-center leading-tight text-brand-primary tracking-[0.07em]"
+                      style="opacity:<%= sel ? 1 : 0.5 %>;"><%= item[:label] %></span>
+              </button>
             <% end %>
           </div>
         <% end %>

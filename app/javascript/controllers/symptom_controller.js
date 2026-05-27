@@ -136,6 +136,31 @@ export default class extends Controller {
     })
   }
 
+  toggleDischarge (event) {
+    const btn = event.currentTarget
+    const key = btn.dataset.discharge
+    const checkEl = document.getElementById('section-discharge-check')
+
+    // Single-select — deselect all, then select tapped item
+    this.element.querySelectorAll('[data-discharge]').forEach(b => {
+      const isSel = b.dataset.discharge === key
+      b.style.opacity = isSel ? '1' : '0.35'
+      b.style.transform = isSel ? 'scale(1.08)' : 'scale(1)'
+      b.style.filter = isSel ? '' : 'grayscale(0.6)'
+      b.setAttribute('aria-pressed', isSel.toString())
+      // Toggle checkmark overlay
+      const overlay = b.querySelector('.discharge-check')
+      if (overlay) overlay.style.display = isSel ? '' : 'none'
+      // Toggle label opacity
+      const label = b.querySelector('span:last-child')
+      if (label) label.style.opacity = isSel ? '1' : '0.5'
+    })
+
+    this.#debouncedSave({ discharge: key })
+
+    if (checkEl) { checkEl.style.display = key ? '' : 'none' }
+  }
+
   // Generic handler for physical + mental symptom sliders.
   // Reads the save URL from data-log-url on the input element.
   saveSymptomSlider (event) {
