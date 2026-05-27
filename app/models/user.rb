@@ -114,7 +114,7 @@ class User < ApplicationRecord
 
   def self.resolve_oauth_uid_column(provider)
     case provider
-    when "google_oauth2" then "google_oauth2_uid"
+    when "google_oauth2" then "google_uid"
     when "facebook" then "facebook_uid"
     when "apple" then "apple_uid"
     else raise ArgumentError, "Unknown OAuth provider: #{provider}"
