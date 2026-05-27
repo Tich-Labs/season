@@ -1,36 +1,32 @@
 class SuperpowersController < ApplicationController
   include Streakable
 
-  SUPERPOWERS = {
-    "menstrual" => [
-      "Deep intuition", "Inner clarity",
-      "Rest and restore", "Dreaming",
-      "Introspection"
-    ],
-    "follicular" => [
-      "Creativity", "Planning",
-      "Starting new projects", "Learning",
-      "Fresh ideas", "Optimism"
-    ],
-    "ovulation" => [
-      "Communication", "Confidence",
-      "Leadership", "Social energy",
-      "Problem solving", "Magnetism"
-    ],
-    "luteal" => [
-      "Rizz Game", "Spatial thinking",
-      "Develop projects", "Execute projects",
-      "Idea-rich", "Creativity",
-      "Comprehension", "Eloquent",
-      "Drive", "Talkative",
-      "Self-confidence", "Positivity"
-    ]
-  }.freeze
+  SUPERPOWERS = [
+    "Spatial reasoning",
+    "Developing/planning projects",
+    "Executing projects",
+    "Imaginative",
+    "Creativity",
+    "Quick on the uptake",
+    "High intellectual capacity",
+    "Eloquent",
+    "Drive",
+    "Talkative",
+    "Self-confidence",
+    "Positivity",
+    "Motivated",
+    "Extroverted",
+    "Feeling attractive",
+    "Good listener",
+    "Open to change",
+    "Focused",
+    "Making decisions is easier",
+    "Self-reflective"
+  ].freeze
 
   def index
     @date = params[:date] ? Date.parse(params[:date]) : Time.zone.today
-    @phase = current_user.current_phase || "follicular"
-    @superpowers = SUPERPOWERS[@phase] || SUPERPOWERS["follicular"]
+    @superpowers = SUPERPOWERS
     @superpower_logs = current_user.superpower_logs.order(date: :desc).limit(10)
     @log = current_user.superpower_logs.find_or_initialize_by(date: @date)
     @ratings = @log.ratings || {}

@@ -10,46 +10,51 @@
   <div class="max-w-app mx-auto px-4">
 
     <!-- Log today's superpowers -->
-    <div class="bg-white rounded-xl p-5 mb-3">
+    <div class="bg-white rounded-xl p-5 mb-3"
+         data-controller="superpower"
+         data-superpower-url-value="<%= superpowers_path %>">
       <h2 class="text-brand-primary text-lg font-bold mb-5">Today's superpowers</h2>
 
-      <%= form_with url: superpowers_path, method: :post, local: true do |f| %>
-        <% superpowers = [
-          ["creativity",    "Creativity",    "🎨"],
-          ["intuition",     "Intuition",     "🔮"],
-          ["communication", "Communication", "💬"],
-          ["focus",         "Focus",         "🎯"],
-          ["empathy",       "Empathy",       "❤️"],
-          ["leadership",    "Leadership",    "👑"],
-          ["productivity",  "Productivity",  "⚡"],
-          ["sensuality",    "Sensuality",    "🌸"]
-        ] %>
+      <div class="flex flex-col">
+        <% @superpowers.each do |sp| %>
+          <% val = (@ratings[sp] || 0).to_i %>
+          <%
+            fill_pct = (val / 3.0 * 100).round
+            fill_bg  = val.positive? \
+              ? "background:linear-gradient(to right,#933a35 #{fill_pct}%,#EDE1D5 #{fill_pct}%)" \
+              : "background:#EDE1D5"
+            dot_positions = ["left:calc(33.33% - 2.5px)", "left:calc(66.67% - 2.5px)", "right:2.5px"]
+          %>
+          <div class="sp-row flex items-center gap-3" style="margin-bottom:25px;">
+            <span class="shrink-0 font-medium font-['Montserrat']"
+                  style="min-width:70px; font-size:14px; color:#933a35; letter-spacing:0.5px;">
+              <%= sp %>
+            </span>
 
-        <div class="flex flex-col gap-5">
-          <% superpowers.each do |field, label, emoji| %>
-            <div>
-              <div class="flex items-center gap-2 mb-2.5">
-                <span class="text-lg"><%= emoji %></span>
-                <label class="text-brand-primary text-sm font-semibold"><%= label %></label>
-              </div>
-              <div class="flex gap-2">
-                <% 5.times do |i| %>
-                  <label class="flex-1 flex flex-col items-center gap-1 cursor-pointer">
-                    <input type="radio" name="ratings[<%= field %>]" value="<%= i+1 %>"
-                           class="w-5 h-5" style="accent-color:#933a35;">
-                    <span class="text-brand-secondary text-xs"><%= i+1 %></span>
-                  </label>
-                <% end %>
-              </div>
+            <div class="relative flex-1" style="padding-bottom:22px;">
+              <input type="range" min="0" max="3" step="1" value="<%= val %>" autocomplete="off"
+                     class="symptom-slider"
+                     data-action="input->superpower#save"
+                     data-field="<%= sp %>"
+                     aria-label="<%= sp %> rating"
+                     style="<%= fill_bg %>;">
+
+              <% dot_positions.each_with_index do |position, i| %>
+                <% level = i + 1 %>
+                <span class="pointer-events-none absolute rounded-full" data-dot="<%= level %>" aria-hidden="true"
+                      style="width:5px;height:5px;top:20px;<%= position %>;background:<%= val >= level ? '#933a35' : '#EDE1D5' %>;"></span>
+              <% end %>
+
+              <span class="sp-label absolute font-['Montserrat'] font-normal"
+                    style="bottom:-8px; font-size:10px; letter-spacing:0.4px; color:#933a35;
+                           left:<%= fill_pct %>%; transform:translateX(-50%);
+                           <%= val.zero? ? 'display:none;' : '' %>">
+                <%= ["", "low", "medium", "high"][val] %>
+              </span>
             </div>
-          <% end %>
-        </div>
-
-        <button type="submit"
-                class="block w-full bg-brand-primary text-white text-center p-4 rounded-xl text-base font-medium border-none cursor-pointer mt-6">
-          Save Superpowers
-        </button>
-      <% end %>
+          </div>
+        <% end %>
+      </div>
     </div>
 
     <!-- Recent logs -->
