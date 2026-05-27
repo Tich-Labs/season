@@ -675,7 +675,11 @@
 
             <%# Other sections (compact) %>
             <% other_parts = [] %>
-            <% other_parts << "#{discharge_label}: #{@log.bleeding.presence || @log.discharge}" if discharge_done || bleeding_done %>
+            <% if bleeding_done %>
+              <% other_parts << "Bleeding: #{@log.bleeding}" %>
+            <% elsif discharge_done %>
+              <% other_parts << "Discharge: #{@log.discharge.to_s.humanize}" %>
+            <% end %>
             <% other_parts << "Intercourse: #{intercourse_selected.join(', ')}" if intercourse_done %>
             <% other_parts << "Cravings: #{cravings_selected.join(', ')}" if cravings_done %>
             <% other_parts << "Sleep: #{@log.sleep}h" if sleep_done %>
