@@ -53,16 +53,16 @@ bundle exec erb_lint --lint-all --format compact  # NOT erblint
 
 - **Project file**: `ios/SeasonApp/project.yml` — XcodeGen spec
 - **Regenerate `.xcodeproj`**: `xcodegen generate` (run from `ios/SeasonApp/`)
-- **Base URL**: set `SEASON_BASE_URL` in `Info.plist` (not hardcoded in Swift)
-- **Tab model**: `Tabs.swift` (`Tab` struct: title, systemImageName, urlPath)
-- **Tab bar controller**: `HotwireTabBarController.swift` — uses `TurboNavigator`
-- **Entry point**: `SceneDelegate.swift` — creates `HotwireTabBarController`
-- **AppDelegate**: minimal stub — do NOT create `WKWebView` or window there
-- **Keychain**: `KeychainHelper.swift` — stores/retrieves native auth token
+- **Base URL**: hardcoded in `Tabs.swift:4` (not Info.plist)
+- **SPM**: `https://github.com/hotwired/hotwire-native-ios` (HotwireNative package, >= 1.0.0)
+- **AppDelegate**: loads `path-configuration.json` + remote `/configurations/ios_v1.json` via `Hotwire.loadPathConfiguration(from:)`
+- **SceneDelegate**: creates `Navigator` with `startLocation: baseURL`, calls `navigator.start()`, sets `window?.rootViewController = navigator.rootViewController`
+- **CRITICAL**: `navigator.start()` MUST be called — without it, the Navigator never creates its WebView or begins the visit lifecycle
+- **Tab bar**: `HotwireTabBarController` (from HotwireNative library) loaded via `switchToTabs()` when user reaches authenticated paths
 - **Path rules endpoint**: `GET /configurations/ios_v1.json` (`ConfigurationsController#ios_v1`)
-- **SPM**: turbo-ios 1.4.0 from GitHub/hotwired
-- **Architecture**: Pure Turbo Native — all views are server-rendered ERB via WKWebView. No SwiftUI views.
-- **Auth bridge**: `Session` → WKUserScript extracts `<meta name="native-auth-token">` → Keychain → cookie injected on launch → `TurboNativeDetection` checks header + cookie
+- **Bundled path config**: `ios/SeasonApp/SeasonApp/path-configuration.json`
+- **Architecture**: Pure Hotwire Native — all views are server-rendered ERB. Navigator manages its own WebView internally. No direct WKWebView creation.
+- **No KeychainHelper / WKUserScript auth bridge** — not yet implemented
 - **xcodegen** requires Xcode 15.3+ (macOS 13+)
 
 ## Docs

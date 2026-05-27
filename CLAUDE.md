@@ -285,22 +285,25 @@ This is acceptable because the color is dynamic and comes from a service.
 ## iOS / Turbo Native
 
 ### Architecture
-- The iOS app wraps the Rails app using [turbo-ios](https://github.com/hotwired/turbo-ios) (SPM, v1.4.0)
-- Entry point: `SceneDelegate.swift` creates `HotwireTabBarController`
-- `AppDelegate.swift` is a minimal stub — do NOT add `WKWebView` or window creation there
-- Tabs are defined in `Tabs.swift` (`Tab` struct) and used by `HotwireTabBarController.swift`
-- Base URL is read from `Info.plist` key `SEASON_BASE_URL` — not hardcoded in Swift
+- The iOS app wraps the Rails app using [hotwire-native-ios](https://github.com/hotwired/hotwire-native-ios) (SPM, >= 1.0.0)
+- Entry point: `SceneDelegate.swift` creates `Navigator` with `startLocation: baseURL`, calls `navigator.start()`, sets `window?.rootViewController = navigator.rootViewController`
+- **CRITICAL**: `navigator.start()` MUST be called — without it the Navigator never creates its managed WebView
+- `AppDelegate.swift` loads path configuration via `Hotwire.loadPathConfiguration(from:)`
+- Tab bar: `HotwireTabBarController` (from library) loaded via `switchToTabs()` when user reaches authenticated paths
+- Tabs are defined in `Tabs.swift` with `HotwireTab` (from HotwireNative library)
+- Base URL is hardcoded in `Tabs.swift:4` — not read from `Info.plist`
+- No direct WKWebView / WKUserScript / KeychainHelper — not yet implemented
 
 ### Files
 | File | Purpose |
 |---|---|
-| `ios/SeasonApp/project.yml` | XcodeGen spec (target iOS 15.0, SPM turbo-ios) |
-| `ios/SeasonApp/SeasonApp/SceneDelegate.swift` | Entry point, creates tab bar |
-| `ios/SeasonApp/SeasonApp/AppDelegate.swift` | Minimal stub (do not add WKWebView) |
-| `ios/SeasonApp/SeasonApp/Tabs.swift` | Tab model (title, systemImageName, urlPath) |
-| `ios/SeasonApp/SeasonApp/HotwireTabBarController.swift` | Tab bar using TurboNavigator |
-| `ios/SeasonApp/SeasonApp/Info.plist` | App config (set SEASON_BASE_URL here) |
-| `app/controllers/configurations_controller.rb` | iOS path rules endpoint |
+| `ios/SeasonApp/project.yml` | XcodeGen spec (target iOS 16.0, SPM HotwireNative) |
+| `ios/SeasonApp/SeasonApp/SceneDelegate.swift` | Entry point, Navigator + tab bar switch |
+| `ios/SeasonApp/SeasonApp/AppDelegate.swift` | Path config loader (`Hotwire.loadPathConfiguration`) |
+| `ios/SeasonApp/SeasonApp/Tabs.swift` | Tab definitions (`HotwireTab`, `baseURL`) |
+| `ios/SeasonApp/SeasonApp/path-configuration.json` | Bundled path rules (auth + app routes) |
+| `ios/SeasonApp/SeasonApp/Info.plist` | App config |
+| `app/controllers/configurations_controller.rb` | iOS path rules endpoint (`ios_v1.json`)
 
 ### Regenerating Xcode project
 ```bash
