@@ -9,6 +9,45 @@
 
   <div class="max-w-app mx-auto px-4">
 
+    <%# ── Date picker drum ────────────────────────────────────────────── %>
+    <div class="flex justify-center pt-6 pb-2" data-controller="date-picker">
+      <div class="relative bg-brand-field overflow-hidden transition-all duration-300 ease-out"
+           style="width:155px; height:31px; border-radius:133px;"
+           data-date-picker-target="drum">
+
+        <button class="w-full h-[31px] flex items-center justify-center gap-2 text-brand-primary font-medium text-base font-['Montserrat'] focus:outline-none"
+                data-action="click->date-picker#toggle"
+                aria-label="Select date">
+          <%= @date.strftime("%-d %B") %>
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none"
+               stroke="currentColor" stroke-width="3" viewBox="0 0 24 24" aria-hidden="true">
+            <polyline points="6 9 12 15 18 9" />
+          </svg>
+        </button>
+
+        <div class="hidden" data-date-picker-target="content">
+          <div class="flex justify-end px-4 pt-3 pb-0">
+            <button data-action="click->date-picker#close" aria-label="Close date picker"
+                    class="text-brand-primary focus:outline-none">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none"
+                   stroke="currentColor" stroke-width="3" viewBox="0 0 24 24" aria-hidden="true">
+                <polyline points="18 15 12 9 6 15" />
+              </svg>
+            </button>
+          </div>
+          <ul class="overflow-y-auto text-center pb-3 scrollbar-hide" style="max-height:160px; scroll-snap-type:y mandatory;">
+            <% ((Date.today - 29)..Date.today).each do |d| %>
+              <li class="<%= d == @date ? 'bg-white/60 rounded-lg mx-2' : '' %>" style="scroll-snap-align:center;">
+                <%= link_to d.strftime("%-d %B"), superpowers_path(date: d),
+                      class: "block py-2 font-['Montserrat'] #{d == @date ? 'font-bold text-base text-brand-primary' : 'font-normal text-sm text-brand-primary opacity-50'}",
+                      data: (d == @date ? { selected: true } : {}) %>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    </div>
+
     <!-- Log today's superpowers -->
     <div class="bg-white rounded-xl p-5 mb-3"
          data-controller="superpower"
@@ -54,6 +93,13 @@
             </div>
           </div>
         <% end %>
+      </div>
+
+      <%# Submit button %>
+      <div class="mt-6">
+        <%= link_to "Submit", tracking_index_path,
+              class: "block w-full text-white text-center rounded-lg py-4 text-xl font-medium tracking-wide font-['Montserrat'] no-underline",
+              style: "background:#933a35;" %>
       </div>
     </div>
 
