@@ -19,7 +19,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
 
         navigationController.setNavigationBarHidden(true, animated: false)
-        navigator = Navigator(delegate: self)
+        navigator = Navigator(configuration: .init(), delegate: self)
 
         let welcome = VisitableViewController(url: baseURL)
         navigationController.viewControllers = [welcome]
