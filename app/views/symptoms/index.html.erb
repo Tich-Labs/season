@@ -484,14 +484,22 @@
         </div>
         <% if sleep_done %><%= render 'symptoms/bi_check', colour: phase_colour %><% end %>
       </summary>
-      <div class="pb-5 flex gap-2" role="group" aria-label="Sleep 1 to 5">
-        <% (1..5).each do |i| %>
-          <% selected = @log.sleep == i; bg = selected ? phase_colour : "#EDE1D5"; fg = selected ? "#ffffff" : "#6B6B6B" %>
-          <button class="dot flex-1 py-2.5 rounded-xl text-sm font-bold transition-colors duration-150"
-                  data-action="click->symptom#save" data-field="sleep" data-value="<%= i %>"
-                  aria-label="Sleep <%= i %>" aria-pressed="<%= selected %>"
-                  style="background:<%= bg %>; color:<%= fg %>; border:none; cursor:pointer;"><%= i %></button>
-        <% end %>
+      <div class="pb-5" data-controller="vertical-picker"
+           data-vertical-picker-min-value="1"
+           data-vertical-picker-max-value="12"
+           data-vertical-picker-step-value="1"
+           data-vertical-picker-value-value="<%= @log.sleep || 8 %>"
+           data-vertical-picker-unit-value="h"
+           data-vertical-picker-field-value="sleep"
+           data-action="vertical-picker:change->symptom#saveFromPicker">
+        <div class="flex justify-center items-baseline gap-1 mb-3">
+          <span data-vertical-picker-target="display" class="vp-display">8h</span>
+        </div>
+        <div class="relative mx-auto w-[100px] h-[150px]">
+          <div class="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[40px] vp-bg pointer-events-none"></div>
+          <div data-vertical-picker-target="track" class="vp-track h-full py-[55px]"
+               data-action="scroll->vertical-picker#scroll"></div>
+        </div>
       </div>
     </details>
 
@@ -508,19 +516,21 @@
         </div>
         <% if temperature_done %><%= render 'symptoms/bi_check', colour: phase_colour %><% end %>
       </summary>
-      <div class="pb-5" data-controller="scroll-picker"
-           data-scroll-picker-min-value="35.0"
-           data-scroll-picker-max-value="42.0"
-           data-scroll-picker-step-value="0.1"
-           data-scroll-picker-value-value="<%= @log.temperature || 36.5 %>"
-           data-scroll-picker-unit-value="°C"
-           data-scroll-picker-field-value="temperature"
-           data-action="scroll-picker:change->symptom#saveFromPicker">
-        <div data-scroll-picker-target="display" class="picker-display">36.5°C</div>
-        <div class="picker-wrap">
-          <div class="picker-indicator"></div>
-          <div data-scroll-picker-target="track" class="picker-track"
-               data-action="scroll->scroll-picker#scroll"></div>
+      <div class="pb-5" data-controller="vertical-picker"
+           data-vertical-picker-min-value="35.0"
+           data-vertical-picker-max-value="42.0"
+           data-vertical-picker-step-value="0.1"
+           data-vertical-picker-value-value="<%= @log.temperature || 36.5 %>"
+           data-vertical-picker-unit-value="°C"
+           data-vertical-picker-field-value="temperature"
+           data-action="vertical-picker:change->symptom#saveFromPicker">
+        <div class="flex justify-center items-baseline gap-1 mb-3">
+          <span data-vertical-picker-target="display" class="vp-display">36.5°C</span>
+        </div>
+        <div class="relative mx-auto w-[100px] h-[150px]">
+          <div class="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[40px] vp-bg pointer-events-none"></div>
+          <div data-vertical-picker-target="track" class="vp-track h-full py-[55px]"
+               data-action="scroll->vertical-picker#scroll"></div>
         </div>
       </div>
     </details>
@@ -538,19 +548,21 @@
         </div>
         <% if weight_done %><%= render 'symptoms/bi_check', colour: phase_colour %><% end %>
       </summary>
-      <div class="pb-5" data-controller="scroll-picker"
-           data-scroll-picker-min-value="30.0"
-           data-scroll-picker-max-value="200.0"
-           data-scroll-picker-step-value="0.5"
-           data-scroll-picker-value-value="<%= @log.weight || 65.0 %>"
-           data-scroll-picker-unit-value=" kg"
-           data-scroll-picker-field-value="weight"
-           data-action="scroll-picker:change->symptom#saveFromPicker">
-        <div data-scroll-picker-target="display" class="picker-display">65.0 kg</div>
-        <div class="picker-wrap">
-          <div class="picker-indicator"></div>
-          <div data-scroll-picker-target="track" class="picker-track"
-               data-action="scroll->scroll-picker#scroll"></div>
+      <div class="pb-5" data-controller="vertical-picker"
+           data-vertical-picker-min-value="30.0"
+           data-vertical-picker-max-value="200.0"
+           data-vertical-picker-step-value="0.5"
+           data-vertical-picker-value-value="<%= @log.weight || 65.0 %>"
+           data-vertical-picker-unit-value=" kg"
+           data-vertical-picker-field-value="weight"
+           data-action="vertical-picker:change->symptom#saveFromPicker">
+        <div class="flex justify-center items-baseline gap-1 mb-3">
+          <span data-vertical-picker-target="display" class="vp-display">65.0 kg</span>
+        </div>
+        <div class="relative mx-auto w-[100px] h-[150px]">
+          <div class="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[40px] vp-bg pointer-events-none"></div>
+          <div data-vertical-picker-target="track" class="vp-track h-full py-[55px]"
+               data-action="scroll->vertical-picker#scroll"></div>
         </div>
       </div>
     </details>

@@ -166,6 +166,56 @@
   mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%);
 }
 
+/* ── Vertical Scroll Picker ─────────────────────────────────────────────── */
+.vp-display {
+  text-align: center;
+  font-weight: 700;
+  font-size: 28px;
+  color: #933a35;
+  font-family: 'Montserrat', sans-serif;
+  line-height: 1;
+}
+.vp-track {
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.vp-track:active {
+  cursor: grabbing;
+}
+.vp-track::-webkit-scrollbar {
+  display: none;
+}
+.vp-item {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  scroll-snap-align: center;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: #933a35;
+  letter-spacing: 0.07em;
+  transition: opacity 0.15s;
+}
+.vp-bg {
+  background: #EDE1D5;
+  border-radius: 8px;
+}
+.vp-unit {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: #933a35;
+  letter-spacing: 0.07em;
+  line-height: 20px;
+}
+
 /* ── Craving button grid ────────────────────────────────────────────────── */
 /* Icon-selection follow the same opacity/grayscale pattern as moods */
 .craving-btn {
