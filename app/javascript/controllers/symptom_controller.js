@@ -176,9 +176,12 @@ export default class extends Controller {
     const flow = button.dataset.flow
     const url = button.dataset.url
 
-    // Update visual feedback
+    // Update visual feedback — standard opacity/grayscale pattern
     this.element.querySelectorAll('[data-action*="saveBleedingFlow"]').forEach(btn => {
-      btn.style.opacity = btn === button ? '1' : '0.6'
+      const isSel = btn === button
+      btn.style.opacity = isSel ? '1' : '0.35'
+      btn.style.transform = isSel ? 'scale(1.08)' : 'scale(1)'
+      btn.style.filter = isSel ? '' : 'grayscale(0.6)'
     })
 
     // Send to server

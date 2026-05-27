@@ -197,7 +197,10 @@
                       data-url="<%= log_bleeding_symptom_path %>"
                       aria-label="<%= bleeding_opt[:name] %> bleeding" aria-pressed="<%= selected %>"
                       style="cursor:pointer;
-                             transform: <%= selected ? 'scale(1.08)' : 'scale(1)' %>; border: none; background: none;">
+                             opacity: <%= selected ? 1 : 0.35 %>;
+                             transform: scale(<%= selected ? 1.08 : 1 %>);
+                             filter: <%= selected ? '' : 'grayscale(0.6)' %>;
+                             border: none; background: none;">
 
                 <%# Droplet visualization — filled droplets with progressive intensity %>
                 <div class="relative w-20 h-20 flex items-center justify-center">
