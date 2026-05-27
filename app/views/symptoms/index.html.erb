@@ -8,7 +8,7 @@
   discharge_label = @phase == "menstrual" ? "Bleeding" : "vaginal discharge"
 
   # Completion flags (for checkmarks)
-  mood_done         = @log.mood_text.present?
+  mood_done         = @log.moods.present?
   physical_done     = @log.any_physical_symptom?
   mental_done       = @log.any_mental_symptom?
   discharge_done    = @log.discharge.present?
@@ -27,7 +27,8 @@
 <div class="bg-white min-h-screen pb-24"
      data-controller="symptom"
      data-symptom-url-value="<%= symptoms_path %>"
-     data-date="<%= @date %>">
+     data-date="<%= @date %>"
+     data-active-moods="<%= (@log.moods || []).to_json %>">
 
   <%# ── Date picker drum ──────────────────────────────────────────────── %>
   <div class="relative flex justify-center pt-6 pb-2" data-controller="date-picker">
@@ -89,18 +90,21 @@
                fill="none" stroke="<%= phase_colour %>" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
             <polyline points="9 18 15 12 9 6" />
           </svg>
-          <span class="font-medium text-[22px] tracking-[0.66px]" style="color:<%= phase_colour %>;">Mood</span>
+          <span class="font-medium text-[22px] tracking-[0.66px]" id="mood-summary-label" style="color:<%= phase_colour %>;">
+            Mood<%= " (#{@log.moods.length})" if @log.moods.present? %>
+          </span>
         </div>
-        <% if mood_done %><%= render 'symptoms/bi_check', colour: phase_colour %><% end %>
+        <span id="section-mood-check" style="display:<%= mood_done ? '' : 'none' %>"><%= render 'symptoms/bi_check', colour: phase_colour %></span>
       </summary>
       <div class="pb-5 grid grid-cols-3 gap-4" role="group" aria-label="Mood picker">
         <% MoodPickerService.all.each do |mood_opt| %>
-          <% selected = @log.mood_text == mood_opt[:name] %>
+          <% selected = @log.moods&.include?(mood_opt[:name]) %>
           <% border_colour = mood_opt[:color] %>
           <button class="flex flex-col items-center justify-center gap-2 transition-all duration-150 focus:outline-none"
-                  data-action="click->symptom#save" data-field="mood_text" data-value="<%= mood_opt[:name] %>"
+                  data-action="click->symptom#toggleMood" data-mood-name="<%= mood_opt[:name] %>"
+                  data-value="<%= mood_opt[:name] %>"
                   aria-label="<%= mood_opt[:name] %>" aria-pressed="<%= selected %>"
-                  style="cursor:pointer; opacity: <%= selected ? '1' : '0.7' %>; transform: <%= selected ? 'scale(1.1)' : 'scale(1)' %>;">
+                  style="cursor:pointer; opacity: <%= selected ? '1' : '0.35' %>; transform: <%= selected ? 'scale(1.08)' : 'scale(1)' %>; filter: <%= selected ? '' : 'grayscale(0.6)' %>;">
             <%# Emoji SVG from icons/emojis folder %>
             <div class="w-16 h-16 flex items-center justify-center">
               <%= image_tag "icons/emojis/#{mood_opt[:svg]}", alt: "", class: "w-full h-full" %>

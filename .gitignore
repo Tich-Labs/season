@@ -57,3 +57,10 @@ Archive SeasonApp_2026-05-22T09-06-50.txt
 node_modules/
 test-results/
 playwright-report/
+android/.gradle/
+android/.idea/
+android/build/
+android/local.properties
+android/gradle/
+android/gradlew
+android/gradlew.bat

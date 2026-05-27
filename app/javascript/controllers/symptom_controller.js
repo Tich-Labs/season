@@ -9,17 +9,50 @@ export default class extends Controller {
   static values = { url: String }
 
   #debounceTimer = null
+  #activeMoods = []
 
   connect () {
     this.element.querySelectorAll('.symptom-slider').forEach(slider => {
       this.#applySliderVisual(slider, parseInt(slider.value))
     })
+    this.#activeMoods = JSON.parse(this.element.dataset.activeMoods || '[]')
+    this.#applyMoodVisuals()
   }
 
   save (event) {
     const { field, value } = event.currentTarget.dataset
     this.#post(this.urlValue, { symptom_log: { date: this.#date, [field]: value } })
       .then(() => this.#updateAriaPressed(event.currentTarget, value))
+  }
+
+  toggleMood (event) {
+    const name = event.currentTarget.dataset.moodName
+    const checkEl = document.getElementById('section-mood-check')
+    const summary = document.getElementById('mood-summary-label')
+
+    if (this.#activeMoods.includes(name)) {
+      this.#activeMoods = this.#activeMoods.filter(m => m !== name)
+    } else {
+      this.#activeMoods.push(name)
+    }
+
+    this.#post(this.urlValue, { symptom_log: { date: this.#date, moods: this.#activeMoods } })
+    this.#applyMoodVisuals()
+
+    if (checkEl) checkEl.style.display = this.#activeMoods.length > 0 ? '' : 'none'
+    if (summary) summary.textContent = this.#activeMoods.length > 0
+      ? `Mood (${this.#activeMoods.length})`
+      : 'Mood'
+  }
+
+  #applyMoodVisuals () {
+    this.element.querySelectorAll('[data-mood-name]').forEach(btn => {
+      const selected = this.#activeMoods.includes(btn.dataset.moodName)
+      btn.style.opacity = selected ? '1' : '0.35'
+      btn.style.transform = selected ? 'scale(1.08)' : 'scale(1)'
+      btn.setAttribute('aria-pressed', selected.toString())
+      btn.style.filter = selected ? '' : 'grayscale(0.6)'
+    })
   }
 
   // Generic handler for physical + mental symptom sliders.

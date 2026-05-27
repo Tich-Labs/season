@@ -56,9 +56,12 @@ class SymptomsController < ApplicationController
 
   def symptom_params
     params.expect(
-      symptom_log: [:date, :mood, :mood_text, :energy, :sleep, :physical,
+      symptom_log: [
+        :date, :mood, :mood_text, :energy, :sleep, :physical,
         :mental, :pain, :cravings, :discharge, :notes,
-        :sexual_intercourse, :temperature, :weight]
+        :sexual_intercourse, :temperature, :weight,
+        {moods: []}
+      ]
     )
   end
 end
