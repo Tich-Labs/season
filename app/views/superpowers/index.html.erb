@@ -5,7 +5,7 @@
   <% end %>
 <% end %>
 
-<div class="bg-brand-background min-h-full pb-1">
+<div class="bg-brand-background min-h-full pb-32">
 
   <div class="max-w-app mx-auto px-4">
 
@@ -52,7 +52,6 @@
     <div class="bg-white rounded-xl p-5 mb-3"
          data-controller="superpower"
          data-superpower-url-value="<%= superpowers_path %>">
-      <h2 class="text-brand-primary font-medium text-2xl text-center font-['Montserrat'] mb-1">My Superpowers</h2>
       <p class="text-brand-primary font-extrabold text-[29px] text-center font-['Montserrat'] mb-6" style="color:<%= @phase_colour %>;">
         <%= @phase.capitalize %> Phase
       </p>
