@@ -14,7 +14,8 @@
   discharge_done    = @log.discharge.present?
   bleeding_done     = @log.bleeding.present?
   intercourse_done  = @log.sexual_intercourse?
-  cravings_done     = @log.cravings.present?
+  cravings_list    = @log.cravings.present? ? @log.cravings.split(',').reject { |c| c.blank? || c.match?(/\A\d+\z/) } : []
+  cravings_done     = cravings_list.any?
   sleep_done        = @log.sleep.present?
   temperature_done  = @log.temperature.present?
   weight_done       = @log.weight.present?
@@ -29,6 +30,7 @@
      data-symptom-url-value="<%= symptoms_path %>"
      data-date="<%= @date %>"
      data-active-moods="<%= (@log.moods || []).to_json %>"
+     data-active-cravings="<%= cravings_list.to_json %>"
      data-phase-color="<%= phase_colour %>">
 
   <%# ── Date picker drum ──────────────────────────────────────────────── %>
@@ -315,16 +317,53 @@
           </svg>
           <span class="font-medium text-[22px] tracking-[0.66px]" style="color:<%= phase_colour %>;">Cravings</span>
         </div>
-        <% if cravings_done %><%= render 'symptoms/bi_check', colour: phase_colour %><% end %>
+        <span id="section-cravings-check" style="<%= 'display:none' unless cravings_done %>"><%= render 'symptoms/bi_check', colour: phase_colour %></span>
       </summary>
-      <div class="pb-5 flex gap-2" role="group" aria-label="Cravings 1 to 5">
-        <% (1..5).each do |i| %>
-          <% selected = @log.cravings == i; bg = selected ? phase_colour : "#EDE1D5"; fg = selected ? "#ffffff" : "#6B6B6B" %>
-          <button class="dot flex-1 py-2.5 rounded-xl text-sm font-bold transition-colors duration-150"
-                  data-action="click->symptom#save" data-field="cravings" data-value="<%= i %>"
-                  aria-label="Cravings <%= i %>" aria-pressed="<%= selected %>"
-                  style="background:<%= bg %>; color:<%= fg %>; border:none; cursor:pointer;"><%= i %></button>
-        <% end %>
+      <div class="pb-5">
+        <div class="flex justify-around text-center mb-3">
+          <span class="flex-1 text-brand-primary font-medium text-sm tracking-[0.07em]">Salty</span>
+          <span class="flex-1 text-brand-primary font-medium text-sm tracking-[0.07em]">Sweet</span>
+          <span class="flex-1 text-brand-primary font-medium text-sm tracking-[0.07em]">Carbs</span>
+        </div>
+        <div class="flex justify-around">
+          <%# Salty column %>
+          <div class="flex-1 flex flex-col items-center gap-3">
+            <button class="craving-btn" data-craving="salty" data-action="click->symptom#toggleCravings"
+                    aria-pressed="false" aria-label="Salty craving">
+              <%= image_tag "cravings/fries-and-burger 1.svg", alt: "Fries and burger" %>
+            </button>
+          </div>
+          <%# Sweet column %>
+          <div class="flex-1 flex flex-col items-center gap-3">
+            <button class="craving-btn" data-craving="sweet-chocolate" data-action="click->symptom#toggleCravings"
+                    aria-pressed="false" aria-label="Chocolate craving">
+              <%= image_tag "cravings/chocolate 1.svg", alt: "Chocolate" %>
+            </button>
+            <button class="craving-btn" data-craving="sweet-doughnut" data-action="click->symptom#toggleCravings"
+                    aria-pressed="false" aria-label="Doughnut craving">
+              <%= image_tag "cravings/doughnut-sprinkles 1.svg", alt: "Doughnut with sprinkles" %>
+            </button>
+            <button class="craving-btn" data-craving="sweet-donut" data-action="click->symptom#toggleCravings"
+                    aria-pressed="false" aria-label="Donut craving">
+              <%= image_tag "cravings/005-donut 1.png", alt: "Donut" %>
+            </button>
+          </div>
+          <%# Carbs column %>
+          <div class="flex-1 flex flex-col items-center gap-3">
+            <button class="craving-btn" data-craving="carbs-macarons" data-action="click->symptom#toggleCravings"
+                    aria-pressed="false" aria-label="Macarons craving">
+              <%= image_tag "cravings/macarons 1.svg", alt: "Macarons" %>
+            </button>
+            <button class="craving-btn" data-craving="carbs-snacks" data-action="click->symptom#toggleCravings"
+                    aria-pressed="false" aria-label="Snacks craving">
+              <%= image_tag "cravings/024-snacks 1.png", alt: "Snacks" %>
+            </button>
+            <button class="craving-btn" data-craving="carbs-noodles" data-action="click->symptom#toggleCravings"
+                    aria-pressed="false" aria-label="Noodles craving">
+              <%= image_tag "cravings/noodles 1.svg", alt: "Noodles" %>
+            </button>
+          </div>
+        </div>
       </div>
     </details>
 

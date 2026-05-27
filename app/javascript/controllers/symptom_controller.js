@@ -10,6 +10,7 @@ export default class extends Controller {
 
   #debounceTimer = null
   #activeMoods = []
+  #activeCravings = []
 
   connect () {
     this.element.querySelectorAll('.symptom-slider').forEach(slider => {
@@ -17,6 +18,8 @@ export default class extends Controller {
     })
     this.#activeMoods = JSON.parse(this.element.dataset.activeMoods || '[]')
     this.#applyMoodVisuals()
+    this.#activeCravings = JSON.parse(this.element.dataset.activeCravings || '[]')
+    this.#applyCravingVisuals()
   }
 
   toggleCheckbox (event) {
@@ -73,6 +76,31 @@ export default class extends Controller {
       btn.style.transform = selected ? 'scale(1.08)' : 'scale(1)'
       btn.setAttribute('aria-pressed', selected.toString())
       btn.style.filter = selected ? '' : 'grayscale(0.6)'
+    })
+  }
+
+  toggleCravings (event) {
+    const btn = event.currentTarget
+    const craving = btn.dataset.craving
+    const checkEl = document.getElementById('section-cravings-check')
+
+    if (this.#activeCravings.includes(craving)) {
+      this.#activeCravings = this.#activeCravings.filter(c => c !== craving)
+    } else {
+      this.#activeCravings.push(craving)
+    }
+
+    this.#debouncedSave({ cravings: this.#activeCravings.join(',') })
+    this.#applyCravingVisuals()
+
+    if (checkEl) { checkEl.style.display = this.#activeCravings.length > 0 ? '' : 'none' }
+  }
+
+  #applyCravingVisuals () {
+    this.element.querySelectorAll('[data-craving]').forEach(btn => {
+      const selected = this.#activeCravings.includes(btn.dataset.craving)
+      btn.setAttribute('aria-pressed', selected.toString())
+      btn.classList.toggle('craving-btn--selected', selected)
     })
   }
 
