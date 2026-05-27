@@ -80,6 +80,39 @@
       <% end %>
     </div>
 
+    <%# ── Daily Analysis card ──────────────────────────────────────────── %>
+    <% if phase_label %>
+      <%
+        analysis_messages = {
+          "menstrual"  => "This is your time to rest and restore. Listen to your body — it knows what it needs.",
+          "follicular" => "Energy is rising and ideas are flowing. A great time to start new projects and plan ahead.",
+          "ovulation"  => "You are magnetic and at your peak. Embrace social connection and communicate with confidence.",
+          "luteal"     => "Turn inward and focus on the details. Execute projects and reflect on what matters most."
+        }
+        analysis_text = analysis_messages[@phase] || "Track your symptoms daily to unlock personalized insights."
+      %>
+      <div class="flex justify-center mb-6" data-controller="dismissible">
+        <div class="relative bg-white rounded-[29px] p-6 pt-10 pb-8" style="width:337px;" data-dismissible-target="card">
+          <%# Close button %>
+          <button data-action="click->dismissible#close" aria-label="Dismiss"
+                  class="absolute top-3 right-3 w-[44px] h-[44px] rounded-full flex items-center justify-center border-0 cursor-pointer"
+                  style="background:#EDE1D5;">
+            <span class="text-brand-primary text-2xl font-medium leading-none font-['Montserrat']">&times;</span>
+          </button>
+
+          <%# Logo %>
+          <div class="flex justify-center mb-4">
+            <%= image_tag "screen1logo.png", alt: "Season", class: "w-[87px] h-[88px] object-contain" %>
+          </div>
+
+          <%# Analysis text %>
+          <p class="text-brand-primary font-medium text-2xl leading-[29px] text-center font-['Montserrat']">
+            <%= analysis_text %>
+          </p>
+        </div>
+      </div>
+    <% end %>
+
     <%# ── Cycle-day strip ─────────────────────────────────────────────── %>
     <% if @strip.present? %>
       <div class="mb-1 overflow-x-auto scrollbar-hide">

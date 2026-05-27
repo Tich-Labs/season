@@ -5,7 +5,7 @@
   phase_season = phase_meta[:season]
 
   # Phase-specific symptom name
-  discharge_label = @phase == "menstrual" ? "Bleeding" : "vaginal discharge"
+  discharge_label = @phase == "menstrual" ? "Bleeding" : "Vaginal Discharge"
 
   # Completion flags (for checkmarks)
   mood_done         = @log.moods.present?
@@ -204,7 +204,7 @@
       </div>
     </details>
 
-    <%# 4. vaginal discharge / Bleeding (menstrual phase) %>
+    <%# 4. Vaginal Discharge / Bleeding (menstrual phase) %>
     <details class="group border-b border-brand-field" id="section-discharge">
       <summary class="flex items-center justify-between py-4 cursor-pointer list-none [&::-webkit-details-marker]:hidden select-none">
         <div class="flex items-center gap-3">
@@ -300,7 +300,7 @@
             <% end %>
           </div>
         <% else %>
-          <%# Vaginal discharge icon grid for non-menstrual phases %>
+          <%# Vaginal Discharge icon grid for non-menstrual phases %>
           <%
             discharge_grid = [
               { key: 'dry',           img: 'dry.png',             label: 'Dry' },
@@ -314,7 +314,7 @@
               { key: 'period',        img: 'period.png',          label: 'Period' },
             ]
           %>
-          <div class="grid grid-cols-3 gap-3" role="group" aria-label="Vaginal discharge type">
+          <div class="grid grid-cols-3 gap-3" role="group" aria-label="Vaginal Discharge type">
             <% discharge_grid.each do |item| %>
               <% sel = @log.discharge == item[:key] %>
               <button class="flex flex-col items-center gap-2 transition-all duration-150 focus:outline-none"
