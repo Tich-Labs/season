@@ -397,9 +397,9 @@
       </summary>
       <div class="pb-5">
         <div class="flex justify-around text-center mb-3">
-          <span class="flex-1 text-brand-primary font-medium text-sm tracking-[0.07em]">Salty</span>
-          <span class="flex-1 text-brand-primary font-medium text-sm tracking-[0.07em]">Sweet</span>
-          <span class="flex-1 text-brand-primary font-medium text-sm tracking-[0.07em]">Carbs</span>
+          <span class="flex-1 text-brand-primary font-medium text-base tracking-[0.07em]">Salty</span>
+          <span class="flex-1 text-brand-primary font-medium text-base tracking-[0.07em]">Sweet</span>
+          <span class="flex-1 text-brand-primary font-medium text-base tracking-[0.07em]">Carbs</span>
         </div>
         <div class="flex justify-around">
           <%# Salty column %>
@@ -408,7 +408,7 @@
             <button class="craving-btn" data-craving="salty" data-action="click->symptom#toggleCravings"
                     aria-pressed="<%= sel %>" aria-label="Salty craving"
                     style="opacity:<%= sel ? 1 : 0.35 %>;transform:scale(<%= sel ? 1.08 : 1 %>);filter:<%= sel ? '' : 'grayscale(0.6)' %>;">
-              <div class="w-14 h-14 flex items-center justify-center">
+              <div class="w-[65px] h-[65px] flex items-center justify-center">
                 <%= image_tag "cravings/fries.svg", alt: "Fries and burger" %>
               </div>
             </button>
@@ -419,7 +419,7 @@
             <button class="craving-btn" data-craving="sweet-chocolate" data-action="click->symptom#toggleCravings"
                     aria-pressed="<%= sel %>" aria-label="Chocolate craving"
                     style="opacity:<%= sel ? 1 : 0.35 %>;transform:scale(<%= sel ? 1.08 : 1 %>);filter:<%= sel ? '' : 'grayscale(0.6)' %>;">
-              <div class="w-14 h-14 flex items-center justify-center">
+              <div class="w-[65px] h-[65px] flex items-center justify-center">
                 <%= image_tag "cravings/chocolate.svg", alt: "Chocolate" %>
               </div>
             </button>
@@ -427,7 +427,7 @@
             <button class="craving-btn" data-craving="sweet-doughnut" data-action="click->symptom#toggleCravings"
                     aria-pressed="<%= sel %>" aria-label="Doughnut craving"
                     style="opacity:<%= sel ? 1 : 0.35 %>;transform:scale(<%= sel ? 1.08 : 1 %>);filter:<%= sel ? '' : 'grayscale(0.6)' %>;">
-              <div class="w-14 h-14 flex items-center justify-center">
+              <div class="w-[65px] h-[65px] flex items-center justify-center">
                 <%= image_tag "cravings/doughnut.svg", alt: "Doughnut with sprinkles" %>
               </div>
             </button>
@@ -435,7 +435,7 @@
             <button class="craving-btn" data-craving="sweet-donut" data-action="click->symptom#toggleCravings"
                     aria-pressed="<%= sel %>" aria-label="Donut craving"
                     style="opacity:<%= sel ? 1 : 0.35 %>;transform:scale(<%= sel ? 1.08 : 1 %>);filter:<%= sel ? '' : 'grayscale(0.6)' %>;">
-              <div class="w-14 h-14 flex items-center justify-center">
+              <div class="w-[65px] h-[65px] flex items-center justify-center">
                 <%= image_tag "cravings/donut.png", alt: "Donut" %>
               </div>
             </button>
@@ -446,7 +446,7 @@
             <button class="craving-btn" data-craving="carbs-macarons" data-action="click->symptom#toggleCravings"
                     aria-pressed="<%= sel %>" aria-label="Macarons craving"
                     style="opacity:<%= sel ? 1 : 0.35 %>;transform:scale(<%= sel ? 1.08 : 1 %>);filter:<%= sel ? '' : 'grayscale(0.6)' %>;">
-              <div class="w-14 h-14 flex items-center justify-center">
+              <div class="w-[65px] h-[65px] flex items-center justify-center">
                 <%= image_tag "cravings/macarons.svg", alt: "Macarons" %>
               </div>
             </button>
@@ -454,7 +454,7 @@
             <button class="craving-btn" data-craving="carbs-snacks" data-action="click->symptom#toggleCravings"
                     aria-pressed="<%= sel %>" aria-label="Snacks craving"
                     style="opacity:<%= sel ? 1 : 0.35 %>;transform:scale(<%= sel ? 1.08 : 1 %>);filter:<%= sel ? '' : 'grayscale(0.6)' %>;">
-              <div class="w-14 h-14 flex items-center justify-center">
+              <div class="w-[65px] h-[65px] flex items-center justify-center">
                 <%= image_tag "cravings/snacks.png", alt: "Snacks" %>
               </div>
             </button>
@@ -462,7 +462,7 @@
             <button class="craving-btn" data-craving="carbs-noodles" data-action="click->symptom#toggleCravings"
                     aria-pressed="<%= sel %>" aria-label="Noodles craving"
                     style="opacity:<%= sel ? 1 : 0.35 %>;transform:scale(<%= sel ? 1.08 : 1 %>);filter:<%= sel ? '' : 'grayscale(0.6)' %>;">
-              <div class="w-14 h-14 flex items-center justify-center">
+              <div class="w-[65px] h-[65px] flex items-center justify-center">
                 <%= image_tag "cravings/noodles.svg", alt: "Noodles" %>
               </div>
             </button>
