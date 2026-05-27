@@ -16,23 +16,13 @@ class SessionsController < ApplicationController
 
     if @user&.valid_password?(params[:password])
       unless @user.confirmed?
-        if turbo_native_app?
-          render json: {error: "unconfirmed"}, status: :unprocessable_content
-        else
-          @error_type = :unconfirmed
-          @user = User.new
-          render :new, status: :unprocessable_content
-        end
+        @error_type = :unconfirmed
+        @user = User.new
+        render :new, status: :unprocessable_content
         return
       end
       login @user
-      if turbo_native_app?
-        render json: respond_with_token(@user), status: :ok
-      else
-        redirect_to after_sign_in_path
-      end
-    elsif turbo_native_app?
-      render json: {error: email.present? ? "wrong_password" : "wrong_email"}, status: :unauthorized
+      redirect_to after_sign_in_path
     else
       @error_type = email.present? ? :wrong_password : :wrong_email
       @user = User.new
@@ -46,13 +36,6 @@ class SessionsController < ApplicationController
   end
 
   private
-
-  def respond_with_token(user)
-    {
-      turbo_native_token: user.native_auth_token,
-      user: {id: user.id, email: user.email, name: user.name}
-    }
-  end
 
   def rate_limited
     flash.now[:alert] = t(".too_many_attempts")
