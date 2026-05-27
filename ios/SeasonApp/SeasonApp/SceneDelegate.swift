@@ -4,9 +4,11 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
 
+    private lazy var navigationController = UINavigationController()
     private lazy var tabBarController = HotwireTabBarController(
         navigatorDelegate: self
     )
+    private var usingTabs = false
 
     func scene(
         _ scene: UIScene,
@@ -15,24 +17,32 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     ) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
 
-        window = UIWindow(windowScene: windowScene)
-        window?.rootViewController = tabBarController
-        window?.makeKeyAndVisible()
+        navigationController.setNavigationBarHidden(true, animated: false)
+        let welcome = VisitableViewController(url: baseURL)
+        navigationController.viewControllers = [welcome]
 
-        tabBarController.load(HotwireTab.all)
-        tabBarController.tabBar.isHidden = true
+        window = UIWindow(windowScene: windowScene)
+        window?.rootViewController = navigationController
+        window?.makeKeyAndVisible()
     }
 
-    private func isAuthURL(_ url: URL) -> Bool {
-        let path = url.path
-        return path == "/" ||
-            path.hasPrefix("/welcome") ||
-            path.hasPrefix("/session") ||
-            path.hasPrefix("/registration") ||
-            path.hasPrefix("/onboarding") ||
-            path.hasPrefix("/password") ||
-            path.hasPrefix("/users") ||
-            path.hasPrefix("/invite")
+    private func switchToTabs() {
+        guard !usingTabs else { return }
+        usingTabs = true
+        tabBarController.load(HotwireTab.all)
+        window?.rootViewController = tabBarController
+    }
+
+    private func isAuthenticatedPath(_ path: String) -> Bool {
+        return path.hasPrefix("/calendar") ||
+            path.hasPrefix("/tracking") ||
+            path.hasPrefix("/daily") ||
+            path.hasPrefix("/symptoms") ||
+            path.hasPrefix("/superpowers") ||
+            path.hasPrefix("/settings") ||
+            path.hasPrefix("/account") ||
+            path.hasPrefix("/informations") ||
+            path.hasPrefix("/feedback")
     }
 }
 
@@ -44,9 +54,8 @@ extension SceneDelegate: NavigatorDelegate {
         guard let host = proposal.url.host else { return .accept }
 
         if host == baseURL.host || host.hasSuffix(".onrender.com") || host.hasSuffix(".season.vision") {
-            let hide = isAuthURL(proposal.url)
-            DispatchQueue.main.async {
-                self.tabBarController.tabBar.isHidden = hide
+            if isAuthenticatedPath(proposal.url.path) {
+                switchToTabs()
             }
             return .accept
         }
