@@ -21,6 +21,39 @@
   temperature_done  = @log.temperature.present?
   weight_done       = @log.weight.present?
   notes_done        = @log.notes.present?
+
+  # Pre-submit review modal data
+  severity_labels = ["", "low", "medium", "high"]
+  physical_items = (@log.physical_symptoms || {}).select { |_, v| v.to_i > 0 }
+  mental_items   = (@log.mental_symptoms || {}).select { |_, v| v.to_i > 0 }
+  phys_labels    = SymptomLog::PHYSICAL_SYMPTOMS.each_with_object({}) { |s, h| h[s[:key]] = s[:label] }
+  ment_labels    = SymptomLog::MENTAL_SYMPTOMS.each_with_object({}) { |s, h| h[s[:key]] = s[:label] }
+
+  # Mood names
+  mood_names = (@log.moods || []).map { |m| m.to_s.humanize }
+
+  # Intercourse labels
+  intercourse_labels = {
+    'keiner' => 'None', 'ungeschuetzt' => 'Unprotected', 'geschuetzt' => 'Protected',
+    'orgasmus' => 'Orgasm', 'kein-orgasmus' => 'No orgasm', 'masturbation' => 'Masturbation'
+  }
+  intercourse_selected = intercourse_list.map { |t| intercourse_labels[t] || t }
+
+  # Cravings labels
+  craving_labels = {
+    'fatty-fried' => 'Fatty & fried', 'salty-food' => 'Salty food', 'bread-noodles' => 'Bread & noodles',
+    'chocolate' => 'Chocolate', 'sugar' => 'Sugar drinks & food'
+  }
+  cravings_selected = cravings_list.map { |c| craving_labels[c] || c }
+
+  # Total symptom count
+  total_symptoms = mood_names.size + physical_items.size + mental_items.size
+  total_symptoms += 1 if discharge_done || bleeding_done
+  total_symptoms += intercourse_selected.size if intercourse_done
+  total_symptoms += cravings_selected.size if cravings_done
+  total_symptoms += 1 if sleep_done
+  total_symptoms += 1 if temperature_done
+  total_symptoms += 1 if weight_done
 %>
 <% content_for(:page_title) { "My Symptoms" } %>
 <% content_for(:header_dark) { "true" } %>
@@ -583,12 +616,92 @@
     </details>
 
     <%# Submit %>
-    <div class="pt-6 pb-8">
-      <%= link_to tracking_index_path,
-            class: "block w-full text-white text-center rounded-lg py-4 text-xl font-medium tracking-wide font-['Montserrat']",
-            style: "background:#{phase_colour}; text-decoration:none;" do %>
+    <div class="pt-6 pb-8" data-controller="submit-modal">
+      <button type="button" data-action="click->submit-modal#open"
+              class="block w-full text-white text-center rounded-lg py-4 text-xl font-medium tracking-wide font-['Montserrat'] border-0 cursor-pointer"
+              style="background:<%= phase_colour %>;">
         Submit
-      <% end %>
+      </button>
+
+      <%# ── Pre-submit review modal ─────────────────────────────────────── %>
+      <div class="hidden fixed inset-0 z-[100] flex items-start justify-center bg-black/40"
+           data-submit-modal-target="modal"
+           data-action="click->submit-modal#overlayClick">
+        <div class="relative bg-white rounded-[29px] mx-4 mt-8" style="width:351px; max-width:calc(100vw - 32px);">
+          <%# Close button %>
+          <button data-action="click->submit-modal#close" aria-label="Close"
+                  class="absolute top-3 right-3 w-[37px] h-[37px] flex items-center justify-center rounded-full rotate-45 border-0 bg-transparent cursor-pointer"
+                  style="color:#A43600;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#933a35" stroke-width="3">
+              <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+          </button>
+
+          <%# Title %>
+          <p class="text-brand-primary font-medium text-[22px] text-center pt-8 pb-2 leading-tight font-['Montserrat']">My Symptoms</p>
+          <div class="mx-[30px] border-t border-brand-field mb-4"></div>
+
+          <%# Count %>
+          <% if total_symptoms > 0 %>
+            <p class="text-brand-primary font-medium text-base tracking-[0.03em] px-[25px] mb-3 font-['Montserrat']"><%= total_symptoms %> symptoms selected</p>
+          <% end %>
+
+          <%# Scrollable list %>
+          <div class="mx-[15px] bg-brand-field/50 rounded-[30px] py-3 px-4 mb-5" style="max-height:280px; overflow-y:auto;">
+
+            <%# Mood %>
+            <% if mood_done %>
+              <p class="text-brand-primary font-medium text-base tracking-[0.03em] font-['Montserrat'] mb-1">Mood (<%= mood_names.size %>)</p>
+              <p class="text-brand-muted font-medium text-sm tracking-[0.03em] font-['Montserrat'] mb-3"><%= mood_names.join(", ") %></p>
+            <% end %>
+
+            <%# Physical %>
+            <% if physical_done %>
+              <p class="text-brand-primary font-medium text-base tracking-[0.03em] font-['Montserrat'] mb-1">Physical (<%= physical_items.size %>)</p>
+              <% physical_items.each do |key, val| %>
+                <p class="text-brand-muted font-medium text-sm tracking-[0.03em] font-['Montserrat'] ml-2 mb-0.5"><%= phys_labels[key] || key %> → <%= severity_labels[val.to_i]&.capitalize %></p>
+              <% end %>
+              <div class="mb-3"></div>
+            <% end %>
+
+            <%# Mental %>
+            <% if mental_done %>
+              <p class="text-brand-primary font-medium text-base tracking-[0.03em] font-['Montserrat'] mb-1">Mental (<%= mental_items.size %>)</p>
+              <% mental_items.each do |key, val| %>
+                <p class="text-brand-muted font-medium text-sm tracking-[0.03em] font-['Montserrat'] ml-2 mb-0.5"><%= ment_labels[key] || key %> → <%= severity_labels[val.to_i]&.capitalize %></p>
+              <% end %>
+              <div class="mb-3"></div>
+            <% end %>
+
+            <%# Other sections (compact) %>
+            <% other_parts = [] %>
+            <% other_parts << "#{discharge_label}: #{@log.bleeding.presence || @log.discharge}" if discharge_done || bleeding_done %>
+            <% other_parts << "Intercourse: #{intercourse_selected.join(', ')}" if intercourse_done %>
+            <% other_parts << "Cravings: #{cravings_selected.join(', ')}" if cravings_done %>
+            <% other_parts << "Sleep: #{@log.sleep}h" if sleep_done %>
+            <% other_parts << "Temperature: #{@log.temperature}°C" if temperature_done %>
+            <% other_parts << "Weight: #{@log.weight} kg" if weight_done %>
+            <% if other_parts.any? %>
+              <p class="text-brand-primary font-medium text-base tracking-[0.03em] font-['Montserrat'] mb-2">Other</p>
+              <% other_parts.each do |part| %>
+                <p class="text-brand-muted font-medium text-sm tracking-[0.03em] font-['Montserrat'] ml-2 mb-0.5"><%= part %></p>
+              <% end %>
+            <% end %>
+
+            <% if total_symptoms == 0 %>
+              <p class="text-brand-muted text-center text-sm font-medium font-['Montserrat'] py-6">No symptoms selected yet.</p>
+            <% end %>
+          </div>
+
+          <%# Buttons %>
+          <%= link_to "Submit tracking", tracking_index_path,
+                class: "block mx-[25px] text-center bg-brand-primary text-white rounded-lg py-[14px] text-base font-medium tracking-[0.03em] font-['Montserrat'] no-underline mb-3" %>
+          <button data-action="click->submit-modal#close"
+                  class="block w-full text-center text-brand-primary text-base font-medium tracking-[0.03em] font-['Montserrat'] pb-6 border-0 bg-transparent cursor-pointer">
+            Go back to change
+          </button>
+        </div>
+      </div>
     </div>
 
   </div>
