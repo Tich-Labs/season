@@ -1,5 +1,6 @@
 <% content_for(:page_title) { "Self Analysis" } %>
-<% content_for(:header_color) { "#ffffff" } %>
+<% content_for(:header_dark) { "true" } %>
+<% content_for(:header_color) { @meta.dig(:colour) || "#933a35" } %>
 
 <%
   def arc_path(cx, cy, r_out, r_in, start_deg, end_deg)

@@ -74,10 +74,7 @@
             </svg>
             <span class="text-white text-2xl font-medium font-['Montserrat']">Settings</span>
           <% else %>
-            <span class="<%= hdr_fg %> text-xl font-medium tracking-wide font-['Montserrat']">Season</span>
-            <% if content_for?(:header_center_dropdown) %>
-              <%= yield(:header_center_dropdown) %>
-            <% end %>
+            <%# No page title set — leave empty %>
           <% end %>
         </div>
 
