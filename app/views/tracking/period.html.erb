@@ -1,10 +1,6 @@
 <% editing = @existing.present? %>
-<% content_for(:page_title) { editing ? "Edit Period" : "Log Period" } %>
-<% content_for(:header_left) do %>
-  <a href="/tracking" class="text-brand-primary text-sm font-medium no-underline p-2">
-    &lt; back
-  </a>
-<% end %>
+<% content_for(:page_title) { "Track my period" } %>
+<% content_for(:header_color) { @phase_col } %>
 
 <%
   today      = Time.zone.today
@@ -15,86 +11,106 @@
   grid_days += Array.new((7 - grid_days.size % 7) % 7, nil)
   prev_month = @month.prev_month
   next_month = @month.next_month
+
+  # Active period bar — highlight period days in this month
+  period_start = @existing
+  period_end   = period_start ? period_start + 4.days : nil
+  period_days  = if period_start && period_start.month == @month.month
+    (period_start..[period_end, last_day].min).to_a
+  else
+    []
+  end
+  period_labels = period_days.map { |d| d.day.to_s }
 %>
 
-<div class="bg-brand-background min-h-screen pb-20">
+<div class="bg-white min-h-screen pb-20">
   <div class="max-w-app mx-auto">
 
-    <%# ── Phase-coloured header ── %>
-    <div class="p-6 pb-5" style="background:<%= @phase_col %>;">
-      <p class="text-white/80 text-xs font-medium uppercase tracking-wider m-0 mb-1">
-        <%= editing ? "Edit period start" : "When did your period start?" %>
+    <%# ── Greeting ─────────────────────────────────────────────────────── %>
+    <div class="pt-8 pb-2 px-4">
+      <p class="text-brand-primary italic font-medium text-[36px] leading-[44px] font-['Montserrat'] m-0">
+        Hello <%= current_user.name&.split&.first || "there" %>
       </p>
-      <p class="text-white text-2xl font-bold m-0 leading-tight">
-        <%= @selected.strftime("%B %-d, %Y") %>
+      <p class="text-brand-primary font-light text-2xl leading-[29px] font-['Montserrat'] m-0 mt-1">
+        This is your month
       </p>
     </div>
 
-    <%# ── Month navigation ── %>
-    <div class="bg-white flex items-center justify-between p-3.5 border-b border-brand-field">
-      <%= link_to "/tracking/period?date=#{prev_month}",
+    <%# ── Month navigation ─────────────────────────────────────────────── %>
+    <div class="flex items-center justify-center gap-4 pt-2 pb-4 px-4">
+      <%= link_to period_tracking_index_path(date: prev_month),
             class: "flex items-center justify-center w-9 h-9 rounded-full bg-brand-field no-underline" do %>
-        <svg width="18" height="18" fill="none" stroke="#933a35" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6" /></svg>
+        <svg width="16" height="16" fill="none" stroke="#933a35" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6" /></svg>
       <% end %>
-      <span class="font-bold text-base text-brand-dark"><%= @month.strftime("%B %Y") %></span>
-      <%= link_to "/tracking/period?date=#{next_month}",
+      <span class="font-medium text-base text-brand-primary font-['Montserrat'] tracking-[0.07em]"><%= @month.strftime("%B") %></span>
+      <%= link_to period_tracking_index_path(date: next_month),
             class: "flex items-center justify-center w-9 h-9 rounded-full bg-brand-field no-underline" do %>
-        <svg width="18" height="18" fill="none" stroke="#933a35" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6" /></svg>
+        <svg width="16" height="16" fill="none" stroke="#933a35" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6" /></svg>
       <% end %>
     </div>
 
-    <%# ── Weekday headers ── %>
-    <div class="bg-white grid grid-cols-7 p-3 pb-1">
-      <% %w[Mo Tu We Th Fr Sa Su].each do |d| %>
-        <div class="text-center text-xs font-semibold text-brand-secondary"><%= d %></div>
-      <% end %>
-    </div>
+    <%# ── Active period indicator bar ──────────────────────────────────── %>
+    <% if period_days.any? %>
+      <div class="px-4 mb-4">
+        <div class="relative h-[11px] bg-brand-field rounded-sm flex items-center">
+          <%
+            first_period = period_days.first
+            period_offset = first_period.day - 1
+            period_width_pct = (period_days.size.to_f / last_day.day * 100).round(1)
+          %>
+          <div class="absolute h-full bg-brand-primary rounded-sm"
+               style="left:<%= (period_offset.to_f / last_day.day * 100).round(1) %>%; width:<%= period_width_pct %>%;">
+            <div class="flex justify-around h-full items-center">
+              <% period_labels.each do |label| %>
+                <span class="text-[10px] font-medium text-[#EDE1D5] font-['Montserrat'] leading-none"><%= label %></span>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
 
-    <%# ── Calendar grid (each day is a link) ── %>
-    <div class="bg-white p-1 pb-4 px-2">
-      <div class="grid grid-cols-7 gap-y-0">
-        <% grid_days.each do |day| %>
-          <% if day.nil? %>
-            <div></div>
-          <% else %>
-            <%
-              is_selected = day == @selected
-              is_today    = day == today
-              is_future   = day > today
-              cell_bg     = is_selected ? @phase_col : (is_today ? "#EDE1D5" : "transparent")
-              text_col    = is_selected ? "#FFFFFF"  : (is_future ? "#AFAFAF" : "#3d2b28")
-              fw          = (is_selected || is_today) ? "700" : "400"
-            %>
-            <% if is_future %>
-              <div class="flex items-center justify-center h-10 w-10 mx-auto rounded-full text-sm" style="background:<%= cell_bg %>; color:<%= text_col %>; font-weight:<%= fw %>;">
-                <%= day.day %>
-              </div>
-            <% else %>
-              <a href="/tracking/period?selected_date=<%= day %>" data-turbo="false"
-                 class="flex items-center justify-center h-10 w-10 mx-auto rounded-full text-sm no-underline" style="background:<%= cell_bg %>; color:<%= text_col %>; font-weight:<%= fw %>;">
-                <%= day.day %>
-              </a>
+    <%# ── Calendar rows ────────────────────────────────────────────────── %>
+    <div class="px-4">
+      <% grid_days.each_slice(7).each do |week| %>
+        <div class="h-[11px] bg-brand-field rounded-sm mb-3 flex items-center relative">
+          <% week.each_with_index do |day, idx| %>
+            <% if day %>
+              <%
+                is_period_day = period_days.include?(day)
+                is_selected   = day == @selected
+                is_today      = day == today
+                is_future     = day > today
+                day_bg = is_selected ? @phase_col : (is_period_day ? '#933a35' : (is_today ? '#933a35' : 'transparent'))
+                day_opacity = is_period_day || is_today ? '1' : '0'
+              %>
+              <% unless is_future %>
+                <a href="<%= period_tracking_index_path(selected_date: day) %>" data-turbo="false"
+                   class="absolute flex items-center justify-center no-underline"
+                   style="left:<%= (idx.to_f / 7 * 100).round(1) %>%; width:<%= (100.0 / 7).round(1) %>%; height:11px;">
+                </a>
+              <% end %>
             <% end %>
           <% end %>
-        <% end %>
-      </div>
+        </div>
+      <% end %>
     </div>
 
-    <%# ── Selected date summary + Save button ── %>
-    <div class="m-4 bg-white rounded-2xl p-5">
-      <p class="text-xs font-semibold text-brand-dark m-0 mb-1">Period start date</p>
-      <p class="text-base font-bold m-0 mb-1.5" style="color:<%= @phase_col %>;">
-        <%= @selected.strftime("%A, %-d %B %Y") %>
+    <%# ── Selected date + Submit ───────────────────────────────────────── %>
+    <div class="px-4 pt-6">
+      <p class="text-brand-primary font-normal text-base text-center font-['Montserrat'] tracking-[0.07em] m-0 mb-1">
+        <%= @selected.strftime("%-d %B") %>
       </p>
-      <p class="text-xs text-brand-secondary m-0">Tap any past date to select it, then save.</p>
-    </div>
+      <p class="text-brand-primary font-light text-2xl text-center font-['Montserrat'] m-0 mb-6">
+        <%= @selected.strftime("%A") %>
+      </p>
 
-    <% btn_text = editing ? "Update period start" : "Save period start" %>
-    <div class="px-4">
-      <a href="/tracking/period?save=1&date=<%= @selected %>" data-turbo="false"
-         class="block text-center no-underline text-white rounded-xl p-4 text-base font-semibold" style="background:<%= @phase_col %>;">
-        <%= btn_text %>
+      <a href="<%= period_tracking_index_path(save: 1, date: @selected) %>" data-turbo="false"
+         class="block w-[253px] mx-auto text-center no-underline text-white rounded-lg py-4 text-2xl font-medium font-['Montserrat']"
+         style="background:#933a35;">
+        Submit
       </a>
     </div>
+
   </div>
 </div>
