@@ -1,5 +1,6 @@
 class Admin::BaseController < ApplicationController
   layout "admin"
+  skip_onboarding_requirement
   before_action :require_admin, :set_inbox_stats
 
   private
