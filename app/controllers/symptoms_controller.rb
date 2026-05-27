@@ -59,7 +59,7 @@ class SymptomsController < ApplicationController
       symptom_log: [
         :date, :mood, :mood_text, :energy, :sleep, :physical,
         :mental, :pain, :cravings, :discharge, :notes,
-        :sexual_intercourse, :temperature, :weight,
+        :sexual_intercourse, :intercourse_tags, :temperature, :weight,
         {moods: []}
       ]
     )

@@ -13,7 +13,8 @@
   mental_done       = @log.any_mental_symptom?
   discharge_done    = @log.discharge.present?
   bleeding_done     = @log.bleeding.present?
-  intercourse_done  = @log.sexual_intercourse?
+  intercourse_list = @log.intercourse_tags.present? ? @log.intercourse_tags.split(',').reject(&:blank?) : []
+  intercourse_done  = intercourse_list.any?
   cravings_list    = @log.cravings.present? ? @log.cravings.split(',').reject { |c| c.blank? || c.match?(/\A\d+\z/) } : []
   cravings_done     = cravings_list.any?
   sleep_done        = @log.sleep.present?
@@ -31,6 +32,7 @@
      data-date="<%= @date %>"
      data-active-moods="<%= (@log.moods || []).to_json %>"
      data-active-cravings="<%= cravings_list.to_json %>"
+     data-active-intercourse="<%= intercourse_list.to_json %>"
      data-phase-color="<%= phase_colour %>">
 
   <%# ── Date picker drum ──────────────────────────────────────────────── %>
@@ -278,33 +280,84 @@
       </div>
     </details>
 
-     <%# 5. Sexual intercourse %>
-    <div class="border-b border-brand-field py-4 flex justify-between items-center intercourse-row">
-      <div class="flex items-center gap-3">
-        <svg class="shrink-0" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-             fill="none" stroke="<%= phase_colour %>" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
-          <polyline points="9 18 15 12 9 6" />
-        </svg>
-        <span class="font-medium text-[22px] tracking-[0.66px]" style="color:<%= phase_colour %>;">Sexual Intercourse</span>
-      </div>
-      <%
-        tog_on = @log.sexual_intercourse?
-        tog_bg = tog_on ? phase_colour : "#EDE1D5"
-        tog_tx = tog_on ? "translate-x-5" : "translate-x-0"
-      %>
-      <span class="intercourse-check" style="display:<%= intercourse_done ? '' : 'none' %>;"><%= render 'symptoms/bi_check', colour: phase_colour %></span>
-      <label class="relative inline-flex items-center cursor-pointer" aria-label="Sexual intercourse">
-        <input type="checkbox" class="sr-only"
-               data-action="change->symptom#toggleCheckbox"
-               data-field="sexual_intercourse"
-               <%= tog_on ? "checked" : "" %>>
-        <div class="relative w-11 h-6 rounded-full transition-colors duration-200 toggle-bg"
-             style="background:<%= tog_bg %>;">
-          <span class="absolute top-[2px] left-[2px] w-5 h-5 bg-white rounded-full
-                       shadow transition-transform duration-200 <%= tog_tx %> toggle-knob"></span>
+    <%# 5. Sexual intercourse %>
+    <details class="group border-b border-brand-field" id="section-intercourse">
+      <summary class="flex items-center justify-between py-4 cursor-pointer list-none [&::-webkit-details-marker]:hidden select-none">
+        <div class="flex items-center gap-3">
+          <svg class="transition-transform duration-200 group-open:rotate-90 shrink-0"
+               xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+               fill="none" stroke="<%= phase_colour %>" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+            <polyline points="9 18 15 12 9 6" />
+          </svg>
+          <span class="font-medium text-[22px] tracking-[0.66px]" style="color:<%= phase_colour %>;">Sexual Intercourse</span>
         </div>
-      </label>
-    </div>
+        <span id="section-intercourse-check" style="display:<%= intercourse_done ? '' : 'none' %>"><%= render 'symptoms/bi_check', colour: phase_colour %></span>
+      </summary>
+      <div class="pb-5">
+        <div class="flex justify-around text-center mb-3">
+          <span class="flex-1 text-brand-primary font-medium text-sm tracking-[0.07em]">None</span>
+          <span class="flex-1 text-brand-primary font-medium text-sm tracking-[0.07em]">Unprotected</span>
+          <span class="flex-1 text-brand-primary font-medium text-sm tracking-[0.07em]">Protected</span>
+        </div>
+        <div class="flex justify-around mb-4">
+          <% sel = intercourse_list.include?('keiner') %>
+          <button class="craving-btn" data-intercourse="keiner" data-action="click->symptom#toggleIntercourse"
+                  aria-pressed="<%= sel %>" aria-label="No intercourse"
+                  style="opacity:<%= sel ? 1 : 0.35 %>;transform:scale(<%= sel ? 1.08 : 1 %>);filter:<%= sel ? '' : 'grayscale(0.6)' %>;">
+            <div class="w-14 h-14 flex items-center justify-center">
+              <%= image_tag "sexual_intercourse/Keiner.png", alt: "No intercourse" %>
+            </div>
+          </button>
+          <% sel = intercourse_list.include?('ungeschuetzt') %>
+          <button class="craving-btn" data-intercourse="ungeschuetzt" data-action="click->symptom#toggleIntercourse"
+                  aria-pressed="<%= sel %>" aria-label="Unprotected intercourse"
+                  style="opacity:<%= sel ? 1 : 0.35 %>;transform:scale(<%= sel ? 1.08 : 1 %>);filter:<%= sel ? '' : 'grayscale(0.6)' %>;">
+            <div class="w-14 h-14 flex items-center justify-center">
+              <%= image_tag "sexual_intercourse/Ungeschützt.png", alt: "Unprotected" %>
+            </div>
+          </button>
+          <% sel = intercourse_list.include?('geschuetzt') %>
+          <button class="craving-btn" data-intercourse="geschuetzt" data-action="click->symptom#toggleIntercourse"
+                  aria-pressed="<%= sel %>" aria-label="Protected intercourse"
+                  style="opacity:<%= sel ? 1 : 0.35 %>;transform:scale(<%= sel ? 1.08 : 1 %>);filter:<%= sel ? '' : 'grayscale(0.6)' %>;">
+            <div class="w-14 h-14 flex items-center justify-center">
+              <%= image_tag "sexual_intercourse/Geschützt.png", alt: "Protected" %>
+            </div>
+          </button>
+        </div>
+        <div class="flex justify-around text-center mb-3">
+          <span class="flex-1 text-brand-primary font-medium text-sm tracking-[0.07em]">Orgasm</span>
+          <span class="flex-1 text-brand-primary font-medium text-sm tracking-[0.07em]">No Orgasm</span>
+          <span class="flex-1 text-brand-primary font-medium text-sm tracking-[0.07em]">Masturbation</span>
+        </div>
+        <div class="flex justify-around">
+          <% sel = intercourse_list.include?('orgasmus') %>
+          <button class="craving-btn" data-intercourse="orgasmus" data-action="click->symptom#toggleIntercourse"
+                  aria-pressed="<%= sel %>" aria-label="Orgasm"
+                  style="opacity:<%= sel ? 1 : 0.35 %>;transform:scale(<%= sel ? 1.08 : 1 %>);filter:<%= sel ? '' : 'grayscale(0.6)' %>;">
+            <div class="w-14 h-14 flex items-center justify-center">
+              <%= image_tag "sexual_intercourse/Orgasmus.png", alt: "Orgasm" %>
+            </div>
+          </button>
+          <% sel = intercourse_list.include?('kein-orgasmus') %>
+          <button class="craving-btn" data-intercourse="kein-orgasmus" data-action="click->symptom#toggleIntercourse"
+                  aria-pressed="<%= sel %>" aria-label="No orgasm"
+                  style="opacity:<%= sel ? 1 : 0.35 %>;transform:scale(<%= sel ? 1.08 : 1 %>);filter:<%= sel ? '' : 'grayscale(0.6)' %>;">
+            <div class="w-14 h-14 flex items-center justify-center">
+              <%= image_tag "sexual_intercourse/Kein-Orgasmus.png", alt: "No orgasm" %>
+            </div>
+          </button>
+          <% sel = intercourse_list.include?('masturbation') %>
+          <button class="craving-btn" data-intercourse="masturbation" data-action="click->symptom#toggleIntercourse"
+                  aria-pressed="<%= sel %>" aria-label="Masturbation"
+                  style="opacity:<%= sel ? 1 : 0.35 %>;transform:scale(<%= sel ? 1.08 : 1 %>);filter:<%= sel ? '' : 'grayscale(0.6)' %>;">
+            <div class="w-14 h-14 flex items-center justify-center">
+              <%= image_tag "sexual_intercourse/Group 431.png", alt: "Vibrator / Masturbation" %>
+            </div>
+          </button>
+        </div>
+      </div>
+    </details>
 
     <%# 6. Cravings %>
     <details class="group border-b border-brand-field" id="section-cravings">

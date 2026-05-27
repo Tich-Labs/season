@@ -11,6 +11,7 @@ export default class extends Controller {
   #debounceTimer = null
   #activeMoods = []
   #activeCravings = []
+  #activeIntercourse = []
 
   connect () {
     this.element.querySelectorAll('.symptom-slider').forEach(slider => {
@@ -20,6 +21,8 @@ export default class extends Controller {
     this.#applyMoodVisuals()
     this.#activeCravings = JSON.parse(this.element.dataset.activeCravings || '[]')
     this.#applyCravingVisuals()
+    this.#activeIntercourse = JSON.parse(this.element.dataset.activeIntercourse || '[]')
+    this.#applyIntercourseVisuals()
   }
 
   toggleCheckbox (event) {
@@ -99,6 +102,33 @@ export default class extends Controller {
   #applyCravingVisuals () {
     this.element.querySelectorAll('[data-craving]').forEach(btn => {
       const selected = this.#activeCravings.includes(btn.dataset.craving)
+      btn.style.opacity = selected ? '1' : '0.35'
+      btn.style.transform = selected ? 'scale(1.08)' : 'scale(1)'
+      btn.setAttribute('aria-pressed', selected.toString())
+      btn.style.filter = selected ? '' : 'grayscale(0.6)'
+    })
+  }
+
+  toggleIntercourse (event) {
+    const btn = event.currentTarget
+    const tag = btn.dataset.intercourse
+    const checkEl = document.getElementById('section-intercourse-check')
+
+    if (this.#activeIntercourse.includes(tag)) {
+      this.#activeIntercourse = this.#activeIntercourse.filter(t => t !== tag)
+    } else {
+      this.#activeIntercourse.push(tag)
+    }
+
+    this.#debouncedSave({ intercourse_tags: this.#activeIntercourse.join(',') })
+    this.#applyIntercourseVisuals()
+
+    if (checkEl) { checkEl.style.display = this.#activeIntercourse.length > 0 ? '' : 'none' }
+  }
+
+  #applyIntercourseVisuals () {
+    this.element.querySelectorAll('[data-intercourse]').forEach(btn => {
+      const selected = this.#activeIntercourse.includes(btn.dataset.intercourse)
       btn.style.opacity = selected ? '1' : '0.35'
       btn.style.transform = selected ? 'scale(1.08)' : 'scale(1)'
       btn.setAttribute('aria-pressed', selected.toString())

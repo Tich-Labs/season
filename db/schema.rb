@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_27_134911) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_27_210340) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -170,6 +170,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_27_134911) do
     t.date "date", null: false
     t.integer "discharge"
     t.integer "energy"
+    t.string "intercourse_tags"
     t.integer "mental"
     t.jsonb "mental_symptoms", default: {}, null: false
     t.integer "mood"
