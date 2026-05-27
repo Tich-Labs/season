@@ -42,6 +42,10 @@ module.exports = {
       minWidth: {
         20: '5rem' // 80px
       },
+      minHeight: {
+        dvh: '100dvh',
+        svh: '100svh'
+      },
       lineHeight: {
         11: '2.75rem' // 44px (same as w-11)
       }
