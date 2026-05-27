@@ -642,59 +642,15 @@
           <div class="mx-[30px] border-t border-brand-field mb-4"></div>
 
           <%# Count %>
-          <% if total_symptoms > 0 %>
-            <p class="text-brand-primary font-medium text-base tracking-[0.03em] px-[25px] mb-3 font-['Montserrat']"><%= total_symptoms %> symptoms selected</p>
-          <% end %>
+          <p data-submit-modal-target="count"
+             class="text-brand-primary font-medium text-base tracking-[0.03em] px-[25px] mb-3 font-['Montserrat']"></p>
 
-          <%# Scrollable list %>
+          <%# Scrollable list — populated dynamically by JS %>
           <div class="mx-[15px] bg-brand-field/50 rounded-[30px] py-3 px-4 mb-5" style="max-height:280px; overflow-y:auto;">
-
-            <%# Mood %>
-            <% if mood_done %>
-              <p class="text-brand-primary font-medium text-base tracking-[0.03em] font-['Montserrat'] mb-1">Mood (<%= mood_names.size %>)</p>
-              <p class="text-brand-muted font-medium text-sm tracking-[0.03em] font-['Montserrat'] mb-3"><%= mood_names.join(", ") %></p>
-            <% end %>
-
-            <%# Physical %>
-            <% if physical_done %>
-              <p class="text-brand-primary font-medium text-base tracking-[0.03em] font-['Montserrat'] mb-1">Physical (<%= physical_items.size %>)</p>
-              <% physical_items.each do |key, val| %>
-                <p class="text-brand-muted font-medium text-sm tracking-[0.03em] font-['Montserrat'] ml-2 mb-0.5"><%= phys_labels[key] || key %> → <%= severity_labels[val.to_i]&.capitalize %></p>
-              <% end %>
-              <div class="mb-3"></div>
-            <% end %>
-
-            <%# Mental %>
-            <% if mental_done %>
-              <p class="text-brand-primary font-medium text-base tracking-[0.03em] font-['Montserrat'] mb-1">Mental (<%= mental_items.size %>)</p>
-              <% mental_items.each do |key, val| %>
-                <p class="text-brand-muted font-medium text-sm tracking-[0.03em] font-['Montserrat'] ml-2 mb-0.5"><%= ment_labels[key] || key %> → <%= severity_labels[val.to_i]&.capitalize %></p>
-              <% end %>
-              <div class="mb-3"></div>
-            <% end %>
-
-            <%# Other sections (compact) %>
-            <% other_parts = [] %>
-            <% if bleeding_done %>
-              <% other_parts << "Bleeding: #{@log.bleeding}" %>
-            <% elsif discharge_done %>
-              <% other_parts << "Discharge: #{@log.discharge.to_s.humanize}" %>
-            <% end %>
-            <% other_parts << "Intercourse: #{intercourse_selected.join(', ')}" if intercourse_done %>
-            <% other_parts << "Cravings: #{cravings_selected.join(', ')}" if cravings_done %>
-            <% other_parts << "Sleep: #{@log.sleep}h" if sleep_done %>
-            <% other_parts << "Temperature: #{@log.temperature}°C" if temperature_done %>
-            <% other_parts << "Weight: #{@log.weight} kg" if weight_done %>
-            <% if other_parts.any? %>
-              <p class="text-brand-primary font-medium text-base tracking-[0.03em] font-['Montserrat'] mb-2">Other</p>
-              <% other_parts.each do |part| %>
-                <p class="text-brand-muted font-medium text-sm tracking-[0.03em] font-['Montserrat'] ml-2 mb-0.5"><%= part %></p>
-              <% end %>
-            <% end %>
-
-            <% if total_symptoms == 0 %>
-              <p class="text-brand-muted text-center text-sm font-medium font-['Montserrat'] py-6">No symptoms selected yet.</p>
-            <% end %>
+            <div data-submit-modal-target="mood"></div>
+            <div data-submit-modal-target="physical"></div>
+            <div data-submit-modal-target="mental"></div>
+            <div data-submit-modal-target="other"></div>
           </div>
 
           <%# Buttons %>

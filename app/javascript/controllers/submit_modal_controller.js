@@ -1,9 +1,12 @@
 import { Controller } from '@hotwired/stimulus'
 
+const LEVELS = ['', 'Low', 'Medium', 'High']
+
 export default class extends Controller {
-  static targets = ['modal']
+  static targets = ['modal', 'count', 'mood', 'physical', 'mental', 'other']
 
   open () {
+    this.#populate()
     this.modalTarget.classList.remove('hidden')
   }
 
@@ -11,8 +14,111 @@ export default class extends Controller {
     this.modalTarget.classList.add('hidden')
   }
 
-  // Close on overlay click
   overlayClick (e) {
     if (e.target === this.modalTarget) this.close()
+  }
+
+  // ── private ──────────────────────────────────────────────────────────
+
+  #populate () {
+    const root = document.querySelector('[data-controller~="symptom"]')
+    if (!root) return
+
+    // Moods
+    const moods = JSON.parse(root.dataset.activeMoods || '[]')
+    if (this.hasMoodTarget) {
+      this.moodTarget.innerHTML = moods.length > 0
+        ? `<p class="text-brand-primary font-medium text-base tracking-[0.03em] font-['Montserrat'] mb-1">Mood (${moods.length})</p>
+           <p class="text-brand-muted font-medium text-sm tracking-[0.03em] font-['Montserrat'] mb-3">${moods.map(m => m.charAt(0).toUpperCase() + m.slice(1)).join(', ')}</p>`
+        : ''
+    }
+
+    // Physical symptoms
+    const physical = this.#gatherSliders('physical')
+    if (this.hasPhysicalTarget) {
+      this.physicalTarget.innerHTML = physical.length > 0
+        ? `<p class="text-brand-primary font-medium text-base tracking-[0.03em] font-['Montserrat'] mb-1">Physical (${physical.length})</p>
+           ${physical.map(p => `<p class="text-brand-muted font-medium text-sm tracking-[0.03em] font-['Montserrat'] ml-2 mb-0.5">${p.label} → ${p.level}</p>`).join('')}
+           <div class="mb-3"></div>`
+        : ''
+    }
+
+    // Mental symptoms
+    const mental = this.#gatherSliders('mental')
+    if (this.hasMentalTarget) {
+      this.mentalTarget.innerHTML = mental.length > 0
+        ? `<p class="text-brand-primary font-medium text-base tracking-[0.03em] font-['Montserrat'] mb-1">Mental (${mental.length})</p>
+           ${mental.map(p => `<p class="text-brand-muted font-medium text-sm tracking-[0.03em] font-['Montserrat'] ml-2 mb-0.5">${p.label} → ${p.level}</p>`).join('')}
+           <div class="mb-3"></div>`
+        : ''
+    }
+
+    // Other sections
+    const other = []
+    const bleedingBtn = root.querySelector('[data-flow][aria-pressed="true"]')
+    if (bleedingBtn) other.push('Bleeding: ' + bleedingBtn.dataset.flow)
+    const dischargeBtn = root.querySelector('[data-discharge][aria-pressed="true"]')
+    if (dischargeBtn) {
+      const key = dischargeBtn.dataset.discharge
+      other.push('Discharge: ' + key.charAt(0).toUpperCase() + key.slice(1).replace(/-/g, ' '))
+    }
+
+    const intercourse = JSON.parse(root.dataset.activeIntercourse || '[]')
+    if (intercourse.length > 0) {
+      const labels = { keiner: 'None', ungeschuetzt: 'Unprotected', geschuetzt: 'Protected', orgasmus: 'Orgasm', 'kein-orgasmus': 'No orgasm', masturbation: 'Masturbation' }
+      other.push('Intercourse: ' + intercourse.map(t => labels[t] || t).join(', '))
+    }
+
+    const cravings = JSON.parse(root.dataset.activeCravings || '[]')
+    if (cravings.length > 0) {
+      const labels = { 'fatty-fried': 'Fatty & fried', 'salty-food': 'Salty food', 'bread-noodles': 'Bread & noodles', chocolate: 'Chocolate', sugar: 'Sugar drinks & food' }
+      other.push('Cravings: ' + cravings.map(c => labels[c] || c).join(', '))
+    }
+
+    const sleepVal = root.querySelector('[data-vertical-picker-field-value="sleep"]')
+    if (sleepVal) {
+      const v = sleepVal.closest('[data-controller~="vertical-picker"]')?.querySelector('[data-vertical-picker-target="display"]')?.textContent
+      if (v && v !== '0h') other.push('Sleep: ' + v)
+    }
+
+    const tempVal = root.querySelector('[data-vertical-picker-field-value="temperature"]')
+    if (tempVal) {
+      const v = tempVal.closest('[data-controller~="vertical-picker"]')?.querySelector('[data-vertical-picker-target="display"]')?.textContent
+      if (v && !v.startsWith('0')) other.push('Temperature: ' + v)
+    }
+
+    const weightVal = root.querySelector('[data-vertical-picker-field-value="weight"]')
+    if (weightVal) {
+      const v = weightVal.closest('[data-controller~="vertical-picker"]')?.querySelector('[data-vertical-picker-target="display"]')?.textContent
+      if (v && !v.startsWith('0')) other.push('Weight: ' + v)
+    }
+
+    if (this.hasOtherTarget) {
+      this.otherTarget.innerHTML = other.length > 0
+        ? `<p class="text-brand-primary font-medium text-base tracking-[0.03em] font-['Montserrat'] mb-2">Other</p>
+           ${other.map(o => `<p class="text-brand-muted font-medium text-sm tracking-[0.03em] font-['Montserrat'] ml-2 mb-0.5">${o}</p>`).join('')}`
+        : ''
+    }
+
+    // Total count
+    const total = moods.length + physical.length + mental.length + other.length
+    if (this.hasCountTarget) {
+      this.countTarget.textContent = total > 0 ? `${total} symptoms selected` : ''
+    }
+  }
+
+  #gatherSliders (section) {
+    const items = []
+    const sectionEl = document.getElementById('section-' + section)
+    if (!sectionEl) return items
+    sectionEl.querySelectorAll('.symptom-slider').forEach(slider => {
+      const v = parseInt(slider.value)
+      if (v > 0) {
+        const row = slider.closest('.symptom-row')
+        const labelEl = row?.querySelector('span:first-child')
+        items.push({ label: labelEl?.textContent || '', level: LEVELS[v] })
+      }
+    })
+    return items
   }
 }
