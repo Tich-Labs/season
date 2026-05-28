@@ -5,6 +5,7 @@ class ForecastController < ApplicationController
     @phase = current_user.current_phase || "menstrual"
     @phase_colour = CycleDayContent.phase_colour(@cycle_day)
     @cards = CycleDayContent.for_forecast(@cycle_day)
+    @events = current_user.calendar_events.where(date: @selected_date).order(:start_time)
     @has_tracking = current_user.last_period_start.present?
   end
 end
