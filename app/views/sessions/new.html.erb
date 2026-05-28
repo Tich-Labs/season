@@ -54,7 +54,7 @@
 
   <!-- Form -->
   <div class="w-full">
-    <%= form_with url: session_path, method: :post do |f| %>
+    <%= form_with url: session_path, method: :post, local: true do |f| %>
 
       <!-- Email -->
       <div class="mt-[29px]">

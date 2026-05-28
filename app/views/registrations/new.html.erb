@@ -60,7 +60,7 @@
 
   <!-- Form -->
   <div class="w-full">
-    <%= form_with url: registration_path, method: :post do |f| %>
+    <%= form_with url: registration_path, method: :post, local: true do |f| %>
 
       <% has_errors = @user.present? && @user.errors.any? %>
 
