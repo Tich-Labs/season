@@ -13,12 +13,19 @@ class User < ApplicationRecord
   has_many :superpower_logs, dependent: :destroy
   has_many :reminders, dependent: :destroy
   has_many :feedbacks, dependent: :destroy
+  has_many :weekly_feedback_responses, dependent: :destroy
   has_many :user_consents, dependent: :destroy
   has_many :push_subscriptions, dependent: :destroy
   has_many :webauthn_credentials, dependent: :destroy
   has_one :streak, dependent: :destroy
 
   has_secure_token :native_auth_token
+
+  def current_feedback_week
+    return nil if created_at.nil?
+    week = ((Time.current - created_at) / 7.days).ceil.clamp(1, 8)
+    (week > 8) ? nil : week
+  end
 
   def valid_native_auth_token?
     native_auth_token.present?

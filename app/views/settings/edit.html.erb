@@ -136,5 +136,20 @@
       </div>
     </div>
 
+    <%# Logout — use button_to for reliable DELETE on iOS %>
+    <%= button_to session_path, method: :delete,
+          form: { style: "margin-top:16px;margin-bottom:8px;" },
+          style: "display:flex;align-items:center;justify-content:center;gap:8px;padding:16px;background:#FFFFFF;border:2px solid #933A35;border-radius:8px;width:100%;cursor:pointer;color:#933A35;font-size:16px;font-weight:700;" do %>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#933A35" stroke-width="2.5">
+        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+        <polyline points="16 17 21 12 16 7" />
+        <line x1="21" y1="12" x2="9" y2="12" />
+      </svg>
+      Log out
+    <% end %>
+
+    <%# Render support modal inline for iOS Turbo Native modal compatibility %>
+    <%= render "shared/support_modal" %>
+
   </div>
 </div>

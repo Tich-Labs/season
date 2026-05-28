@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_27_235513) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_28_132429) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -288,6 +288,33 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_27_235513) do
     t.index ["user_id"], name: "index_webauthn_credentials_on_user_id"
   end
 
+  create_table "weekly_feedback_questions", force: :cascade do |t|
+    t.boolean "active", default: true, null: false
+    t.datetime "created_at", null: false
+    t.jsonb "options", default: []
+    t.integer "position", default: 0, null: false
+    t.text "question_text", null: false
+    t.string "question_type", null: false
+    t.datetime "updated_at", null: false
+    t.integer "week_number", null: false
+    t.index ["week_number", "position"], name: "index_weekly_feedback_questions_on_week_number_and_position"
+  end
+
+  create_table "weekly_feedback_responses", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.text "response_text"
+    t.string "selected_option"
+    t.string "submission_batch_id", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.integer "week_number", null: false
+    t.bigint "weekly_feedback_question_id", null: false
+    t.index ["submission_batch_id"], name: "index_weekly_feedback_responses_on_submission_batch_id"
+    t.index ["user_id", "week_number"], name: "index_weekly_feedback_responses_on_user_id_and_week_number"
+    t.index ["user_id"], name: "index_weekly_feedback_responses_on_user_id"
+    t.index ["weekly_feedback_question_id"], name: "index_weekly_feedback_responses_on_weekly_feedback_question_id"
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "calendar_events", "users"
@@ -301,4 +328,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_27_235513) do
   add_foreign_key "symptom_logs", "users"
   add_foreign_key "user_consents", "users"
   add_foreign_key "webauthn_credentials", "users"
+  add_foreign_key "weekly_feedback_responses", "users"
+  add_foreign_key "weekly_feedback_responses", "weekly_feedback_questions"
 end

@@ -1,0 +1,83 @@
+<%# Native top bar with overflow dropdown — iOS / Android standard pattern %>
+<div data-controller="native-top-bar"
+     style="position:fixed;top:0;left:0;right:0;z-index:50;max-width:430px;margin:0 auto;padding-top:env(safe-area-inset-top,0px);">
+
+  <%# Top bar %>
+  <div style="display:flex;align-items:center;justify-content:flex-end;height:44px;padding:0 16px;">
+    <button type="button"
+            data-action="click->native-top-bar#toggle"
+            aria-label="Menu"
+            style="background:none;border:none;cursor:pointer;padding:8px;display:flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="#933A35">
+        <circle cx="12" cy="5" r="2" />
+        <circle cx="12" cy="12" r="2" />
+        <circle cx="12" cy="19" r="2" />
+      </svg>
+    </button>
+  </div>
+
+  <%# Backdrop %>
+  <div data-native-top-bar-target="backdrop"
+       data-action="click->native-top-bar#backdropClick"
+       style="display:none;opacity:0;position:fixed;inset:0;background:rgba(0,0,0,0.3);z-index:51;transition:opacity 0.25s ease;"
+       aria-hidden="true"></div>
+
+  <%# Dropdown panel — slides from right %>
+  <div data-native-top-bar-target="dropdown"
+       style="display:none;transform:translateX(100%);position:fixed;top:0;right:0;max-width:430px;z-index:52;transition:transform 0.25s ease;"
+       aria-label="Navigation menu">
+
+    <div style="width:268px;margin-left:auto;background:#EDE1D5;border-radius:0 0 0 40px;padding:24px 20px 20px;box-shadow:-2px 4px 16px rgba(0,0,0,0.12);">
+
+      <div style="display:flex;justify-content:flex-end;margin-bottom:16px;">
+        <button type="button"
+                data-action="click->native-top-bar#close"
+                aria-label="Close menu"
+                style="background:none;border:none;cursor:pointer;padding:4px;min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#933A35" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+
+      <nav style="display:flex;flex-direction:column;gap:4px;">
+        <% today_str = Time.zone.today.iso8601 %>
+
+        <%= link_to "Schedule Overview", calendar_appointments_path,
+              class: "font-['Montserrat'] text-[22px] font-medium text-brand-primary no-underline py-3 px-2 tracking-[0.03em]",
+              style: "text-decoration:none;display:block;" %>
+
+        <div style="height:1px;background:rgba(147,58,53,0.15);margin:2px 0;"></div>
+
+        <%= link_to "Day View", daily_view_path(date: today_str),
+              class: "font-['Montserrat'] text-[22px] font-medium text-brand-primary no-underline py-3 px-2 tracking-[0.03em]",
+              style: "text-decoration:none;display:block;" %>
+
+        <div style="height:1px;background:rgba(147,58,53,0.15);margin:2px 0;"></div>
+
+        <%= link_to "Weekly View", calendar_weekly_path,
+              class: "font-['Montserrat'] text-[22px] font-medium text-brand-primary no-underline py-3 px-2 tracking-[0.03em]",
+              style: "text-decoration:none;display:block;" %>
+
+        <div style="height:1px;background:rgba(147,58,53,0.15);margin:2px 0;"></div>
+
+        <%= link_to "Monthly View", calendar_path,
+              class: "font-['Montserrat'] text-[22px] font-medium text-brand-primary no-underline py-3 px-2 tracking-[0.03em]",
+              style: "text-decoration:none;display:block;" %>
+
+        <div style="height:1px;background:rgba(147,58,53,0.15);margin:2px 0;"></div>
+
+        <%= link_to "Settings", edit_settings_path,
+              class: "font-['Montserrat'] text-[22px] font-medium text-brand-primary no-underline py-3 px-2 tracking-[0.03em]",
+              style: "text-decoration:none;display:block;" %>
+
+        <div style="height:1px;background:rgba(147,58,53,0.15);margin:2px 0;"></div>
+
+        <%= link_to "Log out", session_path, data: { turbo_method: :delete },
+              class: "font-['Montserrat'] text-[22px] font-medium text-brand-primary no-underline py-3 px-2 tracking-[0.03em]",
+              style: "text-decoration:none;display:block;" %>
+      </nav>
+    </div>
+  </div>
+</div>

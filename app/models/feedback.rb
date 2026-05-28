@@ -9,6 +9,10 @@ class Feedback < ApplicationRecord
   validates :message, presence: true
   validates :type, presence: true
 
+  def support_or_bug?
+    feedback_type_support? || feedback_type_bug_report?
+  end
+
   after_create_commit :forward_to_trello
 
   private

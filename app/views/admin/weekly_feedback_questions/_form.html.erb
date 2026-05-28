@@ -1,0 +1,52 @@
+<%= form_with model: [:admin, question], local: true do |f| %>
+  <div class="grid grid-cols-1 gap-6">
+    <% if question.errors.any? %>
+      <div class="rounded-2xl border border-red-200 bg-brand-error p-4 text-sm text-brand-error">
+        <p class="font-semibold">Please fix the following errors:</p>
+        <ul class="mt-2 list-disc pl-5 space-y-1">
+          <% question.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div>
+        <%= f.label :week_number, "Week", class: "block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2" %>
+        <%= f.select :week_number, (1..8).map { |w| ["Week #{w}", w] }, {}, class: "w-full bg-brand-field rounded-xl px-4 py-3 text-sm text-brand-dark border-0" %>
+      </div>
+      <div>
+        <%= f.label :question_type, "Type", class: "block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2" %>
+        <%= f.select :question_type, WeeklyFeedbackQuestion::QUESTION_TYPES.map { |t| [t.titleize, t] }, {}, class: "w-full bg-brand-field rounded-xl px-4 py-3 text-sm text-brand-dark border-0" %>
+      </div>
+      <div>
+        <%= f.label :position, "Order", class: "block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2" %>
+        <%= f.number_field :position, min: 0, class: "w-full bg-brand-field rounded-xl px-4 py-3 text-sm text-brand-dark border-0" %>
+      </div>
+    </div>
+
+    <div>
+      <%= f.label :question_text, "Question text", class: "block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2" %>
+      <%= f.text_area :question_text, rows: 3, placeholder: "Enter the question to display to users...", class: "w-full bg-brand-field rounded-xl px-4 py-3 text-sm text-brand-dark border-0" %>
+    </div>
+
+    <div class="rounded-3xl border border-gray-200 bg-white p-5" data-controller="weekly-feedback-form">
+      <p class="text-xs font-semibold uppercase tracking-[0.25em] text-gray-500 mb-4">Options (<span class="text-brand-primary">multiple choice only</span> — leave blank for other types)</p>
+      <div class="mb-2">
+        <p class="text-xs text-gray-400 mb-2">Enter one option per line. Minimum 3 options required for multiple choice.</p>
+        <%= f.text_area :options_text, rows: 5, value: question.options.is_a?(Array) ? question.options.join("\n") : "", placeholder: "Option 1\nOption 2\nOption 3\nOption 4\nOption 5", class: "w-full bg-brand-field rounded-xl px-4 py-3 text-sm text-brand-dark border-0 font-mono" %>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <%= f.check_box :active, class: "h-5 w-5 rounded border-gray-300 text-brand-primary focus:ring-brand-primary" %>
+      <%= f.label :active, "Active (visible to users)", class: "text-sm text-gray-700" %>
+    </div>
+
+    <div class="flex justify-end gap-3">
+      <%= link_to "Cancel", admin_weekly_feedback_questions_path, class: "px-4 py-2 rounded-xl bg-gray-100 text-gray-700 text-sm hover:bg-gray-200 transition-colors" %>
+      <%= f.submit question.persisted? ? "Save changes" : "Create question", class: "px-5 py-2 rounded-xl bg-brand-primary text-white text-sm font-semibold hover:bg-[#7a2f2a] transition-colors" %>
+    </div>
+  </div>
+<% end %>

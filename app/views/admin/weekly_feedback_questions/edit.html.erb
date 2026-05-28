@@ -1,0 +1,2 @@
+<% content_for :page_title, @question.persisted? ? "Edit Question" : "New Question" %>
+<%= render "form", question: @question %>

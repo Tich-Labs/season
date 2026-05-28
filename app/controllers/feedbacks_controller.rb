@@ -7,8 +7,9 @@ class FeedbacksController < ApplicationController
     if @feedback.save
       respond_to do |format|
         format.turbo_stream do
-          render turbo_stream: turbo_stream.replace("feedback-modal-container",
-            partial: "feedbacks/success")
+          container_id = @feedback.support_or_bug? ? "support-modal-container" : "feedback-modal-container"
+          partial = @feedback.support_or_bug? ? "feedbacks/support_success" : "feedbacks/success"
+          render turbo_stream: turbo_stream.replace(container_id, partial: partial)
         end
         format.html { redirect_to user_root_path, notice: t("feedback.create.thank_you") }
       end

@@ -141,6 +141,8 @@
 
     <% if is_authenticated_view && !turbo_native_app? %>
       <%= render "shared/feedback_modal" %>
+      <%= render "shared/support_modal" %>
+      <%= render "shared/weekly_feedback_modal" %>
       <%= render "shared/quick_actions" %>
     <% end %>
 

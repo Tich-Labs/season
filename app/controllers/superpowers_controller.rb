@@ -39,7 +39,7 @@ class SuperpowersController < ApplicationController
   end
 
   def create
-    ratings_params = params[:ratings] || {}
+    ratings_params = (params[:ratings] || {}).to_unsafe_h
     @log = current_user.superpower_logs.find_or_initialize_by(
       date: params[:date] || Time.zone.today
     )

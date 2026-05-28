@@ -28,12 +28,13 @@
         <%# Nav links %>
         <nav class="flex-1 px-3 py-4 space-y-1">
           <% users_active    = controller_name == "users" %>
-          <% content_active  = controller_name == "cycle_phase_contents" %>
+          <% content_active  = controller_name.in?(["cycle_phase_contents", "weekly_feedback_questions"]) %>
           <% signups_active  = controller_name == "launch_signups" %>
           <% inbox_active    = controller_name == "inbox" && action_name == "overview" %>
           <% feedback_active = controller_name == "inbox" && action_name == "feedback" %>
           <% bug_active      = controller_name == "inbox" && action_name == "bugs" %>
           <% support_active  = controller_name == "inbox" && action_name == "support" %>
+          <% weekly_active   = controller_name == "weekly_feedback_responses" %>
 
           <%= link_to admin_users_path,
               class: class_names("flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
@@ -54,9 +55,15 @@
             <div class="mt-2 ml-4 space-y-0.5">
               <%= link_to admin_cycle_phase_contents_path,
                   class: class_names("block px-3 py-2 rounded-lg text-sm font-medium transition-colors",
-                                     "bg-[#7a2f2a] text-white" => content_active,
-                                     "text-[#f5ede8] hover:bg-[#7a2f2a] hover:text-white" => !content_active) do %>
+                                     "bg-[#7a2f2a] text-white" => controller_name == "cycle_phase_contents",
+                                     "text-[#f5ede8] hover:bg-[#7a2f2a] hover:text-white" => controller_name != "cycle_phase_contents") do %>
                 Informations
+              <% end %>
+              <%= link_to admin_weekly_feedback_questions_path,
+                  class: class_names("block px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                                     "bg-[#7a2f2a] text-white" => controller_name == "weekly_feedback_questions",
+                                     "text-[#f5ede8] hover:bg-[#7a2f2a] hover:text-white" => controller_name != "weekly_feedback_questions") do %>
+                Weekly Feedback
               <% end %>
             </div>
           </details>
@@ -108,6 +115,14 @@
                                      "text-[#f5ede8] hover:bg-[#7a2f2a] hover:text-white" => !support_active) do %>
                 <span>Support</span>
                 <span class="text-xs opacity-60"><%= @stats[:support] %></span>
+              <% end %>
+
+              <%= link_to admin_weekly_feedback_responses_path,
+                  class: class_names("flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                                     "bg-[#7a2f2a] text-white" => weekly_active,
+                                     "text-[#f5ede8] hover:bg-[#7a2f2a] hover:text-white" => !weekly_active) do %>
+                <span>Weekly Feedback</span>
+                <span class="text-xs opacity-60"><%= WeeklyFeedbackResponse.count %></span>
               <% end %>
             </div>
           </div>

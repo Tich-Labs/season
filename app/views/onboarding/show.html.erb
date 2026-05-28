@@ -369,26 +369,22 @@
           <% end %>
           <div class="border-t border-brand-field"></div>
         </div>
-      <% end %>
-    </div>
 
-    <div class="w-full flex flex-col gap-2 mt-4 items-center">
-      <a href="#" id="cal-clear" class="text-center text-brand-primary text-sm hidden"><%= t('onboarding.step10.clear') %></a>
+        <a href="#" id="cal-clear" class="block text-center text-brand-primary text-sm hidden mt-4"><%= t('onboarding.step10.clear') %></a>
+
+        <button type="submit" id="cal-submit-btn"
+                class="w-full h-[52px] bg-brand-primary text-white rounded-lg text-[22px] font-medium tracking-[0.66px] hidden mt-2">
+          <%= t('onboarding.step10.submit') %>
+        </button>
+      <% end %>
 
       <%= form_with url: onboarding_path(10), method: :patch, id: "skip-period-form", local: true do |f| %>
         <%= f.hidden_field :skip_last_period, value: "1" %>
+        <button type="submit" id="cal-unsure-btn"
+                class="w-full h-[52px] bg-brand-primary text-white rounded-lg text-[22px] font-medium tracking-[0.66px] mt-2">
+          <%= t('onboarding.step10.unsure') %>
+        </button>
       <% end %>
-
-      <button id="cal-submit-btn"
-              onclick="document.getElementById('step10-form').submit()"
-              class="w-[322px] h-[52px] bg-brand-primary text-white rounded-lg text-[22px] font-medium tracking-[0.66px] hidden">
-        <%= t('onboarding.step10.submit') %>
-      </button>
-      <button id="cal-unsure-btn"
-              onclick="document.getElementById('skip-period-form').submit()"
-              class="w-[322px] h-[52px] bg-brand-primary text-white rounded-lg text-[22px] font-medium tracking-[0.66px]">
-        <%= t('onboarding.step10.unsure') %>
-      </button>
     </div>
 
   <%# ── Step 11: Cycle stage reminder ─────────────────────────────── %>

@@ -1,0 +1,14 @@
+Week <%= @response.week_number %> - <%= @question.question_type.titleize %>
+
+User: <%= @user.email %> (<%= @user.name || "No name" %>)
+Question: <%= @question.question_text %>
+
+<% if @response.selected_option.present? %>
+Answer: <%= @response.selected_option %>
+<% end %>
+<% if @response.response_text.present? %>
+Why/Details: <%= @response.response_text %>
+<% end %>
+
+Submitted: <%= @response.created_at.strftime("%Y-%m-%d %H:%M UTC") %>
+Batch: <%= @response.submission_batch_id %>

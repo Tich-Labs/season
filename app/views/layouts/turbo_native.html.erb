@@ -17,10 +17,16 @@
   </head>
   <body class="bg-brand-background font-['Montserrat'] antialiased h-full overflow-x-hidden"
         data-controller="native">
-    <main class="w-full flex-1">
+    <% if authenticated? %>
+      <%= render "shared/native_top_bar" %>
+    <% end %>
+    <main class="w-full flex-1" <%= 'style="padding-top:calc(44px + env(safe-area-inset-top,0px));"' if authenticated? %>>
       <div class="max-w-app mx-auto h-full">
         <%= yield %>
       </div>
     </main>
+    <%= render "shared/feedback_modal" %>
+    <%= render "shared/support_modal" %>
+    <%= render "shared/weekly_feedback_modal" %>
   </body>
 </html>

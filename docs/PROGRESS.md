@@ -1,7 +1,7 @@
 # Season Progress Tracking
 
-**Version:** 1.0 (2026-05-06)  
-**Updated:** 2026-05-18 19:00  
+**Version:** 1.1 (2026-05-28)  
+**Updated:** 2026-05-28  
 **Based on:** Codebase Chapters (ch01_00 - ch10_68)
 
 Update this file as you complete audit items. Check off items to track progress toward 100%.
@@ -80,6 +80,8 @@ Update this file as you complete audit items. Check off items to track progress 
 ### Completed ✅ (continued)
 - [x] **Google OAuth credentials on Render** (`GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`) ✅ 2026-05-08
 - [x] **Facebook OAuth credentials on Render** (`FACEBOOK_APP_ID`, `FACEBOOK_APP_SECRET`) ✅ 2026-05-08
+- [x] **iOS OAuth CSRF fix** — `config/initializers/omniauth.rb` monkey-patch handles both exceptions AND false returns from `valid_authenticity_token?` to fix silent OAuth redirect blocking on iOS Safari/WKWebView ✅ 2026-05-28
+- [x] **Onboarding step 10 fix** — submit buttons moved inside their `<form>` elements; iOS blocks `form.submit()` from outside a form ✅ 2026-05-28
 
 ### TODO (5% remaining)
 - [ ] **MEDIUM: Apple OAuth credentials on Render**
@@ -224,13 +226,24 @@ Update this file as you complete audit items. Check off items to track progress 
 
 ### Completed ✅
 - [x] Background jobs (Solid Queue)
-- [x] Job classes (SendMorningRemindersJob, etc.)
-- [x] Service objects (CycleCalculatorService)
+- [x] Job classes (SendMorningRemindersJob, SendWeeklyFeedbackNudgesJob, etc.)
+- [x] Service objects (CycleCalculatorService, PushNotificationService)
 - [x] Caching strategy (Solid Cache)
 - [x] Database indexes on foreign keys
 - [x] Calendar events CRUD
 - [x] Symptom/superpower tracking
 - [x] Streaks calculation
+- [x] **Weekly Feedback System (8-week survey)** ✅ 2026-05-28
+  - Admin CMS: `/admin/weekly_feedback_questions` — CRUD per week, 3 question types (multiple_choice, yes_no_with_input, text_only)
+  - Admin Responses view: `/admin/weekly_feedback_responses` — table + CSV export
+  - User modal: dynamic question rendering, submits via JSON API (`GET /weekly_feedback`, `POST /weekly_feedback/submit`)
+  - Nudge system: in-app banner on tracking page + push notification job (daily 10am)
+  - Week calculation: `User#current_feedback_week` via `((Time.now - created_at) / 7.days).ceil`
+  - Responses forward to Trello via `WeeklyFeedbackMailer`
+- [x] **Feedback modal split** ✅ 2026-05-28
+  - Three separate modals: Feedback (`_feedback_modal.html.erb`), Support + Bug (`_support_modal.html.erb`), Weekly Survey (`_weekly_feedback_modal.html.erb`)
+  - Separate Stimulus controllers, event names, and container IDs
+  - iOS Turbo Native layout now renders all three modals
 
 ### TODO (15% remaining)
 - [ ] **MEDIUM: Active Storage S3/R2** - Switch production from local disk
@@ -278,7 +291,7 @@ Update this file as you complete audit items. Check off items to track progress 
 
 ### Completed ✅
 - [x] Test framework configured (Minitest)
-- [x] 76 tests passing
+- [x] 166 tests passing, 0 failures (2026-05-28)
 - [x] Model tests (validations, associations)
 - [x] Controller tests (responses, redirects)
 - [x] Integration tests (user flows)
@@ -377,5 +390,5 @@ LOW Priority (Post-launch):
 
 ---
 
-**Last Updated:** 2026-05-18 19:30
+**Last Updated:** 2026-05-28
 **Next Review:** After remaining TODO items

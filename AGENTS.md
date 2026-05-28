@@ -6,7 +6,7 @@
 # Dev server
 bin/dev
 
-# Tests (166 passing)
+# Tests (166 passing, 0 failures)
 bin/rails test
 
 # Lint
@@ -39,10 +39,17 @@ npx standard app/javascript/controllers/          # JS lint
 - `omniauth-apple` gem needs `/* global requestAnimationFrame */` in JS controllers using rAF for CI `standard` lint
 - Apple OAuth: email only sent on first auth → use UID-first lookup for repeat sign-ins
 - Apple OAuth: `omniauth-rails_csrf_protection` v2.0.1 has Rails 8.1 compat issue → patched in `config/initializers/omniauth.rb`
+- Apple OAuth + Google OAuth on iOS: session cookie is frequently not sent with `button_to` form POSTs (Safari ITP / WKWebView behavior). The CSRF monkey-patch in `config/initializers/omniauth.rb` handles BOTH exceptions AND false returns from `valid_authenticity_token?` to prevent silent OAuth redirect blocking.
+- OAuth buttons use `button_to` with `data: { turbo: false }` — equivalent to `form_with local: true`. Do NOT change to Turbo-based submission.
 - `calc()` CSS requires spaces around `+` or iOS Safari ignores it: `calc(60px + env(...))` NOT `calc(60px+env(...))`
 - `font-['Montserrat']` Tailwind arbitrary values break ERB compiler when combined with inline `<%= %>` in same element → use `font-sans` instead (maps to Montserrat in Tailwind config)
 - Signup and login forms MUST use `local: true` on `form_with` — Turbo's Fetch-based submission conflicts with iOS Safari's cookie/CSRF handling
 - Seed data is automated via `render-build.sh` (`rails db:seed` after `db:prepare`) — uses `find_or_create_by!` so safe to re-run
+- Onboarding step 10 (period date): submit buttons MUST be inside their respective `<form>` elements. iOS Safari/WKWebView blocks `form.submit()` when called from a button outside the form. Use `<button type="submit">` inside the form, never `onclick="document.getElementById('...').submit()"`.
+- Weekly feedback modals: three separate modals exist — `_feedback_modal.html.erb` (general feedback), `_support_modal.html.erb` (support + bug), `_weekly_feedback_modal.html.erb` (8-week survey). Each has its own Stimulus controller and event name. Render all three in every authenticated layout.
+- `open_feedback_controller.js` uses dual approach for iOS reliability: **direct `container.style.display = 'flex'`** as primary mechanism, plus `CustomEvent` dispatch for the modal controller to set up type-specific UI (headings/placeholders). Do NOT rely on events alone — iOS WKWebView can lose event listeners across Turbo Native modal boundaries.
+- Feedback/support modals MUST also be rendered **inline in the pages that trigger them** (`settings/edit.html.erb`, `tracking/index.html.erb`) as a safeguard. iOS Turbo Native opens Settings as a separate WebView modal — if the modal partial is only in the layout, the button's event may not reach it.
+- Logout MUST use `button_to ... method: :delete` NOT `link_to data: { turbo_method: :delete }`. The `data-turbo-method` approach requires Turbo's JS handler; if it fails on iOS, the link 404s. `button_to` generates a proper HTML form that works without JS.
 
 ## iOS UX Best Practices
 
@@ -145,7 +152,7 @@ On Symptoms page, Submit button opens a review modal (`submit_modal_controller.j
 |---|---|---|
 | Welcome | ✅ | Social login, sign-up |
 | Sign In / Sign Up | ✅ | Google, Facebook, Apple OAuth |
-| Self Analysis (`/tracking`) | ✅ | Avatar, phase, cycle strip, daily analysis card, nav cards |
+| Self Analysis (`/tracking`) | ✅ | Avatar, phase, cycle strip, daily analysis card, nav cards, weekly feedback nudge banner |
 | My Symptoms (`/symptoms`) | ✅ | Date drum, mood icons, physical/mental sliders, bleeding drops, intercourse grid, cravings grid, discharge grid, sleep/temp/weight vertical pickers, notes, submit → review modal |
 | Superpowers (`/superpowers`) | ✅ | Date drum, phase label, 20 sliders (low/med/high), submit |
 | Track Period (`/tracking/period`) | ✅ | Greeting, month nav, period bar, horizontal calendar, submit |
@@ -153,6 +160,23 @@ On Symptoms page, Submit button opens a review modal (`submit_modal_controller.j
 | Calendar | ✅ | Cycle day grid |
 | PWA | ✅ | manifest.json, service-worker.js |
 | iOS Turbo Native | ✅ | Hotwire Native integration |
+
+## Weekly Feedback System (8-week survey)
+
+- **Admin CMS**: `/admin/weekly_feedback_questions` — create/edit/delete questions per week (1-8)
+  - 3 question types: `multiple_choice` (3-5 options), `yes_no_with_input` (Yes/No + Why text), `text_only`
+  - Reorder within a week via `position`, active/inactive toggle
+- **Admin Responses**: `/admin/weekly_feedback_responses` — table view + CSV export
+- **User Modal**: `_weekly_feedback_modal.html.erb` with `weekly_feedback_modal_controller.js`
+  - Fetches current week's questions via `GET /weekly_feedback`
+  - Submits answers via `POST /weekly_feedback/submit`
+  - Renders dynamic UI per question type (tap buttons, yes/no toggle, textarea)
+- **Week Calculation**: `User#current_feedback_week` — `((Time.now - created_at) / 7.days).ceil.clamp(1, 8)`
+- **Nudge System**:
+  - In-app banner on tracking page (green bar with week label)
+  - Push notification job (`SendWeeklyFeedbackNudgesJob`) — daily at 10am
+  - Controller: `weekly_feedback_nudge_controller.js`
+- **Forwarding**: Each response fires `WeeklyFeedbackMailer#summary` → Trello email
 
 ## iOS (Turbo Native)
 
@@ -169,6 +193,22 @@ On Symptoms page, Submit button opens a review modal (`submit_modal_controller.j
 - **Architecture**: Pure Hotwire Native — all views are server-rendered ERB. Navigator manages its own WebView internally. No direct WKWebView creation.
 - **No KeychainHelper / WKUserScript auth bridge** — not yet implemented
 - **xcodegen** requires Xcode 15.3+ (macOS 13+)
+
+### iOS Native Navigation
+
+- **Native top bar**: `_native_top_bar.html.erb` rendered in `turbo_native.html.erb` layout for authenticated pages. Provides a 3-dot (more_vert) icon on the right that opens a right-aligned dropdown menu.
+- **Dropdown contents** (22px Montserrat, brand-primary, with dividers):
+  1. Schedule Overview → `/calendar/appointments`
+  2. Day View → `/daily/:today`
+  3. Weekly View → `/calendar/weekly`
+  4. Monthly View → `/calendar`
+  5. Settings → `/settings/edit`
+  6. Log out → `DELETE /session` (`button_to`)
+- **Dropdown styling**: 268px wide, `#EDE1D5` background, `border-radius: 0 0 0 40px` (bottom-left rounded), shadow. Slides in from right with `transform: translateX` animation, 250ms. Semi-transparent backdrop.
+- **Controller**: `native_top_bar_controller.js` — toggle open/close, backdrop click to dismiss
+- **Touch targets**: 44×44px on both the trigger icon and the close button
+- **No hamburger menu on iOS** — hamburger menus are a deprecated anti-pattern on iOS/Android. The native tab bar (Calendar, Tracking, Settings) + this overflow dropdown provides equivalent navigation.
+- **Logout is also available**: at the bottom of the Settings page (always visible, no dropdown needed)
 
 ## Docs
 - Figma: `docs/figma_nodes.md`

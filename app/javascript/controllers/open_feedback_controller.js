@@ -1,14 +1,21 @@
 import { Controller } from '@hotwired/stimulus'
 
-// Dispatches a document-level event to open the feedback modal.
-// Usage: data-controller="open-feedback" data-open-feedback-type-value="feedback"
-//        data-action="click->open-feedback#open"
 export default class extends Controller {
   static values = { type: { type: String, default: 'feedback' } }
 
   open () {
+    const type = this.typeValue
+    const isSupport = type === 'support' || type === 'bug_report'
+    const containerId = isSupport ? 'support-modal-container' : 'feedback-modal-container'
+    const eventName = isSupport ? 'support-modal:open' : 'feedback-modal:open'
+
+    const container = document.getElementById(containerId)
+    if (container) {
+      container.style.display = 'flex'
+    }
+
     document.dispatchEvent(
-      new CustomEvent('feedback-modal:open', { detail: { type: this.typeValue } })
+      new CustomEvent(eventName, { detail: { type } })
     )
   }
 }

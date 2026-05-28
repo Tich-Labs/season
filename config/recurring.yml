@@ -19,3 +19,6 @@ production:
   cleanup_expired_invites:
     class: CleanupExpiredInvitesJob
     schedule: at 3am every day
+  weekly_feedback_nudges:
+    class: SendWeeklyFeedbackNudgesJob
+    schedule: at 10am every day

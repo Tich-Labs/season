@@ -80,6 +80,28 @@
       <% end %>
     </div>
 
+    <%# ── Weekly Feedback Nudge ────────────────────────────────────────── %>
+    <% feedback_week = current_user.current_feedback_week %>
+    <% if feedback_week && !current_user.weekly_feedback_responses.where(week_number: feedback_week).exists? %>
+      <div class="mb-4" data-controller="weekly-feedback-nudge">
+        <button type="button"
+                data-action="click->weekly-feedback-nudge#open"
+                class="w-full flex items-center gap-3 rounded-xl px-5 py-4 bg-brand-primary text-white cursor-pointer border-none text-left">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+          </svg>
+          <div class="flex-1">
+            <span class="block text-base font-semibold font-['Montserrat']">Week <%= feedback_week %> feedback</span>
+            <span class="block text-sm text-white/80">We'd love to hear how your week went</span>
+          </div>
+          <button type="button"
+                  data-action="click->weekly-feedback-nudge#dismiss;event.stopPropagation"
+                  class="bg-transparent border-none text-white/60 p-2 cursor-pointer text-lg leading-none"
+                  aria-label="Dismiss">&times;</button>
+        </button>
+      </div>
+    <% end %>
+
     <%# ── Daily Analysis card ──────────────────────────────────────────── %>
     <% if phase_label %>
       <%
@@ -193,3 +215,6 @@
 
   </div>
 </div>
+
+<%# Render feedback modal inline for iOS Turbo Native compatibility %>
+<%= render "shared/feedback_modal" %>

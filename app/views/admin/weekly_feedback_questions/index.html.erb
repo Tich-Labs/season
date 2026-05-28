@@ -1,0 +1,67 @@
+<% content_for :page_title, "Weekly Feedback" %>
+
+<div class="space-y-6">
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+    <div class="flex items-center justify-between gap-4 flex-wrap">
+      <div>
+        <h2 class="text-lg font-bold text-brand-primary">Weekly Feedback Questions</h2>
+        <p class="text-sm text-gray-500 mt-1">Manage the 8-week feedback survey questions. Each question is assigned to a specific week.</p>
+      </div>
+      <%= link_to "New question", new_admin_weekly_feedback_question_path, class: "inline-flex items-center px-4 py-2 rounded-xl bg-brand-primary text-white text-sm font-semibold hover:bg-[#7a2f2a] transition-colors" %>
+    </div>
+  </div>
+
+  <% @weeks.each do |week| %>
+    <% questions = @questions_by_week[week] || [] %>
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+      <div class="px-6 py-4 bg-brand-field/30 border-b border-gray-200">
+        <h3 class="text-base font-bold text-brand-primary">Week <%= week %><% if questions.empty? %> <span class="text-sm font-normal text-gray-500">(no questions)</span><% end %></h3>
+      </div>
+      <% if questions.any? %>
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">#</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Question</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Options</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+              <th class="px-6 py-3"></th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <% questions.each do |q| %>
+              <tr class="hover:bg-gray-50">
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><%= q.position %></td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium <%= q.question_type_multiple_choice? ? 'bg-blue-100 text-blue-700' : q.question_type_yes_no_with_input? ? 'bg-amber-100 text-amber-700' : 'bg-purple-100 text-purple-700' %>">
+                    <%= q.question_type.titleize %>
+                  </span>
+                </td>
+                <td class="px-6 py-4 text-sm text-gray-700 max-w-md"><%= q.question_text %></td>
+                <td class="px-6 py-4 text-sm text-gray-500 max-w-xs">
+                  <% if q.question_type_multiple_choice? && q.options.is_a?(Array) %>
+                    <%= q.options.join(", ") %>
+                  <% else %>
+                    <span class="text-gray-400">—</span>
+                  <% end %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium <%= q.active? ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500' %>">
+                    <%= q.active? ? "Active" : "Inactive" %>
+                  </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                  <div class="flex items-center justify-end gap-3">
+                    <%= link_to "Edit", edit_admin_weekly_feedback_question_path(q), class: "text-brand-primary hover:underline" %>
+                    <%= button_to "Delete", admin_weekly_feedback_question_path(q), method: :delete, data: { confirm: "Delete this question?" }, class: "text-sm text-brand-primary hover:underline bg-transparent border-0 p-0" %>
+                  </div>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      <% end %>
+    </div>
+  <% end %>
+</div>
