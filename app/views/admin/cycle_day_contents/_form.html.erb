@@ -1,0 +1,37 @@
+<% content_for(:page_title) { content.new_record? ? "New Content" : "Edit Day #{content.cycle_day}" } %>
+
+<div class="max-w-lg mx-auto px-4 py-6">
+  <h1 class="text-xl font-bold text-brand-primary mb-4">
+    <%= content.new_record? ? "New Cycle Day Content" : "Edit Day #{content.cycle_day} — #{content.card_type}" %>
+  </h1>
+
+  <%= form_with model: [:admin, content], local: true, class: "flex flex-col gap-4" do |f| %>
+    <div>
+      <%= f.label :cycle_day, "Day (1-35)", class: "block text-sm font-medium mb-1" %>
+      <%= f.number_field :cycle_day, in: 1..35, class: "w-full rounded-lg border border-brand-field px-3 py-2" %>
+    </div>
+
+    <div>
+      <%= f.label :card_type, class: "block text-sm font-medium mb-1" %>
+      <%= f.select :card_type, CycleDayContent::CARD_TYPES.map { |t| [t.humanize, t] }, {}, class: "w-full rounded-lg border border-brand-field px-3 py-2" %>
+    </div>
+
+    <div>
+      <%= f.label :short_text, class: "block text-sm font-medium mb-1" %>
+      <%= f.text_area :short_text, rows: 3, class: "w-full rounded-lg border border-brand-field px-3 py-2 text-sm" %>
+    </div>
+
+    <div>
+      <%= f.label :long_text, "Expandable Text", class: "block text-sm font-medium mb-1" %>
+      <%= f.text_area :long_text, rows: 8, class: "w-full rounded-lg border border-brand-field px-3 py-2 text-sm" %>
+    </div>
+
+    <div>
+      <%= f.label :food_items, "Food Items (JSON — nutrition cards only)", class: "block text-sm font-medium mb-1" %>
+      <p class="text-xs text-gray-500 mb-1">Format: [{"name":"Beets","description":"Provides iron..."},{"name":"Spinach","description":"..."}]</p>
+      <%= f.text_area :food_items, rows: 5, value: content.food_items.present? ? JSON.pretty_generate(content.food_items) : "", class: "w-full rounded-lg border border-brand-field px-3 py-2 text-xs font-mono" %>
+    </div>
+
+    <%= f.submit "Save", class: "bg-brand-primary text-white px-6 py-3 rounded-lg cursor-pointer" %>
+  <% end %>
+</div>

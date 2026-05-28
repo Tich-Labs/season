@@ -183,8 +183,11 @@ Rails.application.routes.draw do
     get "launch_signups", to: "launch_signups#index", as: :launch_signups
     get "launch_signups/export_csv", to: "launch_signups#export_csv", as: :launch_signups_export_csv
     resources :cycle_phase_contents, except: [:show]
+    resources :cycle_day_contents, except: [:show]
     root to: "users#index"
   end
+
+  get "forecast", to: "forecast#index", as: :forecast
 
   get "up" => "rails/health#show", :as => :rails_health_check
   get "ping" => ->(env) { [200, {"Content-Type" => "text/plain"}, ["OK"]] }
