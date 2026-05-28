@@ -40,6 +40,19 @@ npx standard app/javascript/controllers/          # JS lint
 - Apple OAuth: email only sent on first auth → use UID-first lookup for repeat sign-ins
 - Apple OAuth: `omniauth-rails_csrf_protection` v2.0.1 has Rails 8.1 compat issue → patched in `config/initializers/omniauth.rb`
 - `calc()` CSS requires spaces around `+` or iOS Safari ignores it: `calc(60px + env(...))` NOT `calc(60px+env(...))`
+- `font-['Montserrat']` Tailwind arbitrary values break ERB compiler when combined with inline `<%= %>` in same element → use `font-sans` instead (maps to Montserrat in Tailwind config)
+- Signup and login forms MUST use `local: true` on `form_with` — Turbo's Fetch-based submission conflicts with iOS Safari's cookie/CSRF handling
+- Seed data is automated via `render-build.sh` (`rails db:seed` after `db:prepare`) — uses `find_or_create_by!` so safe to re-run
+
+## iOS UX Best Practices
+
+- **Touch targets**: Minimum 44×44px (Apple HIG). Use `p-2` not `p-1` on buttons with small SVGs
+- **Input font-size**: Minimum 16px to prevent iOS Safari zoom. Never use `text-sm` (14px) on `<input>`, `<textarea>`, `<select>`
+- **Tap delay**: `touch-action: manipulation` set globally in `application.tailwind.css`
+- **Tap highlight**: `-webkit-tap-highlight-color: transparent` set globally
+- **Text selection**: `user-select: none` on buttons, summaries, `[data-action]` elements
+- **Slider thumbs**: Use `radial-gradient(circle at center, COLOR 10px, transparent 10px)` on a 44×44px thumb to increase hit area while keeping visible dot at 20px
+- **`min-h-screen` → `min-h-dvh`**: Always pair with `min-h-screen` as fallback for older iOS
 
 ## Asset Rules
 
@@ -136,6 +149,7 @@ On Symptoms page, Submit button opens a review modal (`submit_modal_controller.j
 | My Symptoms (`/symptoms`) | ✅ | Date drum, mood icons, physical/mental sliders, bleeding drops, intercourse grid, cravings grid, discharge grid, sleep/temp/weight vertical pickers, notes, submit → review modal |
 | Superpowers (`/superpowers`) | ✅ | Date drum, phase label, 20 sliders (low/med/high), submit |
 | Track Period (`/tracking/period`) | ✅ | Greeting, month nav, period bar, horizontal calendar, submit |
+| Forecast (`/forecast`) | ✅ | 2-tab view (appointments + forecast cards), phase-colored, modal detail, cycle-day content from seed data |
 | Calendar | ✅ | Cycle day grid |
 | PWA | ✅ | manifest.json, service-worker.js |
 | iOS Turbo Native | ✅ | Hotwire Native integration |
