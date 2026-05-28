@@ -1,3 +1,4 @@
+# rubocop:disable Rails/I18nLocaleTexts
 module Admin
   class CycleDayContentsController < Admin::BaseController
     before_action :set_content, only: [:edit, :update, :destroy]
@@ -46,3 +47,4 @@ module Admin
     end
   end
 end
+# rubocop:enable Rails/I18nLocaleTexts
