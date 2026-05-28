@@ -8,6 +8,7 @@ bundle exec rails tailwindcss:build
 bundle exec rails assets:precompile
 bundle exec rails assets:clean
 bundle exec rails db:prepare
+bundle exec rails db:seed
 
 # Migrate solid adapter databases explicitly.
 # db:prepare only migrates the primary database when all databases share
