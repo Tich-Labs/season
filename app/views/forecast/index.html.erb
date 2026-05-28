@@ -19,7 +19,7 @@
   pc = @phase_colour
 %>
 
-<div class="bg-brand-background min-h-screen pb-32">
+<div class="bg-brand-background min-h-screen pb-32" data-controller="forecast-modal">
   <div class="max-w-app mx-auto px-4">
 
     <%# ── Greeting ─────────────────────────────────────────────────────── %>
@@ -39,7 +39,7 @@
     </div>
 
     <%# ── Cards ────────────────────────────────────────────────────────── %>
-    <div class="flex flex-col gap-4" data-controller="forecast-modal">
+    <div class="flex flex-col gap-4">
       <% card_config.each do |card| %>
         <%
           content = @cards[card[:key]]
