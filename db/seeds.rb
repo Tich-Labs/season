@@ -82,3 +82,6 @@
 end
 
 Rails.logger.debug { "Seeded #{CyclePhaseContent.count} phase content records" }
+
+# Cycle day forecast content (35 days × 6 cards)
+require_relative "seeds/cycle_day_contents"
