@@ -22,6 +22,12 @@ class Admin::UsersController < Admin::BaseController
     @avg_cycle_length = calculate_avg_cycle_length
   end
 
+  def destroy
+    @user = User.find(params[:id])
+    @user.destroy!
+    redirect_to admin_users_path, notice: "User deleted." # rubocop:disable Rails/I18nLocaleTexts
+  end
+
   private
 
   def calculate_avg_cycle_length

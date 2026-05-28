@@ -1,10 +1,8 @@
 <% content_for(:page_title) { @selected_date.strftime("%-d %B") } %>
 <% content_for(:header_color) { @phase_colour } %>
 <% content_for(:header_left) do %>
-  <%= link_to user_root_path(date: @selected_date.to_s),
-        class: "text-white text-sm font-medium no-underline p-2 font-montserrat" do %>
-    &lt; Calendar
-  <% end %>
+  <%= link_to "&lt; Calendar".html_safe, user_root_path(date: @selected_date.to_s),
+        class: "text-white text-sm font-medium no-underline p-2 font-montserrat" %>
 <% end %>
 
 <%
@@ -89,9 +87,9 @@
           <p class="font-medium text-2xl leading-[29px] font-sans m-0 mb-8" style="color:<%= pc %>;">
             You haven't entered any appointments yet
           </p>
-          <%= link_to "Create appointment", new_calendar_event_path(date: @selected_date),
+              <%= link_to "Create appointment", new_calendar_event_path(date: @selected_date),
                 class: "inline-block w-[253px] rounded-lg py-[14px] text-white text-xl font-medium font-sans no-underline",
-                style: "background:<%= pc %>;" %>
+                style: "background:#{pc};" %>
         </div>
       <% end %>
     </div>
