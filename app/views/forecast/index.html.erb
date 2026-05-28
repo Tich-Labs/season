@@ -31,16 +31,16 @@
 
     <%# ── Greeting ─────────────────────────────────────────────────────── %>
     <div class="pt-8 pb-2">
-      <p class="italic font-medium text-[36px] leading-[44px] font-['Montserrat'] m-0" style="color:<%= pc %>;">
+      <p class="italic font-medium text-[36px] leading-[44px] font-sans m-0" style="color:<%= pc %>;">
         Hello <%= current_user.name&.split&.first || "there" %>
       </p>
-      <p class="font-medium text-2xl leading-[29px] font-['Montserrat'] m-0 mt-1" style="color:<%= pc %>;">
+      <p class="font-medium text-2xl leading-[29px] font-sans m-0 mt-1" style="color:<%= pc %>;">
         You are in your <%= phase_name %>
       </p>
     </div>
 
     <%# ── Dynamic label ────────────────────────────────────────────────── %>
-    <p data-forecast-tabs-target="label" class="text-brand-primary font-normal text-base font-['Montserrat'] m-0 mt-2">
+    <p data-forecast-tabs-target="label" class="text-brand-primary font-normal text-base font-sans m-0 mt-2">
       And this is your day:
     </p>
 
@@ -67,14 +67,14 @@
               <div class="flex items-start gap-3">
                 <span class="text-2xl">📅</span>
                 <div class="flex-1 min-w-0">
-                  <p class="font-medium text-base font-['Montserrat'] m-0" style="color:<%= pc %>;"><%= event.title %></p>
+                  <p class="font-medium text-base font-sans m-0" style="color:<%= pc %>;"><%= event.title %></p>
                   <% if event.start_time %>
-                    <p class="text-sm font-['Montserrat'] m-0 mt-1" style="color:<%= pc %>; opacity:0.7;">
+                    <p class="text-sm font-sans m-0 mt-1" style="color:<%= pc %>; opacity:0.7;">
                       <%= event.start_time.strftime("%H:%M") %><%= event.end_time ? " – #{event.end_time.strftime("%H:%M")}" : "" %>
                     </p>
                   <% end %>
                   <% if event.notes.present? %>
-                    <p class="text-sm font-['Montserrat'] m-0 mt-1" style="color:<%= pc %>; opacity:0.6;"><%= event.notes %></p>
+                    <p class="text-sm font-sans m-0 mt-1" style="color:<%= pc %>; opacity:0.6;"><%= event.notes %></p>
                   <% end %>
                 </div>
               </div>
@@ -86,11 +86,11 @@
           <div class="flex justify-center mb-6">
             <%= image_tag "avatars/no-appointments.png", alt: "No appointments", class: "w-[220px] h-[220px] object-contain" %>
           </div>
-          <p class="font-medium text-2xl leading-[29px] font-['Montserrat'] m-0 mb-8" style="color:<%= pc %>;">
+          <p class="font-medium text-2xl leading-[29px] font-sans m-0 mb-8" style="color:<%= pc %>;">
             You haven't entered any appointments yet
           </p>
           <%= link_to "Create appointment", new_calendar_event_path(date: @selected_date),
-                class: "inline-block w-[253px] rounded-lg py-[14px] text-white text-xl font-medium font-['Montserrat'] no-underline",
+                class: "inline-block w-[253px] rounded-lg py-[14px] text-white text-xl font-medium font-sans no-underline",
                 style: "background:<%= pc %>;" %>
         </div>
       <% end %>
@@ -112,10 +112,10 @@
             <div class="flex items-start gap-3">
               <span class="text-2xl"><%= card[:emoji] %></span>
               <div class="flex-1 min-w-0">
-                <p class="font-medium text-2xl leading-[29px] font-['Montserrat'] m-0" style="color:<%= pc %>;">
+                <p class="font-medium text-2xl leading-[29px] font-sans m-0" style="color:<%= pc %>;">
                   <%= card[:title] %>
                 </p>
-                <p class="text-sm leading-5 font-['Montserrat'] m-0 mt-2" style="color:<%= pc %>;">
+                <p class="text-sm leading-5 font-sans m-0 mt-2" style="color:<%= pc %>;">
                   <%= content&.short_text || "No content yet for this day." %>
                 </p>
               </div>
@@ -136,10 +136,10 @@
         <button data-action="click->forecast-modal#close" aria-label="Close"
                 class="absolute top-3 right-3 w-[44px] h-[44px] rounded-full flex items-center justify-center border-0 cursor-pointer"
                 style="background:#EDE1D5;">
-          <span class="text-2xl font-medium leading-none font-['Montserrat']" style="color:<%= pc %>;">&times;</span>
+          <span class="text-2xl font-medium leading-none font-sans" style="color:<%= pc %>;">&times;</span>
         </button>
-        <p data-forecast-modal-target="title" class="font-medium text-2xl text-center font-['Montserrat'] m-0 mb-4" style="color:<%= pc %>;"></p>
-        <div data-forecast-modal-target="body" class="text-base leading-5 text-center font-['Montserrat']" style="color:<%= pc %>;"></div>
+        <p data-forecast-modal-target="title" class="font-medium text-2xl text-center font-sans m-0 mb-4" style="color:<%= pc %>;"></p>
+        <div data-forecast-modal-target="body" class="text-base leading-5 text-center font-sans" style="color:<%= pc %>;"></div>
         <div data-forecast-modal-target="food" class="mt-4 flex flex-col gap-4"></div>
       </div>
     </div>
