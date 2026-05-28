@@ -111,8 +111,9 @@
 
     <%# Support %>
     <button type="button"
-            data-type="support"
-            data-action="click->feedback-modal#openWithType"
+            data-controller="open-feedback"
+            data-open-feedback-type-value="support"
+            data-action="click->open-feedback#open"
             style="display:flex; align-items:center; gap:16px; padding:16px; background:#899884; border-radius:8px; margin-top:8px; width:100%; border:none; cursor:pointer; text-align:left;">
       <%= vuesax_icon "message-question", size: 32, colour: "white" %>
       <div style="flex:1;">
