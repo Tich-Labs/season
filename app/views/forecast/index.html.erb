@@ -105,8 +105,8 @@
           %>
           <button data-action="click->forecast-modal#open"
                   data-forecast-modal-title="<%= card[:title] %>"
-                  data-forecast-modal-body="<%= h(content&.long_text || 'No content yet for this day.') %>"
-                  data-forecast-modal-food="<%= card[:key] == 'nutrition' && content&.food_items.present? ? h(content.food_items.to_json) : '' %>"
+                  data-forecast-modal-body="<%= content&.long_text&.gsub('"', '&quot;') || 'No content yet for this day.' %>"
+                  data-forecast-modal-food="<%= card[:key] == 'nutrition' && content&.food_items.present? ? content.food_items.to_json.gsub('"', '&quot;') : '' %>"
                   class="rounded-xl p-4 text-left w-full cursor-pointer hover:shadow-md transition-shadow border-0"
                   style="min-height:95px; background:<%= pc %>1A;">
             <div class="flex items-start gap-3">
