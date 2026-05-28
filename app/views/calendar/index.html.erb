@@ -8,7 +8,7 @@
 <% end %>
 <% content_for(:header_center_dropdown) do %>
   <div class="relative" id="view-dropdown" data-controller="calendar-index">
-    <button type="button" class="p-1" data-action="click->calendar-index#toggleDropdown">
+    <button type="button" class="p-2" data-action="click->calendar-index#toggleDropdown">
       <svg class="w-5 h-5 text-brand-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M6 9l6 6 6-6" />
       </svg>
@@ -96,10 +96,10 @@
             <span class="text-xs text-brand-secondary"><%= label %></span>
           </div>
         <% end %>
-        <button class="bg-none border-none cursor-pointer px-1"
+        <button class="bg-none border-none cursor-pointer p-2"
                 data-action="click->season-modal#open"
                 aria-label="Learn about your current phase">
-          <svg class="w-4 h-4 text-brand-secondary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+          <svg class="w-5 h-5 text-brand-secondary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
             <circle cx="12" cy="12" r="10" /><line x1="12" y1="16" x2="12" y2="12" /><line x1="12" y1="8" x2="12.01" y2="8" />
           </svg>
         </button>

@@ -11,6 +11,18 @@
     to { transform: rotate(360deg); }
   }
 
+  /* iOS Safari UX best practices */
+  button, a, input, select, textarea, [role="button"], .cursor-pointer, summary {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Prevent text selection on tappable elements */
+  button, summary, [role="button"], [data-action] {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
   /* Haptic press feedback for touch devices */
   @media (hover: none) and (pointer: coarse) {
     button:active, a:active, label:active, [role="button"]:active {
@@ -55,22 +67,20 @@
 }
 .symptom-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
-  width: 20px;
-  height: 20px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  background: #933a35;
+  background: radial-gradient(circle at center, #933a35 10px, transparent 10px);
   cursor: pointer;
-  margin-top: -5.5px;
-  box-shadow: 0 2px 6px rgba(147, 58, 53, 0.35);
+  margin-top: -17.5px;
 }
 .symptom-slider::-moz-range-thumb {
-  width: 20px;
-  height: 20px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  background: #933a35;
+  background: radial-gradient(circle at center, #933a35 10px, transparent 10px);
   cursor: pointer;
   border: none;
-  box-shadow: 0 2px 6px rgba(147, 58, 53, 0.35);
 }
 .symptom-slider::-webkit-slider-runnable-track {
   height: 9px;
