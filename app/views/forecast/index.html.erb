@@ -83,7 +83,18 @@
         </div>
       <% else %>
         <div class="text-center py-8">
-          <p class="font-['Montserrat'] m-0" style="color:<%= pc %>; opacity:0.5;">No appointments for this day.</p>
+          <div class="flex justify-center mb-6">
+            <div class="w-[120px] h-[120px] rounded-full bg-brand-field flex items-center justify-center">
+              <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="<%= pc %>" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 5v14M5 12h14" />
+              </svg>
+            </div>
+          </div>
+          <p class="font-medium text-lg font-['Montserrat'] m-0 mb-1" style="color:<%= pc %>;">No appointments yet</p>
+          <p class="text-sm font-['Montserrat'] m-0 mb-6" style="color:<%= pc %>; opacity:0.6;">Tap to add an appointment for this day</p>
+          <%= link_to "Create Appointment", new_calendar_event_path(date: @selected_date),
+                class: "inline-block rounded-lg px-8 py-3 text-white font-medium font-['Montserrat'] no-underline",
+                style: "background:<%= pc %>;" %>
         </div>
       <% end %>
     </div>
