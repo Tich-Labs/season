@@ -10,6 +10,7 @@
     { key: "nutrition",     title: "Nutrition",     emoji: "🥗" },
     { key: "fertility",     title: "Fertility",     emoji: "🌸" },
   ]
+  pc = @phase_colour
 %>
 
 <div class="bg-brand-background min-h-screen pb-32">
@@ -17,79 +18,65 @@
 
     <%# ── Greeting ─────────────────────────────────────────────────────── %>
     <div class="pt-8 pb-2">
-      <p class="text-brand-primary italic font-medium text-[36px] leading-[44px] font-['Montserrat'] m-0">
+      <p class="italic font-medium text-[36px] leading-[44px] font-['Montserrat'] m-0" style="color:<%= pc %>;">
         Hello <%= current_user.name&.split&.first || "there" %>
       </p>
-      <p class="text-brand-primary font-light text-2xl leading-[29px] font-['Montserrat'] m-0 mt-1" style="max-width:333px;">
+      <p class="font-light text-2xl leading-[29px] font-['Montserrat'] m-0 mt-1" style="color:<%= pc %>; max-width:333px;">
         <%= @selected_date.strftime("%-d %B %Y") %>
       </p>
     </div>
 
     <%# ── Section bar ──────────────────────────────────────────────────── %>
     <div class="flex gap-0 mt-4 mb-6 rounded-lg overflow-hidden" style="height:5px;">
-      <div class="h-full bg-brand-muted/20" style="width:<%= ((@cycle_day - 1).to_f / 35 * 100).round(1) %>%"></div>
-      <div class="h-full" style="width:<%= (100.0 / 35).round(1) %>%; background:<%= @phase_colour %>;"></div>
+      <div class="h-full" style="width:<%= ((@cycle_day - 1).to_f / 35 * 100).round(1) %>%; background:rgba(209,141,132,0.2);"></div>
+      <div class="h-full" style="width:<%= (100.0 / 35).round(1) %>%; background:<%= pc %>;"></div>
     </div>
 
-    <% if @has_tracking %>
-      <%# ── Cards ──────────────────────────────────────────────────────── %>
-      <div class="flex flex-col gap-4" data-controller="forecast-modal">
-        <% card_config.each do |card| %>
-          <%
-            content = @cards[card[:key]]
-            phase_name = case @cycle_day
-              when 1..7   then "menstrual"
-              when 8..14  then "follicular"
-              when 15..21 then "ovulation"
-              else             "luteal"
-              end
-          %>
-          <button data-action="click->forecast-modal#open"
-                  data-forecast-modal-title="<%= card[:title] %>"
-                  data-forecast-modal-body="<%= content&.long_text&.gsub('"', '&quot;') || 'No content yet for this day.' %>"
-                  data-forecast-modal-food="<%= card[:key] == 'nutrition' && content&.food_items.present? ? content.food_items.to_json.gsub('"', '&quot;') : '' %>"
-                  class="bg-white rounded-xl p-4 text-left w-full cursor-pointer hover:shadow-md transition-shadow"
-                  style="min-height:95px;">
-            <div class="flex items-start gap-3">
-              <span class="text-2xl"><%= card[:emoji] %></span>
-              <div class="flex-1 min-w-0">
-                <p class="text-brand-primary font-medium text-base font-['Montserrat'] m-0"><%= card[:title] %></p>
-                <p class="text-brand-secondary text-sm font-['Montserrat'] m-0 mt-1 leading-snug line-clamp-2">
-                  <%= content&.short_text || "Tap to see #{phase_name} phase #{card[:title].downcase}." %>
-                </p>
-              </div>
-              <svg class="shrink-0 mt-1" width="16" height="16" fill="none" stroke="#D18D84" stroke-width="2" viewBox="0 0 24 24">
-                <polyline points="9 18 15 12 9 6" />
-              </svg>
+    <%# ── Cards ────────────────────────────────────────────────────────── %>
+    <div class="flex flex-col gap-4" data-controller="forecast-modal">
+      <% card_config.each do |card| %>
+        <%
+          content = @cards[card[:key]]
+        %>
+        <button data-action="click->forecast-modal#open"
+                data-forecast-modal-title="<%= card[:title] %>"
+                data-forecast-modal-body="<%= content&.long_text&.gsub('"', '&quot;') || 'No content yet for this day.' %>"
+                data-forecast-modal-food="<%= card[:key] == 'nutrition' && content&.food_items.present? ? content.food_items.to_json.gsub('"', '&quot;') : '' %>"
+                class="rounded-xl p-4 text-left w-full cursor-pointer hover:shadow-md transition-shadow border-0"
+                style="min-height:95px; background:<%= pc %>1A;">
+          <div class="flex items-start gap-3">
+            <span class="text-2xl"><%= card[:emoji] %></span>
+            <div class="flex-1 min-w-0">
+              <p class="font-medium text-2xl leading-[29px] font-['Montserrat'] m-0" style="color:<%= pc %>;">
+                <%= card[:title] %>
+              </p>
+              <p class="text-sm leading-5 font-['Montserrat'] m-0 mt-2" style="color:<%= pc %>;">
+                <%= content&.short_text || "No content yet for this day." %>
+              </p>
             </div>
-          </button>
-        <% end %>
-      </div>
+            <svg class="shrink-0 mt-1" width="16" height="16" fill="none" stroke="<%= pc %>" stroke-width="2" viewBox="0 0 24 24">
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </div>
+        </button>
+      <% end %>
+    </div>
 
-      <%# ── Modal ───────────────────────────────────────────────────────── %>
-      <div class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/40"
-           data-forecast-modal-target="modal"
-           data-action="click->forecast-modal#overlayClick">
-        <div class="relative bg-white rounded-[29px] mx-4 p-6 pt-10 overflow-y-auto" style="width:337px; max-height:80vh;">
-          <button data-action="click->forecast-modal#close" aria-label="Close"
-                  class="absolute top-3 right-3 w-[44px] h-[44px] rounded-full flex items-center justify-center border-0 cursor-pointer"
-                  style="background:#EDE1D5;">
-            <span class="text-brand-primary text-2xl font-medium leading-none font-['Montserrat']">&times;</span>
-          </button>
-          <p data-forecast-modal-target="title" class="text-brand-primary font-medium text-2xl text-center font-['Montserrat'] m-0 mb-4"></p>
-          <div data-forecast-modal-target="body" class="text-brand-primary text-base leading-5 text-center font-['Montserrat']"></div>
-          <div data-forecast-modal-target="food" class="mt-4 flex flex-col gap-4"></div>
-        </div>
+    <%# ── Modal ─────────────────────────────────────────────────────────── %>
+    <div class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/40"
+         data-forecast-modal-target="modal"
+         data-action="click->forecast-modal#overlayClick">
+      <div class="relative bg-white rounded-[29px] mx-4 p-6 pt-10 overflow-y-auto" style="width:337px; max-height:80vh;">
+        <button data-action="click->forecast-modal#close" aria-label="Close"
+                class="absolute top-3 right-3 w-[44px] h-[44px] rounded-full flex items-center justify-center border-0 cursor-pointer"
+                style="background:#EDE1D5;">
+          <span class="text-2xl font-medium leading-none font-['Montserrat']" style="color:<%= pc %>;">&times;</span>
+        </button>
+        <p data-forecast-modal-target="title" class="font-medium text-2xl text-center font-['Montserrat'] m-0 mb-4" style="color:<%= pc %>;"></p>
+        <div data-forecast-modal-target="body" class="text-base leading-5 text-center font-['Montserrat']" style="color:<%= pc %>;"></div>
+        <div data-forecast-modal-target="food" class="mt-4 flex flex-col gap-4"></div>
       </div>
-    <% else %>
-      <%# ── No data state ─────────────────────────────────────────────── %>
-      <div class="bg-white rounded-xl p-6 text-center">
-        <p class="text-brand-primary text-lg font-medium font-['Montserrat'] mb-2">No cycle data yet</p>
-        <p class="text-brand-secondary text-sm font-['Montserrat'] mb-4">Log your last period start to see your personalized cycle forecast.</p>
-        <%= link_to "Track my period", period_tracking_index_path,
-              class: "inline-block bg-brand-primary text-white px-6 py-3 rounded-lg text-sm font-medium no-underline" %>
-      </div>
-    <% end %>
+    </div>
 
   </div>
 </div>
