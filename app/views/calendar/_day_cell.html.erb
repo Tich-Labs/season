@@ -48,7 +48,7 @@
 <% show_events   = mode == "all" || mode == "events" %>
 <% show_tracking = mode == "all" || mode == "tracking" %>
 
-<a href="<%= daily_view_path(date: date.to_s) %>"
+<a href="<%= forecast_path(date: date.to_s) %>"
    style="display:flex; flex-direction:column; text-decoration:none; height:100%; overflow:hidden;<%= in_month ? '' : ' opacity:0.45;' %>">
 
   <%# ── Phase band: full-bleed, 11px, no padding ── %>

@@ -21,11 +21,7 @@
         Hello <%= current_user.name&.split&.first || "there" %>
       </p>
       <p class="text-brand-primary font-light text-2xl leading-[29px] font-['Montserrat'] m-0 mt-1" style="max-width:333px;">
-        <% if @has_tracking %>
-          Your cycle forecast — day <%= @cycle_day %>
-        <% else %>
-          Log your period to see your forecast
-        <% end %>
+        <%= @selected_date.strftime("%-d %B %Y") %>
       </p>
     </div>
 

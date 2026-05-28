@@ -1,6 +1,7 @@
 class ForecastController < ApplicationController
   def index
-    @cycle_day = current_user.current_cycle_day || 1
+    @selected_date = params[:date] ? Date.parse(params[:date]) : Time.zone.today
+    @cycle_day = current_user.current_cycle_day(@selected_date) || 1
     @phase = current_user.current_phase || "menstrual"
     @phase_colour = CycleDayContent.phase_colour(@cycle_day)
     @cards = CycleDayContent.for_forecast(@cycle_day)

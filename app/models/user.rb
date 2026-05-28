@@ -69,9 +69,9 @@ class User < ApplicationRecord
     CycleCalculatorService.new(self).current_phase
   end
 
-  def current_cycle_day
+  def current_cycle_day(date = Time.zone.today)
     return nil unless last_period_start
-    (Time.zone.today - last_period_start.to_date).to_i + 1
+    (date.to_date - last_period_start.to_date).to_i + 1
   end
 
   def first_name
