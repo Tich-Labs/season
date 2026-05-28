@@ -1,8 +1,10 @@
 <% content_for(:page_title) { @selected_date.strftime("%-d %B") } %>
 <% content_for(:header_color) { @phase_colour } %>
 <% content_for(:header_left) do %>
-  <%= link_to "&lt; Calendar".html_safe, user_root_path(date: @selected_date.to_s),
-        class: "text-white text-sm font-medium no-underline p-2 font-montserrat" %>
+  <%= link_to user_root_path(date: @selected_date.to_s),
+        class: "text-white text-sm font-medium no-underline p-2 font-montserrat" do %>
+    ← Calendar
+  <% end %>
 <% end %>
 
 <%
