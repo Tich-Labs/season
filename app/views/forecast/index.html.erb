@@ -1,5 +1,11 @@
-<% content_for(:page_title) { "Forecast" } %>
+<% content_for(:page_title) { @selected_date.strftime("%-d %B") } %>
 <% content_for(:header_color) { @phase_colour } %>
+<% content_for(:header_left) do %>
+  <%= link_to user_root_path(date: @selected_date.to_s),
+        class: "text-white text-sm font-medium no-underline p-2 font-montserrat" do %>
+    &lt; Calendar
+  <% end %>
+<% end %>
 
 <%
   card_config = [
