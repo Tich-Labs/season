@@ -39,7 +39,7 @@ PBXPROJ = f'''// !$*UTF8*$!
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		{P["SYNC"]} /* SeasonApp */ = {{isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {{}}; explicitFolders = (); path = SeasonApp; sourceTree = "<group>"; }};
+		{P["SYNC"]} /* SeasonApp */ = {{isa = PBXFileSystemSynchronizedRootGroup; exceptions = (); explicitFileTypes = {{}}; explicitFolders = (); path = SeasonApp; sourceTree = "<group>"; }};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
