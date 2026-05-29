@@ -16,14 +16,9 @@ jobs:
           sudo xcode-select -s /Applications/Xcode_$(ls /Applications/ | grep Xcode | sort -V | tail -1 | sed 's/Xcode_//;s/.app//').app 2>/dev/null || true
           xcodebuild -version
 
-      - name: Install xcodegen
-        run: brew install xcodegen
-
-      - name: Generate Xcode project
+      - name: Resolve SPM dependencies
         working-directory: ios/SeasonApp
-        run: |
-          xcodegen generate
-          xcodebuild -resolvePackageDependencies -project SeasonApp.xcodeproj -scheme SeasonApp
+        run: xcodebuild -resolvePackageDependencies -project SeasonApp.xcodeproj -scheme SeasonApp -clonedSourcePackagesDirPath ~/Library/Caches/com.apple.dt.Xcode/SourcePackages
 
       - name: List schemes
         run: xcodebuild -list -project ios/SeasonApp/SeasonApp.xcodeproj
