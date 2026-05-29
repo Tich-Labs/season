@@ -6,91 +6,91 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1b41fa308d6342e0af03fe88 /* HotwireNative in Frameworks */ = {isa = PBXBuildFile; productRef = 55f817f9f87e45e597c5e22b /* HotwireNative */; };
+		777f9f9969b94fd3b7464938 /* HotwireNative in Frameworks */ = {isa = PBXBuildFile; productRef = d82f3b8667d543e881f7007b /* HotwireNative */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		0e29bb26442c4011ab9be8d0 /* SeasonApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SeasonApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8ffb5a34414d43ff9fbd07ec /* SeasonApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SeasonApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		a0365c2e41524da69216ff2a /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+		c076e477a47144a5b219c340 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (Info.plist,);
-			target = 717a822c5e4f4f8cb977dc7d /* SeasonApp */;
+			target = 7c3361a7aefc48e6980f15bc /* SeasonApp */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		8fd7ebd82f7644abb21a6a44 /* SeasonApp */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (a0365c2e41524da69216ff2a /* PBXFileSystemSynchronizedBuildFileExceptionSet */,); explicitFileTypes = {}; explicitFolders = (); path = SeasonApp; sourceTree = "<group>"; };
+		393d7a37c53f4252b4d3eae9 /* SeasonApp */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (c076e477a47144a5b219c340 /* PBXFileSystemSynchronizedBuildFileExceptionSet */,); explicitFileTypes = {}; explicitFolders = (); path = SeasonApp; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		716f1d1a8bbe4687921bc50e /* Frameworks */ = {
+		055c891d9ccb4f149ebc0d00 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
-			files = (1b41fa308d6342e0af03fe88 /* HotwireNative in Frameworks */,);
+			files = (777f9f9969b94fd3b7464938 /* HotwireNative in Frameworks */,);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		5760a865d62047cabe4aae33 = {
+		6507d88377bb4cfbbc50a75f = {
 			isa = PBXGroup;
-			children = (8fd7ebd82f7644abb21a6a44 /* SeasonApp */, ff05ab12e14642909f71b7bf /* Products */,);
+			children = (393d7a37c53f4252b4d3eae9 /* SeasonApp */, 12647c8d158d419da798f91d /* Products */,);
 			sourceTree = "<group>";
 		};
-		ff05ab12e14642909f71b7bf /* Products */ = {
+		12647c8d158d419da798f91d /* Products */ = {
 			isa = PBXGroup;
-			children = (0e29bb26442c4011ab9be8d0 /* SeasonApp.app */,);
+			children = (8ffb5a34414d43ff9fbd07ec /* SeasonApp.app */,);
 			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		717a822c5e4f4f8cb977dc7d /* SeasonApp */ = {
+		7c3361a7aefc48e6980f15bc /* SeasonApp */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 5f35b8dd8a40461aa316ab2d /* Build configuration list for PBXNativeTarget "SeasonApp" */;
-			buildPhases = (2d2496d9d2f346d984078d8b /* Sources */, 716f1d1a8bbe4687921bc50e /* Frameworks */, ad956cfdc8304607bae4bc0d /* Resources */,);
+			buildConfigurationList = 556cd5f4e4f34bcbbfebc273 /* Build configuration list for PBXNativeTarget "SeasonApp" */;
+			buildPhases = (da16c8b583f442d0b3e790f0 /* Sources */, 055c891d9ccb4f149ebc0d00 /* Frameworks */, 8eee98a2e17249a4a6da70f8 /* Resources */,);
 			buildRules = ();
 			dependencies = ();
 			name = SeasonApp;
-			packageProductDependencies = (55f817f9f87e45e597c5e22b /* HotwireNative */,);
+			packageProductDependencies = (d82f3b8667d543e881f7007b /* HotwireNative */,);
 			productName = SeasonApp;
-			productReference = 0e29bb26442c4011ab9be8d0 /* SeasonApp.app */;
+			productReference = 8ffb5a34414d43ff9fbd07ec /* SeasonApp.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		2cf60fde61a548ca820a1fc5 /* Project object */ = {
+		fd5272bb99e34ee79a293324 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {BuildIndependentTargetsInParallel = 1; LastSwiftUpdateCheck = 1600; LastUpgradeCheck = 1600;};
-			buildConfigurationList = 6a2612537d85486cabfa459c /* Build configuration list for PBXProject "SeasonApp" */;
+			buildConfigurationList = 8f3e498f6cd4455f9f03cdd0 /* Build configuration list for PBXProject "SeasonApp" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = "en-US";
 			hasScannedForEncodings = 0;
 			knownRegions = (en, Base,);
-			mainGroup = 5760a865d62047cabe4aae33;
-			packageReferences = (96ef7d4036a3489a910c9759 /* XCRemoteSwiftPackageReference "hotwire-native-ios" */,);
-			productRefGroup = ff05ab12e14642909f71b7bf /* Products */;
+			mainGroup = 6507d88377bb4cfbbc50a75f;
+			packageReferences = (0c86c646c9ad4d1e8e48ae21 /* XCRemoteSwiftPackageReference "hotwire-native-ios" */,);
+			productRefGroup = 12647c8d158d419da798f91d /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
-			targets = (717a822c5e4f4f8cb977dc7d /* SeasonApp */,);
+			targets = (7c3361a7aefc48e6980f15bc /* SeasonApp */,);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		ad956cfdc8304607bae4bc0d /* Resources */ = {isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+		8eee98a2e17249a4a6da70f8 /* Resources */ = {isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		2d2496d9d2f346d984078d8b /* Sources */ = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+		da16c8b583f442d0b3e790f0 /* Sources */ = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		ee21d524662e482bbfdeac80 /* Debug */ = {
+		5599a142060e4b778150bbdc /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -113,7 +113,7 @@
 			};
 			name = Debug;
 		};
-		cc2b4e67bbd04ee2b9d0f0be /* Release */ = {
+		7429b8d89c8d4e1d980abd79 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -134,7 +134,7 @@
 			};
 			name = Release;
 		};
-		f1f2bdf3c7fb4d1ea29d6a72 /* Debug */ = {
+		73940d3538a44c1983c889bf /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -148,12 +148,13 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.season-app.ios;
 				PRODUCT_NAME = SeasonApp;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
-		8e00adbb50c1467383f77597 /* Release */ = {
+		ebf94a1dc057440fb6b2e5c0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -167,6 +168,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.season-app.ios;
 				PRODUCT_NAME = SeasonApp;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -175,22 +177,22 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		6a2612537d85486cabfa459c /* Build configuration list for PBXProject "SeasonApp" */ = {
+		8f3e498f6cd4455f9f03cdd0 /* Build configuration list for PBXProject "SeasonApp" */ = {
 			isa = XCConfigurationList;
-			buildConfigurations = (ee21d524662e482bbfdeac80 /* Debug */, cc2b4e67bbd04ee2b9d0f0be /* Release */,);
+			buildConfigurations = (5599a142060e4b778150bbdc /* Debug */, 7429b8d89c8d4e1d980abd79 /* Release */,);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		5f35b8dd8a40461aa316ab2d /* Build configuration list for PBXNativeTarget "SeasonApp" */ = {
+		556cd5f4e4f34bcbbfebc273 /* Build configuration list for PBXNativeTarget "SeasonApp" */ = {
 			isa = XCConfigurationList;
-			buildConfigurations = (f1f2bdf3c7fb4d1ea29d6a72 /* Debug */, 8e00adbb50c1467383f77597 /* Release */,);
+			buildConfigurations = (73940d3538a44c1983c889bf /* Debug */, ebf94a1dc057440fb6b2e5c0 /* Release */,);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		96ef7d4036a3489a910c9759 /* XCRemoteSwiftPackageReference "hotwire-native-ios" */ = {
+		0c86c646c9ad4d1e8e48ae21 /* XCRemoteSwiftPackageReference "hotwire-native-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/hotwired/hotwire-native-ios";
 			requirement = {kind = upToNextMajorVersion; minimumVersion = 1.2.0;};
@@ -198,13 +200,13 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		55f817f9f87e45e597c5e22b /* HotwireNative */ = {
+		d82f3b8667d543e881f7007b /* HotwireNative */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 96ef7d4036a3489a910c9759 /* XCRemoteSwiftPackageReference "hotwire-native-ios" */;
+			package = 0c86c646c9ad4d1e8e48ae21 /* XCRemoteSwiftPackageReference "hotwire-native-ios" */;
 			productName = HotwireNative;
 		};
 /* End XCSwiftPackageProductDependency section */
 
 	};
-	rootObject = 2cf60fde61a548ca820a1fc5 /* Project object */;
+	rootObject = fd5272bb99e34ee79a293324 /* Project object */;
 }
