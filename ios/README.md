@@ -6,7 +6,7 @@ Native iOS wrapper using **Hotwire Native** (`hotwire-native-ios` via SPM).
 
 | File | Purpose |
 |------|---------|
-| `project.yml` | XcodeGen config — SPM, target iOS 17.2, no auto-generated Info.plist |
+| `SeasonApp.xcodeproj` | Xcode project — uses `PBXFileSystemSynchronizedRootGroup` (Xcode 16+ auto-syncs source files) |
 | `SeasonApp/AppDelegate.swift` | Path config loading, bridge component registration, push notification callbacks |
 | `SeasonApp/SceneDelegate.swift` | `HotwireTabBarController` as root VC, notification router, `NavigatorDelegate` |
 | `SeasonApp/Tabs.swift` | Calendar / Tracking / Settings tab definitions (tabs from launch) |
@@ -27,23 +27,24 @@ Native iOS wrapper using **Hotwire Native** (`hotwire-native-ios` via SPM).
 - **Auth via cookies + Keychain** — session cookie handles WKWebView auth automatically. Token bridge (`NativeAuthTokenComponent`) stores `native_auth_token` in Keychain for cold-restart persistence.
 - **Push notifications** — `NotificationTokenComponent` bridge requests permission on the page it appears. `NotificationRouter` handles notification taps and routes to the correct screen.
 - **Path config from server only** — rules served at `/configurations/ios_v1.json`. Settings/Account open as modals.
+- **No XcodeGen** — `.xcodeproj` is committed directly (macOS 12 host cannot compile XcodeGen). Project uses Xcode 16+'s `PBXFileSystemSynchronizedRootGroup` which auto-discovers files — adding new Swift files just requires placing them in the `SeasonApp/` directory and re-running SPM resolution.
 
 ## Development
 
-**Prerequisites:** Xcode 15.3+ (requires macOS 13+).
+**Prerequisites:** Xcode 15.3+ on a macOS 13+ machine.
 
 ```bash
-brew install xcodegen
-cd ios/SeasonApp
-xcodegen generate
 open SeasonApp.xcodeproj
+# Wait for SPM to resolve HotwireNative dependency
+# Build and run from Xcode
 ```
 
-To test against localhost, build with Debug scheme (uses `http://localhost:3000` base URL).
+To test against localhost, build Debug scheme (uses `http://localhost:3000` base URL).
+Release builds use `https://seasonv2.onrender.com`.
 
 ## Deployment
 
-### Fastlane (recommended)
+### Fastlane (recommended, runs on CI)
 
 ```bash
 cd ios/SeasonApp
@@ -54,11 +55,12 @@ fastlane beta
 
 ```bash
 cd ios/SeasonApp
-xcodegen generate
 xcodebuild archive -scheme SeasonApp -archivePath build/SeasonApp.xcarchive -destination generic/platform=iOS
 xcodebuild -exportArchive -archivePath build/SeasonApp.xcarchive -exportPath build/ -exportOptionsPlist ExportOptions.plist
 xcrun altool --upload-app -f build/SeasonApp.ipa -t ios -u "$APPLE_ID" -p "$APP_SPECIFIC_PASSWORD"
 ```
+
+Before TestFlight, change `aps-environment` in `SeasonApp.entitlements` from `development` to `production`.
 
 ## Server Bridge Components
 

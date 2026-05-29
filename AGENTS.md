@@ -192,7 +192,11 @@ On Symptoms page, Submit button opens a review modal (`submit_modal_controller.j
 - **Bundled path config**: `ios/SeasonApp/SeasonApp/path-configuration.json`
 - **Architecture**: Pure Hotwire Native — all views are server-rendered ERB. Navigator manages its own WebView internally. No direct WKWebView creation.
 - **No KeychainHelper / WKUserScript auth bridge** — not yet implemented
-- **xcodegen** requires Xcode 15.3+ (macOS 13+)
+- **No XcodeGen** — `.xcodeproj` is committed directly (macOS 12 host cannot compile XcodeGen)
+- **PBXFileSystemSynchronizedRootGroup** — Xcode 16+ auto-discovers source files in `SeasonApp/` directory
+- **Auth bridge**: `NativeAuthTokenComponent` stores `native_auth_token` in Keychain via `KeychainHelper`
+- **Push notifications**: `NotificationTokenComponent`, `NotificationRouter`, `NotificationTokenViewModel`
+- **Regenerate `.xcodeproj`** if corrupted: run `python3 gen.py` from `ios/SeasonApp/` (generates fresh UUIDs)
 
 ### iOS Native Navigation
 
