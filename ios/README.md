@@ -14,7 +14,7 @@ Native iOS wrapper using **Hotwire Native** (`hotwire-native-ios` via SPM).
 | `SeasonApp/Models/` | NotificationRouter, NotificationToken, KeychainHelper |
 | `SeasonApp/ViewModels/` | NotificationTokenViewModel |
 | `SeasonApp/SeasonApp.entitlements` | Push notification capability (aps-environment) |
-| `SeasonApp/Info.plist` | Bundle ID, scene manifest, ATS, push background mode |
+| `Info.plist` | Bundle ID, scene manifest, ATS, push background mode |
 | `SeasonApp/PrivacyInfo.xcprivacy` | App Store compliance |
 | `SeasonApp/LaunchScreen.storyboard` | Branded splash |
 | `SeasonApp/Assets.xcassets/AppIcon.appiconset/` | All icon sizes |

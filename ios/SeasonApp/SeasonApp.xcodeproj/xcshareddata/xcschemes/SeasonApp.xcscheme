@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "7c3361a7aefc48e6980f15bc"
+               BlueprintIdentifier = "e173fad48e5a4939be793381"
                BuildableName = "SeasonApp.app"
                BlueprintName = "SeasonApp"
                ReferencedContainer = "container:SeasonApp.xcodeproj">
@@ -43,7 +43,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "7c3361a7aefc48e6980f15bc"
+            BlueprintIdentifier = "e173fad48e5a4939be793381"
             BuildableName = "SeasonApp.app"
             BlueprintName = "SeasonApp"
             ReferencedContainer = "container:SeasonApp.xcodeproj">
@@ -60,7 +60,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "7c3361a7aefc48e6980f15bc"
+            BlueprintIdentifier = "e173fad48e5a4939be793381"
             BuildableName = "SeasonApp.app"
             BlueprintName = "SeasonApp"
             ReferencedContainer = "container:SeasonApp.xcodeproj">

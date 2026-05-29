@@ -9,7 +9,7 @@ P = {
     'APP': uu(), 'PRJ': uu(), 'MGRP': uu(), 'PGRP': uu(),
     'TGT': uu(), 'SRC': uu(), 'FWK': uu(), 'RSC': uu(),
     'SPM': uu(), 'SPMP': uu(),
-    'SYNC': uu(), 'SYNCE': uu(), 'BF': uu(),
+    'SYNC': uu(), 'BF': uu(),
     'DPROJ': uu(), 'RPROJ': uu(),
     'DTGT': uu(), 'RTGT': uu(),
     'PCL': uu(), 'TCL': uu(),
@@ -38,16 +38,8 @@ PBXPROJ = f'''// !$*UTF8*$!
 		{P["APP"]} /* SeasonApp.app */ = {{isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SeasonApp.app; sourceTree = BUILT_PRODUCTS_DIR; }};
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		{P["SYNCE"]} /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {{
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (Info.plist,);
-			target = {P["TGT"]} /* SeasonApp */;
-		}};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		{P["SYNC"]} /* SeasonApp */ = {{isa = PBXFileSystemSynchronizedRootGroup; exceptions = ({P["SYNCE"]} /* PBXFileSystemSynchronizedBuildFileExceptionSet */,); explicitFileTypes = {{}}; explicitFolders = (); path = SeasonApp; sourceTree = "<group>"; }};
+		{P["SYNC"]} /* SeasonApp */ = {{isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {{}}; explicitFolders = (); path = SeasonApp; sourceTree = "<group>"; }};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -168,7 +160,7 @@ PBXPROJ = f'''// !$*UTF8*$!
 				CURRENT_PROJECT_VERSION = 59;
 				DEVELOPMENT_TEAM = CH4G9T6ZHP;
 				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = SeasonApp/Info.plist;
+				INFOPLIST_FILE = Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.season-app.ios;
@@ -188,7 +180,7 @@ PBXPROJ = f'''// !$*UTF8*$!
 				CURRENT_PROJECT_VERSION = 59;
 				DEVELOPMENT_TEAM = CH4G9T6ZHP;
 				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = SeasonApp/Info.plist;
+				INFOPLIST_FILE = Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.season-app.ios;
