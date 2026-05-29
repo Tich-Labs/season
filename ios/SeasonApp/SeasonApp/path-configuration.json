@@ -6,19 +6,6 @@
   "rules": [
     {
       "patterns": [
-        "/session/new",
-        "/registration/new",
-        "/password/new",
-        "/password/edit",
-        "/"
-      ],
-      "properties": {
-        "presentation": "default",
-        "pull_to_refresh_enabled": false
-      }
-    },
-    {
-      "patterns": [
         "/calendar",
         "/tracking",
         "/daily/*",

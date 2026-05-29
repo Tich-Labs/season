@@ -6,46 +6,68 @@ Native iOS wrapper using **Hotwire Native** (`hotwire-native-ios` via SPM).
 
 | File | Purpose |
 |------|---------|
-| `project.yml` | XcodeGen config — SPM, target iOS 16.0, no auto-generated Info.plist |
-| `SeasonApp/AppDelegate.swift` | Minimal UIApplicationDelegate |
-| `SeasonApp/SceneDelegate.swift` | `HotwireTabBarController` + `NavigatorDelegate` |
-| `SeasonApp/Tabs.swift` | Calendar / Tracking / Settings tab definitions |
-| `SeasonApp/Info.plist` | Bundle ID, scene manifest, ATS, encryption |
+| `project.yml` | XcodeGen config — SPM, target iOS 17.2, no auto-generated Info.plist |
+| `SeasonApp/AppDelegate.swift` | Path config loading, bridge component registration, push notification callbacks |
+| `SeasonApp/SceneDelegate.swift` | `HotwireTabBarController` as root VC, notification router, `NavigatorDelegate` |
+| `SeasonApp/Tabs.swift` | Calendar / Tracking / Settings tab definitions (tabs from launch) |
+| `SeasonApp/Components/` | Bridge components: ButtonComponent, NotificationTokenComponent, NativeAuthTokenComponent |
+| `SeasonApp/Models/` | NotificationRouter, NotificationToken, KeychainHelper |
+| `SeasonApp/ViewModels/` | NotificationTokenViewModel |
+| `SeasonApp/SeasonApp.entitlements` | Push notification capability (aps-environment) |
+| `SeasonApp/Info.plist` | Bundle ID, scene manifest, ATS, push background mode |
 | `SeasonApp/PrivacyInfo.xcprivacy` | App Store compliance |
 | `SeasonApp/LaunchScreen.storyboard` | Branded splash |
 | `SeasonApp/Assets.xcassets/AppIcon.appiconset/` | All icon sizes |
-| `ExportOptions.plist` | App Store signing config |
+| `ExportOptions.plist` | App Store Connect signing config |
+| `Fastlane/Fastfile` | Build + TestFlight upload lane |
 
-## Web App Integration
+## Key Design Decisions
 
-- **Native tab bar** replaces web burger menu + FAB (hidden in native)
-- **Path config** at `/configurations/ios_v1.json` — Settings/Account open as modals
-- **Auth** via `X-Turbo-Native-Token` header → `TurboNativeDetection` concern
-- **External URLs** routed to system browser by Hotwire Native SDK
+- **`HotwireTabBarController` from launch** — no pre-auth navigator or `switchToTabs()`. All 3 tabs (Calendar, Tracking, Settings) are available immediately. Unauthenticated users see login within the tabs.
+- **Auth via cookies + Keychain** — session cookie handles WKWebView auth automatically. Token bridge (`NativeAuthTokenComponent`) stores `native_auth_token` in Keychain for cold-restart persistence.
+- **Push notifications** — `NotificationTokenComponent` bridge requests permission on the page it appears. `NotificationRouter` handles notification taps and routes to the correct screen.
+- **Path config from server only** — rules served at `/configurations/ios_v1.json`. Settings/Account open as modals.
 
 ## Development
 
-**⚠️ macOS 12 users:** Hotwire Native requires Swift 5.9+ (Xcode 15+). Build via CI (`macos-latest` runner). Local testing: use plain WKWebView on Xcode 14.2.
-
-## Setup
+**Prerequisites:** Xcode 15.3+ (requires macOS 13+).
 
 ```bash
-brew install xcodegen   # macOS 13+ only
+brew install xcodegen
 cd ios/SeasonApp
 xcodegen generate
 open SeasonApp.xcodeproj
 ```
 
-## CI
+To test against localhost, build with Debug scheme (uses `http://localhost:3000` base URL).
 
-GitHub Actions cloud Mac (Xcode 26): xcodegen → SPM resolve → archive → manual codesign → zip IPA → altool upload.
+## Deployment
 
-**9 GitHub secrets required** — see `docs/STORE-DEPLOYMENT.md`.
+### Fastlane (recommended)
 
-## Pre-Push Hook
+```bash
+cd ios/SeasonApp
+fastlane beta
+```
 
-Runs rubocop + erb_lint + JS standard before every `git push`. Setup: `bin/setup-hooks`.
+### Manual CLI
+
+```bash
+cd ios/SeasonApp
+xcodegen generate
+xcodebuild archive -scheme SeasonApp -archivePath build/SeasonApp.xcarchive -destination generic/platform=iOS
+xcodebuild -exportArchive -archivePath build/SeasonApp.xcarchive -exportPath build/ -exportOptionsPlist ExportOptions.plist
+xcrun altool --upload-app -f build/SeasonApp.ipa -t ios -u "$APPLE_ID" -p "$APP_SPECIFIC_PASSWORD"
+```
+
+## Server Bridge Components
+
+| Component | Server Attribute | Purpose |
+|-----------|-----------------|---------|
+| `button` | `data-bridge--button` | Native UIBarButtonItem |
+| `notification-token` | `data-bridge--notification-token` | Push notification permission + registration |
+| `native-auth-token` | `data-bridge--native-auth-token` | Persists auth token in Keychain |
 
 ---
 
-**Status:** Hotwire Native with 3-tab bar. Ready for CI signing → TestFlight.
+**Status:** Hotwire Native with 3-tab bar, push notifications, Keychain auth. CI-ready for TestFlight.

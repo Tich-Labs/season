@@ -1,0 +1,3 @@
+app_identifier("com.season-app.ios")
+apple_id("ENV['APPLE_ID']")
+team_id("CH4G9T6ZHP")

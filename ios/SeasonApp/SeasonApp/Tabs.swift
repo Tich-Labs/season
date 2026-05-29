@@ -1,7 +1,11 @@
 import HotwireNative
 import UIKit
 
+#if DEBUG
+let baseURL = URL(string: "http://localhost:3000")!
+#else
 let baseURL = URL(string: "https://seasonv2.onrender.com")!
+#endif
 
 private let calendarTab = HotwireTab(
     title: "Calendar",

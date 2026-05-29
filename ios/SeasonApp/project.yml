@@ -2,11 +2,11 @@ name: SeasonApp
 options:
   bundleIdPrefix: com.season-app
   deploymentTarget:
-    iOS: "16.0"
+    iOS: "17.2"
 packages:
   HotwireNative:
     url: https://github.com/hotwired/hotwire-native-ios
-    from: 1.0.0
+    from: 1.2.0
 targets:
   SeasonApp:
     type: application
@@ -15,8 +15,6 @@ targets:
       - path: SeasonApp
         excludes:
           - "Season Test"
-    resources:
-      - path: SeasonApp/path-configuration.json
     dependencies:
       - package: HotwireNative
     settings:
@@ -25,3 +23,5 @@ targets:
       GENERATE_INFOPLIST_FILE: NO
       MARKETING_VERSION: "1.0"
       CURRENT_PROJECT_VERSION: "59"
+      CODE_SIGN_ENTITLEMENTS: SeasonApp/SeasonApp.entitlements
+      DEVELOPMENT_TEAM: CH4G9T6ZHP
