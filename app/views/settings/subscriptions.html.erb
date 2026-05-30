@@ -1,4 +1,5 @@
 <%# My Subscriptions screen - matches Figma node 12048-37893 %>
+<%= native_navbar_tag("My Subscriptions") if native_app? %>
 <%# Dark header auto-applied by layout; only back arrow override needed %>
 <% content_for(:header_left) do %>
   <%= link_to edit_settings_path, class: "p-2 flex items-center" do %>

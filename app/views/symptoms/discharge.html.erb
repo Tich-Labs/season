@@ -1,4 +1,5 @@
 <% content_for(:page_title) { "Discharge" } %>
+<%= native_navbar_tag("Discharge") if native_app? %>
 <% content_for(:header_left) do %>
   <%= link_to symptoms_path,
         style: "color:#933a35; font-size:15px; font-weight:500; text-decoration:none; padding:8px 4px; font-family:'Montserrat',sans-serif;" do %>

@@ -211,24 +211,15 @@
         <%= t('onboarding.step6.heading') %>
       </h2>
 
-      <%= form_with url: onboarding_path(6), method: :patch, id: "step6-form", local: true do |f| %>
-        <%= f.hidden_field :birth_control_method, id: "bc_method_value", value: "" %>
-        <div class="flex flex-col gap-3 items-center">
-          <% t('onboarding.step6.methods').each do |method| %>
-            <button type="button" data-method="<%= method %>"
-                    class="bc-method-btn w-[322px] h-[52px] bg-brand-field opacity-50 text-brand-primary rounded-lg text-[22px] font-medium tracking-[0.66px] text-center">
-              <%= method %>
-            </button>
+      <div class="flex flex-col gap-3 items-center">
+        <% t('onboarding.step6.methods').each do |method| %>
+          <%= form_with url: onboarding_path(6), method: :patch, local: true do |f| %>
+            <%= f.hidden_field :birth_control_method, value: method %>
+            <%= f.submit method,
+                class: "w-[322px] h-[52px] bg-brand-field text-brand-primary rounded-lg text-[22px] font-medium tracking-[0.66px] cursor-pointer" %>
           <% end %>
-        </div>
-
-        <div class="flex-1"></div>
-
-        <div class="w-full flex justify-center mt-8">
-          <%= f.submit t('onboarding.step6.submit'),
-              class: "w-[322px] h-[52px] bg-brand-primary text-white rounded-lg text-[22px] font-medium tracking-[0.66px]" %>
-        </div>
-      <% end %>
+        <% end %>
+      </div>
     </div>
 
   <%# ── Step 7: Birth control reminder ────────────────────────────── %>
@@ -261,26 +252,15 @@
         <%= t('onboarding.step8.heading_html', name: current_user.first_name) %>
       </h2>
 
-      <%= form_with url: onboarding_path(8), method: :patch, id: "step8-form", local: true do |f| %>
-        <% step8_options = t('onboarding.step8.contraceptions') %>
-        <%= f.hidden_field :contraception, id: "contraception_value", value: step8_options.first %>
-        <div class="flex flex-col gap-3 items-center">
-          <% step8_options.each_with_index do |c, i| %>
-            <button type="button" data-contraception="<%= c %>"
-                    class="contraception-btn w-[322px] h-[52px] bg-brand-field text-brand-primary rounded-lg text-[22px] font-medium tracking-[0.66px] text-center"
-                    style="opacity:<%= i == 0 ? '1' : '0.45' %>;">
-              <%= c %>
-            </button>
+      <div class="flex flex-col gap-3 items-center">
+        <% t('onboarding.step8.contraceptions').each do |c| %>
+          <%= form_with url: onboarding_path(8), method: :patch, local: true do |f| %>
+            <%= f.hidden_field :contraception, value: c %>
+            <%= f.submit c,
+                class: "w-[322px] h-[52px] bg-brand-field text-brand-primary rounded-lg text-[22px] font-medium tracking-[0.66px] cursor-pointer" %>
           <% end %>
-        </div>
-
-        <div class="flex-1"></div>
-
-        <div class="w-full flex justify-center mt-8">
-          <%= f.submit t('onboarding.step8.submit'),
-              class: "w-[322px] h-[52px] bg-brand-primary text-white rounded-lg text-[22px] font-medium tracking-[0.66px]" %>
-        </div>
-      <% end %>
+        <% end %>
+      </div>
     </div>
 
   <%# ── Step 9: Food preferences ───────────────────────────────────── %>
@@ -290,26 +270,15 @@
         <%= t('onboarding.step9.heading_html', name: current_user.first_name) %>
       </h2>
 
-      <%= form_with url: onboarding_path(9), method: :patch, id: "step9-form", local: true do |f| %>
-        <% step9_options = t('onboarding.step9.foods') %>
-        <%= f.hidden_field :food_preference, id: "food_pref_value", value: step9_options.first %>
-        <div class="flex flex-col gap-3 items-center">
-          <% step9_options.each_with_index do |pref, i| %>
-            <button type="button" data-food="<%= pref %>"
-                    class="food-btn w-[322px] h-[52px] bg-brand-field text-brand-primary rounded-lg text-[22px] font-medium tracking-[0.66px] text-center"
-                    style="opacity:<%= i == 0 ? '1' : '0.45' %>;">
-              <%= pref %>
-            </button>
+      <div class="flex flex-col gap-3 items-center">
+        <% t('onboarding.step9.foods').each do |pref| %>
+          <%= form_with url: onboarding_path(9), method: :patch, local: true do |f| %>
+            <%= f.hidden_field :food_preference, value: pref %>
+            <%= f.submit pref,
+                class: "w-[322px] h-[52px] bg-brand-field text-brand-primary rounded-lg text-[22px] font-medium tracking-[0.66px] cursor-pointer" %>
           <% end %>
-        </div>
-      <% end %>
-    </div>
-
-    <div class="flex-1"></div>
-
-    <div class="w-full flex justify-center">
-      <%= button_tag t('onboarding.step9.submit'), form: "step9-form", type: "submit",
-          class: "w-[322px] h-[52px] bg-brand-primary text-white rounded-lg text-[22px] font-medium tracking-[0.66px]" %>
+        <% end %>
+      </div>
     </div>
 
   <%# ── Step 10: Last period calendar ─────────────────────────────── %>
@@ -452,49 +421,6 @@ document.addEventListener('turbo:load', function () {
     applyHighlight();
     picker.addEventListener('scroll', applyHighlight, { passive: true });
   }
-
-  // ── Step 6: Birth control method ─────────────────────────────────
-  document.querySelectorAll('.bc-method-btn').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      document.querySelectorAll('.bc-method-btn').forEach(function (b) {
-        b.style.opacity    = '0.45';
-        b.style.fontWeight = '';
-      });
-      this.style.opacity    = '1';
-      this.style.fontWeight = '600';
-      document.getElementById('bc_method_value').value = this.dataset.method;
-    });
-  });
-
-  // ── Step 8: Contraception ─────────────────────────────────────────
-  (function () {
-    document.querySelectorAll('.contraception-btn').forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        document.querySelectorAll('.contraception-btn').forEach(function (b) {
-          b.style.opacity    = '0.45';
-          b.style.fontWeight = '';
-        });
-        this.style.opacity    = '1';
-        this.style.fontWeight = '600';
-        document.getElementById('contraception_value').value = this.dataset.contraception;
-      });
-    });
-  })();
-
-  // ── Step 9: Food preferences ──────────────────────────────────────
-  (function () {
-    document.querySelectorAll('.food-btn').forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        document.querySelectorAll('.food-btn').forEach(function (b) {
-          b.style.opacity    = '0.45';
-          b.style.fontWeight = '';
-        });
-        this.style.opacity    = '1';
-        this.style.fontWeight = '600';
-        document.getElementById('food_pref_value').value = this.dataset.food;
-      });
-    });
-  })();
 
   // ── Step 10: Calendar ─────────────────────────────────────────────
   var calGrid = document.getElementById('cal-grid');
