@@ -1,6 +1,7 @@
 app:
   name: "Season"
   mode: normal
+  entry_path: /
 
 appearance:
   tint_color: "#933a35"
