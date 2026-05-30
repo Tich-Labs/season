@@ -65,6 +65,10 @@
   display: block;
   width: 100%;
 }
+.symptom-slider:focus,
+.symptom-slider:focus-visible {
+  outline: none;
+}
 .symptom-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   width: 44px;
@@ -73,6 +77,9 @@
   background: radial-gradient(circle at center, #933a35 10px, transparent 10px);
   cursor: pointer;
   margin-top: -17.5px;
+  border: none;
+  box-shadow: none;
+  outline: none;
 }
 .symptom-slider::-moz-range-thumb {
   width: 44px;
