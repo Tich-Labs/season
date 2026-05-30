@@ -33,6 +33,6 @@ class CalendarControllerTest < ActionDispatch::IntegrationTest
     carol = users(:carol)
     sign_in_as(carol)
     get user_root_path
-    assert_redirected_to onboarding_path(1)
+    assert_redirected_to onboarding_path(2)
   end
 end

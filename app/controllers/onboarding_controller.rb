@@ -53,6 +53,34 @@ class OnboardingController < ApplicationController
       redirect_to onboarding_path(3) and return
 
     when 3
+      # First day of last period
+      if params[:skip_last_period].present?
+        redirect_to onboarding_path(4) and return
+      end
+      date = params[:last_period_start]
+      if date.blank?
+        @error = "Please select a date or tap Unsure"
+        render :show, status: :unprocessable_content
+        return
+      end
+      current_user.update!(last_period_start: Date.parse(date))
+      redirect_to onboarding_path(4) and return
+
+    when 4
+      # Last day of last period
+      if params[:skip_last_period].present?
+        redirect_to onboarding_path(5) and return
+      end
+      date = params[:last_period_end]
+      if date.blank?
+        @error = "Please select a date or tap Unsure"
+        render :show, status: :unprocessable_content
+        return
+      end
+      current_user.update!(last_period_end: Date.parse(date))
+      redirect_to onboarding_path(5) and return
+
+    when 5
       # Regular cycle?
       regular = params[:has_regular_cycle]
       if regular.blank?
@@ -63,16 +91,17 @@ class OnboardingController < ApplicationController
       has_regular = regular == "true"
       current_user.update!(has_regular_cycle: has_regular)
       if has_regular
-        redirect_to onboarding_path(4) and return
+        redirect_to onboarding_path(6) and return
       else
-        redirect_to onboarding_path(4, no_regular: true) and return
+        redirect_to onboarding_path(6, no_regular: true) and return
       end
 
-    when 4
+    when 6
       # Cycle length
       if params[:skip_cycle_length].present?
-        current_user.update!(cycle_length: 28) # default
-        redirect_to onboarding_path(5) and return
+        # TODO: Auto-calculate from user's tracking data over time
+        current_user.update!(cycle_length: 28)
+        redirect_to onboarding_path(7) and return
       end
       cycle_length = params[:cycle_length].to_i
       if cycle_length < 20 || cycle_length > 45
@@ -81,9 +110,9 @@ class OnboardingController < ApplicationController
         return
       end
       current_user.update!(cycle_length: cycle_length)
-      redirect_to onboarding_path(5) and return
+      redirect_to onboarding_path(7) and return
 
-    when 5
+    when 7
       # Hormonal birth control?
       hormonal = params[:uses_hormonal_birth_control]
       if hormonal.blank?
@@ -94,23 +123,12 @@ class OnboardingController < ApplicationController
       uses_hormonal = hormonal == "true"
       current_user.update!(uses_hormonal_birth_control: uses_hormonal)
       if uses_hormonal
-        redirect_to onboarding_path(6) and return
+        redirect_to onboarding_path(9) and return
       else
         redirect_to onboarding_path(8) and return
       end
 
-    when 6
-      # Birth control method
-      method = params[:birth_control_method]
-      if method.blank?
-        @error = "Please select a method"
-        render :show, status: :unprocessable_content
-        return
-      end
-      current_user.update!(contraception_type: method)
-      redirect_to onboarding_path(7) and return
-
-    when 7
+    when 8
       # Birth control reminder
       reminder = params[:birth_control_reminder]
       if reminder.blank?
@@ -119,20 +137,30 @@ class OnboardingController < ApplicationController
         return
       end
       current_user.update!(birth_control_reminder: reminder == "true")
-      redirect_to onboarding_path(8) and return
-
-    when 8
-      # Contraception (taking any?)
-      contraception = params[:contraception]
-      if contraception.blank?
-        @error = "Please select an option"
-        render :show, status: :unprocessable_content
-        return
-      end
-      current_user.update!(contraception_type: contraception) unless current_user.uses_hormonal_birth_control?
       redirect_to onboarding_path(9) and return
 
     when 9
+      # Birth control method
+      # TODO: Eventually redirect to Settings for reminder setup
+      method = params[:birth_control_method]
+      if method.blank?
+        @error = "Please select a method"
+        render :show, status: :unprocessable_content
+        return
+      end
+      current_user.update!(contraception_type: method)
+      redirect_to onboarding_path(10) and return
+
+    when 10
+      # Cycle stage reminder
+      if params[:skip_reminder].present?
+        current_user.update!(cycle_stage_reminder: false)
+      else
+        current_user.update!(cycle_stage_reminder: true)
+      end
+      redirect_to onboarding_path(11) and return
+
+    when 11
       # Food preferences
       food_pref = params[:food_preference]
       if food_pref.blank?
@@ -140,31 +168,7 @@ class OnboardingController < ApplicationController
         render :show, status: :unprocessable_content
         return
       end
-      current_user.update!(food_preference: food_pref)
-      redirect_to onboarding_path(10) and return
-
-    when 10
-      # Last period calendar
-      if params[:skip_last_period].present?
-        redirect_to onboarding_path(11) and return
-      end
-      last_period_date = params[:last_period_date]
-      if last_period_date.blank?
-        @error = "Please select a date or tap Unsure"
-        render :show, status: :unprocessable_content
-        return
-      end
-      parsed_date = Date.parse(last_period_date)
-      current_user.update!(last_period_start: parsed_date)
-      redirect_to onboarding_path(11) and return
-
-    when 11
-      # Cycle stage reminder
-      if params[:skip_reminder].present?
-        current_user.update!(cycle_stage_reminder: false, onboarding_completed: true)
-      else
-        current_user.update!(cycle_stage_reminder: true, onboarding_completed: true)
-      end
+      current_user.update!(food_preference: food_pref, onboarding_completed: true)
       redirect_to onboarding_finish_path and return
     end
   rescue ActiveRecord::RecordInvalid => e

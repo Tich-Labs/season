@@ -87,10 +87,20 @@ de:
       placeholder_year: "JJJJ"
       submit: "Weiter"
     step3:
+      heading: "%{name}, wann war der erste Tag deiner letzten Menstruation?"
+      clear: "Löschen"
+      submit: "Weiter"
+      unsure: "Nicht sicher..."
+    step4:
+      heading: "%{name}, wann war der letzte Tag deiner letzten Menstruation?"
+      clear: "Löschen"
+      submit: "Weiter"
+      unsure: "Nicht sicher..."
+    step5:
       heading: "Hast du einen regelmäßigen Zyklus?"
       "yes": "Ja"
       "no": "Nein"
-    step4:
+    step6:
       no_problem_title: "Kein Problem"
       no_problem_body: "Wir helfen dir, deinen Zyklus mit Sport- und Ernährungstipps wieder in den Griff zu bekommen"
       no_problem_ok: "Okay, weiter"
@@ -99,12 +109,16 @@ de:
       days_suffix: "Tage"
       submit: "Weiter"
       not_sure: "Nicht sicher"
-    step5:
+    step7:
       heading: "Verwendest du hormonelle Verhütungsmittel?"
       "yes": "Ja"
       "no": "Nein"
       info: "Hormonelle Verhütungsmittel verändern deinen natürlichen Zyklus. Season orientiert sich aktuell an deinem natürlichen Zyklus, aber durch das Verfolgen deiner Symptome und Superkraft-Momente erstellen wir eine personalisierte Vorhersage für dich."
-    step6:
+    step8:
+      heading: "Möchtest du eine Erinnerung für dein Verhütungsmittel einrichten?"
+      "yes": "Ja"
+      "no": "Nein"
+    step9:
       heading: "Welche Verhütungsmethode verwendest du?"
       methods:
         - "Antibabypille"
@@ -113,25 +127,12 @@ de:
         - "Hormonspritze"
         - "Intrauterinpessar"
         - "Hormonstäbchen"
+    step10:
+      heading: "Möchtest du an deine Zyklusphasen erinnert werden?"
+      body: "Du erhältst sie zwei Tage vor dem voraussichtlichen Beginn deiner Zyklusphase. Du kannst diese später ändern."
       submit: "Weiter"
-    step7:
-      heading: "Möchtest du eine Erinnerung für dein Verhütungsmittel einrichten?"
-      "yes": "Ja"
-      "no": "Nein"
-    step8:
-      heading_html: "Hallo %{name},<br>Nimmst du ein Verhütungsmittel?"
-      contraceptions:
-        - "Keine"
-        - "Antibabypille"
-        - "Hormonspirale"
-        - "Hormonpflaster"
-        - "Hormonspritze"
-        - "Intrauterinpessar"
-        - "Hormonstäbchen"
-        - "Kondome"
-        - "Andere"
-      submit: "Weiter"
-    step9:
+      maybe_later: "Vielleicht später"
+    step11:
       heading_html: "Hallo %{name},<br>Hast du Ernährungspräferenzen?"
       foods:
         - "Keine"
@@ -139,17 +140,6 @@ de:
         - "Vegan"
         - "Pollotarisch"
         - "Pescetarisch"
-      submit: "Weiter"
-    step10:
-      heading: "%{name}, wann war der erste Tag deiner letzten Menstruation?"
-      clear: "löschen"
-      submit: "Weiter"
-      unsure: "Nicht sicher..."
-    step11:
-      heading: "Möchtest du an deine Zyklusphasen erinnert werden?"
-      body: "Du erhältst sie zwei Tage vor dem voraussichtlichen Beginn deiner Zyklusphase. Du kannst diese später ändern."
-      submit: "Weiter"
-      maybe_later: "Vielleicht später"
     finish:
       skip: "Überspringen"
       animation_alt: "Season App-Setup-Animation — deine Reise ist bereit"

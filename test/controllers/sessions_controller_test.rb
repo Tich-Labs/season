@@ -16,7 +16,7 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
   test "POST /session with valid credentials for incomplete onboarding redirects to onboarding" do
     carol = users(:carol)
     post session_path, params: {email: carol.email, password: "password123"}
-    assert_redirected_to onboarding_path(1)
+    assert_redirected_to onboarding_path(2)
   end
 
   test "POST /session with wrong password renders login with 422" do

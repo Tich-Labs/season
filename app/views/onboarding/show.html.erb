@@ -1,18 +1,5 @@
 <div class="min-h-dvh bg-white flex flex-col max-w-[430px] mx-auto px-8" style="padding-top:calc(60px + env(safe-area-inset-top,0px));padding-bottom:calc(3rem + env(safe-area-inset-bottom,0px))">
 
-  <script nonce="<%= content_security_policy_nonce %>">
-    function selectDate(date, btn) {
-      document.getElementById('last_period_value').value = date;
-      document.querySelectorAll('.cal-day').forEach(function(b) {
-        b.querySelector('span').classList.remove('bg-brand-primary', 'text-white', 'font-semibold', 'rounded-sm');
-        b.querySelector('span').classList.add('text-brand-primary');
-      });
-      btn.querySelector('span').classList.remove('text-brand-primary');
-      btn.querySelector('span').classList.add('bg-brand-primary', 'text-white', 'font-semibold', 'rounded-sm');
-      document.getElementById('cal-submit-btn').classList.remove('hidden');
-    }
-  </script>
-
   <% if @error %>
     <div class="bg-brand-error rounded-xl px-4 py-3 text-sm text-brand-primary mb-4">
       <%= @error %>
@@ -75,42 +62,200 @@
     </div>
     <div class="flex-1"></div>
 
-  <%# ── Step 3: Regular cycle? ────────────────────────────────────── %>
+  <%# ── Step 3: First day of last period ──────────────────────────── %>
   <% when 3 %>
+    <%
+      today      = Time.zone.today
+      cal_year   = (params[:cal_year] || today.year).to_i
+      cal_month_num = (params[:cal_month] || today.month).to_i
+      cal_start  = Date.new(cal_year, cal_month_num, 1)
+      cal_end    = cal_start.end_of_month
+      start_pad  = (cal_start.wday - 1) % 7
+      end_pad    = (7 - cal_end.wday) % 7
+      cal_days   = (cal_start - start_pad)..(cal_end + end_pad)
+    %>
+
+    <div class="pt-4">
+      <h2 class="text-brand-primary text-[22px] font-medium leading-tight mb-6">
+        <%= t('onboarding.step3.heading', name: current_user.first_name) %>
+      </h2>
+    </div>
+
+    <div class="flex-1">
+      <%= form_with url: onboarding_path(3), method: :patch, local: true,
+          data: { controller: "onboarding-calendar" } do |f| %>
+        <%= f.hidden_field :last_period_start, value: "",
+            data: { onboarding_calendar_target: "input" } %>
+
+        <div class="flex items-center justify-between mb-2">
+          <a href="<%= onboarding_path(3, cal_year: (cal_start - 1.month).year, cal_month: (cal_start - 1.month).month) %>"
+             class="text-brand-primary text-sm font-medium px-1">&lt;</a>
+          <span class="text-brand-primary text-sm font-medium">
+            <%= cal_start.strftime("%B %Y") %>
+          </span>
+          <a href="<%= onboarding_path(3, cal_year: (cal_start + 1.month).year, cal_month: (cal_start + 1.month).month) %>"
+             class="text-brand-primary text-sm font-medium px-1">&gt;</a>
+        </div>
+
+        <div>
+          <% cal_days.each_slice(7).each do |week| %>
+            <div class="border-t border-brand-field"></div>
+            <div class="grid grid-cols-7">
+              <% week.each do |day| %>
+                <%
+                  in_month = day.month == cal_start.month
+                  is_today = day == today
+                %>
+                <button type="button"
+                     data-action="click->onboarding-calendar#select"
+                     data-onboarding-calendar-target="day"
+                     data-date="<%= day.iso8601 %>"
+                     data-in-month="<%= in_month %>"
+                     data-today="<%= is_today %>"
+                     class="cal-day flex flex-col items-center py-3 cursor-pointer select-none bg-transparent border-none p-0">
+                  <span class="text-sm w-8 h-8 flex items-center justify-center cal-day-label
+                               <%= is_today ? 'bg-brand-primary text-white font-semibold rounded-sm' : (in_month ? 'text-brand-primary' : 'text-[#C8A49A]') %>">
+                    <%= day.day %>
+                  </span>
+                </button>
+              <% end %>
+            </div>
+          <% end %>
+          <div class="border-t border-brand-field"></div>
+        </div>
+
+        <a href="#" data-action="click->onboarding-calendar#clear"
+           data-onboarding-calendar-target="clear"
+           class="block text-center text-brand-primary text-sm hidden mt-4"><%= t('onboarding.step3.clear') %></a>
+
+        <%= f.submit t('onboarding.step3.submit'),
+            data: { onboarding_calendar_target: "submit" },
+            class: "w-full h-[52px] bg-brand-primary text-white rounded-lg text-[22px] font-medium tracking-[0.66px] hidden mt-2" %>
+      <% end %>
+
+      <%= form_with url: onboarding_path(3), method: :patch, local: true do |f| %>
+        <%= f.hidden_field :skip_last_period, value: "1" %>
+        <%= f.submit t('onboarding.step3.unsure'),
+            data: { onboarding_calendar_target: "skip" },
+            class: "w-full h-[52px] bg-brand-primary text-white rounded-lg text-[22px] font-medium tracking-[0.66px] mt-2" %>
+      <% end %>
+    </div>
+
+  <%# ── Step 4: Last day of last period ───────────────────────────── %>
+  <% when 4 %>
+    <%
+      today      = Time.zone.today
+      cal_year   = (params[:cal_year] || today.year).to_i
+      cal_month_num = (params[:cal_month] || today.month).to_i
+      cal_start  = Date.new(cal_year, cal_month_num, 1)
+      cal_end    = cal_start.end_of_month
+      start_pad  = (cal_start.wday - 1) % 7
+      end_pad    = (7 - cal_end.wday) % 7
+      cal_days   = (cal_start - start_pad)..(cal_end + end_pad)
+    %>
+
+    <div class="pt-4">
+      <h2 class="text-brand-primary text-[22px] font-medium leading-tight mb-6">
+        <%= t('onboarding.step4.heading', name: current_user.first_name) %>
+      </h2>
+    </div>
+
+    <div class="flex-1">
+      <%= form_with url: onboarding_path(4), method: :patch, local: true,
+          data: { controller: "onboarding-calendar" } do |f| %>
+        <%= f.hidden_field :last_period_end, value: "",
+            data: { onboarding_calendar_target: "input" } %>
+
+        <div class="flex items-center justify-between mb-2">
+          <a href="<%= onboarding_path(4, cal_year: (cal_start - 1.month).year, cal_month: (cal_start - 1.month).month) %>"
+             class="text-brand-primary text-sm font-medium px-1">&lt;</a>
+          <span class="text-brand-primary text-sm font-medium">
+            <%= cal_start.strftime("%B %Y") %>
+          </span>
+          <a href="<%= onboarding_path(4, cal_year: (cal_start + 1.month).year, cal_month: (cal_start + 1.month).month) %>"
+             class="text-brand-primary text-sm font-medium px-1">&gt;</a>
+        </div>
+
+        <div>
+          <% cal_days.each_slice(7).each do |week| %>
+            <div class="border-t border-brand-field"></div>
+            <div class="grid grid-cols-7">
+              <% week.each do |day| %>
+                <%
+                  in_month = day.month == cal_start.month
+                  is_today = day == today
+                %>
+                <button type="button"
+                     data-action="click->onboarding-calendar#select"
+                     data-onboarding-calendar-target="day"
+                     data-date="<%= day.iso8601 %>"
+                     data-in-month="<%= in_month %>"
+                     data-today="<%= is_today %>"
+                     class="cal-day flex flex-col items-center py-3 cursor-pointer select-none bg-transparent border-none p-0">
+                  <span class="text-sm w-8 h-8 flex items-center justify-center cal-day-label
+                               <%= is_today ? 'bg-brand-primary text-white font-semibold rounded-sm' : (in_month ? 'text-brand-primary' : 'text-[#C8A49A]') %>">
+                    <%= day.day %>
+                  </span>
+                </button>
+              <% end %>
+            </div>
+          <% end %>
+          <div class="border-t border-brand-field"></div>
+        </div>
+
+        <a href="#" data-action="click->onboarding-calendar#clear"
+           data-onboarding-calendar-target="clear"
+           class="block text-center text-brand-primary text-sm hidden mt-4"><%= t('onboarding.step4.clear') %></a>
+
+        <%= f.submit t('onboarding.step4.submit'),
+            data: { onboarding_calendar_target: "submit" },
+            class: "w-full h-[52px] bg-brand-primary text-white rounded-lg text-[22px] font-medium tracking-[0.66px] hidden mt-2" %>
+      <% end %>
+
+      <%= form_with url: onboarding_path(4), method: :patch, local: true do |f| %>
+        <%= f.hidden_field :skip_last_period, value: "1" %>
+        <%= f.submit t('onboarding.step4.unsure'),
+            data: { onboarding_calendar_target: "skip" },
+            class: "w-full h-[52px] bg-brand-primary text-white rounded-lg text-[22px] font-medium tracking-[0.66px] mt-2" %>
+      <% end %>
+    </div>
+
+  <%# ── Step 5: Regular cycle? ────────────────────────────────────── %>
+  <% when 5 %>
     <div class="mt-[113px]">
       <h2 class="text-brand-primary text-[22px] font-medium leading-[27px] tracking-[1.32px] mb-[43px]">
-        <%= t('onboarding.step3.heading') %>
+        <%= t('onboarding.step5.heading') %>
       </h2>
 
       <div class="flex flex-col gap-3 items-center">
-        <%= form_with url: onboarding_path(3), method: :patch, local: true do |f| %>
+        <%= form_with url: onboarding_path(5), method: :patch, local: true do |f| %>
           <%= f.hidden_field :has_regular_cycle, value: "true" %>
-          <%= f.submit t('onboarding.step3.yes'),
+          <%= f.submit t('onboarding.step5.yes'),
               class: "w-[322px] h-[52px] bg-brand-primary text-white rounded-lg text-[22px] font-medium tracking-[0.66px] cursor-pointer" %>
         <% end %>
 
-        <%= form_with url: onboarding_path(3), method: :patch, local: true do |f| %>
+        <%= form_with url: onboarding_path(5), method: :patch, local: true do |f| %>
           <%= f.hidden_field :has_regular_cycle, value: "false" %>
-          <%= f.submit t('onboarding.step3.no'),
+          <%= f.submit t('onboarding.step5.no'),
               class: "w-[322px] bg-transparent text-brand-primary py-4 text-[22px] font-medium tracking-[0.66px] cursor-pointer border-none" %>
         <% end %>
       </div>
     </div>
     <div class="flex-1"></div>
 
-  <%# ── Step 4: Cycle length (scroll picker) ──────────────────────── %>
-  <% when 4 %>
+  <%# ── Step 6: Cycle length (scroll picker) ──────────────────────── %>
+  <% when 6 %>
     <% if @no_regular_cycle %>
       <div id="no-problem-modal" role="dialog" aria-modal="true" aria-labelledby="no-problem-title"
            class="fixed inset-0 bg-black/40 flex items-center justify-center z-50 px-8">
         <div class="bg-brand-background rounded-2xl px-8 py-10 text-center max-w-[340px] w-full">
-          <h3 id="no-problem-title" class="text-brand-primary text-2xl font-medium mb-4"><%= t('onboarding.step4.no_problem_title') %></h3>
+          <h3 id="no-problem-title" class="text-brand-primary text-2xl font-medium mb-4"><%= t('onboarding.step6.no_problem_title') %></h3>
           <p class="text-brand-primary text-sm leading-relaxed mb-8">
-            <%= t('onboarding.step4.no_problem_body') %>
+            <%= t('onboarding.step6.no_problem_body') %>
           </p>
           <button id="no-problem-ok" onclick="document.getElementById('no-problem-modal').remove()"
                   class="w-full h-12 bg-brand-primary text-white rounded-lg text-xl font-medium">
-            <%= t('onboarding.step4.no_problem_ok') %>
+            <%= t('onboarding.step6.no_problem_ok') %>
           </button>
         </div>
       </div>
@@ -129,18 +274,20 @@
 
     <div class="mt-[113px]">
       <h2 class="text-brand-primary text-[22px] font-medium leading-[27px] tracking-[1.32px] mb-1">
-        <%= t('onboarding.step4.heading') %>
+        <%= t('onboarding.step6.heading') %>
       </h2>
-      <p class="text-brand-secondary text-sm mb-10"><%= t('onboarding.step4.note') %></p>
+      <p class="text-brand-secondary text-sm mb-10"><%= t('onboarding.step6.note') %></p>
 
-      <%= form_with url: onboarding_path(4), method: :patch, id: "step4-form", local: true do |f| %>
-        <%= f.hidden_field :cycle_length, id: "cycle_length_value", value: "28" %>
+      <%= form_with url: onboarding_path(6), method: :patch, id: "step6-form", local: true,
+          data: { controller: "onboarding-picker" } do |f| %>
+        <%= f.hidden_field :cycle_length, id: "cycle_length_value", value: "28",
+            data: { onboarding_picker_target: "input" } %>
 
         <div class="relative flex justify-center overflow-hidden" style="height:210px;">
           <div class="absolute left-0 right-0 bg-brand-field rounded-lg pointer-events-none"
                style="top:84px; height:42px;"></div>
 
-          <div id="cycle-picker"
+          <div data-onboarding-picker-target="track"
                role="listbox" aria-label="Cycle length in days" aria-activedescendant="cycle-day-28"
                tabindex="0"
                class="relative overflow-y-scroll flex flex-col items-center"
@@ -152,7 +299,7 @@
                    data-days="<%= d %>"
                    class="cycle-day-item flex items-center justify-center text-brand-primary font-medium cursor-pointer flex-shrink-0"
                    style="height:42px; min-height:42px; scroll-snap-align:center; font-size:16px; opacity:0.45;">
-                <%= d %> <%= t('onboarding.step4.days_suffix') %>
+                <%= d %> <%= t('onboarding.step6.days_suffix') %>
               </div>
             <% end %>
             <div style="min-height:84px; flex-shrink:0;"></div>
@@ -164,33 +311,34 @@
     <div class="flex-1"></div>
 
     <div class="w-full flex flex-col gap-3 items-center">
-      <%= button_tag t('onboarding.step4.submit'), form: "step4-form", type: "submit",
+      <%= button_tag t('onboarding.step6.submit'), form: "step6-form", type: "submit",
           class: "w-[322px] h-[52px] bg-brand-primary text-white rounded-lg text-[22px] font-medium tracking-[0.66px]" %>
 
-      <%= form_with url: onboarding_path(4), method: :patch, local: true do |f| %>
+      <%# TODO: Auto-calculate cycle length from user's tracking data over time %>
+      <%= form_with url: onboarding_path(6), method: :patch, local: true do |f| %>
         <%= f.hidden_field :skip_cycle_length, value: "1" %>
-        <%= f.submit t('onboarding.step4.not_sure'),
+        <%= f.submit t('onboarding.step6.not_sure'),
             class: "w-[322px] bg-transparent text-brand-primary py-3 text-[22px] font-medium tracking-[0.66px] cursor-pointer border-none" %>
       <% end %>
     </div>
 
-  <%# ── Step 5: Hormonal birth control? ───────────────────────────── %>
-  <% when 5 %>
+  <%# ── Step 7: Hormonal birth control? ───────────────────────────── %>
+  <% when 7 %>
     <div class="mt-[113px]">
       <h2 class="text-brand-primary text-[22px] font-medium leading-[27px] tracking-[1.32px] mb-[43px]">
-        <%= t('onboarding.step5.heading') %>
+        <%= t('onboarding.step7.heading') %>
       </h2>
 
       <div class="flex flex-col gap-3 items-center">
-        <%= form_with url: onboarding_path(5), method: :patch, local: true do |f| %>
+        <%= form_with url: onboarding_path(7), method: :patch, local: true do |f| %>
           <%= f.hidden_field :uses_hormonal_birth_control, value: "true" %>
-          <%= f.submit t('onboarding.step5.yes'),
+          <%= f.submit t('onboarding.step7.yes'),
               class: "w-[322px] h-[52px] bg-brand-primary text-white rounded-lg text-[22px] font-medium tracking-[0.66px] cursor-pointer" %>
         <% end %>
 
-        <%= form_with url: onboarding_path(5), method: :patch, local: true do |f| %>
+        <%= form_with url: onboarding_path(7), method: :patch, local: true do |f| %>
           <%= f.hidden_field :uses_hormonal_birth_control, value: "false" %>
-          <%= f.submit t('onboarding.step5.no'),
+          <%= f.submit t('onboarding.step7.no'),
               class: "w-[322px] bg-transparent text-brand-primary py-4 text-[22px] font-medium tracking-[0.66px] cursor-pointer border-none" %>
         <% end %>
       </div>
@@ -200,20 +348,44 @@
 
     <div class="w-full max-w-80">
       <p class="text-brand-primary text-sm leading-relaxed">
-        <%= t('onboarding.step5.info') %>
+        <%= t('onboarding.step7.info') %>
       </p>
     </div>
 
-  <%# ── Step 6: Birth control method ─────────────────────────────── %>
-  <% when 6 %>
+  <%# ── Step 8: Birth control reminder ────────────────────────────── %>
+  <% when 8 %>
     <div class="mt-[113px]">
       <h2 class="text-brand-primary text-[22px] font-medium leading-[27px] tracking-[1.32px] mb-[43px]">
-        <%= t('onboarding.step6.heading') %>
+        <%= t('onboarding.step8.heading') %>
       </h2>
 
       <div class="flex flex-col gap-3 items-center">
-        <% t('onboarding.step6.methods').each do |method| %>
-          <%= form_with url: onboarding_path(6), method: :patch, local: true do |f| %>
+        <%= form_with url: onboarding_path(8), method: :patch, local: true do |f| %>
+          <%= f.hidden_field :birth_control_reminder, value: "true" %>
+          <%= f.submit t('onboarding.step8.yes'),
+              class: "w-[322px] h-[52px] bg-brand-primary text-white rounded-lg text-[22px] font-medium tracking-[0.66px] cursor-pointer" %>
+        <% end %>
+
+        <%= form_with url: onboarding_path(8), method: :patch, local: true do |f| %>
+          <%= f.hidden_field :birth_control_reminder, value: "false" %>
+          <%= f.submit t('onboarding.step8.no'),
+              class: "w-[322px] bg-transparent text-brand-primary py-4 text-[22px] font-medium tracking-[0.66px] cursor-pointer border-none" %>
+        <% end %>
+      </div>
+    </div>
+    <div class="flex-1"></div>
+
+  <%# ── Step 9: Birth control method ──────────────────────────────── %>
+  <%# TODO: On submit, redirect to Settings for reminder setup instead of next step %>
+  <% when 9 %>
+    <div class="mt-[113px]">
+      <h2 class="text-brand-primary text-[22px] font-medium leading-[27px] tracking-[1.32px] mb-[43px]">
+        <%= t('onboarding.step9.heading') %>
+      </h2>
+
+      <div class="flex flex-col gap-3 items-center">
+        <% t('onboarding.step9.methods').each do |method| %>
+          <%= form_with url: onboarding_path(9), method: :patch, local: true do |f| %>
             <%= f.hidden_field :birth_control_method, value: method %>
             <%= f.submit method,
                 class: "w-[322px] h-[52px] bg-brand-field text-brand-primary rounded-lg text-[22px] font-medium tracking-[0.66px] cursor-pointer" %>
@@ -222,142 +394,8 @@
       </div>
     </div>
 
-  <%# ── Step 7: Birth control reminder ────────────────────────────── %>
-  <% when 7 %>
-    <div class="mt-[113px]">
-      <h2 class="text-brand-primary text-[22px] font-medium leading-[27px] tracking-[1.32px] mb-[43px]">
-        <%= t('onboarding.step7.heading') %>
-      </h2>
-
-      <div class="flex flex-col gap-3 items-center">
-        <%= form_with url: onboarding_path(7), method: :patch, local: true do |f| %>
-          <%= f.hidden_field :birth_control_reminder, value: "true" %>
-          <%= f.submit t('onboarding.step7.yes'),
-              class: "w-[322px] h-[52px] bg-brand-primary text-white rounded-lg text-[22px] font-medium tracking-[0.66px] cursor-pointer" %>
-        <% end %>
-
-        <%= form_with url: onboarding_path(7), method: :patch, local: true do |f| %>
-          <%= f.hidden_field :birth_control_reminder, value: "false" %>
-          <%= f.submit t('onboarding.step7.no'),
-              class: "w-[322px] bg-transparent text-brand-primary py-4 text-[22px] font-medium tracking-[0.66px] cursor-pointer border-none" %>
-        <% end %>
-      </div>
-    </div>
-    <div class="flex-1"></div>
-
-  <%# ── Step 8: Are you taking any contraception? ─────────────────── %>
-  <% when 8 %>
-    <div class="mt-[113px]">
-      <h2 class="text-brand-primary text-[22px] font-medium leading-[27px] tracking-[1.32px] mb-[43px]">
-        <%= t('onboarding.step8.heading_html', name: current_user.first_name) %>
-      </h2>
-
-      <div class="flex flex-col gap-3 items-center">
-        <% t('onboarding.step8.contraceptions').each do |c| %>
-          <%= form_with url: onboarding_path(8), method: :patch, local: true do |f| %>
-            <%= f.hidden_field :contraception, value: c %>
-            <%= f.submit c,
-                class: "w-[322px] h-[52px] bg-brand-field text-brand-primary rounded-lg text-[22px] font-medium tracking-[0.66px] cursor-pointer" %>
-          <% end %>
-        <% end %>
-      </div>
-    </div>
-
-  <%# ── Step 9: Food preferences ───────────────────────────────────── %>
-  <% when 9 %>
-    <div class="mt-[113px]">
-      <h2 class="text-brand-primary text-[22px] font-medium leading-[27px] tracking-[1.32px] mb-[43px]">
-        <%= t('onboarding.step9.heading_html', name: current_user.first_name) %>
-      </h2>
-
-      <div class="flex flex-col gap-3 items-center">
-        <% t('onboarding.step9.foods').each do |pref| %>
-          <%= form_with url: onboarding_path(9), method: :patch, local: true do |f| %>
-            <%= f.hidden_field :food_preference, value: pref %>
-            <%= f.submit pref,
-                class: "w-[322px] h-[52px] bg-brand-field text-brand-primary rounded-lg text-[22px] font-medium tracking-[0.66px] cursor-pointer" %>
-          <% end %>
-        <% end %>
-      </div>
-    </div>
-
-  <%# ── Step 10: Last period calendar ─────────────────────────────── %>
+  <%# ── Step 10: Cycle stage reminder ─────────────────────────────── %>
   <% when 10 %>
-    <%
-      today      = Time.zone.today
-      cal_year   = (params[:cal_year] || today.year).to_i
-      cal_month_num = (params[:cal_month] || today.month).to_i
-      cal_start  = Date.new(cal_year, cal_month_num, 1)
-      cal_end    = cal_start.end_of_month
-      start_pad  = (cal_start.wday - 1) % 7
-      end_pad    = (7 - cal_end.wday) % 7
-      cal_days   = (cal_start - start_pad)..(cal_end + end_pad)
-    %>
-
-    <div class="pt-4">
-      <h2 class="text-brand-primary text-[22px] font-medium leading-tight mb-6">
-        <%= t('onboarding.step10.heading', name: current_user.first_name) %>
-      </h2>
-    </div>
-
-    <div class="flex-1">
-      <%= form_with url: onboarding_path(10), method: :patch, id: "step10-form", local: true do |f| %>
-        <%= f.hidden_field :last_period_date, id: "last_period_value", value: "" %>
-
-        <div class="flex items-center justify-between mb-2">
-          <a href="<%= onboarding_path(10, cal_year: (cal_start - 1.month).year, cal_month: (cal_start - 1.month).month) %>"
-             class="text-brand-primary text-sm font-medium px-1">&lt;</a>
-          <span class="text-brand-primary text-sm font-medium">
-            <%= cal_start.strftime("%B %Y") %>
-          </span>
-          <a href="<%= onboarding_path(10, cal_year: (cal_start + 1.month).year, cal_month: (cal_start + 1.month).month) %>"
-             class="text-brand-primary text-sm font-medium px-1">&gt;</a>
-        </div>
-
-        <div id="cal-grid" data-period-length="<%= current_user.period_length || 5 %>">
-          <% cal_days.each_slice(7).with_index do |week, week_idx| %>
-            <div class="border-t border-brand-field"></div>
-            <div class="cal-row grid grid-cols-7">
-              <% week.each do |day| %>
-                <%
-                  in_month = day.month == cal_start.month
-                  is_today = day == today
-                %>
-                <button type="button" class="cal-day flex flex-col items-center py-3 cursor-pointer select-none bg-transparent border-none p-0"
-                     data-date="<%= day.iso8601 %>"
-                     data-in-month="<%= in_month %>"
-                     data-today="<%= is_today %>"
-                     onclick="selectDate(<%= day.iso8601.to_json %>, this)">
-                  <span class="text-sm w-8 h-8 flex items-center justify-center cal-day-label
-                               <%= is_today ? 'bg-brand-primary text-white font-semibold rounded-sm' : (in_month ? 'text-brand-primary' : 'text-[#C8A49A]') %>">
-                    <%= day.day %>
-                  </span>
-                </button>
-              <% end %>
-            </div>
-          <% end %>
-          <div class="border-t border-brand-field"></div>
-        </div>
-
-        <a href="#" id="cal-clear" class="block text-center text-brand-primary text-sm hidden mt-4"><%= t('onboarding.step10.clear') %></a>
-
-        <button type="submit" id="cal-submit-btn"
-                class="w-full h-[52px] bg-brand-primary text-white rounded-lg text-[22px] font-medium tracking-[0.66px] hidden mt-2">
-          <%= t('onboarding.step10.submit') %>
-        </button>
-      <% end %>
-
-      <%= form_with url: onboarding_path(10), method: :patch, id: "skip-period-form", local: true do |f| %>
-        <%= f.hidden_field :skip_last_period, value: "1" %>
-        <button type="submit" id="cal-unsure-btn"
-                class="w-full h-[52px] bg-brand-primary text-white rounded-lg text-[22px] font-medium tracking-[0.66px] mt-2">
-          <%= t('onboarding.step10.unsure') %>
-        </button>
-      <% end %>
-    </div>
-
-  <%# ── Step 11: Cycle stage reminder ─────────────────────────────── %>
-  <% when 11 %>
     <div class="mt-[113px]">
       <div class="flex justify-center mb-6">
         <svg class="w-14 h-14 text-brand-primary" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
@@ -367,136 +405,45 @@
       </div>
 
       <h2 class="text-brand-primary text-[22px] font-medium leading-[27px] tracking-[1.32px] mb-[43px]">
-        <%= t('onboarding.step11.heading') %>
+        <%= t('onboarding.step10.heading') %>
       </h2>
       <p class="text-brand-primary text-sm leading-relaxed">
-        <%= t('onboarding.step11.body') %>
+        <%= t('onboarding.step10.body') %>
       </p>
     </div>
 
     <div class="flex-1"></div>
 
     <div class="w-full flex flex-col gap-3 items-center">
-      <%= form_with url: onboarding_path(11), method: :patch, local: true do |f| %>
-        <%= f.submit t('onboarding.step11.submit'),
+      <%= form_with url: onboarding_path(10), method: :patch, local: true do |f| %>
+        <%= f.submit t('onboarding.step10.submit'),
             class: "w-[322px] h-[52px] bg-brand-primary text-white rounded-lg text-[22px] font-medium tracking-[0.66px] cursor-pointer" %>
       <% end %>
 
-      <%= form_with url: onboarding_path(11), method: :patch, local: true do |f| %>
+      <%= form_with url: onboarding_path(10), method: :patch, local: true do |f| %>
         <%= f.hidden_field :skip_reminder, value: "1" %>
-        <%= f.submit t('onboarding.step11.maybe_later'),
+        <%= f.submit t('onboarding.step10.maybe_later'),
             class: "w-[322px] bg-transparent text-brand-primary py-3 text-[22px] font-medium tracking-[0.66px] cursor-pointer border-none" %>
       <% end %>
     </div>
 
+  <%# ── Step 11: Food preferences ─────────────────────────────────── %>
+  <% when 11 %>
+    <div class="mt-[113px]">
+      <h2 class="text-brand-primary text-[22px] font-medium leading-[27px] tracking-[1.32px] mb-[43px]">
+        <%= t('onboarding.step11.heading_html', name: current_user.first_name) %>
+      </h2>
+
+      <div class="flex flex-col gap-3 items-center">
+        <% t('onboarding.step11.foods').each do |pref| %>
+          <%= form_with url: onboarding_path(11), method: :patch, local: true do |f| %>
+            <%= f.hidden_field :food_preference, value: pref %>
+            <%= f.submit pref,
+                class: "w-[322px] h-[52px] bg-brand-field text-brand-primary rounded-lg text-[22px] font-medium tracking-[0.66px] cursor-pointer" %>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+
   <% end %>
 </div>
-
-<script nonce="<%= content_security_policy_nonce %>">
-document.addEventListener('turbo:load', function () {
-
-  // ── Step 4: Cycle length drum picker ──────────────────────────────
-  var picker = document.getElementById('cycle-picker');
-  if (picker) {
-    var items  = Array.from(picker.querySelectorAll('.cycle-day-item'));
-    var itemH  = 42;
-
-    function applyHighlight() {
-      var idx = Math.round(picker.scrollTop / itemH);
-      idx = Math.max(0, Math.min(idx, items.length - 1));
-      items.forEach(function (el, i) {
-        var active = (i === idx);
-        el.style.opacity  = active ? '1'    : '0.45';
-        el.style.fontSize = active ? '22px' : '16px';
-        el.setAttribute('aria-selected', active ? 'true' : 'false');
-        if (active) {
-          document.getElementById('cycle_length_value').value = el.dataset.days;
-          picker.setAttribute('aria-activedescendant', el.id);
-        }
-      });
-    }
-
-    var defaultIdx   = 28 - 20;
-    picker.scrollTop = defaultIdx * itemH;
-    applyHighlight();
-    picker.addEventListener('scroll', applyHighlight, { passive: true });
-  }
-
-  // ── Step 10: Calendar ─────────────────────────────────────────────
-  var calGrid = document.getElementById('cal-grid');
-  if (calGrid) {
-    var periodLength  = parseInt(calGrid.dataset.periodLength || '5', 10);
-    var selectedStart = null;
-    var clearLink     = document.getElementById('cal-clear');
-    var submitBtn     = document.getElementById('cal-submit-btn');
-    var unsureBtn     = document.getElementById('cal-unsure-btn');
-    var periodInput   = document.getElementById('last_period_value');
-
-    function isoToDate(str) {
-      var parts = str.split('-');
-      return new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
-    }
-
-    function renderSelection() {
-      var startD = selectedStart ? isoToDate(selectedStart) : null;
-
-      // Reset all rows
-      calGrid.querySelectorAll('.cal-row').forEach(function (row) {
-        row.style.background = '';
-      });
-      // Reset all day labels
-      calGrid.querySelectorAll('.cal-day').forEach(function (cell) {
-        var label   = cell.querySelector('.cal-day-label');
-        var inMonth = cell.dataset.inMonth === 'true';
-        var isToday = cell.dataset.today === 'true';
-        if (!isToday) {
-          label.style.color      = inMonth ? '#933a35' : '#C8A49A';
-          label.style.background = '';
-        }
-      });
-
-      if (startD) {
-        var endD = new Date(startD);
-        endD.setDate(endD.getDate() + periodLength - 1);
-
-        // Highlight entire rows that overlap the period range
-        calGrid.querySelectorAll('.cal-row').forEach(function (row) {
-          var cells     = Array.from(row.querySelectorAll('.cal-day'));
-          var firstDate = isoToDate(cells[0].dataset.date);
-          var lastDate  = isoToDate(cells[cells.length - 1].dataset.date);
-
-          if (firstDate <= endD && lastDate >= startD) {
-            row.style.background = '#933a35';
-            cells.forEach(function (cell) {
-              var label = cell.querySelector('.cal-day-label');
-              label.style.color      = '#ffffff';
-              label.style.background = '';
-            });
-          }
-        });
-      }
-
-      clearLink.classList.toggle('hidden', !selectedStart);
-      submitBtn.classList.toggle('hidden', !selectedStart);
-      unsureBtn.classList.toggle('hidden', !!selectedStart);
-
-      if (selectedStart) periodInput.value = selectedStart;
-    }
-
-    calGrid.querySelectorAll('.cal-day').forEach(function (cell) {
-      cell.addEventListener('click', function () {
-        selectedStart = this.dataset.date;
-        renderSelection();
-      });
-    });
-
-    clearLink.addEventListener('click', function (e) {
-      e.preventDefault();
-      selectedStart = null;
-      renderSelection();
-    });
-
-    renderSelection();
-  }
-});
-</script>
