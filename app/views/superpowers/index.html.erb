@@ -68,13 +68,13 @@
               : "background:#EDE1D5"
             dot_positions = ["left:calc(33.33% - 2.5px)", "left:calc(66.67% - 2.5px)", "right:2.5px"]
           %>
-          <div class="sp-row flex items-center gap-3" style="margin-bottom:25px;">
-            <span class="shrink-0 font-medium font-['Montserrat']"
-                  style="min-width:198px; font-size:16px; color:#933a35; letter-spacing:0.07em;">
+          <div class="sp-row" style="margin-bottom:25px;">
+            <span class="block font-medium font-['Montserrat'] mb-2"
+                  style="font-size:16px; color:#933a35; letter-spacing:0.07em;">
               <%= sp %>
             </span>
 
-            <div class="relative flex-1" style="padding-bottom:22px;">
+            <div class="relative" style="padding-bottom:22px;">
               <input type="range" min="0" max="3" step="1" value="<%= val %>" autocomplete="off"
                      class="symptom-slider"
                      data-action="input->superpower#save"
