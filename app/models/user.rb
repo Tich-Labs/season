@@ -55,8 +55,31 @@ class User < ApplicationRecord
     11 => ->(u) { u.food_preference.present? }
   }.freeze
 
-  # Returns the first step number where required data is missing, or nil when
-  # all required fields are present. Used to resume or nudge profile completion.
+  # All 11 onboarding steps in sequence. Used for resume redirect on sign-in.
+  ALL_ONBOARDING_STEPS = {
+    1 => ->(u) { u.name.present? },
+    2 => ->(u) { u.birthday.present? },
+    3 => ->(u) { u.last_period_start.present? },
+    4 => ->(u) { u.last_period_end.present? },
+    5 => ->(u) { !u.has_regular_cycle.nil? },
+    6 => ->(u) { u.cycle_length.present? },
+    7 => ->(u) { !u.uses_hormonal_birth_control.nil? },
+    8 => ->(u) { u.uses_hormonal_birth_control == true || !u.birth_control_reminder.nil? },
+    9 => ->(u) { u.contraception_type.present? && u.contraception_type != "none" },
+    10 => ->(u) { !u.cycle_stage_reminder.nil? },
+    11 => ->(u) { u.food_preference.present? }
+  }.freeze
+
+  # Returns the first step number where data is still missing (in sequential
+  # order), or nil if onboarding is already completed. Used to resume
+  # onboarding after sign-in for users who haven't finished yet.
+  def next_onboarding_step
+    return nil if onboarding_completed?
+    ALL_ONBOARDING_STEPS.find { |_step, check| !check.call(self) }&.first
+  end
+
+  # Returns the first step where REQUIRED data is missing, or nil when
+  # all required fields are present. Used to check if user can access app.
   def first_incomplete_onboarding_step
     REQUIRED_ONBOARDING_STEPS.find { |_step, check| !check.call(self) }&.first
   end

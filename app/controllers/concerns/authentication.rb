@@ -63,7 +63,7 @@ module Authentication
   end
 
   def after_sign_in_path
-    step = current_user.first_incomplete_onboarding_step
+    step = current_user.next_onboarding_step
     return onboarding_path(step) if step
 
     session.delete("user_return_to") || user_root_path
