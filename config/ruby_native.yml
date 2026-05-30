@@ -1,0 +1,25 @@
+app:
+  name: "Season"
+  mode: normal
+
+appearance:
+  tint_color: "#933a35"
+  background_color: "#FAF7F4"
+
+tabs:
+  - title: Calendar
+    path: /calendar
+    icon: calendar
+  - title: Tracking
+    path: /tracking
+    icon: heart
+  - title: Settings
+    path: /settings/edit
+    icon: gear
+
+ios:
+  bundle_id: com.season-app.ios
+  team_id: 28NDQR5JC4
+
+ruby_native:
+  app_id: app_cu4qa08l

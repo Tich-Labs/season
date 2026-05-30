@@ -95,3 +95,5 @@ group :test do
 end
 
 gem "tailwindcss-rails", "~> 3.3.1"
+
+gem "ruby_native", "~> 0.10.0"
