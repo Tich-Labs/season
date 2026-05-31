@@ -1,6 +1,6 @@
 class OnboardingController < ApplicationController
   layout "launch", except: [:invite]
-  allow_unauthenticated_access only: [:show, :invite]
+  allow_unauthenticated_access only: [:show, :invite, :finish]
   skip_onboarding_requirement
 
   TOTAL_STEPS = 11
@@ -177,7 +177,8 @@ class OnboardingController < ApplicationController
   end
 
   def finish
-    # Redirect handled in view via JS
+    # Also set a Refresh header as a fallback to ensure redirect works
+    response.headers["Refresh"] = "1.5;url=#{calendar_path}"
   end
 
   private
