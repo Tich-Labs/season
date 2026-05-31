@@ -185,7 +185,11 @@ Rails.application.routes.draw do
     get "launch_signups", to: "launch_signups#index", as: :launch_signups
     get "launch_signups/export_csv", to: "launch_signups#export_csv", as: :launch_signups_export_csv
     resources :cycle_phase_contents, except: [:show]
-    resources :cycle_day_contents, except: [:show]
+    resources :cycle_day_contents, except: [:show] do
+      collection do
+        post :import_csv
+      end
+    end
     resources :weekly_feedback_questions, except: [:show]
     get "weekly_feedback_responses", to: "weekly_feedback_responses#index", as: :weekly_feedback_responses
     get "weekly_feedback_responses/export_csv", to: "weekly_feedback_responses#export_csv", as: :weekly_feedback_responses_export_csv

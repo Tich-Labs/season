@@ -3,7 +3,21 @@
 <div class="max-w-4xl mx-auto px-4 py-6">
   <div class="flex justify-between items-center mb-4">
     <h1 class="text-xl font-bold text-brand-primary">Cycle Day Content (1-35)</h1>
-    <%= link_to "New", new_admin_cycle_day_content_path, class: "bg-brand-primary text-white px-4 py-2 rounded-lg text-sm" %>
+    <div class="flex gap-2">
+      <%= link_to "New", new_admin_cycle_day_content_path, class: "bg-brand-primary text-white px-4 py-2 rounded-lg text-sm" %>
+    </div>
+  </div>
+
+  <%# CSV Import %>
+  <div class="bg-gray-50 rounded-lg p-4 mb-6 border">
+    <h2 class="text-sm font-semibold text-gray-700 mb-2">Import from CSV</h2>
+    <%= form_with url: import_csv_admin_cycle_day_contents_path, multipart: true, local: true, class: "flex items-end gap-3" do |f| %>
+      <div class="flex-1">
+        <%= f.file_field :csv_file, accept: ".csv", class: "block w-full text-sm text-gray-600 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:bg-brand-primary file:text-white cursor-pointer" %>
+        <p class="text-xs text-gray-500 mt-1">CSV columns: Day, Phase (EN), Season (EN), Superpower Short Text (EN), Superpower Long Text (EN), Watch Out For (EN), Watch Out For - Expandable Text (EN), Mood (use our emojis) (EN), Sport (EN), Sport - Expandable Text (EN), Nutrition (EN), Nutrition - Expandable Text (EN), Fertility (EN), Fertility - Expandable Text (EN)</p>
+      </div>
+      <%= f.submit "Upload CSV", class: "bg-brand-primary text-white px-4 py-2 rounded-lg text-sm cursor-pointer shrink-0" %>
+    <% end %>
   </div>
 
   <div class="overflow-x-auto">

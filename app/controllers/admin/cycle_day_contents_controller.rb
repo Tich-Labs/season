@@ -36,6 +36,47 @@ module Admin
       redirect_to admin_cycle_day_contents_path, notice: "Deleted."
     end
 
+    def import_csv
+      require "csv"
+
+      file = params[:csv_file]
+      unless file
+        redirect_to admin_cycle_day_contents_path, alert: "Please select a CSV file."
+        return
+      end
+
+      imported = 0
+      errors = []
+
+      CSV.foreach(file.path, headers: true, liberal_parsing: true) do |row|
+        day = row["Day"].to_i
+        next unless day.between?(1, 35)
+
+        mappings = [
+          {type: "superpower", short: row["Superpower Short Text (EN)"], long: row["Superpower Long Text (EN)"]},
+          {type: "watch_out_for", short: row["Watch Out For (EN)"], long: row["Watch Out For - Expandable Text (EN)"]},
+          {type: "mood", short: row["Mood (use our emojis) (EN)"], long: row["Mood (use our emojis) (EN)"]},
+          {type: "sport", short: row["Sport (EN)"], long: row["Sport - Expandable Text (EN)"]},
+          {type: "nutrition", short: row["Nutrition (EN)"], long: row["Nutrition - Expandable Text (EN)"]},
+          {type: "fertility", short: row["Fertility (EN)"], long: row["Fertility - Expandable Text (EN)"].presence || row["Fertility (EN)"]}
+        ]
+
+        mappings.each do |m|
+          next if m[:short].blank?
+
+          rec = CycleDayContent.find_or_initialize_by(cycle_day: day, card_type: m[:type])
+          rec.update!(short_text: m[:short].strip, long_text: m[:long]&.strip || m[:short].strip)
+          imported += 1
+        end
+      rescue => e
+        errors << "Row #{$.}: #{e.message}"
+      end
+
+      notice = "Imported #{imported} records."
+      notice += " Errors: #{errors.join("; ")}" if errors.any?
+      redirect_to admin_cycle_day_contents_path, notice: notice
+    end
+
     private
 
     def set_content
