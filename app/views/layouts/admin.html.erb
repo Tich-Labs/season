@@ -28,7 +28,7 @@
         <%# Nav links %>
         <nav class="flex-1 px-3 py-4 space-y-1">
           <% users_active    = controller_name == "users" %>
-          <% content_active  = controller_name.in?(["cycle_phase_contents", "weekly_feedback_questions"]) %>
+          <% content_active  = controller_name.in?(["cycle_phase_contents", "cycle_day_contents", "weekly_feedback_questions"]) %>
           <% signups_active  = controller_name == "launch_signups" %>
           <% inbox_active    = controller_name == "inbox" && action_name == "overview" %>
           <% feedback_active = controller_name == "inbox" && action_name == "feedback" %>
@@ -58,6 +58,12 @@
                                      "bg-[#7a2f2a] text-white" => controller_name == "cycle_phase_contents",
                                      "text-[#f5ede8] hover:bg-[#7a2f2a] hover:text-white" => controller_name != "cycle_phase_contents") do %>
                 Informations
+              <% end %>
+              <%= link_to admin_cycle_day_contents_path,
+                  class: class_names("block px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                                     "bg-[#7a2f2a] text-white" => controller_name == "cycle_day_contents",
+                                     "text-[#f5ede8] hover:bg-[#7a2f2a] hover:text-white" => controller_name != "cycle_day_contents") do %>
+                Cycle Day
               <% end %>
               <%= link_to admin_weekly_feedback_questions_path,
                   class: class_names("block px-3 py-2 rounded-lg text-sm font-medium transition-colors",
