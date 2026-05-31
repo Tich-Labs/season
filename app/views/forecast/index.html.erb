@@ -10,12 +10,12 @@
 
 <%
   card_config = [
-    { key: "superpower",    title: "Super Power",   emoji: "⚡" },
-    { key: "watch_out_for", title: "Watch Out For", emoji: "⚠️" },
-    { key: "mood",          title: "Mood",          emoji: "😊" },
-    { key: "sport",         title: "Sport",         emoji: "🏃" },
-    { key: "nutrition",     title: "Nutrition",     emoji: "🥗" },
-    { key: "fertility",     title: "Fertility",     emoji: "🌸" },
+    { key: "superpower",    title: "Super Power" },
+    { key: "watch_out_for", title: "Watch Out For" },
+    { key: "mood",          title: "Mood" },
+    { key: "sport",         title: "Sport" },
+    { key: "nutrition",     title: "Nutrition" },
+    { key: "fertility",     title: "Fertility" },
   ]
   pc = @phase_colour
   phase_name = case @cycle_day
@@ -121,9 +121,11 @@
                   class="rounded-xl p-4 text-center w-full cursor-pointer hover:shadow-md transition-shadow border-0"
                   style="min-height:95px; background:<%= pc %>1A;">
             <div class="flex items-start gap-3">
-              <span class="text-2xl shrink-0">
-                <%= mood_icon || card[:emoji] %>
-              </span>
+              <% if mood_icon %>
+                <span class="shrink-0 w-12 h-12">
+                  <%= mood_icon %>
+                </span>
+              <% end %>
               <div class="flex-1 min-w-0">
                 <p class="font-medium text-2xl leading-[29px] font-sans m-0" style="color:<%= pc %>;">
                   <%= card[:title] %>
