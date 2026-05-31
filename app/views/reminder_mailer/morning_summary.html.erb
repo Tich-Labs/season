@@ -45,14 +45,14 @@
       <tr><td style="background:#FFFFFF; padding:20px 28px; border-bottom:1px solid #EDE1D5;">
         <p style="color:#6B6B6B; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.07em; margin:0 0 14px;">Today's focus</p>
         <table width="100%" cellpadding="0" cellspacing="0">
-          <% [
-            ["⚡", "Superpower", {"menstrual" => "Rest & reflect", "follicular" => "New beginnings", "ovulation" => "Connect & create", "luteal" => "Analyse & plan"}[@phase]],
-            ["🏃", "Movement", {"menstrual" => "Gentle yoga or walking", "follicular" => "HIIT & strength training", "ovulation" => "High-intensity cardio", "luteal" => "Moderate, steady exercise"}[@phase]],
-            ["🥗", "Nutrition", {"menstrual" => "Iron-rich foods & warmth", "follicular" => "Light, fresh foods", "ovulation" => "Raw & vibrant foods", "luteal" => "Complex carbs & magnesium"}[@phase]]
-          ].each do |icon, label, tip| %>
+          <% {
+            "Superpower" => {"menstrual" => "Rest & reflect", "follicular" => "New beginnings", "ovulation" => "Connect & create", "luteal" => "Analyse & plan"}[@phase],
+            "Movement" => {"menstrual" => "Gentle yoga or walking", "follicular" => "HIIT & strength training", "ovulation" => "High-intensity cardio", "luteal" => "Moderate, steady exercise"}[@phase],
+            "Nutrition" => @content&.nutrition_text.presence || {"menstrual" => "Iron-rich foods & warmth", "follicular" => "Light, fresh foods", "ovulation" => "Raw & vibrant foods", "luteal" => "Complex carbs & magnesium"}[@phase]
+          }.each do |label, tip| %>
             <tr>
               <td style="padding:8px 0; border-bottom:1px solid #EDE1D5; vertical-align:top;" width="36">
-                <span style="font-size:20px;"><%= icon %></span>
+                <span style="font-size:20px;"><%= {"Superpower" => "⚡", "Movement" => "🏃", "Nutrition" => "🥗"}[label] %></span>
               </td>
               <td style="padding:8px 0 8px 10px; border-bottom:1px solid #EDE1D5; vertical-align:top;">
                 <p style="color:#933a35; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; margin:0 0 2px;"><%= label %></p>

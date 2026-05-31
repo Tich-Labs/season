@@ -219,7 +219,7 @@ All error states must:
 - **`User#current_phase`** — may return nil for new users with no cycle data. Always guard with `|| "Unknown"` in views.
 - **`current_user.onboarding_completed?`** — use this (not `last_period_start.present?`) to check if a user has finished onboarding.
 - **Resend mailer**: use the gem adapter — `config.action_mailer.delivery_method = :resend` in `production.rb`. The API key must be set via `config/initializers/resend.rb` (`Resend.api_key = ENV["RESEND_API_KEY"]`). Do NOT use raw SMTP with `smtp.resend.com` — it was removed.
-- **OmniAuth (Google/Facebook/Apple)**: configured once via `config.omniauth` in `config/initializers/devise.rb` only. A separate `config/initializers/omniauth.rb` was deleted — do not recreate it. **OAuth is fully built — just add credentials to Render dashboard.** See docs/app_documentation.md for step-by-step setup.
+- **OmniAuth (Google/Facebook/Apple)**: configured via `config.omniauth` in `config/initializers/devise.rb`. The separate `config/initializers/omniauth.rb` exists as a monkey-patch for `OmniAuth::Strategy#verified_request?` (handles iOS Safari cookie loss + Rails 8.1 compat). **All 3 providers are live on Render.**
 - **Password reset — expired/invalid token**: redirects to `password_error_link_expired_path` (`/password/error/link-expired`). Do not use `password_error_already_reset_path` for this case — that page is only for rate-limit messaging.
 - **Password reset form**: has two fields (`password` + `password_confirmation`). Validation errors re-render the form inline (not redirect). The token is passed via a hidden field.
 
@@ -286,39 +286,48 @@ This is acceptable because the color is dynamic and comes from a service.
 
 ### Architecture
 - The iOS app wraps the Rails app using [hotwire-native-ios](https://github.com/hotwired/hotwire-native-ios) (SPM, >= 1.0.0)
-- Entry point: `SceneDelegate.swift` creates `Navigator` with `startLocation: baseURL`, calls `navigator.start()`, sets `window?.rootViewController = navigator.rootViewController`
-- **CRITICAL**: `navigator.start()` MUST be called — without it the Navigator never creates its managed WebView
-- `AppDelegate.swift` loads path configuration via `Hotwire.loadPathConfiguration(from:)`
-- Tab bar: `HotwireTabBarController` (from library) loaded via `switchToTabs()` when user reaches authenticated paths
+- Entry point: `SceneDelegate.swift` creates `HotwireTabBarController`, sets `window?.rootViewController`, calls `tabBarController.load(HotwireTab.all)`
+- `AppDelegate.swift` loads path configuration via `Hotwire.loadPathConfiguration(from:)` and registers bridge components via `Hotwire.registerBridgeComponents`
+- Tab bar: `HotwireTabBarController` with 3 tabs (Calendar, Tracking, Settings) loaded immediately in SceneDelegate
 - Tabs are defined in `Tabs.swift` with `HotwireTab` (from HotwireNative library)
-- Base URL is hardcoded in `Tabs.swift:4` — not read from `Info.plist`
-- No direct WKWebView / WKUserScript / KeychainHelper — not yet implemented
+- **Auth bridge**: `NativeAuthTokenComponent` saves `native_auth_token` from `<meta>` tag to iOS Keychain via `KeychainHelper`
+- Base URL: Uses `#if DEBUG` conditional — `http://localhost:3000` for debug, production URL for release
+- KeychainHelper IS implemented — stores auth token with `kSecAttrAccessibleWhenUnlockedThisDeviceOnly`
+- No direct WKWebView or WKUserScript creation — Hotwire Native's Navigator manages its own WebView internally
 
 ### Files
 | File | Purpose |
 |---|---|
 | `ios/SeasonApp/project.yml` | XcodeGen spec (target iOS 16.0, SPM HotwireNative) |
-| `ios/SeasonApp/SeasonApp/SceneDelegate.swift` | Entry point, Navigator + tab bar switch |
-| `ios/SeasonApp/SeasonApp/AppDelegate.swift` | Path config loader (`Hotwire.loadPathConfiguration`) |
-| `ios/SeasonApp/SeasonApp/Tabs.swift` | Tab definitions (`HotwireTab`, `baseURL`) |
+| `ios/SeasonApp/SeasonApp/SceneDelegate.swift` | Entry point, tab bar setup, notification router |
+| `ios/SeasonApp/SeasonApp/AppDelegate.swift` | Path config + bridge component registration |
+| `ios/SeasonApp/SeasonApp/Tabs.swift` | Tab definitions (Calendar, Tracking, Settings) + baseURL |
 | `ios/SeasonApp/SeasonApp/path-configuration.json` | Bundled path rules (auth + app routes) |
-| `ios/SeasonApp/SeasonApp/Info.plist` | App config |
-| `app/controllers/configurations_controller.rb` | iOS path rules endpoint (`ios_v1.json`)
+| `ios/SeasonApp/SeasonApp/Info.plist` | Scene manifest, privacy, encryption |
+| `ios/SeasonApp/SeasonApp/Components/NativeAuthTokenComponent.swift` | Auth token → Keychain bridge |
+| `ios/SeasonApp/SeasonApp/Components/NotificationTokenComponent.swift` | Push token registration bridge |
+| `ios/SeasonApp/SeasonApp/Models/KeychainHelper.swift` | iOS Keychain encrypted storage |
+| `ios/SeasonApp/SeasonApp/Models/NotificationRouter.swift` | Push notification routing |
+| `ios/SeasonApp/SeasonApp/ViewModels/NotificationTokenViewModel.swift` | Token management VM |
+| `app/controllers/configurations_controller.rb` | iOS path rules endpoint (`ios_v1.json` + `android_v1`)
 
 ### Regenerating Xcode project
 ```bash
 cd ios/SeasonApp
-xcodegen generate
+python3 gen.py
 ```
-Requires Xcode 15.3+ (macOS 13+). If unavailable, manually add/remove Swift files from `.xcodeproj`.
+Or manually add/remove Swift files (PBXFileSystemSynchronizedRootGroup auto-discovers files).
 
 ### Configurations endpoint
 `GET /configurations/ios_v1.json` returns path rules:
-- `/calendar`, `/daily/*` → `presentation: default`, `pull_to_refresh: true`
-- `/settings/*`, `/symptoms/new`, `/symptoms/edit` → `presentation: modal`
+- `/calendar`, `/tracking`, `/daily/*`, `/symptoms`, `/superpowers` → `presentation: default`, `pull_to_refresh_enabled: true`
+- `/settings/*`, `/account/*` → `presentation: modal`, `pull_to_refresh_enabled: false`
 
 ### Gotchas
 - `AppDelegate` must be a minimal stub — window creation is handled by `SceneDelegate`
-- Hardcoded URLs in Swift are forbidden — use `SEASON_BASE_URL` from `Info.plist`
-- `xcodegen` requires Xcode 15.3+; falls back to manual `.xcodeproj` edits on older macOS
-- Tab names must match the `Tab` struct in `Tabs.swift` (title, systemImageName, urlPath)
+- Base URL uses `#if DEBUG` conditional compilation in `Tabs.swift` (not `Info.plist`)
+- `python3 gen.py` generates `.xcodeproj` from `project.yml` (preferred over xcodegen)
+- Tab names must match the `HotwireTab` struct in `Tabs.swift` (title, systemImageName, urlPath)
+- Bridge components must be registered in `AppDelegate.swift` via `Hotwire.registerBridgeComponents`
+- Native auth token is regenerated on every login (see `Authentication#login` in `authentication.rb:41`)
+- OAuth CSRF: `config/initializers/omniauth.rb` monkey-patches `verified_request?` to handle iOS cookie loss and Rails 8.1 compat

@@ -11,7 +11,7 @@ class DailyViewController < ApplicationController
       @phase = calculator.phase_for_date(@date)
       @season = CycleCalculatorService::SEASON_NAMES[@phase]
       @cycle_day = calculator.current_cycle_day
-      @content = CyclePhaseContent.for(@phase, current_user.language || "en") if @phase
+      @content = CyclePhaseContent.for(@phase, current_user.language || "en", dietary_preference: current_user.food_preference || "") if @phase
     else
       @phase = nil
       @season = nil

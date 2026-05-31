@@ -10,7 +10,7 @@
         </ul>
       </div>
     <% end %>
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
       <div>
         <%= f.label :phase, "Phase", class: "block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2" %>
         <%= f.select :phase, CycleEntry::PHASES.map { |phase| [phase.capitalize, phase] }, {}, class: "w-full bg-brand-field rounded-xl px-4 py-3 text-sm text-brand-dark border-0" %>
@@ -18,6 +18,10 @@
       <div>
         <%= f.label :locale, "Locale", class: "block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2" %>
         <%= f.select :locale, [["English", "en"], ["Deutsch", "de"]], {}, class: "w-full bg-brand-field rounded-xl px-4 py-3 text-sm text-brand-dark border-0" %>
+      </div>
+      <div>
+        <%= f.label :dietary_preference, "Diet", class: "block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2" %>
+        <%= f.select :dietary_preference, [["Default (all)", ""]] + CyclePhaseContent::DIETARY_PREFERENCES.map { |d| [d, d] }, {}, class: "w-full bg-brand-field rounded-xl px-4 py-3 text-sm text-brand-dark border-0" %>
       </div>
     </div>
 

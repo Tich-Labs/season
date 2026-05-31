@@ -18,7 +18,7 @@ The Season app has an **iOS wrapper** built with **Hotwire Native** (hotwire-nat
 - ✅ Offline fallback page (`/offline.html`)
 - ✅ App icon (all sizes in asset catalog)
 - ✅ iOS meta tags on all layouts (incl. admin)
-- ✅ Plain WKWebView project (zero dependencies)
+- ✅ Hotwire Native project (hotwire-native-ios SPM)
 - ✅ PrivacyInfo.xcprivacy (App Store compliance)
 - ✅ Scene manifest in Info.plist
 - ✅ CI workflow (GitHub Actions: xcodegen → archive → sign → upload)
@@ -43,7 +43,7 @@ The Season app has an **iOS wrapper** built with **Hotwire Native** (hotwire-nat
 | **Native Auth Token** | ✅ Built | `has_secure_token` on User, `TurboNativeDetection` concern, `X-Turbo-Native-Token` header flow |
 | **Safe Area Insets** | ✅ Done | `env(safe-area-inset-*)` on header, content, banners, FAB, feedback modal |
 | **Touch Targets** | ✅ Done | `min-w-11 min-h-11` on all interactive elements |
-| **iOS Project** | ✅ WKWebView | Plain WKWebView, zero dependencies, 2 Swift files |
+| **iOS Project** | ✅ Hotwire Native | hotwire-native-ios SPM, BridgeComponents, 8 Swift files |
 | **Calendar Preferences** | ✅ Complete | 5 toggles: appointments, cycle days, moon phases, holidays, week numbers |
 
 ### Key Files
@@ -71,7 +71,7 @@ gem "stimulus-rails" # Line 16
 - **Turbo Frames:** NOT currently used (none found in views)
 - **Stimulus Controllers:** 25 controllers in `app/javascript/controllers/`
 
-**Stimulus Controllers Available (23 active):**
+**Stimulus Controllers Available (26 active):**
 1. `menu_controller.js` - Burger menu (open/close/slider)
 2. `quick_actions_controller.js` - Modal management
 3. `calendar_index_controller.js` - Calendar dropdown toggle
@@ -113,23 +113,24 @@ def login(user)
     secure: Rails.env.production?,
     same_site: :lax
   }
+  user.regenerate_native_auth_token! if turbo_native_app?
   Current.user = user
 end
 ```
 
-### Native Auth (Token-based)
+### Native Auth (Token-based — Meta Tag + X-Turbo-Native-Token header)
 ```ruby
 # app/models/user.rb
 has_secure_token :native_auth_token
-before_create -> { self.native_auth_token_created_at = Time.current }
 
-def native_auth_token_valid?
-  native_auth_token_created_at.present? && native_auth_token_created_at > 30.days.ago
+def valid_native_auth_token?
+  native_auth_token.present?
 end
 
-def rotate_native_auth_token!
+def regenerate_native_auth_token!
   regenerate_native_auth_token
-  touch(:native_auth_token_created_at)
+  save!
+  native_auth_token
 end
 ```
 
@@ -139,39 +140,72 @@ module TurboNativeDetection
   extend ActiveSupport::Concern
 
   included do
+    before_action :detect_turbo_native
     helper_method :turbo_native_app?
-    before_action :authenticate_via_token, if: :turbo_native_app?
   end
 
   private
 
-  def authenticate_via_token
-    token = request.headers["X-Turbo-Native-Token"]
-    user = User.find_by(native_auth_token: token)
-    if user&.native_auth_token_valid?
-      Current.user = user
-      session[:user_id] = user.id
-    elsif request.format.json?
-      render json: { error: "Unauthorized" }, status: :unauthorized
+  def detect_turbo_native
+    return unless turbo_native_app?
+
+    request.variant = :turbo_native
+    authenticate_native_token if request.headers["X-Turbo-Native-Token"].present?
+  end
+
+  def _layout
+    if turbo_native_app? && lookup_context.exists?("turbo_native", "layouts")
+      "turbo_native"
     else
-      redirect_to new_session_path
+      super
     end
   end
 
+  def authenticate_native_token
+    token = request.headers["X-Turbo-Native-Token"] || cookies[:native_auth_token]
+    user = User.find_by(native_auth_token: token)
+    Current.user ||= user if user&.valid_native_auth_token?
+  end
+
   def turbo_native_app?
-    request.user_agent&.match?(/Turbo Native|Season iOS/i)
+    request.headers["HTTP_X_HOTWIRE_NATIVE"].present? || request.user_agent&.include?("Turbo Native")
   end
 end
 ```
 
 ### Login Flow for Native Apps
-The `SessionsController` detects Turbo Native requests via user-agent and returns a JSON response with the auth token:
+On login, `Authentication#login` calls `user.regenerate_native_auth_token!` when `turbo_native_app?` is true. The token is injected into the `turbo_native` layout via a `<meta name="native-auth-token">` tag and a `<div data-bridge--native-auth-token>` element:
 
-```json
-{
-  "turbo_native_token": "abc123...",
-  "user": { "id": 1, "email": "user@example.com", "name": "Alice" }
-}
+```erb
+<% if turbo_native_app? && authenticated? %>
+  <meta name="native-auth-token" content="<%= current_user.native_auth_token %>">
+  <div data-bridge--native-auth-token data-token="<%= current_user.native_auth_token %>" style="display:none"></div>
+<% end %>
+```
+
+The iOS `NativeAuthTokenComponent` listens for the `connect` event on the bridge and saves the token to the iOS Keychain via `KeychainHelper`. On subsequent requests, the iOS app sends the token as the `X-Turbo-Native-Token` header, and the server authenticates via `authenticate_native_token`.
+
+### OAuth CSRF Workaround (iOS Safari)
+iOS Safari / WKWebView frequently doesn't send session cookies with `button_to` form POSTs, causing `valid_authenticity_token?` to return `false`. This is worked around in `config/initializers/omniauth.rb` by monkey-patching `OmniAuth::Strategy#verified_request?` to return `true` on both exception (Rails 8.1 compat) and `false` return (iOS cookie loss). The OAuth `state` parameter provides independent CSRF protection for the callback.
+```ruby
+# config/initializers/omniauth.rb
+OmniAuth::Strategy.class_eval do
+  def verified_request?
+    return true unless request.post? || request.put? || request.patch? || request.delete?
+    return true unless respond_to?(:protect_against_forgery?) && protect_against_forgery?
+    token = request.params["authenticity_token"] || request.env["HTTP_X_CSRF_TOKEN"]
+    return false if token.blank?
+    begin
+      valid_authenticity_token?(session, token) || begin
+        Rails.logger.warn "[OmniAuth CSRF] Token mismatch. Allowing (OAuth state provides CSRF)."
+        true
+      end
+    rescue => e
+      Rails.logger.error "[OmniAuth CSRF] valid_authenticity_token? raised: #{e.message}. Allowing."
+      true
+    end
+  end
+end
 ```
 
 ---
@@ -229,12 +263,33 @@ Settings: /settings/edit, /settings/notifications, etc.
 
 ### Navigation Concerns:
 1. **No native-specific routes** - Turbo Native handles navigation automatically
-2. **Burger menu** - Uses `menu_controller.js` with slide-out panel
-3. **No deep linking support** - Turbo Native URLs need proper handling
+2. **Native top bar** — Uses `native_top_bar_controller.js` with 3-dot overflow menu (Schedule Overview, Day/Weekly/Monthly views, Settings, Logout)
+3. **No burger menu on iOS** — hamburger menus are a deprecated anti-pattern. Tab bar + overflow dropdown replaces it.
+4. **No deep linking support** - Turbo Native URLs need proper handling
 
 ---
 
 ## Existing iOS/Mobile Code
+
+
+### iOS Bridge Components (Swift)
+
+| Component | File | Purpose |
+|-----------|------|---------|
+| `NativeAuthTokenComponent` | `ios/SeasonApp/SeasonApp/Components/NativeAuthTokenComponent.swift` | Receives auth token from meta tag, stores in Keychain |
+| `NotificationTokenComponent` | `ios/SeasonApp/SeasonApp/Components/NotificationTokenComponent.swift` | Handles push notification registration token |
+| `KeychainHelper` | `ios/SeasonApp/SeasonApp/Models/KeychainHelper.swift` | iOS Keychain read/write/delete (encrypted storage) |
+| `NotificationRouter` | `ios/SeasonApp/SeasonApp/Models/NotificationRouter.swift` | Routes push notification taps to correct tab/screen |
+| `NotificationTokenViewModel` | `ios/SeasonApp/SeasonApp/ViewModels/NotificationTokenViewModel.swift` | View model for notification token management |
+
+All bridge components are registered in `AppDelegate.swift`:
+```swift
+Hotwire.registerBridgeComponents([
+    ButtonComponent.self,
+    NotificationTokenComponent.self,
+    NativeAuthTokenComponent.self
+])
+```
 
 ### PWA Install Controller (`install_controller.js`):
 ```javascript
@@ -355,29 +410,41 @@ session.pathConfiguration = PathConfiguration(sources: [
 ### New Files:
 ```
 1. app/controllers/concerns/turbo_native_detection.rb  — Token auth for native
-2. db/migrate/20260518120000_add_native_auth_token_to_users.rb
-3. public/offline.html                                  — Branded offline page
-4. ios/SeasonApp/SeasonApp/Assets.xcassets/AppIcon.appiconset/icon-1024.png
+2. app/controllers/configurations_controller.rb        — iOS path rules endpoint
+3. app/views/layouts/turbo_native.html.erb             — Turbo Native layout with meta tag auth bridge
+4. app/views/shared/_native_top_bar.html.erb           — 3-dot overflow dropdown menu
+5. db/migrate/20260518120000_add_native_auth_token_to_users.rb
+6. public/offline.html                                 — Branded offline page
+7. ios/SeasonApp/SeasonApp/SceneDelegate.swift         — Navigator + tab bar setup
+8. ios/SeasonApp/SeasonApp/AppDelegate.swift           — Bridge component registration
+9. ios/SeasonApp/SeasonApp/Tabs.swift                  — Tab definitions (Calendar/Tracking/Settings)
+10. ios/SeasonApp/SeasonApp/path-configuration.json    — Bundled path rules
+11. ios/SeasonApp/SeasonApp/Components/NativeAuthTokenComponent.swift  — Token → Keychain bridge
+12. ios/SeasonApp/SeasonApp/Components/NotificationTokenComponent.swift — Push token registration bridge
+13. ios/SeasonApp/SeasonApp/Models/KeychainHelper.swift               — Encrypted Keychain storage
+14. ios/SeasonApp/SeasonApp/Models/NotificationRouter.swift           — Push notification routing
+15. ios/SeasonApp/SeasonApp/ViewModels/NotificationTokenViewModel.swift — Token management VM
+16. ios/SeasonApp/project.yml                                          — XcodeGen project spec
 ```
 
 ### Modified Files:
 ```
-1. app/models/user.rb                — Added has_secure_token + token methods
-2. app/controllers/application_controller.rb — Include TurboNativeDetection
-3. app/controllers/sessions_controller.rb   — Return token for native login
-4. app/controllers/pwa_controller.rb        — Skip auth for offline/manifest
-5. app/views/layouts/application.html.erb   — Safe area insets + touch targets
-6. app/views/layouts/launch.html.erb        — Added missing iOS meta tags
-7. app/views/layouts/admin.html.erb         — Added iOS/PWA meta tags
-8. app/views/layouts/admin_auth.html.erb    — Added iOS/PWA meta tags
-9. app/views/shared/_quick_actions.html.erb — Safe area bottom on FAB
-10. app/views/shared/_feedback_modal.html.erb — Safe area bottom padding
-11. app/views/pwa/service-worker.js.erb     — Offline page caching
-12. db/schema.rb                            — Added native_auth_token columns
-13. ios/SeasonApp/SeasonApp/SceneDelegate.swift — Turbo Navigator (push/replace nav + error handling)
-14. ios/SeasonApp/SeasonApp/AppDelegate.swift     — UIApplicationDelegate entry point
-15. ios/SeasonApp/project.yml                     — XcodeGen config, turbo-ios v8.0.0 SPM
-16. ios/SeasonApp/Assets.xcassets/AppIcon.appiconset/Contents.json — Added icon ref
+1. app/models/user.rb                    — has_secure_token + valid_native_auth_token?
+2. app/controllers/application_controller.rb     — Include TurboNativeDetection
+3. app/controllers/sessions_controller.rb        — regenerate_native_auth_token! on login
+4. app/controllers/configurations_controller.rb  — ios_v1 + android_v1 JSON endpoints
+5. app/controllers/pwa_controller.rb             — Skip auth for offline/manifest
+6. app/views/layouts/application.html.erb        — Safe area insets + touch targets
+7. app/views/layouts/launch.html.erb             — Missing iOS meta tags
+8. app/views/layouts/admin.html.erb              — iOS/PWA meta tags
+9. app/views/layouts/admin_auth.html.erb         — iOS/PWA meta tags
+10. app/views/shared/_quick_actions.html.erb     — Safe area bottom on FAB
+11. app/views/shared/_feedback_modal.html.erb    — Safe area bottom padding
+12. app/views/pwa/service-worker.js.erb          — Offline page caching
+13. db/schema.rb                                 — native_auth_token columns
+14. ios/SeasonApp/SeasonApp/Info.plist           — Scene manifest, privacy, encryption
+15. ios/SeasonApp/SeasonApp/Assets.xcassets/AppIcon.appiconset/ — All icon sizes
+16. ios/SeasonApp/SeasonApp/PrivacyInfo.xcprivacy  — App Store compliance manifest
 ```
 
 ---

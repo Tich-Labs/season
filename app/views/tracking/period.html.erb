@@ -35,7 +35,7 @@
     </div>
 
     <%# ── Month navigation ─────────────────────────────────────────────── %>
-    <div class="flex items-center justify-center gap-4 pt-2 pb-4 px-4">
+    <div class="flex items-center justify-start gap-4 pt-2 pb-4 px-4">
       <%= link_to period_tracking_index_path(date: prev_month),
             class: "flex items-center justify-center w-9 h-9 rounded-full bg-brand-field no-underline" do %>
         <svg width="16" height="16" fill="none" stroke="#933a35" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6" /></svg>
@@ -46,27 +46,6 @@
         <svg width="16" height="16" fill="none" stroke="#933a35" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6" /></svg>
       <% end %>
     </div>
-
-    <%# ── Active period indicator bar ──────────────────────────────────── %>
-    <% if period_days.any? %>
-      <div class="px-4 mb-4">
-        <div class="relative h-[11px] bg-brand-field rounded-sm flex items-center">
-          <%
-            first_period = period_days.first
-            period_offset = first_period.day - 1
-            period_width_pct = (period_days.size.to_f / last_day.day * 100).round(1)
-          %>
-          <div class="absolute h-full bg-brand-primary rounded-sm"
-               style="left:<%= (period_offset.to_f / last_day.day * 100).round(1) %>%; width:<%= period_width_pct %>%;">
-            <div class="flex justify-around h-full items-center">
-              <% period_days.map { |d| d.day.to_s }.each do |label| %>
-                <span class="text-[10px] font-medium text-[#EDE1D5] font-['Montserrat'] leading-none"><%= label %></span>
-              <% end %>
-            </div>
-          </div>
-        </div>
-      </div>
-    <% end %>
 
     <%# ── Day-of-week headers ──────────────────────────────────────────── %>
     <div class="grid grid-cols-7 gap-0 px-4 mb-1">
@@ -120,15 +99,8 @@
       <% end %>
     </div>
 
-    <%# ── Selected date + Submit ───────────────────────────────────────── %>
+    <%# ── Submit ────────────────────────────────────────────────────────── %>
     <div class="px-4 pt-6">
-      <p class="text-brand-primary font-normal text-base text-center font-['Montserrat'] tracking-[0.07em] m-0 mb-1">
-        <%= @selected.strftime("%-d %B") %>
-      </p>
-      <p class="text-brand-primary font-light text-2xl text-center font-['Montserrat'] m-0 mb-6">
-        <%= @selected.strftime("%A") %>
-      </p>
-
       <a href="<%= period_tracking_index_path(save: 1, date: @selected) %>" data-turbo="false"
          class="block w-[253px] mx-auto text-center no-underline text-white rounded-lg py-4 text-2xl font-medium font-['Montserrat']"
          style="background:#933a35;">

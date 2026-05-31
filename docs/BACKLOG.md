@@ -4,106 +4,146 @@ layout: default
 
 # Season — Backlog
 
-**Last Updated:** 28 April 2026
+**Last Updated:** 31 May 2026 (2nd update)
 
 ---
 
-## Launch Priorities (V2 Migration)
+## Milestone Overview
 
-### 🔴 MUST HAVE (Critical for Launch)
-Without these, the 150 users cannot migrate or use the app.
-
-| # | Feature | Status |
-|---|---------|--------|
-| 1 | Personalized Invite Flow: A /invite/:token landing page to capture those 150 users, pre-fill their names, and allow them to set a password. | ✅ Built |
-| 2 | The Cycle Engine: A robust CycleCalculatorService that takes "Last Period Date" and "Cycle Length" to determine the 4 phases (Winter, Spring, Summer, Autumn). | ✅ Built |
-| 3 | M3 Tracking & Server-Side Storage: Users must be able to log symptoms and period dates. Unlike V1's local storage, this must be encrypted on our PostgreSQL backend. | ✅ Built |
-| 4 | M7 Onboarding: A smart, Hotwire-driven multi-step form that collects cycle history and language preference (EN/DE). | ✅ Built |
-| 5 | M5 Reminders (ActionMailer): Core background jobs to send email notifications for contraception and period starts. | ✅ Built |
-| 6 | i18n Infrastructure: English as the default, with German translations for all UI elements—no hardcoded strings. | ✅ Built |
-| 7 | Simple Admin Table: A single /admin view with Ransack to search, filter, and track which of the 150 users have successfully migrated. | ✅ Built |
-
-### 🟡 SHOULD HAVE (High Priority)
-Important for user retention, but the app "works" without them.
-
-| # | Feature | Status |
-|---|---------|--------|
-| 1 | M4 Personalized Tips: Displaying the "Superpower," "Nutrition," and "Sport" advice based on the current phase. | ✅ Built |
-| 2 | Social Login (OmniAuth): Sign-in with Apple, Google, and Facebook to reduce friction. | 🔴 Credentials needed |
-| 3 | Hotwire Native Wrapper: Deploying the app as a "native" shell on iOS/Android so it's accessible via the App Store. | ⏳ Planned |
-
-### 🟢 COULD HAVE (Nice to Have)
-These are your "Intentional Tech Debt" candidates. Cut these first if launch starts looking shaky.
-
-| # | Feature | Status |
-|---|---------|--------|
-| 1 | M6 Engagement (Streaks/Flames): The gamification system (Flammen) and reward badges. | ❌ Not in scope |
-| 2 | M8 Basic Paywall: Stripe integration for Premium tiers. Launch as "100% Free" for the first month. | ⏳ Planned |
-| 3 | Calendar Sync: Bi-directional sync with Google/Outlook/Apple. Manual entry is sufficient for MVP. | ⏳ Planned |
-
-### ⚪ WON'T HAVE (Post-Launch)
-Deferred to Phase 2 (Global Expansion).
-
-| Feature | Notes |
-|---------|-------|
-| PWA Layer | Optimization for low-bandwidth/offline African markets |
-| Hetzner/Kamal Migration | Staying on Render.com for the launch |
-| Push Notifications | Rely on Email Reminders for MVP |
+| Milestone | Feature | Status |
+|-----------|---------|--------|
+| **M3** | Tracking & Symptoms (submit screen) | ✅ Built — ⏳ *Submit modal on Superpowers pending* |
+| **M4** | Personalized Tips | ✅ Built |
+| **M4** | Dietary-aware nutrition filtering | ✅ Built |
+| **M4** | Push Notifications | 🏗️ In Progress |
+| **M5** | Reminders (ActionMailer) | ✅ Built |
+| **M6** | Engagement (Streaks/Flames) | ❌ Not in scope |
+| **M7** | Onboarding | ✅ Built |
+| **M8** | Paywall (Stripe) | ⏳ Planned |
+| **🏗️ Native App** | iOS/Android via Ruby Native | 🏗️ In Progress |
+| **🔑 Social Login** | Apple / Google / Facebook | 🔴 Needs credentials + iOS integration |
+| **🌐 PWA** | manifest.json, service-worker.js | ✅ Done |
+| **📋 GDPR** | Compliance items | 🟡 3 high, 🟢 5 medium |
+| **🔒 Security** | Backlog items | ⏳ 5 open |
+| **🔧 Devise** | Auth cleanup | 🟡 3 medium |
 
 ---
 
-## GDPR & Privacy Compliance (28 April 2026 Update)
+## Active Work Items
 
-### ✅ DONE (Ready for EU Launch)
+### M3 — Tracking & Symptoms
 
-| # | Feature | GDPR Ref | Notes | Status |
-|---|---------|---------|-------|--------|
-| 1 | **Account Deletion** (`DELETE /account`) | Art. 17 | Full data purge via `AccountController#destroy` | ✅ Done |
-| 2 | **Explicit Consent for Health Data** | Art. 9 | `UserConsent` model + audit trail; `/settings/consent` grant/revoke UI; `ConsentCheck` concern enforces gate | ✅ Done |
-| 3 | **Privacy Policy** | Art. 13-14 | ⚠️ Needs update to reference consent mechanism and retention periods | ⚠️ Needs update |
-| 4 | **Cookie Consent Banner** | ePrivacy | No third-party cookies in use | ✅ N/A |
+| # | Item | Status |
+|---|------|--------|
+| 1 | Symptom tracking + period dates | ✅ Built |
+| 2 | **Submit review modal on Superpowers page** — Symptoms has a review modal (`submit_modal_controller.js`); Superpowers uses a plain link. Add modal for consistency. | ⏳ Needs team confirmation |
 
-### 🟡 HIGH (Required Before Launch)
+### M4 — Personalized Tips & Push Notifications
 
-| # | Feature | GDPR Ref | Notes |
-|---|---------|---------|-------|
-| 5 | **Data Export** (`GET /account/export`) | Art. 20 | Not yet built — user should be able to download all their data as JSON |
-| 6 | **Data Retention Policy** | Art. 5(1)(e) | Define retention periods and implement auto-deletion job |
-| 7 | **Third-Party DPAs** | Art. 28 | DPAs needed with Render, Resend, Sentry |
+| # | Item | Status |
+|---|------|--------|
+| 1 | Superpower / Nutrition / Sport advice per phase | ✅ Built |
+| 2 | **Push Notifications** — Daily 10am weekly feedback nudge, period reminders, etc. | 🏗️ In Progress (next after Ruby Native) |
 
-### 🟢 MEDIUM (Post-Launch)
+### M8 — Paywall
 
-| # | Feature | Notes |
-|---|---------|-------|
-| 8 | Enable DB Encryption (pgcrypto) | Encrypt sensitive fields |
-| 9 | Invite Token Expiry | Tokens expire after 7 days |
-| 10 | Audit Logging | Log data access |
-| 11 | Rate Limiting | Auth endpoints |
-| 12 | Article 22 Review | Automated decisions |
+| # | Item | Status |
+|---|------|--------|
+| 1 | Stripe integration for Premium tiers (launch as 100% Free for first month) | ⏳ Planned |
 
-### GitHub Issues Template
+### 🏗️ Native App (iOS/Android)
 
-```bash
-# DONE
-# 1. Account deletion — DELETE /account ✅ (28 April 2026)
-# 2. Explicit consent — /settings/consent ✅ (28 April 2026)
+| # | Item | Status |
+|---|------|--------|
+| 1 | **Ruby Native** — Interim approach for App Store deployment (pivoted from iOS native + Android scaffold) | 🏗️ In Progress |
 
-# High - TODO
-gh issue create \
-  --title "[GDPR] Data Export Endpoint — GDPR Article 20" \
-  --body "Implement data portability. GET /account/export returns all user data as JSON (cycle_entries, symptom_logs, superpower_logs, calendar_events, reminders, settings). Include metadata (export date, data categories)." \
-  --label "gdpr,high"
+### 🔑 Social Login (OmniAuth)
 
-gh issue create \
-  --title "[GDPR] Data Retention Policy" \
-  --body "Define retention periods: cycle data (3 years?), symptom logs (2 years?), calendar events (1 year?). Implement background job to auto-delete expired data. Document in privacy policy." \
-  --label "gdpr,high"
+| # | Item | Status |
+|---|------|--------|
+| 1 | Apple sign-in | 🔴 Needs credentials + iOS WKWebView cookie testing |
+| 2 | Google sign-in | 🔴 Needs credentials + iOS WKWebView cookie testing |
+| 3 | Facebook sign-in | 🔴 Needs credentials + iOS WKWebView cookie testing |
 
-gh issue create \
-  --title "[GDPR] Privacy Policy Update — GDPR Article 13-14" \
-  --body "Update /legal/privacy to include: consent mechanism info, retention periods, DPO contact. See current implementation at /settings/consent." \
-  --label "gdpr,high"
-```
+### 🌐 PWA
+
+| # | Item | Status |
+|---|------|--------|
+| 1 | manifest.json, service-worker.js, offline support | ✅ Done |
+
+### 📋 GDPR & Privacy
+
+#### 🟡 HIGH (Before Launch)
+
+| # | Item | Ref | Notes |
+|---|------|-----|-------|
+| 1 | **Data Export** (`GET /account/export`) | Art. 20 | Download all user data as JSON |
+| 2 | **Data Retention Policy** | Art. 5(1)(e) | Define periods + auto-deletion job |
+| 3 | **Third-Party DPAs** | Art. 28 | DPAs with Render, Resend, Sentry |
+| 4 | **Privacy Policy Update** | Art. 13-14 | Add consent mechanism + retention periods |
+
+#### 🟢 MEDIUM (Post-Launch)
+
+| # | Item | Notes |
+|---|------|-------|
+| 5 | Enable DB Encryption (pgcrypto) | Encrypt sensitive fields |
+| 6 | Invite Token Expiry | Tokens expire after 7 days |
+| 7 | Audit Logging | Log data access |
+| 8 | Rate Limiting | Auth endpoints |
+| 9 | Article 22 Review | Automated decisions |
+
+### 🔒 Security Backlog
+
+#### ⏳ Open
+
+| ID | Issue | File | Notes |
+|----|-------|------|-------|
+| RATE-02 | Login rate limiter keyed on `request.ip` — bypassable via `X-Forwarded-For` | `sessions_controller.rb` | ⏳ Open |
+| PROD-04 | Devise password minimum is 6 chars (below NIST 8-char minimum) | `config/initializers/devise.rb` | ⏳ Open |
+| DATA-01 | Active Storage on local disk — avatars lost on Render redeploy | `config/environments/production.rb` | ⏳ Open (Cloudflare R2 planned) |
+| INFO-03 | Sentry gem installed but no initializer — exceptions silently dropped | — | ⏳ Open |
+| INFO-02 | `DebugController` unconditional `allow_unauthenticated_access` | `debug_controller.rb` | ⏳ Open (route-guarded only) |
+| LOW | Rate limit `POST /launch-signup` (5 req/IP/hour) | `routes.rb` | 🟢 Low |
+
+#### ✅ Resolved
+
+| ID | Issue | Fixed |
+|----|-------|-------|
+| PROD-05 | `config.hosts` commented out — DNS rebinding | ✅ 2026-04-28 |
+| FWKD-01 | Rails 8.0 defaults instead of 8.1 | ✅ 2026-05-06 |
+| AUTH-02 | Devise paranoid mode off — account enumeration | ✅ 2026-05-06 |
+| CSP-01 | CSP was report-only | ✅ 2026-04-28 |
+| HDR-01 | No Permissions Policy | ✅ 2026-04-28 |
+
+### 🔧 Devise & Authentication Cleanup
+
+| # | Item | Notes |
+|---|------|-------|
+| 1 | Add `devise_parameter_sanitizer` to ApplicationController | Missing param filter |
+| 2 | Resolve `:confirmable` — use or remove | Enabled but always skipped |
+| 3 | Add user-level rate limiting | Currently per-IP only |
+
+### 🗺️ Other
+
+| # | Item | Status |
+|---|------|--------|
+| 1 | Calendar Sync (Google/Outlook/Apple) | ⏳ Planned (post-launch) |
+| 2 | M6 Engagement (Streaks/Flames) | ❌ Not in scope |
+| 3 | Hetzner/Kamal Migration | ⚪ Post-launch (stay on Render.com) |
+| 4 | i18n Infrastructure | ✅ Built |
+
+## ✅ RESOLVED (31 May 2026)
+
+### [FEATURE] Dietary preference filtering for nutrition content
+**Status:** ✅ DONE
+
+- Added `dietary_preference` column to `cycle_phase_contents` (default: `""`, not null)
+- Updated `CyclePhaseContent.for()` to accept `dietary_preference:` param with fallback to default
+- Updated `DailyViewController`, `InformationsController` to pass `current_user.food_preference`
+- Refactored `ReminderMailer#morning_summary` to load nutrition from DB (was hardcoded)
+- Added dietary variant seeds: 40 total records (8 default + 32 dietary variants across 4 diets × 2 locales)
+- Admin CMS updated: dietary_preference dropdown, column in index table, permitted params
+- All 166 tests pass
 
 ---
 
@@ -242,128 +282,4 @@ Validations added: presence, uniqueness, email format.
 **Status:** ✅ DONE
 
 `Admin::LaunchSignupsController` built with count, table, and CSV export.
-
----
-
-## 🟢 Low
-
-### [SECURITY] Rate limit POST /launch-signup endpoint
-**Labels:** `security`, `low`
-
-The `POST /launch-signup` endpoint has no rate limiting. Anyone can flood the DB or abuse it.
-
-Options:
-- Use `Rack::Attack` (add gem to Gemfile)
-- Or throttle in `routes.rb` via middleware
-
-Suggested rule:
-```ruby
-# config/initializers/rack_attack.rb
-Rack::Attack.throttle("launch-signup/ip", limit: 5, period: 1.hour) do |req|
-  req.ip if req.path == "/launch-signup" && req.post?
-end
-```
-
----
-
-## Security Backlog (Post-MVP)
-
-From security audit 2026-04-25. Items resolved on 2026-04-28 are marked.
-
-### 🔴 High
-
-| ID | Issue | File | Status |
-|----|-------|------|--------|
-| PROD-05 | `config.hosts` is commented out — DNS rebinding protection disabled | `config/environments/production.rb` | ✅ Fixed 2026-04-28 |
-| RATE-02 | Login rate limiter keyed on `request.ip` — bypassable via `X-Forwarded-For` spoofing | `sessions_controller.rb` | ⏳ Open |
-| FWKD-01 | `config.load_defaults 8.0` but app runs Rails 8.1.3 — missing 8.1 security defaults | `config/application.rb` | ✅ Fixed 2026-05-06 |
-
-### 🟠 Medium
-
-| ID | Issue | File | Status |
-|----|-------|------|--------|
-| AUTH-02 | Devise paranoid mode off — account enumeration possible via password reset/confirm responses | `config/initializers/devise.rb` | ✅ Fixed 2026-05-06 |
-| CSP-01 | CSP was report-only with no enforcement | `config/initializers/content_security_policy.rb` | ✅ Fixed 2026-04-28 — `report_only = false` |
-| HDR-01 | No Permissions Policy | missing file | ✅ Fixed 2026-04-28 — `permissions_policy.rb` created |
-| PROD-04 | Devise password minimum is 6 chars (below NIST 8-char minimum) | `config/initializers/devise.rb` | ⏳ Open |
-| DATA-01 | Active Storage on local disk in production — avatars lost on every Render redeploy | `config/environments/production.rb` | ⏳ Open — Cloudflare R2 planned for launch |
-
-### 🟢 Info
-
-| ID | Issue | Status |
-|----|-------|--------|
-| INFO-03 | Sentry gem installed but no initializer found — exceptions silently dropped in production | ⏳ Open |
-| INFO-02 | `DebugController` has unconditional `allow_unauthenticated_access` — relies on route guard only | ⏳ Open (debug routes now production-guarded, but controller itself unchanged) |
-
----
-
-## Pushing these as GitHub Issues
-
-Once you've installed `gh` and authenticated, run:
-
-```bash
-# Install gh CLI (if not done)
-# macOS: brew install gh
-# Ubuntu: sudo apt install gh
-# then: gh auth login
-
-# Critical issues
-gh issue create \
-  --title "[SMTP] Configure email delivery provider in production" \
-  --body "SMTP is commented out in production.rb. All emails will silently fail. Needs provider decision (Resend / Postmark / SendGrid / Brevo) then credentials wired into production.rb and Rails credentials." \
-  --label "infrastructure,critical"
-
-gh issue create \
-  --title "[JOB] Create NotifyLaunchSignupsJob" \
-  --body "No job exists to send launch notifications. This is the entire point of the waitlist. Blocked by SMTP + LaunchSignupMailer. Needs to be scheduled when ready." \
-  --label "feature,critical"
-
-# High
-gh issue create \
-  --title "[MAILER] Generate LaunchSignupMailer with confirmation + launch-day templates" \
-  --body "No mailer exists. Users get UI confirmation but nothing in their inbox. Two templates needed: confirmation on signup, and launch notification. Blocked by SMTP provider decision." \
-  --label "feature,high"
-
-# Medium
-gh issue create \
-  --title "[MODEL] Add validations to LaunchSignup model" \
-  --body "app/models/launch_signup.rb is completely bare. Needs: validates :email, presence: true, uniqueness: { case_sensitive: false }, format: { with: URI::MailTo::EMAIL_REGEXP }" \
-  --label "quality,medium"
-
-gh issue create \
-  --title "[ADMIN] Add admin view for LaunchSignup count + list" \
-  --body "No visibility into waitlist signups. Add admin/launch_signups_controller.rb with index action showing count + table of emails and signup dates." \
-  --label "admin,medium"
-
-# Low
-gh issue create \
-  --title "[SECURITY] Rate limit POST /launch-signup endpoint" \
-  --body "No rate limiting on the launch signup endpoint. Add Rack::Attack: throttle to 5 requests/IP/hour on POST /launch-signup." \
-  --label "security,low"
-
----
-
-## Devise & Authentication (28 April 2026)
-
-### 🟡 MEDIUM PRIORITY
-
-| # | Feature | Notes |
-|---|---------|-------|
-| 1 | Add `devise_parameter_sanitizer` to ApplicationController | Missing param filter |
-| 2 | Resolve `:confirmable` - use or remove | Enabled but always skipped |
-| 3 | Add user-level rate limiting | Currently per-IP only |
-
-### GitHub Issues
-
-```bash
-# Medium - Devise cleanup
-gh issue create \
-  --title "[AUTH] Add devise_parameter_sanitizer to ApplicationController" \
-  --body "Add before_action :configure_permitted_parameters with devise_parameter_sanitizer for sign_in, sign_up, account_update." \
-  --label "devise,medium"
-
-gh issue create \
-  --title "[AUTH] Resolve confirmable - either implement or remove" \
-  --body "Devise :confirmable module is enabled in User model but registration always skips confirmation. Either implement email confirmation flow or remove the module." \
-  --label "devise,medium"
 ```

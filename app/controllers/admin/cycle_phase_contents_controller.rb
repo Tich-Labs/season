@@ -2,7 +2,7 @@ class Admin::CyclePhaseContentsController < Admin::BaseController
   before_action :set_cycle_phase_content, only: [:edit, :update, :destroy]
 
   def index
-    @contents = CyclePhaseContent.order(:phase, :locale)
+    @contents = CyclePhaseContent.order(:phase, :locale, :dietary_preference)
   end
 
   def new
@@ -47,6 +47,7 @@ class Admin::CyclePhaseContentsController < Admin::BaseController
     params.expect(
       cycle_phase_content: [:phase,
         :locale,
+        :dietary_preference,
         :season_name,
         :superpower_text,
         :mood_text,

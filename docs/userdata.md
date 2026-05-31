@@ -49,7 +49,7 @@ Four tiers. Handling rules differ per tier.
 | `has_regular_cycle` | **Health** | Onboarding context | Should move to health profile |
 | `contraception_type` | **Health** | Birth control tracking | Should move to health profile |
 | `uses_hormonal_birth_control` | **Health** | Cycle context | Should move to health profile |
-| `food_preference` | **Health** | Nutrition tips | Should move to health profile |
+| `food_preference` | **Health** | Nutrition tips — filtered via `CyclePhaseContent.for(dietary_preference:)` and mailer | Should move to health profile |
 | `life_stage` | **Health** | App context | Should move to health profile |
 | `language` | Behavioural | i18n preference | Low sensitivity |
 | `plan` | System | Subscription tier | Low sensitivity |

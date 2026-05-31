@@ -18,8 +18,8 @@ FactoryBot.define do
   factory :user do
     sequence(:email) { |n| "user#{n}@example.com" }
     password { "password123" }
-    first_name { "Test" }
-    birthdate { Date.new(1995, 1, 15) }
+    name { "Test User" }
+    birthday { Date.new(1995, 1, 15) }
     cycle_length { 28 }
     onboarding_step { 1 }
     last_period_start { Time.zone.today - 14 }
@@ -27,8 +27,8 @@ FactoryBot.define do
     trait :onboarded do
       after(:create) do |user|
         user.update!(
-          first_name: "Jane",
-          birthdate: Date.new(1995, 1, 15),
+          name: "Jane User",
+          birthday: Date.new(1995, 1, 15),
           cycle_length: 28,
           last_period_start: Time.zone.today - 14,
           onboarding_completed: true,

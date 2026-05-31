@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_30_190039) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_31_130000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -85,6 +85,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_30_190039) do
 
   create_table "cycle_phase_contents", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.string "dietary_preference", default: "", null: false
     t.string "locale", null: false
     t.text "mood_text"
     t.text "nutrition_text"
@@ -94,7 +95,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_30_190039) do
     t.text "superpower_text"
     t.text "take_care_text"
     t.datetime "updated_at", null: false
-    t.index ["phase", "locale"], name: "index_cycle_phase_contents_on_phase_and_locale", unique: true
+    t.index ["phase", "locale", "dietary_preference"], name: "idx_cycle_phase_contents_on_phase_locale_dietary", unique: true
   end
 
   create_table "feedbacks", force: :cascade do |t|

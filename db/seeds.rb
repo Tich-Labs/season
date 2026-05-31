@@ -75,13 +75,67 @@
 ].each do |attrs|
   CyclePhaseContent.find_or_create_by(
     phase: attrs[:phase],
-    locale: attrs[:locale]
+    locale: attrs[:locale],
+    dietary_preference: ""
   ) do |c|
     c.assign_attributes(attrs)
   end
 end
 
 Rails.logger.debug { "Seeded #{CyclePhaseContent.count} phase content records" }
+
+# Dietary-preference nutrition variants (overrides only nutrition_text)
+dietary_nutrition = [
+  # English
+  {phase: "menstrual", locale: "en", dietary_preference: "Vegetarian", nutrition_text: "Iron-rich plant foods, dark chocolate, warm lentil soups"},
+  {phase: "follicular", locale: "en", dietary_preference: "Vegetarian", nutrition_text: "Fresh vegetables, quinoa, plant-based proteins"},
+  {phase: "ovulation", locale: "en", dietary_preference: "Vegetarian", nutrition_text: "Anti-inflammatory foods, flaxseeds, plenty of water"},
+  {phase: "luteal", locale: "en", dietary_preference: "Vegetarian", nutrition_text: "Magnesium-rich greens, oats, dark leafy vegetables"},
+  {phase: "menstrual", locale: "en", dietary_preference: "Vegan", nutrition_text: "Iron-rich plant foods, dark chocolate, warming soups with legumes"},
+  {phase: "follicular", locale: "en", dietary_preference: "Vegan", nutrition_text: "Fresh vegetables, quinoa, plant-based proteins like tofu"},
+  {phase: "ovulation", locale: "en", dietary_preference: "Vegan", nutrition_text: "Anti-inflammatory foods, chia seeds, omega-3 from algae oil"},
+  {phase: "luteal", locale: "en", dietary_preference: "Vegan", nutrition_text: "Magnesium-rich greens, pumpkin seeds, reduce caffeine"},
+  {phase: "menstrual", locale: "en", dietary_preference: "Pescetarian", nutrition_text: "Iron-rich foods, salmon for omega-3, warming soups"},
+  {phase: "follicular", locale: "en", dietary_preference: "Pescetarian", nutrition_text: "Fresh vegetables, light fish, quinoa salads"},
+  {phase: "ovulation", locale: "en", dietary_preference: "Pescetarian", nutrition_text: "Anti-inflammatory foods, sardines, plenty of water"},
+  {phase: "luteal", locale: "en", dietary_preference: "Pescetarian", nutrition_text: "Magnesium-rich greens, mackerel, reduce caffeine"},
+  {phase: "menstrual", locale: "en", dietary_preference: "Pollotaric", nutrition_text: "Iron-rich foods, lean chicken, dark chocolate"},
+  {phase: "follicular", locale: "en", dietary_preference: "Pollotaric", nutrition_text: "Fresh vegetables, grilled chicken, light proteins"},
+  {phase: "ovulation", locale: "en", dietary_preference: "Pollotaric", nutrition_text: "Anti-inflammatory foods, turkey, plenty of water"},
+  {phase: "luteal", locale: "en", dietary_preference: "Pollotaric", nutrition_text: "Complex carbs, chicken, magnesium-rich greens"},
+  # German
+  {phase: "menstrual", locale: "de", dietary_preference: "Vegetarian", nutrition_text: "Eisenreiche Pflanzenkost, dunkle Schokolade, warme Linsensuppen"},
+  {phase: "follicular", locale: "de", dietary_preference: "Vegetarian", nutrition_text: "Frisches Gemüse, Quinoa, pflanzliche Proteine"},
+  {phase: "ovulation", locale: "de", dietary_preference: "Vegetarian", nutrition_text: "Entzündungshemmende Lebensmittel, Leinsamen, viel Wasser"},
+  {phase: "luteal", locale: "de", dietary_preference: "Vegetarian", nutrition_text: "Magnesiumreiches Grünzeug, Haferflocken, Blattgemüse"},
+  {phase: "menstrual", locale: "de", dietary_preference: "Vegan", nutrition_text: "Eisenreiche Pflanzenkost, dunkle Schokolade, Hülsenfrüchte-Suppen"},
+  {phase: "follicular", locale: "de", dietary_preference: "Vegan", nutrition_text: "Frisches Gemüse, Quinoa, Tofu als Proteinquelle"},
+  {phase: "ovulation", locale: "de", dietary_preference: "Vegan", nutrition_text: "Entzündungshemmende Lebensmittel, Chiasamen, Omega-3 aus Algenöl"},
+  {phase: "luteal", locale: "de", dietary_preference: "Vegan", nutrition_text: "Magnesiumreiches Grünzeug, Kürbiskerne, Koffein reduzieren"},
+  {phase: "menstrual", locale: "de", dietary_preference: "Pescetarian", nutrition_text: "Eisenreiche Lebensmittel, Lachs für Omega-3, warme Suppen"},
+  {phase: "follicular", locale: "de", dietary_preference: "Pescetarian", nutrition_text: "Frisches Gemüse, leichter Fisch, Quinoa-Salate"},
+  {phase: "ovulation", locale: "de", dietary_preference: "Pescetarian", nutrition_text: "Entzündungshemmende Lebensmittel, Sardinen, viel Wasser"},
+  {phase: "luteal", locale: "de", dietary_preference: "Pescetarian", nutrition_text: "Magnesiumreiches Grünzeug, Makrele, Koffein reduzieren"},
+  {phase: "menstrual", locale: "de", dietary_preference: "Pollotaric", nutrition_text: "Eisenreiche Lebensmittel, Hähnchen, dunkle Schokolade"},
+  {phase: "follicular", locale: "de", dietary_preference: "Pollotaric", nutrition_text: "Frisches Gemüse, gegrilltes Hähnchen, leichte Proteine"},
+  {phase: "ovulation", locale: "de", dietary_preference: "Pollotaric", nutrition_text: "Entzündungshemmende Lebensmittel, Pute, viel Wasser"},
+  {phase: "luteal", locale: "de", dietary_preference: "Pollotaric", nutrition_text: "Komplexe Kohlenhydrate, Hähnchen, magnesiumreiches Grünzeug"}
+]
+
+dietary_nutrition.each do |attrs|
+  CyclePhaseContent.find_or_create_by(
+    phase: attrs[:phase],
+    locale: attrs[:locale],
+    dietary_preference: attrs[:dietary_preference]
+  ) do |c|
+    c.assign_attributes(
+      season_name: CyclePhaseContent.find_by(phase: attrs[:phase], locale: attrs[:locale], dietary_preference: "")&.season_name || "",
+      nutrition_text: attrs[:nutrition_text]
+    )
+  end
+end
+
+Rails.logger.debug { "Seeded #{CyclePhaseContent.count} total phase content records (including dietary variants)" }
 
 # Cycle day forecast content (35 days × 6 cards)
 require_relative "seeds/cycle_day_contents"

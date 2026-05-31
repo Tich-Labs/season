@@ -4,9 +4,9 @@ layout: default
 
 # M2 OAuth Credentials Setup — Render Deployment
 
-**Version:** 2.1 (2026-05-06)  
-**Updated:** 2026-05-06 12:15  
-**Changes:** Facebook OAuth ✅ working, updated status table, all credentials ready
+**Version:** 3.0 (2026-05-31)  
+**Updated:** 2026-05-31  
+**Changes:** Apple OAuth config corrected (uses PEM private key, not JWT), all providers live on Render
 
 ---
 
@@ -31,8 +31,10 @@ All OAuth environment variables are configured in `config/initializers/devise.rb
 | `GOOGLE_CLIENT_SECRET` | Google Cloud Console | OAuth 2.0 Client Secret (Web) |
 | `FACEBOOK_APP_ID` | Meta / Facebook App | App ID from dashboard |
 | `FACEBOOK_APP_SECRET` | Meta / Facebook App | App Secret from dashboard |
-| `APPLE_CLIENT_ID` | Apple Developer | Service ID / Bundle ID |
-| `APPLE_CLIENT_SECRET` | Apple Developer | Private key (JWT) |
+| `APPLE_CLIENT_ID` | Apple Developer | Service ID (e.g. `com.seasonapp.web`) |
+| `APPLE_TEAM_ID` | Apple Developer | Team ID from Membership page |
+| `APPLE_KEY_ID` | Apple Developer | Key ID from Apple Developer Keys page |
+| `APPLE_PRIVATE_KEY` | Apple Developer | Private key `.p8` file contents (with `\n` escaped) |
 
 ---
 
@@ -76,11 +78,21 @@ All OAuth environment variables are configured in `config/initializers/devise.rb
    - Add **Return URLs**:
      - `https://seasonv2.onrender.com/users/auth/apple/callback`
      - `http://localhost:3000/users/auth/apple/callback`
-5. Create a **Private Key** for the Service ID
-6. Download the key and generate JWT token:
-   - Use Team ID, Key ID, and private key to create JWT
+5. Create a **Private Key** for the Service ID (`.p8` file)
+6. Configure the Rails app with these env vars (the `omniauth-apple` gem generates the JWT client-side):
    - Service ID → `APPLE_CLIENT_ID`
-   - JWT token → `APPLE_CLIENT_SECRET`
+   - Team ID (from Membership) → `APPLE_TEAM_ID`
+   - Key ID (from the created key) → `APPLE_KEY_ID`
+   - Private key `.p8` file contents → `APPLE_PRIVATE_KEY` (with `\n` line breaks as literal `\n`)
+7. The actual `config/initializers/devise.rb` line:
+   ```ruby
+   config.omniauth :apple, ENV["APPLE_CLIENT_ID"], "",
+     scope: "email name",
+     team_id: ENV["APPLE_TEAM_ID"],
+     key_id: ENV["APPLE_KEY_ID"],
+     pem: ENV["APPLE_PRIVATE_KEY"]&.gsub("\\n", "\n")
+   ```
+   **Note:** The password field is empty string `""` (the gem handles key-based signing, not client secret). The `.p8` key content must have `\n` as literal two-character escape sequences (Render env var format), then `gsub` converts them to actual newlines at runtime.
 
 ---
 
@@ -96,8 +108,10 @@ GOOGLE_CLIENT_ID=<value from Google Cloud>
 GOOGLE_CLIENT_SECRET=<value from Google Cloud>
 FACEBOOK_APP_ID=<value from Meta>
 FACEBOOK_APP_SECRET=<value from Meta>
-APPLE_CLIENT_ID=<value from Apple>
-APPLE_CLIENT_SECRET=<JWT from Apple>
+APPLE_CLIENT_ID=<value from Apple (Service ID)>
+APPLE_TEAM_ID=<value from Apple Developer Membership>
+APPLE_KEY_ID=<value from Apple Developer Keys>
+APPLE_PRIVATE_KEY=<.p8 file content with literal \n for line breaks>
 ```
 
 5. Click **Save Changes**
@@ -117,7 +131,9 @@ GOOGLE_CLIENT_SECRET=<dev_client_secret>
 FACEBOOK_APP_ID=<dev_app_id>
 FACEBOOK_APP_SECRET=<dev_app_secret>
 APPLE_CLIENT_ID=<dev_service_id>
-APPLE_CLIENT_SECRET=<dev_jwt>
+APPLE_TEAM_ID=<dev_team_id>
+APPLE_KEY_ID=<dev_key_id>
+APPLE_PRIVATE_KEY=<dev_p8_content_with_literal_\n>
 ```
 
 Run `bin/dev` and test login buttons at `/session/new`.
@@ -151,8 +167,11 @@ config.omniauth :google_oauth2, ENV["GOOGLE_CLIENT_ID"], ENV["GOOGLE_CLIENT_SECR
   scope: "email,profile", prompt: "select_account"
 config.omniauth :facebook, ENV["FACEBOOK_APP_ID"], ENV["FACEBOOK_APP_SECRET"],
   scope: "email", prompt: "select_account"
-config.omniauth :apple, ENV["APPLE_CLIENT_ID"], ENV["APPLE_CLIENT_SECRET"],
-  scope: "email, name"
+config.omniauth :apple, ENV["APPLE_CLIENT_ID"], "",
+  scope: "email name",
+  team_id: ENV["APPLE_TEAM_ID"],
+  key_id: ENV["APPLE_KEY_ID"],
+  pem: ENV["APPLE_PRIVATE_KEY"]&.gsub("\\n", "\n")
 ```
 
 If any ENV var is missing, OmniAuth will skip that provider silently.
@@ -181,7 +200,7 @@ If any ENV var is missing, OmniAuth will skip that provider silently.
 
 ## Status
 
-> **Updated 8 May 2026** — Google and Facebook are live on Render. Apple pending.
+> **Updated 31 May 2026** — All three providers live on Render.
 
 | Area | Status |
 |------|--------|
@@ -190,7 +209,7 @@ If any ENV var is missing, OmniAuth will skip that provider silently.
 | Custom OAuth conflicts | ✅ Removed — Devise only |
 | Google on Render | ✅ Live |
 | Facebook on Render | ✅ Live |
-| Apple on Render | ⏳ Waiting for Apple Developer Account |
+| Apple on Render | ✅ Live |
 
 ---
 
@@ -200,11 +219,8 @@ If any ENV var is missing, OmniAuth will skip that provider silently.
 |----------|-------------|-----------|--------------|
 | **Google** | ✅ Obtained | ✅ Set | `https://seasonv2.onrender.com/users/auth/google_oauth2/callback` |
 | **Facebook** | ✅ Obtained | ✅ Set | `https://seasonv2.onrender.com/users/auth/facebook/callback` |
-| **Apple** | ⏳ Pending | ⏳ Pending | `https://seasonv2.onrender.com/users/auth/apple/callback` |
+| **Apple** | ✅ Obtained (Service ID + `.p8` key) | ✅ Set | `https://seasonv2.onrender.com/users/auth/apple/callback` |
 
 **Callback pattern:** `/users/auth/:provider/callback` (Devise default)
 
-### What's left
-
-- [ ] Apple Developer Account approval → obtain `APPLE_CLIENT_ID` + `APPLE_CLIENT_SECRET`
-- [ ] Set Apple vars on Render → OAuth fully complete across all three providers
+**Apple Note:** Uses `APPLE_TEAM_ID`, `APPLE_KEY_ID`, `APPLE_PRIVATE_KEY` (`.p8` file). The `omniauth-apple` gem generates the JWT client-side — no `APPLE_CLIENT_SECRET` env var needed.

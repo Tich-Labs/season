@@ -6,6 +6,7 @@ class ReminderMailer < ApplicationMailer
     @cycle_day = @calculator.current_cycle_day
     @season = @calculator.current_season || "Spring"
     @phase_meta = CycleCalculatorService::PHASE_META[@phase]
+    @content = CyclePhaseContent.for(@phase, user.language || "en", dietary_preference: user.food_preference || "")
 
     mail(to: user.email, subject: t(".subject", name: user.name.split.first))
   end

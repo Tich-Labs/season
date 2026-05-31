@@ -17,7 +17,7 @@ TODAY'S FOCUS
 <%= {"menstrual" => "Gentle yoga or walking", "follicular" => "HIIT & strength training", "ovulation" => "High-intensity cardio", "luteal" => "Moderate, steady exercise"}[@phase] %>
 
 🥗 Nutrition
-<%= {"menstrual" => "Iron-rich foods & warmth", "follicular" => "Light, fresh foods", "ovulation" => "Raw & vibrant foods", "luteal" => "Complex carbs & magnesium"}[@phase] %>
+<%= @content&.nutrition_text.presence || {"menstrual" => "Iron-rich foods & warmth", "follicular" => "Light, fresh foods", "ovulation" => "Raw & vibrant foods", "luteal" => "Complex carbs & magnesium"}[@phase] %>
 
 ---
 Open Season: <%= root_url %>

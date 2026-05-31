@@ -1,9 +1,13 @@
 <%# Native top bar with overflow dropdown — iOS / Android standard pattern %>
 <div data-controller="native-top-bar"
-     style="position:fixed;top:0;left:0;right:0;z-index:50;max-width:430px;margin:0 auto;padding-top:env(safe-area-inset-top,0px);">
+     style="position:fixed;top:0;left:0;right:0;z-index:50;max-width:430px;margin:0 auto;background:#EDE1D5;min-height:calc(5rem + env(safe-area-inset-top,0px));padding-top:env(safe-area-inset-top,0px);">
 
-  <%# Top bar %>
-  <div style="display:flex;align-items:center;justify-content:flex-end;height:44px;padding:0 16px;">
+  <%# Top bar with page title %>
+  <div style="display:flex;align-items:center;justify-content:space-between;height:5rem;padding:0 16px;">
+    <div class="w-10"></div>
+
+    <span class="text-[#933a35] text-2xl font-medium font-['Montserrat']"><%= yield(:page_title) %></span>
+
     <button type="button"
             data-action="click->native-top-bar#toggle"
             aria-label="Menu"

@@ -3,7 +3,7 @@ class InformationsController < ApplicationController
 
   def index
     @phases = PHASES.map do |phase|
-      content = CyclePhaseContent.for(phase, I18n.locale.to_s)
+      content = CyclePhaseContent.for(phase, I18n.locale.to_s, dietary_preference: current_user.food_preference || "")
       meta = phase_meta(phase)
       {phase: phase, content: content, meta: meta}
     end
@@ -14,7 +14,7 @@ class InformationsController < ApplicationController
     redirect_to informations_path and return unless PHASES.include?(phase)
 
     @phase = phase
-    @content = CyclePhaseContent.for(phase, I18n.locale.to_s)
+    @content = CyclePhaseContent.for(phase, I18n.locale.to_s, dietary_preference: current_user.food_preference || "")
     @meta = phase_meta(phase)
   end
 
