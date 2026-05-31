@@ -25,6 +25,19 @@ module IconHelper
     svg_icon(CUSTOM_PATH.join("#{name}.svg"), size: size, colour: colour, default_stroke: "#4D4D4D", **attrs)
   end
 
+  EMOJI_PATH = Rails.root.join("app/assets/images/icons/emojis")
+
+  # Render a mood emoji SVG inline.
+  def inline_emoji_svg(filename, size: 48)
+    path = EMOJI_PATH.join(filename)
+    raw = File.read(path)
+    raw = raw.sub(/(<svg[^>]*)\swidth="[^"]*"/, "\\1 width=\"#{size}\"")
+      .sub(/(<svg[^>]*)\sheight="[^"]*"/, "\\1 height=\"#{size}\"")
+    raw.html_safe # rubocop:disable Rails/OutputSafety -- SVG read from app's own asset files, not user input
+  rescue Errno::ENOENT
+    "".html_safe # rubocop:disable Rails/OutputSafety
+  end
+
   private
 
   def svg_icon(path, size:, colour:, default_stroke:, **attrs)
