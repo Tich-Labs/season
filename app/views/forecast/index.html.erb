@@ -103,15 +103,27 @@
         <% card_config.each do |card| %>
           <%
             content = @cards[card[:key]]
+            mood_icon = nil
+            if card[:key] == "mood" && content&.short_text.present?
+              first = content.short_text.split(",").first.strip
+              mood = MoodPickerService.find_by_name(first)
+              unless mood
+                match = content.short_text.split(/[\s,]+/).find { |w| MoodPickerService.find_by_name(w) }
+                mood = match ? MoodPickerService.find_by_name(match) : nil
+              end
+              mood_icon = mood ? image_tag("icons/emojis/#{mood[:svg]}", alt: mood[:name], class: "w-12 h-12") : nil
+            end
           %>
           <button data-action="click->forecast-modal#open"
                   data-forecast-modal-title="<%= card[:title] %>"
                   data-forecast-modal-body="<%= content&.long_text&.gsub('"', '&quot;') || 'No content yet for this day.' %>"
                   data-forecast-modal-food="<%= card[:key] == 'nutrition' && content&.food_items.present? ? content.food_items.to_json.gsub('"', '&quot;') : '' %>"
-                  class="rounded-xl p-4 text-left w-full cursor-pointer hover:shadow-md transition-shadow border-0"
+                  class="rounded-xl p-4 text-center w-full cursor-pointer hover:shadow-md transition-shadow border-0"
                   style="min-height:95px; background:<%= pc %>1A;">
             <div class="flex items-start gap-3">
-              <span class="text-2xl"><%= card[:emoji] %></span>
+              <span class="text-2xl shrink-0">
+                <%= mood_icon || card[:emoji] %>
+              </span>
               <div class="flex-1 min-w-0">
                 <p class="font-medium text-2xl leading-[29px] font-sans m-0" style="color:<%= pc %>;">
                   <%= card[:title] %>

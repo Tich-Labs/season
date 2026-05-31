@@ -2,9 +2,9 @@ class CycleDayContent < ApplicationRecord
   CARD_TYPES = %w[superpower watch_out_for mood sport nutrition fertility].freeze
   PHASE_COLOURS = {
     1..7 => "#933a35",  # Menstruation / Winter
-    8..14 => "#7a8c6e",  # Follicular / Spring
-    15..21 => "#4a5e4a",  # Ovulation / Summer
-    22..35 => "#b07070",  # Luteal / Autumn
+    8..14 => "#899884",  # Follicular / Spring
+    15..21 => "#50705b",  # Ovulation / Summer
+    22..35 => "#D18D83",  # Luteal / Autumn
     :fallback => "#933a35"
   }.freeze
 
