@@ -247,26 +247,26 @@ fertilities = {
 # ── Seed all content (upserts so re-running updates existing records) ──────
 (1..35).each do |day|
   sp = superpowers[day]
-  rec = CycleDayContent.find_or_initialize_by(cycle_day: day, card_type: "superpower")
+  rec = CycleDayContent.find_or_initialize_by(cycle_day: day, card_type: "superpower", locale: "en")
   rec.update!(short_text: sp[:s], long_text: sp[:l])
 
   wo = watch_outs[day]
-  rec = CycleDayContent.find_or_initialize_by(cycle_day: day, card_type: "watch_out_for")
+  rec = CycleDayContent.find_or_initialize_by(cycle_day: day, card_type: "watch_out_for", locale: "en")
   rec.update!(short_text: wo[:s], long_text: wo[:l])
 
-  rec = CycleDayContent.find_or_initialize_by(cycle_day: day, card_type: "mood")
+  rec = CycleDayContent.find_or_initialize_by(cycle_day: day, card_type: "mood", locale: "en")
   rec.update!(short_text: moods[day], long_text: moods[day])
 
   sp_s = sports[day]
-  rec = CycleDayContent.find_or_initialize_by(cycle_day: day, card_type: "sport")
+  rec = CycleDayContent.find_or_initialize_by(cycle_day: day, card_type: "sport", locale: "en")
   rec.update!(short_text: sp_s[:s], long_text: sp_s[:l])
 
   nu = nutritions[day]
-  rec = CycleDayContent.find_or_initialize_by(cycle_day: day, card_type: "nutrition")
+  rec = CycleDayContent.find_or_initialize_by(cycle_day: day, card_type: "nutrition", locale: "en")
   rec.update!(short_text: nu[:s], long_text: nu[:l], food_items: nu[:f])
 
   fe = fertilities[day]
-  rec = CycleDayContent.find_or_initialize_by(cycle_day: day, card_type: "fertility")
+  rec = CycleDayContent.find_or_initialize_by(cycle_day: day, card_type: "fertility", locale: "en")
   rec.update!(short_text: fe[:s], long_text: fe[:l] || fe[:s])
 end
 

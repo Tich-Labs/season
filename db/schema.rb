@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_31_150000) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_31_150001) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -62,10 +62,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_31_150000) do
     t.datetime "created_at", null: false
     t.integer "cycle_day", null: false
     t.jsonb "food_items"
+    t.string "locale", default: "en", null: false
     t.text "long_text"
     t.text "short_text"
     t.datetime "updated_at", null: false
-    t.index ["cycle_day", "card_type"], name: "index_cycle_day_contents_on_cycle_day_and_card_type", unique: true
+    t.index ["cycle_day", "card_type", "locale"], name: "index_cycle_day_contents_on_cycle_day_and_card_type_and_locale", unique: true
   end
 
   create_table "cycle_entries", force: :cascade do |t|

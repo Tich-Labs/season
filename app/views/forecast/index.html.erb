@@ -114,10 +114,11 @@
               mood_icon = mood ? inline_emoji_svg(mood[:svg], size: 48) : nil
             end
           %>
-          <button <%= card[:key] == "mood" ? "" : "data-action=\"click->forecast-modal#open\"" %>
-                  <%= card[:key] == "mood" ? "" : "data-forecast-modal-title=\"#{card[:title]}\"" %>
-                  <%= card[:key] == "mood" ? "" : "data-forecast-modal-body=\"#{content&.long_text&.gsub('"', '&quot;') || 'No content yet for this day.'}\"" %>
-                  <%= card[:key] == "mood" ? "" : "data-forecast-modal-food=\"#{card[:key] == 'nutrition' && content&.food_items.present? ? content.food_items.to_json.gsub('"', '&quot;') : ''}\"" %>
+          <button type="button"
+                  data-action="<%= card[:key] == 'mood' ? '' : 'click->forecast-modal#open' %>"
+                  data-forecast-modal-title="<%= card[:key] == 'mood' ? '' : card[:title] %>"
+                  data-forecast-modal-body="<%= card[:key] == 'mood' ? '' : h(content&.long_text || 'No content yet for this day.') %>"
+                  data-forecast-modal-food="<%= card[:key] == 'mood' || card[:key] != 'nutrition' || !content&.food_items.present? ? '' : h(content.food_items.to_json) %>"
                   class="rounded-xl p-4 text-center w-full <%= card[:key] == 'mood' ? '' : 'cursor-pointer hover:shadow-md' %> transition-shadow border-0"
                   style="min-height:95px; background:<%= pc %>1A;">
             <div class="flex items-start gap-3">

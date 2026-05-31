@@ -17,6 +17,11 @@
     </div>
 
     <div>
+      <%= f.label :locale, class: "block text-sm font-medium mb-1" %>
+      <%= f.select :locale, [["English", "en"], ["Deutsch", "de"]], {}, class: "w-full rounded-lg border border-brand-field px-3 py-2" %>
+    </div>
+
+    <div>
       <%= f.label :short_text, class: "block text-sm font-medium mb-1" %>
       <%= f.text_area :short_text, rows: 3, class: "w-full rounded-lg border border-brand-field px-3 py-2 text-sm" %>
     </div>
