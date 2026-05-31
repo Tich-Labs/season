@@ -8,6 +8,7 @@ class TrackingController < ApplicationController
 
     if current_user.last_period_start
       svc = CycleCalculatorService.new(current_user)
+      @cycle_day = svc.current_cycle_day
       @strip = svc.strip_data(past_days: 6, future_days: 6)
       @arcs = svc.wheel_arcs
     end
