@@ -200,80 +200,74 @@ nutritions = {
 
 # ── Fertility ─────────────────────────────────────────────────────────────
 fertilities = {
-  1 => {s: "Fertility probability: 0-1%", l: "Extremely unlikely, except with very short cycles."},
-  2 => {s: "Fertility probability: 0-1%", l: "Extremely unlikely, except with very short cycles."},
-  3 => {s: "Fertility probability: 0-1%", l: "Extremely unlikely, except with very short cycles."},
-  4 => {s: "Fertility probability: 1-3%", l: "Low, but possible with short cycles."},
-  5 => {s: "Fertility probability: 1-3%", l: "Low, but possible with short cycles."},
-  6 => {s: "Fertility probability: 5-10%", l: "Only relevant with short cycles, otherwise still very low."},
-  7 => {s: "Fertility probability: 5-10%", l: "Only relevant with short cycles, otherwise still very low."},
-  8 => {s: "Fertility probability: 10-20%", l: "High with short cycles, moderate with longer cycles."},
-  9 => {s: "Fertility probability: 10-20%", l: "High with short cycles, moderate with longer cycles."},
-  10 => {s: "Fertility probability: 30-50%", l: "High, especially with medium-length cycles of 26-28 days."},
-  11 => {s: "Fertility probability: 30-50%", l: "High, especially with medium-length cycles."},
-  12 => {s: "Fertility probability: 50-80%", l: "Maximum with cycles of 26-30 days, as ovulation is imminent or has occurred."},
-  13 => {s: "Fertility probability: 50-80%", l: "Maximum with cycles of 26-30 days."},
-  14 => {s: "Fertility probability: 50-80%", l: "Maximum with cycles of 26-30 days."},
-  15 => {s: "Fertility probability: 70-90%", l: "Maximum chance of pregnancy with a regular cycle."},
-  16 => {s: "Fertility probability: 70-90%", l: "Maximum chance of pregnancy with a regular cycle."},
-  17 => {s: "Fertility probability: 20-40%", l: "Only still possible if ovulation occurred later than expected or sperm were already present."},
-  18 => {s: "Fertility probability: 20-40%", l: "Only still possible if ovulation occurred later than expected."},
-  19 => {s: "Fertility probability: 20-40%", l: "Only still possible if ovulation occurred later than expected."},
-  20 => {s: "Fertility probability: 5-10%", l: "Only relevant with very long cycles or late ovulation."},
-  21 => {s: "Fertility probability: 5-10%", l: "Only relevant with very long cycles or late ovulation."},
-  22 => {s: "Fertility probability: 0-1%", l: "No new fertilization possible, only implantation of an already fertilized egg."},
-  23 => {s: "Fertility probability: 0-1%", l: "No new fertilization possible, only implantation of an already fertilized egg."},
-  24 => {s: "Fertility probability: 0-1%", l: "No new fertilization possible, only implantation of an already fertilized egg."},
-  25 => {s: "Fertility probability: 0-1%", l: "No new fertilization possible, only implantation of an already fertilized egg."},
-  26 => {s: "Fertility probability: 0%", l: "No more possibility for fertilization, except an already fertilized egg implants."},
-  27 => {s: "Fertility probability: 0%", l: "No more possibility for fertilization, except an already fertilized egg implants."},
-  28 => {s: "Fertility probability: 0%", l: "No more possibility for fertilization, except an already fertilized egg implants."},
-  29 => {s: "Fertility probability: 0%", l: "No more possibility for fertilization, except an already fertilized egg implants."},
-  30 => {s: "Fertility probability: 0%", l: "No more possibility for fertilization, except an already fertilized egg implants."},
-  31 => {s: "Fertility probability: 0%", l: "No more possibility for fertilization, except an already fertilized egg implants."},
-  32 => {s: "Fertility probability: 0%", l: "Except a fertilized egg successfully implants."},
-  33 => {s: "Fertility probability: 0%", l: "Except a fertilized egg successfully implants."},
-  34 => {s: "Fertility probability: 0%", l: "Except a fertilized egg successfully implants."},
-  35 => {s: "Fertility probability: 0%", l: "Except a fertilized egg successfully implants."}
+  1 => {s: "Fertility probability: 0-1% (extremely unlikely, except with very short cycles)",
+        l: "With a very short cycle (21\u201324 days), a pregnancy is still unlikely, but not impossible, as ovulation could occur as early as day 7\u201310."},
+  2 => {s: "Fertility probability: 0-1% (extremely unlikely, except with very short cycles)",
+        l: "With a very short cycle (21\u201324 days), a pregnancy is still unlikely, but not impossible, as ovulation could occur as early as day 7\u201310."},
+  3 => {s: "Fertility probability: 0-1% (extremely unlikely, except with very short cycles)",
+        l: "With a very short cycle (21\u201324 days), a pregnancy is still unlikely, but not impossible, as ovulation could occur as early as day 7\u201310."},
+  4 => {s: "Fertility probability: 1-3% (low, but possible with short cycles)",
+        l: "With a very short cycle (21\u201324 days), a pregnancy is still unlikely, but not impossible, as ovulation could occur as early as day 7\u201310."},
+  5 => {s: "Fertility probability: 1-3% (low, but possible with short cycles)",
+        l: "With a short cycle of 21\u201324 days, early fertilization could be possible, as sperm can survive up to 5 days and ovulation could occur around day 7\u201310."},
+  6 => {s: "Fertility probability: 5-10% (only relevant with short cycles, otherwise still very low)",
+        l: "With a short cycle of 21\u201324 days, early fertilization could be possible, as sperm can survive up to 5 days and ovulation could occur around day 7\u201310."},
+  7 => {s: "Fertility probability: 5-10% (only relevant with short cycles, otherwise still very low)",
+        l: "With a short cycle of 21\u201324 days, early fertilization could be possible, as sperm can survive up to 5 days and ovulation could occur around day 7\u201310."},
+  8 => {s: "Fertility probability: 10-20% (high with short cycles, moderate with longer cycles)"},
+  9 => {s: "Fertility probability: 10-20% (high with short cycles, moderate with longer cycles)"},
+  10 => {s: "Fertility probability: 30-50% (high, especially with medium-length cycles of 26\u201328 days)"},
+  11 => {s: "Fertility probability: 30-50% (high, especially with medium-length cycles of 26\u201328 days)"},
+  12 => {s: "Fertility probability: 50-80% (maximum with cycles of 26\u201330 days, as ovulation is imminent or has occurred)"},
+  13 => {s: "Fertility probability: 50-80% (maximum with cycles of 26\u201330 days, as ovulation is imminent or has occurred)"},
+  14 => {s: "Fertility probability: 50-80% (maximum with cycles of 26\u201330 days, as ovulation is imminent or has occurred)"},
+  15 => {s: "Fertility probability: 70-90% (maximum chance of pregnancy with a regular cycle)"},
+  16 => {s: "Fertility probability: 70-90% (maximum chance of pregnancy with a regular cycle)"},
+  17 => {s: "Fertility probability: 20-40% (only still possible if ovulation occurred later than expected or sperm were already present)"},
+  18 => {s: "Fertility probability: 20-40% (only still possible if ovulation occurred later than expected)"},
+  19 => {s: "Fertility probability: 20-40% (only still possible if ovulation occurred later than expected)"},
+  20 => {s: "Fertility probability: 5-10% (only relevant with very long cycles or late ovulation)"},
+  21 => {s: "Fertility probability: 5-10% (only relevant with very long cycles or late ovulation)"},
+  22 => {s: "Fertility probability: 0-1% (no new fertilization possible, only implantation of an already fertilized egg)"},
+  23 => {s: "Fertility probability: 0-1% (no new fertilization possible, only implantation of an already fertilized egg)"},
+  24 => {s: "Fertility probability: 0-1% (no new fertilization possible, only implantation of an already fertilized egg)"},
+  25 => {s: "Fertility probability: 0-1% (no new fertilization possible, only implantation of an already fertilized egg)"},
+  26 => {s: "Fertility probability: 0% (no more possibility for fertilization, except an already fertilized egg implants)"},
+  27 => {s: "Fertility probability: 0% (no more possibility for fertilization, except an already fertilized egg implants)"},
+  28 => {s: "Fertility probability: 0% (no more possibility for fertilization, except an already fertilized egg implants)"},
+  29 => {s: "Fertility probability: 0% (no more possibility for fertilization, except an already fertilized egg implants)"},
+  30 => {s: "Fertility probability: 0% (no more possibility for fertilization, except an already fertilized egg implants)"},
+  31 => {s: "Fertility probability: 0% (no more possibility for fertilization, except an already fertilized egg implants)"},
+  32 => {s: "Fertility probability: 0% (except a fertilized egg successfully implants, which then leads to pregnancy)"},
+  33 => {s: "Fertility probability: 0% (except a fertilized egg successfully implants, which then leads to pregnancy)"},
+  34 => {s: "Fertility probability: 0% (except a fertilized egg successfully implants, which then leads to pregnancy)"},
+  35 => {s: "Fertility probability: 0% (except a fertilized egg successfully implants, which then leads to pregnancy)"}
 }
 
-# ── Seed all content ──────────────────────────────────────────────────────
+# ── Seed all content (upserts so re-running updates existing records) ──────
 (1..35).each do |day|
   sp = superpowers[day]
-  CycleDayContent.find_or_create_by!(cycle_day: day, card_type: "superpower") do |c|
-    c.short_text = sp[:s]
-    c.long_text = sp[:l]
-  end
+  rec = CycleDayContent.find_or_initialize_by(cycle_day: day, card_type: "superpower")
+  rec.update!(short_text: sp[:s], long_text: sp[:l])
 
   wo = watch_outs[day]
-  CycleDayContent.find_or_create_by!(cycle_day: day, card_type: "watch_out_for") do |c|
-    c.short_text = wo[:s]
-    c.long_text = wo[:l]
-  end
+  rec = CycleDayContent.find_or_initialize_by(cycle_day: day, card_type: "watch_out_for")
+  rec.update!(short_text: wo[:s], long_text: wo[:l])
 
-  CycleDayContent.find_or_create_by!(cycle_day: day, card_type: "mood") do |c|
-    c.short_text = moods[day]
-    c.long_text = moods[day]
-  end
+  rec = CycleDayContent.find_or_initialize_by(cycle_day: day, card_type: "mood")
+  rec.update!(short_text: moods[day], long_text: moods[day])
 
-  sp = sports[day]
-  CycleDayContent.find_or_create_by!(cycle_day: day, card_type: "sport") do |c|
-    c.short_text = sp[:s]
-    c.long_text = sp[:l]
-  end
+  sp_s = sports[day]
+  rec = CycleDayContent.find_or_initialize_by(cycle_day: day, card_type: "sport")
+  rec.update!(short_text: sp_s[:s], long_text: sp_s[:l])
 
   nu = nutritions[day]
-  CycleDayContent.find_or_create_by!(cycle_day: day, card_type: "nutrition") do |c|
-    c.short_text = nu[:s]
-    c.long_text = nu[:l]
-    c.food_items = nu[:f]
-  end
+  rec = CycleDayContent.find_or_initialize_by(cycle_day: day, card_type: "nutrition")
+  rec.update!(short_text: nu[:s], long_text: nu[:l], food_items: nu[:f])
 
   fe = fertilities[day]
-  CycleDayContent.find_or_create_by!(cycle_day: day, card_type: "fertility") do |c|
-    c.short_text = fe[:s]
-    c.long_text = fe[:l]
-  end
+  rec = CycleDayContent.find_or_initialize_by(cycle_day: day, card_type: "fertility")
+  rec.update!(short_text: fe[:s], long_text: fe[:l] || fe[:s])
 end
 
 Rails.logger.debug { "✅ Seeded #{CycleDayContent.count} cycle day content records (35 days × 6 cards)" }
