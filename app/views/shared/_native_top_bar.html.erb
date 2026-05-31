@@ -1,24 +1,26 @@
 <%# Native top bar with overflow dropdown — iOS / Android standard pattern %>
+<%# Matches app/views/layouts/application.html.erb header styling exactly %>
 <%
-  phase_bg   = content_for?(:header_color) ? yield(:header_color) : "#EDE1D5"
-  is_dark    = content_for?(:header_dark)
-  icon_fill  = is_dark ? "#FFFFFF" : "#933A35"
-  title_fg   = is_dark ? "#FFFFFF" : (content_for?(:header_color) ? yield(:header_color) : "#933a35")
+  is_settings = controller_name == "settings"
+  dark_header = is_settings || content_for?(:header_dark)
+  default_bg  = dark_header ? "#933a35" : "#EDE1D5"
+  hdr_bg      = content_for?(:header_color) ? yield(:header_color) : default_bg
+  hdr_fg      = dark_header ? "#FFFFFF" : "#933A35"
 %>
 <div data-controller="native-top-bar"
-     style="position:fixed;top:0;left:0;right:0;z-index:50;max-width:430px;margin:0 auto;background:<%= phase_bg %>;min-height:calc(5rem + env(safe-area-inset-top,0px));padding-top:env(safe-area-inset-top,0px);">
+     style="position:fixed;top:0;left:0;right:0;z-index:50;max-width:430px;margin:0 auto;background:<%= hdr_bg %>;min-height:calc(5rem + env(safe-area-inset-top,0px));padding-top:env(safe-area-inset-top,0px);">
 
   <%# Top bar with page title %>
   <div style="display:flex;align-items:center;justify-content:space-between;height:5rem;padding:0 16px;">
     <div class="w-10"></div>
 
-    <span style="color:<%= title_fg %>;font-size:24px;font-weight:500;font-family:'Montserrat',sans-serif;"><%= yield(:page_title) %></span>
+    <span style="color:<%= hdr_fg %>;font-size:24px;font-weight:500;font-family:'Montserrat',sans-serif;"><%= yield(:page_title) %></span>
 
     <button type="button"
             data-action="click->native-top-bar#toggle"
             aria-label="Menu"
             style="background:none;border:none;cursor:pointer;padding:8px;display:flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="<%= icon_fill %>">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="<%= hdr_fg %>">
         <circle cx="12" cy="5" r="2" />
         <circle cx="12" cy="12" r="2" />
         <circle cx="12" cy="19" r="2" />

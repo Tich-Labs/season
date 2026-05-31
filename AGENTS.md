@@ -210,6 +210,7 @@ On Symptoms page, Submit button opens a review modal (`submit_modal_controller.j
   6. Log out → `DELETE /session` (`button_to`)
 - **Dropdown styling**: 268px wide, `#EDE1D5` background, `border-radius: 0 0 0 40px` (bottom-left rounded), shadow. Slides in from right with `transform: translateX` animation, 250ms. Semi-transparent backdrop.
 - **Controller**: `native_top_bar_controller.js` — toggle open/close, backdrop click to dismiss
+- **Known issue**: `native_navbar_tag` in `+turbo_native.erb` variants triggers the iOS system UINavigationBar to appear (default white bg, black text), clashing with the custom `_native_top_bar.html.erb`. Currently only `header_color`/`header_dark`/`page_title` content_for blocks are set (no `native_navbar_tag`). To fix: either configure the iOS app to hide the system nav bar (`navigationBar.isHidden = true` in the Navigator), or pass color data through the Ruby Native bridge. See `calendar/index.html+turbo_native.erb` for the pattern.
 - **Touch targets**: 44×44px on both the trigger icon and the close button
 - **No hamburger menu on iOS** — hamburger menus are a deprecated anti-pattern on iOS/Android. The native tab bar (Calendar, Tracking, Settings) + this overflow dropdown provides equivalent navigation.
 - **Logout is also available**: at the bottom of the Settings page (always visible, no dropdown needed)

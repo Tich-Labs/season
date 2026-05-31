@@ -1,8 +1,11 @@
-<% content_for(:page_title) { @date.strftime("%B") } %>
-<%= native_navbar_tag(yield(:page_title)) if native_app? %>
+<% dv_page_title = @date.strftime("%B") %>
+<% content_for(:page_title) { dv_page_title } %>
+<%= native_navbar_tag(dv_page_title) if native_app? %>
+<% content_for(:header_color) { @phase_colour || "#933a35" } %>
+<% content_for(:header_dark) { "true" } %>
 <% content_for(:header_left) do %>
   <%= link_to user_root_path(date: @date.to_s),
-        class: "text-brand-primary font-montserrat text-base font-medium no-underline px-1 py-2 tracking-wider whitespace-nowrap" do %>
+        class: "text-white font-montserrat text-base font-medium no-underline px-1 py-2 tracking-wider whitespace-nowrap" do %>
     &lt; back
   <% end %>
 <% end %>

@@ -1,5 +1,11 @@
+<%
+  phase_meta   = CycleCalculatorService::PHASE_META[@phase] || {}
+  phase_colour = phase_meta[:colour] || "#933a35"
+%>
 <% content_for(:page_title) { "Discharge" } %>
 <%= native_navbar_tag("Discharge") if native_app? %>
+<% content_for(:header_color) { phase_colour } %>
+<% content_for(:header_dark) { "true" } %>
 <% content_for(:header_left) do %>
   <%= link_to symptoms_path,
         style: "color:#933a35; font-size:15px; font-weight:500; text-decoration:none; padding:8px 4px; font-family:'Montserrat',sans-serif;" do %>
@@ -7,11 +13,7 @@
   <% end %>
 <% end %>
 
-<%
-  phase_meta   = CycleCalculatorService::PHASE_META[@phase] || {}
-  phase_colour = phase_meta[:colour] || "#933a35"
-
-  discharge_types = [
+<% discharge_types = [
     {
       value: 1,
       name:  "Dry / None",
@@ -44,8 +46,7 @@
     }
   ]
 
-  current_value = @log&.discharge
-%>
+  current_value = @log&.discharge %>
 
 <div class="min-h-screen pb-24 bg-brand-background"
      data-controller="symptom"

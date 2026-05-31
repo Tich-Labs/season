@@ -1,5 +1,7 @@
 <% content_for(:page_title) { "Superpowers" } %>
 <%= native_navbar_tag("Superpowers") if native_app? %>
+<% content_for(:header_color) { @phase_colour } %>
+<% content_for(:header_dark) { "true" } %>
 <% content_for(:header_left) do %>
   <%= link_to tracking_index_path, class: "text-brand-primary text-sm font-medium no-underline p-2 font-montserrat" do %>
     &lt; back
