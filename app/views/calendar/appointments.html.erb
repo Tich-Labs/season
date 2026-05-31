@@ -1,5 +1,12 @@
-<% content_for(:page_title) { @date.strftime("%B") } %>
-<%= native_navbar_tag(yield(:page_title)) if native_app? %>
+<%
+  app_page_title = @date.strftime("%B")
+  app_phase_data = @cycle_by_date[@date]
+  app_phase_colour = app_phase_data&.dig(:colour) || "#933a35"
+%>
+<% content_for(:page_title) { app_page_title } %>
+<%= native_navbar_tag(app_page_title) if native_app? %>
+<% content_for(:header_color) { app_phase_colour } %>
+<% content_for(:header_dark) { "true" } %>
 <% content_for(:header_right) do %>
   <div class="flex items-center gap-2">
     <div class="flex items-center gap-1">
