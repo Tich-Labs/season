@@ -27,5 +27,8 @@ ruby_native:
 auth:
   oauth_paths:
     - /users/auth/google_oauth2
+    - /users/auth/google_oauth2/callback
     - /users/auth/facebook
+    - /users/auth/facebook/callback
     - /users/auth/apple
+    - /users/auth/apple/callback
