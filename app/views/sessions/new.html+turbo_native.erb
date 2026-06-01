@@ -45,7 +45,7 @@
   </div>
 
   <div class="w-full">
-    <%= form_with url: session_path, method: :post do |f| %>
+    <%= form_with url: session_path, method: :post, local: true do |f| %>
 
       <div class="mt-[29px]">
         <label for="email" class="sr-only">Email</label>

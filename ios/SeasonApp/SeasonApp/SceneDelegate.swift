@@ -1,11 +1,5 @@
 import HotwireNative
 import UIKit
-<<<<<<< Updated upstream
-=======
-import Turbo
-
-private let baseURL = URL(string: "https://seasonv2.onrender.com")!
->>>>>>> Stashed changes
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?

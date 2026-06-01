@@ -1,7 +1,7 @@
 # Season App - Audit System Summary
 
-**Version:** 1.1 (2026-05-19)  
-**Updated:** 2026-05-19  
+**Version:** 1.1 (2026-06-01)  
+**Updated:** 2026-06-01  
 **Status:** Active
 
 ## Overview

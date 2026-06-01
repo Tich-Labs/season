@@ -1,7 +1,7 @@
 # Season Progress Tracking
 
-**Version:** 1.1 (2026-05-28)  
-**Updated:** 2026-05-28  
+**Version:** 1.1 (2026-06-01)  
+**Updated:** 2026-06-01  
 **Based on:** Codebase Chapters (ch01_00 - ch10_68)
 
 Update this file as you complete audit items. Check off items to track progress toward 100%.
@@ -56,6 +56,9 @@ Update this file as you complete audit items. Check off items to track progress 
 - [x] Image_tag used (not `<img src>`)
 - [x] Asset filenames lowercase with hyphens
 
+### Recently Completed ✅
+- [x] **Appointment form redesign** — category picker modal with 9 icon options (Friends, Dinner, Date, Sports, Medical, Birthday, Work, Coffee, Shopping), `season_modal_controller.js` extended with `selectCategory` action, hidden `category` field synced to form, 9 new SVG icons in `app/assets/images/icons/appointment/`, phase-colored date/time block, 365px-width container, Delete button inside form (2026-06-01)
+
 ### TODO (5% remaining)
 - [ ] Burger menu text labels use `t()` (hardcoded English)
 - [ ] Onboarding screens use `t()` helpers (known debt)
@@ -82,6 +85,8 @@ Update this file as you complete audit items. Check off items to track progress 
 - [x] **Facebook OAuth credentials on Render** (`FACEBOOK_APP_ID`, `FACEBOOK_APP_SECRET`) ✅ 2026-05-08
 - [x] **iOS OAuth CSRF fix** — `config/initializers/omniauth.rb` monkey-patch handles both exceptions AND false returns from `valid_authenticity_token?` to fix silent OAuth redirect blocking on iOS Safari/WKWebView ✅ 2026-05-28
 - [x] **Onboarding step 10 fix** — submit buttons moved inside their `<form>` elements; iOS blocks `form.submit()` from outside a form ✅ 2026-05-28
+- [x] **Turbo Native login form fix** — added `local: true` to `form_with` in `sessions/new.html+turbo_native.erb`; prevents iOS Safari/WKWebView cookie/CSRF handling conflicts (matching signup/login form pattern in AGENTS.md) ✅ 2026-06-01
+- [x] **Ruby Native OAuth paths fix** — updated `config/ruby_native.yml` OAuth paths from `/auth/...` to `/users/auth/...` (matches actual Devise route prefix) ✅ 2026-06-01
 
 ### TODO (5% remaining)
 - [ ] **MEDIUM: Apple OAuth credentials on Render**
@@ -182,6 +187,7 @@ Update this file as you complete audit items. Check off items to track progress 
 - [x] **Tab bar** — 3 tabs (Calendar/Daily/Tracking) via `Tabs.swift` + `HotwireTabBarController.swift`
 - [x] **Base URL config** — `SEASON_BASE_URL` in `Info.plist`
 - [x] **AppDelegate cleanup** — minimal stub (no WKWebView)
+- [x] **SceneDelegate merge conflict cleanup** — removed `<<<<<<<`, `=======`, `>>>>>>>` markers and stale `import Turbo` / `baseURL` lines from stashed changes ✅ 2026-06-01
 - [ ] **Turbo Native view variants** — no `+turbo_native.erb` templates exist
 - [ ] **Turbo Frames** — zero `<turbo-frame>` tags anywhere; needed for native partials
 
@@ -390,5 +396,5 @@ LOW Priority (Post-launch):
 
 ---
 
-**Last Updated:** 2026-05-28
+**Last Updated:** 2026-06-01
 **Next Review:** After remaining TODO items

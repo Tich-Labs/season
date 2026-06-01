@@ -26,6 +26,6 @@ ruby_native:
   app_id: app_cu4qa08l
 auth:
   oauth_paths:
-    - /auth/google_oauth2
-    - /auth/facebook
-    - /auth/apple
+    - /users/auth/google_oauth2
+    - /users/auth/facebook
+    - /users/auth/apple
