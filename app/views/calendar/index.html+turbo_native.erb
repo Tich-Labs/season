@@ -60,7 +60,7 @@
 
     <%# ── Phase Legend ── %>
     <% if @cycle_by_date.present? %>
-      <div class="flex gap-3 justify-center flex-wrap mb-3">
+      <div class="flex gap-3 justify-center flex-wrap mb-3" data-controller="auto-hide" data-auto-hide-delay-value="50">
         <% [["Menstrual", "#933a35"], ["Follicular", "#D18D83"], ["Ovulation", "#F5C6AD"], ["Luteal", "#EDE1D5"]].each do |label, color| %>
           <div class="flex items-center gap-1">
             <span class="w-2.5 h-2.5 rounded-full" style="background: <%= color %>;"></span>
