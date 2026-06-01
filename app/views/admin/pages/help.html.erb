@@ -1,0 +1,95 @@
+<% content_for :page_title, "Admin Help" %>
+
+<div class="space-y-8 max-w-3xl">
+
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+    <h2 class="text-lg font-bold text-gray-900 mb-2">Admin Panel Guide</h2>
+    <p class="text-sm text-gray-500">A quick reference for every section in the admin panel, what it does, and how to use it.</p>
+  </div>
+
+  <%# ── Users ── %>
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+    <h3 class="text-base font-bold text-brand-primary flex items-center gap-2 mb-3">
+      <span class="w-7 h-7 rounded bg-brand-field flex items-center justify-center text-sm">1</span>
+      Users
+    </h3>
+    <p class="text-sm text-gray-600 mb-3">The default landing page and user management hub. Lists every registered user.</p>
+    <ul class="space-y-1.5 text-sm text-gray-600 ml-9 list-disc">
+      <li><strong>Search</strong> by name or user ID via the top search bar.</li>
+      <li><strong>Filter</strong> by language (All / English / German) using the pill buttons.</li>
+      <li><strong>Stats bar</strong> shows Total Users, Onboarded, English, and German counts.</li>
+      <li><strong>Table</strong> displays User ID, Name, Language, Onboarding badge, Sign-up date, and Streak.</li>
+      <li><strong>Promote/Demote</strong> — tap <em>Promote</em> to grant admin access or <em>Demote</em> to revoke it (with confirmation). Admins cannot demote or delete themselves.</li>
+      <li><strong>Delete</strong> removes a non-admin user permanently. Admins cannot be deleted.</li>
+      <li><strong>User detail page</strong> — click a user ID to see full profile: GDPR consents, cycle data, activity stats, period history, and an Admin Access toggle section.</li>
+      <li><strong>CSV export</strong> — the green "↓ CSV" button downloads all (filtered) users with Name, Email, Language, Onboarding, Sign-up date, and Streak.</li>
+    </ul>
+  </div>
+
+  <%# ── Content ── %>
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+    <h3 class="text-base font-bold text-brand-primary flex items-center gap-2 mb-3">
+      <span class="w-7 h-7 rounded bg-brand-field flex items-center justify-center text-sm">2</span>
+      Content
+    </h3>
+    <p class="text-sm text-gray-600 mb-3">Manage the educational and informational content shown to users throughout the app. Three sub-sections:</p>
+
+    <div class="ml-9 space-y-4">
+      <div>
+        <h4 class="text-sm font-semibold text-gray-700">Cycle Phase Contents (Informations)</h4>
+        <p class="text-xs text-gray-500">Controls the seasonal phase info shown on Forecast and Superpowers pages. Each record has a phase (menstrual/follicular/ovulation/luteal), locale (en/de), dietary preference, season name, superpower text, mood text, take-care text, sport text, and nutrition text. Full CRUD — create, edit, or delete content for any phase.</p>
+      </div>
+      <div>
+        <h4 class="text-sm font-semibold text-gray-700">Cycle Day Contents</h4>
+        <p class="text-xs text-gray-500">Daily content cards for cycle days 1–35. Each day can have multiple card types (superpower, watch_out_for, mood, sport, nutrition, fertility) per locale. Filter by language. <strong>CSV import</strong> lets you bulk-upload content — supports both English and German column headers. Re-importing is safe (updates existing records by matching cycle day + card type + locale).</p>
+      </div>
+      <div>
+        <h4 class="text-sm font-semibold text-gray-700">Weekly Feedback Questions</h4>
+        <p class="text-xs text-gray-500">The 8-week user survey questions shown in the weekly feedback modal. Questions are grouped by week (1–8) and ordered by position. Three question types: <em>Multiple choice</em> (enter options as newline-separated text), <em>Yes/No + Why</em>, and <em>Text only</em>. You can reorder, activate/deactivate, and edit questions at any time. Active questions appear in the user-facing modal for the corresponding week.</p>
+      </div>
+    </div>
+  </div>
+
+  <%# ── Launch Signups ── %>
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+    <h3 class="text-base font-bold text-brand-primary flex items-center gap-2 mb-3">
+      <span class="w-7 h-7 rounded bg-brand-field flex items-center justify-center text-sm">3</span>
+      Launch Signups
+    </h3>
+    <p class="text-sm text-gray-600 mb-3">Pre-launch email capture list. Read-only — no editing or deleting.</p>
+    <ul class="space-y-1.5 text-sm text-gray-600 ml-9 list-disc">
+      <li>Shows a numbered table of emails and sign-up timestamps.</li>
+      <li><strong>CSV export</strong> available to download the full list.</li>
+      <li>The sidebar badge shows the live total count.</li>
+    </ul>
+  </div>
+
+  <%# ── Inbox ── %>
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+    <h3 class="text-base font-bold text-brand-primary flex items-center gap-2 mb-3">
+      <span class="w-7 h-7 rounded bg-brand-field flex items-center justify-center text-sm">4</span>
+      Inbox
+    </h3>
+    <p class="text-sm text-gray-600 mb-3">All user-submitted messages in one place. Filter by message type via the sidebar sub-links.</p>
+    <ul class="space-y-1.5 text-sm text-gray-600 ml-9 list-disc">
+      <li><strong>Overview</strong> shows all messages. Sidebar sub-links filter to Feedback, Bugs, Support, or Weekly Feedback Responses.</li>
+      <li>Table shows Date, User email, Type (color-coded badge), and Message (truncated).</li>
+      <li><strong>CSV export</strong> downloads messages — optionally filtered by type.</li>
+      <li><strong>Weekly Feedback Responses</strong> shows the last 200 survey answers (which question, which week, selected option, free-text details). Each response auto-emails a summary to Trello when submitted by the user.</li>
+      <li>Sidebar badges show live counts for each category.</li>
+    </ul>
+  </div>
+
+  <%# ── Tips ── %>
+  <div class="bg-brand-field/30 rounded-xl border border-brand-field p-6">
+    <h3 class="text-base font-bold text-brand-primary mb-2">Quick Tips</h3>
+    <ul class="space-y-1.5 text-sm text-brand-primary ml-9 list-disc">
+      <li>Use the <strong>Users</strong> table to find and manage any user. Click their ID for full details.</li>
+      <li>To make someone an admin, find them in Users and tap <strong>Promote</strong>.</li>
+      <li>Use <strong>Cycle Day Contents</strong> CSV import for bulk content updates — it's safe to re-import.</li>
+      <li><strong>Weekly Feedback Questions</strong> drive the 8-week survey — deactivate questions you're not ready to ask yet.</li>
+      <li>All CSV exports respect your current filters — filter first, then export.</li>
+    </ul>
+  </div>
+
+</div>

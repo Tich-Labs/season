@@ -193,6 +193,7 @@ Rails.application.routes.draw do
     resources :weekly_feedback_questions, except: [:show]
     get "weekly_feedback_responses", to: "weekly_feedback_responses#index", as: :weekly_feedback_responses
     get "weekly_feedback_responses/export_csv", to: "weekly_feedback_responses#export_csv", as: :weekly_feedback_responses_export_csv
+    get "help", to: "pages#help", as: :help
     root to: "users#index"
   end
 
