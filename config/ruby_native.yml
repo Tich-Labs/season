@@ -19,7 +19,7 @@ tabs:
     icon: gear
 
 ios:
-  bundle_id: com.season-app.ios
+  bundle_id: com.onrender.seasonv2.rubynative
   team_id: 28NDQR5JC4
 
 ruby_native:
