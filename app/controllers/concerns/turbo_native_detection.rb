@@ -30,6 +30,8 @@ module TurboNativeDetection
   end
 
   def turbo_native_app?
-    request.headers["HTTP_X_HOTWIRE_NATIVE"].present? || request.user_agent&.include?("Turbo Native")
+    request.headers["HTTP_X_HOTWIRE_NATIVE"].present? ||
+      request.user_agent&.include?("Turbo Native") ||
+      request.user_agent&.include?("Ruby Native")
   end
 end
