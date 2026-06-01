@@ -22,6 +22,15 @@ class Admin::UsersController < Admin::BaseController
     @avg_cycle_length = calculate_avg_cycle_length
   end
 
+  def update
+    @user = User.find(params[:id])
+    if @user.update(user_params)
+      redirect_back_or_to(admin_users_path, notice: "User updated.") # rubocop:disable Rails/I18nLocaleTexts
+    else
+      redirect_back_or_to(admin_users_path, alert: @user.errors.full_messages.to_sentence)
+    end
+  end
+
   def destroy
     @user = User.find(params[:id])
     @user.destroy!
@@ -54,5 +63,9 @@ class Admin::UsersController < Admin::BaseController
         ]
       end
     end
+  end
+
+  def user_params
+    params.expect(user: [:admin])
   end
 end

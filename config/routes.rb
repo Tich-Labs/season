@@ -176,7 +176,7 @@ Rails.application.routes.draw do
     get "login", to: "sessions#new", as: :login
     post "login", to: "sessions#create"
     delete "logout", to: "sessions#destroy", as: :logout
-    resources :users, only: [:index, :show, :destroy]
+    resources :users, only: [:index, :show, :update, :destroy]
     get "inbox", to: "inbox#overview", as: :inbox
     get "inbox/feedback", to: "inbox#feedback"
     get "inbox/bugs", to: "inbox#bugs"

@@ -46,6 +46,32 @@
     </dl>
   </div>
 
+  <%# Admin toggle %>
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+    <div class="flex items-center justify-between">
+      <div>
+        <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wide">Admin Access</h3>
+        <p class="text-xs text-gray-400 mt-1">Grant or revoke admin privileges for this user.</p>
+      </div>
+      <% if @user.admin? %>
+        <div class="flex items-center gap-3">
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-brand-primary text-white">Admin</span>
+          <%= button_to "Revoke Admin",
+                admin_user_path(@user, user: { admin: false }),
+                method: :patch,
+                data: { turbo_confirm: "Remove admin access from #{@user.name || @user.email}?" },
+                class: "px-4 py-2 rounded-lg text-sm font-medium bg-red-50 text-red-700 border border-red-200 hover:bg-red-100 transition-colors" %>
+        </div>
+      <% else %>
+        <%= button_to "Grant Admin",
+              admin_user_path(@user, user: { admin: true }),
+              method: :patch,
+              data: { turbo_confirm: "Grant admin access to #{@user.name || @user.email}?" },
+              class: "px-4 py-2 rounded-lg text-sm font-medium bg-brand-primary text-white hover:bg-[#7a2f2a] transition-colors" %>
+      <% end %>
+    </div>
+  </div>
+
   <%# Two-column detail row %>
   <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
 
