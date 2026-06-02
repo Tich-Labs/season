@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Season — Testing Sheet</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 62.5%; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f5efe0; color: #1a1a1a;
+      min-height: 100vh; font-size: 1.6rem;
+    }
+
+    .top-bar {
+      background: #933a35; color: #fff;
+      padding: 12px 24px; display: flex; align-items: center;
+      gap: 16px; flex-wrap: wrap;
+    }
+    .top-bar-title { font-weight: 800; font-size: 1.6rem; letter-spacing: -0.02em; flex: 1; min-width: 200px; }
+    .top-bar-title span { color: #EDE1D5; }
+    .top-bar-links { display: flex; gap: 8px; flex-wrap: wrap; }
+    .top-link {
+      font-size: 1.3rem; font-weight: 600; padding: 5px 12px;
+      border-radius: 5px; text-decoration: none; border: 1px solid rgba(255,255,255,0.25);
+      color: #fff; transition: background 0.15s;
+    }
+    .top-link:hover { background: rgba(255,255,255,0.12); }
+    .top-link.accent { background: #EDE1D5; color: #933a35; border-color: #EDE1D5; }
+    .top-link.accent:hover { background: #d4c8b8; }
+
+    .hero {
+      background: #fff; border-bottom: 1px solid #e5e7eb;
+      padding: 20px 24px 16px;
+    }
+    .hero-row { display: flex; align-items: flex-start; gap: 20px; flex-wrap: wrap; margin-bottom: 16px; }
+    .hero-left { flex: 1; min-width: 220px; }
+    .hero-left h1 { font-size: 2.2rem; font-weight: 800; color: #933a35; letter-spacing: -0.03em; }
+    .hero-left p { font-size: 1.4rem; color: #6b7280; margin-top: 4px; }
+    .hero-right { display: flex; align-items: flex-end; gap: 10px; flex-wrap: wrap; }
+
+    .tester-input-wrap label { font-size: 1.2rem; font-weight: 700; color: #374151; text-transform: uppercase; letter-spacing: 0.06em; display: block; margin-bottom: 4px; }
+    .tester-input-wrap input {
+      padding: 8px 14px; border: 1.5px solid #d1d5db; border-radius: 7px;
+      font-size: 1.5rem; width: 240px; background: #f9fafb;
+    }
+    .tester-input-wrap input:focus { outline: none; border-color: #933a35; }
+
+    .btn {
+      padding: 8px 16px; border-radius: 7px; font-size: 1.4rem;
+      font-weight: 700; cursor: pointer; border: none; transition: all 0.15s; white-space: nowrap;
+    }
+    .btn-primary { background: #933a35; color: #fff; }
+    .btn-primary:hover { background: #7a2f2a; }
+    .btn-accent { background: #EDE1D5; color: #933a35; }
+    .btn-accent:hover { background: #d4c8b8; }
+    .btn-ghost { background: #fff; color: #374151; border: 1.5px solid #d1d5db; }
+    .btn-ghost:hover { background: #f3f4f6; }
+    .btn-danger { background: #fff; color: #991b1b; border: 1.5px solid #fca5a5; }
+    .btn-danger:hover { background: #fef2f2; }
+
+    .save-status-row { display: flex; align-items: center; gap: 8px; font-size: 1.3rem; }
+    .save-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #9ca3af; flex-shrink: 0; }
+    .save-dot.saved { background: #22c55e; }
+    .save-dot.saving { background: #3b82f6; }
+    .save-dot.error { background: #ef4444; }
+    #save-text { color: #6b7280; }
+
+    .progress-wrap { margin-top: 14px; }
+    .progress-label { font-size: 1.3rem; font-weight: 600; color: #374151; margin-bottom: 5px; display: flex; justify-content: space-between; }
+    .progress-track { height: 9px; background: #e5e7eb; border-radius: 99px; overflow: hidden; }
+    .progress-bar { height: 100%; background: linear-gradient(90deg, #D18D83, #933a35); border-radius: 99px; transition: width 0.4s ease; }
+    .progress-pills { display: flex; gap: 12px; margin-top: 6px; }
+    .pill { font-size: 1.2rem; font-weight: 700; padding: 3px 10px; border-radius: 99px; }
+    .pill-pass { background: #dcfce7; color: #166534; }
+    .pill-fail { background: #fee2e2; color: #991b1b; }
+    .pill-pending { background: #fef9c3; color: #854d0e; }
+
+    .tab-bar {
+      background: #fff; border-bottom: 2px solid #e5e7eb;
+      padding: 0 24px; display: flex; gap: 2px; overflow-x: auto;
+      position: sticky; top: 0; z-index: 50;
+    }
+    .tab-bar-left { display: flex; gap: 2px; overflow-x: auto; flex: 1; }
+    .tab-bar-right { display: flex; align-items: center; flex-shrink: 0; padding-left: 8px; }
+    .tab-btn {
+      padding: 14px 16px 12px; border: none; background: transparent;
+      cursor: pointer; font-size: 1.4rem; font-weight: 600; color: #6b7280;
+      border-bottom: 3px solid transparent; margin-bottom: -2px;
+      white-space: nowrap; transition: all 0.15s; display: flex; align-items: center; gap: 8px;
+    }
+    .tab-btn:hover { color: #933a35; }
+    .tab-btn.active { color: #933a35; border-bottom-color: #933a35; }
+    .tab-badge {
+      font-size: 1.1rem; font-weight: 700; padding: 2px 7px;
+      border-radius: 99px; min-width: 32px; text-align: center;
+    }
+    .badge-pending { background: #f1f5f9; color: #64748b; }
+    .badge-pass    { background: #dcfce7; color: #166534; }
+    .badge-fail    { background: #fee2e2; color: #991b1b; }
+    .badge-wip     { background: #fef9c3; color: #854d0e; }
+
+    .content { max-width: 1060px; margin: 0 auto; padding: 20px 24px 40px; }
+
+    .section-header {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      margin-bottom: 16px; flex-wrap: wrap; gap: 10px;
+    }
+    .section-eyebrow { font-size: 1.1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #9ca3af; margin-bottom: 3px; }
+    .section-title { font-size: 2.2rem; font-weight: 800; color: #933a35; }
+    .section-meta { font-size: 1.3rem; color: #6b7280; margin-top: 2px; }
+    .section-nav { display: flex; gap: 8px; }
+
+    .test-table {
+      width: 100%; border-collapse: collapse; background: #fff;
+      border-radius: 12px; overflow: hidden;
+      border: 1px solid #e5e7eb; margin-bottom: 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .test-table th {
+      background: #f8fafc; text-align: left; padding: 11px 16px;
+      font-size: 1.1rem; text-transform: uppercase; letter-spacing: 0.1em;
+      color: #64748b; border-bottom: 2px solid #e5e7eb;
+    }
+    .test-table td { padding: 13px 16px; font-size: 1.5rem; border-bottom: 1px solid #f1f5f9; vertical-align: top; }
+    .test-table tr:last-child td { border-bottom: none; }
+    .data-row { cursor: pointer; transition: background 0.1s; }
+    .data-row:hover td { background: #fafbfc; }
+
+    .scenario-cell { max-width: 400px; }
+    .scenario-text { font-weight: 600; color: #18181b; display: block; line-height: 1.4; }
+    .expand-hint { font-size: 1.1rem; color: #9ca3af; display: block; margin-top: 3px; }
+
+    .expand-row td {
+      background: #fdf7f5; padding: 16px 20px 16px 44px;
+      font-size: 1.4rem; color: #374151; line-height: 1.7;
+      border-bottom: 1px solid #f5d8d5; cursor: default;
+    }
+    .howto-label { font-size: 1.1rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: #933a35; margin-bottom: 8px; }
+    .howto-steps { padding-left: 20px; }
+    .howto-steps li { margin-bottom: 5px; }
+
+    .priority-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: middle; flex-shrink: 0; }
+    .dot-critical  { background: #ef4444; }
+    .dot-important { background: #f59e0b; }
+    .dot-nice      { background: #9ca3af; }
+    .priority-label { font-size: 1.2rem; text-transform: capitalize; color: #6b7280; }
+
+    .status-select {
+      padding: 6px 10px; border-radius: 7px; font-size: 1.3rem;
+      border: 1px solid #e5e7eb; cursor: pointer; font-weight: 700;
+      min-width: 110px; appearance: none; text-align: center;
+    }
+    .status-pass    { background: #dcfce7; color: #166534; border-color: #86efac; }
+    .status-fail    { background: #fee2e2; color: #991b1b; border-color: #fca5a5; }
+    .status-pending { background: #fef9c3; color: #854d0e; border-color: #fde68a; }
+
+    .notes-input {
+      width: 100%; padding: 8px 10px; border: 1px solid #e5e7eb;
+      border-radius: 7px; font-size: 1.4rem; resize: vertical;
+      min-height: 58px; font-family: inherit; line-height: 1.5;
+      color: #374151; background: #fafafa; transition: border-color 0.15s;
+    }
+    .notes-input:focus { outline: none; border-color: #933a35; background: #fff; }
+
+    .section-nav-bottom {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 12px 0; border-top: 1px dashed #d1cfc8; margin-top: 8px;
+    }
+    .section-nav-bottom .nav-info { font-size: 1.3rem; color: #9ca3af; }
+
+    .overview-panel { background: #fff; border-bottom: 1px solid #e5e7eb; }
+    .overview-toggle {
+      width: 100%; display: flex; justify-content: space-between; align-items: center;
+      padding: 12px 24px; background: #EDE1D5; border: none; cursor: pointer;
+      font-size: 1.4rem; font-weight: 700; color: #933a35; letter-spacing: 0.03em;
+      border-bottom: 1px solid #d4c8b8; transition: background 0.15s;
+    }
+    .overview-toggle:hover { background: #e5d6c8; }
+    .overview-toggle-left { display: flex; align-items: center; gap: 10px; }
+    .overview-toggle-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+    .overview-start-badge { background: #933a35; color: #fff; font-size: 1.1rem; font-weight: 800; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.05em; white-space: nowrap; }
+    .overview-toggle-hint { font-size: 1.2rem; font-weight: 500; color: #6b7280; white-space: nowrap; }
+    .overview-toggle-icon { font-size: 1.6rem; font-weight: 700; color: #6b7280; line-height: 1; width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; background: #f3f4f6; transition: background 0.15s, color 0.15s; }
+    .overview-toggle-icon:hover { background: #e5e7eb; color: #111; }
+    .overview-body {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 0; border-top: none;
+    }
+    .overview-body.hidden { display: none; }
+    .ov-block {
+      padding: 18px 22px; border-right: 1px solid #f1f5f9; border-bottom: 1px solid #f1f5f9;
+    }
+    .ov-block:last-child { border-right: none; }
+    .ov-label {
+      font-size: 1.1rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em;
+      color: #9ca3af; margin-bottom: 6px;
+    }
+    .ov-title { font-size: 1.6rem; font-weight: 700; color: #933a35; margin-bottom: 6px; }
+    .ov-text { font-size: 1.4rem; color: #4b5563; line-height: 1.6; }
+    .ov-text a { color: #933a35; font-weight: 600; text-decoration: none; }
+    .ov-text a:hover { text-decoration: underline; }
+    .prio-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 1.4rem; color: #374151; }
+    .prio-row:last-child { margin-bottom: 0; }
+    .sections-list { display: flex; flex-direction: column; gap: 5px; }
+    .section-chip {
+      display: flex; align-items: center; gap: 9px;
+      font-size: 1.3rem; color: #374151; padding: 3px 0;
+    }
+    .chip-num {
+      width: 20px; height: 20px; border-radius: 50%; background: #933a35;
+      color: #fff; font-size: 1.0rem; font-weight: 800; display: flex;
+      align-items: center; justify-content: center; flex-shrink: 0;
+    }
+
+    @media (max-width: 640px) {
+      .top-bar { padding: 10px 14px; }
+      .hero { padding: 14px; }
+      .content { padding: 14px 14px 32px; }
+      .tab-bar { padding: 0 8px; }
+      .tab-btn { padding: 12px 10px 10px; font-size: 1.3rem; }
+      .hero-right { width: 100%; }
+      .tester-input-wrap input { width: 100%; }
+      .section-header { flex-direction: column; }
+      .overview-toggle { padding: 10px 14px; }
+      .ov-block { padding: 14px 16px; border-right: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="top-bar-title">Season <span>Testing Sheet</span></div>
+  <div class="top-bar-links">
+    <a href="https://seasonv2.onrender.com" target="_blank" rel="noopener noreferrer" class="top-link accent">Open Live App</a>
+    <a href="https://seasonv2.onrender.com/admin" target="_blank" rel="noopener noreferrer" class="top-link">Admin Panel</a>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="hero-row">
+    <div class="hero-left">
+      <h1>Functional Testing Checklist</h1>
+      <p>Click any row to expand step-by-step instructions · Results auto-save to your browser · <strong>Prod URL:</strong> seasonv2.onrender.com</p>
+    </div>
+    <div class="hero-right" style="display:flex; align-items:flex-end; gap:10px; flex-wrap:wrap;">
+      <div class="tester-input-wrap">
+        <label for="tester-name">Your Name *</label>
+        <input type="text" id="tester-name" placeholder="Enter your name..." oninput="onTesterNameChange();" />
+      </div>
+      <button class="btn btn-primary" onclick="saveNow()">Save</button>
+      <button class="btn btn-ghost"   onclick="exportToCSV()">Export CSV</button>
+      <button class="btn btn-danger"  onclick="clearSaved()">Reset</button>
+    </div>
+  </div>
+
+  <div class="save-status-row" style="margin-bottom:12px;">
+    <span class="save-dot" id="save-dot"></span>
+    <span id="save-text">Auto-saves when you mark a test</span>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-label">
+      <span id="progress-label-left">Overall progress</span>
+      <span id="progress-label-right"></span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-bar" id="progress-bar" style="width:0%"></div>
+    </div>
+    <div class="progress-pills">
+      <span class="pill pill-pass" id="pill-pass">0 passed</span>
+      <span class="pill pill-fail" id="pill-fail">0 failed</span>
+      <span class="pill pill-pending" id="pill-pending">0 pending</span>
+    </div>
+  </div>
+</div>
+
+<div class="overview-panel">
+  <button class="overview-toggle" onclick="toggleOverview()" id="overview-toggle-btn" aria-expanded="true">
+    <span class="overview-toggle-left">
+      <span class="overview-start-badge">Start Here</span>
+      <span>About this testing sheet &amp; how to use it</span>
+    </span>
+    <span class="overview-toggle-right">
+      <span class="overview-toggle-hint" id="overview-hint">Click to hide</span>
+      <span class="overview-toggle-icon" id="overview-icon">x</span>
+    </span>
+  </button>
+  <div class="overview-body" id="overview-body">
+
+    <div class="ov-block">
+      <div class="ov-label">What you're testing</div>
+      <div class="ov-title">Season V2 — Women's Cycle Tracking PWA</div>
+      <div class="ov-text">
+        A Rails 8.1 progressive web app for cycle tracking. Users log moods, symptoms,
+        superpowers, and period data. The app serves both a PWA (mobile web) and an
+        iOS Turbo Native wrapper. Admin panel at /admin manages users, content, and inbox.
+        <br><br>
+        <a href="https://seasonv2.onrender.com" target="_blank" rel="noopener noreferrer">Open the live app</a>
+      </div>
+    </div>
+
+    <div class="ov-block">
+      <div class="ov-label">Testing environment</div>
+      <div class="ov-title">Production on Render</div>
+      <div class="ov-text">
+        Testing against <strong>live production</strong> at seasonv2.onrender.com.
+        Use real but clearly fake data (e.g. "Test Tester" as name).
+        Admin access requires an existing admin account (naijeria@gmail).
+        <br><br>
+        <strong>Staging URL:</strong> https://seasonv2.onrender.com<br>
+        <strong>Admin:</strong> https://seasonv2.onrender.com/admin
+      </div>
+    </div>
+
+    <div class="ov-block">
+      <div class="ov-label">Priority guide</div>
+      <div class="ov-title">What each dot means</div>
+      <div class="ov-text">
+        <div class="prio-row">
+          <span class="priority-dot dot-critical"></span>
+          <strong>Critical</strong> — Must work before launch. A fail here is a blocker.
+        </div>
+        <div class="prio-row">
+          <span class="priority-dot dot-important"></span>
+          <strong>Important</strong> — Should work. Document if broken but not a hard stop.
+        </div>
+        <div class="prio-row">
+          <span class="priority-dot dot-nice"></span>
+          <strong>Nice to have</strong> — Good to confirm but lowest priority.
+        </div>
+      </div>
+    </div>
+
+    <div class="ov-block">
+      <div class="ov-label">How to use this sheet</div>
+      <div class="ov-title">Step through section by section</div>
+      <div class="ov-text">
+        <strong>1. Enter your name</strong> at the top.<br><br>
+        <strong>2. Work through each tab</strong> in order. The tab bar shows your pass/total count per section.<br><br>
+        <strong>3. Click any test row</strong> to expand the step-by-step instructions.<br><br>
+        <strong>4. Set the status</strong> to Pass, Fail, or leave as Pending.<br><br>
+        <strong>5. Add notes</strong> — include error messages, screenshots, or observations.<br><br>
+        Results <strong>auto-save</strong> to your browser. Use Export CSV to share results.
+      </div>
+    </div>
+
+    <div class="ov-block">
+      <div class="ov-label">Sections covered</div>
+      <div class="ov-title">8 sections · 54 test cases</div>
+      <div class="sections-list">
+        <div class="section-chip"><span class="chip-num">1</span> Setup &amp; Auth — Load, sign up, sign in, social login, password recovery</div>
+        <div class="section-chip"><span class="chip-num">2</span> Onboarding — 11-step flow, data persistence</div>
+        <div class="section-chip"><span class="chip-num">3</span> Calendar — Monthly, weekly, daily view, appointments, events</div>
+        <div class="section-chip"><span class="chip-num">4</span> Tracking — Period entry, symptoms, superpowers, streaks</div>
+        <div class="section-chip"><span class="chip-num">5</span> Learn &amp; Settings — Informations, profile, notifications, consent</div>
+        <div class="section-chip"><span class="chip-num">6</span> Feedback &amp; Support — Modals, weekly survey, submissions</div>
+        <div class="section-chip"><span class="chip-num">7</span> iOS Turbo Native — Wrapper, nav, auth, push</div>
+        <div class="section-chip"><span class="chip-num">8</span> Admin — Users, content, inbox, CSV exports, help</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="tab-bar" id="tabs">
+  <div class="tab-bar-left" id="tab-bar-left"></div>
+  <div class="tab-bar-right" id="tab-bar-right"></div>
+</div>
+
+<div class="content">
+
+  <div class="section-header" id="section-header"></div>
+
+  <table class="test-table">
+    <thead>
+      <tr>
+        <th style="width:110px;">Priority</th>
+        <th>Test Scenario <span style="font-weight:400;font-size:0.68rem;text-transform:none;letter-spacing:0;">(click row for how-to steps)</span></th>
+        <th style="width:120px;">Status</th>
+        <th>Notes / Feedback</th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+
+  <div class="section-nav-bottom">
+    <span class="nav-info"></span>
+    <div style="display:flex;gap:8px;">
+      <a href="https://seasonv2.onrender.com" class="btn btn-accent" style="text-decoration:none;" target="_blank" rel="noopener noreferrer">Open App</a>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const SECTIONS = [
+    { id: "setup",      label: "Setup & Auth" },
+    { id: "onboarding", label: "Onboarding" },
+    { id: "calendar",   label: "Calendar" },
+    { id: "tracking",   label: "Tracking" },
+    { id: "learn",      label: "Learn & Settings" },
+    { id: "feedback",   label: "Feedback" },
+    { id: "ios",        label: "iOS" },
+    { id: "admin",      label: "Admin" },
+  ];
+
+  const DEFAULT_RESULTS = [
+    { section:"setup", scenario:"Site loads on Render (HTTPS, no errors)", priority:"critical",
+      howTo:"1. Open https://seasonv2.onrender.com in Chrome or Safari.\n2. The welcome/splash page should load within 5 seconds.\n3. No 502, 503, or SSL certificate errors.\n4. Refresh the page — should load consistently.", status:"pending", notes:"" },
+    { section:"setup", scenario:"Sign up with email works", priority:"critical",
+      howTo:"1. Go to /welcome, click 'Create account'.\n2. Fill in name, email (use a test email), password.\n3. Submit. Should redirect to onboarding step 1.\n4. Verify no 500 error or blank page.", status:"pending", notes:"" },
+    { section:"setup", scenario:"Sign in with email works", priority:"critical",
+      howTo:"1. Go to /session/new.\n2. Enter an existing email and password.\n3. Submit. Should redirect to /calendar.\n4. If credentials wrong, inline error should appear — no page reload.", status:"pending", notes:"" },
+    { section:"setup", scenario:"Google OAuth sign in works", priority:"important",
+      howTo:"1. Go to /welcome, click 'Sign in with Google'.\n2. Complete Google OAuth consent screen.\n3. Should create account if new, or sign in if existing.\n4. Should redirect to onboarding (new) or calendar (existing).", status:"pending", notes:"" },
+    { section:"setup", scenario:"Facebook OAuth sign in works", priority:"important",
+      howTo:"1. Go to /welcome, click 'Sign in with Facebook'.\n2. Complete Facebook OAuth flow.\n3. Should create/sign in and redirect correctly.", status:"pending", notes:"" },
+    { section:"setup", scenario:"Apple OAuth sign in works", priority:"important",
+      howTo:"1. Go to /welcome, click 'Sign in with Apple'.\n2. Complete Apple OAuth flow.\n3. Note: email only sent on first auth — repeat sign-ins use UID lookup.\n4. Should redirect correctly.", status:"pending", notes:"" },
+    { section:"setup", scenario:"Password recovery flow works", priority:"critical",
+      howTo:"1. Go to /session/new, click 'Forgot password?'.\n2. Enter email, submit.\n3. Check for confirmation message (password reset email sent — verify in logs if SMTP not configured).\n4. Error states: wrong email, already reset, inbox full — each has a dedicated page.", status:"pending", notes:"" },
+    { section:"setup", scenario:"Mobile PWA loads (web manifest, service worker)", priority:"important",
+      howTo:"1. Open on iPhone (Safari) or Android (Chrome).\n2. 'Add to Home Screen' prompt should appear (iOS) or install banner (Android).\n3. Installed PWA should open fullscreen without browser chrome.\n4. Offline page should show when no network.", status:"pending", notes:"" },
+
+    { section:"onboarding", scenario:"All 11 steps render correctly", priority:"critical",
+      howTo:"1. Sign up as a new user.\n2. Step through each onboarding step (1–11).\n3. Verify each step renders the correct form fields.\n4. No blank screens or JavaScript errors.", status:"pending", notes:"" },
+    { section:"onboarding", scenario:"Step navigation (Next / Back) works", priority:"critical",
+      howTo:"1. On each step, click Next to advance.\n2. Click Back to go to the previous step.\n3. Previously entered data should be preserved on Back.\n4. Next should skip optional steps if user chooses 'Skip'.", status:"pending", notes:"" },
+    { section:"onboarding", scenario:"Data persists between steps", priority:"critical",
+      howTo:"1. Fill in name on step 1, birthday on step 2.\n2. Go to step 3, then click Back to step 1.\n3. Name should still be filled in.\n4. Continue to finish — all data should be saved to the user record.", status:"pending", notes:"" },
+    { section:"onboarding", scenario:"Irregular cycle fork works", priority:"important",
+      howTo:"1. On step 3, select 'No, irregular cycle'.\n2. The flow should fork to a different setup path.\n3. Cycle length estimation should be available but clearly optional.", status:"pending", notes:"" },
+    { section:"onboarding", scenario:"Birth control path works", priority:"important",
+      howTo:"1. On step 5, select 'Yes, hormonal birth control'.\n2. Step 6 should show method selection.\n3. Step 7 should offer reminder opt-in.\n4. Step 8 should capture full contraception details.", status:"pending", notes:"" },
+    { section:"onboarding", scenario:"Finish screen shows animation + redirects to calendar", priority:"critical",
+      howTo:"1. Complete all 11 steps.\n2. Finish screen should show animated confirmation.\n3. Click 'Start my Journey' — redirects to /calendar.\n4. Calendar should show populated with entered cycle data.", status:"pending", notes:"" },
+    { section:"onboarding", scenario:"Food preference saves correctly", priority:"nice",
+      howTo:"1. On step 9, select a food preference (vegetarian/vegan/pescetarian).\n2. Complete onboarding.\n3. Later check that nutrition tips on daily view match this preference.", status:"pending", notes:"" },
+
+    { section:"calendar", scenario:"Monthly calendar loads with phase colours", priority:"critical",
+      howTo:"1. Sign in and go to /calendar.\n2. The calendar grid should show day cells coloured by cycle phase.\n3. Phase legend should show (Menstrual, Follicular, Ovulation, Luteal) with colour dots.\n4. Legend auto-hides after 50 seconds.", status:"pending", notes:"" },
+    { section:"calendar", scenario:"Phase banner shows current phase + cycle day", priority:"critical",
+      howTo:"1. On /calendar, look at the top section.\n2. Should show current season (Winter/Spring/Summer/Fall) + phase name.\n3. Should show current cycle day number.\n4. Phase colour should match the banner.", status:"pending", notes:"" },
+    { section:"calendar", scenario:"Weekly view navigates correctly", priority:"important",
+      howTo:"1. Go to /calendar/weekly.\n2. Horizontal week strip should show 7 days with phase colours.\n3. Swipe/scroll through weeks.\n4. Tap a day to go to daily view.", status:"pending", notes:"" },
+    { section:"calendar", scenario:"Daily view shows full day summary", priority:"critical",
+      howTo:"1. Go to /daily/2026-06-01 (or any valid date).\n2. Should show: cycle phase, symptom summary, superpower, nutrition/sport tips.\n3. Calendar events for that day should be listed.\n4. Empty day should show gracefully (not blank/error).", status:"pending", notes:"" },
+    { section:"calendar", scenario:"Appointments list shows all events", priority:"important",
+      howTo:"1. Go to /calendar/appointments.\n2. Should list all future calendar events.\n3. Each shows title, date, time, category.\n4. Tap an event to edit it.", status:"pending", notes:"" },
+    { section:"calendar", scenario:"Create calendar event with category picker", priority:"critical",
+      howTo:"1. Go to /calendar_events/new.\n2. Enter title, date, start/end time.\n3. Click the + button to open the category picker modal.\n4. Select a category (Friends, Dinner, Date, Sports, Medical, Birthday, Work, Coffee, Shopping).\n5. The modal should show 9 icon options with brand colour when selected.\n6. Submit — event should appear in appointments list.", status:"pending", notes:"" },
+    { section:"calendar", scenario:"Edit calendar event", priority:"important",
+      howTo:"1. From appointments list, tap an event to edit.\n2. Change title, time, or category.\n3. Save — changes should reflect in the list.\n4. Delete button should remove the event (with confirmation).", status:"pending", notes:"" },
+
+    { section:"tracking", scenario:"Period entry date picker works", priority:"critical",
+      howTo:"1. Go to /tracking/period.\n2. Tap a date to record period start.\n3. The date should highlight.\n4. Existing dates should show in 'edit' mode.\n5. Submit — cycle should recalculate.", status:"pending", notes:"" },
+    { section:"tracking", scenario:"Self Analysis dashboard loads", priority:"critical",
+      howTo:"1. Go to /tracking.\n2. Should show: avatar, current phase, cycle strip.\n3. Daily analysis card should appear.\n4. Navigation cards (Symptoms, Superpowers, etc.) should be tappable.\n5. Weekly feedback nudge banner should show if applicable.", status:"pending", notes:"" },
+    { section:"tracking", scenario:"Symptom logging — moods auto-save", priority:"critical",
+      howTo:"1. Go to /symptoms.\n2. Date drum picker should be expandable.\n3. Tap mood icons — they should toggle with opacity/grayscale change.\n4. Physical symptoms: tap a symptom, adjust level slider.\n5. Auto-save should trigger on each change (no submit button needed).", status:"pending", notes:"" },
+    { section:"tracking", scenario:"Symptom logging — all fields present", priority:"important",
+      howTo:"1. On /symptoms, verify all sections:\n   - Mood grid\n   - Physical symptoms with level sliders\n   - Mental symptoms with level sliders\n   - Bleeding dropdown\n   - Intercourse grid\n   - Cravings grid\n   - Discharge grid\n   - Sleep vertical picker (1-12h)\n   - Temperature vertical picker (35.0-42.0C)\n   - Weight vertical picker (30.0-200.0 kg)\n   - Notes textarea\n2. Submit opens review modal.", status:"pending", notes:"" },
+    { section:"tracking", scenario:"Submit review modal works", priority:"important",
+      howTo:"1. On /symptoms, click Submit.\n2. Review modal shows: mood count/names, physical/mental symptoms with levels, other counts.\n3. 'Submit tracking' navigates to /tracking.\n4. 'Go back to change' closes modal and returns to form.", status:"pending", notes:"" },
+    { section:"tracking", scenario:"Superpowers page works", priority:"important",
+      howTo:"1. Go to /superpowers.\n2. Date drum should be present.\n3. Phase label should show current phase.\n4. 20 sliders (low/med/high) should be present.\n5. Submit button should save and confirm.", status:"pending", notes:"" },
+    { section:"tracking", scenario:"Streaks counter shows correctly", priority:"nice",
+      howTo:"1. Go to /streaks.\n2. Current streak, best streak, and milestones should show.\n3. Log something daily then check streak increments next day.", status:"pending", notes:"" },
+
+    { section:"learn", scenario:"Informations main page loads", priority:"important",
+      howTo:"1. Go to /informations.\n2. Four phase cards should appear (menstrual, follicular, ovulation, luteal).\n3. Each card should link to phase detail.", status:"pending", notes:"" },
+    { section:"learn", scenario:"Phase detail pages load with content", priority:"important",
+      howTo:"1. Go to /informations/menstrual.\n2. Page should show: biological info, energy feeling, nutrition, exercise, emotional patterns.\n3. Content should be in the correct locale (en/de).\n4. Toggle between all 4 phases.", status:"pending", notes:"" },
+    { section:"learn", scenario:"Settings — profile edit works", priority:"critical",
+      howTo:"1. Go to /settings/profile.\n2. Edit name, email, birthday, upload avatar.\n3. Save — changes should persist.\n4. Email change should trigger confirmation email.", status:"pending", notes:"" },
+    { section:"learn", scenario:"Settings — notification toggles save instantly", priority:"important",
+      howTo:"1. Go to /settings/notifications.\n2. Toggle morning reminder on/off.\n3. Toggle period start warning on/off.\n4. Toggle birth control reminder on/off.\n5. Each toggle should save immediately (PATCH request).", status:"pending", notes:"" },
+    { section:"learn", scenario:"Settings — consent management works", priority:"important",
+      howTo:"1. Go to /settings/consent.\n2. View current consent status (health, symptom, cycle, menstrual data).\n3. Consent history should show grant/revoke timestamps.\n4. Toggle a consent — status should update.", status:"pending", notes:"" },
+    { section:"learn", scenario:"Account deletion works", priority:"important",
+      howTo:"1. Go to /account.\n2. Click 'Delete account'.\n3. Confirm deletion.\n4. Account and all associated data should be removed.\n5. Should redirect to welcome page.", status:"pending", notes:"" },
+
+    { section:"feedback", scenario:"Feedback modal opens and submits", priority:"important",
+      howTo:"1. From main app, find and tap the feedback button.\n2. Type a message, submit.\n3. Should show confirmation.\n4. Go to /admin/inbox/feedback — submission should appear.", status:"pending", notes:"" },
+    { section:"feedback", scenario:"Support modal opens and submits", priority:"important",
+      howTo:"1. Open support/bug report modal.\n2. Select type (Bug / Support).\n3. Type message, submit.\n4. Verify it appears in admin inbox under correct category.", status:"pending", notes:"" },
+    { section:"feedback", scenario:"Weekly feedback survey modal works", priority:"important",
+      howTo:"1. If user has a current feedback week, open the weekly feedback modal.\n2. Questions should render per question type:\n   - Multiple choice: tappable option buttons\n   - Yes/No + Why: toggle + textarea\n   - Text only: textarea\n3. Submit answers.\n4. Admin should see responses at /admin/weekly_feedback_responses.", status:"pending", notes:"" },
+    { section:"feedback", scenario:"Weekly feedback nudge banner appears on tracking", priority:"nice",
+      howTo:"1. Go to /tracking.\n2. If user is in an active feedback week, green banner should appear.\n3. Banner should show week label and link to open the weekly feedback modal.\n4. After submitting, banner should not appear for that week.", status:"pending", notes:"" },
+
+    { section:"ios", scenario:"iOS Turbo Native app loads", priority:"important",
+      howTo:"1. Build and run from ios/SeasonApp/ in Xcode.\n2. App should load the base URL and show the web content.\n3. Native tab bar (Calendar, Tracking, Settings) should appear.\n4. Path configuration should be loaded from /configurations/ios_v1.json.", status:"pending", notes:"" },
+    { section:"ios", scenario:"Native top bar dropdown menu works", priority:"important",
+      howTo:"1. In the iOS app, tap the 3-dot icon in the top bar.\n2. Dropdown should show: Schedule Overview, Day View, Weekly View, Monthly View, Settings, Log out.\n3. Each item should navigate correctly.\n4. Log out should delete the session.", status:"pending", notes:"" },
+    { section:"ios", scenario:"OAuth works in iOS WebView", priority:"critical",
+      howTo:"1. In the iOS app, sign up/sign in with Google.\n2. Complete OAuth flow within the WebView.\n3. Session cookie should persist (no silent redirect blocking).\n4. `local: true` forms should work without CSRF issues.", status:"pending", notes:"" },
+    { section:"ios", scenario:"Turbo View modal paths work", priority:"important",
+      howTo:"1. Navigate to calendar_events/new — should open as a modal.\n2. Dismiss the modal — should return to the previous screen.\n3. Pull-to-refresh should work on list pages (calendar, daily).", status:"pending", notes:"" },
+
+    { section:"admin", scenario:"Admin login works", priority:"critical",
+      howTo:"1. Go to /admin/login.\n2. Enter admin email (naijeria@gmail) and password.\n3. Should redirect to /admin (users list).\n4. Non-admin users should be rejected.", status:"pending", notes:"" },
+    { section:"admin", scenario:"Users table — search, filter, paginate", priority:"critical",
+      howTo:"1. Go to /admin (users index).\n2. Search by name or public ID — results filter.\n3. Filter by language (English/German).\n4. Stats bar shows counts.\n5. Pagination works (Next/Prev).", status:"pending", notes:"" },
+    { section:"admin", scenario:"Promote / demote admin users", priority:"critical",
+      howTo:"1. Find a non-admin user in the table.\n2. Click 'Promote' — confirm the prompt.\n3. User should now show 'Admin' badge with 'Demote' button.\n4. Click 'Demote' — admin access revoked.\n5. On user detail page, admin toggle section should work the same way.", status:"pending", notes:"" },
+    { section:"admin", scenario:"User detail page shows full profile", priority:"important",
+      howTo:"1. Click a user ID in the table.\n2. Should show: profile card, GDPR consents (health/symptom/cycle/menstrual), consent history, data summary (cycle entries, symptom logs, superpowers, events), cycle data (length, period length, avg cycle, last period, current phase, cycle day, next period), recent periods, activity stats.\n3. Admin Access toggle section should be present.", status:"pending", notes:"" },
+    { section:"admin", scenario:"Content management — cycle phase contents", priority:"important",
+      howTo:"1. Go to Content > Informations.\n2. List all phase contents ordered by phase, locale, dietary preference.\n3. Create a new content record.\n4. Edit existing — fields: phase, locale, dietary_preference, season_name, superpower_text, mood_text, take_care_text, sport_text, nutrition_text.\n5. Delete a record.\n6. Content should appear on /informations/:phase in the app.", status:"pending", notes:"" },
+    { section:"admin", scenario:"Content management — cycle day CSV import", priority:"important",
+      howTo:"1. Go to Content > Cycle Day.\n2. Filter by locale (en/de).\n3. Create/edit/delete individual records.\n4. Upload a CSV file via 'Import CSV'.\n5. Supports English and German column headers.\n6. Re-importing should update existing records (idempotent).", status:"pending", notes:"" },
+    { section:"admin", scenario:"Content management — weekly feedback questions", priority:"important",
+      howTo:"1. Go to Content > Weekly Feedback.\n2. Questions grouped by week (1-8), ordered by position.\n3. Create a new question: set week_number, question_type (multiple_choice/yes_no_with_input/text_only), question_text, options (newline-separated), position.\n4. Toggle active/inactive.\n5. Reorder within a week.\n6. Active questions should appear in user's weekly feedback modal.", status:"pending", notes:"" },
+    { section:"admin", scenario:"Inbox — filter by type + CSV export", priority:"important",
+      howTo:"1. Go to /admin/inbox — overview shows all messages.\n2. Sidebar sub-links filter to Feedback, Bugs, Support.\n3. Table shows date, user email, type (color badge), message.\n4. Export CSV per filter.\n5. Weekly Feedback Responses sub-link shows survey answers.", status:"pending", notes:"" },
+    { section:"admin", scenario:"Launch signups — list + CSV export", priority:"important",
+      howTo:"1. Go to /admin/launch_signups.\n2. Numbered table shows email + signup timestamp.\n3. Total count stat card.\n4. CSV export downloads all signups.\n5. Sidebar badge shows live count.", status:"pending", notes:"" },
+    { section:"admin", scenario:"Admin Help page loads", priority:"nice",
+      howTo:"1. Click 'Help' in the admin sidebar footer.\n2. Page should document all admin sections and features.\n3. Should include tips for common admin workflows.", status:"pending", notes:"" },
+  ];
+
+  let results = [];
+  let expandedRow = null;
+  let currentSectionIndex = 0;
+
+  function getActiveSections() {
+    return SECTIONS.filter(s => results.some(r => r.section === s.id));
+  }
+
+  function sectionStats(sectionId) {
+    const rows = results.filter(r => r.section === sectionId);
+    const pass = rows.filter(r => r.status === "pass").length;
+    const fail = rows.filter(r => r.status === "fail").length;
+    return { total: rows.length, pass, fail, pending: rows.length - pass - fail };
+  }
+
+  function initTable() {
+    const saved = localStorage.getItem("season-test-results-v1");
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        results = DEFAULT_RESULTS.map(def => {
+          const s = parsed.find(p => p.scenario === def.scenario);
+          return s ? { ...def, status: s.status, notes: s.notes } : { ...def };
+        });
+      } catch { results = DEFAULT_RESULTS.map(d => ({ ...d })); }
+    } else {
+      results = DEFAULT_RESULTS.map(d => ({ ...d }));
+    }
+
+    const savedSection = localStorage.getItem("season-current-section");
+    if (savedSection !== null) {
+      currentSectionIndex = parseInt(savedSection, 10) || 0;
+    }
+    const savedTesterName = localStorage.getItem("season-tester-name");
+    if (savedTesterName) document.getElementById("tester-name").value = savedTesterName;
+
+    renderAll();
+  }
+
+  function onTesterNameChange() {
+    const name = document.getElementById("tester-name").value.trim();
+    if (name) localStorage.setItem("season-tester-name", name);
+  }
+
+  function persist() {
+    localStorage.setItem("season-test-results-v1", JSON.stringify(
+      results.map(r => ({ scenario: r.scenario, status: r.status, notes: r.notes }))
+    ));
+  }
+
+  function setStatus(index, val) {
+    results[index].status = val;
+    persist(); renderAll();
+  }
+
+  function setNotes(index, val) {
+    results[index].notes = val;
+    persist();
+  }
+
+  function toggleExpand(index, e) {
+    if (e) {
+      const target = e.target || e.srcElement;
+      if (target.closest && (target.closest("select") || target.closest("textarea"))) return;
+    }
+    expandedRow = expandedRow === index ? null : index;
+    renderTable();
+  }
+
+  function clearSaved() {
+    if (!confirm("Clear all saved results? This cannot be undone.")) return;
+    localStorage.removeItem("season-test-results-v1");
+    localStorage.removeItem("season-tester-name");
+    results = DEFAULT_RESULTS.map(d => ({ ...d }));
+    expandedRow = null;
+    document.getElementById("tester-name").value = "";
+    renderAll();
+  }
+
+  function saveNow() {
+    const name = document.getElementById("tester-name").value.trim();
+    if (!name) { alert("Enter your name first."); return; }
+    persist();
+    document.getElementById("save-dot").className = "save-dot saved";
+    document.getElementById("save-text").textContent = "Saved! " + new Date().toLocaleTimeString([], {hour:"2-digit", minute:"2-digit"});
+    setTimeout(() => {
+      document.getElementById("save-dot").className = "save-dot";
+      document.getElementById("save-text").textContent = "Auto-saves when you mark a test";
+    }, 2000);
+  }
+
+  function exportToCSV() {
+    const name = document.getElementById("tester-name").value.trim();
+    if (!name) { alert("Enter your name first."); return; }
+    let csv = "Tester,Section,Scenario,Priority,Status,Notes\n";
+    results.forEach(r => {
+      csv += `"${name}","${r.section}","${r.scenario}","${r.priority}","${r.status}","${r.notes.replace(/"/g,'""')}"\n`;
+    });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([csv], { type:"text/csv" }));
+    a.download = `season-testing-${name.replace(/\s+/g,"-")}-${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+  }
+
+  function goToSection(i) {
+    currentSectionIndex = i;
+    expandedRow = null;
+    renderAll();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    localStorage.setItem("season-current-section", String(i));
+  }
+
+  function prevSection() { if (currentSectionIndex > 0) goToSection(currentSectionIndex - 1); }
+  function nextSection() { const n = getActiveSections().length; if (currentSectionIndex < n - 1) goToSection(currentSectionIndex + 1); }
+
+  function priorityDot(p) {
+    const cls = p === "critical" ? "dot-critical" : p === "important" ? "dot-important" : "dot-nice";
+    return `<span class="priority-dot ${cls}"></span>`;
+  }
+
+  function renderTabs() {
+    const sections = getActiveSections();
+    document.getElementById("tab-bar-left").innerHTML = sections.map((sec, i) => {
+      const st = sectionStats(sec.id);
+      const done = st.pass + st.fail;
+      let badgeClass = done === 0 ? "badge-pending" : st.fail > 0 ? "badge-fail" : done === st.total ? "badge-pass" : "badge-wip";
+      return `<button class="tab-btn ${i === currentSectionIndex ? "active" : ""}" onclick="goToSection(${i})">
+        ${sec.label}
+        <span class="tab-badge ${badgeClass}">${st.pass}/${st.total}</span>
+      </button>`;
+    }).join("");
+    document.getElementById("tab-bar-right").innerHTML = "";
+  }
+
+  function renderSectionHeader() {
+    const sections = getActiveSections();
+    const sec = sections[currentSectionIndex];
+    const st = sectionStats(sec.id);
+    const isFirst = currentSectionIndex === 0;
+    const isLast = currentSectionIndex === sections.length - 1;
+    document.getElementById("section-header").innerHTML = `
+      <div class="section-title-block">
+        <div class="section-eyebrow">Section ${currentSectionIndex + 1} of ${sections.length}</div>
+        <div class="section-title">${sec.label}</div>
+        <div class="section-meta">${st.total} test cases &middot; ${st.pass} passed &middot; ${st.fail} failed &middot; ${st.pending} pending</div>
+      </div>
+      <div class="section-nav">
+        ${!isFirst ? `<button class="btn btn-ghost" onclick="prevSection()">Previous</button>` : ""}
+        ${!isLast ? `<button class="btn btn-primary" onclick="nextSection()">Next section</button>` : `<button class="btn btn-accent" onclick="saveNow()">Save Results</button>`}
+      </div>
+    `;
+  }
+
+  function renderProgress() {
+    const total = results.length;
+    const pass = results.filter(r => r.status === "pass").length;
+    const fail = results.filter(r => r.status === "fail").length;
+    const pending = results.filter(r => r.status === "pending").length;
+    const pct = total ? Math.round(((pass + fail) / total) * 100) : 0;
+    document.getElementById("progress-bar").style.width = pct + "%";
+    document.getElementById("progress-label-left").textContent = `Overall progress — ${pct}% complete`;
+    document.getElementById("progress-label-right").textContent = `${total} total`;
+    document.getElementById("pill-pass").textContent = `${pass} passed`;
+    document.getElementById("pill-fail").textContent = `${fail} failed`;
+    document.getElementById("pill-pending").textContent = `${pending} pending`;
+  }
+
+  function renderTable() {
+    const sections = getActiveSections();
+    const currentSec = sections[currentSectionIndex];
+    const sectionRows = results.map((r, i) => ({ ...r, _i: i })).filter(r => r.section === currentSec.id);
+
+    document.getElementById("tbody").innerHTML = sectionRows.map(({ _i: i, ...r }) => {
+      const howToLines = r.howTo.split("\n").map(l => `<li>${l.replace(/^\d+\.\s*/, "")}</li>`).join("");
+      const escaped = r.notes.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+      let rows = `
+        <tr class="data-row" onclick="toggleExpand(${i}, event)">
+          <td style="white-space:nowrap;">${priorityDot(r.priority)}<span class="priority-label">${r.priority}</span></td>
+          <td class="scenario-cell">
+            <span class="scenario-text">${r.scenario}</span>
+            <span class="expand-hint">click row for how-to steps</span>
+          </td>
+          <td>
+            <select class="status-select status-${r.status}" onchange="setStatus(${i}, this.value)">
+              <option value="pending" ${r.status==="pending"?"selected":""}>Pending</option>
+              <option value="pass"    ${r.status==="pass"   ?"selected":""}>Pass</option>
+              <option value="fail"    ${r.status==="fail"   ?"selected":""}>Fail</option>
+            </select>
+          </td>
+          <td>
+            <textarea class="notes-input" rows="2" placeholder="Add notes or feedback..."
+              oninput="setNotes(${i}, this.value)" onclick="event.stopPropagation();">${escaped}</textarea>
+          </td>
+        </tr>`;
+      if (expandedRow === i) {
+        rows += `<tr class="expand-row">
+          <td colspan="4">
+            <div class="howto-label">How to test</div>
+            <ol class="howto-steps">${howToLines}</ol>
+          </td>
+        </tr>`;
+      }
+      return rows;
+    }).join("");
+  }
+
+  function renderAll() {
+    renderProgress();
+    renderTabs();
+    renderSectionHeader();
+    renderTable();
+  }
+
+  function toggleOverview() {
+    const body = document.getElementById("overview-body");
+    const icon = document.getElementById("overview-icon");
+    const btn  = document.getElementById("overview-toggle-btn");
+    const isOpen = !body.classList.contains("hidden");
+    const hint = document.getElementById("overview-hint");
+    body.classList.toggle("hidden", isOpen);
+    icon.textContent = isOpen ? "+" : "x";
+    if (hint) hint.textContent = isOpen ? "Click to read" : "Click to hide";
+    btn.setAttribute("aria-expanded", String(!isOpen));
+    localStorage.setItem("season-overview-open", String(!isOpen));
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const saved = localStorage.getItem("season-overview-open");
+    if (saved === "false") {
+      const body = document.getElementById("overview-body");
+      const icon = document.getElementById("overview-icon");
+      const btn  = document.getElementById("overview-toggle-btn");
+      const hint = document.getElementById("overview-hint");
+      body.classList.add("hidden");
+      icon.textContent = "+";
+      if (hint) hint.textContent = "Click to read";
+      btn.setAttribute("aria-expanded", "false");
+    }
+    initTable();
+  });
+</script>
+
+</body>
+</html>
