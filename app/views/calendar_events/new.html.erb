@@ -1,11 +1,9 @@
 <% content_for(:page_title) { "Appointment" } %>
 <% content_for(:header_left) do %>
-%= link_to (params[:date] ? daily_view_path(date: params[:date]) : user_root_path),
-        class: "inline-flex items-center justify-center w-10 h-10 rounded-xl text-brand-primary" do %>
-  svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-    polyline points="15 18 9 12 15 6" />
-  /svg>
-% end %>
+  <%= link_to (params[:date] ? daily_view_path(date: params[:date]) : user_root_path),
+        style: "color:#933a35; font-size:15px; font-weight:500; text-decoration:none; padding:8px 4px; font-family:'Montserrat',sans-serif;" do %>
+    &lt; back
+  <% end %>
 <% end %>
 
 <%
@@ -16,367 +14,153 @@
   default_end   = @event.end_time   || Time.zone.now.change(hour: 20, min: 0)
 %>
 
-<div class="bg-brand-background min-h-screen pb-24">
-div class="max-w-app mx-auto">
-
-  div class="relative">
-    div class="h-20 bg-brand-field"></div>
-    div class="absolute inset-0 flex items-center px-4">
-      %= content_for :header_left %>
-      div class="flex-1 text-center">
-        h1 class="text-lg font-semibold text-brand-primary">Appointment</h1>
-      /div>
-      div class="w-10"></div>
-    /div>
-  /div>
-
-  %= form_with model: @event, url: calendar_events_path, local: true do |f| %>
-    div class="px-4 pt-5 space-y-4">
-
-      %# ── Title section ── %>
-      div class="relative">
-        div class="rounded-[32px] bg-white px-5 py-4 flex items-center gap-4">
-          %= f.text_field :title,
-                  required: true,
-                  placeholder: "Enter title",
-                  class: "flex-1 bg-transparent border-0 text-2xl font-semibold text-brand-dark placeholder-brand-secondary outline-none" %>
-
-          %# Add category button ── %>
-          button type="button" data-action="click->season-modal#open" aria-label="Choose event type"
-                    class="flex-shrink-0 flex items-center justify-center w-12 h-12 rounded-full bg-brand-field text-brand-primary hover:bg-brand-muted transition">
-            svg width="24" height="24" fill="none" viewBox="0 0 24 24">
-              path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
-            /svg>
-          /button>
-        /div>
-      /div>
-
-      %# ── Date/Time section ── %>
-      div class="rounded-[32px] overflow-hidden" style="background: <%= phase_col %>33;">
-        div class="px-5 pt-5 pb-4" style="background: <%= phase_col %>;">
-          p class="text-lg font-semibold text-white text-center">
-            %= evt_date.strftime("%a. %B ") %><%= evt_date.day.ordinalize %><%= evt_date.strftime(" %Y") %>
-          /p>
-        /div>
-
-        div class="mx-4 mb-[-24px]">
-          div class="rounded-[30px] bg-white p-5 shadow-sm">
-            div class="flex items-center justify-center gap-2">
-              %= f.time_field :start_time,
-                      value: default_start.strftime("%H:%M"),
-                      class: "w-12 bg-transparent border-0 text-center text-2xl font-semibold text-brand-primary outline-none" %>
-              span class="text-2xl font-light text-brand-primary">-</span>
-              %= f.time_field :end_time,
-                      value: default_end.strftime("%H:%M"),
-                      class: "w-12 bg-transparent border-0 text-center text-2xl font-semibold text-brand-primary outline-none" %>
-            /div>
-            %= f.hidden_field :date, value: evt_date %>
-          /div>
-        /div>
-      /div>
-
-      %# ── Options section ── %>
-      div class="space-y-2 pt-4">
-        %# Reminder option ── %>
-        div class="flex items-center gap-3 px-4 py-3 bg-white rounded-2xl">
-          div class="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-brand-field text-brand-primary">
-            svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-              path d="M13.73 21a2 2 0 0 1-3.46 0" />
-            /svg>
-          /div>
-          span class="flex-1 text-sm font-medium text-brand-primary">15 minutes before</span>
-          button type="button" class="text-brand-secondary hover:text-brand-primary transition">
-            svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              polyline points="9 18 15 12 9 6" />
-            /svg>
-          /button>
-        /div>
-
-        %# Location option ── %>
-        div class="flex items-center gap-3 px-4 py-3 bg-white rounded-2xl">
-          div class="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-brand-field text-brand-primary opacity-50">
-            svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-            /svg>
-          /div>
-          span class="flex-1 text-sm font-medium text-brand-secondary">Add location</span>
-          button type="button" class="text-brand-secondary hover:text-brand-primary transition">
-            svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              polyline points="9 18 15 12 9 6" />
-            /svg>
-          /button>
-        /div>
-
-        %# Notes option ── %>
-        div class="flex items-center gap-3 px-4 py-3 bg-white rounded-2xl">
-          div class="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-brand-field text-brand-primary opacity-50">
-            svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-              circle cx="12" cy="12" r="3" />
-            /svg>
-          /div>
-          span class="flex-1 text-sm font-medium text-brand-secondary">Notes</span>
-          button type="button" class="text-brand-secondary hover:text-brand-primary transition">
-            svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              polyline points="9 18 15 12 9 6" />
-            /svg>
-          /button>
-        /div>
-
-        %# Invite guests option ── %>
-        div class="flex items-center gap-3 px-4 py-3 bg-white rounded-2xl">
-          div class="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-brand-field text-brand-primary opacity-50">
-            svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-              circle cx="12" cy="7" r="4" />
-            /svg>
-          /div>
-          span class="flex-1 text-sm font-medium text-brand-secondary">Invite guests</span>
-          button type="button" class="text-brand-secondary hover:text-brand-primary transition">
-            svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              polyline points="9 18 15 12 9 6" />
-            /svg>
-          /button>
-        /div>
-
-        %# Repeat option ── %>
-        div class="flex items-center gap-3 px-4 py-3 bg-white rounded-2xl">
-          div class="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-brand-field text-brand-primary opacity-50">
-            svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
-              rect x="8" y="2" width="8" height="4" rx="1" />
-            /svg>
-          /div>
-          span class="flex-1 text-sm font-medium text-brand-secondary">Repeat</span>
-          button type="button" class="text-brand-secondary hover:text-brand-primary transition">
-            svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              polyline points="9 18 15 12 9 6" />
-            /svg>
-          /button>
-        /div>
-      /div>
-
-      %# ── Submit section ── %>
-      div class="space-y-3 pt-6">
-        %= f.submit "Set appointment",
-                class: "w-full bg-brand-primary text-white text-center rounded-xl py-3 font-semibold" %>
-
-        % if @event&.persisted? %>
-          %= button_to "Delete appointment",
-                  calendar_event_path(@event),
-                  method: :delete,
-                  class: "w-full bg-transparent text-brand-primary border border-brand-primary rounded-xl py-3 font-semibold" %>
-        % end %>
-      /div>
-
-    /div>
-  % end %>
-
-  %# ── Category Modal ── %>
-  div data-season-modal-target="backdrop" class="hidden fixed inset-0 bg-black/40 z-50"></div>
-  div data-season-modal-target="modal" role="dialog" aria-modal="true" aria-labelledby="choose-icon-modal-title"
-         class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
-    div class="bg-white rounded-3xl shadow-lg max-w-sm w-full max-h-96 overflow-y-auto">
-      div class="sticky top-0 bg-white border-b border-brand-field p-4">
-        div class="flex items-center justify-between">
-          h2 id="choose-icon-modal-title" class="text-lg font-semibold text-brand-primary">Choose an icon</h2>
-          button type="button" data-action="click->season-modal#close"
-                    class="text-brand-primary text-2xl font-light hover:text-brand-dark">×</button>
-        /div>
-      /div>
-
-      div class="p-4 space-y-2">
-        % items = [
-            { label: 'Friends', icon: 'family.svg' },
-            { label: 'Dinner', icon: 'dinner.svg' },
-            { label: 'Date', icon: 'date.svg' },
-            { label: 'Sports', icon: 'sport.svg' },
-            { label: 'Medical', icon: 'medical.svg' },
-            { label: 'Birthday', icon: 'birthday.svg' },
-            { label: 'Work', icon: 'work.svg' },
-            { label: 'Coffee', icon: 'coffee.svg' },
-            { label: 'Shopping', icon: 'shopping.svg' }
-          ] %>
-        % items.each do |item| %>
-          % selected = @event.category.present? && @event.category == item[:label] %>
-          button type="button"
-                    data-action="click->season-modal#selectCategory"
-                    data-category-name-value="<%= item[:label] %>"
-                    data-season-modal-target="categoryOption"
-                    class="w-full flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-brand-background transition <%= selected ? 'bg-brand-field' : '' %>">
-            %= image_tag "icons/appointment/#{item[:icon]}", alt: item[:label], class: "w-8 h-8" %>
-            span class="text-brand-primary font-medium"><%= item[:label] %></span>
-          /button>
-        % end %>
-      /div>
-
-      div class="sticky bottom-0 bg-white border-t border-brand-field p-4 space-y-2">
-        button type="button" data-action="click->season-modal#close"
-                  class="w-full bg-brand-primary text-white rounded-lg py-2 font-semibold">Add Icon</button>
-        button type="button" data-action="click->season-modal#close"
-                  class="w-full bg-transparent text-brand-primary rounded-lg py-2 font-semibold">Delete Icon</button>
-      /div>
-    /div>
-  /div>
-/div>
-</div>
-
-<%
-  phase     = current_user.current_phase
-  phase_col = CycleCalculatorService::PHASE_META[phase]&.dig(:colour) || "#933a35"
-  evt_date  = params[:date] ? Date.parse(params[:date]) : Time.zone.today
-  default_start = @event.start_time || Time.zone.now.change(hour: 19, min: 0)
-  default_end   = @event.end_time   || Time.zone.now.change(hour: 20, min: 0)
-%>
-
 <div style="background:#FFFFFF; min-height:755px; padding-bottom:40px; font-family:'Montserrat',sans-serif;">
-div style="width:365px; max-width:365px; margin:0 auto;" data-controller="season-modal">
+  <div style="width:365px; max-width:365px; margin:0 auto;" data-controller="season-modal">
 
-  %= form_with model: @event, url: calendar_events_path, local: true do |f| %>
+    <%= form_with model: @event, url: calendar_events_path, local: true do |f| %>
 
-    div style="padding:20px 20px 0; position:relative;">
+      <div style="padding:20px 20px 0; position:relative;">
 
-      %# Add (+) button — circle at top-right %>
-      button type="button" data-action="click->season-modal#open" aria-label="Choose event type"
+        <%# Add (+) button — circle at top-right %>
+        <button type="button" data-action="click->season-modal#open" aria-label="Choose event type"
                 style="position:absolute; top:12px; right:16px; width:44px; height:44px; border-radius:50%; background:#EDE1D5; display:flex; align-items:center; justify-content:center; border:none; padding:0; cursor:pointer;">
-        svg width="24" height="24" fill="none" viewBox="0 0 24 24">
-          path d="M12 5v14M5 12h14" stroke="#A43600" stroke-width="2.5" stroke-linecap="round"></path>
-        /svg>
-      /button>
+          <svg width="24" height="24" fill="none" viewBox="0 0 24 24">
+            <path d="M12 5v14M5 12h14" stroke="#A43600" stroke-width="2.5" stroke-linecap="round"></path>
+          </svg>
+        </button>
 
-      %# Title input on white background %>
-      div style="background:#FFFFFF; border-radius:24px; padding:16px 16px 12px;">
-        %= f.text_field :title,
+        <%# Title input on white background %>
+        <div style="background:#FFFFFF; border-radius:24px; padding:16px 16px 12px;">
+          <%= f.text_field :title,
                 placeholder: "Enter title",
                 required: true,
                 style: "width:100%; background:transparent; border:none; color:#3d2b28; font-size:22px; font-weight:500; font-family:'Montserrat',sans-serif; padding:0; outline:none; box-sizing:border-box;" %>
-      /div>
+        </div>
 
-      %# Date + time — formatted display + hidden field %>
-      div style="margin-top:16px; padding:20px 16px 28px; text-align:center; background:<%= phase_col %>; border-radius:24px;">
-        span style="color:#FFFFFF; font-size:22px; font-weight:500; font-family:'Montserrat',sans-serif; letter-spacing:0.03em; display:block;">
-          %= evt_date.strftime("%a. %B ") %><%= evt_date.day.ordinalize %><%= evt_date.strftime(" %Y") %>
-        /span>
-        div style="margin-top:16px; display:flex; align-items:center; justify-content:center; gap:4px;">
-          %= f.time_field :start_time,
+        <%# Date + time — formatted display + hidden field %>
+        <div style="margin-top:16px; padding:20px 16px 28px; text-align:center; background:<%= phase_col %>; border-radius:24px;">
+          <span style="color:#FFFFFF; font-size:22px; font-weight:500; font-family:'Montserrat',sans-serif; letter-spacing:0.03em; display:block;">
+            <%= evt_date.strftime("%a. %B ") %><%= evt_date.day.ordinalize %><%= evt_date.strftime(" %Y") %>
+          </span>
+          <div style="margin-top:16px; display:flex; align-items:center; justify-content:center; gap:4px;">
+            <%= f.time_field :start_time,
                   value: default_start.strftime("%H:%M"),
                   style: "background:transparent; border:none; color:#FFFFFF; font-size:22px; font-weight:500; font-family:'Montserrat',sans-serif; outline:none; width:60px; text-align:center; padding:0; -webkit-appearance:none;" %>
-          span style="color:#FFFFFF; font-size:22px; font-weight:300;">-</span>
-          %= f.time_field :end_time,
+            <span style="color:#FFFFFF; font-size:22px; font-weight:300;">-</span>
+            <%= f.time_field :end_time,
                   value: default_end.strftime("%H:%M"),
                   style: "background:transparent; border:none; color:#FFFFFF; font-size:22px; font-weight:500; font-family:'Montserrat',sans-serif; outline:none; width:60px; text-align:center; padding:0; -webkit-appearance:none;" %>
-        /div>
-        %= f.hidden_field :date, value: evt_date %>
-      /div>
-    /div>
+          </div>
+          <%= f.hidden_field :date, value: evt_date %>
+        </div>
+      </div>
 
-    %# ── Divider 1 ── %>
-    div style="height:1px; background:rgba(147,58,53,0.5); margin:40px 6px 0;"></div>
+      <%# ── Divider 1 ── %>
+      <div style="height:1px; background:rgba(147,58,53,0.5); margin:40px 6px 0;"></div>
 
-    %# ── Reminder row (bell) ── %>
-    div style="background:#FFFFFF; padding:14px 20px; display:flex; align-items:center; gap:12px;">
-      div style="width: 39px; height: 38px; border-radius: 50%; background: #EDE1D5; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-        svg width="20" height="20" fill="none" stroke="#933A35" stroke-width="2" viewBox="0 0 24 24">
-            path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-          path d="M13.73 21a2 2 0 0 1-3.46 0" />
-        /svg>
-      /div>
-      span style="color:#3d2b28; font-size:16px; font-weight:500; letter-spacing:0.07em; flex:1;">15 minutes before</span>
-      svg width="16" height="16" fill="none" stroke="#AFAFAF" stroke-width="2" viewBox="0 0 24 24">
-        polyline points="9 18 15 12 9 6" />
-      /svg>
-    /div>
+      <%# ── Reminder row (bell) ── %>
+      <div style="background:#FFFFFF; padding:14px 20px; display:flex; align-items:center; gap:12px;">
+        <div style="width: 39px; height: 38px; border-radius: 50%; background: #EDE1D5; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+          <svg width="20" height="20" fill="none" stroke="#933A35" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+          </svg>
+        </div>
+        <span style="color:#3d2b28; font-size:16px; font-weight:500; letter-spacing:0.07em; flex:1;">15 minutes before</span>
+        <svg width="16" height="16" fill="none" stroke="#AFAFAF" stroke-width="2" viewBox="0 0 24 24">
+          <polyline points="9 18 15 12 9 6" />
+        </svg>
+      </div>
 
-    %# ── Divider 2 ── %>
-    div style="height:1px; background:rgba(147,58,53,0.5); margin:0 6px;"></div>
+      <%# ── Divider 2 ── %>
+      <div style="height:1px; background:rgba(147,58,53,0.5); margin:0 6px;"></div>
 
-    %# ── Location row (droplet) ── %>
-    div style="background:#FFFFFF; padding:14px 20px; display:flex; align-items:center; gap:12px;">
-      div style="width:39px; height:38px; border-radius:50%; background:rgba(237,225,213,0.5); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-        svg width="20" height="20" fill="none" stroke="#933A35" stroke-width="2" viewBox="0 0 24 24" opacity="0.5">
-          path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
-        /svg>
-      /div>
-      span style="color:#AFAFAF; font-size:16px; font-weight:500; letter-spacing:0.07em; flex:1;">Add location</span>
-      svg width="16" height="16" fill="none" stroke="#AFAFAF" stroke-width="2" viewBox="0 0 24 24">
-        polyline points="9 18 15 12 9 6" />
-      /svg>
-    /div>
+      <%# ── Location row (droplet) ── %>
+      <div style="background:#FFFFFF; padding:14px 20px; display:flex; align-items:center; gap:12px;">
+        <div style="width:39px; height:38px; border-radius:50%; background:rgba(237,225,213,0.5); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+          <svg width="20" height="20" fill="none" stroke="#933A35" stroke-width="2" viewBox="0 0 24 24" opacity="0.5">
+            <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
+          </svg>
+        </div>
+        <span style="color:#AFAFAF; font-size:16px; font-weight:500; letter-spacing:0.07em; flex:1;">Add location</span>
+        <svg width="16" height="16" fill="none" stroke="#AFAFAF" stroke-width="2" viewBox="0 0 24 24">
+          <polyline points="9 18 15 12 9 6" />
+        </svg>
+      </div>
 
-    %# ── Notes row (eye) — with textarea ── %>
-    div style="background:#FFFFFF; padding:14px 20px; display:flex; align-items:flex-start; gap:12px;">
-      div style="width:39px; height:38px; border-radius:50%; background:rgba(237,225,213,0.5); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-        svg width="20" height="20" fill="none" stroke="#933A35" stroke-width="2" viewBox="0 0 24 24" opacity="0.5">
-          path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-          circle cx="12" cy="12" r="3" />
-        /svg>
-      /div>
-      %= f.text_area :notes,
+      <%# ── Notes row (eye) — with textarea ── %>
+      <div style="background:#FFFFFF; padding:14px 20px; display:flex; align-items:flex-start; gap:12px;">
+        <div style="width:39px; height:38px; border-radius:50%; background:rgba(237,225,213,0.5); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+          <svg width="20" height="20" fill="none" stroke="#933A35" stroke-width="2" viewBox="0 0 24 24" opacity="0.5">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+            <circle cx="12" cy="12" r="3" />
+          </svg>
+        </div>
+        <%= f.text_area :notes,
               placeholder: "Notes",
               rows: 2,
               style: "flex:1; background:transparent; border:none; font-size:16px; font-weight:500; letter-spacing:0.07em; color:#3d2b28; font-family:'Montserrat',sans-serif; outline:none; resize:none; padding:0;" %>
-    /div>
+      </div>
 
-    %# ── Guests row (user) ── %>
-    div style="background:#FFFFFF; padding:14px 20px; display:flex; align-items:center; gap:12px;">
-      div style="width:39px; height:38px; border-radius:50%; background:rgba(237,225,213,0.5); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-        svg width="20" height="20" fill="none" stroke="#933A35" stroke-width="2" viewBox="0 0 24 24" opacity="0.5">
-          path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-          circle cx="12" cy="7" r="4" />
-        /svg>
-      /div>
-      span style="color:#AFAFAF; font-size:16px; font-weight:500; letter-spacing:0.07em; flex:1;">Invite guests</span>
-      svg width="16" height="16" fill="none" stroke="#AFAFAF" stroke-width="2" viewBox="0 0 24 24">
-        polyline points="9 18 15 12 9 6" />
-      /svg>
-    /div>
+      <%# ── Guests row (user) ── %>
+      <div style="background:#FFFFFF; padding:14px 20px; display:flex; align-items:center; gap:12px;">
+        <div style="width:39px; height:38px; border-radius:50%; background:rgba(237,225,213,0.5); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+          <svg width="20" height="20" fill="none" stroke="#933A35" stroke-width="2" viewBox="0 0 24 24" opacity="0.5">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
+          </svg>
+        </div>
+        <span style="color:#AFAFAF; font-size:16px; font-weight:500; letter-spacing:0.07em; flex:1;">Invite guests</span>
+        <svg width="16" height="16" fill="none" stroke="#AFAFAF" stroke-width="2" viewBox="0 0 24 24">
+          <polyline points="9 18 15 12 9 6" />
+        </svg>
+      </div>
 
-    %# ── Repeat row (clipboard) ── %>
-    div style="background:#FFFFFF; padding:14px 20px; display:flex; align-items:center; gap:12px;">
-      div style="width:39px; height:38px; border-radius:50%; background:rgba(237,225,213,0.5); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-        svg width="20" height="20" fill="none" stroke="#933A35" stroke-width="2" viewBox="0 0 24 24" opacity="0.5">
-          path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
-          rect x="8" y="2" width="8" height="4" rx="1" />
-        /svg>
-      /div>
-      span style="color:#AFAFAF; font-size:16px; font-weight:500; letter-spacing:0.07em; flex:1;">Repeat</span>
-      svg width="16" height="16" fill="none" stroke="#AFAFAF" stroke-width="2" viewBox="0 0 24 24">
-        polyline points="9 18 15 12 9 6" />
-      /svg>
-    /div>
+      <%# ── Repeat row (clipboard) ── %>
+      <div style="background:#FFFFFF; padding:14px 20px; display:flex; align-items:center; gap:12px;">
+        <div style="width:39px; height:38px; border-radius:50%; background:rgba(237,225,213,0.5); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+          <svg width="20" height="20" fill="none" stroke="#933A35" stroke-width="2" viewBox="0 0 24 24" opacity="0.5">
+            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+            <rect x="8" y="2" width="8" height="4" rx="1" />
+          </svg>
+        </div>
+        <span style="color:#AFAFAF; font-size:16px; font-weight:500; letter-spacing:0.07em; flex:1;">Repeat</span>
+        <svg width="16" height="16" fill="none" stroke="#AFAFAF" stroke-width="2" viewBox="0 0 24 24">
+          <polyline points="9 18 15 12 9 6" />
+        </svg>
+      </div>
 
-    %# ── Submit button (322px, centered, 8px radius) ── %>
-    div style="display:flex; justify-content:center; padding:28px 20px 0;">
-      %= f.submit "Set appointment",
+      <%# ── Submit button (322px, centered, 8px radius) ── %>
+      <div style="display:flex; justify-content:center; padding:28px 20px 0;">
+        <%= f.submit "Set appointment",
               style: "width:322px; background:#{phase_col}; color:#FFFFFF; padding:14px 0; border-radius:8px; border:none; font-size:22px; font-weight:500; font-family:'Montserrat',sans-serif; cursor:pointer; letter-spacing:0.03em;" %>
-    /div>
+      </div>
 
-    %= f.hidden_field :category, value: @event.category, data: { season_modal_target: 'categoryInput' } %>
+      <%= f.hidden_field :category, value: @event.category, data: { season_modal_target: 'categoryInput' } %>
 
-    % if @event&.persisted? %>
-      div style="display:flex; justify-content:center; padding-top:12px;">
-        %= button_to "Delete appointment",
+      <% if @event&.persisted? %>
+        <div style="display:flex; justify-content:center; padding-top:12px;">
+          <%= button_to "Delete appointment",
                 calendar_event_path(@event),
                 method: :delete,
                 style: "width:322px; background:transparent; color:#933A35; border:1px solid #933A35; border-radius:8px; font-size:22px; font-weight:500; font-family:'Montserrat',sans-serif; cursor:pointer; letter-spacing:0.03em; padding:14px 0;" %>
-      /div>
-    % end %>
+        </div>
+      <% end %>
 
-  % end %>
+    <% end %>
 
-  div data-season-modal-target="backdrop" class="hidden fixed inset-0 bg-black/40 z-50"></div>
-  div data-season-modal-target="modal" role="dialog" aria-modal="true" aria-labelledby="choose-icon-modal-title"
+    <div data-season-modal-target="backdrop" class="hidden fixed inset-0 bg-black/40 z-50"></div>
+    <div data-season-modal-target="modal" role="dialog" aria-modal="true" aria-labelledby="choose-icon-modal-title"
          class="hidden fixed inset-0 z-50 flex items-center justify-center">
-    div style="width:351px; height:845px; background:#FFFFFF; border-radius:29px; padding:24px 18px; box-shadow:0 24px 64px rgba(0,0,0,0.16); opacity:1; position:relative;">
-      div style="width:322px; height:24px; position:absolute; left:15px; top:41px; display:flex; justify-content:center; align-items:center; opacity:1;">
-        h2 id="choose-icon-modal-title" style="width:322px; margin:0; font-family:'Montserrat'; font-weight:500; font-style:normal; font-size:22px; line-height:45px; letter-spacing:0%; text-align:center; color:#933A35;">Choose an icon.</h2>
-        button type="button" data-season-modal-target="closeBtn" data-action="click->season-modal#close"
+      <div style="width:351px; height:845px; background:#FFFFFF; border-radius:29px; padding:24px 18px; box-shadow:0 24px 64px rgba(0,0,0,0.16); opacity:1; position:relative;">
+        <div style="width:322px; height:24px; position:absolute; left:15px; top:41px; display:flex; justify-content:center; align-items:center; opacity:1;">
+          <h2 id="choose-icon-modal-title" style="width:322px; margin:0; font-family:'Montserrat'; font-weight:500; font-style:normal; font-size:22px; line-height:45px; letter-spacing:0%; text-align:center; color:#933A35;">Choose an icon.</h2>
+          <button type="button" data-season-modal-target="closeBtn" data-action="click->season-modal#close"
                   style="position:absolute; right:18px; top:-4px; background:none; border:none; color:#933A35; font-size:26px; width:36px; height:36px; display:flex; align-items:center; justify-content:center; cursor:pointer;">×</button>
-      /div>
-      div style="position:absolute; left:18px; right:18px; top:90px; height:1px; background:#EDE1D5;"></div>
-      div style="position:relative; width:100%; height:660px; top:100px;">
-        % items = [
+        </div>
+        <div style="position:absolute; left:18px; right:18px; top:90px; height:1px; background:#EDE1D5;"></div>
+        <div style="position:relative; width:100%; height:660px; top:100px;">
+          <% items = [
             { label: 'Friends', icon: 'family.svg', top: 0 },
             { label: 'Dinner', icon: 'dinner.svg', top: 62 },
             { label: 'Date', icon: 'date.svg', top: 125 },
@@ -387,24 +171,24 @@ div style="width:365px; max-width:365px; margin:0 auto;" data-controller="season
             { label: 'Coffee', icon: 'coffee.svg', top: 435 },
             { label: 'Shopping', icon: 'shopping.svg', top: 499 }
           ] %>
-        % items.each do |item| %>
-          % selected = @event.category.present? && @event.category == item[:label] %>
-          button type="button"
+          <% items.each do |item| %>
+            <% selected = @event.category.present? && @event.category == item[:label] %>
+            <button type="button"
                     data-action="click->season-modal#selectCategory"
                     data-category-name-value="<%= item[:label] %>"
                     data-season-modal-target="categoryOption"
                     style="position:absolute; top:<%= item[:top] %>px; left:84px; width:263px; height:45px; display:flex; align-items:center; justify-content:flex-start; gap:12px; border:none; background:transparent; color:<%= selected ? '#933A35' : '#EDE1D5' %>; font-family:'Montserrat'; font-weight:500; font-size:22px; line-height:45px; text-align:left; opacity:1; cursor:pointer; padding:0;">
-            %= image_tag "icons/appointment/#{item[:icon]}", alt: item[:label], style: "width:47px; height:45px;" %>
-            span><%= item[:label] %></span>
-          /button>
-        % end %>
-      /div>
-      div style="position:absolute; top:730px; left:25px; width:302px; display:flex; flex-direction:column; gap:10px;">
-        button type="button" data-action="click->season-modal#close" style="width:302px; height:52px; background:#933A35; color:#FFFFFF; border:none; border-radius:8px; opacity:1; font-family:'Montserrat'; font-weight:500; font-size:22px; line-height:45px; text-align:center; cursor:pointer;">Add Icon</button>
-        button type="button" data-action="click->season-modal#close" style="width:100%; background:transparent; color:#933A35; border:none; text-decoration:none; font-family:'Montserrat'; font-weight:500; font-size:22px; line-height:45px; cursor:pointer;">Delete Icon</button>
-      /div>
-    /div>
-  /div>
+              <%= image_tag "icons/appointment/#{item[:icon]}", alt: item[:label], style: "width:47px; height:45px;" %>
+              <span><%= item[:label] %></span>
+            </button>
+          <% end %>
+        </div>
+        <div style="position:absolute; top:730px; left:25px; width:302px; display:flex; flex-direction:column; gap:10px;">
+          <button type="button" data-action="click->season-modal#close" style="width:302px; height:52px; background:#933A35; color:#FFFFFF; border:none; border-radius:8px; opacity:1; font-family:'Montserrat'; font-weight:500; font-size:22px; line-height:45px; text-align:center; cursor:pointer;">Add Icon</button>
+          <button type="button" data-action="click->season-modal#close" style="width:100%; background:transparent; color:#933A35; border:none; text-decoration:none; font-family:'Montserrat'; font-weight:500; font-size:22px; line-height:45px; cursor:pointer;">Delete Icon</button>
+        </div>
+      </div>
+    </div>
 
-/div>
+  </div>
 </div>
