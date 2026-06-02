@@ -231,7 +231,7 @@
 <body>
 
 <div class="top-bar">
-  <div class="top-bar-title">Season <span>PWA Testing Sheet</span></div>
+  <div class="top-bar-title">Season <span>Testing Sheet — Web PWA &amp; iOS</span></div>
   <div class="top-bar-links">
     <a href="https://seasonv2.onrender.com" target="_blank" rel="noopener noreferrer" class="top-link accent">Open Live App</a>
     <a href="https://seasonv2.onrender.com/admin" target="_blank" rel="noopener noreferrer" class="top-link">Admin Panel</a>
@@ -241,23 +241,8 @@
 <div class="hero">
   <div class="hero-row">
     <div class="hero-left">
-      <h1>PWA Functional Testing Checklist</h1>
+      <h1>Season Functional Testing — Web PWA &amp; iOS</h1>
       <p>Click any row to expand step-by-step instructions · Results auto-save to your browser · <strong>Prod URL:</strong> seasonv2.onrender.com</p>
-<div class="state-banner" style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; padding:12px 16px; margin-top:10px; font-size:1.3rem; line-height:1.6;">
-  <strong style="color:#166534;">Current App State (2026-06-02 Audit)</strong><br>
-  <strong style="color:#933a35;">92% overall</strong> — Chapters: Foundation 98% · Core 100% · Views 95% · Auth 98% · iOS PWA 93% · Advanced 90% · Integration 85% · Testing 85% · Production 80% (now 90% after config.hosts+force_ssl fix)<br><br>
-  <span style="color:#166534;">✅ Production config (config.hosts + force_ssl) — FIXED 2026-06-02</span><br>
-  <span style="color:#166534;">✅ iOS PWA meta tags (apple-mobile-web-app-capable) — FIXED 2026-06-02</span><br>
-  <span style="color:#166534;">✅ Asset filenames cleaned (30 files renamed, no more uppercase/spaces in prod assets) — FIXED 2026-06-02</span><br>
-  <span style="color:#166534;">✅ Devise paranoid mode enabled</span><br>
-  <span style="color:#166534;">✅ CI/CD configured (.github/workflows/ci.yml + ios.yml)</span><br>
-  <span style="color:#854d0e;">⚠️ Apple OAuth — blocked by Apple Developer Account (not yet created)</span><br>
-  <span style="color:#854d0e;">⚠️ Splash screen config — LaunchScreen is basic label only</span><br>
-  <span style="color:#854d0e;">⚠️ Active Storage — uses local disk in production (S3 not yet configured)</span><br>
-  <span style="color:#854d0e;">⚠️ Integration/system tests — not yet implemented (test/ dir empty)</span><br>
-  <span style="color:#854d0e;">⚠️ Sentry DSN — not yet set on Render</span><br>
-  <span style="color:#EF4444;">❌ Nothing is a hard launch blocker — all critical paths work</span>
-</div>
     </div>
     <div class="hero-right" style="display:flex; align-items:flex-end; gap:10px; flex-wrap:wrap;">
       <div class="tester-input-wrap" style="margin-right:8px;">
@@ -278,6 +263,22 @@
       <button class="btn btn-accent"  onclick="sendToTrello()">Send Failed to Trello</button>
       <button class="btn btn-danger"  onclick="clearSaved()">Reset</button>
     </div>
+  </div>
+
+  <div class="state-banner" style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; padding:12px 16px; margin:0 0 12px 0; font-size:1.3rem; line-height:1.6; width:100%;">
+    <strong style="color:#166534;">Current App State (2026-06-02 Audit)</strong><br>
+    <strong style="color:#933a35;">92% overall</strong> — Chapters: Foundation 98% · Core 100% · Views 95% · Auth 98% · iOS PWA 93% · Advanced 90% · Integration 85% · Testing 85% · Production 80% (now 90% after config.hosts+force_ssl fix)<br><br>
+    <span style="color:#166534;">✅ Production config (config.hosts + force_ssl) — FIXED 2026-06-02</span><br>
+    <span style="color:#166534;">✅ iOS PWA meta tags (apple-mobile-web-app-capable) — FIXED 2026-06-02</span><br>
+    <span style="color:#166534;">✅ Asset filenames cleaned (30 files renamed, no more uppercase/spaces in prod assets) — FIXED 2026-06-02</span><br>
+    <span style="color:#166534;">✅ Devise paranoid mode enabled</span><br>
+    <span style="color:#166534;">✅ CI/CD configured (.github/workflows/ci.yml + ios.yml)</span><br>
+    <span style="color:#854d0e;">⚠️ Apple OAuth — blocked by Apple Developer Account (not yet created)</span><br>
+    <span style="color:#854d0e;">⚠️ Splash screen config — LaunchScreen is basic label only</span><br>
+    <span style="color:#854d0e;">⚠️ Active Storage — uses local disk in production (S3 not yet configured)</span><br>
+    <span style="color:#854d0e;">⚠️ Integration/system tests — not yet implemented (test/ dir empty)</span><br>
+    <span style="color:#854d0e;">⚠️ Sentry DSN — not yet set on Render</span><br>
+    <span style="color:#EF4444;">❌ Nothing is a hard launch blocker — all critical paths work</span>
   </div>
 
   <div class="save-status-row" style="margin-bottom:12px;">
@@ -316,10 +317,10 @@
 
     <div class="ov-block">
       <div class="ov-label">What you're testing</div>
-      <div class="ov-title">Season V2 — Women's Cycle Tracking PWA</div>
+      <div class="ov-title">Season V2 — Web PWA &amp; iOS TestFlight</div>
       <div class="ov-text">
         A Rails 8.1 progressive web app for cycle tracking. Users log moods, symptoms,
-        superpowers, and period data. The app runs as a PWA in mobile browsers (Safari, Chrome).
+        superpowers, and period data. Runs as Web PWA (mobile browser or installed) and iOS app via TestFlight.
         Admin panel at /admin manages users, content, and inbox.
         <br><br>
         <a href="https://seasonv2.onrender.com" target="_blank" rel="noopener noreferrer">Open the live app</a>
@@ -330,10 +331,11 @@
 
     <div class="ov-block">
       <div class="ov-label">Testing environment</div>
-      <div class="ov-title">Production on Render — Mobile Browser & PWA</div>
+      <div class="ov-title">Production on Render — Web, PWA &amp; iOS</div>
       <div class="ov-text">
         Testing against <strong>live production</strong> at seasonv2.onrender.com.
-        Test on <strong>iOS Safari, Android Chrome</strong> (mobile web) and as an <strong>installed PWA</strong>.
+        <strong>Web/PWA:</strong> iOS Safari, Android Chrome (mobile web or installed PWA).
+        <strong>iOS:</strong> TestFlight build with Turbo Native wrapper.
         Use real but clearly fake data (e.g. "Test Tester" as name).
         Admin access requires an existing admin account (naijeria@gmail).
         <br><br>
