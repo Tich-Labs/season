@@ -1,5 +1,12 @@
 class CalendarEventsController < ApplicationController
-  before_action :set_event, only: [:edit, :update, :destroy]
+  before_action :set_event, only: [:show, :edit, :update, :destroy]
+
+  def index
+    @events = current_user.calendar_events.ordered
+  end
+
+  def show
+  end
 
   def new
     @event = current_user.calendar_events.build(
@@ -13,7 +20,7 @@ class CalendarEventsController < ApplicationController
   def create
     @event = current_user.calendar_events.build(event_params)
     if @event.save
-      redirect_to calendar_path, notice: t(".created")
+      redirect_to calendar_event_path(@event), notice: t(".created")
     else
       render :new, status: :unprocessable_content
     end
@@ -21,7 +28,7 @@ class CalendarEventsController < ApplicationController
 
   def update
     if @event.update(event_params)
-      redirect_to calendar_path, notice: t(".updated")
+      redirect_to calendar_event_path(@event), notice: t(".updated")
     else
       render :edit, status: :unprocessable_content
     end
@@ -29,7 +36,7 @@ class CalendarEventsController < ApplicationController
 
   def destroy
     @event.destroy
-    redirect_to calendar_path, notice: t(".deleted")
+    redirect_to calendar_appointments_path, notice: t(".deleted")
   end
 
   private

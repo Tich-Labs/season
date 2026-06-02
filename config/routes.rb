@@ -105,7 +105,7 @@ Rails.application.routes.draw do
   get "calendar", to: "calendar#index", as: :calendar
   get "calendar/weekly", to: "calendar#weekly", as: :calendar_weekly
   get "calendar/appointments", to: "calendar#appointments", as: :calendar_appointments
-  resources :calendar_events, except: [:index, :show]
+  resources :calendar_events
   resources :tracking, only: [:index, :create] do
     collection do
       get :period
