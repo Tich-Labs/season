@@ -162,14 +162,14 @@
         <div style="position:relative; width:100%; height:660px; top:100px;">
           <% items = [
             { label: 'Friends', icon: 'family.svg', top: 0 },
-            { label: 'Dinner', icon: 'Dinner.svg', top: 62 },
-            { label: 'Date', icon: 'Date.svg', top: 125 },
-            { label: 'Sports', icon: 'Sport.svg', top: 187 },
-            { label: 'Medical', icon: 'Medical.svg', top: 249 },
-            { label: 'Birthday', icon: 'Birthday.svg', top: 311 },
-            { label: 'Work', icon: 'Work.svg', top: 371 },
-            { label: 'Coffee', icon: 'Coffee.svg', top: 435 },
-            { label: 'Shopping', icon: 'Shopping.svg', top: 499 }
+            { label: 'Dinner', icon: 'dinner.svg', top: 62 },
+            { label: 'Date', icon: 'date.svg', top: 125 },
+            { label: 'Sports', icon: 'sport.svg', top: 187 },
+            { label: 'Medical', icon: 'medical.svg', top: 249 },
+            { label: 'Birthday', icon: 'birthday.svg', top: 311 },
+            { label: 'Work', icon: 'work.svg', top: 371 },
+            { label: 'Coffee', icon: 'coffee.svg', top: 435 },
+            { label: 'Shopping', icon: 'shopping.svg', top: 499 }
           ] %>
           <% items.each do |item| %>
             <% selected = @event.category.present? && @event.category == item[:label] %>

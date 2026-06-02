@@ -243,8 +243,32 @@
     <div class="hero-left">
       <h1>PWA Functional Testing Checklist</h1>
       <p>Click any row to expand step-by-step instructions · Results auto-save to your browser · <strong>Prod URL:</strong> seasonv2.onrender.com</p>
+<div class="state-banner" style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; padding:12px 16px; margin-top:10px; font-size:1.3rem; line-height:1.6;">
+  <strong style="color:#166534;">Current App State (2026-06-02 Audit)</strong><br>
+  <strong style="color:#933a35;">92% overall</strong> — Chapters: Foundation 98% · Core 100% · Views 95% · Auth 98% · iOS PWA 93% · Advanced 90% · Integration 85% · Testing 85% · Production 80% (now 90% after config.hosts+force_ssl fix)<br><br>
+  <span style="color:#166534;">✅ Production config (config.hosts + force_ssl) — FIXED 2026-06-02</span><br>
+  <span style="color:#166534;">✅ iOS PWA meta tags (apple-mobile-web-app-capable) — FIXED 2026-06-02</span><br>
+  <span style="color:#166534;">✅ Asset filenames cleaned (30 files renamed, no more uppercase/spaces in prod assets) — FIXED 2026-06-02</span><br>
+  <span style="color:#166534;">✅ Devise paranoid mode enabled</span><br>
+  <span style="color:#166534;">✅ CI/CD configured (.github/workflows/ci.yml + ios.yml)</span><br>
+  <span style="color:#854d0e;">⚠️ Apple OAuth — blocked by Apple Developer Account (not yet created)</span><br>
+  <span style="color:#854d0e;">⚠️ Splash screen config — LaunchScreen is basic label only</span><br>
+  <span style="color:#854d0e;">⚠️ Active Storage — uses local disk in production (S3 not yet configured)</span><br>
+  <span style="color:#854d0e;">⚠️ Integration/system tests — not yet implemented (test/ dir empty)</span><br>
+  <span style="color:#854d0e;">⚠️ Sentry DSN — not yet set on Render</span><br>
+  <span style="color:#EF4444;">❌ Nothing is a hard launch blocker — all critical paths work</span>
+</div>
     </div>
     <div class="hero-right" style="display:flex; align-items:flex-end; gap:10px; flex-wrap:wrap;">
+      <div class="tester-input-wrap" style="margin-right:8px;">
+        <label for="test-device">Testing On *</label>
+        <select id="test-device" onchange="onDeviceChange()" style="padding:8px 14px;border:1.5px solid #d1d5db;border-radius:7px;font-size:1.5rem;width:260px;background:#f9fafb;">
+          <option value="">Select device...</option>
+          <option value="mobile-web">Mobile Browser — iOS Safari / Android Chrome</option>
+          <option value="pwa-ios">Installed PWA — iOS (Add to Home Screen)</option>
+          <option value="pwa-android">Installed PWA — Android (Add to Home Screen)</option>
+        </select>
+      </div>
       <div class="tester-input-wrap">
         <label for="tester-name">Your Name *</label>
         <input type="text" id="tester-name" placeholder="Enter your name..." oninput="onTesterNameChange();" />
@@ -306,16 +330,65 @@
 
     <div class="ov-block">
       <div class="ov-label">Testing environment</div>
-      <div class="ov-title">Production on Render — PWA in Browser</div>
+      <div class="ov-title">Production on Render — Mobile Browser & PWA</div>
       <div class="ov-text">
         Testing against <strong>live production</strong> at seasonv2.onrender.com.
-        Test on <strong>mobile Safari and Chrome</strong>.
+        Test on <strong>iOS Safari, Android Chrome</strong> (mobile web) and as an <strong>installed PWA</strong>.
         Use real but clearly fake data (e.g. "Test Tester" as name).
         Admin access requires an existing admin account (naijeria@gmail).
         <br><br>
         <strong>PWA:</strong> https://seasonv2.onrender.com<br>
         <strong>Admin:</strong> https://seasonv2.onrender.com/admin<br>
         <strong>iOS Sheet:</strong> <a href="testing-sheet-ios.html">Separate iOS testing sheet</a>
+      </div>
+    </div>
+
+    <div class="ov-block">
+      <div class="ov-label">Social Logins (PWA Only)</div>
+      <div class="ov-title">Google · Facebook · Apple OAuth</div>
+      <div class="ov-text">
+        <strong>Social logins are TESTABLE on PWA/Web.</strong> They are <strong style="color:#991b1b;">SUSPENDED on iOS Turbo Native</strong> (WKWebView cookie/CSRF issues).
+        Test Google, Facebook, and Apple OAuth flows on this sheet.
+        Apple OAuth is partially blocked by pending Apple Developer Account.
+        <br><br>
+        <strong>Google OAuth:</strong> Credentials on Render ✅<br>
+        <strong>Facebook OAuth:</strong> Credentials on Render ✅<br>
+        <strong>Apple OAuth:</strong> Blocked by Developer Account ⚠️
+      </div>
+    </div>
+
+    <div class="ov-block">
+      <div class="ov-label">Known Limitations (post-audit)</div>
+      <div class="ov-title">What's NOT yet ready</div>
+      <div class="ov-text">
+        <div class="prio-row">
+          <span class="priority-dot dot-critical"></span>
+          <strong>Apple OAuth</strong> — blocked by Developer Account (not yet created)
+        </div>
+        <div class="prio-row">
+          <span class="priority-dot dot-important"></span>
+          <strong>Splash screen</strong> — LaunchScreen shows basic label, no branded splash
+        </div>
+        <div class="prio-row">
+          <span class="priority-dot dot-important"></span>
+          <strong>Active Storage</strong> — production uses local disk; avatars lost on redeploy
+        </div>
+        <div class="prio-row">
+          <span class="priority-dot dot-important"></span>
+          <strong>Sentry</strong> — initializer ready but DSN not set on Render
+        </div>
+        <div class="prio-row">
+          <span class="priority-dot dot-important"></span>
+          <strong>Integration tests</strong> — test/integration/ + test/system/ don't exist yet
+        </div>
+        <div class="prio-row">
+          <span class="priority-dot dot-important"></span>
+          <strong>Inline styles</strong> — ~4 files still use hardcoded hex instead of Tailwind
+        </div>
+        <div class="prio-row">
+          <span class="priority-dot dot-nice"></span>
+          <strong>Stripe paywall</strong> — gem installed but no payment UI built (post-launch)
+        </div>
       </div>
     </div>
 
@@ -353,15 +426,17 @@
 
     <div class="ov-block">
       <div class="ov-label">Sections covered</div>
-      <div class="ov-title">7 sections · 56 test cases</div>
+       <div class="ov-title">9 sections · 58 test cases (by Figma milestone)</div>
       <div class="sections-list">
-        <div class="section-chip"><span class="chip-num">1</span> Setup &amp; Auth — Load, sign up, sign in, social login, password recovery, PWA install</div>
-        <div class="section-chip"><span class="chip-num">2</span> Onboarding — 11-step flow, data persistence</div>
-        <div class="section-chip"><span class="chip-num">3</span> Calendar — Monthly, weekly, daily view, appointments, events</div>
-        <div class="section-chip"><span class="chip-num">4</span> Tracking — Period entry, symptoms, superpowers, streaks</div>
-        <div class="section-chip"><span class="chip-num">5</span> Learn &amp; Settings — Informations, profile, notifications, consent</div>
-        <div class="section-chip"><span class="chip-num">6</span> Feedback &amp; Support — Modals, weekly survey, submissions</div>
-        <div class="section-chip"><span class="chip-num">7</span> Admin — Users, content, inbox, CSV exports, help</div>
+        <div class="section-chip"><span class="chip-num">M1</span> Sign In &amp; Onboarding — Welcome, sign up, sign in, OAuth, 11-step onboarding flow</div>
+        <div class="section-chip"><span class="chip-num">M2</span> Calendar &amp; Cycle — Monthly/weekly/daily views, phase colours, cycle day data</div>
+        <div class="section-chip"><span class="chip-num">M3</span> Tracking — Period entry, symptoms (moods/physical/mental), superpowers</div>
+        <div class="section-chip"><span class="chip-num">M4</span> Appointments — Calendar events, category picker modal, create/edit/delete</div>
+        <div class="section-chip"><span class="chip-num">M5</span> Reminders &amp; Consent — Informations, profile, notifications, birth control, GDPR consent</div>
+        <div class="section-chip"><span class="chip-num">M6</span> Streaks — Streak counter, milestones, gamification</div>
+        <div class="section-chip"><span class="chip-num">M7</span> Feedback — General feedback, support/bug, weekly 8-week survey, nudges</div>
+        <div class="section-chip"><span class="chip-num">A</span> Admin — Users, content CMS, inbox, CSV exports, production config checks</div>
+        <div class="section-chip"><span class="chip-num">P</span> PWA / iOS Native — Service worker, offline, install, push, touch targets</div>
       </div>
     </div>
 
@@ -400,111 +475,113 @@
 
 <script>
   const SECTIONS = [
-    { id: "setup",      label: "Setup & Auth" },
-    { id: "onboarding", label: "Onboarding" },
-    { id: "calendar",   label: "Calendar" },
-    { id: "tracking",   label: "Tracking" },
-    { id: "learn",      label: "Learn & Settings" },
-    { id: "feedback",   label: "Feedback" },
-    { id: "admin",      label: "Admin" },
+    { id: "m1", label: "M1: Sign In & Onboarding" },
+    { id: "m2", label: "M2: Calendar & Cycle" },
+    { id: "m3", label: "M3: Tracking" },
+    { id: "m4", label: "M4: Appointments" },
+    { id: "m5", label: "M5: Reminders & Consent" },
+    { id: "m6", label: "M6: Streaks" },
+    { id: "m7", label: "M7: Feedback" },
+    { id: "admin", label: "Admin" },
+    { id: "pwa", label: "PWA / iOS Native" },
   ];
 
   const DEFAULT_RESULTS = [
-    { section:"setup", scenario:"Site loads on Render (HTTPS, no errors)", priority:"critical",
+    { section:"m1", scenario:"Site loads on Render (HTTPS, no errors)", priority:"critical",
       howTo:"1. Open https://seasonv2.onrender.com in Chrome or Safari.\n2. The welcome/splash page should load within 5 seconds.\n3. No 502, 503, or SSL certificate errors.\n4. Refresh the page — should load consistently.", status:"pending", notes:"" },
-    { section:"setup", scenario:"Sign up with email works", priority:"critical",
+    { section:"m1", scenario:"Sign up with email works", priority:"critical",
       howTo:"1. Go to /welcome, click 'Create account'.\n2. Fill in name, email (use a test email), password.\n3. Submit. Should redirect to onboarding step 1.\n4. Verify no 500 error or blank page.", status:"pending", notes:"" },
-    { section:"setup", scenario:"Sign in with email works", priority:"critical",
+    { section:"m1", scenario:"Sign in with email works", priority:"critical",
       howTo:"1. Go to /session/new.\n2. Enter an existing email and password.\n3. Submit. Should redirect to /calendar.\n4. If credentials wrong, inline error should appear — no page reload.", status:"pending", notes:"" },
-    { section:"setup", scenario:"Google OAuth sign in works", priority:"important",
-      howTo:"1. Go to /welcome, click 'Sign in with Google'.\n2. Complete Google OAuth consent screen.\n3. Should create account if new, or sign in if existing.\n4. Should redirect to onboarding (new) or calendar (existing).", status:"pending", notes:"" },
-    { section:"setup", scenario:"Facebook OAuth sign in works", priority:"important",
-      howTo:"1. Go to /welcome, click 'Sign in with Facebook'.\n2. Complete Facebook OAuth flow.\n3. Should create/sign in and redirect correctly.", status:"pending", notes:"" },
-    { section:"setup", scenario:"Apple OAuth sign in works", priority:"important",
-      howTo:"1. Go to /welcome, click 'Sign in with Apple'.\n2. Complete Apple OAuth flow.\n3. Note: email only sent on first auth — repeat sign-ins use UID lookup.\n4. Should redirect correctly.", status:"pending", notes:"" },
-    { section:"setup", scenario:"Password recovery flow works", priority:"critical",
+    { section:"m1", scenario:"Google OAuth sign in works", priority:"important",
+      howTo:"1. Go to /welcome, click 'Sign in with Google'.\n2. Complete Google OAuth consent screen.\n3. Should create account if new, or sign in if existing.\n4. Should redirect to onboarding (new) or calendar (existing).", status:"pending", notes:"Note: Social logins work on PWA/Web only. They are SUSPENDED on iOS Turbo Native (see iOS sheet)." },
+    { section:"m1", scenario:"Facebook OAuth sign in works", priority:"important",
+      howTo:"1. Go to /welcome, click 'Sign in with Facebook'.\n2. Complete Facebook OAuth flow.\n3. Should create/sign in and redirect correctly.", status:"pending", notes:"Note: Social logins work on PWA/Web only. They are SUSPENDED on iOS Turbo Native." },
+    { section:"m1", scenario:"Apple OAuth sign in works", priority:"important",
+      howTo:"1. Go to /welcome, click 'Sign in with Apple'.\n2. Complete Apple OAuth flow.\n3. Note: email only sent on first auth — repeat sign-ins use UID lookup.\n4. Should redirect correctly.", status:"pending", notes:"Note: Social logins work on PWA/Web only. SUSPENDED on iOS. Also blocked by Apple Developer Account." },
+    { section:"m1", scenario:"Password recovery flow works", priority:"critical",
       howTo:"1. Go to /session/new, click 'Forgot password?'.\n2. Enter email, submit.\n3. Check for confirmation message (password reset email sent — verify in logs if SMTP not configured).\n4. Error states: wrong email, already reset, inbox full — each has a dedicated page.", status:"pending", notes:"" },
-    { section:"setup", scenario:"Mobile PWA loads (web manifest, service worker)", priority:"important",
+    { section:"pwa", scenario:"Mobile PWA loads (web manifest, service worker)", priority:"important",
       howTo:"1. Open on iPhone (Safari) or Android (Chrome).\n2. 'Add to Home Screen' prompt should appear (iOS) or install banner (Android).\n3. Installed PWA should open fullscreen without browser chrome.\n4. Offline page should show when no network.", status:"pending", notes:"" },
 
-    { section:"onboarding", scenario:"All 11 steps render correctly", priority:"critical",
-      howTo:"1. Sign up as a new user.\n2. Step through each onboarding step (1–11).\n3. Verify each step renders the correct form fields.\n4. No blank screens or JavaScript errors.", status:"pending", notes:"" },
-    { section:"onboarding", scenario:"Step navigation (Next / Back) works", priority:"critical",
+    { section:"m1", scenario:"All 11 steps render correctly", priority:"critical",
+      howTo:"Onboarding has 11 steps. Test each one:\n\nStep 1 — Name: Enter your full name, tap Next.\nStep 2 — Birthday: Day/Month/Year picker.\nStep 3 — First day of last period: Date selector (can tap Unsure to skip).\nStep 4 — Last day of last period: Date selector (can tap Unsure to skip).\nStep 5 — Regular cycle?: Yes → step 6 / No → step 6 with irregular flag.\nStep 6 — Cycle length: 20-45 day picker (can skip → defaults to 28).\nStep 7 — Hormonal birth control?: Yes → skips to step 9 / No → step 8.\nStep 8 — Birth control reminder: Yes/No (only shown if step 7 = No).\nStep 9 — Birth control method: Pill/IUD/Ring/Implant/Injection/Patch/Other.\nStep 10 — Cycle stage reminder: Notification opt-in (can Skip).\nStep 11 — Food preferences: Vegetarian/Vegan/Pescetarian/None.\n\nExpectations per step:\n• No blank screens or JavaScript errors\n• Back preserves previously entered data\n• Next advances to correct next step (including forks at steps 5, 7, 8)", status:"pending", notes:"" },
+    { section:"m1", scenario:"Step navigation (Next / Back) works", priority:"critical",
       howTo:"1. On each step, click Next to advance.\n2. Click Back to go to the previous step.\n3. Previously entered data should be preserved on Back.\n4. Next should skip optional steps if user chooses 'Skip'.", status:"pending", notes:"" },
-    { section:"onboarding", scenario:"Data persists between steps", priority:"critical",
+    { section:"m1", scenario:"Data persists between steps", priority:"critical",
       howTo:"1. Fill in name on step 1, birthday on step 2.\n2. Go to step 3, then click Back to step 1.\n3. Name should still be filled in.\n4. Continue to finish — all data should be saved to the user record.", status:"pending", notes:"" },
-    { section:"onboarding", scenario:"Irregular cycle fork works", priority:"important",
+    { section:"m1", scenario:"Irregular cycle fork works", priority:"important",
       howTo:"1. On step 3, select 'No, irregular cycle'.\n2. The flow should fork to a different setup path.\n3. Cycle length estimation should be available but clearly optional.", status:"pending", notes:"" },
-    { section:"onboarding", scenario:"Birth control path works", priority:"important",
+    { section:"m1", scenario:"Birth control path works", priority:"important",
       howTo:"1. On step 5, select 'Yes, hormonal birth control'.\n2. Step 6 should show method selection.\n3. Step 7 should offer reminder opt-in.\n4. Step 8 should capture full contraception details.", status:"pending", notes:"" },
-    { section:"onboarding", scenario:"Finish screen shows animation + redirects to calendar", priority:"critical",
+    { section:"m1", scenario:"Finish screen shows animation + redirects to calendar", priority:"critical",
       howTo:"1. Complete all 11 steps.\n2. Finish screen should show animated confirmation.\n3. Click 'Start my Journey' — redirects to /calendar.\n4. Calendar should show populated with entered cycle data.", status:"pending", notes:"" },
-    { section:"onboarding", scenario:"Food preference saves correctly", priority:"nice",
+    { section:"m1", scenario:"Food preference saves correctly", priority:"nice",
       howTo:"1. On step 9, select a food preference (vegetarian/vegan/pescetarian).\n2. Complete onboarding.\n3. Later check that nutrition tips on daily view match this preference.", status:"pending", notes:"" },
 
-    { section:"calendar", scenario:"Monthly calendar loads with phase colours", priority:"critical",
+    { section:"m2", scenario:"Monthly calendar loads with phase colours", priority:"critical",
       howTo:"1. Sign in and go to /calendar.\n2. The calendar grid should show day cells coloured by cycle phase.\n3. Phase legend should show (Menstrual, Follicular, Ovulation, Luteal) with colour dots.\n4. Legend auto-hides after 50 seconds.", status:"pending", notes:"" },
-    { section:"calendar", scenario:"Phase banner shows current phase + cycle day", priority:"critical",
+    { section:"m2", scenario:"Phase banner shows current phase + cycle day", priority:"critical",
       howTo:"1. On /calendar, look at the top section.\n2. Should show current season (Winter/Spring/Summer/Fall) + phase name.\n3. Should show current cycle day number.\n4. Phase colour should match the banner.", status:"pending", notes:"" },
-    { section:"calendar", scenario:"Weekly view navigates correctly", priority:"important",
+    { section:"m2", scenario:"Weekly view navigates correctly", priority:"important",
       howTo:"1. Go to /calendar/weekly.\n2. Horizontal week strip should show 7 days with phase colours.\n3. Swipe/scroll through weeks.\n4. Tap a day to go to daily view.", status:"pending", notes:"" },
-    { section:"calendar", scenario:"Daily view shows full day summary", priority:"critical",
+    { section:"m2", scenario:"Daily view shows full day summary", priority:"critical",
       howTo:"1. Go to /daily/2026-06-01 (or any valid date).\n2. Should show: cycle phase, symptom summary, superpower, nutrition/sport tips.\n3. Calendar events for that day should be listed.\n4. Empty day should show gracefully (not blank/error).", status:"pending", notes:"" },
-    { section:"calendar", scenario:"Appointments list shows all events", priority:"important",
+    { section:"m4", scenario:"Appointments list shows all events", priority:"important",
       howTo:"1. Go to /calendar/appointments.\n2. Should list all future calendar events.\n3. Each shows title, date, time, category.\n4. Tap an event to edit it.", status:"pending", notes:"" },
-    { section:"calendar", scenario:"Create calendar event with category picker", priority:"critical",
+    { section:"m4", scenario:"Create calendar event with category picker", priority:"critical",
       howTo:"1. Go to /calendar_events/new.\n2. Enter title, date, start/end time.\n3. Click the + button to open the category picker modal.\n4. Select a category (Friends, Dinner, Date, Sports, Medical, Birthday, Work, Coffee, Shopping).\n5. The modal should show 9 icon options with brand colour when selected.\n6. Submit — event should appear in appointments list.", status:"pending", notes:"" },
-    { section:"calendar", scenario:"Edit calendar event", priority:"important",
+    { section:"m4", scenario:"Edit calendar event", priority:"important",
       howTo:"1. From appointments list, tap an event to edit.\n2. Change title, time, or category.\n3. Save — changes should reflect in the list.\n4. Delete button should remove the event (with confirmation).", status:"pending", notes:"" },
 
-    { section:"tracking", scenario:"Period entry date picker works", priority:"critical",
+    { section:"m3", scenario:"Period entry date picker works", priority:"critical",
       howTo:"1. Go to /tracking/period.\n2. Tap a date to record period start.\n3. The date should highlight.\n4. Existing dates should show in 'edit' mode.\n5. Submit — cycle should recalculate.", status:"pending", notes:"" },
-    { section:"tracking", scenario:"Self Analysis dashboard loads", priority:"critical",
+    { section:"m3", scenario:"Self Analysis dashboard loads", priority:"critical",
       howTo:"1. Go to /tracking.\n2. Should show: avatar, current phase, cycle strip.\n3. Daily analysis card should appear.\n4. Navigation cards (Symptoms, Superpowers, etc.) should be tappable.\n5. Weekly feedback nudge banner should show if applicable.", status:"pending", notes:"" },
-    { section:"tracking", scenario:"Symptom logging — moods auto-save", priority:"critical",
+    { section:"m3", scenario:"Symptom logging — moods auto-save", priority:"critical",
       howTo:"1. Go to /symptoms.\n2. Date drum picker should be expandable.\n3. Tap mood icons — they should toggle with opacity/grayscale change.\n4. Physical symptoms: tap a symptom, adjust level slider.\n5. Auto-save should trigger on each change (no submit button needed).", status:"pending", notes:"" },
-    { section:"tracking", scenario:"Symptom logging — all fields present", priority:"important",
+    { section:"m3", scenario:"Symptom logging — all fields present", priority:"important",
       howTo:"1. On /symptoms, verify all sections:\n   - Mood grid\n   - Physical symptoms with level sliders\n   - Mental symptoms with level sliders\n   - Bleeding dropdown\n   - Intercourse grid\n   - Cravings grid\n   - Discharge grid\n   - Sleep vertical picker (1-12h)\n   - Temperature vertical picker (35.0-42.0C)\n   - Weight vertical picker (30.0-200.0 kg)\n   - Notes textarea\n2. Submit opens review modal.", status:"pending", notes:"" },
-    { section:"tracking", scenario:"Submit review modal works", priority:"important",
+    { section:"m6", scenario:"Submit review modal works", priority:"important",
       howTo:"1. On /symptoms, click Submit.\n2. Review modal shows: mood count/names, physical/mental symptoms with levels, other counts.\n3. 'Submit tracking' navigates to /tracking.\n4. 'Go back to change' closes modal and returns to form.", status:"pending", notes:"" },
-    { section:"tracking", scenario:"Superpowers page works", priority:"important",
+    { section:"m3", scenario:"Superpowers page works", priority:"important",
       howTo:"1. Go to /superpowers.\n2. Date drum should be present.\n3. Phase label should show current phase.\n4. 20 sliders (low/med/high) should be present.\n5. Submit button should save and confirm.", status:"pending", notes:"" },
-    { section:"tracking", scenario:"Streaks counter shows correctly", priority:"nice",
+    { section:"m6", scenario:"Streaks counter shows correctly", priority:"nice",
       howTo:"1. Go to /streaks.\n2. Current streak, best streak, and milestones should show.\n3. Log something daily then check streak increments next day.", status:"pending", notes:"" },
 
-    { section:"learn", scenario:"Informations main page loads", priority:"important",
+    { section:"m5", scenario:"Informations main page loads", priority:"important",
       howTo:"1. Go to /informations.\n2. Four phase cards should appear (menstrual, follicular, ovulation, luteal).\n3. Each card should link to phase detail.", status:"pending", notes:"" },
-    { section:"learn", scenario:"Phase detail pages load with content", priority:"important",
+    { section:"m5", scenario:"Phase detail pages load with content", priority:"important",
       howTo:"1. Go to /informations/menstrual.\n2. Page should show: biological info, energy feeling, nutrition, exercise, emotional patterns.\n3. Content should be in the correct locale (en/de).\n4. Toggle between all 4 phases.", status:"pending", notes:"" },
-    { section:"learn", scenario:"Settings — profile edit works", priority:"critical",
+    { section:"m5", scenario:"Settings — profile edit works", priority:"critical",
       howTo:"1. Go to /settings/profile.\n2. Edit name, email, birthday, upload avatar.\n3. Save — changes should persist.\n4. Email change should trigger confirmation email.", status:"pending", notes:"" },
-    { section:"learn", scenario:"Settings — notification toggles save instantly", priority:"important",
+    { section:"m5", scenario:"Settings — notification toggles save instantly", priority:"important",
       howTo:"1. Go to /settings/notifications.\n2. Toggle morning reminder on/off.\n3. Toggle period start warning on/off.\n4. Toggle birth control reminder on/off.\n5. Each toggle should save immediately (PATCH request).", status:"pending", notes:"" },
-    { section:"learn", scenario:"Settings — consent management works", priority:"important",
+    { section:"m5", scenario:"Settings — consent management works", priority:"important",
       howTo:"1. Go to /settings/consent.\n2. View current consent status (health, symptom, cycle, menstrual data).\n3. Consent history should show grant/revoke timestamps.\n4. Toggle a consent — status should update.", status:"pending", notes:"" },
-    { section:"learn", scenario:"Account deletion works", priority:"important",
+    { section:"m5", scenario:"Account deletion works", priority:"important",
       howTo:"1. Go to /account.\n2. Click 'Delete account'.\n3. Confirm deletion.\n4. Account and all associated data should be removed.\n5. Should redirect to welcome page.", status:"pending", notes:"" },
 
-    { section:"feedback", scenario:"Feedback modal opens and submits", priority:"important",
+    { section:"m7", scenario:"Feedback modal opens and submits", priority:"important",
       howTo:"1. From main app, find and tap the feedback button.\n2. Type a message, submit.\n3. Should show confirmation.\n4. Go to /admin/inbox/feedback — submission should appear.", status:"pending", notes:"" },
-    { section:"feedback", scenario:"Support modal opens and submits", priority:"important",
+    { section:"m7", scenario:"Support modal opens and submits", priority:"important",
       howTo:"1. Open support/bug report modal.\n2. Select type (Bug / Support).\n3. Type message, submit.\n4. Verify it appears in admin inbox under correct category.", status:"pending", notes:"" },
-    { section:"feedback", scenario:"Weekly feedback survey modal works", priority:"important",
+    { section:"m7", scenario:"Weekly feedback survey modal works", priority:"important",
       howTo:"1. If user has a current feedback week, open the weekly feedback modal.\n2. Questions should render per question type:\n   - Multiple choice: tappable option buttons\n   - Yes/No + Why: toggle + textarea\n   - Text only: textarea\n3. Submit answers.\n4. Admin should see responses at /admin/weekly_feedback_responses.", status:"pending", notes:"" },
-    { section:"feedback", scenario:"Weekly feedback nudge banner appears on tracking", priority:"nice",
+    { section:"m7", scenario:"Weekly feedback nudge banner appears on tracking", priority:"nice",
       howTo:"1. Go to /tracking.\n2. If user is in an active feedback week, green banner should appear.\n3. Banner should show week label and link to open the weekly feedback modal.\n4. After submitting, banner should not appear for that week.", status:"pending", notes:"" },
 
-    { section:"feedback", scenario:"PWA — service worker registers and caches assets", priority:"important",
+    { section:"pwa", scenario:"PWA — service worker registers and caches assets", priority:"important",
       howTo:"1. Open DevTools > Application > Service Workers.\n2. SW should be registered and active.\n3. Cache Storage should contain app assets (CSS, JS, images).\n4. Reload the page — SW should intercept requests from cache.", status:"pending", notes:"" },
-    { section:"feedback", scenario:"PWA — offline page works", priority:"important",
+    { section:"pwa", scenario:"PWA — offline page works", priority:"important",
       howTo:"1. Turn off network (airplane mode).\n2. Navigate to any page.\n3. Should show branded offline page with retry button.\n4. Turn network back on — click retry to reload the app.", status:"pending", notes:"" },
-    { section:"feedback", scenario:"PWA — Add to Home Screen flow works", priority:"important",
+    { section:"pwa", scenario:"PWA — Add to Home Screen flow works", priority:"important",
       howTo:"1. Open on mobile Safari (iOS) or Chrome (Android).\n2. 'Add to Home Screen' prompt should appear (install banner).\n3. Install the PWA — it should add to the home screen.\n4. Open from home screen — should launch standalone (no browser chrome).\n5. App icon and title should match manifest.", status:"pending", notes:"" },
-    { section:"feedback", scenario:"PWA — responsive layout (430px container)", priority:"important",
+    { section:"pwa", scenario:"PWA — responsive layout (430px container)", priority:"important",
       howTo:"1. Test on phone (375-430px wide).\n2. Test on tablet (768px wide).\n3. Test on desktop (1024px+ wide).\n4. Container should be max-w-app (430px) centered on all sizes.\n5. No horizontal overflow or cut-off content.", status:"pending", notes:"" },
-    { section:"feedback", scenario:"PWA — touch targets are 44x44px minimum", priority:"important",
+    { section:"pwa", scenario:"PWA — touch targets are 44x44px minimum", priority:"important",
       howTo:"1. Inspect buttons, links, toggles on mobile.\n2. All interactive elements should have minimum 44x44px touch area (or use p-2 on small icons).\n3. No accidental tap on adjacent elements.", status:"pending", notes:"" },
-    { section:"feedback", scenario:"PWA — push notifications subscribe/unsubscribe", priority:"important",
+    { section:"pwa", scenario:"PWA — push notifications subscribe/unsubscribe", priority:"important",
       howTo:"1. Go to Settings > Notifications.\n2. Toggle push notifications on — browser permission prompt should appear.\n3. Allow — subscription should be created.\n4. Toggle off — subscription should be removed.\n5. Check DevTools > Application > Push Messaging.", status:"pending", notes:"" },
 
     { section:"admin", scenario:"Admin login works", priority:"critical",
@@ -527,6 +604,12 @@
       howTo:"1. Go to /admin/launch_signups.\n2. Numbered table shows email + signup timestamp.\n3. Total count stat card.\n4. CSV export downloads all signups.\n5. Sidebar badge shows live count.", status:"pending", notes:"" },
     { section:"admin", scenario:"Admin Help page loads", priority:"nice",
       howTo:"1. Click 'Help' in the admin sidebar footer.\n2. Page should document all admin sections and features.\n3. Should include tips for common admin workflows.", status:"pending", notes:"" },
+    { section:"admin", scenario:"Production config — HTTPS enforced (force_ssl)", priority:"critical",
+      howTo:"1. Open https://seasonv2.onrender.com in a browser.\n2. Check that the URL shows a lock icon (valid SSL certificate).\n3. Try http://seasonv2.onrender.com — it should redirect to https.\n4. Check response headers for Strict-Transport-Security (HSTS).", status:"pending", notes:"" },
+    { section:"admin", scenario:"Production config — DNS rebinding protection (config.hosts)", priority:"critical",
+      howTo:"1. The app should only respond to requests with valid Host headers.\n2. Try accessing with a wrong Host header (e.g., via curl with -H 'Host: evil.com').\n3. Should return a 403 Forbidden or similar.\n4. Health check endpoint /up should still be accessible.", status:"pending", notes:"" },
+    { section:"admin", scenario:"iOS PWA — apple-mobile-web-app-capable meta tag works", priority:"important",
+      howTo:"1. Open the app on iOS Safari.\n2. Add to Home Screen.\n3. Launch from Home Screen — should open in standalone mode (no Safari chrome).\n4. View page source — meta tag should be present in all three layouts (application, turbo_native, launch).", status:"pending", notes:"" },
   ];
 
   let results = [];
@@ -564,6 +647,8 @@
     }
     const savedTesterName = localStorage.getItem("season-tester-name");
     if (savedTesterName) document.getElementById("tester-name").value = savedTesterName;
+    const savedDevice = localStorage.getItem("season-test-device");
+    if (savedDevice) { document.getElementById("test-device").value = savedDevice; updateDeviceHints(); }
 
     renderAll();
   }
@@ -571,6 +656,30 @@
   function onTesterNameChange() {
     const name = document.getElementById("tester-name").value.trim();
     if (name) localStorage.setItem("season-tester-name", name);
+  }
+
+  function onDeviceChange() {
+    const device = document.getElementById("test-device").value;
+    if (device) {
+      localStorage.setItem("season-test-device", device);
+      updateDeviceHints();
+    }
+  }
+
+  function getSelectedDevice() {
+    return document.getElementById("test-device").value || localStorage.getItem("season-test-device") || "";
+  }
+
+  function updateDeviceHints() {
+    const device = getSelectedDevice();
+    document.querySelectorAll(".device-note").forEach(el => el.remove());
+    const heroLeft = document.querySelector(".hero-left p");
+    if (!heroLeft) return;
+    if (device.startsWith("pwa")) {
+      heroLeft.insertAdjacentHTML("afterend", '<span class="device-note" style="display:block;color:#933a35;font-size:1.3rem;font-weight:600;margin-top:4px;">PWA mode: Test service worker, offline page, install flow, and standalone launch.</span>');
+    } else if (device === "mobile-web") {
+      heroLeft.insertAdjacentHTML("afterend", '<span class="device-note" style="display:block;color:#933a35;font-size:1.3rem;font-weight:600;margin-top:4px;">Mobile Web mode: Test touch targets (44px min), no-zoom inputs, responsive layout. Safari/Chrome on iPhone or Android.</span>');
+    }
   }
 
   function persist() {
@@ -623,9 +732,10 @@
   function exportToCSV() {
     const name = document.getElementById("tester-name").value.trim();
     if (!name) { alert("Enter your name first."); return; }
-    let csv = "Tester,Section,Scenario,Priority,Status,Notes\n";
+    const device = getSelectedDevice();
+    let csv = "Tester,Device,Section,Scenario,Priority,Status,Notes\n";
     results.forEach(r => {
-      csv += `"${name}","${r.section}","${r.scenario}","${r.priority}","${r.status}","${r.notes.replace(/"/g,'""')}"\n`;
+      csv += `"${name}","${device}","${r.section}","${r.scenario}","${r.priority}","${r.status}","${r.notes.replace(/"/g,'""')}"\n`;
     });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(new Blob([csv], { type:"text/csv" }));
@@ -647,7 +757,7 @@
       const resp = await fetch("https://seasonv2.onrender.com/test_results/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tester_name: name, platform: "pwa", failures: failures })
+        body: JSON.stringify({ tester_name: name, platform: "pwa", device: getSelectedDevice(), failures: failures })
       });
       const data = await resp.json();
       if (resp.ok) {

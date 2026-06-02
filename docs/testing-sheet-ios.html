@@ -243,8 +243,32 @@
     <div class="hero-left">
       <h1>iOS Turbo Native Testing Checklist</h1>
       <p>For testing the Season app inside the iOS Turbo Native wrapper · Click any row for steps · Auto-saves to your browser</p>
+<div class="state-banner" style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; padding:12px 16px; margin-top:10px; font-size:1.3rem; line-height:1.6;">
+  <strong style="color:#166534;">Current iOS State (2026-06-02 Audit)</strong><br>
+  <strong style="color:#933a35;">Chapter 5 (iOS PWA): 93%</strong> — PWA Infrastructure 8/8 · iOS Meta & Safe Area 6/6 · Turbo Native 8/8 · Push & Biometrics 7/7 · UX 4/4<br><br>
+  <span style="color:#166534;">✅ apple-mobile-web-app-capable meta tag — FIXED 2026-06-02 (was missing, now in all 3 layouts)</span><br>
+  <span style="color:#166534;">✅ apple-mobile-web-app-status-bar-style — now in turbo_native + launch layouts too</span><br>
+  <span style="color:#166534;">✅ Production config.hosts + force_ssl — FIXED 2026-06-02</span><br>
+  <span style="color:#166534;">✅ Xcode project builds — 10 Swift files, HotwireNative SPM, no merge conflicts</span><br>
+  <span style="color:#166534;">✅ Turbo Native detection — UA-based variant selection + native_auth_token</span><br>
+  <span style="color:#166534;">✅ Path configuration — /configurations/ios_v1.json endpoint + bundled path-configuration.json</span><br>
+  <span style="color:#166534;">✅ Push notifications — subscribe/unsubscribe + APNs service</span><br>
+  <span style="color:#166534;">✅ Pin/Biometric unlock — PinProtection concern + WebAuthn platform authenticator</span><br>
+  <span style="color:#854d0e;">⚠️ Splash screen — LaunchScreen shows basic label, no branded splash config</span><br>
+  <span style="color:#854d0e;">⚠️ System UINavigationBar — may clash with custom _native_top_bar.html.erb (known issue)</span><br>
+  <span style="color:#854d0e;">⚠️ Apple Developer Account — not yet created/approved; TestFlight not available</span><br>
+  <span style="color:#854d0e;">⚠️ App Store listing — not created</span><br>
+  <span style="color:#EF4444;">❌ Apple OAuth — blocked by Apple Developer Account</span>
+</div>
     </div>
     <div class="hero-right" style="display:flex; align-items:flex-end; gap:10px; flex-wrap:wrap;">
+      <div class="tester-input-wrap" style="margin-right:8px;">
+        <label for="test-device">Testing On *</label>
+        <select id="test-device" onchange="onDeviceChange()" style="padding:8px 14px;border:1.5px solid #d1d5db;border-radius:7px;font-size:1.5rem;width:240px;background:#f9fafb;">
+          <option value="">Select device...</option>
+          <option value="iphone">iPhone (TestFlight)</option>
+        </select>
+      </div>
       <div class="tester-input-wrap">
         <label for="tester-name">Your Name *</label>
         <input type="text" id="tester-name" placeholder="Enter your name..." oninput="onTesterNameChange();" />
@@ -304,12 +328,12 @@
 
     <div class="ov-block">
       <div class="ov-label">Testing environment</div>
-      <div class="ov-title">Xcode Simulator / Device — Production Backend</div>
+      <div class="ov-title">TestFlight — iPhone — Production Backend</div>
       <div class="ov-text">
         <strong>Base URL:</strong> https://seasonv2.onrender.com<br>
-        <strong>Project:</strong> ios/SeasonApp/SeasonApp.xcodeproj<br>
-        <strong>SPM Deps:</strong> HotwireNative (turbo-ios)<br><br>
-        Build and run from Xcode. The app loads server-rendered pages
+        <strong>Delivery:</strong> TestFlight (iOS app distributed for testing)<br>
+        <strong>Project:</strong> ios/SeasonApp/SeasonApp.xcodeproj (builds shipped via TestFlight)<br><br>
+        Install from TestFlight. The app loads server-rendered pages
         in a WKWebView. No local HTML — all content comes from Render.
       </div>
     </div>
@@ -318,6 +342,9 @@
       <div class="ov-label">Key iOS-specific concerns</div>
       <div class="ov-title">Cookie handling, CSRF, OAuth in WKWebView</div>
       <div class="ov-text">
+        <div style="background:#fef2f2;border:1.5px solid #fca5a5;border-radius:6px;padding:8px 12px;margin-bottom:10px;font-size:1.3rem;font-weight:700;color:#991b1b;">
+          ⚠️ SOCIAL LOGINS (Google, Facebook, Apple) ARE SUSPENDED ON iOS. Test on PWA sheet only.
+        </div>
         <div class="prio-row">
           <span class="priority-dot dot-critical"></span>
           <strong>Session persistence</strong> — Cookies must survive app restarts
@@ -338,11 +365,42 @@
     </div>
 
     <div class="ov-block">
+      <div class="ov-label">Known Limitations</div>
+      <div class="ov-title">What's NOT yet ready for iOS</div>
+      <div class="ov-text">
+        <div class="prio-row">
+          <span class="priority-dot dot-critical"></span>
+          <strong>Apple OAuth</strong> — blocked by Apple Developer Account (not created)
+        </div>
+        <div class="prio-row">
+          <span class="priority-dot dot-important"></span>
+          <strong>Splash screen</strong> — LaunchScreen.storyboard is basic; no branded launch image
+        </div>
+        <div class="prio-row">
+          <span class="priority-dot dot-important"></span>
+          <strong>Navigation bar clash</strong> — System UINavigationBar (white bg, black text) may overlap custom _native_top_bar. Set navigationBar.isHidden=true in Navigator.
+        </div>
+        <div class="prio-row">
+          <span class="priority-dot dot-important"></span>
+          <strong>App Store</strong> — App Store listing not created; developer account pending
+        </div>
+        <div class="prio-row">
+          <span class="priority-dot dot-important"></span>
+          <strong>TestFlight</strong> — Not available until Developer Account is approved
+        </div>
+        <div class="prio-row">
+          <span class="priority-dot dot-nice"></span>
+          <strong>Turbo Native view variants</strong> — some +turbo_native.erb variants exist but not comprehensive
+        </div>
+      </div>
+    </div>
+
+    <div class="ov-block">
       <div class="ov-label">How to use this sheet</div>
       <div class="ov-title">Step through section by section</div>
       <div class="ov-text">
         <strong>1. Enter your name</strong> at the top.<br><br>
-        <strong>2. Build &amp; run</strong> the iOS app from Xcode first.<br><br>
+        <strong>2. Install from TestFlight</strong> on your iPhone first.<br><br>
         <strong>3. Work through each tab</strong>. The tab bar shows pass/total.<br><br>
         <strong>4. Click any row</strong> to expand step-by-step instructions.<br><br>
         <strong>5. Set status + add notes</strong>. Results auto-save to your browser.<br><br>
@@ -352,14 +410,17 @@
 
     <div class="ov-block">
       <div class="ov-label">Sections covered</div>
-      <div class="ov-title">6 sections · 35 test cases</div>
+      <div class="ov-title">9 sections · 36 test cases (by Figma milestone)</div>
       <div class="sections-list">
-        <div class="section-chip"><span class="chip-num">1</span> Setup — Build, install, first launch</div>
-        <div class="section-chip"><span class="chip-num">2</span> Auth — Sign up, sign in, OAuth in WKWebView</div>
-        <div class="section-chip"><span class="chip-num">3</span> Native UI — Tab bar, top bar dropdown, modals</div>
-        <div class="section-chip"><span class="chip-num">4</span> Core Screens — Calendar, tracking, daily, settings</div>
-        <div class="section-chip"><span class="chip-num">5</span> Forms &amp; Interactions — CSRF, modals, sliders, pickers</div>
-        <div class="section-chip"><span class="chip-num">6</span> Push &amp; Background — Notifications, state restoration</div>
+        <div class="section-chip"><span class="chip-num">M1</span> Sign In &amp; Onboarding — Sign up, sign in, OAuth (⚠️ suspended), 11-step onboarding</div>
+        <div class="section-chip"><span class="chip-num">M2</span> Calendar &amp; Cycle — Monthly/weekly/daily, phase colours, pull-to-refresh</div>
+        <div class="section-chip"><span class="chip-num">M3</span> Tracking — Symptoms (moods/sliders/pickers), superpowers, review modal</div>
+        <div class="section-chip"><span class="chip-num">M4</span> Appointments — Modal paths, category picker, create/edit events</div>
+        <div class="section-chip"><span class="chip-num">M5</span> Reminders &amp; Consent — Settings, notifications, consent, profile</div>
+        <div class="section-chip"><span class="chip-num">M6</span> Streaks — Streak counter, milestones</div>
+        <div class="section-chip"><span class="chip-num">M7</span> Feedback — General, support/bug, weekly survey modals</div>
+        <div class="section-chip"><span class="chip-num">N</span> iOS Native — Tab bar, nav dropdown, session, touch targets, input zoom</div>
+        <div class="section-chip"><span class="chip-num">P</span> Push &amp; Background — Notifications, biometrics, state restoration</div>
       </div>
     </div>
 
@@ -398,72 +459,75 @@
 
 <script>
   const SECTIONS = [
-    { id: "setup",   label: "Setup" },
-    { id: "auth",    label: "Auth" },
-    { id: "native",  label: "Native UI" },
-    { id: "screens", label: "Core Screens" },
-    { id: "forms",   label: "Forms & Interactions" },
-    { id: "push",    label: "Push & Background" },
+    { id: "m1", label: "M1: Sign In & Onboarding" },
+    { id: "m2", label: "M2: Calendar & Cycle" },
+    { id: "m3", label: "M3: Tracking" },
+    { id: "m4", label: "M4: Appointments" },
+    { id: "m5", label: "M5: Reminders & Consent" },
+    { id: "m6", label: "M6: Streaks" },
+    { id: "m7", label: "M7: Feedback" },
+    { id: "native", label: "iOS Native" },
+    { id: "push", label: "Push & Background" },
   ];
 
   const DEFAULT_RESULTS = [
-    { section:"setup", scenario:"Xcode project builds without errors", priority:"critical",
-      howTo:"1. Open ios/SeasonApp/SeasonApp.xcodeproj in Xcode.\n2. Select a simulator target (iPhone 16, iOS 18+).\n3. Build (Cmd+B) — must compile without errors.\n4. Verify no missing SPM packages (HotwireNative).", status:"pending", notes:"" },
-    { section:"setup", scenario:"App launches and loads remote URL", priority:"critical",
-      howTo:"1. Run the app (Cmd+R) in simulator.\n2. The app should show the Season welcome screen loaded from seasonv2.onrender.com.\n3. Verify the URL bar is hidden (this is a native wrapper, not Safari).\n4. No blank white screen on launch.", status:"pending", notes:"" },
-    { section:"setup", scenario:"Tab bar renders with 3 tabs", priority:"critical",
+    { section:"native", scenario:"App installs via TestFlight and launches", priority:"critical",
+      howTo:"1. Install the Season app from TestFlight on your iPhone or iPad.\n2. Launch the app — it should show the Season welcome screen loaded from seasonv2.onrender.com.\n3. Verify the URL bar is hidden (native wrapper, not Safari).\n4. No blank white screen on launch.", status:"pending", notes:"" },
+    { section:"native", scenario:"App launches and loads remote URL", priority:"critical",
+      howTo:"1. Launch the TestFlight app on your device.\n2. The app should show the Season welcome screen loaded from seasonv2.onrender.com.\n3. Verify the URL bar is hidden (native wrapper, not Safari).\n4. No blank white screen on launch.", status:"pending", notes:"" },
+    { section:"native", scenario:"Tab bar renders with 3 tabs", priority:"critical",
       howTo:"1. After launching, verify the bottom tab bar shows: Calendar, Tracking, Settings.\n2. Each tab icon should be visible.\n3. Tapping each tab should navigate to the correct screen.\n4. Active tab should be highlighted.", status:"pending", notes:"" },
-    { section:"setup", scenario:"Native top bar dropdown works (3-dot menu)", priority:"important",
+    { section:"native", scenario:"Native top bar dropdown works (3-dot menu)", priority:"important",
       howTo:"1. Tap the 3-dot icon in the top-right corner.\n2. Dropdown menu should slide in from the right.\n3. Items: Schedule Overview, Day View, Weekly View, Monthly View, Settings, Log out.\n4. Each item navigates to the correct screen.\n5. Log out deletes the session and returns to welcome.\n6. Tapping the backdrop dismisses the menu.", status:"pending", notes:"" },
-    { section:"setup", scenario:"Session persists across app restarts", priority:"critical",
+    { section:"native", scenario:"Session persists across app restarts", priority:"critical",
       howTo:"1. Sign in to the app.\n2. Force-quit the app (swipe up from app switcher).\n3. Re-open the app.\n4. You should still be signed in — no login prompt.\n5. Session cookie must survive app restart.", status:"pending", notes:"" },
-    { section:"setup", scenario:"Native auth token stored in Keychain", priority:"important",
+    { section:"native", scenario:"Native auth token stored in Keychain", priority:"important",
       howTo:"1. Sign in to the app.\n2. Check the iOS Keychain (via debugger or logs) for native_auth_token.\n3. Token should be stored and used for API authentication.\n4. Token should be regenerated on each login.", status:"pending", notes:"" },
 
-    { section:"auth", scenario:"Sign up with email works in WKWebView", priority:"critical",
+    { section:"m1", scenario:"Sign up with email works in WKWebView", priority:"critical",
       howTo:"1. On the welcome screen, tap 'Create account'.\n2. Fill in name, email, password. Submit.\n3. Should redirect to onboarding step 1.\n4. No CSRF token errors or blank page.", status:"pending", notes:"" },
-    { section:"auth", scenario:"Sign in with email works in WKWebView", priority:"critical",
+    { section:"m1", scenario:"Sign in with email works in WKWebView", priority:"critical",
       howTo:"1. Tap 'Sign in' on the welcome screen.\n2. Enter credentials, submit.\n3. Should redirect to /calendar.\n4. Wrong credentials should show inline error (no page reload).", status:"pending", notes:"" },
-    { section:"auth", scenario:"Google OAuth works in WKWebView", priority:"critical",
-      howTo:"1. Tap 'Sign in with Google'.\n2. Complete Google OAuth consent in the WebView.\n3. Must redirect back to the app successfully.\n4. If new user → onboarding. If existing → calendar.\n5. No '400 Bad Request' or CSRF rejection.", status:"pending", notes:"" },
-    { section:"auth", scenario:"Facebook OAuth works in WKWebView", priority:"important",
-      howTo:"1. Tap 'Sign in with Facebook'.\n2. Complete Facebook OAuth in the WebView.\n3. Must redirect back to the app.\n4. Handle both new and existing user flows.", status:"pending", notes:"" },
-    { section:"auth", scenario:"Apple OAuth works in WKWebView", priority:"important",
-      howTo:"1. Tap 'Sign in with Apple'.\n2. Complete Apple OAuth in the WebView.\n3. First auth sends email; repeat auth uses UID lookup.\n4. Must work for both new and returning users.", status:"pending", notes:"" },
-    { section:"auth", scenario:"Turbo Native login form uses local:true (no CSRF issues)", priority:"critical",
+    { section:"m1", scenario:"Google OAuth works in WKWebView (⚠️ SUSPENDED on iOS)", priority:"critical", suspended: true,
+      howTo:"1. Tap 'Sign in with Google'.\n2. Complete Google OAuth consent in the WebView.\n3. Must redirect back to the app successfully.\n4. If new user → onboarding. If existing → calendar.\n5. No '400 Bad Request' or CSRF rejection.", status:"pending", notes:"SOCIAL LOGINS ARE SUSPENDED ON iOS. WKWebView cookie/CSRF issues prevent reliable OAuth in Turbo Native. Test social login on the PWA sheet (testing-sheet.html) instead. Email sign-in is the supported iOS auth path." },
+    { section:"m1", scenario:"Facebook OAuth works in WKWebView (⚠️ SUSPENDED on iOS)", priority:"important", suspended: true,
+      howTo:"1. Tap 'Sign in with Facebook'.\n2. Complete Facebook OAuth in the WebView.\n3. Must redirect back to the app.\n4. Handle both new and existing user flows.", status:"pending", notes:"SOCIAL LOGINS ARE SUSPENDED ON iOS. Use the PWA sheet (testing-sheet.html) to test Facebook OAuth. Email sign-in only on iOS." },
+    { section:"m1", scenario:"Apple OAuth works in WKWebView (⚠️ SUSPENDED on iOS)", priority:"important", suspended: true,
+      howTo:"1. Tap 'Sign in with Apple'.\n2. Complete Apple OAuth in the WebView.\n3. First auth sends email; repeat auth uses UID lookup.\n4. Must work for both new and returning users.", status:"pending", notes:"SOCIAL LOGINS ARE SUSPENDED ON iOS. Apple OAuth is also blocked by pending Apple Developer Account. Email sign-in only on iOS." },
+    { section:"m1", scenario:"Turbo Native login form uses local:true (no CSRF issues)", priority:"critical",
       howTo:"1. On the login screen, verify the form has `local: true`.\n2. Submit the form — must succeed without CSRF errors.\n3. Same check for signup form.\n4. OAuth button_to forms must use `data: { turbo: false }`.", status:"pending", notes:"" },
 
-    { section:"native", scenario:"Calendar opens as main screen after login", priority:"critical",
+    { section:"m2", scenario:"Calendar opens as main screen after login", priority:"critical",
       howTo:"1. Sign in. The app should land on /calendar.\n2. Monthly calendar grid renders with phase colours.\n3. Phase banner shows current phase + cycle day.\n4. Tab bar shows Calendar as active.", status:"pending", notes:"" },
-    { section:"native", scenario:"Pull-to-refresh works on calendar", priority:"important",
+    { section:"m2", scenario:"Pull-to-refresh works on calendar", priority:"important",
       howTo:"1. On /calendar, pull down on the screen.\n2. Custom pull-to-refresh indicator should appear ('Pull down to refresh').\n3. Release to trigger a refresh — page should reload.\n4. Should not conflict with WKWebView's native bounce.", status:"pending", notes:"" },
-    { section:"native", scenario:"Modal paths open as native modals", priority:"critical",
+    { section:"m4", scenario:"Modal paths open as native modals", priority:"critical",
       howTo:"1. Go to /calendar_events/new — should slide up as a modal.\n2. The form should be fully functional inside the modal.\n3. Submit should dismiss the modal and return to previous screen.\n4. Dismiss by swiping down (iOS gesture) or using close button.", status:"pending", notes:"" },
-    { section:"native", scenario:"New/edit forms open as modals (path config)", priority:"important",
+    { section:"m4", scenario:"New/edit forms open as modals (path config)", priority:"important",
       howTo:"1. From appointments, tap an event to edit.\n2. Calendar event edit form should open as a modal.\n3. Settings sub-pages should open as push navigation (not modals).\n4. Verify /configurations/ios_v1.json path rules are applied.", status:"pending", notes:"" },
 
-    { section:"screens", scenario:"Onboarding — all 11 steps work in WKWebView", priority:"critical",
-      howTo:"1. Sign up as new user, complete all 11 onboarding steps.\n2. Step 10 (period date): submit buttons must be inside their forms.\n3. Back/Next navigation must work.\n4. Data must persist between steps.\n5. Finish screen redirects to /calendar.", status:"pending", notes:"" },
-    { section:"screens", scenario:"Daily view renders with phase content", priority:"important",
+    { section:"m1", scenario:"Onboarding — all 11 steps work in WKWebView", priority:"critical",
+      howTo:"Onboarding has 11 steps. Test each one:\n\nStep 1 — Name: Enter your full name, tap Next.\nStep 2 — Birthday: Day/Month/Year picker.\nStep 3 — First day of last period: Date selector (can tap Unsure to skip).\nStep 4 — Last day of last period: Date selector (can tap Unsure to skip).\nStep 5 — Regular cycle?: Yes → step 6 / No → step 6 with irregular flag.\nStep 6 — Cycle length: 20-45 day picker (can skip → defaults to 28).\nStep 7 — Hormonal birth control?: Yes → skips to step 9 / No → step 8.\nStep 8 — Birth control reminder: Yes/No (only shown if step 7 = No).\nStep 9 — Birth control method: Pill/IUD/Ring/Implant/Injection/Patch/Other.\nStep 10 — Cycle stage reminder: CRITICAL — submit buttons MUST be inside their form elements (iOS WKWebView blocks form.submit() from external buttons).\nStep 11 — Food preferences: Vegetarian/Vegan/Pescetarian/None.\n\nExpectations per step:\n• No blank screens or JavaScript errors\n• Back preserves previously entered data\n• Next advances to correct next step (including forks at steps 5, 7, 8)\n• Step 10 is especially critical for iOS — test thoroughly", status:"pending", notes:"" },
+    { section:"m2", scenario:"Daily view renders with phase content", priority:"important",
       howTo:"1. From calendar, tap any day to go to /daily/:date.\n2. Should show: phase info, symptom summary, superpower text, nutrition/sport tips.\n3. Calendar events for that day should be listed.\n4. Pull-to-refresh should work on this page.", status:"pending", notes:"" },
-    { section:"screens", scenario:"Self Analysis (tracking) dashboard loads", priority:"important",
+    { section:"m3", scenario:"Self Analysis (tracking) dashboard loads", priority:"important",
       howTo:"1. Tap Tracking tab.\n2. Should show: avatar, current phase, cycle strip.\n3. Daily analysis card + navigation cards should be visible.\n4. Weekly feedback banner should show if user is in an active week.", status:"pending", notes:"" },
-    { section:"screens", scenario:"Settings pages work correctly", priority:"important",
+    { section:"m5", scenario:"Settings pages work correctly", priority:"important",
       howTo:"1. Tap Settings tab.\n2. Navigate to: Profile, Calendar, Notifications, Subscriptions, Consent.\n3. Each sub-page should load and save changes correctly.\n4. Logout button at bottom of Settings works.\n5. Toggle switches should respond to touch.", status:"pending", notes:"" },
-    { section:"screens", scenario:"Weekly appointment view loads", priority:"nice",
+    { section:"m2", scenario:"Weekly appointment view loads", priority:"nice",
       howTo:"1. From the top bar dropdown, select 'Weekly View'.\n2. Horizontal week strip should render with phase colours.\n3. Swipe to navigate between weeks.", status:"pending", notes:"" },
 
-    { section:"forms", scenario:"Symptom logging — all pickers work with touch", priority:"critical",
+    { section:"m3", scenario:"Symptom logging — all pickers work with touch", priority:"critical",
       howTo:"1. Go to /symptoms.\n2. Date drum: tap to expand, scroll to pick date.\n3. Mood icons: tap to toggle (opacity + grayscale change).\n4. Physical/mental sliders: drag to adjust level.\n5. Vertical pickers (sleep/temp/weight): scroll to select.\n6. All auto-save — no submit button needed for individual changes.", status:"pending", notes:"" },
-    { section:"forms", scenario:"Submit review modal opens and works", priority:"important",
+    { section:"m3", scenario:"Submit review modal opens and works", priority:"important",
       howTo:"1. On /symptoms, fill in some symptoms, tap Submit.\n2. Review modal should summarize all entries.\n3. Tap 'Submit tracking' — navigates to /tracking.\n4. Tap 'Go back to change' — returns to symptoms form.\n5. Modal should have working backdrop tap to dismiss.", status:"pending", notes:"" },
-    { section:"forms", scenario:"Calendar event — category picker modal works", priority:"important",
+    { section:"m4", scenario:"Calendar event — category picker modal works", priority:"important",
       howTo:"1. Go to /calendar_events/new.\n2. Tap the + button to open the icon picker modal.\n3. 9 category icons should appear (Friends, Dinner, Date, Sports, Medical, Birthday, Work, Coffee, Shopping).\n4. Tap a category — selected icon highlights in brand colour.\n5. Tap 'Add Icon' to confirm — modal closes.\n6. Set appointment button submits the form.", status:"pending", notes:"" },
-    { section:"forms", scenario:"Superpowers — sliders respond to touch", priority:"important",
+    { section:"m6", scenario:"Superpowers — sliders respond to touch", priority:"important",
       howTo:"1. Go to /superpowers.\n2. 20 sliders (low/med/high) should be present.\n3. Drag each slider — should set value smoothly.\n4. No jump or lag on touch drag.", status:"pending", notes:"" },
-    { section:"forms", scenario:"Feedback modals open and submit correctly", priority:"important",
+    { section:"m7", scenario:"Feedback modals open and submit correctly", priority:"important",
       howTo:"1. From the app, open the feedback modal.\n2. Type a message, submit.\n3. Open support/bug modal — select type, submit.\n4. Open weekly feedback modal (if active week).\n5. All modals should have correct iOS-safe-area bottom padding.\n6. All modals should dismiss correctly.", status:"pending", notes:"" },
-    { section:"forms", scenario:"No 16px zoom on input focus", priority:"important",
+    { section:"native", scenario:"No 16px zoom on input focus", priority:"important",
       howTo:"1. Tap any text input or textarea.\n2. The page must NOT zoom in.\n3. Input font-size must be at least 16px to prevent iOS zoom.", status:"pending", notes:"" },
 
     { section:"push", scenario:"Push notification permission prompt appears", priority:"important",
@@ -478,6 +542,12 @@
       howTo:"1. Go to Settings, set up a PIN code.\n2. Send app to background, wait 5+ minutes.\n3. Bring app back — PIN unlock screen should appear.\n4. Enter correct PIN — app unlocks.\n5. If Face ID / Touch ID is set up, the biometric prompt should appear.\n6. Wrong PIN should show error and not unlock.", status:"pending", notes:"" },
     { section:"push", scenario:"Native auth token regenerates on login", priority:"nice",
       howTo:"1. Sign in. Note the auth token (via debug log).\n2. Sign out, then sign in again.\n3. A new token should be generated.\n4. Old token should no longer work for API auth.", status:"pending", notes:"" },
+    { section:"native", scenario:"Meta tag — apple-mobile-web-app-capable is present", priority:"critical",
+      howTo:"1. Open the app in iOS Safari (not Turbo Native).\n2. Add to Home Screen.\n3. Open from Home Screen — app should launch in standalone/fullscreen mode.\n4. View page source — verify the meta tag exists in all three layouts:\n   - application.html.erb\n   - turbo_native.html.erb\n   - launch.html.erb\n5. Without this tag, iOS won't enter standalone mode.", status:"pending", notes:"" },
+    { section:"native", scenario:"Meta tag — apple-mobile-web-app-status-bar-style present", priority:"important",
+      howTo:"1. Verify the status bar meta tag is black-translucent.\n2. In standalone mode, the status bar should blend with the app's header.\n3. Check that turbo_native.html.erb AND launch.html.erb have this tag (was previously missing from both).", status:"pending", notes:"" },
+    { section:"push", scenario:"Production config — HTTPS + HSTS enforced", priority:"critical",
+      howTo:"1. The app connects to https://seasonv2.onrender.com.\n2. Verify the connection is HTTPS (padlock icon in browser).\n3. curl -I https://seasonv2.onrender.com should return Strict-Transport-Security header.\n4. config.force_ssl = true is now uncommented in production.rb (fixed 2026-06-02).\n5. config.hosts now protects against DNS rebinding (also uncommented 2026-06-02).", status:"pending", notes:"" },
   ];
 
   let results = [];
@@ -512,12 +582,31 @@
     if (savedSection !== null) currentSectionIndex = parseInt(savedSection, 10) || 0;
     const savedTesterName = localStorage.getItem("season-ios-tester-name");
     if (savedTesterName) document.getElementById("tester-name").value = savedTesterName;
+    const savedDevice = localStorage.getItem("season-ios-test-device");
+    if (savedDevice) { document.getElementById("test-device").value = savedDevice; updateDeviceSpecifics(); }
     renderAll();
   }
 
   function onTesterNameChange() {
     const name = document.getElementById("tester-name").value.trim();
     if (name) localStorage.setItem("season-ios-tester-name", name);
+  }
+
+  function onDeviceChange() {
+    const device = document.getElementById("test-device").value;
+    if (device) {
+      localStorage.setItem("season-ios-test-device", device);
+      updateDeviceSpecifics();
+    }
+  }
+
+  function getSelectedDevice() {
+    return document.getElementById("test-device").value || localStorage.getItem("season-ios-test-device") || "";
+  }
+
+  function updateDeviceSpecifics() {
+    const device = getSelectedDevice();
+    document.querySelectorAll(".device-note").forEach(el => el.remove());
   }
 
   function persist() {
@@ -560,9 +649,10 @@
   function exportToCSV() {
     const name = document.getElementById("tester-name").value.trim();
     if (!name) { alert("Enter your name first."); return; }
-    let csv = "Tester,Section,Scenario,Priority,Status,Notes\n";
+    const device = getSelectedDevice();
+    let csv = "Tester,Device,Section,Scenario,Priority,Status,Notes\n";
     results.forEach(r => {
-      csv += `"${name}","${r.section}","${r.scenario}","${r.priority}","${r.status}","${r.notes.replace(/"/g,'""')}"\n`;
+      csv += `"${name}","${device}","${r.section}","${r.scenario}","${r.priority}","${r.status}","${r.notes.replace(/"/g,'""')}"\n`;
     });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(new Blob([csv], { type:"text/csv" }));
@@ -584,7 +674,7 @@
       const resp = await fetch("https://seasonv2.onrender.com/test_results/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tester_name: name, platform: "ios", failures: failures })
+        body: JSON.stringify({ tester_name: name, platform: "ios", device: getSelectedDevice(), failures: failures })
       });
       const data = await resp.json();
       if (resp.ok) {
@@ -651,6 +741,18 @@
     document.getElementById("pill-pass").textContent = `${pass} passed`;
     document.getElementById("pill-fail").textContent = `${fail} failed`;
     document.getElementById("pill-pending").textContent = `${pending} pending`;
+    const suspended = results.filter(r => r.suspended).length;
+    let suspendedEl = document.getElementById("pill-suspended");
+    if (!suspendedEl) {
+      suspendedEl = document.createElement("span");
+      suspendedEl.id = "pill-suspended";
+      suspendedEl.className = "pill pill-fail";
+      suspendedEl.style.background = "#fef2f2";
+      suspendedEl.style.color = "#991b1b";
+      document.querySelector(".progress-pills").appendChild(suspendedEl);
+    }
+    suspendedEl.textContent = `${suspended} suspended`;
+    suspendedEl.style.display = suspended > 0 ? "" : "none";
   }
 
   function renderTable() {
@@ -663,12 +765,12 @@
       const escaped = r.notes.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
       let rows = `<tr class="data-row" onclick="toggleExpand(${i}, event)">
         <td style="white-space:nowrap;">${priorityDot(r.priority)}<span class="priority-label">${r.priority}</span></td>
-        <td class="scenario-cell"><span class="scenario-text">${r.scenario}</span><span class="expand-hint">click row for how-to steps</span></td>
-        <td><select class="status-select status-${r.status}" onchange="setStatus(${i}, this.value)">
+        <td class="scenario-cell"><span class="scenario-text" style="${r.suspended ? 'color:#991b1b;font-style:italic;' : ''}">${r.scenario}</span>${r.suspended ? '<span style="display:block;color:#991b1b;font-size:1.2rem;font-weight:700;margin-top:4px;">⚠️ SUSPENDED ON iOS — test on PWA</span>' : '<span class="expand-hint">click row for how-to steps</span>'}</td>
+        <td>${r.suspended ? `<span style="display:inline-block;padding:6px 10px;border-radius:7px;font-size:1.3rem;font-weight:700;background:#fee2e2;color:#991b1b;border:1px solid #fca5a5;">SUSPENDED</span>` : `<select class="status-select status-${r.status}" onchange="setStatus(${i}, this.value)">
           <option value="pending" ${r.status==="pending"?"selected":""}>Pending</option>
           <option value="pass"    ${r.status==="pass"   ?"selected":""}>Pass</option>
           <option value="fail"    ${r.status==="fail"   ?"selected":""}>Fail</option>
-        </select></td>
+        </select>`}</td>
         <td><textarea class="notes-input" rows="2" placeholder="Add notes or feedback..." oninput="setNotes(${i}, this.value)" onclick="event.stopPropagation();">${escaped}</textarea></td>
       </tr>`;
       if (expandedRow === i) {
