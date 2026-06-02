@@ -492,7 +492,7 @@
     { section:"m1", scenario:"Site loads on Render (HTTPS, no errors)", priority:"critical",
       howTo:"1. Open https://seasonv2.onrender.com in Chrome or Safari.\n2. The welcome/splash page should load within 5 seconds.\n3. No 502, 503, or SSL certificate errors.\n4. Refresh the page — should load consistently.", status:"pending", notes:"" },
     { section:"m1", scenario:"Sign up with email works", priority:"critical",
-      howTo:"1. Go to /welcome, click 'Create account'.\n2. Fill in name, email (use a test email), password.\n3. Submit. Should redirect to onboarding step 1.\n4. Verify no 500 error or blank page.", status:"pending", notes:"" },
+      howTo:"1. Go to /welcome on your test device.\n2. Tap 'Create account' to reach the sign-up form.\n3. Fill in:\n   • Name: Use a test name (e.g. 'Test Tester')\n   • Email: Use a real test email you can access\n   • Password: At least 8 characters\n4. Tap Submit. Should redirect to onboarding step 1.\n5. Verify no 500 error, blank page, or CSRF rejection.\n6. Try duplicate email — should show inline error (no page reload).", status:"pending", notes:"" },
     { section:"m1", scenario:"Sign in with email works", priority:"critical",
       howTo:"1. Go to /session/new.\n2. Enter an existing email and password.\n3. Submit. Should redirect to /calendar.\n4. If credentials wrong, inline error should appear — no page reload.", status:"pending", notes:"" },
     { section:"m1", scenario:"Google OAuth sign in works", priority:"important",
@@ -519,7 +519,7 @@
     { section:"m1", scenario:"Finish screen shows animation + redirects to calendar", priority:"critical",
       howTo:"1. Complete all 11 steps.\n2. Finish screen should show animated confirmation.\n3. Click 'Start my Journey' — redirects to /calendar.\n4. Calendar should show populated with entered cycle data.", status:"pending", notes:"" },
     { section:"m1", scenario:"Food preference saves correctly", priority:"nice",
-      howTo:"1. On step 11, select a food preference (vegetarian/vegan/pescetarian).\n2. Complete onboarding.\n3. Later check that nutrition tips on daily view match this preference.", status:"pending", notes:"" },
+      howTo:"1. Complete onboarding through all 11 steps.\n2. On step 11 (Food preferences), select one:\n   • Vegetarian\n   • Vegan\n   • Pescetarian\n   • None (no preference)\n3. Finish onboarding — redirect to /calendar.\n4. Go to /daily/TODAY — check nutrition tips.\n5. Tips should match the food preference you selected.\n6. Go to Settings → Profile — food preference should show correct value.", status:"pending", notes:"" },
 
     { section:"m2", scenario:"Monthly calendar loads with phase colours", priority:"critical",
       howTo:"1. Sign in and go to /calendar.\n2. The calendar grid should show day cells coloured by cycle phase.\n3. Phase legend should show (Menstrual, Follicular, Ovulation, Luteal) with colour dots.\n4. Legend auto-hides after 50 seconds.", status:"pending", notes:"" },
