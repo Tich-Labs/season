@@ -435,7 +435,7 @@
         <div class="section-chip"><span class="chip-num">M3</span> Tracking — Period entry, symptoms (moods/physical/mental), superpowers</div>
         <div class="section-chip"><span class="chip-num">M4</span> Appointments — Calendar events, category picker modal, create/edit/delete</div>
         <div class="section-chip"><span class="chip-num">M5</span> Reminders &amp; Consent — Informations, profile, notifications, birth control, GDPR consent</div>
-        <div class="section-chip"><span class="chip-num">M6</span> Streaks — Streak counter, milestones, gamification</div>
+        <div class="section-chip"><span class="chip-num">M6</span> Streaks — Streak counter, milestones, gamification 🚧 NOT BUILT</div>
         <div class="section-chip"><span class="chip-num">M7</span> Feedback — General feedback, support/bug, weekly 8-week survey, nudges</div>
         <div class="section-chip"><span class="chip-num">A</span> Admin — Users, content CMS, inbox, CSV exports, production config checks</div>
         <div class="section-chip"><span class="chip-num">P</span> PWA / iOS Native — Service worker, offline, install, push, touch targets</div>
@@ -544,11 +544,11 @@
       howTo:"1. Go to /symptoms.\n2. Date drum picker should be expandable.\n3. Tap mood icons — they should toggle with opacity/grayscale change.\n4. Physical symptoms: tap a symptom, adjust level slider.\n5. Auto-save should trigger on each change (no submit button needed).", status:"pending", notes:"" },
     { section:"m3", scenario:"Symptom logging — all fields present", priority:"important",
       howTo:"1. On /symptoms, verify all sections:\n   - Mood grid\n   - Physical symptoms with level sliders\n   - Mental symptoms with level sliders\n   - Bleeding dropdown\n   - Intercourse grid\n   - Cravings grid\n   - Discharge grid\n   - Sleep vertical picker (1-12h)\n   - Temperature vertical picker (35.0-42.0C)\n   - Weight vertical picker (30.0-200.0 kg)\n   - Notes textarea\n2. Submit opens review modal.", status:"pending", notes:"" },
-    { section:"m6", scenario:"Submit review modal works", priority:"important",
+    { section:"m6", scenario:"Submit review modal works", priority:"important", not_built: true,
       howTo:"1. On /symptoms, click Submit.\n2. Review modal shows: mood count/names, physical/mental symptoms with levels, other counts.\n3. 'Submit tracking' navigates to /tracking.\n4. 'Go back to change' closes modal and returns to form.", status:"pending", notes:"" },
     { section:"m3", scenario:"Superpowers page works", priority:"important",
       howTo:"1. Go to /superpowers.\n2. Date drum should be present.\n3. Phase label should show current phase.\n4. 20 sliders (low/med/high) should be present.\n5. Submit button should save and confirm.", status:"pending", notes:"" },
-    { section:"m6", scenario:"Streaks counter shows correctly", priority:"nice",
+    { section:"m6", scenario:"Streaks counter shows correctly", priority:"nice", not_built: true,
       howTo:"1. Go to /streaks.\n2. Current streak, best streak, and milestones should show.\n3. Log something daily then check streak increments next day.", status:"pending", notes:"" },
 
     { section:"m5", scenario:"Informations main page loads", priority:"important",
@@ -837,6 +837,18 @@
     document.getElementById("pill-pass").textContent = `${pass} passed`;
     document.getElementById("pill-fail").textContent = `${fail} failed`;
     document.getElementById("pill-pending").textContent = `${pending} pending`;
+    const notBuilt = results.filter(r => r.not_built).length;
+    let nbEl = document.getElementById("pill-notbuilt");
+    if (!nbEl) {
+      nbEl = document.createElement("span");
+      nbEl.id = "pill-notbuilt";
+      nbEl.className = "pill";
+      nbEl.style.background = "#f1f5f9";
+      nbEl.style.color = "#64748b";
+      document.querySelector(".progress-pills").appendChild(nbEl);
+    }
+    nbEl.textContent = `${notBuilt} not built`;
+    nbEl.style.display = notBuilt > 0 ? "" : "none";
   }
 
   function renderTable() {
@@ -848,18 +860,18 @@
       const howToLines = r.howTo.split("\n").map(l => `<li>${l.replace(/^\d+\.\s*/, "")}</li>`).join("");
       const escaped = r.notes.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
       let rows = `
-        <tr class="data-row" onclick="toggleExpand(${i}, event)">
+        <tr class="data-row" onclick="toggleExpand(${i}, event)" style="${r.not_built ? 'opacity:0.45;filter:grayscale(0.8);' : ''}">
           <td style="white-space:nowrap;">${priorityDot(r.priority)}<span class="priority-label">${r.priority}</span></td>
           <td class="scenario-cell">
-            <span class="scenario-text">${r.scenario}</span>
-            <span class="expand-hint">click row for how-to steps</span>
+            <span class="scenario-text" style="${r.not_built ? 'color:#9ca3af;font-style:italic;' : ''}">${r.scenario}</span>
+            ${r.not_built ? '<span style="display:block;color:#9ca3af;font-size:1.2rem;font-weight:700;margin-top:4px;">🚧 NOT BUILT — M6 not yet implemented</span>' : '<span class="expand-hint">click row for how-to steps</span>'}
           </td>
           <td>
-            <select class="status-select status-${r.status}" onchange="setStatus(${i}, this.value)">
+            ${r.not_built ? '<span style="display:inline-block;padding:6px 10px;border-radius:7px;font-size:1.3rem;font-weight:700;background:#f1f5f9;color:#64748b;border:1px solid #d1d5db;">NOT BUILT</span>' : `<select class="status-select status-${r.status}" onchange="setStatus(${i}, this.value)">
               <option value="pending" ${r.status==="pending"?"selected":""}>Pending</option>
               <option value="pass"    ${r.status==="pass"   ?"selected":""}>Pass</option>
               <option value="fail"    ${r.status==="fail"   ?"selected":""}>Fail</option>
-            </select>
+            </select>`}
           </td>
           <td>
             <textarea class="notes-input" rows="2" placeholder="Add notes or feedback..."
