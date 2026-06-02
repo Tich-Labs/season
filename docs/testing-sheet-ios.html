@@ -251,6 +251,7 @@
       </div>
       <button class="btn btn-primary" onclick="saveNow()">Save</button>
       <button class="btn btn-ghost"   onclick="exportToCSV()">Export CSV</button>
+      <button class="btn btn-accent"  onclick="sendToTrello()">Send Failed to Trello</button>
       <button class="btn btn-danger"  onclick="clearSaved()">Reset</button>
     </div>
   </div>
@@ -567,6 +568,37 @@
     a.href = URL.createObjectURL(new Blob([csv], { type:"text/csv" }));
     a.download = `season-ios-testing-${name.replace(/\s+/g,"-")}-${new Date().toISOString().slice(0,10)}.csv`;
     a.click();
+  }
+
+  async function sendToTrello() {
+    const name = document.getElementById("tester-name").value.trim();
+    if (!name) { alert("Enter your name first."); return; }
+    const failures = results.filter(r => r.status === "fail");
+    if (failures.length === 0) { alert("No failed tests to send. Mark some tests as 'Fail' first."); return; }
+    if (!confirm(`Send ${failures.length} failed test${failures.length > 1 ? "s" : ""} to Trello? Each will create a card on the board.`)) return;
+
+    document.getElementById("save-dot").className = "save-dot saving";
+    document.getElementById("save-text").textContent = `Sending ${failures.length} failure${failures.length > 1 ? "s" : ""} to Trello…`;
+
+    try {
+      const resp = await fetch("https://seasonv2.onrender.com/test_results/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ tester_name: name, platform: "ios", failures: failures })
+      });
+      const data = await resp.json();
+      if (resp.ok) {
+        document.getElementById("save-dot").className = "save-dot saved";
+        document.getElementById("save-text").textContent = `Sent ${data.sent} failure${data.sent !== 1 ? "s" : ""} to Trello! ${new Date().toLocaleTimeString([], {hour:"2-digit", minute:"2-digit"})}`;
+      } else {
+        throw new Error(data.error || "Unknown error");
+      }
+    } catch (err) {
+      document.getElementById("save-dot").className = "save-dot error";
+      document.getElementById("save-text").textContent = "Failed to send. The server may be offline.";
+      console.warn("Trello submit error:", err);
+    }
+    setTimeout(() => { document.getElementById("save-dot").className = "save-dot"; }, 4000);
   }
 
   function goToSection(i) { currentSectionIndex = i; expandedRow = null; renderAll(); window.scrollTo({ top: 0, behavior: "smooth" }); localStorage.setItem("season-ios-current-section", String(i)); }

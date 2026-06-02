@@ -37,4 +37,29 @@ class TrelloMailer < ApplicationMailer
       subject: "#{@emoji} #{@type_label} — #{@user.email}: #{feedback.message.truncate(55)}"
     )
   end
+
+  def test_failure(data)
+    @tester_name = data[:tester_name]
+    @platform = data[:platform]
+    @scenario = data[:scenario]
+    @section = data[:section]
+    @priority = data[:priority]
+    @notes = data[:notes] || ""
+
+    to_address = ENV["TRELLO_EMAIL"]
+    return if to_address.blank?
+
+    priority_label = if @priority == "critical"
+      "[Critical]"
+    else
+      (@priority == "important") ? "[Important]" : "[Nice-to-have]"
+    end
+    platform_label = (@platform == "ios") ? "iOS" : "PWA"
+
+    mail(
+      to: to_address,
+      from: "Season Testing <#{ENV.fetch("RESEND_FROM_EMAIL", "info@season.vision")}>",
+      subject: "❌ #{priority_label} FAILED TEST [#{platform_label}] #{@section} — #{@scenario.truncate(60)}"
+    )
+  end
 end

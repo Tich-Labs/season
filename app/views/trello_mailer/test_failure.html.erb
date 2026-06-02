@@ -1,0 +1,19 @@
+<h2>❌ FAILED TEST — <%= @priority.upcase %> — <%= @section %></h2>
+
+<table>
+  <tr><td><strong>Tester:</strong></td><td><%= @tester_name %></td></tr>
+  <tr><td><strong>Platform:</strong></td><td><%= @platform == "ios" ? "iOS Turbo Native" : "PWA (Browser)" %></td></tr>
+  <tr><td><strong>Priority:</strong></td><td><%= @priority.capitalize %></td></tr>
+  <tr><td><strong>Section:</strong></td><td><%= @section %></td></tr>
+</table>
+
+<hr>
+
+<h3>Scenario</h3>
+<p><%= simple_format @scenario %></p>
+
+<h3>Notes</h3>
+<p><%= simple_format @notes.presence || "(no notes provided)" %></p>
+
+<hr>
+<p><small>From: <a href="https://tich-labs.github.io/season/testing-sheet<%= @platform == "ios" ? "-ios" : "" %>.html">Testing Sheet</a></small></p>

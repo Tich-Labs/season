@@ -197,6 +197,8 @@ Rails.application.routes.draw do
     root to: "users#index"
   end
 
+  post "test_results/submit", to: "test_results#submit"
+
   get "forecast", to: "forecast#index", as: :forecast
 
   get "up" => "rails/health#show", :as => :rails_health_check

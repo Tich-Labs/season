@@ -1,0 +1,22 @@
+❌ FAILED TEST | <%= @priority.upcase %> | <%= @platform.upcase %> | <%= @section %>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Tester:    <%= @tester_name %>
+Platform:  <%= @platform == "ios" ? "iOS Turbo Native" : "PWA (Browser)" %>
+Priority:  <%= @priority.capitalize %>
+Section:   <%= @section %>
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SCENARIO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+<%= @scenario %>
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+NOTES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+<%= @notes.presence || "(no notes provided)" %>
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Testing sheet: https://tich-labs.github.io/season/testing-sheet<%= @platform == "ios" ? "-ios" : "" %>.html
