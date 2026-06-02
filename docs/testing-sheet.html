@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Season — Testing Sheet</title>
+  <title>Season — PWA Testing Sheet</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html { font-size: 62.5%; }
@@ -231,7 +231,7 @@
 <body>
 
 <div class="top-bar">
-  <div class="top-bar-title">Season <span>Testing Sheet</span></div>
+  <div class="top-bar-title">Season <span>PWA Testing Sheet</span></div>
   <div class="top-bar-links">
     <a href="https://seasonv2.onrender.com" target="_blank" rel="noopener noreferrer" class="top-link accent">Open Live App</a>
     <a href="https://seasonv2.onrender.com/admin" target="_blank" rel="noopener noreferrer" class="top-link">Admin Panel</a>
@@ -241,7 +241,7 @@
 <div class="hero">
   <div class="hero-row">
     <div class="hero-left">
-      <h1>Functional Testing Checklist</h1>
+      <h1>PWA Functional Testing Checklist</h1>
       <p>Click any row to expand step-by-step instructions · Results auto-save to your browser · <strong>Prod URL:</strong> seasonv2.onrender.com</p>
     </div>
     <div class="hero-right" style="display:flex; align-items:flex-end; gap:10px; flex-wrap:wrap;">
@@ -294,23 +294,27 @@
       <div class="ov-title">Season V2 — Women's Cycle Tracking PWA</div>
       <div class="ov-text">
         A Rails 8.1 progressive web app for cycle tracking. Users log moods, symptoms,
-        superpowers, and period data. The app serves both a PWA (mobile web) and an
-        iOS Turbo Native wrapper. Admin panel at /admin manages users, content, and inbox.
+        superpowers, and period data. The app runs as a PWA in mobile browsers (Safari, Chrome).
+        Admin panel at /admin manages users, content, and inbox.
         <br><br>
         <a href="https://seasonv2.onrender.com" target="_blank" rel="noopener noreferrer">Open the live app</a>
+        &nbsp;·&nbsp;
+        <a href="testing-sheet-ios.html" target="_blank" rel="noopener noreferrer">iOS Testing Sheet</a>
       </div>
     </div>
 
     <div class="ov-block">
       <div class="ov-label">Testing environment</div>
-      <div class="ov-title">Production on Render</div>
+      <div class="ov-title">Production on Render — PWA in Browser</div>
       <div class="ov-text">
         Testing against <strong>live production</strong> at seasonv2.onrender.com.
+        Test on <strong>mobile Safari and Chrome</strong>.
         Use real but clearly fake data (e.g. "Test Tester" as name).
         Admin access requires an existing admin account (naijeria@gmail).
         <br><br>
-        <strong>Staging URL:</strong> https://seasonv2.onrender.com<br>
-        <strong>Admin:</strong> https://seasonv2.onrender.com/admin
+        <strong>PWA:</strong> https://seasonv2.onrender.com<br>
+        <strong>Admin:</strong> https://seasonv2.onrender.com/admin<br>
+        <strong>iOS Sheet:</strong> <a href="testing-sheet-ios.html">Separate iOS testing sheet</a>
       </div>
     </div>
 
@@ -348,16 +352,15 @@
 
     <div class="ov-block">
       <div class="ov-label">Sections covered</div>
-      <div class="ov-title">8 sections · 54 test cases</div>
+      <div class="ov-title">7 sections · 56 test cases</div>
       <div class="sections-list">
-        <div class="section-chip"><span class="chip-num">1</span> Setup &amp; Auth — Load, sign up, sign in, social login, password recovery</div>
+        <div class="section-chip"><span class="chip-num">1</span> Setup &amp; Auth — Load, sign up, sign in, social login, password recovery, PWA install</div>
         <div class="section-chip"><span class="chip-num">2</span> Onboarding — 11-step flow, data persistence</div>
         <div class="section-chip"><span class="chip-num">3</span> Calendar — Monthly, weekly, daily view, appointments, events</div>
         <div class="section-chip"><span class="chip-num">4</span> Tracking — Period entry, symptoms, superpowers, streaks</div>
         <div class="section-chip"><span class="chip-num">5</span> Learn &amp; Settings — Informations, profile, notifications, consent</div>
         <div class="section-chip"><span class="chip-num">6</span> Feedback &amp; Support — Modals, weekly survey, submissions</div>
-        <div class="section-chip"><span class="chip-num">7</span> iOS Turbo Native — Wrapper, nav, auth, push</div>
-        <div class="section-chip"><span class="chip-num">8</span> Admin — Users, content, inbox, CSV exports, help</div>
+        <div class="section-chip"><span class="chip-num">7</span> Admin — Users, content, inbox, CSV exports, help</div>
       </div>
     </div>
 
@@ -402,7 +405,6 @@
     { id: "tracking",   label: "Tracking" },
     { id: "learn",      label: "Learn & Settings" },
     { id: "feedback",   label: "Feedback" },
-    { id: "ios",        label: "iOS" },
     { id: "admin",      label: "Admin" },
   ];
 
@@ -491,14 +493,18 @@
     { section:"feedback", scenario:"Weekly feedback nudge banner appears on tracking", priority:"nice",
       howTo:"1. Go to /tracking.\n2. If user is in an active feedback week, green banner should appear.\n3. Banner should show week label and link to open the weekly feedback modal.\n4. After submitting, banner should not appear for that week.", status:"pending", notes:"" },
 
-    { section:"ios", scenario:"iOS Turbo Native app loads", priority:"important",
-      howTo:"1. Build and run from ios/SeasonApp/ in Xcode.\n2. App should load the base URL and show the web content.\n3. Native tab bar (Calendar, Tracking, Settings) should appear.\n4. Path configuration should be loaded from /configurations/ios_v1.json.", status:"pending", notes:"" },
-    { section:"ios", scenario:"Native top bar dropdown menu works", priority:"important",
-      howTo:"1. In the iOS app, tap the 3-dot icon in the top bar.\n2. Dropdown should show: Schedule Overview, Day View, Weekly View, Monthly View, Settings, Log out.\n3. Each item should navigate correctly.\n4. Log out should delete the session.", status:"pending", notes:"" },
-    { section:"ios", scenario:"OAuth works in iOS WebView", priority:"critical",
-      howTo:"1. In the iOS app, sign up/sign in with Google.\n2. Complete OAuth flow within the WebView.\n3. Session cookie should persist (no silent redirect blocking).\n4. `local: true` forms should work without CSRF issues.", status:"pending", notes:"" },
-    { section:"ios", scenario:"Turbo View modal paths work", priority:"important",
-      howTo:"1. Navigate to calendar_events/new — should open as a modal.\n2. Dismiss the modal — should return to the previous screen.\n3. Pull-to-refresh should work on list pages (calendar, daily).", status:"pending", notes:"" },
+    { section:"feedback", scenario:"PWA — service worker registers and caches assets", priority:"important",
+      howTo:"1. Open DevTools > Application > Service Workers.\n2. SW should be registered and active.\n3. Cache Storage should contain app assets (CSS, JS, images).\n4. Reload the page — SW should intercept requests from cache.", status:"pending", notes:"" },
+    { section:"feedback", scenario:"PWA — offline page works", priority:"important",
+      howTo:"1. Turn off network (airplane mode).\n2. Navigate to any page.\n3. Should show branded offline page with retry button.\n4. Turn network back on — click retry to reload the app.", status:"pending", notes:"" },
+    { section:"feedback", scenario:"PWA — Add to Home Screen flow works", priority:"important",
+      howTo:"1. Open on mobile Safari (iOS) or Chrome (Android).\n2. 'Add to Home Screen' prompt should appear (install banner).\n3. Install the PWA — it should add to the home screen.\n4. Open from home screen — should launch standalone (no browser chrome).\n5. App icon and title should match manifest.", status:"pending", notes:"" },
+    { section:"feedback", scenario:"PWA — responsive layout (430px container)", priority:"important",
+      howTo:"1. Test on phone (375-430px wide).\n2. Test on tablet (768px wide).\n3. Test on desktop (1024px+ wide).\n4. Container should be max-w-app (430px) centered on all sizes.\n5. No horizontal overflow or cut-off content.", status:"pending", notes:"" },
+    { section:"feedback", scenario:"PWA — touch targets are 44x44px minimum", priority:"important",
+      howTo:"1. Inspect buttons, links, toggles on mobile.\n2. All interactive elements should have minimum 44x44px touch area (or use p-2 on small icons).\n3. No accidental tap on adjacent elements.", status:"pending", notes:"" },
+    { section:"feedback", scenario:"PWA — push notifications subscribe/unsubscribe", priority:"important",
+      howTo:"1. Go to Settings > Notifications.\n2. Toggle push notifications on — browser permission prompt should appear.\n3. Allow — subscription should be created.\n4. Toggle off — subscription should be removed.\n5. Check DevTools > Application > Push Messaging.", status:"pending", notes:"" },
 
     { section:"admin", scenario:"Admin login works", priority:"critical",
       howTo:"1. Go to /admin/login.\n2. Enter admin email (naijeria@gmail) and password.\n3. Should redirect to /admin (users list).\n4. Non-admin users should be rejected.", status:"pending", notes:"" },

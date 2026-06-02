@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Season — iOS Testing Sheet</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 62.5%; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f5efe0; color: #1a1a1a;
+      min-height: 100vh; font-size: 1.6rem;
+    }
+
+    .top-bar {
+      background: #933a35; color: #fff;
+      padding: 12px 24px; display: flex; align-items: center;
+      gap: 16px; flex-wrap: wrap;
+    }
+    .top-bar-title { font-weight: 800; font-size: 1.6rem; letter-spacing: -0.02em; flex: 1; min-width: 200px; }
+    .top-bar-title span { color: #EDE1D5; }
+    .top-bar-links { display: flex; gap: 8px; flex-wrap: wrap; }
+    .top-link {
+      font-size: 1.3rem; font-weight: 600; padding: 5px 12px;
+      border-radius: 5px; text-decoration: none; border: 1px solid rgba(255,255,255,0.25);
+      color: #fff; transition: background 0.15s;
+    }
+    .top-link:hover { background: rgba(255,255,255,0.12); }
+    .top-link.accent { background: #EDE1D5; color: #933a35; border-color: #EDE1D5; }
+    .top-link.accent:hover { background: #d4c8b8; }
+
+    .hero {
+      background: #fff; border-bottom: 1px solid #e5e7eb;
+      padding: 20px 24px 16px;
+    }
+    .hero-row { display: flex; align-items: flex-start; gap: 20px; flex-wrap: wrap; margin-bottom: 16px; }
+    .hero-left { flex: 1; min-width: 220px; }
+    .hero-left h1 { font-size: 2.2rem; font-weight: 800; color: #933a35; letter-spacing: -0.03em; }
+    .hero-left p { font-size: 1.4rem; color: #6b7280; margin-top: 4px; }
+    .hero-right { display: flex; align-items: flex-end; gap: 10px; flex-wrap: wrap; }
+
+    .tester-input-wrap label { font-size: 1.2rem; font-weight: 700; color: #374151; text-transform: uppercase; letter-spacing: 0.06em; display: block; margin-bottom: 4px; }
+    .tester-input-wrap input {
+      padding: 8px 14px; border: 1.5px solid #d1d5db; border-radius: 7px;
+      font-size: 1.5rem; width: 240px; background: #f9fafb;
+    }
+    .tester-input-wrap input:focus { outline: none; border-color: #933a35; }
+
+    .btn {
+      padding: 8px 16px; border-radius: 7px; font-size: 1.4rem;
+      font-weight: 700; cursor: pointer; border: none; transition: all 0.15s; white-space: nowrap;
+    }
+    .btn-primary { background: #933a35; color: #fff; }
+    .btn-primary:hover { background: #7a2f2a; }
+    .btn-accent { background: #EDE1D5; color: #933a35; }
+    .btn-accent:hover { background: #d4c8b8; }
+    .btn-ghost { background: #fff; color: #374151; border: 1.5px solid #d1d5db; }
+    .btn-ghost:hover { background: #f3f4f6; }
+    .btn-danger { background: #fff; color: #991b1b; border: 1.5px solid #fca5a5; }
+    .btn-danger:hover { background: #fef2f2; }
+
+    .save-status-row { display: flex; align-items: center; gap: 8px; font-size: 1.3rem; }
+    .save-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #9ca3af; flex-shrink: 0; }
+    .save-dot.saved { background: #22c55e; }
+    .save-dot.saving { background: #3b82f6; }
+    .save-dot.error { background: #ef4444; }
+    #save-text { color: #6b7280; }
+
+    .progress-wrap { margin-top: 14px; }
+    .progress-label { font-size: 1.3rem; font-weight: 600; color: #374151; margin-bottom: 5px; display: flex; justify-content: space-between; }
+    .progress-track { height: 9px; background: #e5e7eb; border-radius: 99px; overflow: hidden; }
+    .progress-bar { height: 100%; background: linear-gradient(90deg, #D18D83, #933a35); border-radius: 99px; transition: width 0.4s ease; }
+    .progress-pills { display: flex; gap: 12px; margin-top: 6px; }
+    .pill { font-size: 1.2rem; font-weight: 700; padding: 3px 10px; border-radius: 99px; }
+    .pill-pass { background: #dcfce7; color: #166534; }
+    .pill-fail { background: #fee2e2; color: #991b1b; }
+    .pill-pending { background: #fef9c3; color: #854d0e; }
+
+    .tab-bar {
+      background: #fff; border-bottom: 2px solid #e5e7eb;
+      padding: 0 24px; display: flex; gap: 2px; overflow-x: auto;
+      position: sticky; top: 0; z-index: 50;
+    }
+    .tab-bar-left { display: flex; gap: 2px; overflow-x: auto; flex: 1; }
+    .tab-bar-right { display: flex; align-items: center; flex-shrink: 0; padding-left: 8px; }
+    .tab-btn {
+      padding: 14px 16px 12px; border: none; background: transparent;
+      cursor: pointer; font-size: 1.4rem; font-weight: 600; color: #6b7280;
+      border-bottom: 3px solid transparent; margin-bottom: -2px;
+      white-space: nowrap; transition: all 0.15s; display: flex; align-items: center; gap: 8px;
+    }
+    .tab-btn:hover { color: #933a35; }
+    .tab-btn.active { color: #933a35; border-bottom-color: #933a35; }
+    .tab-badge {
+      font-size: 1.1rem; font-weight: 700; padding: 2px 7px;
+      border-radius: 99px; min-width: 32px; text-align: center;
+    }
+    .badge-pending { background: #f1f5f9; color: #64748b; }
+    .badge-pass    { background: #dcfce7; color: #166534; }
+    .badge-fail    { background: #fee2e2; color: #991b1b; }
+    .badge-wip     { background: #fef9c3; color: #854d0e; }
+
+    .content { max-width: 1060px; margin: 0 auto; padding: 20px 24px 40px; }
+
+    .section-header {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      margin-bottom: 16px; flex-wrap: wrap; gap: 10px;
+    }
+    .section-eyebrow { font-size: 1.1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #9ca3af; margin-bottom: 3px; }
+    .section-title { font-size: 2.2rem; font-weight: 800; color: #933a35; }
+    .section-meta { font-size: 1.3rem; color: #6b7280; margin-top: 2px; }
+    .section-nav { display: flex; gap: 8px; }
+
+    .test-table {
+      width: 100%; border-collapse: collapse; background: #fff;
+      border-radius: 12px; overflow: hidden;
+      border: 1px solid #e5e7eb; margin-bottom: 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .test-table th {
+      background: #f8fafc; text-align: left; padding: 11px 16px;
+      font-size: 1.1rem; text-transform: uppercase; letter-spacing: 0.1em;
+      color: #64748b; border-bottom: 2px solid #e5e7eb;
+    }
+    .test-table td { padding: 13px 16px; font-size: 1.5rem; border-bottom: 1px solid #f1f5f9; vertical-align: top; }
+    .test-table tr:last-child td { border-bottom: none; }
+    .data-row { cursor: pointer; transition: background 0.1s; }
+    .data-row:hover td { background: #fafbfc; }
+
+    .scenario-cell { max-width: 400px; }
+    .scenario-text { font-weight: 600; color: #18181b; display: block; line-height: 1.4; }
+    .expand-hint { font-size: 1.1rem; color: #9ca3af; display: block; margin-top: 3px; }
+
+    .expand-row td {
+      background: #fdf7f5; padding: 16px 20px 16px 44px;
+      font-size: 1.4rem; color: #374151; line-height: 1.7;
+      border-bottom: 1px solid #f5d8d5; cursor: default;
+    }
+    .howto-label { font-size: 1.1rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: #933a35; margin-bottom: 8px; }
+    .howto-steps { padding-left: 20px; }
+    .howto-steps li { margin-bottom: 5px; }
+
+    .priority-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: middle; flex-shrink: 0; }
+    .dot-critical  { background: #ef4444; }
+    .dot-important { background: #f59e0b; }
+    .dot-nice      { background: #9ca3af; }
+    .priority-label { font-size: 1.2rem; text-transform: capitalize; color: #6b7280; }
+
+    .status-select {
+      padding: 6px 10px; border-radius: 7px; font-size: 1.3rem;
+      border: 1px solid #e5e7eb; cursor: pointer; font-weight: 700;
+      min-width: 110px; appearance: none; text-align: center;
+    }
+    .status-pass    { background: #dcfce7; color: #166534; border-color: #86efac; }
+    .status-fail    { background: #fee2e2; color: #991b1b; border-color: #fca5a5; }
+    .status-pending { background: #fef9c3; color: #854d0e; border-color: #fde68a; }
+
+    .notes-input {
+      width: 100%; padding: 8px 10px; border: 1px solid #e5e7eb;
+      border-radius: 7px; font-size: 1.4rem; resize: vertical;
+      min-height: 58px; font-family: inherit; line-height: 1.5;
+      color: #374151; background: #fafafa; transition: border-color 0.15s;
+    }
+    .notes-input:focus { outline: none; border-color: #933a35; background: #fff; }
+
+    .section-nav-bottom {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 12px 0; border-top: 1px dashed #d1cfc8; margin-top: 8px;
+    }
+    .section-nav-bottom .nav-info { font-size: 1.3rem; color: #9ca3af; }
+
+    .overview-panel { background: #fff; border-bottom: 1px solid #e5e7eb; }
+    .overview-toggle {
+      width: 100%; display: flex; justify-content: space-between; align-items: center;
+      padding: 12px 24px; background: #EDE1D5; border: none; cursor: pointer;
+      font-size: 1.4rem; font-weight: 700; color: #933a35; letter-spacing: 0.03em;
+      border-bottom: 1px solid #d4c8b8; transition: background 0.15s;
+    }
+    .overview-toggle:hover { background: #e5d6c8; }
+    .overview-toggle-left { display: flex; align-items: center; gap: 10px; }
+    .overview-toggle-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+    .overview-start-badge { background: #933a35; color: #fff; font-size: 1.1rem; font-weight: 800; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.05em; white-space: nowrap; }
+    .overview-toggle-hint { font-size: 1.2rem; font-weight: 500; color: #6b7280; white-space: nowrap; }
+    .overview-toggle-icon { font-size: 1.6rem; font-weight: 700; color: #6b7280; line-height: 1; width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; background: #f3f4f6; transition: background 0.15s, color 0.15s; }
+    .overview-toggle-icon:hover { background: #e5e7eb; color: #111; }
+    .overview-body {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 0; border-top: none;
+    }
+    .overview-body.hidden { display: none; }
+    .ov-block {
+      padding: 18px 22px; border-right: 1px solid #f1f5f9; border-bottom: 1px solid #f1f5f9;
+    }
+    .ov-block:last-child { border-right: none; }
+    .ov-label {
+      font-size: 1.1rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em;
+      color: #9ca3af; margin-bottom: 6px;
+    }
+    .ov-title { font-size: 1.6rem; font-weight: 700; color: #933a35; margin-bottom: 6px; }
+    .ov-text { font-size: 1.4rem; color: #4b5563; line-height: 1.6; }
+    .ov-text a { color: #933a35; font-weight: 600; text-decoration: none; }
+    .ov-text a:hover { text-decoration: underline; }
+    .prio-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 1.4rem; color: #374151; }
+    .prio-row:last-child { margin-bottom: 0; }
+    .sections-list { display: flex; flex-direction: column; gap: 5px; }
+    .section-chip {
+      display: flex; align-items: center; gap: 9px;
+      font-size: 1.3rem; color: #374151; padding: 3px 0;
+    }
+    .chip-num {
+      width: 20px; height: 20px; border-radius: 50%; background: #933a35;
+      color: #fff; font-size: 1.0rem; font-weight: 800; display: flex;
+      align-items: center; justify-content: center; flex-shrink: 0;
+    }
+
+    @media (max-width: 640px) {
+      .top-bar { padding: 10px 14px; }
+      .hero { padding: 14px; }
+      .content { padding: 14px 14px 32px; }
+      .tab-bar { padding: 0 8px; }
+      .tab-btn { padding: 12px 10px 10px; font-size: 1.3rem; }
+      .hero-right { width: 100%; }
+      .tester-input-wrap input { width: 100%; }
+      .section-header { flex-direction: column; }
+      .overview-toggle { padding: 10px 14px; }
+      .ov-block { padding: 14px 16px; border-right: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="top-bar-title">Season <span>iOS Testing Sheet</span></div>
+  <div class="top-bar-links">
+    <a href="https://seasonv2.onrender.com" target="_blank" rel="noopener noreferrer" class="top-link accent">Open Live App</a>
+    <a href="testing-sheet.html" class="top-link">PWA Testing Sheet</a>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="hero-row">
+    <div class="hero-left">
+      <h1>iOS Turbo Native Testing Checklist</h1>
+      <p>For testing the Season app inside the iOS Turbo Native wrapper · Click any row for steps · Auto-saves to your browser</p>
+    </div>
+    <div class="hero-right" style="display:flex; align-items:flex-end; gap:10px; flex-wrap:wrap;">
+      <div class="tester-input-wrap">
+        <label for="tester-name">Your Name *</label>
+        <input type="text" id="tester-name" placeholder="Enter your name..." oninput="onTesterNameChange();" />
+      </div>
+      <button class="btn btn-primary" onclick="saveNow()">Save</button>
+      <button class="btn btn-ghost"   onclick="exportToCSV()">Export CSV</button>
+      <button class="btn btn-danger"  onclick="clearSaved()">Reset</button>
+    </div>
+  </div>
+
+  <div class="save-status-row" style="margin-bottom:12px;">
+    <span class="save-dot" id="save-dot"></span>
+    <span id="save-text">Auto-saves when you mark a test</span>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-label">
+      <span id="progress-label-left">Overall progress</span>
+      <span id="progress-label-right"></span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-bar" id="progress-bar" style="width:0%"></div>
+    </div>
+    <div class="progress-pills">
+      <span class="pill pill-pass" id="pill-pass">0 passed</span>
+      <span class="pill pill-fail" id="pill-fail">0 failed</span>
+      <span class="pill pill-pending" id="pill-pending">0 pending</span>
+    </div>
+  </div>
+</div>
+
+<div class="overview-panel">
+  <button class="overview-toggle" onclick="toggleOverview()" id="overview-toggle-btn" aria-expanded="true">
+    <span class="overview-toggle-left">
+      <span class="overview-start-badge">iOS Only</span>
+      <span>About this testing sheet &amp; how to use it</span>
+    </span>
+    <span class="overview-toggle-right">
+      <span class="overview-toggle-hint" id="overview-hint">Click to hide</span>
+      <span class="overview-toggle-icon" id="overview-icon">x</span>
+    </span>
+  </button>
+  <div class="overview-body" id="overview-body">
+
+    <div class="ov-block">
+      <div class="ov-label">What you're testing</div>
+      <div class="ov-title">Season V2 — iOS Turbo Native Wrapper</div>
+      <div class="ov-text">
+        The Season app running inside an iOS Turbo Native wrapper. All views are
+        server-rendered HTML via WKWebView. Native elements include the tab bar,
+        top bar dropdown menu, modal presentations, and pull-to-refresh.
+        <br><br>
+        <a href="testing-sheet.html" target="_blank" rel="noopener noreferrer">PWA Testing Sheet (separate)</a>
+      </div>
+    </div>
+
+    <div class="ov-block">
+      <div class="ov-label">Testing environment</div>
+      <div class="ov-title">Xcode Simulator / Device — Production Backend</div>
+      <div class="ov-text">
+        <strong>Base URL:</strong> https://seasonv2.onrender.com<br>
+        <strong>Project:</strong> ios/SeasonApp/SeasonApp.xcodeproj<br>
+        <strong>SPM Deps:</strong> HotwireNative (turbo-ios)<br><br>
+        Build and run from Xcode. The app loads server-rendered pages
+        in a WKWebView. No local HTML — all content comes from Render.
+      </div>
+    </div>
+
+    <div class="ov-block">
+      <div class="ov-label">Key iOS-specific concerns</div>
+      <div class="ov-title">Cookie handling, CSRF, OAuth in WKWebView</div>
+      <div class="ov-text">
+        <div class="prio-row">
+          <span class="priority-dot dot-critical"></span>
+          <strong>Session persistence</strong> — Cookies must survive app restarts
+        </div>
+        <div class="prio-row">
+          <span class="priority-dot dot-critical"></span>
+          <strong>OAuth in WebView</strong> — Google/Facebook/Apple login must work
+        </div>
+        <div class="prio-row">
+          <span class="priority-dot dot-critical"></span>
+          <strong>CSRF with button_to</strong> — Forms must submit without 422 errors
+        </div>
+        <div class="prio-row">
+          <span class="priority-dot dot-important"></span>
+          <strong>Modal presentations</strong> — New/edit forms open as modals
+        </div>
+      </div>
+    </div>
+
+    <div class="ov-block">
+      <div class="ov-label">How to use this sheet</div>
+      <div class="ov-title">Step through section by section</div>
+      <div class="ov-text">
+        <strong>1. Enter your name</strong> at the top.<br><br>
+        <strong>2. Build &amp; run</strong> the iOS app from Xcode first.<br><br>
+        <strong>3. Work through each tab</strong>. The tab bar shows pass/total.<br><br>
+        <strong>4. Click any row</strong> to expand step-by-step instructions.<br><br>
+        <strong>5. Set status + add notes</strong>. Results auto-save to your browser.<br><br>
+        Use <strong>Export CSV</strong> to share results with the team.
+      </div>
+    </div>
+
+    <div class="ov-block">
+      <div class="ov-label">Sections covered</div>
+      <div class="ov-title">6 sections · 35 test cases</div>
+      <div class="sections-list">
+        <div class="section-chip"><span class="chip-num">1</span> Setup — Build, install, first launch</div>
+        <div class="section-chip"><span class="chip-num">2</span> Auth — Sign up, sign in, OAuth in WKWebView</div>
+        <div class="section-chip"><span class="chip-num">3</span> Native UI — Tab bar, top bar dropdown, modals</div>
+        <div class="section-chip"><span class="chip-num">4</span> Core Screens — Calendar, tracking, daily, settings</div>
+        <div class="section-chip"><span class="chip-num">5</span> Forms &amp; Interactions — CSRF, modals, sliders, pickers</div>
+        <div class="section-chip"><span class="chip-num">6</span> Push &amp; Background — Notifications, state restoration</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="tab-bar" id="tabs">
+  <div class="tab-bar-left" id="tab-bar-left"></div>
+  <div class="tab-bar-right" id="tab-bar-right"></div>
+</div>
+
+<div class="content">
+
+  <div class="section-header" id="section-header"></div>
+
+  <table class="test-table">
+    <thead>
+      <tr>
+        <th style="width:110px;">Priority</th>
+        <th>Test Scenario <span style="font-weight:400;font-size:0.68rem;text-transform:none;letter-spacing:0;">(click row for how-to steps)</span></th>
+        <th style="width:120px;">Status</th>
+        <th>Notes / Feedback</th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+
+  <div class="section-nav-bottom">
+    <span class="nav-info"></span>
+    <div style="display:flex;gap:8px;">
+      <a href="testing-sheet.html" class="btn btn-accent" style="text-decoration:none;">PWA Sheet</a>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const SECTIONS = [
+    { id: "setup",   label: "Setup" },
+    { id: "auth",    label: "Auth" },
+    { id: "native",  label: "Native UI" },
+    { id: "screens", label: "Core Screens" },
+    { id: "forms",   label: "Forms & Interactions" },
+    { id: "push",    label: "Push & Background" },
+  ];
+
+  const DEFAULT_RESULTS = [
+    { section:"setup", scenario:"Xcode project builds without errors", priority:"critical",
+      howTo:"1. Open ios/SeasonApp/SeasonApp.xcodeproj in Xcode.\n2. Select a simulator target (iPhone 16, iOS 18+).\n3. Build (Cmd+B) — must compile without errors.\n4. Verify no missing SPM packages (HotwireNative).", status:"pending", notes:"" },
+    { section:"setup", scenario:"App launches and loads remote URL", priority:"critical",
+      howTo:"1. Run the app (Cmd+R) in simulator.\n2. The app should show the Season welcome screen loaded from seasonv2.onrender.com.\n3. Verify the URL bar is hidden (this is a native wrapper, not Safari).\n4. No blank white screen on launch.", status:"pending", notes:"" },
+    { section:"setup", scenario:"Tab bar renders with 3 tabs", priority:"critical",
+      howTo:"1. After launching, verify the bottom tab bar shows: Calendar, Tracking, Settings.\n2. Each tab icon should be visible.\n3. Tapping each tab should navigate to the correct screen.\n4. Active tab should be highlighted.", status:"pending", notes:"" },
+    { section:"setup", scenario:"Native top bar dropdown works (3-dot menu)", priority:"important",
+      howTo:"1. Tap the 3-dot icon in the top-right corner.\n2. Dropdown menu should slide in from the right.\n3. Items: Schedule Overview, Day View, Weekly View, Monthly View, Settings, Log out.\n4. Each item navigates to the correct screen.\n5. Log out deletes the session and returns to welcome.\n6. Tapping the backdrop dismisses the menu.", status:"pending", notes:"" },
+    { section:"setup", scenario:"Session persists across app restarts", priority:"critical",
+      howTo:"1. Sign in to the app.\n2. Force-quit the app (swipe up from app switcher).\n3. Re-open the app.\n4. You should still be signed in — no login prompt.\n5. Session cookie must survive app restart.", status:"pending", notes:"" },
+    { section:"setup", scenario:"Native auth token stored in Keychain", priority:"important",
+      howTo:"1. Sign in to the app.\n2. Check the iOS Keychain (via debugger or logs) for native_auth_token.\n3. Token should be stored and used for API authentication.\n4. Token should be regenerated on each login.", status:"pending", notes:"" },
+
+    { section:"auth", scenario:"Sign up with email works in WKWebView", priority:"critical",
+      howTo:"1. On the welcome screen, tap 'Create account'.\n2. Fill in name, email, password. Submit.\n3. Should redirect to onboarding step 1.\n4. No CSRF token errors or blank page.", status:"pending", notes:"" },
+    { section:"auth", scenario:"Sign in with email works in WKWebView", priority:"critical",
+      howTo:"1. Tap 'Sign in' on the welcome screen.\n2. Enter credentials, submit.\n3. Should redirect to /calendar.\n4. Wrong credentials should show inline error (no page reload).", status:"pending", notes:"" },
+    { section:"auth", scenario:"Google OAuth works in WKWebView", priority:"critical",
+      howTo:"1. Tap 'Sign in with Google'.\n2. Complete Google OAuth consent in the WebView.\n3. Must redirect back to the app successfully.\n4. If new user → onboarding. If existing → calendar.\n5. No '400 Bad Request' or CSRF rejection.", status:"pending", notes:"" },
+    { section:"auth", scenario:"Facebook OAuth works in WKWebView", priority:"important",
+      howTo:"1. Tap 'Sign in with Facebook'.\n2. Complete Facebook OAuth in the WebView.\n3. Must redirect back to the app.\n4. Handle both new and existing user flows.", status:"pending", notes:"" },
+    { section:"auth", scenario:"Apple OAuth works in WKWebView", priority:"important",
+      howTo:"1. Tap 'Sign in with Apple'.\n2. Complete Apple OAuth in the WebView.\n3. First auth sends email; repeat auth uses UID lookup.\n4. Must work for both new and returning users.", status:"pending", notes:"" },
+    { section:"auth", scenario:"Turbo Native login form uses local:true (no CSRF issues)", priority:"critical",
+      howTo:"1. On the login screen, verify the form has `local: true`.\n2. Submit the form — must succeed without CSRF errors.\n3. Same check for signup form.\n4. OAuth button_to forms must use `data: { turbo: false }`.", status:"pending", notes:"" },
+
+    { section:"native", scenario:"Calendar opens as main screen after login", priority:"critical",
+      howTo:"1. Sign in. The app should land on /calendar.\n2. Monthly calendar grid renders with phase colours.\n3. Phase banner shows current phase + cycle day.\n4. Tab bar shows Calendar as active.", status:"pending", notes:"" },
+    { section:"native", scenario:"Pull-to-refresh works on calendar", priority:"important",
+      howTo:"1. On /calendar, pull down on the screen.\n2. Custom pull-to-refresh indicator should appear ('Pull down to refresh').\n3. Release to trigger a refresh — page should reload.\n4. Should not conflict with WKWebView's native bounce.", status:"pending", notes:"" },
+    { section:"native", scenario:"Modal paths open as native modals", priority:"critical",
+      howTo:"1. Go to /calendar_events/new — should slide up as a modal.\n2. The form should be fully functional inside the modal.\n3. Submit should dismiss the modal and return to previous screen.\n4. Dismiss by swiping down (iOS gesture) or using close button.", status:"pending", notes:"" },
+    { section:"native", scenario:"New/edit forms open as modals (path config)", priority:"important",
+      howTo:"1. From appointments, tap an event to edit.\n2. Calendar event edit form should open as a modal.\n3. Settings sub-pages should open as push navigation (not modals).\n4. Verify /configurations/ios_v1.json path rules are applied.", status:"pending", notes:"" },
+
+    { section:"screens", scenario:"Onboarding — all 11 steps work in WKWebView", priority:"critical",
+      howTo:"1. Sign up as new user, complete all 11 onboarding steps.\n2. Step 10 (period date): submit buttons must be inside their forms.\n3. Back/Next navigation must work.\n4. Data must persist between steps.\n5. Finish screen redirects to /calendar.", status:"pending", notes:"" },
+    { section:"screens", scenario:"Daily view renders with phase content", priority:"important",
+      howTo:"1. From calendar, tap any day to go to /daily/:date.\n2. Should show: phase info, symptom summary, superpower text, nutrition/sport tips.\n3. Calendar events for that day should be listed.\n4. Pull-to-refresh should work on this page.", status:"pending", notes:"" },
+    { section:"screens", scenario:"Self Analysis (tracking) dashboard loads", priority:"important",
+      howTo:"1. Tap Tracking tab.\n2. Should show: avatar, current phase, cycle strip.\n3. Daily analysis card + navigation cards should be visible.\n4. Weekly feedback banner should show if user is in an active week.", status:"pending", notes:"" },
+    { section:"screens", scenario:"Settings pages work correctly", priority:"important",
+      howTo:"1. Tap Settings tab.\n2. Navigate to: Profile, Calendar, Notifications, Subscriptions, Consent.\n3. Each sub-page should load and save changes correctly.\n4. Logout button at bottom of Settings works.\n5. Toggle switches should respond to touch.", status:"pending", notes:"" },
+    { section:"screens", scenario:"Weekly appointment view loads", priority:"nice",
+      howTo:"1. From the top bar dropdown, select 'Weekly View'.\n2. Horizontal week strip should render with phase colours.\n3. Swipe to navigate between weeks.", status:"pending", notes:"" },
+
+    { section:"forms", scenario:"Symptom logging — all pickers work with touch", priority:"critical",
+      howTo:"1. Go to /symptoms.\n2. Date drum: tap to expand, scroll to pick date.\n3. Mood icons: tap to toggle (opacity + grayscale change).\n4. Physical/mental sliders: drag to adjust level.\n5. Vertical pickers (sleep/temp/weight): scroll to select.\n6. All auto-save — no submit button needed for individual changes.", status:"pending", notes:"" },
+    { section:"forms", scenario:"Submit review modal opens and works", priority:"important",
+      howTo:"1. On /symptoms, fill in some symptoms, tap Submit.\n2. Review modal should summarize all entries.\n3. Tap 'Submit tracking' — navigates to /tracking.\n4. Tap 'Go back to change' — returns to symptoms form.\n5. Modal should have working backdrop tap to dismiss.", status:"pending", notes:"" },
+    { section:"forms", scenario:"Calendar event — category picker modal works", priority:"important",
+      howTo:"1. Go to /calendar_events/new.\n2. Tap the + button to open the icon picker modal.\n3. 9 category icons should appear (Friends, Dinner, Date, Sports, Medical, Birthday, Work, Coffee, Shopping).\n4. Tap a category — selected icon highlights in brand colour.\n5. Tap 'Add Icon' to confirm — modal closes.\n6. Set appointment button submits the form.", status:"pending", notes:"" },
+    { section:"forms", scenario:"Superpowers — sliders respond to touch", priority:"important",
+      howTo:"1. Go to /superpowers.\n2. 20 sliders (low/med/high) should be present.\n3. Drag each slider — should set value smoothly.\n4. No jump or lag on touch drag.", status:"pending", notes:"" },
+    { section:"forms", scenario:"Feedback modals open and submit correctly", priority:"important",
+      howTo:"1. From the app, open the feedback modal.\n2. Type a message, submit.\n3. Open support/bug modal — select type, submit.\n4. Open weekly feedback modal (if active week).\n5. All modals should have correct iOS-safe-area bottom padding.\n6. All modals should dismiss correctly.", status:"pending", notes:"" },
+    { section:"forms", scenario:"No 16px zoom on input focus", priority:"important",
+      howTo:"1. Tap any text input or textarea.\n2. The page must NOT zoom in.\n3. Input font-size must be at least 16px to prevent iOS zoom.", status:"pending", notes:"" },
+
+    { section:"push", scenario:"Push notification permission prompt appears", priority:"important",
+      howTo:"1. Go to Settings > Notifications.\n2. Toggle push notifications on.\n3. iOS system permission dialog should appear.\n4. Allow — subscription should be created on server.", status:"pending", notes:"" },
+    { section:"push", scenario:"Push notification delivered to device", priority:"important",
+      howTo:"1. With push enabled, trigger a morning reminder (via admin or job).\n2. Push notification should appear on the lock screen / notification center.\n3. Tapping the notification should open the app.\n4. Verify the notification content matches the expected message.", status:"pending", notes:"" },
+    { section:"push", scenario:"Push unsubscribe works", priority:"important",
+      howTo:"1. Go to Settings > Notifications.\n2. Toggle push notifications off.\n3. Subscription should be removed from the server.\n4. No more notifications should arrive.", status:"pending", notes:"" },
+    { section:"push", scenario:"App state restoration (background → foreground)", priority:"important",
+      howTo:"1. Use the app normally.\n2. Send app to background (swipe up / home button).\n3. Wait 30+ seconds.\n4. Bring app back to foreground.\n5. The current screen should remain — no reload to welcome page.\n6. Session should still be valid.", status:"pending", notes:"" },
+    { section:"push", scenario:"Pin code / biometric unlock works", priority:"important",
+      howTo:"1. Go to Settings, set up a PIN code.\n2. Send app to background, wait 5+ minutes.\n3. Bring app back — PIN unlock screen should appear.\n4. Enter correct PIN — app unlocks.\n5. If Face ID / Touch ID is set up, the biometric prompt should appear.\n6. Wrong PIN should show error and not unlock.", status:"pending", notes:"" },
+    { section:"push", scenario:"Native auth token regenerates on login", priority:"nice",
+      howTo:"1. Sign in. Note the auth token (via debug log).\n2. Sign out, then sign in again.\n3. A new token should be generated.\n4. Old token should no longer work for API auth.", status:"pending", notes:"" },
+  ];
+
+  let results = [];
+  let expandedRow = null;
+  let currentSectionIndex = 0;
+
+  function getActiveSections() {
+    return SECTIONS.filter(s => results.some(r => r.section === s.id));
+  }
+
+  function sectionStats(sectionId) {
+    const rows = results.filter(r => r.section === sectionId);
+    const pass = rows.filter(r => r.status === "pass").length;
+    const fail = rows.filter(r => r.status === "fail").length;
+    return { total: rows.length, pass, fail, pending: rows.length - pass - fail };
+  }
+
+  function initTable() {
+    const saved = localStorage.getItem("season-ios-test-results-v1");
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        results = DEFAULT_RESULTS.map(def => {
+          const s = parsed.find(p => p.scenario === def.scenario);
+          return s ? { ...def, status: s.status, notes: s.notes } : { ...def };
+        });
+      } catch { results = DEFAULT_RESULTS.map(d => ({ ...d })); }
+    } else {
+      results = DEFAULT_RESULTS.map(d => ({ ...d }));
+    }
+    const savedSection = localStorage.getItem("season-ios-current-section");
+    if (savedSection !== null) currentSectionIndex = parseInt(savedSection, 10) || 0;
+    const savedTesterName = localStorage.getItem("season-ios-tester-name");
+    if (savedTesterName) document.getElementById("tester-name").value = savedTesterName;
+    renderAll();
+  }
+
+  function onTesterNameChange() {
+    const name = document.getElementById("tester-name").value.trim();
+    if (name) localStorage.setItem("season-ios-tester-name", name);
+  }
+
+  function persist() {
+    localStorage.setItem("season-ios-test-results-v1", JSON.stringify(
+      results.map(r => ({ scenario: r.scenario, status: r.status, notes: r.notes }))
+    ));
+  }
+
+  function setStatus(index, val) { results[index].status = val; persist(); renderAll(); }
+  function setNotes(index, val) { results[index].notes = val; persist(); }
+
+  function toggleExpand(index, e) {
+    if (e) {
+      const target = e.target || e.srcElement;
+      if (target.closest && (target.closest("select") || target.closest("textarea"))) return;
+    }
+    expandedRow = expandedRow === index ? null : index;
+    renderTable();
+  }
+
+  function clearSaved() {
+    if (!confirm("Clear all saved results? This cannot be undone.")) return;
+    localStorage.removeItem("season-ios-test-results-v1");
+    localStorage.removeItem("season-ios-tester-name");
+    results = DEFAULT_RESULTS.map(d => ({ ...d }));
+    expandedRow = null;
+    document.getElementById("tester-name").value = "";
+    renderAll();
+  }
+
+  function saveNow() {
+    const name = document.getElementById("tester-name").value.trim();
+    if (!name) { alert("Enter your name first."); return; }
+    persist();
+    document.getElementById("save-dot").className = "save-dot saved";
+    document.getElementById("save-text").textContent = "Saved! " + new Date().toLocaleTimeString([], {hour:"2-digit", minute:"2-digit"});
+    setTimeout(() => { document.getElementById("save-dot").className = "save-dot"; document.getElementById("save-text").textContent = "Auto-saves when you mark a test"; }, 2000);
+  }
+
+  function exportToCSV() {
+    const name = document.getElementById("tester-name").value.trim();
+    if (!name) { alert("Enter your name first."); return; }
+    let csv = "Tester,Section,Scenario,Priority,Status,Notes\n";
+    results.forEach(r => {
+      csv += `"${name}","${r.section}","${r.scenario}","${r.priority}","${r.status}","${r.notes.replace(/"/g,'""')}"\n`;
+    });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([csv], { type:"text/csv" }));
+    a.download = `season-ios-testing-${name.replace(/\s+/g,"-")}-${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+  }
+
+  function goToSection(i) { currentSectionIndex = i; expandedRow = null; renderAll(); window.scrollTo({ top: 0, behavior: "smooth" }); localStorage.setItem("season-ios-current-section", String(i)); }
+  function prevSection() { if (currentSectionIndex > 0) goToSection(currentSectionIndex - 1); }
+  function nextSection() { const n = getActiveSections().length; if (currentSectionIndex < n - 1) goToSection(currentSectionIndex + 1); }
+
+  function priorityDot(p) {
+    const cls = p === "critical" ? "dot-critical" : p === "important" ? "dot-important" : "dot-nice";
+    return `<span class="priority-dot ${cls}"></span>`;
+  }
+
+  function renderTabs() {
+    const sections = getActiveSections();
+    document.getElementById("tab-bar-left").innerHTML = sections.map((sec, i) => {
+      const st = sectionStats(sec.id);
+      const done = st.pass + st.fail;
+      let badgeClass = done === 0 ? "badge-pending" : st.fail > 0 ? "badge-fail" : done === st.total ? "badge-pass" : "badge-wip";
+      return `<button class="tab-btn ${i === currentSectionIndex ? "active" : ""}" onclick="goToSection(${i})">${sec.label}<span class="tab-badge ${badgeClass}">${st.pass}/${st.total}</span></button>`;
+    }).join("");
+    document.getElementById("tab-bar-right").innerHTML = "";
+  }
+
+  function renderSectionHeader() {
+    const sections = getActiveSections();
+    const sec = sections[currentSectionIndex];
+    const st = sectionStats(sec.id);
+    const isFirst = currentSectionIndex === 0;
+    const isLast = currentSectionIndex === sections.length - 1;
+    document.getElementById("section-header").innerHTML = `
+      <div class="section-title-block">
+        <div class="section-eyebrow">Section ${currentSectionIndex + 1} of ${sections.length}</div>
+        <div class="section-title">${sec.label}</div>
+        <div class="section-meta">${st.total} test cases &middot; ${st.pass} passed &middot; ${st.fail} failed &middot; ${st.pending} pending</div>
+      </div>
+      <div class="section-nav">
+        ${!isFirst ? `<button class="btn btn-ghost" onclick="prevSection()">Previous</button>` : ""}
+        ${!isLast ? `<button class="btn btn-primary" onclick="nextSection()">Next</button>` : `<button class="btn btn-accent" onclick="saveNow()">Save Results</button>`}
+      </div>`;
+  }
+
+  function renderProgress() {
+    const total = results.length;
+    const pass = results.filter(r => r.status === "pass").length;
+    const fail = results.filter(r => r.status === "fail").length;
+    const pending = results.filter(r => r.status === "pending").length;
+    const pct = total ? Math.round(((pass + fail) / total) * 100) : 0;
+    document.getElementById("progress-bar").style.width = pct + "%";
+    document.getElementById("progress-label-left").textContent = `Overall progress — ${pct}% complete`;
+    document.getElementById("progress-label-right").textContent = `${total} total`;
+    document.getElementById("pill-pass").textContent = `${pass} passed`;
+    document.getElementById("pill-fail").textContent = `${fail} failed`;
+    document.getElementById("pill-pending").textContent = `${pending} pending`;
+  }
+
+  function renderTable() {
+    const sections = getActiveSections();
+    const currentSec = sections[currentSectionIndex];
+    const sectionRows = results.map((r, i) => ({ ...r, _i: i })).filter(r => r.section === currentSec.id);
+
+    document.getElementById("tbody").innerHTML = sectionRows.map(({ _i: i, ...r }) => {
+      const howToLines = r.howTo.split("\n").map(l => `<li>${l.replace(/^\d+\.\s*/, "")}</li>`).join("");
+      const escaped = r.notes.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+      let rows = `<tr class="data-row" onclick="toggleExpand(${i}, event)">
+        <td style="white-space:nowrap;">${priorityDot(r.priority)}<span class="priority-label">${r.priority}</span></td>
+        <td class="scenario-cell"><span class="scenario-text">${r.scenario}</span><span class="expand-hint">click row for how-to steps</span></td>
+        <td><select class="status-select status-${r.status}" onchange="setStatus(${i}, this.value)">
+          <option value="pending" ${r.status==="pending"?"selected":""}>Pending</option>
+          <option value="pass"    ${r.status==="pass"   ?"selected":""}>Pass</option>
+          <option value="fail"    ${r.status==="fail"   ?"selected":""}>Fail</option>
+        </select></td>
+        <td><textarea class="notes-input" rows="2" placeholder="Add notes or feedback..." oninput="setNotes(${i}, this.value)" onclick="event.stopPropagation();">${escaped}</textarea></td>
+      </tr>`;
+      if (expandedRow === i) {
+        rows += `<tr class="expand-row"><td colspan="4"><div class="howto-label">How to test</div><ol class="howto-steps">${howToLines}</ol></td></tr>`;
+      }
+      return rows;
+    }).join("");
+  }
+
+  function renderAll() { renderProgress(); renderTabs(); renderSectionHeader(); renderTable(); }
+
+  function toggleOverview() {
+    const body = document.getElementById("overview-body");
+    const icon = document.getElementById("overview-icon");
+    const btn  = document.getElementById("overview-toggle-btn");
+    const isOpen = !body.classList.contains("hidden");
+    const hint = document.getElementById("overview-hint");
+    body.classList.toggle("hidden", isOpen);
+    icon.textContent = isOpen ? "+" : "x";
+    if (hint) hint.textContent = isOpen ? "Click to read" : "Click to hide";
+    btn.setAttribute("aria-expanded", String(!isOpen));
+    localStorage.setItem("season-ios-overview-open", String(!isOpen));
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const saved = localStorage.getItem("season-ios-overview-open");
+    if (saved === "false") {
+      document.getElementById("overview-body").classList.add("hidden");
+      document.getElementById("overview-icon").textContent = "+";
+      document.getElementById("overview-hint").textContent = "Click to read";
+      document.getElementById("overview-toggle-btn").setAttribute("aria-expanded", "false");
+    }
+    initTable();
+  });
+</script>
+
+</body>
+</html>
