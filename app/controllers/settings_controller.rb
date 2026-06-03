@@ -41,7 +41,38 @@ class SettingsController < ApplicationController
   end
 
   def notifications
-    @notifications = NotificationSettings.new(true, true, true, false, true, true, true, "09:00")
+    reminders = current_user.reminders.index_by(&:reminder_type)
+    @notifications = NotificationSettings.new(
+      reminders["morning"]&.active || false,
+      reminders["period_start"]&.active || false,
+      reminders["pill"]&.active || false,
+      false, # appointment_reminder (not yet implemented)
+      reminders["supplement"]&.active || false,
+      current_user.push_subscriptions.any?,
+      false, # email_notifications (not yet persisted)
+      "09:00"
+    )
+  end
+
+  KEY_TO_REMINDER = {
+    "cycle_reminder" => ["morning", "09:00"],
+    "period_prediction" => ["period_start", "00:00"],
+    "ovulation_alert" => ["pill", "21:00"],
+    "newsletter" => ["supplement", "18:00"]
+  }.freeze
+
+  def update_notifications
+    KEY_TO_REMINDER.each do |key, (type, default_time)|
+      next unless params.key?(key)
+
+      active = ActiveModel::Type::Boolean.new.cast(params[key])
+      reminder = current_user.reminders.find_or_initialize_by(reminder_type: type)
+      reminder.active = active
+      reminder.time ||= default_time
+      reminder.save!
+    end
+
+    render json: {success: true}
   end
 
   def update_avatar
@@ -179,10 +210,6 @@ class SettingsController < ApplicationController
     end
 
     redirect_to user_root_path, notice: t("consent.saved")
-  end
-
-  def update_notifications
-    render json: {success: true}
   end
 
   private
