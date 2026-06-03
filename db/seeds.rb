@@ -139,3 +139,48 @@ Rails.logger.debug { "Seeded #{CyclePhaseContent.count} total phase content reco
 
 # Cycle day forecast content (35 days × 6 cards)
 require_relative "seeds/cycle_day_contents"
+
+# Seed notifications for the first user (testing/demo)
+if (test_user = User.first)
+  notifications_data = [
+    {
+      title: "Welcome to Season!",
+      description: "Start tracking your cycle and discover your superpowers.",
+      notification_type: "info"
+    },
+    {
+      title: "Track Your Period",
+      description: "It's time to log your symptoms. Update your cycle information for better insights.",
+      notification_type: "reminder"
+    },
+    {
+      title: "Upcoming Appointment",
+      description: "Your appointment reminder: Check-up scheduled for tomorrow at 2 PM.",
+      notification_type: "appointment"
+    },
+    {
+      title: "Symptom Logged",
+      description: "You successfully logged your daily symptoms. Great job staying on top of your health!",
+      notification_type: "success"
+    },
+    {
+      title: "Weekly Feedback",
+      description: "Help us improve Season by sharing your experience this week.",
+      notification_type: "alert"
+    }
+  ]
+
+  notifications_data.each_with_index do |attrs, index|
+    Notification.find_or_create_by(
+      user: test_user,
+      title: attrs[:title]
+    ) do |notification|
+      notification.description = attrs[:description]
+      notification.notification_type = attrs[:notification_type]
+      # Mark first notification as read for demo purposes
+      notification.read_at = Time.zone.now if index.zero?
+    end
+  end
+
+  Rails.logger.debug { "Seeded #{test_user.notifications.count} notifications for user #{test_user.email}" }
+end
