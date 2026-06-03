@@ -103,68 +103,69 @@
     <div class="border-b border-brand-divider"></div>
 
     <%# In-App Popups %>
-    <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 0 8px;">
-      <span style="color:#933a35; font-size:16px; font-weight:500;">In-App Popups</span>
-      <label style="position:relative; width:41px; height:20px; cursor:pointer; flex-shrink:0;">
-        <input type="checkbox" id="email_notifications" <%= @notifications.email_notifications ? 'checked' : '' %>
-               aria-label="In-App Popups"
-               onchange="toggleSetting('email_notifications')"
-               style="opacity:0; width:0; height:0;">
-        <span style="position:absolute; inset:0; background:<%= @notifications.email_notifications ? '#933a35' : '#ccc' %>; border-radius:20px; transition:0.2s;"></span>
-        <span style="position:absolute; top:1px; left:<%= @notifications.email_notifications ? '22px' : '2px' %>; width:18px; height:18px; background:white; border-radius:50%; transition:0.2s;"></span>
-      </label>
+    <% inapp_on = @notifications.email_notifications %>
+    <div class="flex items-center justify-between py-3.5 pb-2">
+      <span class="text-brand-primary text-base font-medium">In-App Popups</span>
+      <%= render "shared/toggle_switch",
+            field_id: "email_notifications",
+            checked: inapp_on,
+            aria_label: "In-App Popups",
+            onchange: "toggleSetting('email_notifications')" %>
     </div>
+    <% prefs = current_user.notification_preferences || {} %>
     <% [
-      ["new_appt_synced",    "New appointments synced"],
-      ["tracking_reminder",  "Tracking reminder"],
-      ["new_feedback",       "New Feedback available"],
-      ["app_updates",        "App-Updates"],
-      ["appointments",       "Appointments"]
+      ["in_app_new_appt_synced",   "New appointments synced"],
+      ["in_app_tracking_reminder", "Tracking reminder"],
+      ["in_app_new_feedback",      "New Feedback available"],
+      ["in_app_app_updates",       "App-Updates"],
+      ["in_app_appointments",      "Appointments"]
     ].each do |field, label| %>
-      <div style="display:flex; align-items:center; justify-content:space-between; padding:6px 0;">
-        <span style="color:#d18d83; font-size:14px; font-weight:500;"><%= label %></span>
-        <label style="position:relative; width:41px; height:20px; cursor:pointer; flex-shrink:0;">
-          <input type="checkbox" style="opacity:0; width:0; height:0;" aria-label="<%= label %>">
-          <span style="position:absolute; inset:0; background:#933a35; border-radius:20px;"></span>
-          <span style="position:absolute; top:1px; left:22px; width:18px; height:18px; background:white; border-radius:50%;"></span>
-        </label>
+      <div class="flex items-center justify-between py-1.5">
+        <span class="text-brand-secondary text-sm font-medium"><%= label %></span>
+        <%= render "shared/toggle_switch",
+              field_id: field,
+              checked: prefs[field].nil? ? true : prefs[field],
+              aria_label: label,
+              onchange: %(toggleSetting(#{field.to_json})) %>
       </div>
     <% end %>
-    <div style="border-bottom:1px solid #DDD0CB; margin-top:8px;"></div>
+    <div class="border-b border-brand-divider mt-2"></div>
 
     <%# General Push-Notifications %>
+    <% push_on = @notifications.push_notifications %>
     <div data-controller="push-subscription"
          data-vapid-key="<%= Rails.application.credentials.dig(:vapid, :public_key) %>"
-         style="display:flex; align-items:center; justify-content:space-between; padding:14px 0 8px;">
+         class="flex items-center justify-between py-3.5 pb-2">
       <div>
-        <span style="color:#933a35; font-size:16px; font-weight:500;">General Push-Notifications</span>
-        <span data-push-subscription-target="status" style="color:#D18D83; font-size:12px; margin-left:8px;"></span>
+        <span class="text-brand-primary text-base font-medium">General Push-Notifications</span>
+        <span data-push-subscription-target="status" class="text-brand-secondary text-xs ml-2"></span>
       </div>
-      <label style="position:relative; width:41px; height:20px; cursor:pointer; flex-shrink:0;">
+      <label class="relative w-[41px] h-5 cursor-pointer shrink-0">
         <input type="checkbox" aria-label="General Push-Notifications"
                data-action="change->push-subscription#subscribe"
-               style="opacity:0; width:0; height:0;">
-        <span style="position:absolute; inset:0; background:#ccc; border-radius:20px; transition:0.2s;"></span>
-        <span style="position:absolute; top:1px; left:2px; width:18px; height:18px; background:white; border-radius:50%; transition:0.2s;"></span>
+               class="opacity-0 w-0 h-0"
+               <%= push_on ? 'checked' : '' %>>
+        <span class="absolute inset-0 rounded-[20px] transition-all duration-200" style="background:<%= push_on ? '#933a35' : '#ccc' %>;"></span>
+        <span class="absolute top-px w-[18px] h-[18px] bg-white rounded-full transition-all duration-200" style="left:<%= push_on ? '22px' : '2px' %>;"></span>
       </label>
     </div>
     <% [
-      "New appointments synced",
-      "Tracking reminder",
-      "New Feedback available",
-      "App-Updates",
-      "Appointments"
-    ].each do |label| %>
-      <div style="display:flex; align-items:center; justify-content:space-between; padding:6px 0;">
-        <span style="color:#d18d83; font-size:14px; font-weight:500;"><%= label %></span>
-        <label style="position:relative; width:41px; height:20px; cursor:pointer; flex-shrink:0;">
-          <input type="checkbox" style="opacity:0; width:0; height:0;" aria-label="<%= label %>">
-          <span style="position:absolute; inset:0; background:#933a35; border-radius:20px;"></span>
-          <span style="position:absolute; top:1px; left:22px; width:18px; height:18px; background:white; border-radius:50%;"></span>
-        </label>
+      ["push_new_appt_synced",   "New appointments synced"],
+      ["push_tracking_reminder", "Tracking reminder"],
+      ["push_new_feedback",      "New Feedback available"],
+      ["push_app_updates",       "App-Updates"],
+      ["push_appointments",      "Appointments"]
+    ].each do |field, label| %>
+      <div class="flex items-center justify-between py-1.5">
+        <span class="text-brand-secondary text-sm font-medium"><%= label %></span>
+        <%= render "shared/toggle_switch",
+              field_id: field,
+              checked: prefs[field].nil? ? true : prefs[field],
+              aria_label: label,
+              onchange: %(toggleSetting(#{field.to_json})) %>
       </div>
     <% end %>
-    <p style="color:#933a35; font-size:10px; font-weight:500; margin:12px 0 0; line-height:1.5;">
+    <p class="text-brand-primary text-[10px] font-medium mt-3 leading-relaxed">
       Superpower of the day, pay attention to, mood, sport, nutrition, fertility
     </p>
 

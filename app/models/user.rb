@@ -16,6 +16,12 @@ class User < ApplicationRecord
   has_many :weekly_feedback_responses, dependent: :destroy
   has_many :user_consents, dependent: :destroy
   has_many :push_subscriptions, dependent: :destroy
+
+  store_accessor :notification_preferences,
+    :in_app_new_appt_synced, :in_app_tracking_reminder, :in_app_new_feedback,
+    :in_app_app_updates, :in_app_appointments,
+    :push_new_appt_synced, :push_tracking_reminder, :push_new_feedback,
+    :push_app_updates, :push_appointments
   has_many :webauthn_credentials, dependent: :destroy
   has_many :notifications, dependent: :destroy
   has_one :streak, dependent: :destroy

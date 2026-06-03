@@ -42,14 +42,15 @@ class SettingsController < ApplicationController
 
   def notifications
     reminders = current_user.reminders.index_by(&:reminder_type)
+    current_user.notification_preferences || {}
     @notifications = NotificationSettings.new(
       reminders["morning"]&.active || false,
       reminders["period_start"]&.active || false,
       reminders["pill"]&.active || false,
-      false, # appointment_reminder (not yet implemented)
+      false, # appointment_reminder
       reminders["supplement"]&.active || false,
       current_user.push_subscriptions.any?,
-      false, # email_notifications (not yet persisted)
+      reminders["in_app"]&.active || false,
       "09:00"
     )
   end
@@ -58,8 +59,16 @@ class SettingsController < ApplicationController
     "cycle_reminder" => ["morning", "09:00"],
     "period_prediction" => ["period_start", "00:00"],
     "ovulation_alert" => ["pill", "21:00"],
-    "newsletter" => ["supplement", "18:00"]
+    "newsletter" => ["supplement", "18:00"],
+    "email_notifications" => ["in_app", nil]
   }.freeze
+
+  PREFERENCE_KEYS = %w[
+    in_app_new_appt_synced in_app_tracking_reminder in_app_new_feedback
+    in_app_app_updates in_app_appointments
+    push_new_appt_synced push_tracking_reminder push_new_feedback
+    push_app_updates push_appointments
+  ].freeze
 
   def update_notifications
     KEY_TO_REMINDER.each do |key, (type, default_time)|
@@ -68,8 +77,16 @@ class SettingsController < ApplicationController
       active = ActiveModel::Type::Boolean.new.cast(params[key])
       reminder = current_user.reminders.find_or_initialize_by(reminder_type: type)
       reminder.active = active
-      reminder.time ||= default_time
+      reminder.time ||= default_time if default_time
       reminder.save!
+    end
+
+    PREFERENCE_KEYS.each do |key|
+      next unless params.key?(key)
+
+      prefs = current_user.notification_preferences || {}
+      prefs[key] = ActiveModel::Type::Boolean.new.cast(params[key])
+      current_user.update!(notification_preferences: prefs)
     end
 
     render json: {success: true}
