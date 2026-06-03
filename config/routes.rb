@@ -1,4 +1,9 @@
 Rails.application.routes.draw do
+  resources :notifications, only: [:index, :show, :destroy] do
+    member do
+      patch :mark_read
+    end
+  end
   get "health", to: proc { |env|
     status = {
       rails: "ok",

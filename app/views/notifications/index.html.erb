@@ -1,0 +1,73 @@
+<% content_for(:page_title) { "Notifications" } %>
+<% content_for(:header_left) do %>
+  <%= link_to user_root_path,
+        class: "inline-flex items-center justify-center w-10 h-10 rounded-xl text-brand-primary" do %>
+    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+      <polyline points="15 18 9 12 15 6"/>
+    </svg>
+  <% end %>
+<% end %>
+
+<div class="bg-brand-background min-h-screen pb-24">
+  <div class="max-w-app mx-auto">
+
+    <div class="relative">
+      <div class="h-20 bg-brand-field"></div>
+      <div class="absolute inset-0 flex items-center px-4">
+        <%= content_for :header_left %>
+        <div class="flex-1 text-center">
+          <h1 class="text-lg font-semibold text-brand-primary">Notifications</h1>
+        </div>
+        <% if @unread_count&.positive? %>
+          <div class="flex items-center justify-center w-6 h-6 rounded-full bg-brand-primary text-white text-xs font-bold">
+            <%= @unread_count %>
+          </div>
+        <% else %>
+          <div class="w-6"></div>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="px-4 pt-5">
+      <% if @notifications&.any? %>
+        <div class="space-y-2">
+          <% @notifications.each do |notification| %>
+            <%= link_to notification_path(notification),
+                  class: "block rounded-2xl bg-white px-4 py-3 hover:bg-brand-background transition #{notification.read? ? 'opacity-60' : ''}" do %>
+              <div class="flex items-start gap-3">
+                <div class="flex-shrink-0 w-4 h-4 mt-1.5 rounded-full <%= notification.unread? ? 'bg-brand-primary' : 'bg-brand-field' %>"></div>
+                <div class="flex-1 min-w-0">
+                  <h3 class="text-sm font-semibold text-brand-dark truncate">
+                    <%= notification.title %>
+                  </h3>
+                  <% if notification.description.present? %>
+                    <p class="text-xs text-brand-secondary mt-0.5 line-clamp-2">
+                      <%= notification.description %>
+                    </p>
+                  <% end %>
+                  <p class="text-xs text-brand-secondary mt-1">
+                    <%= time_ago_in_words(notification.created_at) %> ago
+                  </p>
+                </div>
+                <div class="flex-shrink-0 text-brand-secondary">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <polyline points="9 18 15 12 9 6"/>
+                  </svg>
+                </div>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="flex flex-col items-center justify-center py-12">
+          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" class="text-brand-secondary mb-4">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+          </svg>
+          <h2 class="text-brand-dark font-semibold mb-1">No notifications yet</h2>
+          <p class="text-brand-secondary text-sm">You're all caught up!</p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_31_150001) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_03_121050) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -126,6 +126,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_31_150001) do
     t.bigint "user_id"
     t.index ["device_token"], name: "index_native_devices_on_device_token", unique: true
     t.index ["user_id"], name: "index_native_devices_on_user_id"
+  end
+
+  create_table "notifications", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.text "description"
+    t.string "notification_type", default: "info", null: false
+    t.datetime "read_at"
+    t.string "title", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["user_id", "created_at"], name: "index_notifications_on_user_id_and_created_at"
+    t.index ["user_id", "read_at"], name: "index_notifications_on_user_id_and_read_at"
+    t.index ["user_id"], name: "index_notifications_on_user_id"
   end
 
   create_table "push_subscriptions", force: :cascade do |t|
@@ -324,6 +337,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_31_150001) do
   add_foreign_key "cycle_entries", "users"
   add_foreign_key "feedbacks", "users"
   add_foreign_key "native_devices", "users"
+  add_foreign_key "notifications", "users"
   add_foreign_key "push_subscriptions", "users"
   add_foreign_key "reminders", "users"
   add_foreign_key "streaks", "users"
