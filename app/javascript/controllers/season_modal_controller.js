@@ -1,9 +1,21 @@
 import { Controller } from '@hotwired/stimulus'
 
 export default class extends Controller {
-  static targets = ['modal', 'backdrop', 'closeBtn', 'categoryInput', 'categoryOption']
+  static targets = ['modal', 'backdrop', 'closeBtn', 'categoryInput', 'categoryOption', 'triggerButton']
   static values = {
     selectedCategory: String
+  }
+
+  static CATEGORY_ICONS = {
+    Friends: 'family.svg',
+    Dinner: 'dinner.svg',
+    Date: 'date.svg',
+    Sports: 'sport.svg',
+    Medical: 'medical.svg',
+    Birthday: 'birthday.svg',
+    Work: 'work.svg',
+    Coffee: 'coffee.svg',
+    Shopping: 'shopping.svg'
   }
 
   connect () {
@@ -20,6 +32,9 @@ export default class extends Controller {
 
     if (this.hasCategoryInputTarget) {
       this.selectedCategoryValue = this.categoryInputTarget.value
+      if (this.selectedCategoryValue) {
+        this.updateTriggerButton(this.selectedCategoryValue)
+      }
     }
   }
 
@@ -57,5 +72,16 @@ export default class extends Controller {
         icon.style.opacity = '1'
       }
     })
+
+    this.updateTriggerButton(category)
+  }
+
+  updateTriggerButton (category) {
+    if (!this.hasTriggerButtonTarget) return
+    const iconFile = this.constructor.CATEGORY_ICONS[category]
+    if (!iconFile) return
+    const iconPath = `/assets/icons/appointment/${iconFile}`
+    this.triggerButtonTarget.innerHTML = `<img src="${iconPath}" alt="${category}" style="width:30px;height:30px;">`
+    this.triggerButtonTarget.style.background = 'transparent'
   }
 }

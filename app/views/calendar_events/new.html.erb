@@ -19,16 +19,28 @@
 <div class="bg-white min-h-screen pb-32 font-sans" data-controller="season-modal">
   <div class="max-w-app mx-auto px-4 pt-5">
 
+    <% category_icons = {
+      'Friends' => 'family.svg', 'Dinner' => 'dinner.svg', 'Date' => 'date.svg',
+      'Sports' => 'sport.svg', 'Medical' => 'medical.svg', 'Birthday' => 'birthday.svg',
+      'Work' => 'work.svg', 'Coffee' => 'coffee.svg', 'Shopping' => 'shopping.svg'
+    } %>
     <%= form_with model: @event, url: calendar_events_path, local: true do |f| %>
 
       <div class="relative">
 
-        <%# Add (+) button — circle at top-right %>
-        <button type="button" data-action="click->season-modal#open" aria-label="Choose event type"
+        <%# Trigger button — shows + or selected category icon %>
+        <% has_category = @event.category.present? && category_icons.key?(@event.category) %>
+        <button type="button" data-action="click->season-modal#open"
+                data-season-modal-target="triggerButton"
+                aria-label="Choose event type"
                 class="absolute top-0 right-0 w-11 h-11 rounded-full bg-brand-field flex items-center justify-center border-0 p-0 cursor-pointer">
-          <svg width="24" height="24" fill="none" viewBox="0 0 24 24">
-            <path d="M12 5v14M5 12h14" stroke="#A43600" stroke-width="2.5" stroke-linecap="round"></path>
-          </svg>
+          <% if has_category %>
+            <%= image_tag "icons/appointment/#{category_icons[@event.category]}", alt: @event.category, style: "width:30px;height:30px;" %>
+          <% else %>
+            <svg width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <path d="M12 5v14M5 12h14" stroke="#A43600" stroke-width="2.5" stroke-linecap="round"></path>
+            </svg>
+          <% end %>
         </button>
 
         <%# Title input %>
