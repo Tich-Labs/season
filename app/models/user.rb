@@ -137,6 +137,8 @@ class User < ApplicationRecord
 
     if user.new_record?
       user.skip_confirmation!
+      user.password = Devise.friendly_token[0, 20]
+      user.password_confirmation = user.password
       user.save!
     elsif user.public_send(uid_column).blank?
       user.update(uid_column => auth.uid)
