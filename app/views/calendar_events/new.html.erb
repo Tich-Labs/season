@@ -671,7 +671,7 @@
         </button>
 
         <%# Title %>
-        <% until_date = Time.zone.today + 30 %>
+        <% until_date = evt_date + 30 %>
         <% days_count = (until_date - evt_date).to_i %>
         <% day_names = %w[Su Mo Tu We Th Fr Sa] %>
         <% d = until_date.day; m = until_date.month; y = until_date.year %>
