@@ -2,7 +2,7 @@ class CalendarEventsController < ApplicationController
   before_action :set_event, only: [:show, :edit, :update, :destroy]
 
   def index
-    @events = current_user.calendar_events.ordered
+    redirect_to forecast_path
   end
 
   def show
@@ -36,7 +36,7 @@ class CalendarEventsController < ApplicationController
 
   def destroy
     @event.destroy
-    redirect_to calendar_appointments_path, notice: t(".deleted")
+    redirect_to forecast_path, notice: t(".deleted")
   end
 
   private

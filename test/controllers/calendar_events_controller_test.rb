@@ -56,7 +56,7 @@ class CalendarEventsControllerTest < ActionDispatch::IntegrationTest
     assert_difference("CalendarEvent.count", -1) do
       delete calendar_event_path(@event)
     end
-    assert_redirected_to calendar_appointments_path
+    assert_redirected_to forecast_path
   end
 
   test "cannot edit another user's event" do
