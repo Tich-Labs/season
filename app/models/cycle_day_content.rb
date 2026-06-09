@@ -2,11 +2,11 @@ class CycleDayContent < ApplicationRecord
   CARD_TYPES = %w[superpower watch_out_for mood sport nutrition fertility].freeze
   LOCALES = %w[en de].freeze
   PHASE_COLOURS = {
-    1..7 => "#933a35",  # Menstruation / Winter
-    8..14 => "#899884",  # Follicular / Spring
-    15..21 => "#50705b",  # Ovulation / Summer
-    22..35 => "#D18D83",  # Luteal / Autumn
-    :fallback => "#933a35"
+    1..7 => CycleCalculatorService::PHASE_META["menstrual"][:colour],
+    8..14 => CycleCalculatorService::PHASE_META["follicular"][:colour],
+    15..21 => CycleCalculatorService::PHASE_META["ovulation"][:colour],
+    22..35 => CycleCalculatorService::PHASE_META["luteal"][:colour],
+    :fallback => CycleCalculatorService::PHASE_META["menstrual"][:colour]
   }.freeze
 
   validates :cycle_day, presence: true,

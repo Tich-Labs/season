@@ -233,6 +233,67 @@
   line-height: 20px;
 }
 
+/* ── Time Picker ──────────────────────────────────────────────────────── */
+.tp-select {
+  background: transparent;
+  border: none;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+  font-size: 22px;
+  color: #ffffff;
+  cursor: pointer;
+  padding: 0;
+  min-width: 38px;
+  min-height: 44px;
+  appearance: none;
+  -webkit-appearance: none;
+  text-align: center;
+  outline: none;
+  line-height: 44px;
+}
+.tp-select option {
+  color: #933a35;
+  background: #fff;
+}
+.tp-select-modal {
+  background: transparent;
+  border: none;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+  font-size: 22px;
+  color: #933a35;
+  cursor: pointer;
+  padding: 0 2px;
+  min-width: 38px;
+  min-height: 44px;
+  appearance: none;
+  -webkit-appearance: none;
+  text-align: center;
+  outline: none;
+  line-height: 44px;
+}
+.tp-select-modal option {
+  color: #933a35;
+  background: #fff;
+}
+/* Hide scrollbar on time picker scrolls */
+[data-appointment-date-picker-target="hourScroll"]::-webkit-scrollbar,
+[data-appointment-date-picker-target="minuteScroll"]::-webkit-scrollbar {
+  display: none;
+}
+.tp-done {
+  background: transparent;
+  border: none;
+  font-size: 22px;
+  color: #ffffff;
+  cursor: pointer;
+  padding: 0 4px;
+  min-width: 44px;
+  min-height: 44px;
+  line-height: 44px;
+  touch-action: manipulation;
+}
+
 /* ── Craving button grid ────────────────────────────────────────────────── */
 /* Icon-selection follow the same opacity/grayscale pattern as moods */
 .craving-btn {

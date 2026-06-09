@@ -20,7 +20,7 @@ class CalendarEventsController < ApplicationController
   def create
     @event = current_user.calendar_events.build(event_params)
     if @event.save
-      redirect_to calendar_event_path(@event), notice: t(".created")
+      redirect_to edit_calendar_event_path(@event), notice: t(".created")
     else
       render :new, status: :unprocessable_content
     end
@@ -47,7 +47,7 @@ class CalendarEventsController < ApplicationController
 
   def event_params
     params.expect(
-      calendar_event: [:title, :date, :start_time, :end_time, :category, :notes]
+      calendar_event: [:title, :date, :start_time, :end_time, :category, :notes, :location, :guests, :reminder_minutes, :repeat_frequency]
     )
   end
 end

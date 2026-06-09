@@ -30,7 +30,6 @@ export default class extends Controller {
     this.contentTarget.classList.remove('hidden')
     this.#expanded = true
 
-    // Scroll selected date into view
     requestAnimationFrame(() => {
       const ul = this.contentTarget.querySelector('ul')
       const sel = this.contentTarget.querySelector('[data-selected]')

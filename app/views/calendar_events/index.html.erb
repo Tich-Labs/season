@@ -25,7 +25,7 @@
             </div>
 
             <%# Events for this date %>
-            <div class="space-y-2">
+            <div class="space-y-3">
               <% events.sort_by { |e| e.start_time || Time.zone.now }.each do |event| %>
                 <%= link_to calendar_event_path(event), class: "block no-underline" do %>
                   <div class="rounded-2xl bg-white p-4 shadow-sm border-l-4" style="border-left-color: <%= CycleCalculatorService::PHASE_META[current_user.current_phase]&.dig(:colour) || '#933a35' %>;">
@@ -60,22 +60,29 @@
                           'Coffee' => 'coffee.svg',
                           'Shopping' => 'shopping.svg'
                         } %>
-                        <% if icon_map[event.category].present? %>
-                          <div class="flex-shrink-0">
-                            <%= image_tag "icons/appointment/#{icon_map[event.category]}", alt: event.category, class: "w-8 h-8" %>
-                          </div>
-                        <% end %>
+                         <% if icon_map[event.category].present? %>
+                           <div class="flex-shrink-0">
+                             <%= image_tag "icons/appointment/#{icon_map[event.category]}", alt: event.category, class: "w-8 h-8", style: "filter:brightness(0) saturate(100%) invert(28%) sepia(84%) saturate(1607%) hue-rotate(342deg) brightness(63%) contrast(94%);" %>
+                           </div>
+                         <% end %>
                       <% end %>
                     </div>
 
                     <%# Location or notes preview %>
-                    <% if event.location.present? || event.notes.present? %>
+                    <% if event.location.present? || event.notes.present? || event.guests.present? %>
                       <div class="mt-3 flex items-center gap-1 text-xs text-brand-muted truncate">
                         <% if event.location.present? %>
                           <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
                           </svg>
                           <span><%= event.location %></span>
+                        <% elsif event.guests.present? %>
+                          <% guest_count = event.guests.split(',').map(&:strip).reject(&:empty?).size %>
+                          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                            <circle cx="12" cy="7" r="4" />
+                          </svg>
+                          <span><%= guest_count %> guest<%= 's' if guest_count != 1 %></span>
                         <% elsif event.notes.present? %>
                           <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                             <path d="M4 4h16v16H4z" />

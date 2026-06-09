@@ -2,125 +2,113 @@
 <% content_for(:header_left) do %>
   <%= link_to calendar_appointments_path,
         class: "inline-flex items-center justify-center w-10 h-10 rounded-xl text-brand-primary" do %>
-    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-      <polyline points="15 18 9 12 15 6" />
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+      <path d="M3 18H21V16H3V18ZM3 13H21V11H3V13ZM3 6V8H21V6H3Z" fill="#933A35" />
     </svg>
   <% end %>
 <% end %>
 
-<%
-  phase     = current_user.current_phase
-  phase_col = CycleCalculatorService::PHASE_META[phase]&.dig(:colour) || "#933a35"
-%>
+<div class="bg-white min-h-screen pb-32 font-sans">
+  <div class="max-w-app mx-auto px-4 pt-5">
 
-<div class="bg-brand-background min-h-screen pb-24">
-  <div class="max-w-app mx-auto">
+    <%# Title %>
+    <div class="pr-4">
+      <h1 class="text-[22px] font-medium text-brand-primary font-sans m-0"><%= @event.title %></h1>
+    </div>
 
-    <div class="relative">
-      <div class="h-20 bg-brand-field"></div>
-      <div class="absolute inset-0 flex items-center px-4">
-        <%= content_for :header_left %>
-        <div class="flex-1 text-center">
-          <h1 class="text-lg font-semibold text-brand-primary">Appointment</h1>
+    <hr class="border-brand-primary mx-0 my-8" style="width:304px;">
+
+    <%# Date + time SVG block (read-only) %>
+    <div class="py-8">
+      <div class="mx-auto relative" style="width:360px;height:125px;">
+        <svg width="360" height="125" viewBox="0 0 360 125" fill="none" xmlns="http://www.w3.org/2000/svg" class="absolute inset-0 pointer-events-none">
+          <path d="M0 19C0 8.50659 8.50659 0 19 0H341C351.493 0 360 8.50659 360 19V106C360 116.493 351.493 125 341 125H19C8.50659 125 0 116.493 0 106V19Z" fill="#933A35"/>
+        </svg>
+        <div class="relative z-10 flex flex-col justify-center items-center gap-2 h-full text-center">
+          <p class="text-white text-[22px] font-medium tracking-wide font-sans m-0">
+            <%= @event.date.strftime("%a. %B ") %><%= @event.date.day.ordinalize %><%= @event.date.strftime(" %Y") %>
+          </p>
+          <p class="text-white text-[22px] font-medium tracking-wide font-sans m-0">
+            <% if @event.start_time.present? %>
+              <%= @event.start_time.strftime("%l:%M %p").strip %> - <%= @event.end_time&.strftime("%l:%M %p")&.strip || "..." %>
+            <% else %>
+              All day
+            <% end %>
+          </p>
         </div>
-        <div class="w-10"></div>
       </div>
     </div>
 
-    <div class="px-4 pt-5 space-y-4">
-      <%# ── Date/Time Header ── %>
-      <div class="rounded-[32px] overflow-hidden" style="background: <%= phase_col %>33;">
-        <div class="px-5 pt-5 pb-4">
-          <h2 class="text-3xl font-semibold text-white"><%= @event.title %></h2>
-        </div>
+    <hr class="border-brand-primary/50 mx-0 my-8">
 
-        <div class="mx-4 mb-[-24px]">
-          <div class="rounded-[30px] bg-white p-5 shadow-sm">
-            <p class="text-sm font-semibold text-brand-primary"><%= @event.date.strftime("%A, %B %-d %Y") %></p>
-            <p class="mt-3 text-xl font-semibold text-brand-primary">
-              <% if @event.start_time.present? && @event.end_time.present? %>
-                <%= @event.start_time.strftime("%-H:%M") %> – <%= @event.end_time.strftime("%-H:%M") %>
-              <% elsif @event.start_time.present? %>
-                <%= @event.start_time.strftime("%-H:%M") %>
-              <% else %>
-                All day
-              <% end %>
-            </p>
-          </div>
-        </div>
+    <%# Reminder row %>
+    <div class="flex items-center gap-3 py-3.5 px-0">
+      <div class="w-[39px] h-[38px] rounded-full bg-brand-field flex items-center justify-center shrink-0">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#933A35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 8C18 6.409 17.368 4.883 16.243 3.757C15.117 2.632 13.591 2 12 2C10.409 2 8.883 2.632 7.757 3.757C6.632 4.883 6 6.409 6 8C6 15 3 17 3 17H21C21 17 18 15 18 8Z" />
+          <path d="M13.73 21C13.554 21.303 13.301 21.555 12.998 21.73C12.694 21.904 12.35 21.997 12 21.997C11.649 21.997 11.305 21.904 11.001 21.73C10.698 21.555 10.445 21.303 10.27 21" />
+        </svg>
       </div>
+      <% mins = @event.reminder_minutes || 15 %>
+      <span class="text-brand-primary text-base font-medium tracking-[0.07em] flex-1 font-sans"><%= case mins when 1440 then '1 day before' when 120 then '2 hours before' when 60 then '1 hour before' else "#{mins} minutes before" end %></span>
+    </div>
 
-      <%# ── Details Card ── %>
-      <div class="rounded-[28px] bg-white p-4 shadow-sm space-y-4">
-        <%# Reminders %>
-        <% if @event.reminders&.any? %>
-          <div class="space-y-2 border-b border-brand-field pb-4">
-            <p class="text-xs font-semibold text-brand-secondary uppercase">Reminders</p>
-            <% @event.reminders.each do |reminder| %>
-              <div class="flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="text-brand-primary">
-                  <path d="M12 8v4l3 3" />
-                  <path d="M19.4 15a7.5 7.5 0 1 0-1.4 1.4" />
-                </svg>
-                <span class="text-sm font-medium text-brand-primary"><%= reminder.duration %> before</span>
-              </div>
+    <hr class="border-brand-primary/50 mx-0 my-8">
+
+    <%# Location %>
+    <% loc = @event.location.present? %>
+    <div class="flex items-center gap-3 py-3.5 px-0">
+      <div class="w-[39px] h-[38px] rounded-full flex items-center justify-center shrink-0 <%= loc ? 'bg-brand-field' : 'bg-brand-field/50' %>">
+        <svg width="24" height="25" viewBox="0 0 24 25" fill="none" stroke="#933A35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M11.999 22.197L6.339 16.301C5.22 15.137 4.457 13.652 4.148 12.035C3.839 10.418 3.997 8.743 4.603 7.22C5.208 5.697 6.233 4.395 7.549 3.479C8.865 2.563 10.412 2.074 11.994 2.074C13.577 2.074 15.124 2.563 16.439 3.479C17.755 4.395 18.78 5.697 19.386 7.22C19.991 8.743 20.149 10.418 19.84 12.035C19.531 13.652 18.769 15.137 17.649 16.301L11.999 22.197Z" />
+          <path d="M12 13.75C13.657 13.75 15 12.519 15 11C15 9.481 13.657 8.25 12 8.25C10.343 8.25 9 9.481 9 11C9 12.519 10.343 13.75 12 13.75Z" />
+        </svg>
+      </div>
+      <span class="text-base font-medium tracking-[0.07em] flex-1 font-sans <%= loc ? 'text-brand-primary' : 'text-[#AFAFAF]' %>"><%= loc ? @event.location : 'Add location' %></span>
+    </div>
+
+    <%# Guests %>
+    <% guest_list = @event.guests.to_s.split(',').map(&:strip).reject(&:empty?) %>
+    <div class="flex items-start gap-3 py-3.5 px-0">
+      <div class="w-[39px] h-[38px] rounded-full flex items-center justify-center shrink-0 mt-0.5 <%= guest_list.any? ? 'bg-brand-field' : 'bg-brand-field/50' %>">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#933A35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21V19C20 17.939 19.579 16.922 18.828 16.172C18.078 15.421 17.061 15 16 15H8C6.939 15 5.922 15.421 5.172 16.172C4.421 16.922 4 17.939 4 19V21" />
+          <path d="M12 11C14.209 11 16 9.209 16 7C16 4.791 14.209 3 12 3C9.791 3 8 4.791 8 7C8 9.209 9.791 11 12 11Z" />
+        </svg>
+      </div>
+      <div class="flex-1 min-w-0">
+        <% if guest_list.any? %>
+          <div class="flex flex-col gap-1">
+            <% guest_list.each do |email| %>
+              <span class="text-brand-primary text-base font-medium tracking-[0.07em] font-sans"><%= email %></span>
             <% end %>
           </div>
+        <% else %>
+          <span class="text-[#AFAFAF] text-base font-medium tracking-[0.07em] font-sans">Invite guests</span>
         <% end %>
-
-        <%# Location %>
-        <% if @event.location.present? %>
-          <div class="space-y-2 border-b border-brand-field pb-4">
-            <p class="text-xs font-semibold text-brand-secondary uppercase">Location</p>
-            <div class="flex items-center gap-2">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="text-brand-primary">
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                <circle cx="12" cy="10" r="3" />
-              </svg>
-              <span class="text-sm font-medium text-brand-primary"><%= @event.location %></span>
-            </div>
-          </div>
-        <% end %>
-
-        <%# Notes %>
-        <% if @event.notes.present? %>
-          <div class="space-y-2 border-b border-brand-field pb-4">
-            <p class="text-xs font-semibold text-brand-secondary uppercase">Notes</p>
-            <p class="text-sm text-brand-primary"><%= @event.notes %></p>
-          </div>
-        <% end %>
-
-        <%# Category %>
-        <% if @event.category.present? %>
-          <div class="space-y-2">
-            <p class="text-xs font-semibold text-brand-secondary uppercase">Category</p>
-            <div class="flex items-center gap-2">
-              <% icon_map = {
-                'Friends' => 'family.svg',
-                'Dinner' => 'dinner.svg',
-                'Date' => 'date.svg',
-                'Sports' => 'sport.svg',
-                'Medical' => 'medical.svg',
-                'Birthday' => 'birthday.svg',
-                'Work' => 'work.svg',
-                'Coffee' => 'coffee.svg',
-                'Shopping' => 'shopping.svg'
-              } %>
-              <% if icon_map[@event.category].present? %>
-                <%= image_tag "icons/appointment/#{icon_map[@event.category]}", alt: @event.category, class: "w-6 h-6" %>
-              <% end %>
-              <span class="text-sm font-medium text-brand-primary"><%= @event.category %></span>
-            </div>
-          </div>
-        <% end %>
-      </div>
-
-      <%# ── Action Buttons ── %>
-      <div class="space-y-3 pb-6">
-        <%= link_to "Edit appointment", edit_calendar_event_path(@event), class: "block w-full bg-brand-primary text-white text-center rounded-xl py-3 font-semibold no-underline" %>
-
-        <%= button_to "Delete appointment", calendar_event_path(@event), method: :delete, data: { turbo_confirm: "Are you sure?" }, class: "w-full bg-brand-error text-brand-primary border border-brand-primary rounded-xl py-3 font-semibold" %>
       </div>
     </div>
+
+    <%# Notes %>
+    <% has_notes = @event.notes.present? %>
+    <div class="flex items-start gap-3 py-3.5 px-0">
+      <div class="w-[39px] h-[38px] rounded-full flex items-center justify-center shrink-0 <%= has_notes ? 'bg-brand-field' : 'bg-brand-field/50' %>">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#933A35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M16 4H18C18.53 4 19.039 4.211 19.414 4.586C19.789 4.961 20 5.47 20 6V20C20 20.53 19.789 21.039 19.414 21.414C19.039 21.789 18.53 22 18 22H6C5.47 22 4.961 21.789 4.586 21.414C4.211 21.039 4 20.53 4 20V6C4 5.47 4.211 4.961 4.586 4.586C4.961 4.211 5.47 4 6 4H8" />
+          <path d="M15 2H9C8.448 2 8 2.448 8 3V5C8 5.552 8.448 6 9 6H15C15.552 6 16 5.552 16 5V3C16 2.448 15.552 2 15 2Z" />
+        </svg>
+      </div>
+      <span class="text-base font-medium tracking-[0.07em] flex-1 font-sans <%= has_notes ? 'text-brand-primary' : 'text-[#AFAFAF]' %>"><%= has_notes ? @event.notes : 'Notes...' %></span>
+    </div>
+
+    <%# ── Buttons ── %>
+    <div class="flex flex-col gap-3 pt-7">
+      <%= link_to "Edit appointment", edit_calendar_event_path(@event),
+            class: "block w-full text-center text-white py-3.5 rounded-lg text-[22px] font-medium font-sans tracking-[0.03em] bg-brand-primary no-underline" %>
+      <%= button_to "Delete appointment", calendar_event_path(@event),
+            method: :delete, data: { turbo_confirm: "Are you sure?" },
+            class: "w-full bg-transparent text-brand-primary rounded-lg text-[22px] font-medium font-sans cursor-pointer tracking-[0.03em] py-3.5 border-0" %>
+    </div>
+
   </div>
 </div>
