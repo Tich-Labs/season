@@ -60,7 +60,7 @@
       <% if @events&.any? %>
         <div class="flex flex-col gap-3">
           <% @events.each do |event| %>
-            <%= link_to edit_calendar_event_path(event), class: "block no-underline" do %>
+            <%= link_to edit_calendar_event_path(event), class: "block no-underline", data: { turbo: false } do %>
               <div class="rounded-lg p-4 relative" style="background:rgba(147,58,53,0.1);<%= 'padding-bottom:12px;' unless event.notes.present? %>">
                 <div class="flex items-start justify-between gap-3">
                   <div class="min-w-0">
