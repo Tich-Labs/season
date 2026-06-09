@@ -9,9 +9,10 @@
 <% end %>
 
 <%
-  evt_date  = params[:date] ? Date.parse(params[:date]) : Time.zone.today
-  default_start = @event.start_time || Time.zone.now.change(hour: 19, min: 0)
-  default_end   = @event.end_time   || Time.zone.now.change(hour: 20, min: 0)
+  evt_date  = params[:date] ? Date.parse(params[:date]) : Time.zone.tomorrow.to_date
+  now = Time.zone.now
+  default_start = @event.start_time || now.change(min: 0) + 1.hour
+  default_end   = @event.end_time   || default_start + 1.hour
 %>
 
 <div class="bg-white min-h-screen pb-32 font-sans" data-controller="season-modal appointment-date-picker"
