@@ -11,17 +11,10 @@
 <div class="bg-white min-h-screen pb-24 font-sans">
   <div class="max-w-app mx-auto px-4 pt-5">
 
-    <h1 class="text-[22px] font-medium text-brand-primary mb-6 font-sans">Your Appointments</h1>
-
     <% if @events.any? %>
-      <% @events.group_by { |e| e.date }.sort.reverse_each do |date, events| %>
+      <% @events.group_by { |e| e.date }.sort.each do |date, events| %>
         <div class="mb-6">
-          <%# Date group header %>
-          <div class="py-2 mb-3">
-            <p class="text-sm font-semibold text-brand-secondary uppercase"><%= date.strftime("%A, %B %-d %Y") %></p>
-          </div>
-
-          <%# Cards %>
+          <p class="text-sm font-semibold text-brand-secondary uppercase mb-3"><%= date.strftime("%A, %B %-d %Y") %></p>
           <div class="space-y-3">
             <% events.sort_by { |e| e.start_time || Time.zone.now }.each do |event| %>
               <%= link_to edit_calendar_event_path(event), class: "block no-underline" do %>
@@ -39,28 +32,18 @@
                         <% end %>
                       </p>
                     </div>
-
-                    <%# Category icon %>
                     <% if event.category.present? %>
-                      <% icon_map = {
-                        'Friends' => 'family.svg', 'Dinner' => 'dinner.svg', 'Date' => 'date.svg',
-                        'Sports' => 'sport.svg', 'Medical' => 'medical.svg', 'Birthday' => 'birthday.svg',
-                        'Work' => 'work.svg', 'Coffee' => 'coffee.svg', 'Shopping' => 'shopping.svg'
-                      } %>
+                      <% icon_map = { 'Friends'=>'family.svg','Dinner'=>'dinner.svg','Date'=>'date.svg','Sports'=>'sport.svg','Medical'=>'medical.svg','Birthday'=>'birthday.svg','Work'=>'work.svg','Coffee'=>'coffee.svg','Shopping'=>'shopping.svg' } %>
                       <% if icon_map[event.category].present? %>
-                        <div class="flex h-11 w-11 items-center justify-center rounded-full bg-brand-primary/10 text-brand-primary shrink-0">
+                        <div class="flex h-11 w-11 items-center justify-center rounded-full bg-brand-primary/10 shrink-0">
                           <%= image_tag "icons/appointment/#{icon_map[event.category]}", alt: event.category, class: "w-8 h-8", style: "filter:brightness(0) saturate(100%) invert(28%) sepia(84%) saturate(1607%) hue-rotate(342deg) brightness(63%) contrast(94%);" %>
                         </div>
                       <% end %>
                     <% end %>
                   </div>
-
-                  <%# Notes preview %>
                   <% if event.notes.present? %>
                     <p class="mt-3 text-sm leading-relaxed text-brand-secondary font-sans">Note:<br><%= event.notes.truncate(60) %></p>
                   <% end %>
-
-                  <%# Edit pencil button %>
                   <div class="absolute bottom-4 right-4 flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-sm">
                     <svg width="20" height="20" viewBox="0 0 23 23" fill="none">
                       <path d="M10.538 1.917H8.621C3.83 1.917 1.913 3.834 1.913 8.625v5.75c0 4.792 1.917 6.709 6.708 6.709h5.75c4.792 0 6.709-1.917 6.709-6.709v-1.916" stroke="#933A35" stroke-width="2.02" stroke-linecap="round" stroke-linejoin="round"/>
@@ -86,14 +69,5 @@
       </div>
     <% end %>
 
-    <%# ── Create button (floating) ── %>
-    <div class="fixed bottom-24 right-4">
-      <%= link_to new_calendar_event_path, class: "inline-flex items-center justify-center w-14 h-14 rounded-full bg-brand-primary text-white shadow-lg" do %>
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="12" y1="5" x2="12" y2="19" />
-          <line x1="5" y1="12" x2="19" y2="12" />
-        </svg>
-      <% end %>
-    </div>
   </div>
 </div>
