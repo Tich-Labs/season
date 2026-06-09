@@ -1,8 +1,5 @@
-<% tn_cal_colour = @current_phase ? (CycleCalculatorService::PHASE_META[@current_phase]&.dig(:colour) || "#933a35") : "#933a35" %>
 <% tn_cal_title = @date.strftime("%B") %>
-<% content_for(:page_title) { tn_cal_title } %>
-<% content_for(:header_color) { tn_cal_colour } %>
-<% content_for(:header_dark) { "true" } %>
+<%= native_navbar_tag(tn_cal_title) %>
 
 <%# ── No-cycle banner ── %>
 <% if current_user.onboarding_completed? && current_user.last_period_start.nil? %>
