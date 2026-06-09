@@ -1,6 +1,5 @@
 class TestResultsController < ApplicationController
   skip_before_action :verify_authenticity_token, only: [:submit]
-  skip_before_action :require_authentication, only: [:submit]
 
   def submit
     tester_name = params[:tester_name].presence || "Unknown"
