@@ -17,7 +17,7 @@
           <p class="text-sm font-semibold text-brand-secondary uppercase mb-3"><%= date.strftime("%A, %B %-d %Y") %></p>
           <div class="space-y-3">
             <% events.sort_by { |e| e.start_time || Time.zone.now }.each do |event| %>
-              <%= link_to edit_calendar_event_path(event), class: "block no-underline" do %>
+              <%= link_to edit_calendar_event_path(event), class: "block no-underline", data: { turbo_action: "replace" } do %>
                 <div class="rounded-lg p-4 relative" style="background:rgba(147,58,53,0.1);">
                   <div class="flex items-start justify-between gap-3">
                     <div class="min-w-0">
