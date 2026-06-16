@@ -12,14 +12,20 @@ export default class extends Controller {
     'slot2Btn', 'slot2Label', 'slot2Time',
     'allDayToggle',
     'dayScroll', 'monthScroll', 'yearScroll', 'hourScroll', 'minuteScroll', 'stage2Title',
-    'dateDisplay', 'dateField', 'startField', 'endField'
+    'dateDisplay', 'dateField', 'endDateField', 'startField', 'endField'
   ]
 
   _allDay = false
   _mode = 'date'
+  // Slot 1 date state
   _pickDay = 1
   _pickMonth = 1
   _pickYear = 2026
+  // Slot 2 date state (null = auto: slot1 + 1 day)
+  _pickDay2 = null
+  _pickMonth2 = null
+  _pickYear2 = null
+  // Time state
   _pickHour1 = 12
   _pickMin1 = 0
   _pickHour2 = 13
@@ -76,6 +82,13 @@ export default class extends Controller {
   editDate2 () {
     this._editingSlot = 2
     this._mode = 'date'
+    // Initialise slot 2 date from its effective date if not yet set
+    if (this._pickDay2 === null) {
+      const d2 = this.#getSlot2Date()
+      this._pickDay2 = d2.getDate()
+      this._pickMonth2 = d2.getMonth() + 1
+      this._pickYear2 = d2.getFullYear()
+    }
     this.#openStage2()
   }
 
@@ -97,11 +110,19 @@ export default class extends Controller {
     this.#setPickHour(h24)
     this.#setPickMin(Math.round(m / 5) * 5)
 
-    const dateStr = this.#dateStr()
-    const d = dateStr ? new Date(dateStr + 'T00:00:00') : new Date(this._pickYear, this._pickMonth - 1, this._pickDay)
-    this._pickYear = d.getFullYear()
-    this._pickMonth = d.getMonth() + 1
-    this._pickDay = d.getDate()
+    let d
+    if (this._editingSlot === 2 && this._mode === 'date') {
+      d = this.#getSlot2Date()
+      this._pickDay2 = d.getDate()
+      this._pickMonth2 = d.getMonth() + 1
+      this._pickYear2 = d.getFullYear()
+    } else {
+      const dateStr = this.#dateStr()
+      d = dateStr ? new Date(dateStr + 'T00:00:00') : new Date(this._pickYear, this._pickMonth - 1, this._pickDay)
+      this._pickYear = d.getFullYear()
+      this._pickMonth = d.getMonth() + 1
+      this._pickDay = d.getDate()
+    }
 
     const dayName = d.toLocaleDateString('en-US', { weekday: 'short' })
     const month = String(d.getMonth() + 1).padStart(2, '0')
@@ -114,9 +135,12 @@ export default class extends Controller {
 
     requestAnimationFrame(() => {
       if (this._mode === 'date') {
-        this.#scrollTo(this.monthScrollTarget, this._pickMonth)
-        this.#scrollTo(this.dayScrollTarget, this._pickDay)
-        this.#scrollTo(this.yearScrollTarget, this._pickYear)
+        const pm = this._editingSlot === 2 ? this._pickMonth2 : this._pickMonth
+        const pd = this._editingSlot === 2 ? this._pickDay2 : this._pickDay
+        const py = this._editingSlot === 2 ? this._pickYear2 : this._pickYear
+        this.#scrollTo(this.monthScrollTarget, pm)
+        this.#scrollTo(this.dayScrollTarget, pd)
+        this.#scrollTo(this.yearScrollTarget, py)
       } else {
         this.#scrollTo(this.hourScrollTarget, this.#getPickHour())
         this.#scrollTo(this.minuteScrollTarget, this.#getPickMin())
@@ -141,7 +165,26 @@ export default class extends Controller {
     const dateStr = this.#dateStr()
     if (!dateStr) return
 
-    this.#applyDate(dateStr)
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    const picked = new Date(dateStr + 'T00:00:00')
+    if (picked < today) {
+      this.dispatch('past-date')
+      return
+    }
+
+    // Write start date
+    this.dateFieldTarget.value = dateStr
+
+    // Write end date (slot 2 date)
+    const d2 = this.#getSlot2Date()
+    const endDateStr = `${d2.getFullYear()}-${String(d2.getMonth() + 1).padStart(2, '0')}-${String(d2.getDate()).padStart(2, '0')}`
+    if (this.hasEndDateFieldTarget) {
+      this.endDateFieldTarget.value = endDateStr
+    }
+
+    // Update date display — show range if different days
+    this.#applyDateDisplay(dateStr, endDateStr)
 
     if (this._allDay) {
       this.startFieldTarget.value = '00:00'
@@ -244,12 +287,28 @@ export default class extends Controller {
     }
   }
 
+  // Returns the effective Date object for slot 2 (independent if set, else slot1 + 1 day)
+  #getSlot2Date () {
+    if (this._pickDay2 !== null) {
+      return new Date(this._pickYear2, this._pickMonth2 - 1, this._pickDay2)
+    }
+    const d = new Date(this._pickYear, this._pickMonth - 1, this._pickDay)
+    d.setDate(d.getDate() + 1)
+    return d
+  }
+
   onDayScroll () {
     if (this._dRaf) return
     this._dRaf = requestAnimationFrame(() => {
       this._dRaf = null
       const item = this.#closestItem(this.dayScrollTarget)
-      if (item) this._pickDay = parseInt(item.dataset.value)
+      if (item) {
+        if (this._editingSlot === 2 && this._mode === 'date') {
+          this._pickDay2 = parseInt(item.dataset.value)
+        } else {
+          this._pickDay = parseInt(item.dataset.value)
+        }
+      }
       this.#highlightScrollers()
       this.#updateAllSlotLabels()
     })
@@ -260,7 +319,13 @@ export default class extends Controller {
     this._moRaf = requestAnimationFrame(() => {
       this._moRaf = null
       const item = this.#closestItem(this.monthScrollTarget)
-      if (item) this._pickMonth = parseInt(item.dataset.value)
+      if (item) {
+        if (this._editingSlot === 2 && this._mode === 'date') {
+          this._pickMonth2 = parseInt(item.dataset.value)
+        } else {
+          this._pickMonth = parseInt(item.dataset.value)
+        }
+      }
       this.#highlightScrollers()
       this.#updateAllSlotLabels()
     })
@@ -271,27 +336,31 @@ export default class extends Controller {
     this._yRaf = requestAnimationFrame(() => {
       this._yRaf = null
       const item = this.#closestItem(this.yearScrollTarget)
-      if (item) this._pickYear = parseInt(item.dataset.value)
+      if (item) {
+        if (this._editingSlot === 2 && this._mode === 'date') {
+          this._pickYear2 = parseInt(item.dataset.value)
+        } else {
+          this._pickYear = parseInt(item.dataset.value)
+        }
+      }
       this.#highlightScrollers()
       this.#updateAllSlotLabels()
     })
   }
 
   #updateAllSlotLabels () {
-    const d = new Date(this._pickYear, this._pickMonth - 1, this._pickDay)
-    const dayName = d.toLocaleDateString('en-US', { weekday: 'short' })
-    const month = String(d.getMonth() + 1).padStart(2, '0')
-    const dateNum = String(d.getDate()).padStart(2, '0')
-    const year = d.getFullYear()
-    this.stage2TitleTarget.textContent = `${dayName} ${month}.${dateNum}.${year}`
+    const d1 = new Date(this._pickYear, this._pickMonth - 1, this._pickDay)
+    const d2 = this.#getSlot2Date()
 
-    const dateShort = `${SHORT[d.getDay()]} ${month}.${dateNum}.${year}`
-    const tomorrow = new Date(d)
-    tomorrow.setDate(tomorrow.getDate() + 1)
-    const date2Short = `${SHORT[tomorrow.getDay()]} ${String(tomorrow.getMonth() + 1).padStart(2, '0')}.${String(tomorrow.getDate()).padStart(2, '0')}.${tomorrow.getFullYear()}`
+    // Stage 2 title reflects whichever slot is being edited
+    const dTitle = this._editingSlot === 2 ? d2 : d1
+    const tMonth = String(dTitle.getMonth() + 1).padStart(2, '0')
+    const tDate = String(dTitle.getDate()).padStart(2, '0')
+    this.stage2TitleTarget.textContent = `${SHORT[dTitle.getDay()]} ${tMonth}.${tDate}.${dTitle.getFullYear()}`
 
-    this.slot1LabelTargets.forEach(el => { el.textContent = dateShort })
-    this.slot2LabelTargets.forEach(el => { el.textContent = date2Short })
+    const fmt = (d) => `${SHORT[d.getDay()]} ${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}.${d.getFullYear()}`
+    this.slot1LabelTargets.forEach(el => { el.textContent = fmt(d1) })
+    this.slot2LabelTargets.forEach(el => { el.textContent = fmt(d2) })
   }
 
   #setBoldForEditingSlot () {
@@ -350,6 +419,20 @@ export default class extends Controller {
     }
   }
 
+  #highlightScrollers () {
+    if (this._mode === 'date') {
+      const pd = this._editingSlot === 2 ? this._pickDay2 : this._pickDay
+      const pm = this._editingSlot === 2 ? this._pickMonth2 : this._pickMonth
+      const py = this._editingSlot === 2 ? this._pickYear2 : this._pickYear
+      this.#highlightTrack(this.dayScrollTarget, pd)
+      this.#highlightTrack(this.monthScrollTarget, pm)
+      this.#highlightTrack(this.yearScrollTarget, py)
+    } else {
+      this.#highlightTrack(this.hourScrollTarget, this.#getPickHour())
+      this.#highlightTrack(this.minuteScrollTarget, this.#getPickMin())
+    }
+  }
+
   #scrollTo (track, val) {
     const items = track.querySelectorAll('[data-value]')
     for (const item of items) {
@@ -367,17 +450,6 @@ export default class extends Controller {
     this._pickMin1 = Math.round(sm / 5) * 5
     this._pickHour2 = eh
     this._pickMin2 = Math.round(em / 5) * 5
-  }
-
-  #highlightScrollers () {
-    if (this._mode === 'date') {
-      this.#highlightTrack(this.dayScrollTarget, this._pickDay)
-      this.#highlightTrack(this.monthScrollTarget, this._pickMonth)
-      this.#highlightTrack(this.yearScrollTarget, this._pickYear)
-    } else {
-      this.#highlightTrack(this.hourScrollTarget, this.#getPickHour())
-      this.#highlightTrack(this.minuteScrollTarget, this.#getPickMin())
-    }
   }
 
   #highlightTrack (track, activeVal) {
@@ -401,19 +473,73 @@ export default class extends Controller {
     return closest
   }
 
-  #applyDate (dateStr) {
-    const d = new Date(dateStr + 'T00:00:00')
-    const dayName = d.toLocaleDateString('en-US', { weekday: 'short' })
-    const monthName = d.toLocaleDateString('en-US', { month: 'long' })
-    const dateNum = d.getDate()
-    const year = d.getFullYear()
-    const nth = this.#ordinal(dateNum)
-    this.dateDisplayTarget.textContent = `${dayName}. ${monthName} ${dateNum}${nth} ${year}`
-    this.dateFieldTarget.value = dateStr
+  #applyDateDisplay (startDateStr, endDateStr) {
+    const d1 = new Date(startDateStr + 'T00:00:00')
+    const d2 = endDateStr ? new Date(endDateStr + 'T00:00:00') : null
+    const multiDay = d2 && d2.toDateString() !== d1.toDateString()
+
+    const dayName1 = d1.toLocaleDateString('en-US', { weekday: 'short' })
+    const monthName1 = d1.toLocaleDateString('en-US', { month: 'long' })
+    const dateNum1 = d1.getDate()
+    const year1 = d1.getFullYear()
+    const nth1 = this.#ordinal(dateNum1)
+
+    let text
+    if (multiDay) {
+      const dayName2 = d2.toLocaleDateString('en-US', { weekday: 'short' })
+      const dateNum2 = d2.getDate()
+      const nth2 = this.#ordinal(dateNum2)
+      const year2 = d2.getFullYear()
+      if (year1 === year2) {
+        text = `${dayName1}. ${monthName1} ${dateNum1}${nth1} – ${dayName2}. ${dateNum2}${nth2} ${year1}`
+      } else {
+        text = `${dayName1}. ${monthName1} ${dateNum1}${nth1} ${year1} – ${dayName2}. ${dateNum2}${nth2} ${year2}`
+      }
+    } else {
+      text = `${dayName1}. ${monthName1} ${dateNum1}${nth1} ${year1}`
+    }
+
+    this.dateDisplayTarget.textContent = text
   }
 
-  #dateStr () {
-    return `${this._pickYear}-${String(this._pickMonth).padStart(2, '0')}-${String(this._pickDay).padStart(2, '0')}`
+  #setDateFromField () {
+    const dateStr = this.dateFieldTarget.value || this.#todayStr()
+    const [y, m, d] = dateStr.split('-').map(Number)
+    this._pickYear = y
+    this._pickMonth = m
+    this._pickDay = d
+
+    // Load saved end_date into slot 2 state
+    const endDateStr = this.hasEndDateFieldTarget ? this.endDateFieldTarget.value : ''
+    if (endDateStr) {
+      const [ey, em2, ed] = endDateStr.split('-').map(Number)
+      this._pickYear2 = ey
+      this._pickMonth2 = em2
+      this._pickDay2 = ed
+    } else {
+      this._pickDay2 = null
+      this._pickMonth2 = null
+      this._pickYear2 = null
+    }
+
+    this.#updateDateTitle()
+  }
+
+  #buildSlots () {
+    const d1 = new Date(this._pickYear, this._pickMonth - 1, this._pickDay)
+    const d2 = this.#getSlot2Date()
+
+    const fmt = (d) => `${SHORT[d.getDay()]} ${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}.${d.getFullYear()}`
+    this.slot1LabelTargets.forEach(el => { el.textContent = fmt(d1) })
+    this.slot2LabelTargets.forEach(el => { el.textContent = fmt(d2) })
+
+    const time12a = this.#fmt12h(this._pickHour1, this._pickMin1)
+    const time12b = this.#fmt12h(this._pickHour2, this._pickMin2)
+    this.slot1TimeTargets.forEach(el => { el.textContent = time12a })
+    this.slot2TimeTargets.forEach(el => { el.textContent = time12b })
+
+    this.slot1BtnTargets.forEach(el => { el.dataset.time24 = this.#getSlotTime24(1) })
+    this.slot2BtnTargets.forEach(el => { el.dataset.time24 = this.#getSlotTime24(2) })
   }
 
   #updateDateTitle () {
@@ -426,15 +552,10 @@ export default class extends Controller {
   }
 
   #updateDateDisplay () {
-    const dateStr = this.dateFieldTarget.value
-    if (!dateStr) return
-    const d = new Date(dateStr + 'T00:00:00')
-    const dayName = d.toLocaleDateString('en-US', { weekday: 'short' })
-    const monthName = d.toLocaleDateString('en-US', { month: 'long' })
-    const dateNum = d.getDate()
-    const year = d.getFullYear()
-    const nth = this.#ordinal(dateNum)
-    this.dateDisplayTarget.textContent = `${dayName}. ${monthName} ${dateNum}${nth} ${year}`
+    const startDateStr = this.dateFieldTarget.value
+    if (!startDateStr) return
+    const endDateStr = this.hasEndDateFieldTarget ? this.endDateFieldTarget.value : ''
+    this.#applyDateDisplay(startDateStr, endDateStr || null)
   }
 
   #updateTimeDisplays () {
@@ -453,42 +574,14 @@ export default class extends Controller {
     }
   }
 
-  #setDateFromField () {
-    const dateStr = this.dateFieldTarget.value || this.#todayStr()
-    const [y, m, d] = dateStr.split('-').map(Number)
-    this._pickYear = y
-    this._pickMonth = m
-    this._pickDay = d
-    this.#updateDateTitle()
-  }
-
-  #buildSlots () {
-    const dateStr = this.#dateStr() || this.#todayStr()
-    const d = new Date(dateStr + 'T00:00:00')
-    const tomorrow = new Date(d)
-    tomorrow.setDate(tomorrow.getDate() + 1)
-
-    const sd = SHORT[d.getDay()]
-    const td = SHORT[tomorrow.getDay()]
-    const date1Str = `${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}.${d.getFullYear()}`
-    const date2Str = `${String(tomorrow.getMonth() + 1).padStart(2, '0')}.${String(tomorrow.getDate()).padStart(2, '0')}.${tomorrow.getFullYear()}`
-
-    this.slot1LabelTarget.textContent = `${sd} ${date1Str}`
-    this.slot2LabelTarget.textContent = `${td} ${date2Str}`
-
-    const time12a = this.#fmt12h(this._pickHour1, this._pickMin1)
-    const time12b = this.#fmt12h(this._pickHour2, this._pickMin2)
-    this.slot1TimeTarget.textContent = time12a
-    this.slot2TimeTarget.textContent = time12b
-
-    this.slot1BtnTargets.forEach(el => { el.dataset.time24 = this.#getSlotTime24(1) })
-    this.slot2BtnTargets.forEach(el => { el.dataset.time24 = this.#getSlotTime24(2) })
-  }
-
   #fmt12h (h24, m) {
     const ampm = h24 >= 12 ? 'PM' : 'AM'
     const h12 = h24 % 12 || 12
     return `${h12}:${String(m).padStart(2, '0')} ${ampm}`
+  }
+
+  #dateStr () {
+    return `${this._pickYear}-${String(this._pickMonth).padStart(2, '0')}-${String(this._pickDay).padStart(2, '0')}`
   }
 
   #todayStr () {

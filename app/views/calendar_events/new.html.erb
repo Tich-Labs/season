@@ -128,6 +128,7 @@
             </div>
           </div>
           <%= f.hidden_field :date, value: evt_date, data: { appointment_date_picker_target: 'dateField' } %>
+          <%= f.hidden_field :end_date, value: nil, data: { appointment_date_picker_target: 'endDateField' } %>
           </div>
         </div>
         </div>
@@ -179,9 +180,9 @@
 
       <%# Guests row %>
       <% guest_list = @event.guests.to_s.split(',').map(&:strip).reject(&:empty?) %>
-      <div class="flex items-start gap-3 py-3.5 px-5 cursor-pointer"
+      <div class="flex items-center gap-3 py-3.5 px-5 cursor-pointer"
            data-action="click->season-modal#openGuests">
-        <div data-season-modal-target="guestsIconBg" class="w-[39px] h-[38px] rounded-full flex items-center justify-center shrink-0 mt-0.5 <%= guest_list.any? ? 'bg-brand-field' : 'bg-brand-field/50' %>">
+        <div data-season-modal-target="guestsIconBg" class="w-[39px] h-[38px] rounded-full flex items-center justify-center shrink-0 <%= guest_list.any? ? 'bg-brand-field' : 'bg-brand-field/50' %>">
           <svg width="20" height="20" fill="none" stroke="#933A35" stroke-width="2" viewBox="0 0 24 24" <%= guest_list.any? ? '' : 'opacity="0.5"' %>>
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
             <circle cx="12" cy="7" r="4" />
@@ -375,7 +376,7 @@
         <div class="flex flex-col gap-2.5 mt-auto">
           <button type="button" data-action="click->season-modal#close"
                   class="w-full h-[52px] bg-brand-primary text-white rounded-lg border-none font-medium text-[22px] font-sans leading-[45px] text-center cursor-pointer">Add Icon</button>
-          <button type="button" data-action="click->season-modal#close"
+          <button type="button" data-action="click->season-modal#deleteCategory click->season-modal#close"
                   class="w-full bg-transparent text-brand-primary border-none font-medium text-[22px] font-sans leading-[45px] cursor-pointer">Delete Icon</button>
         </div>
       </div>
@@ -467,10 +468,10 @@
     </div>
 
     <%# ── Reminder picker modal ── %>
-    <div data-season-modal-target="reminderBackdrop" class="hidden fixed inset-0 bg-black/40 z-50" data-action="click->season-modal#closeReminder"></div>
+    <div data-season-modal-target="reminderBackdrop" class="hidden fixed inset-0 bg-black/40 z-50"></div>
     <div data-season-modal-target="reminderModal" role="dialog" aria-modal="true" aria-label="Set reminder"
          class="hidden fixed inset-0 z-50 flex items-center justify-center">
-      <div style="width:355px;height:524px;background:#fff;border-radius:29px;box-shadow:0 24px 64px rgba(0,0,0,0.16);position:relative;">
+      <div style="width:355px;height:600px;background:#fff;border-radius:29px;box-shadow:0 24px 64px rgba(0,0,0,0.16);position:relative;">
 
         <%# Close button %>
         <button type="button" data-action="click->season-modal#closeReminder"
@@ -489,10 +490,10 @@
         <%# Divider %>
         <div style="position:absolute;left:18px;top:101px;width:320px;height:0;border:1px solid #EDE1D5;"></div>
 
-        <% reminder_options = [[15, '15 minutes before'], [60, '1 hour before'], [1440, '1 day before'], [10080, '1 week before'], [-1, 'Set my own timer']] %>
+        <% reminder_options = [[15, '15 minutes before'], [60, '1 hour before'], [360, '6 hours before'], [1440, '1 day before'], [10080, '1 week before'], [-1, 'Set my own timer']] %>
         <% sel_min = @event.reminder_minutes || 15 %>
-        <% positions = [140, 185, 230, 276, 354] %>
-        <% heights = [39, 38, 38, 38, 39] %>
+        <% positions = [140, 185, 230, 276, 322, 400] %>
+        <% heights = [39, 38, 38, 38, 38, 39] %>
         <% reminder_options.each_with_index do |(min_val, label), idx| %>
           <% active = sel_min == min_val %>
           <% top = positions[idx] %>
@@ -506,14 +507,62 @@
         <% end %>
 
         <%# Set reminder button %>
-        <div style="position:absolute;left:37px;top:430px;width:281px;height:52px;background:#933A35;border-radius:8px;"></div>
+        <div style="position:absolute;left:37px;top:505px;width:281px;height:52px;background:#933A35;border-radius:8px;"></div>
         <button type="button" data-action="click->season-modal#confirmReminder"
-                style="position:absolute;left:37px;top:430px;width:281px;height:52px;background:transparent;border:none;cursor:pointer;padding:0;display:flex;align-items:center;justify-content:center;font-family:Montserrat;font-weight:500;font-size:16px;line-height:20px;letter-spacing:0.07em;color:#fff;">Set reminder</button>
+                style="position:absolute;left:37px;top:505px;width:281px;height:52px;background:transparent;border:none;cursor:pointer;padding:0;display:flex;align-items:center;justify-content:center;font-family:Montserrat;font-weight:500;font-size:16px;line-height:20px;letter-spacing:0.07em;color:#fff;">Set reminder</button>
+      </div>
+    </div>
+
+    <%# ── Custom reminder picker modal ── %>
+    <div data-season-modal-target="customReminderBackdrop" class="hidden fixed inset-0 bg-black/40 z-50" data-action="click->season-modal#closeCustomReminder"></div>
+    <div data-season-modal-target="customReminderModal" role="dialog" aria-modal="true" aria-label="Set reminder"
+         class="hidden fixed inset-0 z-50 flex items-center justify-center">
+      <div style="width:355px;height:380px;background:#fff;border-radius:29px;box-shadow:0 24px 64px rgba(0,0,0,0.16);position:relative;">
+
+        <%# Close button %>
+        <button type="button" data-action="click->season-modal#closeCustomReminder"
+                style="position:absolute;left:289px;top:13px;width:37px;height:37px;background:transparent;border:none;cursor:pointer;padding:0;z-index:2;">
+          <svg width="37" height="37" viewBox="0 0 53 53" fill="none"><path d="M35.8 16.2L36 16.4C36.2 16.6 36.4 17 36.4 17.4C36.4 17.7 36.3 18.1 36.1 18.4L36 18.5L28.3 26.2L36 33.8C36.2 34.1 36.4 34.4 36.4 34.8C36.4 35.2 36.3 35.5 36.1 35.8L36 36C35.7 36.2 35.4 36.4 35 36.4C34.6 36.4 34.2 36.3 33.9 36.1L33.8 36L26.2 28.3L18.5 36C18.3 36.2 17.9 36.4 17.5 36.4C17.2 36.4 16.8 36.3 16.5 36.1L16.4 36C16.1 35.7 16 35.4 15.9 35C15.9 34.6 16 34.2 16.2 33.9L16.4 33.8L24 26.2L16.4 18.5C16.1 18.3 16 17.9 15.9 17.5C15.9 17.2 16 16.8 16.2 16.5L16.4 16.4C16.6 16.1 17 16 17.4 15.9C17.7 15.9 18.1 16 18.4 16.2L18.5 16.4L26.2 24L33.8 16.4C34.1 16.1 34.4 16 34.8 15.9C35.2 15.9 35.5 16 35.8 16.2L36 16.4L35.8 16.2Z" fill="#A43600"/></svg>
+        </button>
+
+        <%# Bell icon %>
+        <div style="position:absolute;left:158px;top:38px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#933A35" stroke-width="2">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+          </svg>
+        </div>
+
+        <div style="position:absolute;left:18px;top:101px;width:320px;height:0;border:1px solid #EDE1D5;"></div>
+
+        <%# Scroll pickers: number + unit %>
+        <div style="position:absolute;left:36px;top:130px;width:283px;height:100px;display:flex;align-items:center;justify-content:center;gap:12px;overflow:hidden;">
+          <div style="position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);height:44px;background:#EDE1D5;border-radius:8px;pointer-events:none;"></div>
+          <%# Number column %>
+          <div data-season-modal-target="customReminderNum"
+               style="overflow-y:auto;scroll-snap-type:y mandatory;height:100%;width:56px;scrollbar-width:none;text-align:center;position:relative;z-index:1;">
+            <% (1..60).each do |n| %>
+              <div data-value="<%= n %>" style="height:44px;display:flex;align-items:center;justify-content:center;font-family:Montserrat;font-size:22px;letter-spacing:0.03em;color:#933a35;scroll-snap-align:center;font-weight:<%= n == 5 ? '700' : '400' %>;opacity:<%= n == 5 ? '1' : '0.4' %>"><%= format('%02d', n) %></div>
+            <% end %>
+          </div>
+          <%# Unit column %>
+          <div data-season-modal-target="customReminderUnit"
+               style="overflow-y:auto;scroll-snap-type:y mandatory;height:100%;width:90px;scrollbar-width:none;text-align:center;position:relative;z-index:1;">
+            <% [['minutes', 'Minutes'], ['hours', 'Hours'], ['days', 'Days']].each_with_index do |(val, label), i| %>
+              <div data-value="<%= val %>" style="height:44px;display:flex;align-items:center;justify-content:center;font-family:Montserrat;font-size:16px;letter-spacing:0.07em;color:#933a35;scroll-snap-align:center;font-weight:<%= i == 0 ? '700' : '400' %>;opacity:<%= i == 0 ? '1' : '0.4' %>"><%= label %></div>
+            <% end %>
+          </div>
+        </div>
+
+        <%# Add reminder button %>
+        <div style="position:absolute;left:37px;top:285px;width:281px;height:52px;background:#933A35;border-radius:8px;"></div>
+        <button type="button" data-action="click->season-modal#confirmCustomReminder"
+                style="position:absolute;left:37px;top:285px;width:281px;height:52px;background:transparent;border:none;cursor:pointer;padding:0;display:flex;align-items:center;justify-content:center;font-family:Montserrat;font-weight:500;font-size:16px;line-height:20px;letter-spacing:0.07em;color:#fff;">Add reminder</button>
       </div>
     </div>
 
     <%# ── Guests modal ── %>
-    <div data-season-modal-target="guestsBackdrop" class="hidden fixed inset-0 bg-black/40 z-50" data-action="click->season-modal#closeGuests"></div>
+    <div data-season-modal-target="guestsBackdrop" class="hidden fixed inset-0 bg-black/40 z-50"></div>
     <div data-season-modal-target="guestsModal" role="dialog" aria-modal="true" aria-label="Invite guests"
          class="hidden fixed inset-0 z-50 flex items-center justify-center">
       <div data-season-modal-target="guestsCard"
@@ -563,7 +612,7 @@
     </div>
 
     <%# ── Repeat modal ── %>
-    <div data-season-modal-target="repeatBackdrop" class="hidden fixed inset-0 bg-black/40 z-50" data-action="click->season-modal#closeRepeat"></div>
+    <div data-season-modal-target="repeatBackdrop" class="hidden fixed inset-0 bg-black/40 z-50"></div>
     <div data-season-modal-target="repeatModal" role="dialog" aria-modal="true" aria-label="Repeat"
          class="hidden fixed inset-0 z-50 flex items-center justify-center">
       <div style="width:361px;height:776px;background:#fff;border-radius:29px;box-shadow:0 24px 64px rgba(0,0,0,0.16);position:relative;overflow-y:auto;scrollbar-width:none;">
@@ -622,8 +671,29 @@
 
   </div>
 
+    <%# ── Attention dialogs (shared, content swapped by JS) ── %>
+    <div data-season-modal-target="attentionBackdrop" class="hidden fixed inset-0 bg-black/40 z-[200]"></div>
+    <div data-season-modal-target="attentionModal" role="alertdialog" aria-modal="true"
+         class="hidden fixed inset-0 z-[200] flex items-center justify-center">
+      <div style="width:337px;background:#fff;border-radius:29px;box-shadow:0 24px 64px rgba(0,0,0,0.16);padding:32px 28px 24px;position:relative;">
+        <p style="font-family:Montserrat;font-weight:700;font-size:18px;color:#933A35;margin:0 0 12px;">Attention</p>
+        <p data-season-modal-target="attentionBody" style="font-family:Montserrat;font-weight:400;font-size:14px;line-height:1.5;color:#933A35;margin:0 0 24px;"></p>
+        <div class="flex gap-3">
+          <button type="button" data-action="click->season-modal#closeAttention"
+                  data-season-modal-target="attentionCancel"
+                  style="flex:1;height:44px;background:#EDE1D5;border:none;border-radius:10px;font-family:Montserrat;font-weight:500;font-size:15px;color:#933A35;cursor:pointer;">
+            Keep editing
+          </button>
+          <button type="button" data-season-modal-target="attentionConfirm"
+                  style="flex:1;height:44px;background:#933A35;border:none;border-radius:10px;font-family:Montserrat;font-weight:500;font-size:15px;color:#fff;cursor:pointer;">
+            OK
+          </button>
+        </div>
+      </div>
+    </div>
+
     <%# ── Custom repeat modal ── %>
-    <div data-season-modal-target="customRepeatBackdrop" class="hidden fixed inset-0 bg-black/40 z-50" data-action="click->season-modal#closeCustomRepeat"></div>
+    <div data-season-modal-target="customRepeatBackdrop" class="hidden fixed inset-0 bg-black/40 z-50"></div>
     <div data-season-modal-target="customRepeatModal" role="dialog" aria-modal="true" aria-label="Custom repeat"
          class="hidden fixed inset-0 z-50 flex items-center justify-center">
       <div style="width:361px;height:451px;background:#fff;border-radius:29px;box-shadow:0 24px 64px rgba(0,0,0,0.16);position:relative;overflow-y:auto;scrollbar-width:none;">

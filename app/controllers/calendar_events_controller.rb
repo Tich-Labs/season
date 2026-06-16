@@ -28,7 +28,7 @@ class CalendarEventsController < ApplicationController
 
   def update
     if @event.update(event_params)
-      redirect_to calendar_event_path(@event), notice: t(".updated")
+      redirect_to forecast_path, notice: t(".updated")
     else
       render :edit, status: :unprocessable_content
     end
@@ -47,7 +47,7 @@ class CalendarEventsController < ApplicationController
 
   def event_params
     params.expect(
-      calendar_event: [:title, :date, :start_time, :end_time, :category, :notes, :location, :guests, :reminder_minutes, :repeat_frequency]
+      calendar_event: [:title, :date, :end_date, :start_time, :end_time, :category, :notes, :location, :guests, :reminder_minutes, :repeat_frequency]
     )
   end
 end

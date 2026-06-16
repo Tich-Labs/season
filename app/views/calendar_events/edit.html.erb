@@ -8,129 +8,711 @@
   <% end %>
 <% end %>
 
-<div class="bg-white min-h-screen pb-32 font-sans">
+<%
+  evt_date       = @event.date
+  now            = Time.zone.now
+  default_start  = @event.start_time || now.change(min: 0) + 1.hour
+  default_end    = @event.end_time   || default_start + 1.hour
+  repeat_val     = @event.repeat_frequency
+%>
+
+<div class="bg-white min-h-screen pb-32 font-sans"
+     data-controller="season-modal appointment-date-picker"
+     data-appointment-date-picker-selected-date-value="<%= evt_date %>">
   <div class="max-w-app mx-auto px-4 pt-5">
+
+    <% category_icons = {
+      'Friends' => 'family.svg', 'Dinner' => 'dinner.svg', 'Date' => 'date.svg',
+      'Sports' => 'sport.svg', 'Medical' => 'medical.svg', 'Birthday' => 'birthday.svg',
+      'Work' => 'work.svg', 'Coffee' => 'coffee.svg', 'Shopping' => 'shopping.svg'
+    } %>
 
     <%= form_with model: @event, url: calendar_event_path(@event), method: :patch, local: true do |f| %>
 
-      <%# Title input %>
       <div class="relative">
-        <div class="pr-14">
+
+        <%# Category trigger button %>
+        <% has_category = @event.category.present? && category_icons.key?(@event.category) %>
+        <button type="button" data-action="click->season-modal#open"
+                data-season-modal-target="triggerButton"
+                aria-label="Choose event type"
+                class="absolute top-0 right-0 w-11 h-11 rounded-full bg-brand-field flex items-center justify-center border-0 p-0 cursor-pointer">
+          <% if has_category %>
+            <%= image_tag "icons/appointment/#{category_icons[@event.category]}", alt: @event.category, style: "width:30px;height:30px;" %>
+          <% else %>
+            <svg width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <path d="M12 5v14M5 12h14" stroke="#A43600" stroke-width="2.5" stroke-linecap="round"></path>
+            </svg>
+          <% end %>
+        </button>
+
+        <%# Title input %>
+        <div class="bg-white rounded-3xl px-4 pt-4 pb-3 pr-12">
           <%= f.text_field :title,
                 placeholder: "Enter title",
                 required: true,
                 value: @event.title,
                 class: "w-full bg-transparent border-none text-[22px] font-medium text-brand-primary p-0 outline-none font-sans" %>
         </div>
-        <button type="submit" class="absolute top-0 right-0 w-11 h-11 rounded-full bg-brand-field flex items-center justify-center border-0 p-0 cursor-pointer">
-          <svg width="27" height="27" viewBox="0 0 27 27" fill="none">
-            <path d="M4.308 4.744C4.308 3.339 5.381 2.189 6.693 2.189C8.005 2.189 9.078 3.339 9.078 4.744C9.078 6.149 8.005 7.298 6.693 7.298C5.381 7.298 4.308 6.149 4.308 4.744ZM15.041 25.18C14.373 25.18 13.825 24.618 13.789 23.903L13.252 12.407L9.078 11.13H1.922C1.266 11.13 0.73 10.555 0.73 9.853C0.73 9.15 1.266 8.576 1.922 8.576H7.885L15.351 2.866C15.852 2.483 16.544 2.573 16.949 3.071C17.402 3.646 17.307 4.501 16.735 4.936L12.823 7.937H16.234L24.689 2.713C24.945 2.544 25.253 2.487 25.548 2.554C25.842 2.622 26.101 2.808 26.27 3.075C26.439 3.342 26.506 3.668 26.456 3.987C26.406 4.305 26.243 4.59 26.001 4.782L16.83 12.407L16.293 23.903C16.257 24.618 15.709 25.18 15.041 25.18Z" fill="#933A35"/>
-          </svg>
-        </button>
+
+        <div class="mx-5 my-8" style="width:304px;height:1px;background:#933A35;"></div>
+
+        <%# Date + time block %>
+        <div class="py-8">
+          <div class="mx-auto relative" style="width:360px;height:125px;">
+            <svg width="360" height="125" viewBox="0 0 360 125" fill="none" xmlns="http://www.w3.org/2000/svg" class="absolute inset-0 pointer-events-none">
+              <path d="M0 19C0 8.50659 8.50659 0 19 0H341C351.493 0 360 8.50659 360 19V106C360 116.493 351.493 125 341 125H19C8.50659 125 0 116.493 0 106V19Z" fill="#933A35"/>
+            </svg>
+            <div class="relative z-10 flex flex-col justify-center items-center gap-2 h-full text-center">
+              <button type="button" data-action="click->appointment-date-picker#open"
+                      data-appointment-date-picker-target="dateDisplay"
+                      class="text-white text-[22px] font-medium tracking-wide font-sans bg-transparent border-none cursor-pointer p-0">
+                <%= evt_date.strftime("%a. %B ") %><%= evt_date.day.ordinalize %><%= evt_date.strftime(" %Y") %>
+              </button>
+              <%
+                st_h    = default_start.hour > 12 ? default_start.hour - 12 : (default_start.hour == 0 ? 12 : default_start.hour)
+                st_m    = (default_start.min / 5).round * 5
+                st_ampm = default_start.hour >= 12 ? 'PM' : 'AM'
+                et_h    = default_end.hour > 12 ? default_end.hour - 12 : (default_end.hour == 0 ? 12 : default_end.hour)
+                et_m    = (default_end.min / 5).round * 5
+                et_ampm = default_end.hour >= 12 ? 'PM' : 'AM'
+              %>
+              <div class="flex items-center justify-center gap-1">
+                <div data-controller="time-picker"
+                     data-time-picker-hour-value="<%= st_h %>"
+                     data-time-picker-minute-value="<%= st_m %>"
+                     data-time-picker-ampm-value="<%= st_ampm %>"
+                     data-time-picker-field-name-value="calendar_event[start_time]"
+                     class="inline-flex items-center gap-0">
+                  <button type="button" data-action="click->time-picker#open"
+                          data-time-picker-target="display"
+                          class="text-white text-[22px] font-medium tracking-wide font-sans bg-transparent border-none cursor-pointer p-0 min-w-[44px] min-h-[44px] select-none"><%= st_h %>:<%= format('%02d', st_m) %> <%= st_ampm %></button>
+                  <div data-time-picker-target="edit" class="hidden items-center gap-0">
+                    <select data-time-picker-target="hourSelect" data-action="change->time-picker#update" class="tp-select">
+                      <% (1..12).each do |h| %><option value="<%= h %>" <%= 'selected' if h == st_h %>><%= h %></option><% end %>
+                    </select>
+                    <span class="text-white text-[22px] font-light font-sans w-[8px] text-center">:</span>
+                    <select data-time-picker-target="minuteSelect" data-action="change->time-picker#update" class="tp-select">
+                      <% [0,5,10,15,20,25,30,35,40,45,50,55].each do |m| %><option value="<%= m %>" <%= 'selected' if m == st_m %>><%= format('%02d', m) %></option><% end %>
+                    </select>
+                    <select data-time-picker-target="ampmSelect" data-action="change->time-picker#updateAmPm" class="tp-select">
+                      <option value="AM" <%= 'selected' if st_ampm == 'AM' %>>AM</option>
+                      <option value="PM" <%= 'selected' if st_ampm == 'PM' %>>PM</option>
+                    </select>
+                    <button type="button" data-action="click->time-picker#close" class="tp-done">&check;</button>
+                  </div>
+                  <input type="hidden" name="calendar_event[start_time]" data-time-picker-target="field" data-appointment-date-picker-target="startField" value="<%= default_start.strftime('%H:%M') %>">
+                </div>
+                <span class="text-white text-[22px] font-light font-sans">-</span>
+                <div data-controller="time-picker"
+                     data-time-picker-hour-value="<%= et_h %>"
+                     data-time-picker-minute-value="<%= et_m %>"
+                     data-time-picker-ampm-value="<%= et_ampm %>"
+                     data-time-picker-field-name-value="calendar_event[end_time]"
+                     class="inline-flex items-center gap-0">
+                  <button type="button" data-action="click->time-picker#open"
+                          data-time-picker-target="display"
+                          class="text-white text-[22px] font-medium tracking-wide font-sans bg-transparent border-none cursor-pointer p-0 min-w-[44px] min-h-[44px] select-none"><%= et_h %>:<%= format('%02d', et_m) %> <%= et_ampm %></button>
+                  <div data-time-picker-target="edit" class="hidden items-center gap-0">
+                    <select data-time-picker-target="hourSelect" data-action="change->time-picker#update" class="tp-select">
+                      <% (1..12).each do |h| %><option value="<%= h %>" <%= 'selected' if h == et_h %>><%= h %></option><% end %>
+                    </select>
+                    <span class="text-white text-[22px] font-light font-sans w-[8px] text-center">:</span>
+                    <select data-time-picker-target="minuteSelect" data-action="change->time-picker#update" class="tp-select">
+                      <% [0,5,10,15,20,25,30,35,40,45,50,55].each do |m| %><option value="<%= m %>" <%= 'selected' if m == et_m %>><%= format('%02d', m) %></option><% end %>
+                    </select>
+                    <select data-time-picker-target="ampmSelect" data-action="change->time-picker#updateAmPm" class="tp-select">
+                      <option value="AM" <%= 'selected' if et_ampm == 'AM' %>>AM</option>
+                      <option value="PM" <%= 'selected' if et_ampm == 'PM' %>>PM</option>
+                    </select>
+                    <button type="button" data-action="click->time-picker#close" class="tp-done">&check;</button>
+                  </div>
+                  <input type="hidden" name="calendar_event[end_time]" data-time-picker-target="field" data-appointment-date-picker-target="endField" value="<%= default_end.strftime('%H:%M') %>">
+                </div>
+              </div>
+              <%= f.hidden_field :date, value: evt_date, data: { appointment_date_picker_target: 'dateField' } %>
+              <%= f.hidden_field :end_date, value: @event.end_date, data: { appointment_date_picker_target: 'endDateField' } %>
+            </div>
+          </div>
+        </div>
+
       </div>
 
-      <hr class="border-brand-primary mx-0 my-8" style="width:304px;">
+      <hr class="border-brand-primary/50 my-8 mx-5">
 
-      <%# Reminder rows %>
-      <% if @event.reminder_minutes.present? && @event.reminder_minutes > 0 %>
-        <div class="flex items-center gap-3 py-3.5 px-0">
-          <div class="w-[39px] h-[38px] rounded-full bg-brand-field flex items-center justify-center shrink-0">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#933A35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M18 8C18 6.4087 17.3679 4.88258 16.2426 3.75736C15.1174 2.63214 13.5913 2 12 2C10.4087 2 8.88258 2.63214 7.75736 3.75736C6.63214 4.88258 6 6.4087 6 8C6 15 3 17 3 17H21C21 17 18 15 18 8Z" />
-              <path d="M13.73 21C13.5537 21.3031 13.3014 21.5547 12.9978 21.7295C12.6941 21.9044 12.3499 21.9965 11.9995 21.9965C11.6492 21.9965 11.3049 21.9044 11.0013 21.7295C10.6977 21.5547 10.4453 21.3031 10.2695 21" />
-            </svg>
-          </div>
-          <% mins = @event.reminder_minutes %>
-          <span class="text-brand-primary text-base font-medium tracking-[0.07em] flex-1 font-sans"><%= case mins when 1440 then '1 day before' when 120 then '2 hours before' when 60 then '1 hour before' else "#{mins} minutes before" end %></span>
-          <span class="text-brand-primary text-base font-bold font-sans cursor-pointer">X</span>
+      <%# Reminder row %>
+      <% rem = @event.reminder_minutes || 15 %>
+      <% rem_label = case rem when 0 then 'No reminder' when -1 then 'Custom timer' when 10080 then '1 week before' when 1440 then '1 day before' when 360 then '6 hours before' when 60 then '1 hour before' else "#{rem} minutes before" end %>
+      <div class="flex items-center gap-3 py-3.5 px-5 cursor-pointer"
+           data-action="click->season-modal#openReminder">
+        <div data-season-modal-target="reminderIconBg" class="w-[39px] h-[38px] rounded-full flex items-center justify-center shrink-0 <%= rem == 0 ? 'bg-brand-field/50' : 'bg-brand-field' %>">
+          <svg width="20" height="20" fill="none" stroke="#933A35" stroke-width="2" viewBox="0 0 24 24" <%= rem == 0 ? 'opacity="0.5"' : '' %>>
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+          </svg>
         </div>
-      <% else %>
-        <div class="flex items-center gap-3 py-3.5 px-0">
-          <div class="w-[39px] h-[38px] rounded-full bg-brand-field flex items-center justify-center shrink-0">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#933A35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M18 8C18 6.4087 17.3679 4.88258 16.2426 3.75736C15.1174 2.63214 13.5913 2 12 2C10.4087 2 8.88258 2.63214 7.75736 3.75736C6.63214 4.88258 6 6.4087 6 8C6 15 3 17 3 17H21C21 17 18 15 18 8Z" />
-              <path d="M13.73 21C13.5537 21.3031 13.3014 21.5547 12.9978 21.7295C12.6941 21.9044 12.3499 21.9965 11.9995 21.9965C11.6492 21.9965 11.3049 21.9044 11.0013 21.7295C10.6977 21.5547 10.4453 21.3031 10.2695 21" />
-            </svg>
-          </div>
-          <span class="text-brand-primary text-base font-medium tracking-[0.07em] flex-1 font-sans">15 minutes before</span>
-        </div>
-      <% end %>
+        <span data-season-modal-target="reminderLabel" class="text-base font-medium tracking-[0.07em] flex-1 font-sans <%= rem == 0 ? 'text-[#AFAFAF]' : 'text-brand-primary' %>"><%= rem_label %></span>
+      </div>
 
-      <hr class="border-brand-primary/50 mx-0 my-8">
+      <hr class="border-brand-primary/50 my-8 mx-5">
 
       <%# Location row %>
       <% loc = @event.location.present? %>
-      <div class="flex items-center gap-3 py-3.5 px-0">
-        <div class="w-[39px] h-[38px] rounded-full flex items-center justify-center shrink-0 <%= loc ? 'bg-brand-field' : 'bg-brand-field/50' %>">
-          <svg width="24" height="25" viewBox="0 0 24 25" fill="none" stroke="#933A35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M11.999 22.197L6.339 16.301C5.22 15.136 4.457 13.651 4.148 12.035C3.839 10.418 3.997 8.743 4.603 7.22C5.208 5.696 6.233 4.395 7.549 3.479C8.865 2.563 10.412 2.074 11.994 2.074C13.577 2.074 15.124 2.563 16.439 3.479C17.755 4.395 18.78 5.696 19.386 7.22C19.991 8.743 20.149 10.418 19.84 12.035C19.531 13.651 18.769 15.136 17.649 16.301L11.999 22.197Z" />
-            <path d="M12 13.75C13.657 13.75 15 12.519 15 11C15 9.481 13.657 8.25 12 8.25C10.343 8.25 9 9.481 9 11C9 12.519 10.343 13.75 12 13.75Z" stroke="#933A35" stroke-width="2" />
+      <div class="flex items-center gap-3 py-3.5 px-5 cursor-pointer"
+           data-action="click->season-modal#openLocation">
+        <div data-season-modal-target="locationIconBg" class="w-[39px] h-[38px] rounded-full flex items-center justify-center shrink-0 <%= loc ? 'bg-brand-field' : 'bg-brand-field/50' %>">
+          <svg width="20" height="20" fill="none" stroke="#933A35" stroke-width="2" viewBox="0 0 24 24" <%= loc ? '' : 'opacity="0.5"' %>>
+            <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
           </svg>
         </div>
-        <span class="text-base font-medium tracking-[0.07em] flex-1 font-sans <%= loc ? 'text-brand-primary' : 'text-[#AFAFAF]' %>"><%= loc ? @event.location : 'Add location' %></span>
-      </div>
-
-      <%# Guests row %>
-      <% guest_list = @event.guests.to_s.split(',').map(&:strip).reject(&:empty?) %>
-      <div class="flex items-start gap-3 py-3.5 px-0">
-        <div class="w-[39px] h-[38px] rounded-full flex items-center justify-center shrink-0 mt-0.5 <%= guest_list.any? ? 'bg-brand-field' : 'bg-brand-field/50' %>">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#933A35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M20 21V19C20 17.939 19.579 16.922 18.828 16.172C18.078 15.421 17.061 15 16 15H8C6.939 15 5.922 15.421 5.172 16.172C4.421 16.922 4 17.939 4 19V21" />
-            <path d="M12 11C14.209 11 16 9.209 16 7C16 4.791 14.209 3 12 3C9.791 3 8 4.791 8 7C8 9.209 9.791 11 12 11Z" />
-          </svg>
-        </div>
-        <div class="flex-1 min-w-0">
-          <% if guest_list.any? %>
-            <div class="flex flex-col gap-1">
-              <% guest_list.each do |email| %>
-                <div class="flex items-center justify-between gap-2">
-                  <span class="text-brand-primary text-base font-medium tracking-[0.07em] font-sans"><%= email %></span>
-                  <span class="text-brand-primary text-base font-bold font-sans cursor-pointer">X</span>
-                </div>
-              <% end %>
-            </div>
-          <% else %>
-            <span class="text-[#AFAFAF] text-base font-medium tracking-[0.07em] font-sans">Invite guests</span>
-          <% end %>
-        </div>
+        <span data-season-modal-target="locationLabel" class="text-base font-medium tracking-[0.07em] flex-1 font-sans <%= loc ? 'text-brand-primary' : 'text-[#AFAFAF]' %>"><%= loc ? @event.location : 'Add location' %></span>
       </div>
 
       <%# Notes row %>
       <% has_notes = @event.notes.present? %>
-      <div class="flex items-start gap-3 py-3.5 px-0">
-        <div class="w-[39px] h-[38px] rounded-full flex items-center justify-center shrink-0 <%= has_notes ? 'bg-brand-field' : 'bg-brand-field/50' %>">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#933A35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M16 4H18C18.53 4 19.039 4.211 19.414 4.586C19.789 4.961 20 5.47 20 6V20C20 20.53 19.789 21.039 19.414 21.414C19.039 21.789 18.53 22 18 22H6C5.47 22 4.961 21.789 4.586 21.414C4.211 21.039 4 20.53 4 20V6C4 5.47 4.211 4.961 4.586 4.586C4.961 4.211 5.47 4 6 4H8" />
-            <path d="M15 2H9C8.448 2 8 2.448 8 3V5C8 5.552 8.448 6 9 6H15C15.552 6 16 5.552 16 5V3C16 2.448 15.552 2 15 2Z" />
+      <div class="flex items-center gap-3 py-3.5 px-5 cursor-pointer"
+           data-action="click->season-modal#openNotes">
+        <div data-season-modal-target="notesIconBg" class="w-[39px] h-[38px] rounded-full flex items-center justify-center shrink-0 <%= has_notes ? 'bg-brand-field' : 'bg-brand-field/50' %>">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" <%= has_notes ? '' : 'stroke-opacity="0.5"' %>>
+            <path d="M16 4H18C18.5304 4 19.0391 4.21071 19.4142 4.58579C19.7893 4.96086 20 5.46957 20 6V20C20 20.5304 19.7893 21.0391 19.4142 21.4142C19.0391 21.7893 18.5304 22 18 22H6C5.46957 22 4.96086 21.7893 4.58579 21.4142C4.21071 21.0391 4 20.5304 4 20V6C4 5.46957 4.21071 4.96086 4.58579 4.58579C4.96086 4.21071 5.46957 4 6 4H8" stroke="#933A35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M15 2H9C8.44772 2 8 2.44772 8 3V5C8 5.55228 8.44772 6 9 6H15C15.5523 6 16 5.55228 16 5V3C16 2.44772 15.5523 2 15 2Z" stroke="#933A35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </div>
-        <span class="text-base font-medium tracking-[0.07em] flex-1 font-sans <%= has_notes ? 'text-brand-primary' : 'text-[#AFAFAF]' %>"><%= has_notes ? @event.notes.truncate(40) : 'Notes...' %></span>
+        <span data-season-modal-target="notesLabel" class="text-base font-medium tracking-[0.07em] flex-1 font-sans <%= has_notes ? 'text-brand-primary' : 'text-[#AFAFAF]' %>"><%= has_notes ? @event.notes.truncate(30) : 'Notes...' %></span>
+      </div>
+
+      <%# Guests row %>
+      <% guest_list = @event.guests.to_s.split(',').map(&:strip).reject(&:empty?) %>
+      <div class="flex items-center gap-3 py-3.5 px-5 cursor-pointer"
+           data-action="click->season-modal#openGuests">
+        <div data-season-modal-target="guestsIconBg" class="w-[39px] h-[38px] rounded-full flex items-center justify-center shrink-0 <%= guest_list.any? ? 'bg-brand-field' : 'bg-brand-field/50' %>">
+          <svg width="20" height="20" fill="none" stroke="#933A35" stroke-width="2" viewBox="0 0 24 24" <%= guest_list.any? ? '' : 'opacity="0.5"' %>>
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
+          </svg>
+        </div>
+        <div class="flex-1 min-w-0">
+          <span data-season-modal-target="guestsLabel" class="text-[#AFAFAF] text-base font-medium tracking-[0.07em] font-sans <%= guest_list.any? ? 'hidden' : '' %>">Invite guests</span>
+          <div data-season-modal-target="guestsInlineList" class="<%= guest_list.any? ? '' : 'hidden' %> flex flex-col gap-1">
+            <% guest_list.each do |email| %>
+              <div class="flex items-center justify-between gap-2">
+                <span class="text-brand-primary text-base font-medium tracking-[0.07em] font-sans truncate"><%= email %></span>
+                <button type="button" data-action="click->season-modal#removeGuest"
+                        data-guest-email="<%= email %>"
+                        class="shrink-0 bg-transparent border-none cursor-pointer p-0 w-6 h-6 flex items-center justify-center">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M9 3L3 9M3 3l6 6" stroke="#933A35" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </button>
+              </div>
+            <% end %>
+          </div>
+        </div>
       </div>
 
       <%# Repeat row %>
       <% repeat_val = @event.repeat_frequency %>
       <% repeat_label = case repeat_val when 'daily' then 'Daily' when 'weekly' then 'Weekly' when 'monthly' then 'Monthly' when 'yearly' then 'Every Year' when 'custom' then 'Custom' else nil end %>
-      <div class="flex items-center gap-3 py-3.5 px-0">
-        <div class="w-[39px] h-[38px] rounded-full flex items-center justify-center shrink-0 <%= repeat_val.present? ? 'bg-brand-field' : 'bg-brand-field/50' %>">
-          <svg width="22" height="20" viewBox="0 0 22 20" fill="none" stroke="#933A35" stroke-opacity="0.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <div class="flex items-center gap-3 py-3.5 px-5 cursor-pointer"
+           data-action="click->season-modal#openRepeat">
+        <div data-season-modal-target="repeatIconBg" class="w-[39px] h-[38px] rounded-full flex items-center justify-center shrink-0 <%= repeat_val.present? ? 'bg-brand-field' : 'bg-brand-field/50' %>">
+          <svg width="22" height="20" viewBox="0 0 22 20" fill="none" stroke="#933A35" stroke-opacity="<%= repeat_val.present? ? '1' : '0.5' %>" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M20.996 1.998V7.998h-6" />
             <path d="M18.486 12.998C17.836 14.838 16.606 16.417 14.98 17.497C13.355 18.576 11.422 19.099 9.474 18.985C7.526 18.871 5.668 18.127 4.18 16.865C2.691 15.603 1.653 13.891 1.222 11.988C0.791 10.085 0.99 8.093 1.79 6.313C2.589 4.533 3.946 3.061 5.654 2.119C7.363 1.176 9.332 0.815 11.264 1.089C13.196 1.363 14.987 2.258 16.366 3.638L20.996 7.998" />
           </svg>
         </div>
-        <span class="text-base font-medium tracking-[0.07em] flex-1 font-sans <%= repeat_label.present? ? 'text-brand-primary' : 'text-[#AFAFAF]' %>"><%= repeat_label || 'Repeat' %></span>
+        <span data-season-modal-target="repeatLabel" class="text-base font-medium tracking-[0.07em] flex-1 font-sans <%= repeat_label.present? ? 'text-brand-primary' : 'text-[#AFAFAF]' %>"><%= repeat_label || 'Repeat' %></span>
       </div>
 
-      <%# ── Buttons ── %>
+      <%# Buttons %>
       <div class="flex flex-col gap-3 pt-7">
         <%= f.submit "Change appointment",
               class: "w-full text-white py-3.5 rounded-lg border-none text-[22px] font-medium font-sans cursor-pointer tracking-[0.03em] bg-brand-primary" %>
-        <%= button_to "Delete appointment",
-              calendar_event_path(@event),
-              method: :delete,
-              class: "w-full bg-transparent text-brand-primary rounded-lg text-[22px] font-medium font-sans cursor-pointer tracking-[0.03em] py-3.5 border-0" %>
+        <button type="button" data-action="click->season-modal#openNotifyGuests"
+                class="w-full bg-transparent text-brand-primary rounded-lg text-[22px] font-medium font-sans cursor-pointer tracking-[0.03em] py-3.5 border-0">
+          Delete appointment
+        </button>
       </div>
 
+      <%= f.hidden_field :repeat_frequency, value: repeat_val || 'monthly', data: { season_modal_target: 'repeatField' } %>
+      <%= f.hidden_field :reminder_minutes, value: @event.reminder_minutes || 15, data: { season_modal_target: 'reminderField' } %>
+      <%= f.hidden_field :guests, value: @event.guests, data: { season_modal_target: 'guestsField' } %>
+      <%= f.hidden_field :category, value: @event.category, data: { season_modal_target: 'categoryInput' } %>
+      <%= f.hidden_field :location, value: @event.location, data: { season_modal_target: 'locationField' } %>
+      <%= f.hidden_field :notes, value: @event.notes, data: { season_modal_target: 'notesField' } %>
+
     <% end %>
+
+    <%# ── Set Date modal (shared with new form) ── %>
+    <div data-appointment-date-picker-target="backdrop" class="hidden fixed inset-0 bg-black/40 z-50" data-action="click->appointment-date-picker#close"></div>
+    <div data-appointment-date-picker-target="modal" role="dialog" aria-modal="true" class="hidden">
+      <div style="width:333px;height:406px;background:#fff;border-radius:29px;box-shadow:0 24px 64px rgba(0,0,0,0.16);position:relative;">
+
+        <%# Stage 1 %>
+        <div data-appointment-date-picker-target="stage1">
+          <span data-appointment-date-picker-target="dateTitle" style="position:absolute;left:54px;top:65px;width:228px;font-family:Montserrat;font-weight:500;font-size:22px;line-height:27px;letter-spacing:0.03em;color:#933a35;text-align:center;"></span>
+          <button type="button" data-action="click->appointment-date-picker#close" style="position:absolute;left:278px;top:13px;width:37px;height:37px;background:transparent;border:none;cursor:pointer;padding:0;">
+            <svg width="37" height="37" viewBox="0 0 53 53" fill="none"><path d="M35.8 16.2L36 16.4C36.2 16.6 36.4 17 36.4 17.4C36.4 17.7 36.3 18.1 36.1 18.4L36 18.5L28.3 26.2L36 33.8C36.2 34.1 36.4 34.4 36.4 34.8C36.4 35.2 36.3 35.5 36.1 35.8L36 36C35.7 36.2 35.4 36.4 35 36.4C34.6 36.4 34.2 36.3 33.9 36.1L33.8 36L26.2 28.3L18.5 36C18.3 36.2 17.9 36.4 17.5 36.4C17.2 36.4 16.8 36.3 16.5 36.1L16.4 36C16.1 35.7 16 35.4 15.9 35C15.9 34.6 16 34.2 16.2 33.9L16.4 33.8L24 26.2L16.4 18.5C16.1 18.3 16 17.9 15.9 17.5C15.9 17.2 16 16.8 16.2 16.5L16.4 16.4C16.6 16.1 17 16 17.4 15.9C17.7 15.9 18.1 16 18.4 16.2L18.5 16.4L26.2 24L33.8 16.4C34.1 16.1 34.4 16 34.8 15.9C35.2 15.9 35.5 16 35.8 16.2L36 16.4L35.8 16.2Z" fill="#A43600"/></svg>
+          </button>
+          <hr style="position:absolute;left:110px;top:107px;width:132px;border:none;height:1px;background:black;opacity:0.2;">
+          <div style="position:absolute;left:38px;right:38px;top:122px;height:30px;display:flex;align-items:center;justify-content:space-between;">
+            <button type="button" data-action="click->appointment-date-picker#editDate1" data-appointment-date-picker-target="slot1Btn" style="background:transparent;border:none;cursor:pointer;padding:0;">
+              <span data-appointment-date-picker-target="slot1Label" style="font-family:Montserrat;font-weight:500;font-size:16px;letter-spacing:0.07em;color:#933a35;"></span>
+            </button>
+            <button type="button" data-action="click->appointment-date-picker#editTime1" style="background:transparent;border:none;cursor:pointer;padding:0;">
+              <span data-appointment-date-picker-target="slot1Time" style="font-family:Montserrat;font-weight:500;font-size:16px;letter-spacing:0.07em;color:#933a35;"></span>
+            </button>
+          </div>
+          <div style="position:absolute;left:38px;right:38px;top:168px;height:30px;display:flex;align-items:center;justify-content:space-between;">
+            <button type="button" data-action="click->appointment-date-picker#editDate2" data-appointment-date-picker-target="slot2Btn" style="background:transparent;border:none;cursor:pointer;padding:0;">
+              <span data-appointment-date-picker-target="slot2Label" style="font-family:Montserrat;font-weight:500;font-size:16px;letter-spacing:0.07em;color:#933a35;"></span>
+            </button>
+            <button type="button" data-action="click->appointment-date-picker#editTime2" style="background:transparent;border:none;cursor:pointer;padding:0;">
+              <span data-appointment-date-picker-target="slot2Time" style="font-family:Montserrat;font-weight:500;font-size:16px;letter-spacing:0.07em;color:#933a35;"></span>
+            </button>
+          </div>
+          <div style="position:absolute;left:38px;right:38px;top:228px;display:flex;align-items:center;justify-content:space-between;">
+            <span style="font-family:Montserrat;font-weight:500;font-size:16px;letter-spacing:0.07em;color:#933a35;">All day</span>
+            <button type="button" data-action="click->appointment-date-picker#toggleAllDay" data-appointment-date-picker-target="allDayToggle" style="width:63px;height:34px;border-radius:17px;background:#D9D9D9;border:none;cursor:pointer;position:relative;padding:0;">
+              <span style="position:absolute;left:3px;top:2px;width:30px;height:30px;background:white;border-radius:50%;box-shadow:0 1px 4px rgba(0,0,0,0.2);transition:transform 0.2s;"></span>
+            </button>
+          </div>
+          <button type="button" data-action="click->appointment-date-picker#confirm" style="position:absolute;left:38px;top:313px;width:257px;height:48px;background:#933a35;border-radius:8px;border:none;cursor:pointer;font-family:Montserrat;font-weight:500;font-size:22px;line-height:27px;letter-spacing:0.03em;color:white;text-align:center;">Set date</button>
+        </div>
+
+        <%# Stage 2 %>
+        <div data-appointment-date-picker-target="stage2" class="hidden">
+          <span data-appointment-date-picker-target="stage2Title" style="position:absolute;left:54px;top:65px;width:228px;font-family:Montserrat;font-weight:500;font-size:22px;line-height:27px;letter-spacing:0.03em;color:#933a35;text-align:center;"></span>
+          <button type="button" data-action="click->appointment-date-picker#close" style="position:absolute;left:278px;top:13px;width:37px;height:37px;background:transparent;border:none;cursor:pointer;padding:0;">
+            <svg width="37" height="37" viewBox="0 0 53 53" fill="none"><path d="M35.8 16.2L36 16.4C36.2 16.6 36.4 17 36.4 17.4C36.4 17.7 36.3 18.1 36.1 18.4L36 18.5L28.3 26.2L36 33.8C36.2 34.1 36.4 34.4 36.4 34.8C36.4 35.2 36.3 35.5 36.1 35.8L36 36C35.7 36.2 35.4 36.4 35 36.4C34.6 36.4 34.2 36.3 33.9 36.1L33.8 36L26.2 28.3L18.5 36C18.3 36.2 17.9 36.4 17.5 36.4C17.2 36.4 16.8 36.3 16.5 36.1L16.4 36C16.1 35.7 16 35.4 15.9 35C15.9 34.6 16 34.2 16.2 33.9L16.4 33.8L24 26.2L16.4 18.5C16.1 18.3 16 17.9 15.9 17.5C15.9 17.2 16 16.8 16.2 16.5L16.4 16.4C16.6 16.1 17 16 17.4 15.9C17.7 15.9 18.1 16 18.4 16.2L18.5 16.4L26.2 24L33.8 16.4C34.1 16.1 34.4 16 34.8 15.9C35.2 15.9 35.5 16 35.8 16.2L36 16.4L35.8 16.2Z" fill="#A43600"/></svg>
+          </button>
+          <hr style="position:absolute;left:110px;top:107px;width:132px;border:none;height:1px;background:black;opacity:0.2;">
+          <div style="position:absolute;left:38px;right:38px;top:122px;height:30px;display:flex;align-items:center;justify-content:space-between;">
+            <span data-appointment-date-picker-target="slot1Label" style="font-family:Montserrat;font-weight:500;font-size:16px;letter-spacing:0.07em;color:#933a35;"></span>
+            <span data-appointment-date-picker-target="slot1Time" style="font-family:Montserrat;font-weight:500;font-size:16px;letter-spacing:0.07em;color:#933a35;"></span>
+          </div>
+          <hr style="position:absolute;left:110px;top:170px;width:132px;border:none;height:1px;background:black;opacity:0.2;">
+          <div data-picker="date" style="position:absolute;left:38px;top:195px;width:256px;height:60px;display:flex;align-items:center;justify-content:center;gap:6px;">
+            <div style="position:absolute;inset:0;margin:12px 0;background:#EDE1D5;border-radius:8px;"></div>
+            <div data-appointment-date-picker-target="monthScroll" data-action="scroll->appointment-date-picker#onMonthScroll" style="overflow-y:auto;scroll-snap-type:y mandatory;height:100%;width:48px;scrollbar-width:none;position:relative;z-index:1;">
+              <% (1..12).each do |m| %><div data-value="<%= m %>" style="height:20px;display:flex;align-items:center;justify-content:center;font-family:Montserrat;font-size:16px;letter-spacing:0.07em;color:#933a35;"><%= format('%02d', m) %></div><% end %>
+            </div>
+            <span style="font-family:Montserrat;font-size:16px;color:#933a35;position:relative;z-index:1;">/</span>
+            <div data-appointment-date-picker-target="dayScroll" data-action="scroll->appointment-date-picker#onDayScroll" style="overflow-y:auto;scroll-snap-type:y mandatory;height:100%;width:48px;scrollbar-width:none;position:relative;z-index:1;">
+              <% (1..31).each do |d| %><div data-value="<%= d %>" style="height:20px;display:flex;align-items:center;justify-content:center;font-family:Montserrat;font-size:16px;letter-spacing:0.07em;color:#933a35;"><%= format('%02d', d) %></div><% end %>
+            </div>
+            <span style="font-family:Montserrat;font-size:16px;color:#933a35;position:relative;z-index:1;">/</span>
+            <div data-appointment-date-picker-target="yearScroll" data-action="scroll->appointment-date-picker#onYearScroll" style="overflow-y:auto;scroll-snap-type:y mandatory;height:100%;width:64px;scrollbar-width:none;position:relative;z-index:1;">
+              <% ((Time.zone.today.year - 5)..(Time.zone.today.year + 5)).each do |y| %><div data-value="<%= y %>" style="height:20px;display:flex;align-items:center;justify-content:center;font-family:Montserrat;font-size:16px;letter-spacing:0.07em;color:#933a35;"><%= y %></div><% end %>
+            </div>
+          </div>
+          <div data-picker="time" style="position:absolute;left:38px;top:195px;width:256px;height:60px;display:none;align-items:center;justify-content:center;gap:4px;">
+            <div style="position:absolute;inset:0;margin:12px 0;background:#EDE1D5;border-radius:8px;"></div>
+            <div data-appointment-date-picker-target="hourScroll" data-action="scroll->appointment-date-picker#onHourScroll" style="overflow-y:auto;scroll-snap-type:y mandatory;height:100%;width:50px;scrollbar-width:none;position:relative;z-index:1;">
+              <% (0..23).each do |h| %><div data-value="<%= h %>" style="height:20px;display:flex;align-items:center;justify-content:center;font-family:Montserrat;font-size:16px;letter-spacing:0.07em;color:#933a35;"><%= format('%02d', h) %></div><% end %>
+            </div>
+            <span style="font-family:Montserrat;font-weight:700;font-size:16px;color:#933a35;position:relative;z-index:1;">:</span>
+            <div data-appointment-date-picker-target="minuteScroll" data-action="scroll->appointment-date-picker#onMinuteScroll" style="overflow-y:auto;scroll-snap-type:y mandatory;height:100%;width:56px;scrollbar-width:none;position:relative;z-index:1;">
+              <% [0,5,10,15,20,25,30,35,40,45,50,55].each do |m| %><div data-value="<%= m %>" style="height:20px;display:flex;align-items:center;justify-content:center;font-family:Montserrat;font-size:16px;letter-spacing:0.07em;color:#933a35;"><%= format('%02d', m) %></div><% end %>
+            </div>
+          </div>
+          <hr data-stage2-divider style="position:absolute;left:110px;top:306px;width:132px;border:none;height:1px;background:black;opacity:0.2;">
+          <div data-stage2-slot2 style="position:absolute;left:38px;right:38px;top:320px;height:30px;display:flex;align-items:center;justify-content:space-between;">
+            <span data-appointment-date-picker-target="slot2Label" style="font-family:Montserrat;font-weight:500;font-size:16px;letter-spacing:0.07em;color:#933a35;"></span>
+            <span data-appointment-date-picker-target="slot2Time" style="font-family:Montserrat;font-weight:500;font-size:16px;letter-spacing:0.07em;color:#933a35;"></span>
+          </div>
+          <div data-stage2-allday style="position:absolute;left:38px;right:38px;top:375px;display:flex;align-items:center;justify-content:space-between;">
+            <span style="font-family:Montserrat;font-weight:500;font-size:16px;letter-spacing:0.07em;color:#933a35;">All day</span>
+            <button type="button" data-action="click->appointment-date-picker#toggleAllDay" data-appointment-date-picker-target="allDayToggle" style="width:63px;height:34px;border-radius:17px;background:#D9D9D9;border:none;cursor:pointer;position:relative;padding:0;">
+              <span style="position:absolute;left:3px;top:2px;width:30px;height:30px;background:white;border-radius:50%;box-shadow:0 1px 4px rgba(0,0,0,0.2);transition:transform 0.2s;"></span>
+            </button>
+          </div>
+          <button type="button" data-action="click->appointment-date-picker#confirmTime" data-stage2-button style="position:absolute;left:38px;top:440px;width:257px;height:48px;background:#933a35;border-radius:8px;border:none;cursor:pointer;font-family:Montserrat;font-weight:500;font-size:22px;line-height:27px;letter-spacing:0.03em;color:white;text-align:center;">Set date</button>
+        </div>
+      </div>
+    </div>
+
+    <%# ── Category icon picker modal ── %>
+    <div data-season-modal-target="backdrop" class="hidden fixed inset-0 bg-black/40 z-50"></div>
+    <div data-season-modal-target="modal" role="dialog" aria-modal="true" aria-labelledby="edit-choose-icon-title"
+         class="hidden fixed inset-0 z-50 flex items-center justify-center">
+      <div class="w-[351px] h-[845px] bg-white rounded-[29px] p-6 relative flex flex-col" style="box-shadow:0 24px 64px rgba(0,0,0,0.16);">
+        <div class="flex justify-center items-center relative mb-4">
+          <h2 id="edit-choose-icon-title" class="text-[22px] font-medium text-brand-primary text-center font-sans leading-[45px]">Choose an icon.</h2>
+          <button type="button" data-season-modal-target="closeBtn" data-action="click->season-modal#close"
+                  class="absolute right-0 top-1/2 -translate-y-1/2 bg-transparent border-none text-brand-primary text-[26px] w-9 h-9 flex items-center justify-center cursor-pointer font-sans">×</button>
+        </div>
+        <hr class="border-brand-field mb-4">
+        <div class="relative flex-1 min-h-0 overflow-y-auto" style="scrollbar-width:none;">
+          <% items = [
+            { label: 'Friends', icon: 'family.svg', top: 0 },
+            { label: 'Dinner',  icon: 'dinner.svg',  top: 62 },
+            { label: 'Date',    icon: 'date.svg',    top: 125 },
+            { label: 'Sports',  icon: 'sport.svg',   top: 187 },
+            { label: 'Medical', icon: 'medical.svg', top: 249 },
+            { label: 'Birthday',icon: 'birthday.svg',top: 311 },
+            { label: 'Work',    icon: 'work.svg',    top: 371 },
+            { label: 'Coffee',  icon: 'coffee.svg',  top: 435 },
+            { label: 'Shopping',icon: 'shopping.svg',top: 499 }
+          ] %>
+          <% items.each do |item| %>
+            <% selected = @event.category.present? && @event.category == item[:label] %>
+            <button type="button"
+                    data-action="click->season-modal#selectCategory"
+                    data-category-name-value="<%= item[:label] %>"
+                    data-season-modal-target="categoryOption"
+                    class="absolute left-0 w-full h-[45px] flex items-center gap-3 border-none bg-transparent text-left font-medium text-[22px] font-sans leading-[45px] cursor-pointer p-0"
+                    style="top:<%= item[:top] %>px; color:<%= selected ? '#933A35' : '#EDE1D5' %>;">
+              <%= image_tag "icons/appointment/#{item[:icon]}", alt: item[:label], class: "w-[47px] h-[45px]" %>
+              <span><%= item[:label] %></span>
+            </button>
+          <% end %>
+        </div>
+        <div class="flex flex-col gap-2.5 mt-auto">
+          <button type="button" data-action="click->season-modal#close"
+                  class="w-full h-[52px] bg-brand-primary text-white rounded-lg border-none font-medium text-[22px] font-sans text-center cursor-pointer">Add Icon</button>
+          <button type="button" data-action="click->season-modal#deleteCategory click->season-modal#close"
+                  class="w-full bg-transparent text-brand-primary border-none font-medium text-[22px] font-sans cursor-pointer leading-[45px]">Delete Icon</button>
+        </div>
+      </div>
+    </div>
+
+    <%# ── Location picker modal ── %>
+    <div data-season-modal-target="locationBackdrop" class="hidden fixed inset-0 bg-black/40 z-50"></div>
+    <div data-season-modal-target="locationModal" role="dialog" aria-modal="true" aria-label="Add location"
+         class="hidden fixed inset-0 z-50 flex items-center justify-center">
+      <div data-season-modal-target="locationCard"
+           style="width:347px;height:301px;background:#fff;border-radius:29px;box-shadow:0 24px 64px rgba(0,0,0,0.16);position:relative;transition:height 0.25s ease;overflow:hidden;">
+        <button type="button" data-action="click->season-modal#closeLocation"
+                style="position:absolute;left:290px;top:5px;width:37px;height:37px;background:transparent;border:none;cursor:pointer;padding:0;z-index:2;">
+          <svg width="37" height="37" viewBox="0 0 53 53" fill="none"><path d="M35.8 16.2L36 16.4C36.2 16.6 36.4 17 36.4 17.4C36.4 17.7 36.3 18.1 36.1 18.4L36 18.5L28.3 26.2L36 33.8C36.2 34.1 36.4 34.4 36.4 34.8C36.4 35.2 36.3 35.5 36.1 35.8L36 36C35.7 36.2 35.4 36.4 35 36.4C34.6 36.4 34.2 36.3 33.9 36.1L33.8 36L26.2 28.3L18.5 36C18.3 36.2 17.9 36.4 17.5 36.4C17.2 36.4 16.8 36.3 16.5 36.1L16.4 36C16.1 35.7 16 35.4 15.9 35C15.9 34.6 16 34.2 16.2 33.9L16.4 33.8L24 26.2L16.4 18.5C16.1 18.3 16 17.9 15.9 17.5C15.9 17.2 16 16.8 16.2 16.5L16.4 16.4C16.6 16.1 17 16 17.4 15.9C17.7 15.9 18.1 16 18.4 16.2L18.5 16.4L26.2 24L33.8 16.4C34.1 16.1 34.4 16 34.8 15.9;35.2 15.9 35.5 16 35.8 16.2L36 16.4L35.8 16.2Z" fill="#A43600"/></svg>
+        </button>
+        <svg width="45" height="47" viewBox="0 0 45 47" fill="none" style="position:absolute;left:152px;top:34.7px;"><path d="M22.2224 41.1074L11.7409 30.1892C9.66804 28.0314 8.2561 25.2817 7.68368 22.2879C7.11126 19.2941 7.40407 16.1907 8.52508 13.3702C9.6461 10.5498 11.5449 8.13902 13.9814 6.44288C16.4179 4.74673 19.2826 3.8414 22.2131 3.8414C25.1436 3.8414 28.0083 4.74673 30.4448 6.44288C32.8813 8.13902 34.7801 10.5498 35.9012 13.3702C37.0222 16.1907 37.315 19.2941 36.7426 22.2879C36.1701 25.2817 34.7582 28.0314 32.6853 30.1892L22.2224 41.1074Z" stroke="#933A35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg width="45" height="41" viewBox="0 0 45 41" fill="none" style="position:absolute;left:152px;top:31px;"><path d="M22.2221 25.463C25.2903 25.463 27.7776 23.183 27.7776 20.3704C27.7776 17.5579 25.2903 15.2778 22.2221 15.2778C19.1538 15.2778 16.6665 17.5579 16.6665 20.3704C16.6665 23.183 19.1538 25.463 22.2221 25.463Z" stroke="#933A35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div style="position:absolute;left:33px;top:94px;width:283px;height:0;border:1px solid #EDE1D5;"></div>
+        <div style="position:absolute;left:33px;top:130px;width:283px;height:52px;background:#EDE1D5;opacity:0.5;border-radius:8px;"></div>
+        <input type="text" autocomplete="off"
+               data-season-modal-target="locationInput"
+               data-action="input->season-modal#searchLocations"
+               value="<%= @event.location %>"
+               style="position:absolute;left:50px;top:130px;width:249px;height:52px;background:transparent;border:none;padding:0;font-family:Montserrat;font-weight:500;font-size:22px;line-height:52px;letter-spacing:0.03em;color:rgba(147,58,53,0.5);outline:none;"
+               placeholder="Add Location">
+        <div data-season-modal-target="locationResults"
+             style="position:absolute;left:33px;top:190px;width:283px;max-height:230px;overflow-y:auto;display:none;flex-direction:column;scrollbar-width:none;"></div>
+        <div data-season-modal-target="locationSubmitBg"
+             style="position:absolute;left:33px;top:203px;width:283px;height:44px;background:#933A35;opacity:0.5;border-radius:8px;transition:top 0.25s ease,opacity 0.25s ease;"></div>
+        <button type="button" data-action="click->season-modal#submitLocation"
+                data-season-modal-target="locationSubmitBtn"
+                style="position:absolute;left:33px;top:203px;width:283px;height:44px;background:transparent;border:none;cursor:pointer;padding:0;display:flex;align-items:center;justify-content:center;font-family:Montserrat;font-weight:500;font-size:16px;letter-spacing:0.03em;color:#fff;transition:top 0.25s ease;">Submit</button>
+      </div>
+    </div>
+
+    <%# ── Notes modal ── %>
+    <div data-season-modal-target="notesBackdrop" class="hidden fixed inset-0 bg-black/40 z-50"></div>
+    <div data-season-modal-target="notesModal" role="dialog" aria-modal="true" aria-label="Add notes"
+         class="hidden fixed inset-0 z-50 flex items-center justify-center">
+      <div style="width:385px;height:477px;background:#fff;border-radius:29px;box-shadow:0 24px 64px rgba(0,0,0,0.16);position:relative;">
+        <button type="button" data-action="click->season-modal#closeNotes"
+                style="position:absolute;left:321px;top:3px;width:37px;height:37px;background:transparent;border:none;cursor:pointer;padding:0;z-index:2;">
+          <svg width="37" height="37" viewBox="0 0 53 53" fill="none"><path d="M35.8 16.2L36 16.4C36.2 16.6 36.4 17 36.4 17.4C36.4 17.7 36.3 18.1 36.1 18.4L36 18.5L28.3 26.2L36 33.8C36.2 34.1 36.4 34.4 36.4 34.8C36.4 35.2 36.3 35.5 36.1 35.8L36 36C35.7 36.2 35.4 36.4 35 36.4C34.6 36.4 34.2 36.3 33.9 36.1L33.8 36L26.2 28.3L18.5 36C18.3 36.2 17.9 36.4 17.5 36.4C17.2 36.4 16.8 36.3 16.5 36.1L16.4 36C16.1 35.7 16 35.4 15.9 35C15.9 34.6 16 34.2 16.2 33.9L16.4 33.8L24 26.2L16.4 18.5C16.1 18.3 16 17.9 15.9 17.5C15.9 17.2 16 16.8 16.2 16.5L16.4 16.4C16.6 16.1 17 16 17.4 15.9C17.7 15.9 18.1 16 18.4 16.2L18.5 16.4L26.2 24L33.8 16.4C34.1 16.1 34.4 16 34.8 15.9C35.2 15.9 35.5 16 35.8 16.2L36 16.4L35.8 16.2Z" fill="#A43600"/></svg>
+        </button>
+        <svg width="40" height="44" viewBox="0 0 40 44" fill="none" style="position:absolute;left:173px;top:32px;"><path d="M26.3864 7.33325H29.6847C30.5594 7.33325 31.3984 7.71956 32.0169 8.40719C32.6355 9.09483 32.983 10.0275 32.983 10.9999V36.6666C32.983 37.639 32.6355 38.5717 32.0169 39.2593C31.3984 39.9469 30.5594 40.3333 29.6847 40.3333H9.89497C9.02021 40.3333 8.18127 39.9469 7.56273 39.2593C6.94418 38.5717 6.59668 37.639 6.59668 36.6666V10.9999C6.59668 10.0275 6.94418 9.09483 7.56273 8.40719C8.18127 7.71956 9.02021 7.33325 9.89497 7.33325H13.1933" stroke="#933A35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M24.7374 3.66675H14.8425C13.9317 3.66675 13.1934 4.48756 13.1934 5.50008V9.16675C13.1934 10.1793 13.9317 11.0001 14.8425 11.0001H24.7374C25.6482 11.0001 26.3865 10.1793 26.3865 9.16675V5.50008C26.3865 4.48756 25.6482 3.66675 24.7374 3.66675Z" stroke="#933A35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div style="position:absolute;left:33px;top:101px;width:320px;height:0;border:1px solid #EDE1D5;"></div>
+        <span style="position:absolute;left:32px;top:127px;font-family:Montserrat;font-weight:500;font-size:16px;line-height:20px;letter-spacing:0.07em;color:#933A35;">Your Notes</span>
+        <div style="position:absolute;left:32px;top:158px;width:322px;height:225px;background:#EDE1D5;opacity:0.5;border-radius:8px;"></div>
+        <textarea data-season-modal-target="notesInput"
+                  style="position:absolute;left:53px;top:158px;width:280px;height:225px;background:transparent;border:none;padding:16px 0;font-family:Montserrat;font-weight:500;font-size:16px;line-height:20px;letter-spacing:0.07em;color:rgba(147,58,53,0.5);outline:none;resize:none;"
+                  placeholder="Enter your notes here..."><%= @event.notes %></textarea>
+        <div style="position:absolute;left:32px;top:392px;width:322px;height:52px;background:#933A35;border-radius:8px;"></div>
+        <button type="button" data-action="click->season-modal#submitNotes"
+                style="position:absolute;left:32px;top:392px;width:322px;height:52px;background:transparent;border:none;cursor:pointer;padding:0;display:flex;align-items:center;justify-content:center;font-family:Montserrat;font-weight:500;font-size:22px;line-height:27px;letter-spacing:0.03em;color:#fff;">Submit</button>
+      </div>
+    </div>
+
+    <%# ── Reminder picker modal ── %>
+    <div data-season-modal-target="reminderBackdrop" class="hidden fixed inset-0 bg-black/40 z-50"></div>
+    <div data-season-modal-target="reminderModal" role="dialog" aria-modal="true" aria-label="Set reminder"
+         class="hidden fixed inset-0 z-50 flex items-center justify-center">
+      <div style="width:355px;height:600px;background:#fff;border-radius:29px;box-shadow:0 24px 64px rgba(0,0,0,0.16);position:relative;">
+        <button type="button" data-action="click->season-modal#closeReminder"
+                style="position:absolute;left:289px;top:13px;width:37px;height:37px;background:transparent;border:none;cursor:pointer;padding:0;z-index:2;">
+          <svg width="37" height="37" viewBox="0 0 53 53" fill="none"><path d="M35.8 16.2L36 16.4C36.2 16.6 36.4 17 36.4 17.4C36.4 17.7 36.3 18.1 36.1 18.4L36 18.5L28.3 26.2L36 33.8C36.2 34.1 36.4 34.4 36.4 34.8C36.4 35.2 36.3 35.5 36.1 35.8L36 36C35.7 36.2 35.4 36.4 35 36.4C34.6 36.4 34.2 36.3 33.9 36.1L33.8 36L26.2 28.3L18.5 36C18.3 36.2 17.9 36.4 17.5 36.4C17.2 36.4 16.8 36.3 16.5 36.1L16.4 36C16.1 35.7 16 35.4 15.9 35C15.9 34.6 16 34.2 16.2 33.9L16.4 33.8L24 26.2L16.4 18.5C16.1 18.3 16 17.9 15.9 17.5C15.9 17.2 16 16.8 16.2 16.5L16.4 16.4C16.6 16.1 17 16 17.4 15.9C17.7 15.9 18.1 16 18.4 16.2L18.5 16.4L26.2 24L33.8 16.4C34.1 16.1 34.4 16 34.8 15.9C35.2 15.9 35.5 16 35.8 16.2L36 16.4L35.8 16.2Z" fill="#A43600"/></svg>
+        </button>
+        <div style="position:absolute;left:158px;top:38px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#933A35" stroke-width="2">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+          </svg>
+        </div>
+        <div style="position:absolute;left:18px;top:101px;width:320px;height:0;border:1px solid #EDE1D5;"></div>
+        <% edit_reminder_options = [[15, '15 minutes before'], [60, '1 hour before'], [360, '6 hours before'], [1440, '1 day before'], [10080, '1 week before'], [-1, 'Set my own timer']] %>
+        <% edit_sel_min = @event.reminder_minutes || 15 %>
+        <% edit_positions = [140, 185, 230, 276, 322, 400] %>
+        <% edit_heights = [39, 38, 38, 38, 38, 39] %>
+        <% edit_reminder_options.each_with_index do |(min_val, label), idx| %>
+          <% active = edit_sel_min == min_val %>
+          <div data-season-modal-target="reminderOption"
+               data-reminder-minutes-value="<%= min_val %>"
+               data-action="click->season-modal#selectReminder"
+               style="position:absolute;left:37px;top:<%= edit_positions[idx] %>px;width:281px;height:<%= edit_heights[idx] %>px;background:<%= active ? '#EDE1D5' : 'rgba(237,225,213,0.5)' %>;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.15s;">
+            <span style="font-family:Montserrat;font-weight:500;font-size:16px;line-height:45px;text-align:center;color:#933A35;"><%= label %></span>
+          </div>
+        <% end %>
+        <div style="position:absolute;left:37px;top:505px;width:281px;height:52px;background:#933A35;border-radius:8px;"></div>
+        <button type="button" data-action="click->season-modal#confirmReminder"
+                style="position:absolute;left:37px;top:505px;width:281px;height:52px;background:transparent;border:none;cursor:pointer;padding:0;display:flex;align-items:center;justify-content:center;font-family:Montserrat;font-weight:500;font-size:16px;line-height:20px;letter-spacing:0.07em;color:#fff;">Set reminder</button>
+      </div>
+    </div>
+
+    <%# ── Custom reminder picker modal ── %>
+    <div data-season-modal-target="customReminderBackdrop" class="hidden fixed inset-0 bg-black/40 z-50" data-action="click->season-modal#closeCustomReminder"></div>
+    <div data-season-modal-target="customReminderModal" role="dialog" aria-modal="true" aria-label="Set reminder"
+         class="hidden fixed inset-0 z-50 flex items-center justify-center">
+      <div style="width:355px;height:380px;background:#fff;border-radius:29px;box-shadow:0 24px 64px rgba(0,0,0,0.16);position:relative;">
+        <button type="button" data-action="click->season-modal#closeCustomReminder"
+                style="position:absolute;left:289px;top:13px;width:37px;height:37px;background:transparent;border:none;cursor:pointer;padding:0;z-index:2;">
+          <svg width="37" height="37" viewBox="0 0 53 53" fill="none"><path d="M35.8 16.2L36 16.4C36.2 16.6 36.4 17 36.4 17.4C36.4 17.7 36.3 18.1 36.1 18.4L36 18.5L28.3 26.2L36 33.8C36.2 34.1 36.4 34.4 36.4 34.8C36.4 35.2 36.3 35.5 36.1 35.8L36 36C35.7 36.2 35.4 36.4 35 36.4C34.6 36.4 34.2 36.3 33.9 36.1L33.8 36L26.2 28.3L18.5 36C18.3 36.2 17.9 36.4 17.5 36.4C17.2 36.4 16.8 36.3 16.5 36.1L16.4 36C16.1 35.7 16 35.4 15.9 35C15.9 34.6 16 34.2 16.2 33.9L16.4 33.8L24 26.2L16.4 18.5C16.1 18.3 16 17.9 15.9 17.5C15.9 17.2 16 16.8 16.2 16.5L16.4 16.4C16.6 16.1 17 16 17.4 15.9C17.7 15.9 18.1 16 18.4 16.2L18.5 16.4L26.2 24L33.8 16.4C34.1 16.1 34.4 16 34.8 15.9C35.2 15.9 35.5 16 35.8 16.2L36 16.4L35.8 16.2Z" fill="#A43600"/></svg>
+        </button>
+        <div style="position:absolute;left:158px;top:38px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#933A35" stroke-width="2">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+          </svg>
+        </div>
+        <div style="position:absolute;left:18px;top:101px;width:320px;height:0;border:1px solid #EDE1D5;"></div>
+        <div style="position:absolute;left:36px;top:130px;width:283px;height:100px;display:flex;align-items:center;justify-content:center;gap:12px;overflow:hidden;">
+          <div style="position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);height:44px;background:#EDE1D5;border-radius:8px;pointer-events:none;"></div>
+          <div data-season-modal-target="customReminderNum"
+               style="overflow-y:auto;scroll-snap-type:y mandatory;height:100%;width:56px;scrollbar-width:none;text-align:center;position:relative;z-index:1;">
+            <% (1..60).each do |n| %>
+              <div data-value="<%= n %>" style="height:44px;display:flex;align-items:center;justify-content:center;font-family:Montserrat;font-size:22px;letter-spacing:0.03em;color:#933a35;scroll-snap-align:center;font-weight:<%= n == 5 ? '700' : '400' %>;opacity:<%= n == 5 ? '1' : '0.4' %>"><%= format('%02d', n) %></div>
+            <% end %>
+          </div>
+          <div data-season-modal-target="customReminderUnit"
+               style="overflow-y:auto;scroll-snap-type:y mandatory;height:100%;width:90px;scrollbar-width:none;text-align:center;position:relative;z-index:1;">
+            <% [['minutes','Minutes'],['hours','Hours'],['days','Days']].each_with_index do |(val,label),i| %>
+              <div data-value="<%= val %>" style="height:44px;display:flex;align-items:center;justify-content:center;font-family:Montserrat;font-size:16px;letter-spacing:0.07em;color:#933a35;scroll-snap-align:center;font-weight:<%= i == 0 ? '700' : '400' %>;opacity:<%= i == 0 ? '1' : '0.4' %>"><%= label %></div>
+            <% end %>
+          </div>
+        </div>
+        <div style="position:absolute;left:37px;top:285px;width:281px;height:52px;background:#933A35;border-radius:8px;"></div>
+        <button type="button" data-action="click->season-modal#confirmCustomReminder"
+                style="position:absolute;left:37px;top:285px;width:281px;height:52px;background:transparent;border:none;cursor:pointer;padding:0;display:flex;align-items:center;justify-content:center;font-family:Montserrat;font-weight:500;font-size:16px;line-height:20px;letter-spacing:0.07em;color:#fff;">Add reminder</button>
+      </div>
+    </div>
+
+    <%# ── Guests modal ── %>
+    <div data-season-modal-target="guestsBackdrop" class="hidden fixed inset-0 bg-black/40 z-50"></div>
+    <div data-season-modal-target="guestsModal" role="dialog" aria-modal="true" aria-label="Invite guests"
+         class="hidden fixed inset-0 z-50 flex items-center justify-center">
+      <div data-season-modal-target="guestsCard"
+           style="width:348px;height:331px;background:#fff;border-radius:29px;box-shadow:0 24px 64px rgba(0,0,0,0.16);position:relative;transition:height 0.25s ease;overflow:hidden;">
+        <button type="button" data-action="click->season-modal#closeGuests"
+                style="position:absolute;left:290px;top:5px;width:37px;height:37px;background:transparent;border:none;cursor:pointer;padding:0;z-index:2;">
+          <svg width="37" height="37" viewBox="0 0 53 53" fill="none"><path d="M35.8 16.2L36 16.4C36.2 16.6 36.4 17 36.4 17.4C36.4 17.7 36.3 18.1 36.1 18.4L36 18.5L28.3 26.2L36 33.8C36.2 34.1 36.4 34.4 36.4 34.8C36.4 35.2 36.3 35.5 36.1 35.8L36 36C35.7 36.2 35.4 36.4 35 36.4C34.6 36.4 34.2 36.3 33.9 36.1L33.8 36L26.2 28.3L18.5 36C18.3 36.2 17.9 36.4 17.5 36.4C17.2 36.4 16.8 36.3 16.5 36.1L16.4 36C16.1 35.7 16 35.4 15.9 35C15.9 34.6 16 34.2 16.2 33.9L16.4 33.8L24 26.2L16.4 18.5C16.1 18.3 16 17.9 15.9 17.5C15.9 17.2 16 16.8 16.2 16.5L16.4 16.4C16.6 16.1 17 16 17.4 15.9C17.7 15.9 18.1 16 18.4 16.2L18.5 16.4L26.2 24L33.8 16.4C34.1 16.1 34.4 16 34.8 15.9C35.2 15.9 35.5 16 35.8 16.2L36 16.4L35.8 16.2Z" fill="#A43600"/></svg>
+        </button>
+        <div style="position:absolute;left:152px;top:34px;width:44px;height:44px;display:flex;align-items:center;justify-content:center;">
+          <svg width="44" height="44" viewBox="0 0 44 44" fill="none"><path d="M36.667 38.5V35.3333C36.667 33.3884 35.894 31.5232 34.519 30.1479C33.144 28.7726 31.278 28 29.333 28H14.667C12.722 28 10.857 28.7726 9.4813 30.1479C8.1059 31.5232 7.33337 33.3884 7.33337 35.3333V38.5" stroke="#933A35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="22" cy="15.1667" r="7.33333" stroke="#933A35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div style="position:absolute;left:34px;top:100px;width:280px;height:0;border:1px solid #EDE1D5;"></div>
+        <span style="position:absolute;left:50%;transform:translateX(-50%);top:120px;font-family:Montserrat;font-weight:500;font-size:22px;line-height:27px;letter-spacing:0.03em;color:#933A35;white-space:nowrap;">Invite Guests</span>
+        <div style="position:absolute;left:32px;top:166px;width:284px;height:52px;background:#EDE1D5;opacity:0.5;border-radius:8px;"></div>
+        <input type="email" autocomplete="off"
+               data-season-modal-target="guestsInput"
+               data-action="keydown->season-modal#guestsKeydown"
+               style="position:absolute;left:49px;top:166px;width:250px;height:52px;background:transparent;border:none;padding:0;font-family:Montserrat;font-weight:500;font-size:22px;line-height:52px;letter-spacing:0.03em;color:rgba(147,58,53,0.5);outline:none;"
+               placeholder="Add email address">
+        <div data-season-modal-target="guestsList"
+             style="position:absolute;left:32px;top:228px;width:284px;max-height:120px;overflow-y:auto;display:flex;flex-direction:column;gap:4px;scrollbar-width:none;"></div>
+        <div data-season-modal-target="guestsSubmitBg"
+             style="position:absolute;left:32px;top:241px;width:284px;height:52px;background:#933A35;border-radius:8px;transition:top 0.25s ease;"></div>
+        <button type="button" data-action="click->season-modal#addGuest"
+                data-season-modal-target="guestsSubmitBtn"
+                style="position:absolute;left:32px;top:241px;width:284px;height:52px;background:transparent;border:none;cursor:pointer;padding:0;display:flex;align-items:center;justify-content:center;font-family:Montserrat;font-weight:500;font-size:22px;line-height:27px;letter-spacing:0.03em;color:#fff;transition:top 0.25s ease;">Invite Guests</button>
+      </div>
+    </div>
+
+    <%# ── Repeat modal ── %>
+    <div data-season-modal-target="repeatBackdrop" class="hidden fixed inset-0 bg-black/40 z-50"></div>
+    <div data-season-modal-target="repeatModal" role="dialog" aria-modal="true" aria-label="Repeat"
+         class="hidden fixed inset-0 z-50 flex items-center justify-center">
+      <div style="width:361px;height:776px;background:#fff;border-radius:29px;box-shadow:0 24px 64px rgba(0,0,0,0.16);position:relative;overflow-y:auto;scrollbar-width:none;">
+        <button type="button" data-action="click->season-modal#closeRepeat"
+                style="position:absolute;left:304px;top:13px;width:37px;height:37px;background:transparent;border:none;cursor:pointer;padding:0;z-index:2;">
+          <svg width="37" height="37" viewBox="0 0 53 53" fill="none"><path d="M35.8 16.2L36 16.4C36.2 16.6 36.4 17 36.4 17.4C36.4 17.7 36.3 18.1 36.1 18.4L36 18.5L28.3 26.2L36 33.8C36.2 34.1 36.4 34.4 36.4 34.8C36.4 35.2 36.3 35.5 36.1 35.8L36 36C35.7 36.2 35.4 36.4 35 36.4C34.6 36.4 34.2 36.3 33.9 36.1L33.8 36L26.2 28.3L18.5 36C18.3 36.2 17.9 36.4 17.5 36.4C17.2 36.4 16.8 36.3 16.5 36.1L16.4 36C16.1 35.7 16 35.4 15.9 35C15.9 34.6 16 34.2 16.2 33.9L16.4 33.8L24 26.2L16.4 18.5C16.1 18.3 16 17.9 15.9 17.5C15.9 17.2 16 16.8 16.2 16.5L16.4 16.4C16.6 16.1 17 16 17.4 15.9C17.7 15.9 18.1 16 18.4 16.2L18.5 16.4L26.2 24L33.8 16.4C34.1 16.1 34.4 16 34.8 15.9C35.2 15.9 35.5 16 35.8 16.2L36 16.4L35.8 16.2Z" fill="#A43600"/></svg>
+        </button>
+        <p style="position:absolute;left:50%;transform:translateX(-50%);top:34px;font-family:Montserrat;font-weight:500;font-size:22px;line-height:27px;letter-spacing:0.03em;color:#933A35;white-space:nowrap;">Repeat this event</p>
+        <div style="position:absolute;left:13px;top:96px;width:335px;height:0;border:1px solid #EDE1D5;"></div>
+        <% edit_repeat_opts = [['daily','Daily'],['weekly','Weekly'],['monthly','Monthly'],['yearly','Every Year'],['custom','Custom']] %>
+        <% edit_sel_repeat = repeat_val || 'monthly' %>
+        <% edit_tops = [144,199,254,309,364] %>
+        <% edit_repeat_opts.each_with_index do |(val,label),idx| %>
+          <% active = edit_sel_repeat == val %>
+          <div data-season-modal-target="repeatOption"
+               data-repeat-value="<%= val %>"
+               data-action="click->season-modal#selectRepeat"
+               style="position:absolute;left:29px;top:<%= edit_tops[idx] %>px;width:289px;height:38px;background:<%= active ? '#EDE1D5' : 'rgba(237,225,213,0.5)' %>;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.15s;">
+            <span style="font-family:Montserrat;font-weight:500;font-size:16px;letter-spacing:0.07em;color:#933A35;"><%= label %></span>
+          </div>
+        <% end %>
+        <div style="position:absolute;left:30px;top:430px;width:287px;height:0;border:1px solid #EDE1D5;"></div>
+        <div data-season-modal-target="repeatSubOptions" style="position:absolute;left:30px;right:30px;top:456px;">
+          <% sub_opts = [{val:'endless',label:'Repeat endlessly',active:true,top:0},{val:'until',label:'Repeat until',active:false,top:49},{val:'count',label:'Repeat',active:false,top:98}] %>
+          <% sub_opts.each do |opt| %>
+            <div style="position:absolute;top:<%= opt[:top] %>px;left:0;right:0;height:34px;display:flex;align-items:center;justify-content:space-between;">
+              <span style="font-family:Montserrat;font-weight:500;font-size:16px;letter-spacing:0.07em;color:#933A35;"><%= opt[:label] %></span>
+              <div style="width:63px;height:34px;border-radius:17px;background:<%= opt[:active] ? '#933A35' : '#D9D9D9' %>;cursor:pointer;position:relative;flex-shrink:0;"
+                   data-action="click->season-modal#toggleRepeatSub"
+                   data-sub-value="<%= opt[:val] %>">
+                <div style="position:absolute;top:2px;<%= opt[:active] ? 'right:2px;' : 'left:2px;' %>width:30px;height:30px;background:#fff;border-radius:50%;box-shadow:0 1px 4px rgba(0,0,0,0.2);transition:all 0.2s;"></div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+        <div style="position:absolute;left:33px;top:676px;width:290px;height:52px;background:#933A35;border-radius:8px;"></div>
+        <button type="button" data-action="click->season-modal#confirmRepeat"
+                style="position:absolute;left:33px;top:676px;width:290px;height:52px;background:transparent;border:none;cursor:pointer;padding:0;display:flex;align-items:center;justify-content:center;font-family:Montserrat;font-weight:500;font-size:16px;line-height:20px;letter-spacing:0.07em;color:#fff;">Save</button>
+      </div>
+    </div>
+
+    <%# ── Custom repeat modal ── %>
+    <div data-season-modal-target="customRepeatBackdrop" class="hidden fixed inset-0 bg-black/40 z-50"></div>
+    <div data-season-modal-target="customRepeatModal" role="dialog" aria-modal="true" aria-label="Custom repeat"
+         class="hidden fixed inset-0 z-50 flex items-center justify-center">
+      <div style="width:361px;height:451px;background:#fff;border-radius:29px;box-shadow:0 24px 64px rgba(0,0,0,0.16);position:relative;overflow-y:auto;scrollbar-width:none;">
+        <button type="button" data-action="click->season-modal#closeCustomRepeat"
+                style="position:absolute;left:304px;top:13px;width:37px;height:37px;background:transparent;border:none;cursor:pointer;padding:0;z-index:2;">
+          <svg width="37" height="37" viewBox="0 0 53 53" fill="none"><path d="M35.8 16.2L36 16.4C36.2 16.6 36.4 17 36.4 17.4C36.4 17.7 36.3 18.1 36.1 18.4L36 18.5L28.3 26.2L36 33.8C36.2 34.1 36.4 34.4 36.4 34.8C36.4 35.2 36.3 35.5 36.1 35.8L36 36C35.7 36.2 35.4 36.4 35 36.4C34.6 36.4 34.2 36.3 33.9 36.1L33.8 36L26.2 28.3L18.5 36C18.3 36.2 17.9 36.4 17.5 36.4C17.2 36.4 16.8 36.3 16.5 36.1L16.4 36C16.1 35.7 16 35.4 15.9 35C15.9 34.6 16 34.2 16.2 33.9L16.4 33.8L24 26.2L16.4 18.5C16.1 18.3 16 17.9 15.9 17.5C15.9 17.2 16 16.8 16.2 16.5L16.4 16.4C16.6 16.1 17 16 17.4 15.9C17.7 15.9 18.1 16 18.4 16.2L18.5 16.4L26.2 24L33.8 16.4C34.1 16.1 34.4 16 34.8 15.9C35.2 15.9 35.5 16 35.8 16.2L36 16.4L35.8 16.2Z" fill="#A43600"/></svg>
+        </button>
+        <p style="position:absolute;left:50%;transform:translateX(-50%);top:34px;font-family:Montserrat;font-weight:500;font-size:22px;line-height:27px;letter-spacing:0.03em;color:#933A35;white-space:nowrap;">Custom repeat</p>
+        <div style="position:absolute;left:36px;top:100px;width:287px;height:0;border:1px solid #EDE1D5;"></div>
+        <% edit_custom_rows = [{label:'Every',unit:'days',max:365,top:140,default:1},{label:'Every',unit:'weeks',max:52,top:205,default:1},{label:'Every',unit:'months',max:24,top:270,default:1}] %>
+        <% edit_custom_rows.each do |row| %>
+          <div style="position:absolute;left:36px;top:<%= row[:top] %>px;width:287px;height:38px;background:rgba(237,225,213,0.5);border-radius:10px;display:flex;align-items:center;padding:0 16px;gap:4px;">
+            <span style="font-family:Montserrat;font-weight:500;font-size:16px;letter-spacing:0.07em;color:#933A35;"><%= row[:label] %></span>
+            <input type="number" inputmode="numeric" min="1" max="<%= row[:max] %>" value="<%= row[:default] %>" autocomplete="off" style="width:56px;height:100%;background:transparent;border:none;font-family:Montserrat;font-weight:700;font-size:16px;color:#933A35;text-align:center;outline:none;">
+            <span style="font-family:Montserrat;font-weight:500;font-size:16px;letter-spacing:0.07em;color:#933A35;"><%= row[:unit] %></span>
+          </div>
+        <% end %>
+        <div style="position:absolute;left:36px;top:352px;width:287px;height:52px;background:#933A35;border-radius:8px;"></div>
+        <button type="button" data-action="click->season-modal#confirmCustomRepeat"
+                style="position:absolute;left:36px;top:352px;width:287px;height:52px;background:transparent;border:none;cursor:pointer;padding:0;display:flex;align-items:center;justify-content:center;font-family:Montserrat;font-weight:500;font-size:16px;line-height:20px;letter-spacing:0.07em;color:#fff;">Save</button>
+      </div>
+    </div>
+
+    <%# ── Repeat until date modal ── %>
+    <div data-season-modal-target="repeatUntilBackdrop" class="hidden fixed inset-0 bg-black/40 z-50" data-action="click->season-modal#closeRepeatUntil"></div>
+    <div data-season-modal-target="repeatUntilModal" role="dialog" aria-modal="true" aria-label="Repeat until"
+         class="hidden fixed inset-0 z-50 flex items-center justify-center">
+      <div style="width:361px;height:438px;background:#fff;border-radius:29px;box-shadow:0 24px 64px rgba(0,0,0,0.16);position:relative;">
+        <button type="button" data-action="click->season-modal#closeRepeatUntil"
+                style="position:absolute;left:304px;top:13px;width:37px;height:37px;background:transparent;border:none;cursor:pointer;padding:0;z-index:2;">
+          <svg width="37" height="37" viewBox="0 0 53 53" fill="none"><path d="M35.8 16.2L36 16.4C36.2 16.6 36.4 17 36.4 17.4C36.4 17.7 36.3 18.1 36.1 18.4L36 18.5L28.3 26.2L36 33.8C36.2 34.1 36.4 34.4 36.4 34.8C36.4 35.2 36.3 35.5 36.1 35.8L36 36C35.7 36.2 35.4 36.4 35 36.4C34.6 36.4 34.2 36.3 33.9 36.1L33.8 36L26.2 28.3L18.5 36C18.3 36.2 17.9 36.4 17.5 36.4C17.2 36.4 16.8 36.3 16.5 36.1L16.4 36C16.1 35.7 16 35.4 15.9 35C15.9 34.6 16 34.2 16.2 33.9L16.4 33.8L24 26.2L16.4 18.5C16.1 18.3 16 17.9 15.9 17.5C15.9 17.2 16 16.8 16.2 16.5L16.4 16.4C16.6 16.1 17 16 17.4 15.9C17.7 15.9 18.1 16 18.4 16.2L18.5 16.4L26.2 24L33.8 16.4C34.1 16.1 34.4 16 34.8 15.9C35.2 15.9 35.5 16 35.8 16.2L36 16.4L35.8 16.2Z" fill="#A43600"/></svg>
+        </button>
+        <% edit_until_date = evt_date + 30 %>
+        <% edit_until_days = (edit_until_date - evt_date).to_i %>
+        <% edit_day_names = %w[Su Mo Tu We Th Fr Sa] %>
+        <% ud = edit_until_date.day; um = edit_until_date.month; uy = edit_until_date.year %>
+        <p style="position:absolute;left:50%;transform:translateX(-50%);top:34px;font-family:Montserrat;font-weight:500;font-size:22px;line-height:27px;letter-spacing:0.03em;color:#933A35;white-space:nowrap;">Repeat until day <%= edit_until_days %></p>
+        <div style="position:absolute;left:36px;top:100px;width:287px;height:0;border:1px solid #EDE1D5;"></div>
+        <% edit_date_label = "#{edit_day_names[edit_until_date.wday]} #{format('%02d', ud)}.#{format('%02d', um)}.#{uy}" %>
+        <p style="position:absolute;left:50%;transform:translateX(-50%);top:136px;font-family:Montserrat;font-weight:700;font-size:16px;letter-spacing:0.07em;color:#933A35;white-space:nowrap;"><%= edit_date_label %></p>
+        <div style="position:absolute;left:36px;top:176px;width:287px;height:100px;background:#fff;border-radius:8px;display:flex;align-items:center;justify-content:center;gap:12px;position:relative;overflow:hidden;">
+          <div style="position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);height:44px;background:#EDE1D5;border-radius:8px;pointer-events:none;"></div>
+          <div style="overflow-y:auto;scroll-snap-type:y mandatory;height:100%;width:44px;scrollbar-width:none;text-align:center;position:relative;z-index:1;"
+               onscroll="const t=this;t.querySelectorAll('div').forEach(el=>{const r=el.getBoundingClientRect(),p=t.getBoundingClientRect(),c=r.top-p.top+r.height/2-t.clientHeight/2;el.style.opacity=Math.abs(c)<22?'1':'0.35';el.style.fontWeight=Math.abs(c)<22?'700':'400'})">
+            <% (1..31).each do |day| %>
+              <div style="height:44px;display:flex;align-items:center;justify-content:center;font-family:Montserrat;font-size:16px;color:#933A35;scroll-snap-align:center;font-weight:<%= day == ud ? '700' : '400' %>;opacity:<%= day == ud ? '1' : '0.35' %>"><%= format('%02d', day) %></div>
+            <% end %>
+          </div>
+          <% edit_months = %w[Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec] %>
+          <div style="overflow-y:auto;scroll-snap-type:y mandatory;height:100%;width:52px;scrollbar-width:none;text-align:center;position:relative;z-index:1;"
+               onscroll="const t=this;t.querySelectorAll('div').forEach(el=>{const r=el.getBoundingClientRect(),p=t.getBoundingClientRect(),c=r.top-p.top+r.height/2-t.clientHeight/2;el.style.opacity=Math.abs(c)<22?'1':'0.35';el.style.fontWeight=Math.abs(c)<22?'700':'400'})">
+            <% edit_months.each_with_index do |mon, mi| %>
+              <% mo = mi + 1 %>
+              <div style="height:44px;display:flex;align-items:center;justify-content:center;font-family:Montserrat;font-size:16px;color:#933A35;scroll-snap-align:center;font-weight:<%= mo == um ? '700' : '400' %>;opacity:<%= mo == um ? '1' : '0.35' %>"><%= mon %></div>
+            <% end %>
+          </div>
+          <div style="overflow-y:auto;scroll-snap-type:y mandatory;height:100%;width:60px;scrollbar-width:none;text-align:center;position:relative;z-index:1;"
+               onscroll="const t=this;t.querySelectorAll('div').forEach(el=>{const r=el.getBoundingClientRect(),p=t.getBoundingClientRect(),c=r.top-p.top+r.height/2-t.clientHeight/2;el.style.opacity=Math.abs(c)<22?'1':'0.35';el.style.fontWeight=Math.abs(c)<22?'700':'400'})">
+            <% (2025..2035).each do |yr| %>
+              <div style="height:44px;display:flex;align-items:center;justify-content:center;font-family:Montserrat;font-size:16px;color:#933A35;scroll-snap-align:center;font-weight:<%= yr == uy ? '700' : '400' %>;opacity:<%= yr == uy ? '1' : '0.35' %>"><%= yr %></div>
+            <% end %>
+          </div>
+        </div>
+        <div style="position:absolute;left:36px;top:341px;width:287px;height:52px;background:#933A35;border-radius:8px;"></div>
+        <button type="button" data-action="click->season-modal#confirmRepeatUntil"
+                style="position:absolute;left:36px;top:341px;width:287px;height:52px;background:transparent;border:none;cursor:pointer;padding:0;display:flex;align-items:center;justify-content:center;font-family:Montserrat;font-weight:500;font-size:16px;line-height:20px;letter-spacing:0.07em;color:#fff;">Save</button>
+      </div>
+    </div>
+
+    <%# ── Recurring event edit modal ── %>
+    <div data-season-modal-target="recurringBackdrop" class="hidden fixed inset-0 bg-black/40 z-[150]" data-action="click->season-modal#closeRecurring"></div>
+    <div data-season-modal-target="recurringModal" role="dialog" aria-modal="true"
+         class="hidden fixed inset-0 z-[150] flex items-center justify-center">
+      <div style="width:337px;background:#fff;border-radius:29px;box-shadow:0 24px 64px rgba(0,0,0,0.16);padding:32px 28px 24px;">
+        <p style="font-family:Montserrat;font-weight:500;font-size:18px;color:#933A35;margin:0 0 8px;text-align:center;">This is a recurring event.</p>
+        <div style="height:1px;background:#EDE1D5;margin:16px 0;"></div>
+        <div class="flex flex-col gap-3">
+          <% [['Edit only this event', :single], ['Edit this and subsequent events', :forward], ['Edit all events', :all]].each do |(label, scope)| %>
+            <button type="button"
+                    data-action="click->season-modal#closeRecurring"
+                    style="width:100%;height:44px;background:#EDE1D5;border:none;border-radius:10px;font-family:Montserrat;font-weight:500;font-size:15px;color:#933A35;cursor:pointer;">
+              <%= label %>
+            </button>
+          <% end %>
+          <button type="button" data-action="click->season-modal#closeRecurring"
+                  style="width:100%;height:44px;background:transparent;border:none;font-family:Montserrat;font-weight:500;font-size:15px;color:#933A35;cursor:pointer;opacity:0.6;">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <%# ── Notify guests on delete modal ── %>
+    <div data-season-modal-target="notifyBackdrop" class="hidden fixed inset-0 bg-black/40 z-[150]" data-action="click->season-modal#closeNotify"></div>
+    <div data-season-modal-target="notifyModal" role="dialog" aria-modal="true"
+         class="hidden fixed inset-0 z-[150] flex items-center justify-center">
+      <div style="width:337px;background:#fff;border-radius:29px;box-shadow:0 24px 64px rgba(0,0,0,0.16);padding:32px 28px 24px;">
+        <p style="font-family:Montserrat;font-weight:500;font-size:16px;color:#933A35;margin:0 0 8px;text-align:center;">Others are also involved in this meeting.</p>
+        <div style="height:1px;background:#EDE1D5;margin:16px 0;"></div>
+        <div class="flex flex-col gap-3">
+          <%= button_to "Notify all parties involved",
+                calendar_event_path(@event),
+                method: :delete,
+                class: "w-full",
+                style: "height:44px;background:#933A35;border:none;border-radius:10px;font-family:Montserrat;font-weight:500;font-size:15px;color:#fff;cursor:pointer;" %>
+          <%= button_to "Notify nobody",
+                calendar_event_path(@event),
+                method: :delete,
+                class: "w-full",
+                style: "height:44px;background:#EDE1D5;border:none;border-radius:10px;font-family:Montserrat;font-weight:500;font-size:15px;color:#933A35;cursor:pointer;" %>
+          <button type="button" data-action="click->season-modal#closeNotify"
+                  style="width:100%;height:44px;background:transparent;border:none;font-family:Montserrat;font-weight:500;font-size:15px;color:#933A35;cursor:pointer;opacity:0.6;">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <%# ── Attention dialogs ── %>
+    <div data-season-modal-target="attentionBackdrop" class="hidden fixed inset-0 bg-black/40 z-[200]"></div>
+    <div data-season-modal-target="attentionModal" role="alertdialog" aria-modal="true"
+         class="hidden fixed inset-0 z-[200] flex items-center justify-center">
+      <div style="width:337px;background:#fff;border-radius:29px;box-shadow:0 24px 64px rgba(0,0,0,0.16);padding:32px 28px 24px;">
+        <p style="font-family:Montserrat;font-weight:700;font-size:18px;color:#933A35;margin:0 0 12px;">Attention</p>
+        <p data-season-modal-target="attentionBody" style="font-family:Montserrat;font-weight:400;font-size:14px;line-height:1.5;color:#933A35;margin:0 0 24px;"></p>
+        <div class="flex gap-3">
+          <button type="button" data-action="click->season-modal#closeAttention"
+                  data-season-modal-target="attentionCancel"
+                  style="flex:1;height:44px;background:#EDE1D5;border:none;border-radius:10px;font-family:Montserrat;font-weight:500;font-size:15px;color:#933A35;cursor:pointer;">
+            Keep editing
+          </button>
+          <button type="button" data-season-modal-target="attentionConfirm"
+                  style="flex:1;height:44px;background:#933A35;border:none;border-radius:10px;font-family:Montserrat;font-weight:500;font-size:15px;color:#fff;cursor:pointer;">
+            OK
+          </button>
+        </div>
+      </div>
+    </div>
 
   </div>
 </div>

@@ -1,7 +1,7 @@
 import { Controller } from '@hotwired/stimulus'
 
 export default class extends Controller {
-  static targets = ['modal', 'backdrop', 'closeBtn', 'categoryInput', 'categoryOption', 'triggerButton', 'locationModal', 'locationBackdrop', 'locationInput', 'locationField', 'locationCard', 'locationResults', 'locationSubmitBg', 'locationSubmitBtn', 'locationLabel', 'locationIconBg', 'notesModal', 'notesBackdrop', 'notesInput', 'notesField', 'notesLabel', 'notesIconBg', 'guestsModal', 'guestsBackdrop', 'guestsInput', 'guestsField', 'guestsLabel', 'guestsIconBg', 'guestsList', 'guestsCard', 'guestsSubmitBg', 'guestsSubmitBtn', 'guestsInlineList', 'reminderModal', 'reminderBackdrop', 'reminderField', 'reminderLabel', 'reminderIconBg', 'reminderOption', 'repeatModal', 'repeatBackdrop', 'repeatLabel', 'repeatIconBg', 'repeatOption', 'repeatSubOptions', 'repeatField', 'customRepeatModal', 'customRepeatBackdrop', 'repeatUntilModal', 'repeatUntilBackdrop']
+  static targets = ['modal', 'backdrop', 'closeBtn', 'categoryInput', 'categoryOption', 'triggerButton', 'locationModal', 'locationBackdrop', 'locationInput', 'locationField', 'locationCard', 'locationResults', 'locationSubmitBg', 'locationSubmitBtn', 'locationLabel', 'locationIconBg', 'notesModal', 'notesBackdrop', 'notesInput', 'notesField', 'notesLabel', 'notesIconBg', 'guestsModal', 'guestsBackdrop', 'guestsInput', 'guestsField', 'guestsLabel', 'guestsIconBg', 'guestsList', 'guestsCard', 'guestsSubmitBg', 'guestsSubmitBtn', 'guestsInlineList', 'reminderModal', 'reminderBackdrop', 'reminderField', 'reminderLabel', 'reminderIconBg', 'reminderOption', 'repeatModal', 'repeatBackdrop', 'repeatLabel', 'repeatIconBg', 'repeatOption', 'repeatSubOptions', 'repeatField', 'customRepeatModal', 'customRepeatBackdrop', 'repeatUntilModal', 'repeatUntilBackdrop', 'customReminderModal', 'customReminderBackdrop', 'customReminderNum', 'customReminderUnit', 'attentionModal', 'attentionBackdrop', 'attentionTitle', 'attentionBody', 'attentionConfirm', 'attentionCancel', 'recurringModal', 'recurringBackdrop', 'notifyModal', 'notifyBackdrop']
   static values = {
     selectedCategory: String,
     lastLat: Number,
@@ -29,9 +29,44 @@ export default class extends Controller {
         if (this.hasRepeatModalTarget && !this.repeatModalTarget.classList.contains('hidden')) {
           this.closeRepeat()
         }
+        if (this.hasCustomReminderModalTarget && !this.customReminderModalTarget.classList.contains('hidden')) {
+          this.closeCustomReminder()
+        }
+        if (this.hasAttentionModalTarget && !this.attentionModalTarget.classList.contains('hidden')) {
+          this.closeAttention()
+        }
       }
     }
     document.addEventListener('keydown', this._escHandler)
+
+    // Track whether the user has actually modified the form
+    this._formDirty = false
+    const _watchForm = this.element.querySelector('form')
+    if (_watchForm) {
+      _watchForm.addEventListener('input', () => { this._formDirty = true })
+      _watchForm.addEventListener('change', () => { this._formDirty = true })
+    }
+
+    this._turboBeforeVisit = (event) => {
+      if (!this.hasAttentionModalTarget) return
+      if (!this._formDirty) return
+      const form = this.element.querySelector('form')
+      if (!form) return
+      const title = (new FormData(form).get('calendar_event[title]') || '').trim()
+      if (!title) return
+      event.preventDefault()
+      this._pendingNavUrl = event.detail.url
+      this.openAttention({
+        body: "The appointment hasn't been saved yet. Are you sure you want to leave?",
+        cancelLabel: 'Keep editing',
+        confirmLabel: 'Delete',
+        onConfirm: () => { window.location.href = this._pendingNavUrl }
+      })
+    }
+    document.addEventListener('turbo:before-visit', this._turboBeforeVisit)
+
+    this.element.addEventListener('appointment-date-picker:past-date', () => this.showPastDateAlert())
+    this.element.addEventListener('appointment-date-picker:sensitive-period', (e) => this.showSensitivePeriodAlert(e.detail?.message))
 
     if (this.hasBackdropTarget) {
       this.backdropTarget.addEventListener('click', () => this.close())
@@ -65,6 +100,7 @@ export default class extends Controller {
 
   disconnect () {
     document.removeEventListener('keydown', this._escHandler)
+    document.removeEventListener('turbo:before-visit', this._turboBeforeVisit)
   }
 
   open () {
@@ -497,10 +533,69 @@ export default class extends Controller {
     if (isNaN(minutes)) return
     if (minutes === -1) {
       this.closeReminder()
+      this.openCustomReminder()
       return
     }
     this._selectedReminderMinutes = minutes
     this.#highlightReminderOptions()
+  }
+
+  openCustomReminder () {
+    if (!this.hasCustomReminderModalTarget) return
+    this.customReminderBackdropTarget.classList.remove('hidden')
+    this.customReminderModalTarget.classList.remove('hidden')
+    this.customReminderModalTarget.style.display = 'flex'
+  }
+
+  closeCustomReminder () {
+    if (!this.hasCustomReminderModalTarget) return
+    this.customReminderModalTarget.classList.add('hidden')
+    this.customReminderModalTarget.style.display = 'none'
+    this.customReminderBackdropTarget.classList.add('hidden')
+  }
+
+  confirmCustomReminder () {
+    if (!this.hasCustomReminderNumTarget) return
+    const numEl = this.customReminderNumTarget.querySelector('[data-value]')
+    const unitEl = this.customReminderUnitTarget.querySelector('[data-value]')
+    const scrolledNum = this.#scrolledValue(this.customReminderNumTarget) || 5
+    const scrolledUnit = this.#scrolledUnit(this.customReminderUnitTarget) || 'minutes'
+    let totalMinutes = scrolledNum
+    if (scrolledUnit === 'hours') totalMinutes = scrolledNum * 60
+    if (scrolledUnit === 'days') totalMinutes = scrolledNum * 1440
+    this._selectedReminderMinutes = totalMinutes
+    if (this.hasReminderFieldTarget) {
+      this.reminderFieldTarget.value = totalMinutes
+      this.#notifyPersistence(this.reminderFieldTarget)
+    }
+    this.#updateReminderLabel(totalMinutes)
+    this.closeCustomReminder()
+  }
+
+  #scrolledValue (container) {
+    const items = container.querySelectorAll('[data-value]')
+    const rect = container.getBoundingClientRect()
+    const center = rect.top + rect.height / 2
+    let closest = null, minDist = Infinity
+    items.forEach(el => {
+      const er = el.getBoundingClientRect()
+      const dist = Math.abs(er.top + er.height / 2 - center)
+      if (dist < minDist) { minDist = dist; closest = el }
+    })
+    return closest ? parseInt(closest.dataset.value) : null
+  }
+
+  #scrolledUnit (container) {
+    const items = container.querySelectorAll('[data-value]')
+    const rect = container.getBoundingClientRect()
+    const center = rect.top + rect.height / 2
+    let closest = null, minDist = Infinity
+    items.forEach(el => {
+      const er = el.getBoundingClientRect()
+      const dist = Math.abs(er.top + er.height / 2 - center)
+      if (dist < minDist) { minDist = dist; closest = el }
+    })
+    return closest ? closest.dataset.value : null
   }
 
   confirmReminder () {
@@ -522,7 +617,7 @@ export default class extends Controller {
 
   #updateReminderLabel (minutes) {
     if (!this.hasReminderLabelTarget) return
-    const labels = { 0: 'No reminder', 10080: '1 week before', 1440: '1 day before', 60: '1 hour before', '-1': 'Custom timer' }
+    const labels = { 0: 'No reminder', 10080: '1 week before', 1440: '1 day before', 360: '6 hours before', 60: '1 hour before', '-1': 'Custom timer' }
     const label = labels[minutes] || `${minutes} minutes before`
     this.reminderLabelTarget.textContent = label
     if (minutes === 0) {
@@ -671,6 +766,57 @@ export default class extends Controller {
   }
 
   confirmRepeatUntil () {
+    const modal = this.hasRepeatUntilModalTarget ? this.repeatUntilModalTarget : null
+    if (modal) {
+      const dayCol = modal.querySelector('[style*="width:44px"]')
+      const monCol = modal.querySelector('[style*="width:52px"]')
+      const yrCol  = modal.querySelector('[style*="width:60px"]')
+      const picked = (col) => {
+        if (!col) return null
+        const items = col.querySelectorAll('div[style*="height:44px"]')
+        const rect = col.getBoundingClientRect()
+        const center = rect.top + rect.height / 2
+        let best = null, min = Infinity
+        items.forEach(el => {
+          const er = el.getBoundingClientRect()
+          const d = Math.abs(er.top + er.height / 2 - center)
+          if (d < min) { min = d; best = el }
+        })
+        return best ? best.textContent.trim() : null
+      }
+      const d = picked(dayCol); const m = picked(monCol); const y = picked(yrCol)
+      if (d && m && y) {
+        const monthMap = { Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11 }
+        const pickedDate = new Date(parseInt(y), monthMap[m] ?? 0, parseInt(d))
+        const today = new Date(); today.setHours(0,0,0,0)
+        if (pickedDate < today) {
+          this.closeRepeatUntil()
+          this.openAttention({
+            body: 'The "Repeat until" date must be in the future.',
+            cancelLabel: 'Go back',
+            confirmLabel: 'OK',
+            onConfirm: () => { if (this.hasRepeatUntilModalTarget) { this.repeatUntilModalTarget.classList.remove('hidden'); this.repeatUntilModalTarget.style.display = 'flex'; this.repeatUntilBackdropTarget.classList.remove('hidden'); this.repeatUntilBackdropTarget.style.display = 'block' } }
+          })
+          return
+        }
+        const label = `Repeat until ${m} ${d}, ${y}`
+        if (this.hasRepeatLabelTarget) {
+          this.repeatLabelTarget.textContent = label
+          this.repeatLabelTarget.classList.remove('text-[#AFAFAF]')
+          this.repeatLabelTarget.classList.add('text-brand-primary')
+        }
+        if (this.hasRepeatIconBgTarget) {
+          this.repeatIconBgTarget.classList.remove('bg-brand-field/50')
+          this.repeatIconBgTarget.classList.add('bg-brand-field')
+          const svg = this.repeatIconBgTarget.querySelector('svg')
+          if (svg) svg.removeAttribute('stroke-opacity')
+        }
+        if (this.hasRepeatFieldTarget) {
+          this.repeatFieldTarget.value = `until:${y}-${m}-${d}`
+          this.#notifyPersistence(this.repeatFieldTarget)
+        }
+      }
+    }
     this.closeRepeatUntil()
   }
 
@@ -800,5 +946,93 @@ export default class extends Controller {
     } catch (_) {
       this._clearResults()
     }
+  }
+
+  // ── Attention dialogs ────────────────────────────────────────────────────
+
+  openAttention ({ body, confirmLabel = 'OK', cancelLabel = 'Keep editing', onConfirm = null } = {}) {
+    if (!this.hasAttentionModalTarget) return
+    if (body) this.attentionBodyTarget.textContent = body
+    if (confirmLabel) this.attentionConfirmTarget.textContent = confirmLabel
+    if (this.hasAttentionCancelTarget) this.attentionCancelTarget.textContent = cancelLabel
+    this._attentionOnConfirm = onConfirm
+    this.attentionBackdropTarget.classList.remove('hidden')
+    this.attentionModalTarget.classList.remove('hidden')
+    this.attentionModalTarget.style.display = 'flex'
+    this.attentionConfirmTarget.onclick = () => {
+      this.closeAttention()
+      if (typeof this._attentionOnConfirm === 'function') this._attentionOnConfirm()
+    }
+  }
+
+  closeAttention () {
+    if (!this.hasAttentionModalTarget) return
+    this.attentionModalTarget.classList.add('hidden')
+    this.attentionModalTarget.style.display = 'none'
+    this.attentionBackdropTarget.classList.add('hidden')
+  }
+
+  showUnsavedChangesAlert (event) {
+    const form = this.element.querySelector('form')
+    if (!form) return
+    const data = new FormData(form)
+    const title = (data.get('calendar_event[title]') || '').trim()
+    if (!title) return
+    event.preventDefault()
+    this.openAttention({
+      body: "The appointment hasn't been saved yet. Are you sure you want to leave?",
+      cancelLabel: 'Keep editing',
+      confirmLabel: 'Delete',
+      onConfirm: () => { window.history.back() }
+    })
+  }
+
+  showPastDateAlert () {
+    this.openAttention({
+      body: 'This appointment is in the past. No reminder notification can be set for past dates.',
+      cancelLabel: 'Set date',
+      confirmLabel: 'Choose another date',
+      onConfirm: () => { if (this.hasReminderModalTarget) this.openReminder() }
+    })
+  }
+
+  showSensitivePeriodAlert (message) {
+    this.openAttention({
+      body: message || 'During your period, your body is often more sensitive. Procedures such as tattoos, piercings, or laser treatments may be more painful. Consider rescheduling if possible.',
+      cancelLabel: 'Set date',
+      confirmLabel: 'Choose another date'
+    })
+  }
+
+  // ── Recurring event edit modal ───────────────────────────────────────────
+
+  openRecurring () {
+    if (!this.hasRecurringModalTarget) return
+    this.recurringBackdropTarget.classList.remove('hidden')
+    this.recurringModalTarget.classList.remove('hidden')
+    this.recurringModalTarget.style.display = 'flex'
+  }
+
+  closeRecurring () {
+    if (!this.hasRecurringModalTarget) return
+    this.recurringModalTarget.classList.add('hidden')
+    this.recurringModalTarget.style.display = 'none'
+    this.recurringBackdropTarget.classList.add('hidden')
+  }
+
+  // ── Notify guests modal ──────────────────────────────────────────────────
+
+  openNotifyGuests () {
+    if (!this.hasNotifyModalTarget) return
+    this.notifyBackdropTarget.classList.remove('hidden')
+    this.notifyModalTarget.classList.remove('hidden')
+    this.notifyModalTarget.style.display = 'flex'
+  }
+
+  closeNotify () {
+    if (!this.hasNotifyModalTarget) return
+    this.notifyModalTarget.classList.add('hidden')
+    this.notifyModalTarget.style.display = 'none'
+    this.notifyBackdropTarget.classList.add('hidden')
   }
 }
