@@ -386,7 +386,7 @@
       <div class="flex flex-col gap-3 items-center">
         <% t('onboarding.step9.methods').each_with_index do |method_label, idx| %>
           <%= form_with url: onboarding_path(9), method: :patch, local: true do |f| %>
-            <%= f.hidden_field :birth_control_method, value: idx == 0 ? "none" : method_label %>
+            <%= f.hidden_field :birth_control_method, value: method_label %>
             <%= f.submit method_label,
                 class: "w-[322px] h-[52px] bg-brand-field text-brand-primary rounded-lg text-[22px] font-medium tracking-[0.66px] cursor-pointer" %>
           <% end %>

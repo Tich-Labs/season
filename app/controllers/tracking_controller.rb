@@ -39,8 +39,16 @@ class TrackingController < ApplicationController
     @period_end = current_user.last_period_end
 
     if params[:save] == "1" && params[:date].present?
-      date = Date.parse(params[:date])
+      begin
+        date = Date.iso8601(params[:date])
+      rescue ArgumentError, TypeError
+        redirect_to period_tracking_index_path, alert: t("tracking.period_update.invalid_date") and return
+      end
+
       if params[:field] == "end"
+        if @existing && date < @existing
+          redirect_to period_tracking_index_path, alert: t("tracking.period_update.end_before_start") and return
+        end
         current_user.update!(last_period_end: date)
         redirect_to period_tracking_index_path, notice: t("tracking.period_update.end_saved")
       else
@@ -53,16 +61,20 @@ class TrackingController < ApplicationController
           cycle_day: 1,
           period_start: true
         )
-        redirect_to tracking_index_path, notice: t("tracking.period_update.saved")
+        redirect_to period_tracking_index_path, notice: t("tracking.period_update.saved")
       end
       return
     end
 
-    @selected = if params[:selected_date]
-      Date.parse(params[:selected_date])
-    elsif params[:date]
-      Date.parse(params[:date])
-    else
+    @selected = begin
+      if params[:selected_date].present?
+        Date.iso8601(params[:selected_date])
+      elsif params[:date].present?
+        Date.iso8601(params[:date])
+      else
+        @existing || Time.zone.today
+      end
+    rescue ArgumentError, TypeError
       @existing || Time.zone.today
     end
 
@@ -72,7 +84,11 @@ class TrackingController < ApplicationController
   def period_update
     date_param = params.dig(:period, :date)
     if date_param.present?
-      date = Date.parse(date_param)
+      begin
+        date = Date.iso8601(date_param)
+      rescue ArgumentError, TypeError
+        redirect_to period_tracking_index_path, alert: t(".invalid_date") and return
+      end
       current_user.update!(last_period_start: date)
 
       # Remove any existing period_start cycle entry for this date then re-create

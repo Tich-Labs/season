@@ -156,6 +156,14 @@ de:
       saved: "Startdatum der Periode gespeichert."
       end_saved: "Enddatum der Periode gespeichert."
       date_required: "Bitte wähle ein Datum aus."
+      invalid_date: "Ungültiges Datum — bitte versuche es erneut."
+      end_before_start: "Das Enddatum darf nicht vor dem Startdatum liegen."
+      period:
+        selected: "Ausgewählt:"
+        set_start: "Als Periodenstart setzen"
+        set_end: "Als Periodenende setzen"
+        label_start: "Start:"
+        label_end: "Ende:"
   calendar_events:
     create:
       created: "Termin erstellt"

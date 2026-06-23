@@ -147,7 +147,7 @@ class OnboardingController < ApplicationController
         render :show, status: :unprocessable_content
         return
       end
-      current_user.update!(contraception_type: (method == "none") ? nil : method)
+      current_user.update!(contraception_type: method)
       redirect_to onboarding_path(10) and return
 
     when 10

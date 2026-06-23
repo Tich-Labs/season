@@ -11,11 +11,18 @@
   prev_month = @month.prev_month
   next_month = @month.next_month
 
-  # Active period bar — highlight period days in this month
+  # Active period bar — highlight confirmed period days in this month (no fabricated fallback)
   period_start = @existing
-  period_end   = @period_end || (period_start ? period_start + 4.days : nil)
-  period_days  = if period_start && period_start.month == @month.month
-    (period_start..[period_end, last_day].min).to_a
+  period_end   = @period_end
+  period_days  = if period_start && period_end
+    # Both ends known — show the intersection of the period range with this month
+    range_start = [period_start, first_day].max
+    range_end   = [period_end, last_day].min
+    range_start <= range_end ? (range_start..range_end).to_a : []
+  elsif period_start && period_start.year == @month.year && period_start.month == @month.month
+    # Start is this month, end not yet set — highlight from start to today
+    range_end = [today, last_day].min
+    period_start <= range_end ? (period_start..range_end).to_a : []
   else
     []
   end
@@ -102,24 +109,22 @@
     <%# ── Submit ────────────────────────────────────────────────────────── %>
     <div class="px-4 pt-4 pb-2">
       <p class="text-center text-sm text-brand-secondary font-['Montserrat'] mb-3">
-        Selected: <strong class="text-brand-primary"><%= @selected.strftime("%-d %B") %></strong>
+        <%= t("tracking.period_update.period.selected") %> <strong class="text-brand-primary"><%= @selected.strftime("%-d %B") %></strong>
       </p>
       <div class="flex flex-col gap-3 items-center">
         <a href="<%= period_tracking_index_path(save: 1, field: "start", date: @selected) %>" data-turbo="false"
-           class="block w-[253px] text-center no-underline text-white rounded-lg py-4 text-xl font-medium font-['Montserrat']"
-           style="background:#933a35;">
-          Set as period start
+           class="block w-[253px] text-center no-underline text-white bg-brand-primary rounded-lg py-4 text-xl font-medium font-['Montserrat']">
+          <%= t("tracking.period_update.period.set_start") %>
         </a>
         <a href="<%= period_tracking_index_path(save: 1, field: "end", date: @selected) %>" data-turbo="false"
-           class="block w-[253px] text-center no-underline rounded-lg py-4 text-xl font-medium font-['Montserrat'] border-2"
-           style="color:#933a35; border-color:#933a35; background:transparent;">
-          Set as period end
+           class="block w-[253px] text-center no-underline text-brand-primary border-2 border-brand-primary bg-transparent rounded-lg py-4 text-xl font-medium font-['Montserrat']">
+          <%= t("tracking.period_update.period.set_end") %>
         </a>
       </div>
       <% if @existing || @period_end %>
         <div class="mt-4 text-center text-xs text-brand-secondary font-['Montserrat'] space-y-1">
-          <% if @existing %><p>Start: <%= @existing.strftime("%-d %B %Y") %></p><% end %>
-          <% if @period_end %><p>End: <%= @period_end.strftime("%-d %B %Y") %></p><% end %>
+          <% if @existing %><p><%= t("tracking.period_update.period.label_start") %> <%= @existing.strftime("%-d %B %Y") %></p><% end %>
+          <% if @period_end %><p><%= t("tracking.period_update.period.label_end") %> <%= @period_end.strftime("%-d %B %Y") %></p><% end %>
         </div>
       <% end %>
     </div>

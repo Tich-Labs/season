@@ -165,6 +165,14 @@ en:
       saved: "Period start date saved."
       end_saved: "Period end date saved."
       date_required: "Please select a date."
+      invalid_date: "Invalid date — please try again."
+      end_before_start: "End date cannot be before the start date."
+      period:
+        selected: "Selected:"
+        set_start: "Set as period start"
+        set_end: "Set as period end"
+        label_start: "Start:"
+        label_end: "End:"
   calendar_events:
     create:
       created: "Event created"
