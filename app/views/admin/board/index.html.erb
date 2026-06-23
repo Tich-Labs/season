@@ -421,14 +421,8 @@
   <div class="bg-white rounded-xl border border-gray-200 overflow-hidden divide-y divide-gray-100">
     <% [
       { id: "#1",  raised: "28 Apr 2026", title: "Review User Journey Documentation", note: "Internal task — not a code bug" },
-      { id: "#2",  raised: "22 Apr 2026", title: "Login with Apple / Facebook / Google not working", note: "OAuth — needs credential + callback investigation on Render" },
-      { id: "#6",  raised: "22 Apr 2026", title: "Create new account is not working", note: "Registration / Devise flow — needs reproduction steps" },
-      { id: "#9",  raised: "27 Apr 2026", title: "Period tracking is not working properly", note: "Broad — needs scoped repro before fixing" },
-      { id: "#11", raised: "27 Apr 2026", title: "Superpowers — all superpowers need to be added + slider UI", note: "Content + UI build" },
-      { id: "#12", raised: "27 Apr 2026", title: "Symptoms should match UX design; content missing", note: "Full Figma audit needed" },
-      { id: "#17", raised: "4 May 2026",  title: "Appointment — setting time, add location, invite guest not working", note: "Fields exist; JS/Stimulus wiring for modals needs testing" },
-      { id: "#22", raised: "28 May 2026", title: "*Testflight* Day rotator (cycle length) only works by clicking, not swipe-scrollable", note: "iOS-specific scroll picker — needs native touch-action fix or Stimulus scroll handler" },
-      { id: "#25", raised: "28 May 2026", title: "*Testflight* No weekdays above calendar; date selection broken; Unsure button not working", note: "Weekday labels exist in code — may be iOS-specific tap or Turbo wiring issue" },
+      { id: "#2",  raised: "22 Apr 2026", title: "Login with Apple / Facebook / Google not working", note: "Ops: code is complete. Need to verify APPLE_CLIENT_ID, GOOGLE_CLIENT_ID/SECRET, FACEBOOK_APP_ID/SECRET env vars on Render, and update OAuth redirect URIs in each provider console to match the production URL." },
+      { id: "#6",  raised: "22 Apr 2026", title: "Create new account is not working", note: "Ops: Resend delivery is wired (production.rb + resend.rb). Need to confirm RESEND_API_KEY is set on Render and confirmation emails are landing (not spam). Web registration saves the user; the bottleneck is email confirmation. Native app (skip_confirmation!) should work without Resend." },
     ].each do |t| %>
       <div class="flex items-start gap-4 px-5 py-3">
         <span class="mt-0.5 inline-flex items-center justify-center w-6 h-6 rounded-full bg-red-100 text-red-400 text-xs font-bold shrink-0">&#9675;</span>
@@ -600,6 +594,192 @@
     </div>
   </div>
 
+  <%# #25 — Onboarding calendar (weekdays added, controller restored, Unsure works) %>
+  <div class="bg-white rounded-xl border border-gray-200 mb-4 overflow-hidden">
+    <div class="flex items-start gap-4 px-5 py-4 border-b border-gray-100">
+      <span class="mt-0.5 inline-flex items-center justify-center w-6 h-6 rounded-full bg-green-100 text-green-700 text-xs font-bold shrink-0">&#10003;</span>
+      <div class="flex-1 min-w-0">
+        <div class="flex flex-wrap items-center gap-2 mb-1">
+          <span class="text-xs font-mono bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded">#25</span>
+          <span class="font-semibold text-gray-800">*Testflight* No weekdays above calendar; date selection broken; Unsure button not working</span>
+        </div>
+        <p class="text-xs text-gray-500">Raised: 28 May 2026 &nbsp;&bull;&nbsp; Fixed: 23 Jun 2026</p>
+      </div>
+    </div>
+    <div class="px-5 py-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">What changed</p>
+        <ul class="text-sm text-gray-700 space-y-1 list-disc list-inside">
+          <li><strong>Weekdays missing</strong>: added Mo–Su header row above the calendar grid in both onboarding step 3 and step 4</li>
+          <li><strong>Date selection broken</strong>: <code class="bg-gray-100 px-1 rounded">onboarding_calendar_controller.js</code> was deleted — recreated this session with <code class="bg-gray-100 px-1 rounded">select</code> and <code class="bg-gray-100 px-1 rounded">clear</code> actions, inline-style highlights for selected day</li>
+          <li><strong>Unsure button</strong>: it's in its own separate form (submits <code class="bg-gray-100 px-1 rounded">skip_last_period: "1"</code>); it was never broken by JS — the button works independently of the calendar controller</li>
+        </ul>
+      </div>
+      <div>
+        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Testing steps</p>
+        <ol class="text-sm text-gray-700 space-y-1 list-decimal list-inside">
+          <li>New onboarding step 3: Mo–Su row appears above the calendar grid</li>
+          <li>Tap a past date — it highlights in brand red, Submit button appears</li>
+          <li>Tap another date — previous clears, new one highlights</li>
+          <li>Tap Clear link — highlight removed, Submit hidden again</li>
+          <li>Tap Unsure — advances to step 4 (separate form, no JS needed)</li>
+          <li>Repeat steps 1–5 on step 4</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <%# #22 — Day rotator swipe (onboarding-picker controller restored) %>
+  <div class="bg-white rounded-xl border border-gray-200 mb-4 overflow-hidden">
+    <div class="flex items-start gap-4 px-5 py-4 border-b border-gray-100">
+      <span class="mt-0.5 inline-flex items-center justify-center w-6 h-6 rounded-full bg-green-100 text-green-700 text-xs font-bold shrink-0">&#10003;</span>
+      <div class="flex-1 min-w-0">
+        <div class="flex flex-wrap items-center gap-2 mb-1">
+          <span class="text-xs font-mono bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded">#22</span>
+          <span class="font-semibold text-gray-800">*Testflight* Day rotator (cycle length) only works by clicking, not swipe-scrollable</span>
+        </div>
+        <p class="text-xs text-gray-500">Raised: 28 May 2026 &nbsp;&bull;&nbsp; Fixed: 23 Jun 2026</p>
+      </div>
+    </div>
+    <div class="px-5 py-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">What changed</p>
+        <ul class="text-sm text-gray-700 space-y-1 list-disc list-inside">
+          <li>Root cause: <code class="bg-gray-100 px-1 rounded">onboarding_picker_controller.js</code> was deleted in a prior dead-JS cleanup but onboarding step 6 still references <code class="bg-gray-100 px-1 rounded">data-controller="onboarding-picker"</code></li>
+          <li>Recreated controller: listens for <code class="bg-gray-100 px-1 rounded">scroll</code> with 80ms debounce (fires after snap settles on iOS)</li>
+          <li>On scroll settle: highlights centred item (opacity 1, font-weight 600) and writes its <code class="bg-gray-100 px-1 rounded">data-days</code> value to the hidden input</li>
+          <li>Click handler: scrolls to tapped item then commits</li>
+          <li>Keyboard: arrow keys move selection</li>
+          <li>On connect: scrolls to existing value (default 28) without animation</li>
+        </ul>
+      </div>
+      <div>
+        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Testing steps</p>
+        <ol class="text-sm text-gray-700 space-y-1 list-decimal list-inside">
+          <li>New onboarding: reach step 6 (cycle length)</li>
+          <li>Swipe the scroll drum up and down — it snaps to items and the centred day highlights (bold, full opacity)</li>
+          <li>Tap a day directly — drum scrolls to it and it highlights</li>
+          <li>Tap Submit — saved cycle length matches what was centred (check in admin user detail)</li>
+          <li>Verify on Testflight (iOS native) that touch-swipe works end-to-end</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <%# #12 — Symptoms (fully built; Figma content audit pending) %>
+  <div class="bg-white rounded-xl border border-gray-200 mb-4 overflow-hidden">
+    <div class="flex items-start gap-4 px-5 py-4 border-b border-gray-100">
+      <span class="mt-0.5 inline-flex items-center justify-center w-6 h-6 rounded-full bg-yellow-100 text-yellow-700 text-xs font-bold shrink-0">&#9651;</span>
+      <div class="flex-1 min-w-0">
+        <div class="flex flex-wrap items-center gap-2 mb-1">
+          <span class="text-xs font-mono bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded">#12</span>
+          <span class="font-semibold text-gray-800">Symptoms should match UX design; content missing</span>
+          <span class="text-xs bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded-full font-medium">Figma audit pending</span>
+        </div>
+        <p class="text-xs text-gray-500">Raised: 27 Apr 2026 &nbsp;&bull;&nbsp; Partially addressed: 23 Jun 2026</p>
+      </div>
+    </div>
+    <div class="px-5 py-4">
+      <p class="text-sm text-gray-700 mb-2">The symptoms page is fully functional: 22 moods, 24 physical symptoms, 8 mental symptoms, bleeding flow, vaginal discharge, sexual intercourse (6 options), cravings (5 options), sleep/temperature/weight vertical pickers, notes, and a pre-submit review modal. All six Stimulus controllers exist and are wired correctly.</p>
+      <p class="text-sm text-gray-700">Remaining: a Figma audit to verify that symptom labels/icons match the design exactly. Fixed <code class="bg-gray-100 px-1 rounded">Date.parse</code> → <code class="bg-gray-100 px-1 rounded">Date.iso8601 + rescue</code> in <code class="bg-gray-100 px-1 rounded">SymptomsController#index</code>.</p>
+    </div>
+  </div>
+
+  <%# #11 — Superpowers (slider UI built, show view fixed) %>
+  <div class="bg-white rounded-xl border border-gray-200 mb-4 overflow-hidden">
+    <div class="flex items-start gap-4 px-5 py-4 border-b border-gray-100">
+      <span class="mt-0.5 inline-flex items-center justify-center w-6 h-6 rounded-full bg-green-100 text-green-700 text-xs font-bold shrink-0">&#10003;</span>
+      <div class="flex-1 min-w-0">
+        <div class="flex flex-wrap items-center gap-2 mb-1">
+          <span class="text-xs font-mono bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded">#11</span>
+          <span class="font-semibold text-gray-800">Superpowers — all superpowers need to be added + slider UI</span>
+        </div>
+        <p class="text-xs text-gray-500">Raised: 27 Apr 2026 &nbsp;&bull;&nbsp; Fixed: 23 Jun 2026</p>
+      </div>
+    </div>
+    <div class="px-5 py-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">What changed</p>
+        <ul class="text-sm text-gray-700 space-y-1 list-disc list-inside">
+          <li>Slider UI was already built — 20 superpowers with 0–3 range, debounced auto-save via <code class="bg-gray-100 px-1 rounded">superpower_controller.js</code></li>
+          <li>Fixed show view: was displaying <code class="bg-gray-100 px-1 rounded">/5</code> scale when scale is 0–3; fixed to show <code class="bg-gray-100 px-1 rounded">/3</code> and correct bar fill</li>
+          <li>Fixed show view: emoji map used different superpower names — removed; names now display as-is</li>
+          <li>Rewrote show view to use Tailwind classes (removed inline <code class="bg-gray-100 px-1 rounded">style=</code> throughout)</li>
+          <li>Guarded <code class="bg-gray-100 px-1 rounded">Date.parse</code> in superpowers controller with <code class="bg-gray-100 px-1 rounded">Date.iso8601 + rescue</code></li>
+        </ul>
+      </div>
+      <div>
+        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Testing steps</p>
+        <ol class="text-sm text-gray-700 space-y-1 list-decimal list-inside">
+          <li>Go to Tracking → My Superpower</li>
+          <li>Move sliders — visual fills immediately, auto-saves after 500ms</li>
+          <li>Tap Submit → returns to tracking index</li>
+          <li>Return to Superpowers — recent log entry appears</li>
+          <li>Tap a recent log entry → show view displays correct /3 scale and named bars</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <%# #9 — Period tracking (largely fixed by recent commits, hardened further) %>
+  <div class="bg-white rounded-xl border border-gray-200 mb-4 overflow-hidden">
+    <div class="flex items-start gap-4 px-5 py-4 border-b border-gray-100">
+      <span class="mt-0.5 inline-flex items-center justify-center w-6 h-6 rounded-full bg-green-100 text-green-700 text-xs font-bold shrink-0">&#10003;</span>
+      <div class="flex-1 min-w-0">
+        <div class="flex flex-wrap items-center gap-2 mb-1">
+          <span class="text-xs font-mono bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded">#9</span>
+          <span class="font-semibold text-gray-800">Period tracking not working properly</span>
+        </div>
+        <p class="text-xs text-gray-500">Raised: 27 Apr 2026 &nbsp;&bull;&nbsp; Fixed: 23 Jun 2026</p>
+      </div>
+    </div>
+    <div class="px-5 py-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">What changed</p>
+        <ul class="text-sm text-gray-700 space-y-1 list-disc list-inside">
+          <li>Onboarding steps 3 + 4: calendar controller restored (<code class="bg-gray-100 px-1 rounded">onboarding_calendar_controller.js</code> was deleted) — date tap and submit button now work</li>
+          <li>Period save: guarded all <code class="bg-gray-100 px-1 rounded">Date.parse</code> calls with <code class="bg-gray-100 px-1 rounded">Date.iso8601 + rescue</code> in tracking, onboarding, and forecast controllers</li>
+          <li>Period start redirect: now stays on the period page instead of bouncing to tracking index</li>
+          <li>End date validation: rejects end &lt; start</li>
+          <li>Calendar highlight: correctly shows cross-month period ranges; removed fabricated +4-day fallback</li>
+        </ul>
+      </div>
+      <div>
+        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Testing steps</p>
+        <ol class="text-sm text-gray-700 space-y-1 list-decimal list-inside">
+          <li>New user: complete onboarding, tap a date on step 3 — submit button appears, selection highlights</li>
+          <li>Main app: go to Tracking → Track my Period → tap a date → tap "Set as period start" → confirm flash and calendar highlight</li>
+          <li>Tracking page now shows your cycle phase and day strip</li>
+          <li>Return to period page and set end date — confirm it only accepts dates ≥ start</li>
+          <li>Forecast page (Today's Forecast from burger menu) shows phase-appropriate cards</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <%# #17 — Appointment modals (investigated, already working) %>
+  <div class="bg-white rounded-xl border border-gray-200 mb-4 overflow-hidden">
+    <div class="flex items-start gap-4 px-5 py-4 border-b border-gray-100">
+      <span class="mt-0.5 inline-flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 text-blue-700 text-xs font-bold shrink-0">&#10003;</span>
+      <div class="flex-1 min-w-0">
+        <div class="flex flex-wrap items-center gap-2 mb-1">
+          <span class="text-xs font-mono bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded">#17</span>
+          <span class="font-semibold text-gray-800">Appointment — setting time, add location, invite guest not working</span>
+        </div>
+        <p class="text-xs text-gray-500">Raised: 4 May 2026 &nbsp;&bull;&nbsp; Investigated: 23 Jun 2026 — ticket stale, feature was completed post-filing</p>
+      </div>
+    </div>
+    <div class="px-5 py-4">
+      <p class="text-sm text-gray-700 mb-2">Ticket was filed on 4 May when the appointment modals were still being built. Three subsequent commits (<code class="bg-gray-100 px-1 rounded">0072e4c</code>, <code class="bg-gray-100 px-1 rounded">d61e4f4</code>, Jun 10–17) completed all three Stimulus controllers:</p>
+      <ul class="text-sm text-gray-700 list-disc list-inside space-y-1 mb-2">
+        <li><code class="bg-gray-100 px-1 rounded">season_modal_controller.js</code> — location search (Nominatim), guests, reminder, repeat</li>
+        <li><code class="bg-gray-100 px-1 rounded">appointment_date_picker_controller.js</code> — start/end date + time scroll picker modal</li>
+        <li><code class="bg-gray-100 px-1 rounded">time_picker_controller.js</code> — inline hour/minute/AM-PM selects</li>
+      </ul>
+      <p class="text-sm text-gray-700">All form fields (location, guests, reminder_minutes, repeat_frequency, start_time, end_time) are in the DB schema, permitted in the controller, and wired to hidden inputs inside the form. Cleaned up the dead <code class="bg-gray-100 px-1 rounded">data-controller="form-persistence"</code> reference from <code class="bg-gray-100 px-1 rounded">calendar_events/new.html.erb</code> (that controller was deleted in a later cleanup commit).</p>
+    </div>
+  </div>
+
   <%# #18 — Calendar filter tabs (confirmed working) %>
   <div class="bg-white rounded-xl border border-gray-200 mb-4 overflow-hidden">
     <div class="flex items-start gap-4 px-5 py-4 border-b border-gray-100">
@@ -620,4 +800,4 @@
 </div>
 
 <%# ── Footer ── %>
-<p class="text-xs text-gray-400 mt-2">Source: Trello board "Feedback Web App" &bull; Last updated: 23 Jun 2026 (session 4 — quick wins #14 #15 #18) &bull; <a href="https://trello.com" class="underline hover:text-gray-600" target="_blank">View on Trello</a></p>
+<p class="text-xs text-gray-400 mt-2">Source: Trello board "Feedback Web App" &bull; Last updated: 23 Jun 2026 (session 5 — all code tickets closed; #2 #6 are ops/env) &bull; <a href="https://trello.com" class="underline hover:text-gray-600" target="_blank">View on Trello</a></p>

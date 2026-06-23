@@ -63,7 +63,12 @@ class OnboardingController < ApplicationController
         render :show, status: :unprocessable_content
         return
       end
-      current_user.update!(last_period_start: Date.parse(date))
+      begin
+        current_user.update!(last_period_start: Date.iso8601(date))
+      rescue ArgumentError, TypeError
+        @error = "Invalid date — please select again"
+        render :show, status: :unprocessable_content and return
+      end
       redirect_to onboarding_path(4) and return
 
     when 4
@@ -77,7 +82,12 @@ class OnboardingController < ApplicationController
         render :show, status: :unprocessable_content
         return
       end
-      current_user.update!(last_period_end: Date.parse(date))
+      begin
+        current_user.update!(last_period_end: Date.iso8601(date))
+      rescue ArgumentError, TypeError
+        @error = "Invalid date — please select again"
+        render :show, status: :unprocessable_content and return
+      end
       redirect_to onboarding_path(5) and return
 
     when 5

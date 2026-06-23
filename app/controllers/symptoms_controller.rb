@@ -2,7 +2,11 @@ class SymptomsController < ApplicationController
   include Streakable
 
   def index
-    @date = params[:date] ? Date.parse(params[:date]) : Time.zone.today
+    @date = begin
+      params[:date].present? ? Date.iso8601(params[:date]) : Time.zone.today
+    rescue ArgumentError, TypeError
+      Time.zone.today
+    end
     @log = current_user.symptom_logs.find_or_initialize_by(date: @date)
     @phase = current_user.current_phase
     @season = @phase ? CycleCalculatorService::SEASON_NAMES[@phase] : ""

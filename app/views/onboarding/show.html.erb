@@ -97,6 +97,13 @@
              class="text-brand-primary text-sm font-medium px-1">&gt;</a>
         </div>
 
+        <%# Weekday headers %>
+        <div class="grid grid-cols-7 mb-1">
+          <% %w[Mo Tu We Th Fr Sa Su].each do |d| %>
+            <div class="text-center text-brand-secondary text-xs font-semibold tracking-wider py-1"><%= d %></div>
+          <% end %>
+        </div>
+
         <div>
           <% cal_days.each_slice(7).each do |week| %>
             <div class="border-t border-brand-field"></div>
@@ -174,6 +181,13 @@
           </span>
           <a href="<%= onboarding_path(4, cal_year: (cal_start + 1.month).year, cal_month: (cal_start + 1.month).month) %>"
              class="text-brand-primary text-sm font-medium px-1">&gt;</a>
+        </div>
+
+        <%# Weekday headers %>
+        <div class="grid grid-cols-7 mb-1">
+          <% %w[Mo Tu We Th Fr Sa Su].each do |d| %>
+            <div class="text-center text-brand-secondary text-xs font-semibold tracking-wider py-1"><%= d %></div>
+          <% end %>
         </div>
 
         <div>

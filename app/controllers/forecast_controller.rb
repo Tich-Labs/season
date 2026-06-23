@@ -1,6 +1,10 @@
 class ForecastController < ApplicationController
   def index
-    @selected_date = params[:date] ? Date.parse(params[:date]) : Time.zone.today
+    @selected_date = begin
+      params[:date].present? ? Date.iso8601(params[:date]) : Time.zone.today
+    rescue ArgumentError, TypeError
+      Time.zone.today
+    end
     @cycle_day = current_user.current_cycle_day(@selected_date) || 1
     @phase = current_user.current_phase || "menstrual"
     @phase_colour = CycleDayContent.phase_colour(@cycle_day)

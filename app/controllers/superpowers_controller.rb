@@ -25,7 +25,11 @@ class SuperpowersController < ApplicationController
   ].freeze
 
   def index
-    @date = params[:date] ? Date.parse(params[:date]) : Time.zone.today
+    @date = begin
+      params[:date].present? ? Date.iso8601(params[:date]) : Time.zone.today
+    rescue ArgumentError, TypeError
+      Time.zone.today
+    end
     @phase = current_user.current_phase || "follicular"
     @phase_colour = CycleCalculatorService::PHASE_META[@phase]&.dig(:colour) || "#933a35"
     @superpowers = SUPERPOWERS

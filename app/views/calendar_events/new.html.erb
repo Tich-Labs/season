@@ -24,8 +24,7 @@
       'Sports' => 'sport.svg', 'Medical' => 'medical.svg', 'Birthday' => 'birthday.svg',
       'Work' => 'work.svg', 'Coffee' => 'coffee.svg', 'Shopping' => 'shopping.svg'
     } %>
-    <%= form_with model: @event, url: calendar_events_path, local: true,
-          html: { data: { controller: "form-persistence", form_persistence_key_value: "calendar_event_new" } } do |f| %>
+    <%= form_with model: @event, url: calendar_events_path, local: true do |f| %>
 
       <div class="relative">
 
