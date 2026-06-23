@@ -48,4 +48,20 @@ class SymptomsControllerTest < ActionDispatch::IntegrationTest
     end
     assert_equal 5, @alice.symptom_logs.find_by(date: Time.zone.today).mood
   end
+
+  # Date guard — index
+  test "GET /symptoms with valid date param returns 200" do
+    get symptoms_path(date: 7.days.ago.to_date.to_s)
+    assert_response :success
+  end
+
+  test "GET /symptoms with garbage date param returns 200 (falls back to today)" do
+    get symptoms_path(date: "not-a-date")
+    assert_response :success
+  end
+
+  test "GET /symptoms with empty date param returns 200 (falls back to today)" do
+    get symptoms_path(date: "")
+    assert_response :success
+  end
 end

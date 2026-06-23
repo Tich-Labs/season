@@ -48,7 +48,7 @@ class CalendarEventsControllerTest < ActionDispatch::IntegrationTest
     patch calendar_event_path(@event), params: {
       calendar_event: {title: "Updated title", date: @event.date.to_s}
     }
-    assert_redirected_to calendar_event_path(@event)
+    assert_redirected_to forecast_path
     assert_equal "Updated title", @event.reload.title
   end
 

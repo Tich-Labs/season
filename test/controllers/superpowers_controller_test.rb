@@ -27,4 +27,20 @@ class SuperpowersControllerTest < ActionDispatch::IntegrationTest
     get superpower_path(superpower_logs(:alice_log_b))
     assert_response :success
   end
+
+  # Date guard — index
+  test "GET /superpowers with valid date param returns 200" do
+    get superpowers_path(date: 7.days.ago.to_date.to_s)
+    assert_response :success
+  end
+
+  test "GET /superpowers with garbage date param returns 200 (falls back to today)" do
+    get superpowers_path(date: "not-a-date")
+    assert_response :success
+  end
+
+  test "GET /superpowers with empty date param returns 200 (falls back to today)" do
+    get superpowers_path(date: "")
+    assert_response :success
+  end
 end
