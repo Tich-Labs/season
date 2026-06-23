@@ -420,7 +420,6 @@
 
   <div class="bg-white rounded-xl border border-gray-200 overflow-hidden divide-y divide-gray-100">
     <% [
-      { id: "#1",  raised: "28 Apr 2026", title: "Review User Journey Documentation", note: "Internal task — not a code bug" },
       { id: "#2",  raised: "22 Apr 2026", title: "Login with Apple / Facebook / Google not working", note: "Ops: code is complete. Need to verify APPLE_CLIENT_ID, GOOGLE_CLIENT_ID/SECRET, FACEBOOK_APP_ID/SECRET env vars on Render, and update OAuth redirect URIs in each provider console to match the production URL." },
       { id: "#6",  raised: "22 Apr 2026", title: "Create new account is not working", note: "Ops: Resend delivery is wired (production.rb + resend.rb). Test: (1) Render → Environment → confirm RESEND_API_KEY matches active key in Resend dashboard. (2) Confirm MAIL_FROM domain (season.vision) is verified as a sender in Resend. (3) Confirm APP_HOST is set to the correct production URL. (4) Register a fresh email on web → check inbox + spam for confirmation email. (5) Click confirmation link → should auto-login and redirect to onboarding." },
     ].each do |t| %>
