@@ -447,28 +447,83 @@
 </div>
 
 <%# ═══════════════════════════════════════════════════════════════════════════
-    SECTION 4 — WISHLIST (not urgent)
+    SECTION 4 — WISHLIST FIXED (2026-06-23, session 3)
     ═══════════════════════════════════════════════════════════════════════════ %>
 <div class="mb-8">
-  <h2 class="text-base font-bold text-gray-500 mb-3 flex items-center gap-2">
-    <span class="inline-block w-2 h-2 rounded-full bg-gray-400"></span>
-    Wishlist — Not Urgent
+  <h2 class="text-base font-bold text-green-700 mb-3 flex items-center gap-2">
+    <span class="inline-block w-2 h-2 rounded-full bg-green-500"></span>
+    Wishlist Fixed — 23 Jun 2026 (Session 3)
   </h2>
 
-  <div class="bg-white rounded-xl border border-gray-200 overflow-hidden divide-y divide-gray-100">
-    <% [
-      { id: "#3", raised: "22 Apr 2026", title: "Opening screen — reduce space above logo for a more balanced look" },
-      { id: "#4", raised: "22 Apr 2026", title: 'Reduce spacing for more content per viewport; "repeat password" field missing eye icon and needs same background colour as other inputs' },
-    ].each do |t| %>
-      <div class="flex items-center gap-4 px-5 py-3">
-        <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-gray-100 text-gray-400 text-xs font-bold shrink-0">&#9723;</span>
-        <span class="text-xs font-mono bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded"><%= t[:id] %></span>
-        <span class="flex-1 text-sm text-gray-700"><%= t[:title] %></span>
-        <span class="text-xs text-gray-400 shrink-0">Raised <%= t[:raised] %></span>
+  <%# #3 — Opening screen spacing %>
+  <div class="bg-white rounded-xl border border-gray-200 mb-4 overflow-hidden">
+    <div class="flex items-start gap-4 px-5 py-4 border-b border-gray-100">
+      <span class="mt-0.5 inline-flex items-center justify-center w-6 h-6 rounded-full bg-green-100 text-green-700 text-xs font-bold shrink-0">&#10003;</span>
+      <div class="flex-1 min-w-0">
+        <div class="flex flex-wrap items-center gap-2 mb-1">
+          <span class="text-xs font-mono bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded">#3</span>
+          <span class="font-semibold text-gray-800">Opening screen — reduce space above logo for a more balanced look</span>
+        </div>
+        <p class="text-xs text-gray-500">Raised: 22 Apr 2026 &nbsp;&bull;&nbsp; Fixed: 23 Jun 2026</p>
       </div>
-    <% end %>
+    </div>
+    <div class="px-5 py-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">What changed</p>
+        <ul class="text-sm text-gray-700 space-y-1 list-disc list-inside">
+          <li>Welcome screen <code class="bg-gray-100 px-1 rounded">padding-top</code> reduced from <code class="bg-gray-100 px-1 rounded">60px</code> to <code class="bg-gray-100 px-1 rounded">20px</code> (safe-area inset still applied for iOS notch)</li>
+          <li>Removed redundant <code class="bg-gray-100 px-1 rounded">min-h-screen</code> class alongside <code class="bg-gray-100 px-1 rounded">min-h-dvh</code></li>
+        </ul>
+      </div>
+      <div>
+        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Testing steps</p>
+        <ol class="text-sm text-gray-700 space-y-1 list-decimal list-inside">
+          <li>Open the app root URL (<code class="bg-gray-100 px-1 rounded">/welcome</code>) when logged out</li>
+          <li>Confirm the Season logo sits closer to the vertical centre of the screen — not pushed down by a large blank gap at the top</li>
+          <li>On iOS Testflight, confirm the logo is not cut off by the notch (safe-area inset still applies)</li>
+        </ol>
+        <p class="mt-2 text-xs text-green-600 font-medium">&#10003; Expected: logo and wordmark centred with balanced whitespace above and below</p>
+      </div>
+    </div>
   </div>
+
+  <%# #4 — Registration spacing + field consistency %>
+  <div class="bg-white rounded-xl border border-gray-200 mb-4 overflow-hidden">
+    <div class="flex items-start gap-4 px-5 py-4 border-b border-gray-100">
+      <span class="mt-0.5 inline-flex items-center justify-center w-6 h-6 rounded-full bg-green-100 text-green-700 text-xs font-bold shrink-0">&#10003;</span>
+      <div class="flex-1 min-w-0">
+        <div class="flex flex-wrap items-center gap-2 mb-1">
+          <span class="text-xs font-mono bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded">#4</span>
+          <span class="font-semibold text-gray-800">Registration — reduce spacing; repeat password needs matching background</span>
+        </div>
+        <p class="text-xs text-gray-500">Raised: 22 Apr 2026 &nbsp;&bull;&nbsp; Fixed: 23 Jun 2026</p>
+      </div>
+    </div>
+    <div class="px-5 py-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">What changed</p>
+        <ul class="text-sm text-gray-700 space-y-1 list-disc list-inside">
+          <li>Top padding reduced 60px → 20px (same as welcome screen fix)</li>
+          <li>Subtitle gap <code class="bg-gray-100 px-1 rounded">mt-11</code> → <code class="bg-gray-100 px-1 rounded">mt-6</code>; social login <code class="bg-gray-100 px-1 rounded">mt-[62px]</code> → <code class="bg-gray-100 px-1 rounded">mt-8</code>; "or email" divider <code class="bg-gray-100 px-1 rounded">mt-[62px]</code> → <code class="bg-gray-100 px-1 rounded">mt-6</code>; submit button <code class="bg-gray-100 px-1 rounded">mt-[75px]</code> → <code class="bg-gray-100 px-1 rounded">mt-8</code></li>
+          <li>Repeat password field: added <code class="bg-gray-100 px-1 rounded">opacity-50</code> in normal state to match email and password fields; error state now uses <code class="bg-gray-100 px-1 rounded">bg-brand-error</code> instead of a hardcoded hex</li>
+          <li>Note: the eye icon on repeat password was already built — Trello ticket was filed before it existed</li>
+        </ul>
+      </div>
+      <div>
+        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Testing steps</p>
+        <ol class="text-sm text-gray-700 space-y-1 list-decimal list-inside">
+          <li>Open <code class="bg-gray-100 px-1 rounded">/registration/new</code> on a 375px-wide screen (iPhone SE size)</li>
+          <li>Confirm all three fields (email, password, repeat password), the social login buttons, and the "Create account" button are all visible without scrolling (or with minimal scroll)</li>
+          <li>Confirm email, password and repeat password fields look identical in their unfocused state — same tinted field background with matching opacity</li>
+          <li>Tap the eye icon on the repeat password field — confirm the password text toggles visible/hidden</li>
+          <li>Submit with mismatched passwords — confirm the repeat password field turns the error background colour</li>
+        </ol>
+        <p class="mt-2 text-xs text-green-600 font-medium">&#10003; Expected: tighter layout, all three fields visually identical, eye icon works on both password fields</p>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <%# ── Footer ── %>
-<p class="text-xs text-gray-400 mt-2">Source: Trello board "Feedback Web App" &bull; Last updated: 23 Jun 2026 (session 2 — code review fixes) &bull; <a href="https://trello.com" class="underline hover:text-gray-600" target="_blank">View on Trello</a></p>
+<p class="text-xs text-gray-400 mt-2">Source: Trello board "Feedback Web App" &bull; Last updated: 23 Jun 2026 (session 3 — wishlist #3 #4 fixed) &bull; <a href="https://trello.com" class="underline hover:text-gray-600" target="_blank">View on Trello</a></p>
