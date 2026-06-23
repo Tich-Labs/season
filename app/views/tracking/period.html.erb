@@ -13,7 +13,7 @@
 
   # Active period bar — highlight period days in this month
   period_start = @existing
-  period_end   = period_start ? period_start + 4.days : nil
+  period_end   = @period_end || (period_start ? period_start + 4.days : nil)
   period_days  = if period_start && period_start.month == @month.month
     (period_start..[period_end, last_day].min).to_a
   else
@@ -100,12 +100,28 @@
     </div>
 
     <%# ── Submit ────────────────────────────────────────────────────────── %>
-    <div class="px-4 pt-6">
-      <a href="<%= period_tracking_index_path(save: 1, date: @selected) %>" data-turbo="false"
-         class="block w-[253px] mx-auto text-center no-underline text-white rounded-lg py-4 text-2xl font-medium font-['Montserrat']"
-         style="background:#933a35;">
-        Submit
-      </a>
+    <div class="px-4 pt-4 pb-2">
+      <p class="text-center text-sm text-brand-secondary font-['Montserrat'] mb-3">
+        Selected: <strong class="text-brand-primary"><%= @selected.strftime("%-d %B") %></strong>
+      </p>
+      <div class="flex flex-col gap-3 items-center">
+        <a href="<%= period_tracking_index_path(save: 1, field: "start", date: @selected) %>" data-turbo="false"
+           class="block w-[253px] text-center no-underline text-white rounded-lg py-4 text-xl font-medium font-['Montserrat']"
+           style="background:#933a35;">
+          Set as period start
+        </a>
+        <a href="<%= period_tracking_index_path(save: 1, field: "end", date: @selected) %>" data-turbo="false"
+           class="block w-[253px] text-center no-underline rounded-lg py-4 text-xl font-medium font-['Montserrat'] border-2"
+           style="color:#933a35; border-color:#933a35; background:transparent;">
+          Set as period end
+        </a>
+      </div>
+      <% if @existing || @period_end %>
+        <div class="mt-4 text-center text-xs text-brand-secondary font-['Montserrat'] space-y-1">
+          <% if @existing %><p>Start: <%= @existing.strftime("%-d %B %Y") %></p><% end %>
+          <% if @period_end %><p>End: <%= @period_end.strftime("%-d %B %Y") %></p><% end %>
+        </div>
+      <% end %>
     </div>
 
   </div>

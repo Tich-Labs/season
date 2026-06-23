@@ -127,6 +127,7 @@ en:
     step9:
       heading: "What method of birth control do you use?"
       methods:
+        - "None"
         - "Birth control pill"
         - "Hormonering"
         - "Hormoneplaster"
@@ -162,6 +163,7 @@ en:
     feedback: "Give feedback"
     period_update:
       saved: "Period start date saved."
+      end_saved: "Period end date saved."
       date_required: "Please select a date."
   calendar_events:
     create:

@@ -137,7 +137,7 @@
     </div>
     <% end %>
 
-    <main class="w-full flex-1 no-ptr <%= 'native-inset' if native_app? %>" data-controller="pull-to-refresh" style="<%= is_authenticated_view && !turbo_native_app? && !native_app? ? "padding-top: calc(6rem + env(safe-area-inset-top, 0px));" : is_authenticated_view && !native_app? ? "padding-top: env(safe-area-inset-top, 0px);" : '' %>">
+    <main class="w-full flex-1 no-ptr <%= 'native-inset' if native_app? %>" data-controller="pull-to-refresh" style="<%= is_authenticated_view && !turbo_native_app? && !native_app? ? "padding-top: calc(5rem + env(safe-area-inset-top, 0px));" : is_authenticated_view && !native_app? ? "padding-top: env(safe-area-inset-top, 0px);" : '' %>">
       <div class="max-w-md mx-auto h-full">
         <%= yield %>
       </div>

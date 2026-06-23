@@ -36,19 +36,25 @@ class TrackingController < ApplicationController
     @phase = current_user.current_phase
     @phase_col = CycleCalculatorService::PHASE_META[@phase]&.dig(:colour) || "#933a35"
     @existing = current_user.last_period_start
+    @period_end = current_user.last_period_end
 
     if params[:save] == "1" && params[:date].present?
       date = Date.parse(params[:date])
-      current_user.update!(last_period_start: date)
-      current_user.cycle_entries.where(period_start: true, date: date).destroy_all
-      current_user.cycle_entries.create!(
-        date: date,
-        phase: "menstrual",
-        season_name: "Winter",
-        cycle_day: 1,
-        period_start: true
-      )
-      redirect_to tracking_index_path, notice: t("tracking.period_update.saved")
+      if params[:field] == "end"
+        current_user.update!(last_period_end: date)
+        redirect_to period_tracking_index_path, notice: t("tracking.period_update.end_saved")
+      else
+        current_user.update!(last_period_start: date)
+        current_user.cycle_entries.where(period_start: true, date: date).destroy_all
+        current_user.cycle_entries.create!(
+          date: date,
+          phase: "menstrual",
+          season_name: "Winter",
+          cycle_day: 1,
+          period_start: true
+        )
+        redirect_to tracking_index_path, notice: t("tracking.period_update.saved")
+      end
       return
     end
 

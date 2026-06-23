@@ -141,14 +141,13 @@ class OnboardingController < ApplicationController
 
     when 9
       # Birth control method
-      # TODO: Eventually redirect to Settings for reminder setup
       method = params[:birth_control_method]
       if method.blank?
         @error = "Please select a method"
         render :show, status: :unprocessable_content
         return
       end
-      current_user.update!(contraception_type: method)
+      current_user.update!(contraception_type: (method == "none") ? nil : method)
       redirect_to onboarding_path(10) and return
 
     when 10

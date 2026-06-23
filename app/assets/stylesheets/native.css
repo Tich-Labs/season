@@ -19,3 +19,8 @@
 [data-hotwire-native] [data-controller="pull-to-refresh"] {
   overscroll-behavior: auto;
 }
+
+/* Onboarding: strip the 20px web base padding — native nav bar handles that space */
+[data-hotwire-native] .onboarding-layout {
+  padding-top: env(safe-area-inset-top, 0px) !important;
+}

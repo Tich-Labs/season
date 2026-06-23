@@ -121,6 +121,7 @@ de:
     step9:
       heading: "Welche Verhütungsmethode verwendest du?"
       methods:
+        - "Keine"
         - "Antibabypille"
         - "Hormonspirale"
         - "Hormonpflaster"
@@ -153,6 +154,7 @@ de:
     feedback: "Feedback geben"
     period_update:
       saved: "Startdatum der Periode gespeichert."
+      end_saved: "Enddatum der Periode gespeichert."
       date_required: "Bitte wähle ein Datum aus."
   calendar_events:
     create:

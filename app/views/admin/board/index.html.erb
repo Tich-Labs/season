@@ -1,0 +1,325 @@
+<% content_for(:page_title) { "Trello Board — Bug Tracker" } %>
+
+<%# ── Legend ── %>
+<div class="mb-6 flex flex-wrap gap-2 text-xs font-semibold">
+  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-green-100 text-green-700">&#10003; Fixed</span>
+  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-100 text-blue-700">&#9654; In Progress</span>
+  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-red-100 text-red-700">&#9675; Open</span>
+  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-gray-100 text-gray-500">&#9723; Wishlist</span>
+  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-purple-100 text-purple-700">&#9654;&#9654; Previously Done</span>
+</div>
+
+<%# ═══════════════════════════════════════════════════════════════════════════
+    SECTION 1 — FIXED IN THIS SESSION (2026-06-23)
+    ═══════════════════════════════════════════════════════════════════════════ %>
+<div class="mb-8">
+  <h2 class="text-base font-bold text-green-700 mb-3 flex items-center gap-2">
+    <span class="inline-block w-2 h-2 rounded-full bg-green-500"></span>
+    Fixed — Session 2026-06-23
+  </h2>
+
+  <%# Card helper: each fix is one card %>
+
+  <%# ── #13 / #23 ── %>
+  <div class="bg-white rounded-xl border border-gray-200 mb-4 overflow-hidden">
+    <div class="flex items-start gap-4 px-5 py-4 border-b border-gray-100">
+      <span class="mt-0.5 inline-flex items-center justify-center w-6 h-6 rounded-full bg-green-100 text-green-700 text-xs font-bold shrink-0">&#10003;</span>
+      <div class="flex-1 min-w-0">
+        <div class="flex flex-wrap items-center gap-2 mb-1">
+          <span class="text-xs font-mono bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded">#13</span>
+          <span class="text-xs font-mono bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded">#23</span>
+          <span class="font-semibold text-gray-800">Too much padding at the top / pages starting too far down</span>
+          <span class="text-xs bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded-full font-medium">Testflight + Web</span>
+        </div>
+        <p class="text-xs text-gray-500">Raised: 27 Apr 2026 (#13) &nbsp;&bull;&nbsp; 28 May 2026 (#23) &nbsp;&bull;&nbsp; Fixed: 23 Jun 2026</p>
+      </div>
+    </div>
+    <div class="px-5 py-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">What changed</p>
+        <ul class="text-sm text-gray-700 space-y-1 list-disc list-inside">
+          <li>Main layout <code class="bg-gray-100 px-1 rounded">padding-top</code> reduced: <code class="bg-gray-100 px-1 rounded">6rem → 5rem</code> (removes 16px dead space below header)</li>
+          <li>Onboarding outer div base padding: <code class="bg-gray-100 px-1 rounded">60px → 20px</code></li>
+          <li>Native CSS override strips onboarding base padding entirely in the iOS shell — safe-area inset handles it</li>
+        </ul>
+      </div>
+      <div>
+        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Testing steps</p>
+        <ol class="text-sm text-gray-700 space-y-1 list-decimal list-inside">
+          <li>Open the app on web browser and navigate to Calendar</li>
+          <li>Confirm content starts immediately below the header bar with a small gap (~4px) — not a large white strip</li>
+          <li>On iOS Testflight, open the Onboarding steps 1–11</li>
+          <li>Confirm the first heading is visible near the top of the screen without excessive blank space above</li>
+        </ol>
+        <p class="mt-2 text-xs text-green-600 font-medium">&#10003; Expected: content sits closer to the top bar; no large blank band</p>
+      </div>
+    </div>
+  </div>
+
+  <%# ── #24 ── %>
+  <div class="bg-white rounded-xl border border-gray-200 mb-4 overflow-hidden">
+    <div class="flex items-start gap-4 px-5 py-4 border-b border-gray-100">
+      <span class="mt-0.5 inline-flex items-center justify-center w-6 h-6 rounded-full bg-green-100 text-green-700 text-xs font-bold shrink-0">&#10003;</span>
+      <div class="flex-1 min-w-0">
+        <div class="flex flex-wrap items-center gap-2 mb-1">
+          <span class="text-xs font-mono bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded">#24</span>
+          <span class="font-semibold text-gray-800">Onboarding — birth control & food preferences can't be selected; only "None" submits</span>
+          <span class="text-xs bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded-full font-medium">Testflight</span>
+        </div>
+        <p class="text-xs text-gray-500">Raised: 28 May 2026 &nbsp;&bull;&nbsp; Fixed: 23 Jun 2026</p>
+      </div>
+    </div>
+    <div class="px-5 py-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">What changed</p>
+        <ul class="text-sm text-gray-700 space-y-1 list-disc list-inside">
+          <li>Onboarding outer container changed from <code class="bg-gray-100 px-1 rounded">min-h-dvh</code> to <code class="bg-gray-100 px-1 rounded">h-dvh overflow-y-auto</code> — all options are now reachable by scrolling</li>
+          <li>"None" added as the first option in Step 9 (birth control) — previously there was no way to skip</li>
+          <li>Fixed locale-independent sentinel value so German locale also works correctly</li>
+          <li>Controller updated to store <code class="bg-gray-100 px-1 rounded">nil</code> for "None" selection</li>
+        </ul>
+      </div>
+      <div>
+        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Testing steps</p>
+        <ol class="text-sm text-gray-700 space-y-1 list-decimal list-inside">
+          <li>Create a new test account and go through onboarding</li>
+          <li>On Step 9 (birth control method), scroll down — all options including "None" should be visible and tappable</li>
+          <li>Select "IUD" (or any non-None option) and tap it — it should advance to Step 10</li>
+          <li>On Step 11 (food preferences), scroll and select "Vegan" — should advance to Step 11</li>
+          <li>Select "None" — should also advance correctly</li>
+        </ol>
+        <p class="mt-2 text-xs text-green-600 font-medium">&#10003; Expected: every option is tappable; selecting any option advances the flow</p>
+      </div>
+    </div>
+  </div>
+
+  <%# ── #10 ── %>
+  <div class="bg-white rounded-xl border border-gray-200 mb-4 overflow-hidden">
+    <div class="flex items-start gap-4 px-5 py-4 border-b border-gray-100">
+      <span class="mt-0.5 inline-flex items-center justify-center w-6 h-6 rounded-full bg-green-100 text-green-700 text-xs font-bold shrink-0">&#10003;</span>
+      <div class="flex-1 min-w-0">
+        <div class="flex flex-wrap items-center gap-2 mb-1">
+          <span class="text-xs font-mono bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded">#10</span>
+          <span class="font-semibold text-gray-800">"Give feedback" button should only appear in burger menu, not in Track My Day</span>
+        </div>
+        <p class="text-xs text-gray-500">Raised: 28 Apr 2026 &nbsp;&bull;&nbsp; Fixed: 23 Jun 2026</p>
+      </div>
+    </div>
+    <div class="px-5 py-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">What changed</p>
+        <ul class="text-sm text-gray-700 space-y-1 list-disc list-inside">
+          <li>Weekly feedback nudge banner removed from <code class="bg-gray-100 px-1 rounded">tracking/index.html.erb</code></li>
+          <li>Feedback remains accessible in the burger/hamburger menu only</li>
+        </ul>
+      </div>
+      <div>
+        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Testing steps</p>
+        <ol class="text-sm text-gray-700 space-y-1 list-decimal list-inside">
+          <li>Log in and navigate to the Tracking tab (Track My Day)</li>
+          <li>Scroll through the full page — confirm no "Give feedback" or "Week X feedback" banner appears</li>
+          <li>Open the burger menu (☰) — confirm "Feedback" is still listed there</li>
+        </ol>
+        <p class="mt-2 text-xs text-green-600 font-medium">&#10003; Expected: no feedback button on the tracking page; still present in burger menu</p>
+      </div>
+    </div>
+  </div>
+
+  <%# ── #21 ── %>
+  <div class="bg-white rounded-xl border border-gray-200 mb-4 overflow-hidden">
+    <div class="flex items-start gap-4 px-5 py-4 border-b border-gray-100">
+      <span class="mt-0.5 inline-flex items-center justify-center w-6 h-6 rounded-full bg-green-100 text-green-700 text-xs font-bold shrink-0">&#10003;</span>
+      <div class="flex-1 min-w-0">
+        <div class="flex flex-wrap items-center gap-2 mb-1">
+          <span class="text-xs font-mono bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded">#21</span>
+          <span class="font-semibold text-gray-800">Mood selection — selected mood should be full opacity; others fade; deselect removes opacity</span>
+        </div>
+        <p class="text-xs text-gray-500">Raised: 5 May 2026 &nbsp;&bull;&nbsp; Verified: 23 Jun 2026 (already wired correctly — no code change needed)</p>
+      </div>
+    </div>
+    <div class="px-5 py-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">What changed</p>
+        <ul class="text-sm text-gray-700 space-y-1 list-disc list-inside">
+          <li>No code change — the logic was already implemented in <code class="bg-gray-100 px-1 rounded">symptom_controller.js</code></li>
+          <li>Selected mood: opacity 1, scale 1.08, no grayscale</li>
+          <li>Unselected moods: opacity 0.35, grayscale 0.6</li>
+          <li>Server-side selected state read from <code class="bg-gray-100 px-1 rounded">data-active-moods</code> on connect</li>
+        </ul>
+      </div>
+      <div>
+        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Testing steps</p>
+        <ol class="text-sm text-gray-700 space-y-1 list-decimal list-inside">
+          <li>Navigate to Tracking → Symptoms</li>
+          <li>Open the Mood section</li>
+          <li>Tap a mood icon — it should stay full opacity; all others should fade and show grayscale</li>
+          <li>Tap the same icon again — it should deselect; all icons return to faded state</li>
+          <li>Tap two different moods — both should remain full opacity</li>
+        </ol>
+        <p class="mt-2 text-xs text-green-600 font-medium">&#10003; Expected: visual toggle works correctly on every tap</p>
+      </div>
+    </div>
+  </div>
+
+  <%# ── #20 ── %>
+  <div class="bg-white rounded-xl border border-gray-200 mb-4 overflow-hidden">
+    <div class="flex items-start gap-4 px-5 py-4 border-b border-gray-100">
+      <span class="mt-0.5 inline-flex items-center justify-center w-6 h-6 rounded-full bg-green-100 text-green-700 text-xs font-bold shrink-0">&#10003;</span>
+      <div class="flex-1 min-w-0">
+        <div class="flex flex-wrap items-center gap-2 mb-1">
+          <span class="text-xs font-mono bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded">#20</span>
+          <span class="font-semibold text-gray-800">Period end date cannot be added</span>
+        </div>
+        <p class="text-xs text-gray-500">Raised: 4 May 2026 &nbsp;&bull;&nbsp; Fixed: 23 Jun 2026</p>
+      </div>
+    </div>
+    <div class="px-5 py-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">What changed</p>
+        <ul class="text-sm text-gray-700 space-y-1 list-disc list-inside">
+          <li>Period tracking view now shows two buttons: <strong>Set as period start</strong> and <strong>Set as period end</strong></li>
+          <li>Selected date is displayed above the buttons for clarity</li>
+          <li>Controller now saves to <code class="bg-gray-100 px-1 rounded">last_period_end</code> (DB column already existed)</li>
+          <li>Calendar highlights real end date instead of hardcoded +4 days</li>
+          <li>Current start and end dates shown below the buttons if set</li>
+        </ul>
+      </div>
+      <div>
+        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Testing steps</p>
+        <ol class="text-sm text-gray-700 space-y-1 list-decimal list-inside">
+          <li>Go to Tracking → Track my Period</li>
+          <li>Tap a past date in the calendar (e.g. the 1st of the month)</li>
+          <li>Confirm the date shows as "Selected: 1 June" below the calendar</li>
+          <li>Tap <strong>"Set as period start"</strong> — confirm success notice and redirect to Tracking home</li>
+          <li>Return to Track my Period, tap the 5th of the month</li>
+          <li>Tap <strong>"Set as period end"</strong> — confirm success notice stays on the period page</li>
+          <li>Confirm the calendar highlights days 1–5 in the period colour</li>
+        </ol>
+        <p class="mt-2 text-xs text-green-600 font-medium">&#10003; Expected: both start and end can be set independently; calendar reflects the actual range</p>
+      </div>
+    </div>
+  </div>
+
+  <%# ── #19 ── %>
+  <div class="bg-white rounded-xl border border-gray-200 mb-4 overflow-hidden">
+    <div class="flex items-start gap-4 px-5 py-4 border-b border-gray-100">
+      <span class="mt-0.5 inline-flex items-center justify-center w-6 h-6 rounded-full bg-green-100 text-green-700 text-xs font-bold shrink-0">&#10003;</span>
+      <div class="flex-1 min-w-0">
+        <div class="flex flex-wrap items-center gap-2 mb-1">
+          <span class="text-xs font-mono bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded">#19</span>
+          <span class="font-semibold text-gray-800">Symmetry is off — text overflows row, should wrap</span>
+        </div>
+        <p class="text-xs text-gray-500">Raised: 4 May 2026 &nbsp;&bull;&nbsp; Fixed: 23 Jun 2026</p>
+      </div>
+    </div>
+    <div class="px-5 py-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">What changed</p>
+        <ul class="text-sm text-gray-700 space-y-1 list-disc list-inside">
+          <li>Tracking nav rows (Symptoms, Superpower, Period): fixed height <code class="bg-gray-100 px-1 rounded">h-12</code> replaced with <code class="bg-gray-100 px-1 rounded">min-h-[3rem] py-3</code> so rows expand if text wraps</li>
+          <li>Text spans given <code class="bg-gray-100 px-1 rounded">flex-1 min-w-0</code> to prevent overflowing the arrow icon</li>
+          <li>Bonus: removed hardcoded <code class="bg-gray-100 px-1 rounded"> P.M.</code> suffix from appointment time display (was showing on all appointments regardless of AM/PM)</li>
+        </ul>
+      </div>
+      <div>
+        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Testing steps</p>
+        <ol class="text-sm text-gray-700 space-y-1 list-decimal list-inside">
+          <li>Go to Tracking — check that "My Symptoms", "My Superpower", "Track my Period" rows all align correctly with the arrow on the right</li>
+          <li>Check the rows on a narrow screen (375px width) — text should wrap inside the row, not push the arrow off-screen</li>
+          <li>Navigate to Calendar → Appointments — create an event with a start time of 09:00</li>
+          <li>Confirm the time shows as "9:00" (not "9:00 P.M.")</li>
+        </ol>
+        <p class="mt-2 text-xs text-green-600 font-medium">&#10003; Expected: rows stay symmetrical; appointment times display without the incorrect "P.M." suffix</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%# ═══════════════════════════════════════════════════════════════════════════
+    SECTION 2 — PREVIOUSLY COMPLETED (before this session)
+    ═══════════════════════════════════════════════════════════════════════════ %>
+<div class="mb-8">
+  <h2 class="text-base font-bold text-purple-700 mb-3 flex items-center gap-2">
+    <span class="inline-block w-2 h-2 rounded-full bg-purple-500"></span>
+    Previously Completed
+  </h2>
+
+  <div class="bg-white rounded-xl border border-gray-200 overflow-hidden divide-y divide-gray-100">
+    <% [
+      { id: "#5",  title: '"Forgot password" does not work, no email received', raised: "22 Apr 2026", fixed: "27 Apr 2026" },
+      { id: "#8",  title: "When trying to reset password, no email received",   raised: "22 Apr 2026", fixed: "27 Apr 2026" },
+      { id: "#16", title: '"Informations" displaced — should be top-right icon, not burger menu', raised: "prior", fixed: "16 Jun 2026" },
+    ].each do |t| %>
+      <div class="flex items-center gap-4 px-5 py-3">
+        <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-purple-100 text-purple-700 text-xs font-bold shrink-0">&#10003;</span>
+        <span class="text-xs font-mono bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded"><%= t[:id] %></span>
+        <span class="flex-1 text-sm text-gray-700"><%= t[:title] %></span>
+        <span class="text-xs text-gray-400 shrink-0">Raised <%= t[:raised] %> &bull; Fixed <%= t[:fixed] %></span>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<%# ═══════════════════════════════════════════════════════════════════════════
+    SECTION 3 — STILL OPEN
+    ═══════════════════════════════════════════════════════════════════════════ %>
+<div class="mb-8">
+  <h2 class="text-base font-bold text-red-700 mb-3 flex items-center gap-2">
+    <span class="inline-block w-2 h-2 rounded-full bg-red-400"></span>
+    Still Open — To Do
+  </h2>
+
+  <div class="bg-white rounded-xl border border-gray-200 overflow-hidden divide-y divide-gray-100">
+    <% [
+      { id: "#1",  raised: "28 Apr 2026", title: "Review User Journey Documentation", note: "Internal task — not a code bug" },
+      { id: "#2",  raised: "22 Apr 2026", title: "Login with Apple / Facebook / Google not working", note: "OAuth — needs credential + callback investigation on Render" },
+      { id: "#6",  raised: "22 Apr 2026", title: "Create new account is not working", note: "Registration / Devise flow — needs reproduction steps" },
+      { id: "#9",  raised: "27 Apr 2026", title: "Period tracking is not working properly", note: "Broad — needs scoped repro before fixing" },
+      { id: "#11", raised: "27 Apr 2026", title: "Superpowers — all superpowers need to be added + slider UI", note: "Content + UI build" },
+      { id: "#12", raised: "27 Apr 2026", title: "Symptoms should match UX design; content missing", note: "Full Figma audit needed" },
+      { id: "#14", raised: "27 Apr 2026", title: "Forecast is missing", note: "Route exists — may be a data or nav link issue; needs investigation" },
+      { id: "#15", raised: "27 Apr 2026", title: "Onboarding period start/end missing", note: "Steps exist in code — may be conditional rendering issue; needs repro" },
+      { id: "#17", raised: "4 May 2026",  title: "Appointment — setting time, add location, invite guest not working", note: "Fields exist; JS/Stimulus wiring for modals needs testing" },
+      { id: "#18", raised: "4 May 2026",  title: "Calendar filter tabs (All / Events / Tracked) not working", note: "Logic exists; needs end-to-end test per filter mode" },
+      { id: "#22", raised: "28 May 2026", title: "*Testflight* Day rotator (cycle length) only works by clicking, not swipe-scrollable", note: "iOS-specific scroll picker — needs native touch-action fix or Stimulus scroll handler" },
+      { id: "#25", raised: "28 May 2026", title: "*Testflight* No weekdays above calendar; date selection broken; Unsure button not working", note: "Weekday labels exist in code — may be iOS-specific tap or Turbo wiring issue" },
+    ].each do |t| %>
+      <div class="flex items-start gap-4 px-5 py-3">
+        <span class="mt-0.5 inline-flex items-center justify-center w-6 h-6 rounded-full bg-red-100 text-red-400 text-xs font-bold shrink-0">&#9675;</span>
+        <span class="text-xs font-mono bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded mt-0.5 shrink-0"><%= t[:id] %></span>
+        <div class="flex-1 min-w-0">
+          <p class="text-sm font-medium text-gray-800"><%= t[:title] %></p>
+          <p class="text-xs text-gray-400 mt-0.5"><%= t[:note] %></p>
+        </div>
+        <span class="text-xs text-gray-400 shrink-0 mt-0.5">Raised <%= t[:raised] %></span>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<%# ═══════════════════════════════════════════════════════════════════════════
+    SECTION 4 — WISHLIST (not urgent)
+    ═══════════════════════════════════════════════════════════════════════════ %>
+<div class="mb-8">
+  <h2 class="text-base font-bold text-gray-500 mb-3 flex items-center gap-2">
+    <span class="inline-block w-2 h-2 rounded-full bg-gray-400"></span>
+    Wishlist — Not Urgent
+  </h2>
+
+  <div class="bg-white rounded-xl border border-gray-200 overflow-hidden divide-y divide-gray-100">
+    <% [
+      { id: "#3", raised: "22 Apr 2026", title: "Opening screen — reduce space above logo for a more balanced look" },
+      { id: "#4", raised: "22 Apr 2026", title: 'Reduce spacing for more content per viewport; "repeat password" field missing eye icon and needs same background colour as other inputs' },
+    ].each do |t| %>
+      <div class="flex items-center gap-4 px-5 py-3">
+        <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-gray-100 text-gray-400 text-xs font-bold shrink-0">&#9723;</span>
+        <span class="text-xs font-mono bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded"><%= t[:id] %></span>
+        <span class="flex-1 text-sm text-gray-700"><%= t[:title] %></span>
+        <span class="text-xs text-gray-400 shrink-0">Raised <%= t[:raised] %></span>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<%# ── Footer ── %>
+<p class="text-xs text-gray-400 mt-2">Source: Trello board "Feedback Web App" &bull; Last updated: 23 Jun 2026 &bull; <a href="https://trello.com" class="underline hover:text-gray-600" target="_blank">View on Trello</a></p>

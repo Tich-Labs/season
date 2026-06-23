@@ -199,6 +199,7 @@ Rails.application.routes.draw do
     get "weekly_feedback_responses", to: "weekly_feedback_responses#index", as: :weekly_feedback_responses
     get "weekly_feedback_responses/export_csv", to: "weekly_feedback_responses#export_csv", as: :weekly_feedback_responses_export_csv
     get "help", to: "pages#help", as: :help
+    get "board", to: "board#index", as: :board
     root to: "users#index"
   end
 
