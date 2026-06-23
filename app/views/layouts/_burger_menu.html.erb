@@ -14,7 +14,7 @@
     <div class="absolute left-0 top-0 bottom-0 w-80 bg-white shadow-2xl transform transition-transform duration-300 overflow-y-auto overflow-x-hidden"
          data-menu-target="panel">
 
-      <div class="relative w-80 min-h-[760px]">
+      <div class="relative w-80 min-h-[800px]">
 
         <%# Close button — Figma: left-[250px] top-[27px] %>
         <button class="absolute left-[250px] top-[27px] size-11 bg-brand-field rounded-full flex items-center justify-center z-10"
@@ -87,25 +87,34 @@
           <span class="absolute left-[71px] top-[10px] text-brand-primary text-base font-medium tracking-wide"><%= t("nav.menu.monthly_view") %></span>
         <% end %>
 
+        <%# Forecast — top-[461px] %>
+        <%= link_to forecast_path, class: "absolute left-0 top-[461px] w-full h-[40px] flex items-center hover:bg-stone-50", "data-turbo-action": "replace" do %>
+          <svg class="absolute left-[30px] top-[10px]" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#933a35" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 20h20" />
+            <path d="M6 16l4-8 4 6 3-4 3 6" />
+          </svg>
+          <span class="absolute left-[71px] top-[10px] text-brand-primary text-base font-medium tracking-wide"><%= t("nav.menu.forecast") %></span>
+        <% end %>
+
         <%# Divider Line 20 %>
-        <div class="absolute left-0 top-[501px] w-80 h-px bg-brand-field"></div>
+        <div class="absolute left-0 top-[541px] w-80 h-px bg-brand-field"></div>
 
         <%# "Coming soon" badge 2 %>
-        <div class="absolute left-[214px] top-[508px] w-24 h-4 bg-brand-field rounded-lg flex items-center justify-center z-10">
+        <div class="absolute left-[214px] top-[548px] w-24 h-4 bg-brand-field rounded-lg flex items-center justify-center z-10">
           <span class="text-brand-primary text-xs font-normal tracking-wide"><%= t("nav.menu.coming_soon") %></span>
         </div>
 
         <%# E-Mail to partner %>
-        <a href="#" class="absolute left-0 top-[511px] w-full h-[38px] flex items-center hover:bg-stone-50">
+        <a href="#" class="absolute left-0 top-[551px] w-full h-[38px] flex items-center hover:bg-stone-50">
           <%= vuesax_icon "sms", size: 20, class: "absolute left-[30px] top-[7px]" %>
           <span class="absolute left-[71px] top-[10px] text-brand-primary text-base font-medium tracking-wide"><%= t("nav.menu.email_partner") %></span>
         </a>
 
         <%# Divider Line 23 %>
-        <div class="absolute left-0 top-[549px] w-80 h-px bg-brand-field"></div>
+        <div class="absolute left-0 top-[589px] w-80 h-px bg-brand-field"></div>
 
         <%# Settings %>
-        <%= link_to edit_settings_path, class: "absolute left-0 top-[564px] w-full h-[49px] flex items-center hover:bg-stone-50", "data-turbo-action": "replace" do %>
+        <%= link_to edit_settings_path, class: "absolute left-0 top-[604px] w-full h-[49px] flex items-center hover:bg-stone-50", "data-turbo-action": "replace" do %>
           <%= vuesax_icon "settings", size: 20, class: "absolute left-[30px] top-[10px]" %>
           <span class="absolute left-[71px] top-[15px] text-brand-primary text-base font-medium tracking-wide"><%= t("nav.menu.settings") %></span>
         <% end %>
@@ -114,7 +123,7 @@
         <button type="button"
                 data-type="feedback"
                 data-action="click->menu#openFeedback"
-                class="absolute left-0 top-[613px] w-full h-[49px] flex items-center hover:bg-stone-50 cursor-pointer">
+                class="absolute left-0 top-[653px] w-full h-[49px] flex items-center hover:bg-stone-50 cursor-pointer">
           <%= vuesax_icon "document-text", size: 20, class: "absolute left-[31px] top-[10px]" %>
           <span class="absolute left-[71px] top-[15px] text-brand-primary text-base font-medium tracking-wide"><%= t("nav.menu.feedback") %></span>
         </button>
@@ -123,7 +132,7 @@
         <button type="button"
                 data-type="bug_report"
                 data-action="click->menu#openFeedback"
-                class="absolute left-0 top-[661px] w-full h-[49px] flex items-center hover:bg-stone-50 cursor-pointer">
+                class="absolute left-0 top-[701px] w-full h-[49px] flex items-center hover:bg-stone-50 cursor-pointer">
           <%= vuesax_icon "message", size: 20, class: "absolute left-[31px] top-[10px]" %>
           <span class="absolute left-[71px] top-[15px] text-brand-primary text-base font-medium tracking-wide"><%= t("nav.menu.bug_report") %></span>
         </button>
@@ -131,7 +140,7 @@
         <%# Log out %>
         <%= link_to session_path,
                     data: { turbo_method: :delete },
-                    class: "absolute left-0 top-[706px] w-full h-[45px] flex items-center hover:bg-stone-50" do %>
+                    class: "absolute left-0 top-[746px] w-full h-[45px] flex items-center hover:bg-stone-50" do %>
           <svg class="absolute left-[30px] top-[9px]" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#933a35" stroke-width="1.5">
             <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
             <polyline points="16 17 21 12 16 7" />

@@ -525,5 +525,102 @@
 
 </div>
 
+<%# ── Quick Wins — 23 Jun 2026 (Session 4) ── %>
+<div class="mb-8">
+  <h2 class="text-xl font-bold text-gray-800 mb-4">Quick Wins Fixed — 23 Jun 2026 (Session 4)</h2>
+
+  <%# #14 — Forecast missing nav link %>
+  <div class="bg-white rounded-xl border border-gray-200 mb-4 overflow-hidden">
+    <div class="flex items-start gap-4 px-5 py-4 border-b border-gray-100">
+      <span class="mt-0.5 inline-flex items-center justify-center w-6 h-6 rounded-full bg-green-100 text-green-700 text-xs font-bold shrink-0">&#10003;</span>
+      <div class="flex-1 min-w-0">
+        <div class="flex flex-wrap items-center gap-2 mb-1">
+          <span class="text-xs font-mono bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded">#14</span>
+          <span class="font-semibold text-gray-800">Forecast — no navigation entry in burger menu</span>
+        </div>
+        <p class="text-xs text-gray-500">Raised: Low priority &nbsp;&bull;&nbsp; Fixed: 23 Jun 2026</p>
+      </div>
+    </div>
+    <div class="px-5 py-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">What changed</p>
+        <ul class="text-sm text-gray-700 space-y-1 list-disc list-inside">
+          <li>Added "Today's Forecast" link to the burger menu at position top-[461px] (after Monthly-View)</li>
+          <li>Shifted all menu items below it down 40px to avoid overlap</li>
+          <li>Added <code class="bg-gray-100 px-1 rounded">nav.menu.forecast</code> locale key to en.yml and de.yml</li>
+          <li>Note: every calendar day cell already linked to forecast — this adds a direct entry point for today's forecast</li>
+        </ul>
+      </div>
+      <div>
+        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Testing steps</p>
+        <ol class="text-sm text-gray-700 space-y-1 list-decimal list-inside">
+          <li>Open the app and tap the hamburger (☰) menu</li>
+          <li>Confirm "Today's Forecast" appears between Monthly-View and the second divider</li>
+          <li>Tap it — confirm it navigates to <code class="bg-gray-100 px-1 rounded">/forecast</code> showing today's forecast</li>
+          <li>Also confirm tapping any day cell on the monthly calendar still navigates to the forecast for that date</li>
+          <li>Confirm menu items below (Settings, Feedback, Bug Report, Log out) are all visible and not overlapping</li>
+        </ol>
+        <p class="mt-2 text-xs text-green-600 font-medium">&#10003; Expected: "Today's Forecast" visible in burger menu, navigates correctly</p>
+      </div>
+    </div>
+  </div>
+
+  <%# #15 — Onboarding period start/end broken %>
+  <div class="bg-white rounded-xl border border-gray-200 mb-4 overflow-hidden">
+    <div class="flex items-start gap-4 px-5 py-4 border-b border-gray-100">
+      <span class="mt-0.5 inline-flex items-center justify-center w-6 h-6 rounded-full bg-green-100 text-green-700 text-xs font-bold shrink-0">&#10003;</span>
+      <div class="flex-1 min-w-0">
+        <div class="flex flex-wrap items-center gap-2 mb-1">
+          <span class="text-xs font-mono bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded">#15</span>
+          <span class="font-semibold text-gray-800">Onboarding steps 3 &amp; 4 — period start/end date selection broken</span>
+        </div>
+        <p class="text-xs text-gray-500">Raised: Low priority &nbsp;&bull;&nbsp; Fixed: 23 Jun 2026</p>
+      </div>
+    </div>
+    <div class="px-5 py-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">What changed</p>
+        <ul class="text-sm text-gray-700 space-y-1 list-disc list-inside">
+          <li>Recreated <code class="bg-gray-100 px-1 rounded">onboarding_calendar_controller.js</code> — it was incorrectly deleted as "dead JS" in a prior cleanup session</li>
+          <li>Steps 3 and 4 both use <code class="bg-gray-100 px-1 rounded">data-controller="onboarding-calendar"</code> — without the controller, day taps did nothing and the submit button stayed hidden</li>
+          <li>Controller handles: day tap → highlight selected day (inline style) + populate hidden field + show submit/clear buttons; clear tap → reset all</li>
+          <li>Private methods <code class="bg-gray-100 px-1 rounded">#applyHighlight</code> / <code class="bg-gray-100 px-1 rounded">#clearHighlight</code> use inline style to avoid Tailwind class conflicts</li>
+        </ul>
+      </div>
+      <div>
+        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Testing steps</p>
+        <ol class="text-sm text-gray-700 space-y-1 list-decimal list-inside">
+          <li>Sign up a fresh test account and start onboarding</li>
+          <li>Reach step 3 (period start date) — tap any past date on the calendar</li>
+          <li>Confirm the selected date highlights in the brand-primary colour and the "Set period start" submit button appears below the calendar</li>
+          <li>Tap the "Clear" link — confirm highlight clears and submit button hides again</li>
+          <li>Select a date and submit — confirm you advance to step 4</li>
+          <li>Repeat steps 2–5 for step 4 (period end date)</li>
+          <li>Confirm the "I don't know" button on both steps still works independently</li>
+        </ol>
+        <p class="mt-2 text-xs text-green-600 font-medium">&#10003; Expected: day tap highlights date and shows submit button; form submits correctly; clear resets state</p>
+      </div>
+    </div>
+  </div>
+
+  <%# #18 — Calendar filter tabs (confirmed working) %>
+  <div class="bg-white rounded-xl border border-gray-200 mb-4 overflow-hidden">
+    <div class="flex items-start gap-4 px-5 py-4 border-b border-gray-100">
+      <span class="mt-0.5 inline-flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 text-blue-700 text-xs font-bold shrink-0">&#10003;</span>
+      <div class="flex-1 min-w-0">
+        <div class="flex flex-wrap items-center gap-2 mb-1">
+          <span class="text-xs font-mono bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded">#18</span>
+          <span class="font-semibold text-gray-800">Calendar filter tabs (All / Events / Tracked / Cycle) — investigated, already working</span>
+        </div>
+        <p class="text-xs text-gray-500">Raised: Low priority &nbsp;&bull;&nbsp; Investigated: 23 Jun 2026 — no fix needed</p>
+      </div>
+    </div>
+    <div class="px-5 py-4">
+      <p class="text-sm text-gray-700">Code audit confirmed the full pipeline is correctly implemented: <code class="bg-gray-100 px-1 rounded">@mode</code> is read from params with a whitelist guard in <code class="bg-gray-100 px-1 rounded">CalendarController#index</code>; <code class="bg-gray-100 px-1 rounded">@tracked_days_set</code> is built as a Ruby Set via <code class="bg-gray-100 px-1 rounded">.pluck(:date).to_set</code>; the <code class="bg-gray-100 px-1 rounded">_day_cell</code> partial correctly uses <code class="bg-gray-100 px-1 rounded">mode</code> to toggle event labels, tracking dots, and phase bands. Filter tabs are plain GET links — no JS required. Ticket can be closed.</p>
+    </div>
+  </div>
+
+</div>
+
 <%# ── Footer ── %>
-<p class="text-xs text-gray-400 mt-2">Source: Trello board "Feedback Web App" &bull; Last updated: 23 Jun 2026 (session 3 — wishlist #3 #4 fixed) &bull; <a href="https://trello.com" class="underline hover:text-gray-600" target="_blank">View on Trello</a></p>
+<p class="text-xs text-gray-400 mt-2">Source: Trello board "Feedback Web App" &bull; Last updated: 23 Jun 2026 (session 4 — quick wins #14 #15 #18) &bull; <a href="https://trello.com" class="underline hover:text-gray-600" target="_blank">View on Trello</a></p>
