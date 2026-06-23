@@ -1,4 +1,4 @@
-<div class="bg-white min-h-screen min-h-dvh flex flex-col items-center justify-between px-8 max-w-app mx-auto" style="padding-top:calc(60px + env(safe-area-inset-top,0px));padding-bottom:calc(3rem + env(safe-area-inset-bottom,0px))">
+<div class="bg-white min-h-dvh flex flex-col items-center justify-between px-8 max-w-app mx-auto" style="padding-top:calc(20px + env(safe-area-inset-top,0px));padding-bottom:calc(3rem + env(safe-area-inset-bottom,0px))">
 
   <!-- Title -->
   <div class="w-full text-center">
@@ -8,14 +8,14 @@
   </div>
 
   <!-- Subtitle -->
-  <div class="w-full text-center mt-11">
+  <div class="w-full text-center mt-6">
     <p class="text-brand-primary text-[22px] font-medium text-center leading-[27px] tracking-[1.32px]">
       <%= t('devise.registrations.new.subtitle', default: 'Create an account, so we can save your tracked data and app settings.') %>
     </p>
   </div>
 
   <!-- Social Login -->
-  <div class="w-full mt-[62px]">
+  <div class="w-full mt-8">
     <p class="text-brand-primary text-base font-normal mb-[21px] text-center">
       <%= t('devise.registrations.new.fast_lane', default: 'Use the fast lane:') %>
     </p>
@@ -52,7 +52,7 @@
     </div>
   </div>
 
-  <div class="w-full mt-[62px] text-center">
+  <div class="w-full mt-6 text-center">
     <span class="text-brand-primary text-base font-normal">
       <%= t('devise.registrations.new.or_email', default: '...or sign up with your E-mail:') %>
     </span>
@@ -115,7 +115,7 @@
             placeholder: t('devise.registrations.new.confirm_password_placeholder', default: 'Repeat password...'),
             aria: { invalid: has_errors, describedby: has_errors ? "reg-error" : nil },
             data: { "password-visibility-target": "input" },
-            class: "w-full rounded-lg px-[21px] pr-[50px] h-[52px] text-[22px] font-medium text-brand-primary outline-none #{has_errors ? 'bg-[#F6F0EA] border-2 border-brand-primary' : 'bg-brand-field border-0'}" %>
+            class: "w-full rounded-lg px-[21px] pr-[50px] h-[52px] text-[22px] font-medium text-brand-primary outline-none #{has_errors ? 'bg-brand-error border-2 border-brand-primary' : 'bg-brand-field opacity-50 border-0'}" %>
         <button type="button" aria-label="Toggle password visibility" data-action="click->password-visibility#toggle" class="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer bg-transparent border-0 p-0">
           <svg data-password-visibility-target="eyeOpen" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="<%= has_errors ? '#933a35' : 'rgba(147,58,53,0.5)' %>" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
           <svg data-password-visibility-target="eyeClosed" class="hidden" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="<%= has_errors ? '#933a35' : 'rgba(147,58,53,0.5)' %>" stroke-width="1.5"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" /><line x1="1" y1="1" x2="23" y2="23" /></svg>
@@ -137,7 +137,7 @@
       <% end %>
 
       <!-- Submit -->
-      <div class="flex justify-center mt-[75px]">
+      <div class="flex justify-center mt-8">
         <%= f.submit t('devise.registrations.new.submit', default: 'Create account'),
             class: "w-[322px] bg-brand-primary text-white text-[22px] font-medium tracking-[0.66px] rounded-lg border-0 cursor-pointer #{has_errors ? 'h-[62px]' : 'h-[52px]'}" %>
       </div>
