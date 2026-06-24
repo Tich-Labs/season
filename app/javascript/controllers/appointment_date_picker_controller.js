@@ -128,7 +128,9 @@ export default class extends Controller {
     const month = String(d.getMonth() + 1).padStart(2, '0')
     const dateNum = String(d.getDate()).padStart(2, '0')
     const year = d.getFullYear()
-    this.stage2TitleTarget.textContent = `${dayName} ${month}.${dateNum}.${year}`
+    const slotLabel = this._editingSlot === 1 ? 'Start' : 'End'
+    const modeLabel = this._mode === 'date' ? 'date' : 'time'
+    this.stage2TitleTarget.textContent = `${slotLabel} ${modeLabel}: ${dayName} ${dateNum}.${month}.${year}`
 
     this.#updateAllSlotLabels()
     this.#setBoldForEditingSlot()
@@ -356,9 +358,11 @@ export default class extends Controller {
     const dTitle = this._editingSlot === 2 ? d2 : d1
     const tMonth = String(dTitle.getMonth() + 1).padStart(2, '0')
     const tDate = String(dTitle.getDate()).padStart(2, '0')
-    this.stage2TitleTarget.textContent = `${SHORT[dTitle.getDay()]} ${tMonth}.${tDate}.${dTitle.getFullYear()}`
+    const slotLabel = this._editingSlot === 1 ? 'Start' : 'End'
+    const modeLabel = this._mode === 'date' ? 'date' : 'time'
+    this.stage2TitleTarget.textContent = `${slotLabel} ${modeLabel}: ${SHORT[dTitle.getDay()]} ${tDate}.${tMonth}.${dTitle.getFullYear()}`
 
-    const fmt = (d) => `${SHORT[d.getDay()]} ${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}.${d.getFullYear()}`
+    const fmt = (d) => `${SHORT[d.getDay()]} ${String(d.getDate()).padStart(2, '0')}.${String(d.getMonth() + 1).padStart(2, '0')}.${d.getFullYear()}`
     this.slot1LabelTargets.forEach(el => { el.textContent = fmt(d1) })
     this.slot2LabelTargets.forEach(el => { el.textContent = fmt(d2) })
   }
@@ -484,22 +488,19 @@ export default class extends Controller {
     const year1 = d1.getFullYear()
     const nth1 = this.#ordinal(dateNum1)
 
-    let text
     if (multiDay) {
       const dayName2 = d2.toLocaleDateString('en-US', { weekday: 'short' })
+      const monthName2 = d2.toLocaleDateString('en-US', { month: 'long' })
       const dateNum2 = d2.getDate()
       const nth2 = this.#ordinal(dateNum2)
       const year2 = d2.getFullYear()
-      if (year1 === year2) {
-        text = `${dayName1}. ${monthName1} ${dateNum1}${nth1} – ${dayName2}. ${dateNum2}${nth2} ${year1}`
-      } else {
-        text = `${dayName1}. ${monthName1} ${dateNum1}${nth1} ${year1} – ${dayName2}. ${dateNum2}${nth2} ${year2}`
-      }
+      const line1 = `${dayName1}. ${monthName1} ${dateNum1}${nth1} ${year1}`
+      const line2 = `${dayName2}. ${monthName2} ${dateNum2}${nth2} ${year2}`
+      this.dateDisplayTarget.innerHTML = `${line1}<br>${line2}`
     } else {
-      text = `${dayName1}. ${monthName1} ${dateNum1}${nth1} ${year1}`
+      this.dateDisplayTarget.textContent = `${dayName1}. ${monthName1} ${dateNum1}${nth1} ${year1}`
     }
-
-    this.dateDisplayTarget.textContent = text
+    this.dateDisplayTarget.style.fontSize = ''
   }
 
   #setDateFromField () {
@@ -529,7 +530,7 @@ export default class extends Controller {
     const d1 = new Date(this._pickYear, this._pickMonth - 1, this._pickDay)
     const d2 = this.#getSlot2Date()
 
-    const fmt = (d) => `${SHORT[d.getDay()]} ${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}.${d.getFullYear()}`
+    const fmt = (d) => `${SHORT[d.getDay()]} ${String(d.getDate()).padStart(2, '0')}.${String(d.getMonth() + 1).padStart(2, '0')}.${d.getFullYear()}`
     this.slot1LabelTargets.forEach(el => { el.textContent = fmt(d1) })
     this.slot2LabelTargets.forEach(el => { el.textContent = fmt(d2) })
 
@@ -548,7 +549,7 @@ export default class extends Controller {
     const month = String(d.getMonth() + 1).padStart(2, '0')
     const dateNum = String(d.getDate()).padStart(2, '0')
     const year = d.getFullYear()
-    this.dateTitleTarget.textContent = `${dayName} ${month}.${dateNum}.${year}`
+    this.dateTitleTarget.textContent = `${dayName} ${dateNum}.${month}.${year}`
   }
 
   #updateDateDisplay () {
