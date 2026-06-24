@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="h-full" lang="<%= I18n.locale %>"<%= " data-hotwire-native" if turbo_native_app? %>>
+<html class="h-full" lang="<%= I18n.locale %>"<%= " data-ruby-native" if native_app? %>>
   <head>
     <title><%= content_for(:title) || "Season" %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -20,10 +20,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
     <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
-    <% if turbo_native_app? %>
+    <% if native_app? %>
       <%= stylesheet_link_tag "native", "data-turbo-track": "reload" %>
+      <%= stylesheet_link_tag :ruby_native, "data-turbo-track": "reload" %>
     <% end %>
-    <%= stylesheet_link_tag :ruby_native, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
     <script nonce="<%= content_security_policy_nonce %>">
       if ('serviceWorker' in navigator) {
@@ -42,7 +42,7 @@
   <body class="bg-[#FCF9F7] font-['Montserrat'] antialiased h-full overflow-x-hidden"
         data-controller="update-prompt install haptic">
 
-    <% if is_authenticated_view && !turbo_native_app? && !native_app? %>
+    <% if is_authenticated_view && !native_app? %>
     <div data-controller="menu">
       <%# --- TOP APP BAR — constrained to mobile viewport --- %>
       <%# Settings controller auto-applies dark theme; any view can opt in via content_for(:header_dark) %>
@@ -103,7 +103,7 @@
     <%= native_tabs_tag if authenticated? && native_app? %>
 
     <%# PWA update banner — shown by update_prompt_controller when a new SW is waiting %>
-    <% unless turbo_native_app? || native_app? %>
+    <% unless native_app? %>
     <div data-update-prompt-target="banner"
          class="fixed left-1/2 -translate-x-1/2 w-full max-w-app px-4 z-50 hidden" style="bottom: calc(6rem + env(safe-area-inset-bottom, 0px));">
       <div class="bg-[#3d2b28] text-white rounded-2xl px-4 py-3 flex items-center justify-between shadow-xl">
@@ -137,13 +137,13 @@
     </div>
     <% end %>
 
-    <main class="w-full flex-1 no-ptr <%= 'native-inset' if native_app? %>" data-controller="pull-to-refresh" style="<%= is_authenticated_view && !turbo_native_app? && !native_app? ? "padding-top: calc(5rem + env(safe-area-inset-top, 0px));" : is_authenticated_view && !native_app? ? "padding-top: env(safe-area-inset-top, 0px);" : '' %>">
+    <main class="w-full flex-1 no-ptr <%= 'native-inset' if native_app? %>" data-controller="pull-to-refresh" style="<%= is_authenticated_view && !native_app? ? "padding-top: calc(5rem + env(safe-area-inset-top, 0px));" : '' %>">
       <div class="max-w-md mx-auto h-full">
         <%= yield %>
       </div>
     </main>
 
-    <% if is_authenticated_view && !turbo_native_app? && !native_app? %>
+    <% if is_authenticated_view && !native_app? %>
       <%= render "shared/feedback_modal" %>
       <%= render "shared/support_modal" %>
       <%= render "shared/weekly_feedback_modal" %>

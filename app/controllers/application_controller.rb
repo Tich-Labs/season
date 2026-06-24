@@ -1,6 +1,5 @@
 class ApplicationController < ActionController::Base
   include Authentication
-  include TurboNativeDetection
 
   before_action :set_locale, if: :current_user
 

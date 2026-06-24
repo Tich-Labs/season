@@ -28,10 +28,10 @@ class RegistrationsController < ApplicationController
       render :new, status: :unprocessable_content
     else
       @user = User.new(user_params.merge(email: email, name: name))
-      @user.skip_confirmation! if turbo_native_app?
+      @user.skip_confirmation! if native_app?
 
       if @user.save
-        if turbo_native_app?
+        if native_app?
           login(@user)
           redirect_to after_sign_in_path
         else

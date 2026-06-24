@@ -2,15 +2,15 @@ import { Controller } from '@hotwired/stimulus'
 
 export default class extends Controller {
   connect () {
-    if (this.isTurboNative()) {
-      document.documentElement.classList.add('turbo-native')
+    if (this.isNative()) {
+      document.documentElement.classList.add('ruby-native')
       this.disablePWAControllers()
     }
   }
 
-  isTurboNative () {
-    return navigator.userAgent.includes('Turbo Native') ||
-           document.documentElement.dataset.hotwireNative === 'true'
+  isNative () {
+    return navigator.userAgent.includes('Ruby Native') ||
+           document.documentElement.dataset.rubyNative === 'true'
   }
 
   disablePWAControllers () {

@@ -11,16 +11,16 @@
 }
 
 /* Native tab bar takes ~49pt + safe area at bottom — pad web content */
-[data-hotwire-native] main {
+[data-ruby-native] main {
   padding-bottom: calc(49pt + env(safe-area-inset-bottom, 0px));
 }
 
 /* Remove pull-to-refresh in native app (native UIRefreshControl handles it) */
-[data-hotwire-native] [data-controller="pull-to-refresh"] {
+[data-ruby-native] [data-controller="pull-to-refresh"] {
   overscroll-behavior: auto;
 }
 
 /* Onboarding: strip the 20px web base padding — native nav bar handles that space */
-[data-hotwire-native] .onboarding-layout {
+[data-ruby-native] .onboarding-layout {
   padding-top: env(safe-area-inset-top, 0px) !important;
 }

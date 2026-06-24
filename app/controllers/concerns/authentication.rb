@@ -5,6 +5,7 @@ module Authentication
 
   included do
     helper_method :authenticated?
+    before_action :authenticate_native_token
     before_action :authenticate_user, unless: :devise_controller?
     before_action :require_onboarding_completed, if: :authenticated?
   end
@@ -21,11 +22,19 @@ module Authentication
 
   private
 
+  def authenticate_native_token
+    token = request.headers["X-Native-Auth-Token"] || cookies[:native_auth_token]
+    return if token.blank?
+
+    user = User.find_by(native_auth_token: token)
+    Current.user ||= user if user&.valid_native_auth_token?
+  end
+
   def authenticate_user
     return if authenticated?
 
     store_location_for(:user, request.fullpath) if request.get? || request.head?
-    redirect_to turbo_native_app? ? root_path : new_session_path
+    redirect_to native_app? ? root_path : new_session_path
   end
 
   def login(user)
@@ -38,7 +47,7 @@ module Authentication
       secure: Rails.env.production?,
       same_site: :lax
     }
-    user.regenerate_native_auth_token! if turbo_native_app?
+    user.regenerate_native_auth_token! if native_app?
     Current.user = user
   end
 

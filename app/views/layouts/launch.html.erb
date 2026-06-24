@@ -40,7 +40,7 @@
   </head>
   <body class="bg-brand-background font-sans">
     <%= yield %>
-    <% unless turbo_native_app? %>
+    <% unless native_app? %>
       <%= render "shared/feedback_modal" %>
     <% end %>
   </body>
