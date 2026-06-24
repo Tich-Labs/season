@@ -61,6 +61,7 @@
   <!-- Form -->
   <div class="w-full">
     <%= form_with url: registration_path, method: :post, local: true do |f| %>
+      <%= native_form_tag if native_app? %>
 
       <% has_errors = @user.present? && @user.errors.any? %>
 

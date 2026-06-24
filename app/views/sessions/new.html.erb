@@ -55,6 +55,7 @@
   <!-- Form -->
   <div class="w-full">
     <%= form_with url: session_path, method: :post, local: true do |f| %>
+      <%= native_form_tag if native_app? %>
 
       <!-- Email -->
       <div class="mt-[29px]">

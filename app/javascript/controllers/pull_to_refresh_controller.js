@@ -5,6 +5,8 @@ export default class extends Controller {
   static targets = ['indicator']
 
   connect () {
+    if (document.documentElement.hasAttribute('data-ruby-native')) return
+
     this.touchStartY = 0
     this.pulling = false
     this.spinner = null

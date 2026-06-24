@@ -1,4 +1,4 @@
-/* Hotwire Native styles — only loaded when the app is rendered inside the native iOS shell */
+/* Ruby Native styles — only loaded when the app is rendered inside the native iOS shell */
 
 /* Hide elements that are replaced by native UI (header, burger menu, FAB, banners) */
 .d-hotwire-native-none {
@@ -13,11 +13,6 @@
 /* Native tab bar takes ~49pt + safe area at bottom — pad web content */
 [data-ruby-native] main {
   padding-bottom: calc(49pt + env(safe-area-inset-bottom, 0px));
-}
-
-/* Remove pull-to-refresh in native app (native UIRefreshControl handles it) */
-[data-ruby-native] [data-controller="pull-to-refresh"] {
-  overscroll-behavior: auto;
 }
 
 /* Onboarding: strip the 20px web base padding — native nav bar handles that space */

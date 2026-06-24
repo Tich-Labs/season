@@ -8,7 +8,9 @@ class NotificationTokenViewModel {
         req.httpMethod = "POST"
         req.setValue("application/json", forHTTPHeaderField: "Accept")
         req.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        req.setValue("true", forHTTPHeaderField: "X-Turbo-Native")
+        if let authToken = KeychainHelper.read(key: "nativeAuthToken") {
+            req.setValue(authToken, forHTTPHeaderField: "X-Native-Auth-Token")
+        }
 
         do {
             let body = NotificationToken(token: token)
