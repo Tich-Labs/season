@@ -337,6 +337,8 @@ en:
       delete_button: "Delete My Account"
       cancel: "Cancel"
       confirm: "Are you sure you want to delete your account? This cannot be undone."
+    destroy:
+      success: "Your account has been deleted."
   invites:
     show:
       welcome: "Welcome to Season!"

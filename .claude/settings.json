@@ -7,17 +7,18 @@
       "mcp__plugin_figma_figma__get_metadata"
     ]
   },
+  "enabledPlugins": {
+    "rails-simplifier@maquina": true,
+    "recuerd0@maquina": true,
+    "rails-security-auditor@maquina": true
+  },
   "extraKnownMarketplaces": {
     "maquina": {
       "source": {
         "source": "github",
         "repo": "maquina-app/rails-claude-code"
-      }
+      },
+      "autoUpdate": true
     }
-  },
-  "enabledPlugins": [
-    "rails-simplifier@maquina",
-    "recuerd0@maquina",
-    "rails-security-auditor@maquina"
-  ]
+  }
 }

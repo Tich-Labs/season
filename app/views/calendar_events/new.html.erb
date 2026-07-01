@@ -35,7 +35,7 @@
                 aria-label="Choose event type"
                 class="absolute top-0 right-0 w-11 h-11 rounded-full bg-brand-field flex items-center justify-center border-0 p-0 cursor-pointer">
           <% if has_category %>
-            <%= image_tag "icons/appointment/#{category_icons[@event.category]}", alt: @event.category, style: "width:30px;height:30px;" %>
+            <%= image_tag "icons/appointment/#{category_icons[@event.category]}", alt: @event.category, class: "w-[30px] h-[30px]" %>
           <% else %>
             <svg width="24" height="24" fill="none" viewBox="0 0 24 24">
               <path d="M12 5v14M5 12h14" stroke="#A43600" stroke-width="2.5" stroke-linecap="round"></path>
@@ -51,11 +51,11 @@
                 class: "w-full bg-transparent border-none text-[22px] font-medium text-brand-primary p-0 outline-none font-sans" %>
         </div>
 
-        <div class="mx-5 my-8" style="width:304px;height:1px;background:#933A35;"></div>
+        <div class="mx-5 my-8 w-[304px] h-px bg-brand-primary"></div>
 
         <%# Date + time — SVG block %>
         <div class="py-8">
-          <div class="mx-auto relative" style="width:360px;height:125px;">
+          <div class="mx-auto relative w-[360px] h-[125px]">
           <svg width="360" height="125" viewBox="0 0 360 125" fill="none" xmlns="http://www.w3.org/2000/svg" class="absolute inset-0 pointer-events-none">
             <path d="M0 19C0 8.50659 8.50659 0 19 0H341C351.493 0 360 8.50659 360 19V106C360 116.493 351.493 125 341 125H19C8.50659 125 0 116.493 0 106V19Z" fill="#933A35" />
           </svg>
@@ -250,96 +250,96 @@
     <%# ── Set Date modal ── %>
     <div data-appointment-date-picker-target="backdrop" class="hidden fixed inset-0 bg-black/40 z-50" data-action="click->appointment-date-picker#close"></div>
     <div data-appointment-date-picker-target="modal" role="dialog" aria-modal="true" class="hidden">
-      <div style="width:333px;height:406px;background:#fff;border-radius:29px;box-shadow:0 24px 64px rgba(0,0,0,0.16);position:relative;">
+      <div class="w-[333px] h-[406px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] relative">
 
         <%# ── Stage 1 ── %>
         <div data-appointment-date-picker-target="stage1">
-          <span data-appointment-date-picker-target="dateTitle" style="position:absolute;left:54px;top:65px;width:228px;font-family:Montserrat;font-weight:500;font-size:22px;line-height:27px;letter-spacing:0.03em;color:#933a35;text-align:center;"></span>
-          <button type="button" data-action="click->appointment-date-picker#close" style="position:absolute;left:278px;top:13px;width:37px;height:37px;background:transparent;border:none;cursor:pointer;padding:0;">
+          <span data-appointment-date-picker-target="dateTitle" class="absolute left-[54px] top-[65px] w-[228px] font-medium text-[22px] leading-[27px] tracking-[0.03em] text-brand-primary text-center"></span>
+          <button type="button" data-action="click->appointment-date-picker#close" class="absolute left-[278px] top-[13px] w-[37px] h-[37px] bg-transparent border-none cursor-pointer p-0">
             <svg width="37" height="37" viewBox="0 0 53 53" fill="none"><path d="M35.8 16.2L36 16.4C36.2 16.6 36.4 17 36.4 17.4C36.4 17.7 36.3 18.1 36.1 18.4L36 18.5L28.3 26.2L36 33.8C36.2 34.1 36.4 34.4 36.4 34.8C36.4 35.2 36.3 35.5 36.1 35.8L36 36C35.7 36.2 35.4 36.4 35 36.4C34.6 36.4 34.2 36.3 33.9 36.1L33.8 36L26.2 28.3L18.5 36C18.3 36.2 17.9 36.4 17.5 36.4C17.2 36.4 16.8 36.3 16.5 36.1L16.4 36C16.1 35.7 16 35.4 15.9 35C15.9 34.6 16 34.2 16.2 33.9L16.4 33.8L24 26.2L16.4 18.5C16.1 18.3 16 17.9 15.9 17.5C15.9 17.2 16 16.8 16.2 16.5L16.4 16.4C16.6 16.1 17 16 17.4 15.9C17.7 15.9 18.1 16 18.4 16.2L18.5 16.4L26.2 24L33.8 16.4C34.1 16.1 34.4 16 34.8 15.9C35.2 15.9 35.5 16 35.8 16.2L36 16.4L35.8 16.2Z" fill="#A43600" /></svg>
           </button>
-          <hr style="position:absolute;left:110px;top:107px;width:132px;border:none;height:1px;background:black;opacity:0.2;">
-          <div style="position:absolute;left:38px;right:38px;top:122px;height:30px;display:flex;align-items:center;justify-content:space-between;">
-            <button type="button" data-action="click->appointment-date-picker#editDate1" data-appointment-date-picker-target="slot1Btn" style="background:transparent;border:none;cursor:pointer;padding:0;display:flex;align-items:center;gap:5px;">
-              <span style="font-family:Montserrat;font-size:11px;font-weight:600;letter-spacing:0.08em;color:#933a35;opacity:0.5;text-transform:uppercase;">From</span>
-              <span data-appointment-date-picker-target="slot1Label" style="font-family:Montserrat;font-weight:500;font-size:16px;letter-spacing:0.07em;color:#933a35;"></span>
+          <hr class="absolute left-[110px] top-[107px] w-[132px] border-none h-px bg-black opacity-20">
+          <div class="absolute left-[38px] right-[38px] top-[122px] h-[30px] flex items-center justify-between">
+            <button type="button" data-action="click->appointment-date-picker#editDate1" data-appointment-date-picker-target="slot1Btn" class="bg-transparent border-none cursor-pointer p-0 flex items-center gap-[5px]">
+              <span class="text-[11px] font-semibold tracking-[0.08em] text-brand-primary opacity-50 uppercase">From</span>
+              <span data-appointment-date-picker-target="slot1Label" class="font-medium text-base tracking-[0.07em] text-brand-primary"></span>
             </button>
-            <button type="button" data-action="click->appointment-date-picker#editTime1" style="background:transparent;border:none;cursor:pointer;padding:0;">
-              <span data-appointment-date-picker-target="slot1Time" style="font-family:Montserrat;font-weight:500;font-size:16px;letter-spacing:0.07em;color:#933a35;"></span>
-            </button>
-          </div>
-          <div style="position:absolute;left:38px;right:38px;top:168px;height:30px;display:flex;align-items:center;justify-content:space-between;">
-            <button type="button" data-action="click->appointment-date-picker#editDate2" data-appointment-date-picker-target="slot2Btn" style="background:transparent;border:none;cursor:pointer;padding:0;display:flex;align-items:center;gap:5px;">
-              <span style="font-family:Montserrat;font-size:11px;font-weight:600;letter-spacing:0.08em;color:#933a35;opacity:0.5;text-transform:uppercase;">To</span>
-              <span data-appointment-date-picker-target="slot2Label" style="font-family:Montserrat;font-weight:500;font-size:16px;letter-spacing:0.07em;color:#933a35;"></span>
-            </button>
-            <button type="button" data-action="click->appointment-date-picker#editTime2" style="background:transparent;border:none;cursor:pointer;padding:0;">
-              <span data-appointment-date-picker-target="slot2Time" style="font-family:Montserrat;font-weight:500;font-size:16px;letter-spacing:0.07em;color:#933a35;"></span>
+            <button type="button" data-action="click->appointment-date-picker#editTime1" class="bg-transparent border-none cursor-pointer p-0">
+              <span data-appointment-date-picker-target="slot1Time" class="font-medium text-base tracking-[0.07em] text-brand-primary"></span>
             </button>
           </div>
-          <div style="position:absolute;left:38px;right:38px;top:228px;display:flex;align-items:center;justify-content:space-between;">
-            <span style="font-family:Montserrat;font-weight:500;font-size:16px;letter-spacing:0.07em;color:#933a35;">All day</span>
-            <button type="button" data-action="click->appointment-date-picker#toggleAllDay" data-appointment-date-picker-target="allDayToggle" style="width:63px;height:34px;border-radius:17px;background:#D9D9D9;border:none;cursor:pointer;position:relative;padding:0;">
-              <span style="position:absolute;left:3px;top:2px;width:30px;height:30px;background:white;border-radius:50%;box-shadow:0 1px 4px rgba(0,0,0,0.2);transition:transform 0.2s;"></span>
+          <div class="absolute left-[38px] right-[38px] top-[168px] h-[30px] flex items-center justify-between">
+            <button type="button" data-action="click->appointment-date-picker#editDate2" data-appointment-date-picker-target="slot2Btn" class="bg-transparent border-none cursor-pointer p-0 flex items-center gap-[5px]">
+              <span class="text-[11px] font-semibold tracking-[0.08em] text-brand-primary opacity-50 uppercase">To</span>
+              <span data-appointment-date-picker-target="slot2Label" class="font-medium text-base tracking-[0.07em] text-brand-primary"></span>
+            </button>
+            <button type="button" data-action="click->appointment-date-picker#editTime2" class="bg-transparent border-none cursor-pointer p-0">
+              <span data-appointment-date-picker-target="slot2Time" class="font-medium text-base tracking-[0.07em] text-brand-primary"></span>
             </button>
           </div>
-          <button type="button" data-action="click->appointment-date-picker#confirm" style="position:absolute;left:38px;top:313px;width:257px;height:48px;background:#933a35;border-radius:8px;border:none;cursor:pointer;font-family:Montserrat;font-weight:500;font-size:22px;line-height:27px;letter-spacing:0.03em;color:white;text-align:center;">Set date</button>
+          <div class="absolute left-[38px] right-[38px] top-[228px] flex items-center justify-between">
+            <span class="font-medium text-base tracking-[0.07em] text-brand-primary">All day</span>
+            <button type="button" data-action="click->appointment-date-picker#toggleAllDay" data-appointment-date-picker-target="allDayToggle" class="w-[63px] h-[34px] rounded-[17px] bg-[#D9D9D9] border-none cursor-pointer relative p-0">
+              <span class="absolute left-[3px] top-[2px] w-[30px] h-[30px] bg-white rounded-full shadow-[0_1px_4px_rgba(0,0,0,0.2)] transition-transform duration-200"></span>
+            </button>
+          </div>
+          <button type="button" data-action="click->appointment-date-picker#confirm" class="absolute left-[38px] top-[313px] w-[257px] h-12 bg-brand-primary rounded-lg border-none cursor-pointer font-medium text-[22px] leading-[27px] tracking-[0.03em] text-white text-center">Set date</button>
         </div>
 
         <%# ── Stage 2 ── %>
         <div data-appointment-date-picker-target="stage2" class="hidden">
-          <span data-appointment-date-picker-target="stage2Title" style="position:absolute;left:54px;top:65px;width:228px;font-family:Montserrat;font-weight:500;font-size:18px;line-height:27px;letter-spacing:0.03em;color:#933a35;text-align:center;"></span>
-          <button type="button" data-action="click->appointment-date-picker#close" style="position:absolute;left:278px;top:13px;width:37px;height:37px;background:transparent;border:none;cursor:pointer;padding:0;">
+          <span data-appointment-date-picker-target="stage2Title" class="absolute left-[54px] top-[65px] w-[228px] font-medium text-lg leading-[27px] tracking-[0.03em] text-brand-primary text-center"></span>
+          <button type="button" data-action="click->appointment-date-picker#close" class="absolute left-[278px] top-[13px] w-[37px] h-[37px] bg-transparent border-none cursor-pointer p-0">
             <svg width="37" height="37" viewBox="0 0 53 53" fill="none"><path d="M35.8 16.2L36 16.4C36.2 16.6 36.4 17 36.4 17.4C36.4 17.7 36.3 18.1 36.1 18.4L36 18.5L28.3 26.2L36 33.8C36.2 34.1 36.4 34.4 36.4 34.8C36.4 35.2 36.3 35.5 36.1 35.8L36 36C35.7 36.2 35.4 36.4 35 36.4C34.6 36.4 34.2 36.3 33.9 36.1L33.8 36L26.2 28.3L18.5 36C18.3 36.2 17.9 36.4 17.5 36.4C17.2 36.4 16.8 36.3 16.5 36.1L16.4 36C16.1 35.7 16 35.4 15.9 35C15.9 34.6 16 34.2 16.2 33.9L16.4 33.8L24 26.2L16.4 18.5C16.1 18.3 16 17.9 15.9 17.5C15.9 17.2 16 16.8 16.2 16.5L16.4 16.4C16.6 16.1 17 16 17.4 15.9C17.7 15.9 18.1 16 18.4 16.2L18.5 16.4L26.2 24L33.8 16.4C34.1 16.1 34.4 16 34.8 15.9C35.2 15.9 35.5 16 35.8 16.2L36 16.4L35.8 16.2Z" fill="#A43600" /></svg>
           </button>
-          <hr style="position:absolute;left:110px;top:107px;width:132px;border:none;height:1px;background:black;opacity:0.2;">
-          <div style="position:absolute;left:38px;right:38px;top:122px;height:30px;display:flex;align-items:center;justify-content:space-between;">
-            <span style="display:flex;align-items:center;gap:5px;">
-              <span style="font-family:Montserrat;font-size:11px;font-weight:600;letter-spacing:0.08em;color:#933a35;opacity:0.5;text-transform:uppercase;">From</span>
-              <span data-appointment-date-picker-target="slot1Label" style="font-family:Montserrat;font-weight:500;font-size:16px;letter-spacing:0.07em;color:#933a35;"></span>
+          <hr class="absolute left-[110px] top-[107px] w-[132px] border-none h-px bg-black opacity-20">
+          <div class="absolute left-[38px] right-[38px] top-[122px] h-[30px] flex items-center justify-between">
+            <span class="flex items-center gap-[5px]">
+              <span class="text-[11px] font-semibold tracking-[0.08em] text-brand-primary opacity-50 uppercase">From</span>
+              <span data-appointment-date-picker-target="slot1Label" class="font-medium text-base tracking-[0.07em] text-brand-primary"></span>
             </span>
-            <span data-appointment-date-picker-target="slot1Time" style="font-family:Montserrat;font-weight:500;font-size:16px;letter-spacing:0.07em;color:#933a35;"></span>
+            <span data-appointment-date-picker-target="slot1Time" class="font-medium text-base tracking-[0.07em] text-brand-primary"></span>
           </div>
-          <hr style="position:absolute;left:110px;top:170px;width:132px;border:none;height:1px;background:black;opacity:0.2;">
-          <div data-picker="date" style="position:absolute;left:38px;top:195px;width:256px;height:60px;display:flex;align-items:center;justify-content:center;gap:6px;">
-            <div style="position:absolute;inset:0;margin:12px 0;background:#EDE1D5;border-radius:8px;"></div>
-            <div data-appointment-date-picker-target="monthScroll" data-action="scroll->appointment-date-picker#onMonthScroll" style="overflow-y:auto;scroll-snap-type:y mandatory;height:100%;width:48px;scrollbar-width:none;position:relative;z-index:1;">
-              <% (1..12).each do |m| %><div data-value="<%= m %>" style="height:20px;display:flex;align-items:center;justify-content:center;font-family:Montserrat;font-size:16px;letter-spacing:0.07em;color:#933a35;"><%= format('%02d', m) %></div><% end %>
+          <hr class="absolute left-[110px] top-[170px] w-[132px] border-none h-px bg-black opacity-20">
+          <div data-picker="date" class="absolute left-[38px] top-[195px] w-[256px] h-[60px] flex items-center justify-center gap-1.5">
+            <div class="absolute inset-0 my-3 bg-brand-field rounded-lg"></div>
+            <div data-appointment-date-picker-target="monthScroll" data-action="scroll->appointment-date-picker#onMonthScroll" class="overflow-y-auto snap-y snap-mandatory h-full w-12 [scrollbar-width:none] relative z-[1]">
+              <% (1..12).each do |m| %><div data-value="<%= m %>" class="h-5 flex items-center justify-center text-base tracking-[0.07em] text-brand-primary"><%= format('%02d', m) %></div><% end %>
             </div>
-            <span style="font-family:Montserrat;font-size:16px;color:#933a35;position:relative;z-index:1;">/</span>
-            <div data-appointment-date-picker-target="dayScroll" data-action="scroll->appointment-date-picker#onDayScroll" style="overflow-y:auto;scroll-snap-type:y mandatory;height:100%;width:48px;scrollbar-width:none;position:relative;z-index:1;">
-              <% (1..31).each do |d| %><div data-value="<%= d %>" style="height:20px;display:flex;align-items:center;justify-content:center;font-family:Montserrat;font-size:16px;letter-spacing:0.07em;color:#933a35;"><%= format('%02d', d) %></div><% end %>
+            <span class="text-base text-brand-primary relative z-[1]">/</span>
+            <div data-appointment-date-picker-target="dayScroll" data-action="scroll->appointment-date-picker#onDayScroll" class="overflow-y-auto snap-y snap-mandatory h-full w-12 [scrollbar-width:none] relative z-[1]">
+              <% (1..31).each do |d| %><div data-value="<%= d %>" class="h-5 flex items-center justify-center text-base tracking-[0.07em] text-brand-primary"><%= format('%02d', d) %></div><% end %>
             </div>
-            <span style="font-family:Montserrat;font-size:16px;color:#933a35;position:relative;z-index:1;">/</span>
-            <div data-appointment-date-picker-target="yearScroll" data-action="scroll->appointment-date-picker#onYearScroll" style="overflow-y:auto;scroll-snap-type:y mandatory;height:100%;width:64px;scrollbar-width:none;position:relative;z-index:1;">
-              <% ((Time.zone.today.year - 5)..(Time.zone.today.year + 5)).each do |y| %><div data-value="<%= y %>" style="height:20px;display:flex;align-items:center;justify-content:center;font-family:Montserrat;font-size:16px;letter-spacing:0.07em;color:#933a35;"><%= y %></div><% end %>
-            </div>
-          </div>
-          <div data-picker="time" style="position:absolute;left:38px;top:195px;width:256px;height:60px;display:none;align-items:center;justify-content:center;gap:4px;">
-            <div style="position:absolute;inset:0;margin:12px 0;background:#EDE1D5;border-radius:8px;"></div>
-            <div data-appointment-date-picker-target="hourScroll" data-action="scroll->appointment-date-picker#onHourScroll" style="overflow-y:auto;scroll-snap-type:y mandatory;height:100%;width:50px;scrollbar-width:none;position:relative;z-index:1;">
-              <% (0..23).each do |h| %><div data-value="<%= h %>" style="height:20px;display:flex;align-items:center;justify-content:center;font-family:Montserrat;font-size:16px;letter-spacing:0.07em;color:#933a35;"><%= format('%02d', h) %></div><% end %>
-            </div>
-            <span style="font-family:Montserrat;font-weight:700;font-size:16px;color:#933a35;position:relative;z-index:1;">:</span>
-            <div data-appointment-date-picker-target="minuteScroll" data-action="scroll->appointment-date-picker#onMinuteScroll" style="overflow-y:auto;scroll-snap-type:y mandatory;height:100%;width:56px;scrollbar-width:none;position:relative;z-index:1;">
-              <% [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55].each do |m| %><div data-value="<%= m %>" style="height:20px;display:flex;align-items:center;justify-content:center;font-family:Montserrat;font-size:16px;letter-spacing:0.07em;color:#933a35;"><%= format('%02d', m) %></div><% end %>
+            <span class="text-base text-brand-primary relative z-[1]">/</span>
+            <div data-appointment-date-picker-target="yearScroll" data-action="scroll->appointment-date-picker#onYearScroll" class="overflow-y-auto snap-y snap-mandatory h-full w-16 [scrollbar-width:none] relative z-[1]">
+              <% ((Time.zone.today.year - 5)..(Time.zone.today.year + 5)).each do |y| %><div data-value="<%= y %>" class="h-5 flex items-center justify-center text-base tracking-[0.07em] text-brand-primary"><%= y %></div><% end %>
             </div>
           </div>
-          <hr data-stage2-divider style="position:absolute;left:110px;top:306px;width:132px;border:none;height:1px;background:black;opacity:0.2;">
-          <div data-stage2-slot2 style="position:absolute;left:38px;right:38px;top:320px;height:30px;display:flex;align-items:center;justify-content:space-between;">
-            <span style="display:flex;align-items:center;gap:5px;">
-              <span style="font-family:Montserrat;font-size:11px;font-weight:600;letter-spacing:0.08em;color:#933a35;opacity:0.5;text-transform:uppercase;">To</span>
-              <span data-appointment-date-picker-target="slot2Label" style="font-family:Montserrat;font-weight:500;font-size:16px;letter-spacing:0.07em;color:#933a35;"></span>
+          <div data-picker="time" class="hidden items-center justify-center gap-1 absolute left-[38px] top-[195px] w-[256px] h-[60px]">
+            <div class="absolute inset-0 my-3 bg-brand-field rounded-lg"></div>
+            <div data-appointment-date-picker-target="hourScroll" data-action="scroll->appointment-date-picker#onHourScroll" class="overflow-y-auto snap-y snap-mandatory h-full w-[50px] [scrollbar-width:none] relative z-[1]">
+              <% (0..23).each do |h| %><div data-value="<%= h %>" class="h-5 flex items-center justify-center text-base tracking-[0.07em] text-brand-primary"><%= format('%02d', h) %></div><% end %>
+            </div>
+            <span class="font-bold text-base text-brand-primary relative z-[1]">:</span>
+            <div data-appointment-date-picker-target="minuteScroll" data-action="scroll->appointment-date-picker#onMinuteScroll" class="overflow-y-auto snap-y snap-mandatory h-full w-14 [scrollbar-width:none] relative z-[1]">
+              <% [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55].each do |m| %><div data-value="<%= m %>" class="h-5 flex items-center justify-center text-base tracking-[0.07em] text-brand-primary"><%= format('%02d', m) %></div><% end %>
+            </div>
+          </div>
+          <hr data-stage2-divider class="absolute left-[110px] top-[306px] w-[132px] border-none h-px bg-black opacity-20">
+          <div data-stage2-slot2 class="absolute left-[38px] right-[38px] top-[320px] h-[30px] flex items-center justify-between">
+            <span class="flex items-center gap-[5px]">
+              <span class="text-[11px] font-semibold tracking-[0.08em] text-brand-primary opacity-50 uppercase">To</span>
+              <span data-appointment-date-picker-target="slot2Label" class="font-medium text-base tracking-[0.07em] text-brand-primary"></span>
             </span>
-            <span data-appointment-date-picker-target="slot2Time" style="font-family:Montserrat;font-weight:500;font-size:16px;letter-spacing:0.07em;color:#933a35;"></span>
+            <span data-appointment-date-picker-target="slot2Time" class="font-medium text-base tracking-[0.07em] text-brand-primary"></span>
           </div>
-          <div data-stage2-allday style="position:absolute;left:38px;right:38px;top:375px;display:flex;align-items:center;justify-content:space-between;">
-            <span style="font-family:Montserrat;font-weight:500;font-size:16px;letter-spacing:0.07em;color:#933a35;">All day</span>
-            <button type="button" data-action="click->appointment-date-picker#toggleAllDay" data-appointment-date-picker-target="allDayToggle" style="width:63px;height:34px;border-radius:17px;background:#D9D9D9;border:none;cursor:pointer;position:relative;padding:0;">
-              <span style="position:absolute;left:3px;top:2px;width:30px;height:30px;background:white;border-radius:50%;box-shadow:0 1px 4px rgba(0,0,0,0.2);transition:transform 0.2s;"></span>
+          <div data-stage2-allday class="absolute left-[38px] right-[38px] top-[375px] flex items-center justify-between">
+            <span class="font-medium text-base tracking-[0.07em] text-brand-primary">All day</span>
+            <button type="button" data-action="click->appointment-date-picker#toggleAllDay" data-appointment-date-picker-target="allDayToggle" class="w-[63px] h-[34px] rounded-[17px] bg-[#D9D9D9] border-none cursor-pointer relative p-0">
+              <span class="absolute left-[3px] top-[2px] w-[30px] h-[30px] bg-white rounded-full shadow-[0_1px_4px_rgba(0,0,0,0.2)] transition-transform duration-200"></span>
             </button>
           </div>
-          <button type="button" data-action="click->appointment-date-picker#confirmTime" data-stage2-button style="position:absolute;left:38px;top:440px;width:257px;height:48px;background:#933a35;border-radius:8px;border:none;cursor:pointer;font-family:Montserrat;font-weight:500;font-size:22px;line-height:27px;letter-spacing:0.03em;color:white;text-align:center;">Done</button>
+          <button type="button" data-action="click->appointment-date-picker#confirmTime" data-stage2-button class="absolute left-[38px] top-[440px] w-[257px] h-12 bg-brand-primary rounded-lg border-none cursor-pointer font-medium text-[22px] leading-[27px] tracking-[0.03em] text-white text-center">Done</button>
         </div>
       </div>
     </div>
@@ -348,7 +348,7 @@
     <div data-season-modal-target="backdrop" class="hidden fixed inset-0 bg-black/40 z-50"></div>
     <div data-season-modal-target="modal" role="dialog" aria-modal="true" aria-labelledby="choose-icon-modal-title"
          class="hidden fixed inset-0 z-50 flex items-center justify-center">
-      <div class="w-[351px] h-[845px] bg-white rounded-[29px] p-6 relative flex flex-col" style="box-shadow:0 24px 64px rgba(0,0,0,0.16);">
+      <div class="w-[351px] h-[845px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] p-6 relative flex flex-col">
 
         <%# Modal header %>
         <div class="flex justify-center items-center relative mb-4">
@@ -360,7 +360,7 @@
         <hr class="border-brand-field mb-4">
 
         <%# Category list %>
-        <div class="relative flex-1 min-h-0 overflow-y-auto" style="scrollbar-width: none;">
+        <div class="relative flex-1 min-h-0 overflow-y-auto [scrollbar-width:none]">
           <% items = [
             { label: 'Friends', icon: 'family.svg', top: 0 },
             { label: 'Dinner', icon: 'dinner.svg', top: 62 },
@@ -401,46 +401,42 @@
     <div data-season-modal-target="locationModal" role="dialog" aria-modal="true" aria-label="Add location"
          class="hidden fixed inset-0 z-50 flex items-center justify-center">
       <div data-season-modal-target="locationCard"
-           style="width:347px;height:301px;background:#fff;border-radius:29px;box-shadow:0 24px 64px rgba(0,0,0,0.16);position:relative;transition:height 0.25s ease;overflow:hidden;">
+           class="w-[347px] h-[301px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] relative transition-[height] duration-[250ms] ease-in-out overflow-hidden">
 
         <%# Close button %>
         <button type="button" data-action="click->season-modal#closeLocation"
-                style="position:absolute;left:290px;top:5px;width:37px;height:37px;background:transparent;border:none;cursor:pointer;padding:0;z-index:2;">
+                class="absolute left-[290px] top-[5px] w-[37px] h-[37px] bg-transparent border-none cursor-pointer p-0 z-[2]">
           <svg width="37" height="37" viewBox="0 0 53 53" fill="none"><path d="M35.8 16.2L36 16.4C36.2 16.6 36.4 17 36.4 17.4C36.4 17.7 36.3 18.1 36.1 18.4L36 18.5L28.3 26.2L36 33.8C36.2 34.1 36.4 34.4 36.4 34.8C36.4 35.2 36.3 35.5 36.1 35.8L36 36C35.7 36.2 35.4 36.4 35 36.4C34.6 36.4 34.2 36.3 33.9 36.1L33.8 36L26.2 28.3L18.5 36C18.3 36.2 17.9 36.4 17.5 36.4C17.2 36.4 16.8 36.3 16.5 36.1L16.4 36C16.1 35.7 16 35.4 15.9 35C15.9 34.6 16 34.2 16.2 33.9L16.4 33.8L24 26.2L16.4 18.5C16.1 18.3 16 17.9 15.9 17.5C15.9 17.2 16 16.8 16.2 16.5L16.4 16.4C16.6 16.1 17 16 17.4 15.9C17.7 15.9 18.1 16 18.4 16.2L18.5 16.4L26.2 24L33.8 16.4C34.1 16.1 34.4 16 34.8 15.9C35.2 15.9 35.5 16 35.8 16.2L36 16.4L35.8 16.2Z" fill="#A43600" /></svg>
         </button>
 
-        <%# Pin icon (droplet + eye) %>
-        <svg width="45" height="47" viewBox="0 0 45 47" fill="none" style="position:absolute;left:152px;top:34.7px;">
+        <%# Pin icon %>
+        <svg width="45" height="47" viewBox="0 0 45 47" fill="none" class="absolute left-[152px] top-[35px]">
           <path d="M22.2224 41.1074L11.7409 30.1892C9.66804 28.0314 8.2561 25.2817 7.68368 22.2879C7.11126 19.2941 7.40407 16.1907 8.52508 13.3702C9.6461 10.5498 11.5449 8.13902 13.9814 6.44288C16.4179 4.74673 19.2826 3.8414 22.2131 3.8414C25.1436 3.8414 28.0083 4.74673 30.4448 6.44288C32.8813 8.13902 34.7801 10.5498 35.9012 13.3702C37.0222 16.1907 37.315 19.2941 36.7426 22.2879C36.1701 25.2817 34.7582 28.0314 32.6853 30.1892L22.2224 41.1074Z" stroke="#933A35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
-        <svg width="45" height="41" viewBox="0 0 45 41" fill="none" style="position:absolute;left:152px;top:31px;">
+        <svg width="45" height="41" viewBox="0 0 45 41" fill="none" class="absolute left-[152px] top-[31px]">
           <path d="M22.2221 25.463C25.2903 25.463 27.7776 23.183 27.7776 20.3704C27.7776 17.5579 25.2903 15.2778 22.2221 15.2778C19.1538 15.2778 16.6665 17.5579 16.6665 20.3704C16.6665 23.183 19.1538 25.463 22.2221 25.463Z" stroke="#933A35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
 
-        <%# Divider %>
-        <div style="position:absolute;left:33px;top:94px;width:283px;height:0;border:1px solid #EDE1D5;"></div>
+        <div class="absolute left-[33px] top-[94px] w-[283px] h-0 border border-brand-field"></div>
 
-        <%# Location input group %>
-        <div style="position:absolute;left:33px;top:130px;width:283px;height:52px;background:#EDE1D5;opacity:0.5;border-radius:8px;"></div>
+        <div class="absolute left-[33px] top-[130px] w-[283px] h-[52px] bg-brand-field opacity-50 rounded-lg"></div>
         <input type="text"
                autocomplete="off"
                data-season-modal-target="locationInput"
                data-action="input->season-modal#searchLocations"
                value="<%= @event.location %>"
-               style="position:absolute;left:50px;top:130px;width:249px;height:52px;background:transparent;border:none;padding:0;font-family:Montserrat;font-weight:500;font-size:22px;line-height:52px;letter-spacing:0.03em;color:rgba(147,58,53,0.5);outline:none;"
+               class="absolute left-[50px] top-[130px] w-[249px] h-[52px] bg-transparent border-none p-0 font-medium text-[22px] leading-[52px] tracking-[0.03em] text-brand-primary/50 outline-none"
                placeholder="Add Location">
 
-        <%# Results list %>
         <div data-season-modal-target="locationResults"
-             style="position:absolute;left:33px;top:190px;width:283px;max-height:230px;overflow-y:auto;display:none;flex-direction:column;scrollbar-width:none;">
+             class="absolute left-[33px] top-[190px] w-[283px] max-h-[230px] overflow-y-auto hidden flex-col [scrollbar-width:none]">
         </div>
 
-        <%# Submit button group %>
         <div data-season-modal-target="locationSubmitBg"
-             style="position:absolute;left:33px;top:203px;width:283px;height:44px;background:#933A35;opacity:0.5;border-radius:8px;transition:top 0.25s ease,opacity 0.25s ease;"></div>
+             class="absolute left-[33px] top-[203px] w-[283px] h-11 bg-brand-primary opacity-50 rounded-lg transition-[top,opacity] duration-[250ms] ease-in-out"></div>
         <button type="button" data-action="click->season-modal#submitLocation"
                 data-season-modal-target="locationSubmitBtn"
-                style="position:absolute;left:33px;top:203px;width:283px;height:44px;background:transparent;border:none;cursor:pointer;padding:0;display:flex;align-items:center;justify-content:center;font-family:Montserrat;font-weight:500;font-size:16px;letter-spacing:0.03em;color:#fff;transition:top 0.25s ease;">Submit</button>
+                class="absolute left-[33px] top-[203px] w-[283px] h-11 bg-transparent border-none cursor-pointer p-0 flex items-center justify-center font-medium text-base tracking-[0.03em] text-white transition-[top] duration-[250ms] ease-in-out">Submit</button>
       </div>
     </div>
 
@@ -448,36 +444,30 @@
     <div data-season-modal-target="notesBackdrop" class="hidden fixed inset-0 bg-black/40 z-50"></div>
     <div data-season-modal-target="notesModal" role="dialog" aria-modal="true" aria-label="Add notes"
          class="hidden fixed inset-0 z-50 flex items-center justify-center">
-      <div style="width:385px;height:477px;background:#fff;border-radius:29px;box-shadow:0 24px 64px rgba(0,0,0,0.16);position:relative;">
+      <div class="w-[385px] h-[477px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] relative">
 
-        <%# Close button %>
         <button type="button" data-action="click->season-modal#closeNotes"
-                style="position:absolute;left:321px;top:3px;width:37px;height:37px;background:transparent;border:none;cursor:pointer;padding:0;z-index:2;">
+                class="absolute left-[321px] top-[3px] w-[37px] h-[37px] bg-transparent border-none cursor-pointer p-0 z-[2]">
           <svg width="37" height="37" viewBox="0 0 53 53" fill="none"><path d="M35.8 16.2L36 16.4C36.2 16.6 36.4 17 36.4 17.4C36.4 17.7 36.3 18.1 36.1 18.4L36 18.5L28.3 26.2L36 33.8C36.2 34.1 36.4 34.4 36.4 34.8C36.4 35.2 36.3 35.5 36.1 35.8L36 36C35.7 36.2 35.4 36.4 35 36.4C34.6 36.4 34.2 36.3 33.9 36.1L33.8 36L26.2 28.3L18.5 36C18.3 36.2 17.9 36.4 17.5 36.4C17.2 36.4 16.8 36.3 16.5 36.1L16.4 36C16.1 35.7 16 35.4 15.9 35C15.9 34.6 16 34.2 16.2 33.9L16.4 33.8L24 26.2L16.4 18.5C16.1 18.3 16 17.9 15.9 17.5C15.9 17.2 16 16.8 16.2 16.5L16.4 16.4C16.6 16.1 17 16 17.4 15.9C17.7 15.9 18.1 16 18.4 16.2L18.5 16.4L26.2 24L33.8 16.4C34.1 16.1 34.4 16 34.8 15.9C35.2 15.9 35.5 16 35.8 16.2L36 16.4L35.8 16.2Z" fill="#A43600" /></svg>
         </button>
 
-        <%# Clipboard icon %>
-        <svg width="40" height="44" viewBox="0 0 40 44" fill="none" style="position:absolute;left:173px;top:32px;">
+        <svg width="40" height="44" viewBox="0 0 40 44" fill="none" class="absolute left-[173px] top-[32px]">
           <path d="M26.3864 7.33325H29.6847C30.5594 7.33325 31.3984 7.71956 32.0169 8.40719C32.6355 9.09483 32.983 10.0275 32.983 10.9999V36.6666C32.983 37.639 32.6355 38.5717 32.0169 39.2593C31.3984 39.9469 30.5594 40.3333 29.6847 40.3333H9.89497C9.02021 40.3333 8.18127 39.9469 7.56273 39.2593C6.94418 38.5717 6.59668 37.639 6.59668 36.6666V10.9999C6.59668 10.0275 6.94418 9.09483 7.56273 8.40719C8.18127 7.71956 9.02021 7.33325 9.89497 7.33325H13.1933" stroke="#933A35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
           <path d="M24.7374 3.66675H14.8425C13.9317 3.66675 13.1934 4.48756 13.1934 5.50008V9.16675C13.1934 10.1793 13.9317 11.0001 14.8425 11.0001H24.7374C25.6482 11.0001 26.3865 10.1793 26.3865 9.16675V5.50008C26.3865 4.48756 25.6482 3.66675 24.7374 3.66675Z" stroke="#933A35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
 
-        <%# Divider %>
-        <div style="position:absolute;left:33px;top:101px;width:320px;height:0;border:1px solid #EDE1D5;"></div>
+        <div class="absolute left-[33px] top-[101px] w-[320px] h-0 border border-brand-field"></div>
 
-        <%# Title %>
-        <span style="position:absolute;left:32px;top:127px;font-family:Montserrat;font-weight:500;font-size:16px;line-height:20px;letter-spacing:0.07em;color:#933A35;">Your Notes</span>
+        <span class="absolute left-[32px] top-[127px] font-medium text-base leading-5 tracking-[0.07em] text-brand-primary">Your Notes</span>
 
-        <%# Textarea group %>
-        <div style="position:absolute;left:32px;top:158px;width:322px;height:225px;background:#EDE1D5;opacity:0.5;border-radius:8px;"></div>
+        <div class="absolute left-[32px] top-[158px] w-[322px] h-[225px] bg-brand-field opacity-50 rounded-lg"></div>
         <textarea data-season-modal-target="notesInput"
-                  style="position:absolute;left:53px;top:158px;width:280px;height:225px;background:transparent;border:none;padding:16px 0;font-family:Montserrat;font-weight:500;font-size:16px;line-height:20px;letter-spacing:0.07em;color:rgba(147,58,53,0.5);outline:none;resize:none;"
+                  class="absolute left-[53px] top-[158px] w-[280px] h-[225px] bg-transparent border-none py-4 px-0 font-medium text-base leading-5 tracking-[0.07em] text-brand-primary/50 outline-none resize-none"
                   placeholder="Enter your notes here..."></textarea>
 
-        <%# Submit button %>
-        <div style="position:absolute;left:32px;top:392px;width:322px;height:52px;background:#933A35;border-radius:8px;"></div>
+        <div class="absolute left-[32px] top-[392px] w-[322px] h-[52px] bg-brand-primary rounded-lg"></div>
         <button type="button" data-action="click->season-modal#submitNotes"
-                style="position:absolute;left:32px;top:392px;width:322px;height:52px;background:transparent;border:none;cursor:pointer;padding:0;display:flex;align-items:center;justify-content:center;font-family:Montserrat;font-weight:500;font-size:22px;line-height:27px;letter-spacing:0.03em;color:#fff;">Submit</button>
+                class="absolute left-[32px] top-[392px] w-[322px] h-[52px] bg-transparent border-none cursor-pointer p-0 flex items-center justify-center font-medium text-[22px] leading-[27px] tracking-[0.03em] text-white">Submit</button>
       </div>
     </div>
 
@@ -485,24 +475,21 @@
     <div data-season-modal-target="reminderBackdrop" class="hidden fixed inset-0 bg-black/40 z-50"></div>
     <div data-season-modal-target="reminderModal" role="dialog" aria-modal="true" aria-label="Set reminder"
          class="hidden fixed inset-0 z-50 flex items-center justify-center">
-      <div style="width:355px;height:600px;background:#fff;border-radius:29px;box-shadow:0 24px 64px rgba(0,0,0,0.16);position:relative;">
+      <div class="w-[355px] h-[600px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] relative">
 
-        <%# Close button %>
         <button type="button" data-action="click->season-modal#closeReminder"
-                style="position:absolute;left:289px;top:13px;width:37px;height:37px;background:transparent;border:none;cursor:pointer;padding:0;z-index:2;">
+                class="absolute left-[289px] top-[13px] w-[37px] h-[37px] bg-transparent border-none cursor-pointer p-0 z-[2]">
           <svg width="37" height="37" viewBox="0 0 53 53" fill="none"><path d="M35.8 16.2L36 16.4C36.2 16.6 36.4 17 36.4 17.4C36.4 17.7 36.3 18.1 36.1 18.4L36 18.5L28.3 26.2L36 33.8C36.2 34.1 36.4 34.4 36.4 34.8C36.4 35.2 36.3 35.5 36.1 35.8L36 36C35.7 36.2 35.4 36.4 35 36.4C34.6 36.4 34.2 36.3 33.9 36.1L33.8 36L26.2 28.3L18.5 36C18.3 36.2 17.9 36.4 17.5 36.4C17.2 36.4 16.8 36.3 16.5 36.1L16.4 36C16.1 35.7 16 35.4 15.9 35C15.9 34.6 16 34.2 16.2 33.9L16.4 33.8L24 26.2L16.4 18.5C16.1 18.3 16 17.9 15.9 17.5C15.9 17.2 16 16.8 16.2 16.5L16.4 16.4C16.6 16.1 17 16 17.4 15.9C17.7 15.9 18.1 16 18.4 16.2L18.5 16.4L26.2 24L33.8 16.4C34.1 16.1 34.4 16 34.8 15.9C35.2 15.9 35.5 16 35.8 16.2L36 16.4L35.8 16.2Z" fill="#A43600" /></svg>
         </button>
 
-        <%# Bell icon %>
-        <div style="position:absolute;left:158px;top:38px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;">
+        <div class="absolute left-[158px] top-[38px] w-10 h-10 flex items-center justify-center">
           <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#933A35" stroke-width="2">
             <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
             <path d="M13.73 21a2 2 0 0 1-3.46 0" />
           </svg>
         </div>
 
-        <%# Divider %>
-        <div style="position:absolute;left:18px;top:101px;width:320px;height:0;border:1px solid #EDE1D5;"></div>
+        <div class="absolute left-[18px] top-[101px] w-[320px] h-0 border border-brand-field"></div>
 
         <% reminder_options = [[15, '15 minutes before'], [60, '1 hour before'], [360, '6 hours before'], [1440, '1 day before'], [10080, '1 week before'], [-1, 'Set my own timer']] %>
         <% sel_min = @event.reminder_minutes || 15 %>
@@ -515,15 +502,15 @@
           <div data-season-modal-target="reminderOption"
                data-reminder-minutes-value="<%= min_val %>"
                data-action="click->season-modal#selectReminder"
-               style="position:absolute;left:37px;top:<%= top %>px;width:281px;height:<%= h %>px;background:<%= active ? '#EDE1D5' : 'rgba(237,225,213,0.5)' %>;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.15s;">
-            <span style="font-family:Montserrat;font-weight:500;font-size:16px;line-height:45px;text-align:center;color:#933A35;"><%= label %></span>
+               class="absolute left-[37px] w-[281px] rounded-[10px] cursor-pointer flex items-center justify-center transition-colors duration-[150ms]"
+               style="top:<%= top %>px;height:<%= h %>px;background:<%= active ? '#EDE1D5' : 'rgba(237,225,213,0.5)' %>">
+            <span class="font-medium text-base leading-[45px] text-center text-brand-primary"><%= label %></span>
           </div>
         <% end %>
 
-        <%# Set reminder button %>
-        <div style="position:absolute;left:37px;top:505px;width:281px;height:52px;background:#933A35;border-radius:8px;"></div>
+        <div class="absolute left-[37px] top-[505px] w-[281px] h-[52px] bg-brand-primary rounded-lg"></div>
         <button type="button" data-action="click->season-modal#confirmReminder"
-                style="position:absolute;left:37px;top:505px;width:281px;height:52px;background:transparent;border:none;cursor:pointer;padding:0;display:flex;align-items:center;justify-content:center;font-family:Montserrat;font-weight:500;font-size:16px;line-height:20px;letter-spacing:0.07em;color:#fff;">Set reminder</button>
+                class="absolute left-[37px] top-[505px] w-[281px] h-[52px] bg-transparent border-none cursor-pointer p-0 flex items-center justify-center font-medium text-base leading-5 tracking-[0.07em] text-white">Set reminder</button>
       </div>
     </div>
 
@@ -531,47 +518,41 @@
     <div data-season-modal-target="customReminderBackdrop" class="hidden fixed inset-0 bg-black/40 z-50" data-action="click->season-modal#closeCustomReminder"></div>
     <div data-season-modal-target="customReminderModal" role="dialog" aria-modal="true" aria-label="Set reminder"
          class="hidden fixed inset-0 z-50 flex items-center justify-center">
-      <div style="width:355px;height:380px;background:#fff;border-radius:29px;box-shadow:0 24px 64px rgba(0,0,0,0.16);position:relative;">
+      <div class="w-[355px] h-[380px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] relative">
 
-        <%# Close button %>
         <button type="button" data-action="click->season-modal#closeCustomReminder"
-                style="position:absolute;left:289px;top:13px;width:37px;height:37px;background:transparent;border:none;cursor:pointer;padding:0;z-index:2;">
+                class="absolute left-[289px] top-[13px] w-[37px] h-[37px] bg-transparent border-none cursor-pointer p-0 z-[2]">
           <svg width="37" height="37" viewBox="0 0 53 53" fill="none"><path d="M35.8 16.2L36 16.4C36.2 16.6 36.4 17 36.4 17.4C36.4 17.7 36.3 18.1 36.1 18.4L36 18.5L28.3 26.2L36 33.8C36.2 34.1 36.4 34.4 36.4 34.8C36.4 35.2 36.3 35.5 36.1 35.8L36 36C35.7 36.2 35.4 36.4 35 36.4C34.6 36.4 34.2 36.3 33.9 36.1L33.8 36L26.2 28.3L18.5 36C18.3 36.2 17.9 36.4 17.5 36.4C17.2 36.4 16.8 36.3 16.5 36.1L16.4 36C16.1 35.7 16 35.4 15.9 35C15.9 34.6 16 34.2 16.2 33.9L16.4 33.8L24 26.2L16.4 18.5C16.1 18.3 16 17.9 15.9 17.5C15.9 17.2 16 16.8 16.2 16.5L16.4 16.4C16.6 16.1 17 16 17.4 15.9C17.7 15.9 18.1 16 18.4 16.2L18.5 16.4L26.2 24L33.8 16.4C34.1 16.1 34.4 16 34.8 15.9C35.2 15.9 35.5 16 35.8 16.2L36 16.4L35.8 16.2Z" fill="#A43600" /></svg>
         </button>
 
-        <%# Bell icon %>
-        <div style="position:absolute;left:158px;top:38px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;">
+        <div class="absolute left-[158px] top-[38px] w-10 h-10 flex items-center justify-center">
           <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#933A35" stroke-width="2">
             <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
             <path d="M13.73 21a2 2 0 0 1-3.46 0" />
           </svg>
         </div>
 
-        <div style="position:absolute;left:18px;top:101px;width:320px;height:0;border:1px solid #EDE1D5;"></div>
+        <div class="absolute left-[18px] top-[101px] w-[320px] h-0 border border-brand-field"></div>
 
-        <%# Scroll pickers: number + unit %>
-        <div style="position:absolute;left:36px;top:130px;width:283px;height:100px;display:flex;align-items:center;justify-content:center;gap:12px;overflow:hidden;">
-          <div style="position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);height:44px;background:#EDE1D5;border-radius:8px;pointer-events:none;"></div>
-          <%# Number column %>
+        <div class="absolute left-[36px] top-[130px] w-[283px] h-[100px] flex items-center justify-center gap-3 overflow-hidden">
+          <div class="absolute inset-x-0 top-1/2 -translate-y-1/2 h-11 bg-brand-field rounded-lg pointer-events-none"></div>
           <div data-season-modal-target="customReminderNum"
-               style="overflow-y:auto;scroll-snap-type:y mandatory;height:100%;width:56px;scrollbar-width:none;text-align:center;position:relative;z-index:1;">
+               class="overflow-y-auto snap-y snap-mandatory h-full w-14 [scrollbar-width:none] text-center relative z-[1]">
             <% (1..60).each do |n| %>
-              <div data-value="<%= n %>" style="height:44px;display:flex;align-items:center;justify-content:center;font-family:Montserrat;font-size:22px;letter-spacing:0.03em;color:#933a35;scroll-snap-align:center;font-weight:<%= n == 5 ? '700' : '400' %>;opacity:<%= n == 5 ? '1' : '0.4' %>"><%= format('%02d', n) %></div>
+              <div data-value="<%= n %>" class="h-11 flex items-center justify-center text-[22px] tracking-[0.03em] text-brand-primary snap-center" style="font-weight:<%= n == 5 ? '700' : '400' %>;opacity:<%= n == 5 ? '1' : '0.4' %>"><%= format('%02d', n) %></div>
             <% end %>
           </div>
-          <%# Unit column %>
           <div data-season-modal-target="customReminderUnit"
-               style="overflow-y:auto;scroll-snap-type:y mandatory;height:100%;width:90px;scrollbar-width:none;text-align:center;position:relative;z-index:1;">
+               class="overflow-y-auto snap-y snap-mandatory h-full w-[90px] [scrollbar-width:none] text-center relative z-[1]">
             <% [['minutes', 'Minutes'], ['hours', 'Hours'], ['days', 'Days']].each_with_index do |(val, label), i| %>
-              <div data-value="<%= val %>" style="height:44px;display:flex;align-items:center;justify-content:center;font-family:Montserrat;font-size:16px;letter-spacing:0.07em;color:#933a35;scroll-snap-align:center;font-weight:<%= i == 0 ? '700' : '400' %>;opacity:<%= i == 0 ? '1' : '0.4' %>"><%= label %></div>
+              <div data-value="<%= val %>" class="h-11 flex items-center justify-center text-base tracking-[0.07em] text-brand-primary snap-center" style="font-weight:<%= i == 0 ? '700' : '400' %>;opacity:<%= i == 0 ? '1' : '0.4' %>"><%= label %></div>
             <% end %>
           </div>
         </div>
 
-        <%# Add reminder button %>
-        <div style="position:absolute;left:37px;top:285px;width:281px;height:52px;background:#933A35;border-radius:8px;"></div>
+        <div class="absolute left-[37px] top-[285px] w-[281px] h-[52px] bg-brand-primary rounded-lg"></div>
         <button type="button" data-action="click->season-modal#confirmCustomReminder"
-                style="position:absolute;left:37px;top:285px;width:281px;height:52px;background:transparent;border:none;cursor:pointer;padding:0;display:flex;align-items:center;justify-content:center;font-family:Montserrat;font-weight:500;font-size:16px;line-height:20px;letter-spacing:0.07em;color:#fff;">Add reminder</button>
+                class="absolute left-[37px] top-[285px] w-[281px] h-[52px] bg-transparent border-none cursor-pointer p-0 flex items-center justify-center font-medium text-base leading-5 tracking-[0.07em] text-white">Add reminder</button>
       </div>
     </div>
 
@@ -580,48 +561,41 @@
     <div data-season-modal-target="guestsModal" role="dialog" aria-modal="true" aria-label="Invite guests"
          class="hidden fixed inset-0 z-50 flex items-center justify-center">
       <div data-season-modal-target="guestsCard"
-           style="width:348px;height:331px;background:#fff;border-radius:29px;box-shadow:0 24px 64px rgba(0,0,0,0.16);position:relative;transition:height 0.25s ease;overflow:hidden;">
+           class="w-[348px] h-[331px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] relative transition-[height] duration-[250ms] ease-in-out overflow-hidden">
 
-        <%# Close button %>
         <button type="button" data-action="click->season-modal#closeGuests"
-                style="position:absolute;left:290px;top:5px;width:37px;height:37px;background:transparent;border:none;cursor:pointer;padding:0;z-index:2;">
+                class="absolute left-[290px] top-[5px] w-[37px] h-[37px] bg-transparent border-none cursor-pointer p-0 z-[2]">
           <svg width="37" height="37" viewBox="0 0 53 53" fill="none"><path d="M35.8 16.2L36 16.4C36.2 16.6 36.4 17 36.4 17.4C36.4 17.7 36.3 18.1 36.1 18.4L36 18.5L28.3 26.2L36 33.8C36.2 34.1 36.4 34.4 36.4 34.8C36.4 35.2 36.3 35.5 36.1 35.8L36 36C35.7 36.2 35.4 36.4 35 36.4C34.6 36.4 34.2 36.3 33.9 36.1L33.8 36L26.2 28.3L18.5 36C18.3 36.2 17.9 36.4 17.5 36.4C17.2 36.4 16.8 36.3 16.5 36.1L16.4 36C16.1 35.7 16 35.4 15.9 35C15.9 34.6 16 34.2 16.2 33.9L16.4 33.8L24 26.2L16.4 18.5C16.1 18.3 16 17.9 15.9 17.5C15.9 17.2 16 16.8 16.2 16.5L16.4 16.4C16.6 16.1 17 16 17.4 15.9C17.7 15.9 18.1 16 18.4 16.2L18.5 16.4L26.2 24L33.8 16.4C34.1 16.1 34.4 16 34.8 15.9C35.2 15.9 35.5 16 35.8 16.2L36 16.4L35.8 16.2Z" fill="#A43600" /></svg>
         </button>
 
-        <%# Person icon %>
-        <div style="position:absolute;left:152px;top:34px;width:44px;height:44px;display:flex;align-items:center;justify-content:center;">
+        <div class="absolute left-[152px] top-[34px] w-11 h-11 flex items-center justify-center">
           <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
             <path d="M36.667 38.5V35.3333C36.667 33.3884 35.894 31.5232 34.519 30.1479C33.144 28.7726 31.278 28 29.333 28H14.667C12.722 28 10.857 28.7726 9.4813 30.1479C8.1059 31.5232 7.33337 33.3884 7.33337 35.3333V38.5" stroke="#933A35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
             <circle cx="22" cy="15.1667" r="7.33333" stroke="#933A35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
           </svg>
         </div>
 
-        <%# Divider %>
-        <div style="position:absolute;left:34px;top:100px;width:280px;height:0;border:1px solid #EDE1D5;"></div>
+        <div class="absolute left-[34px] top-[100px] w-[280px] h-0 border border-brand-field"></div>
 
-        <%# Title %>
-        <span style="position:absolute;left:50%;transform:translateX(-50%);top:120px;font-family:Montserrat;font-weight:500;font-size:22px;line-height:27px;letter-spacing:0.03em;color:#933A35;white-space:nowrap;">Invite Guests</span>
+        <span class="absolute left-1/2 -translate-x-1/2 top-[120px] font-medium text-[22px] leading-[27px] tracking-[0.03em] text-brand-primary whitespace-nowrap">Invite Guests</span>
 
-        <%# Email input %>
-        <div style="position:absolute;left:32px;top:166px;width:284px;height:52px;background:#EDE1D5;opacity:0.5;border-radius:8px;"></div>
+        <div class="absolute left-[32px] top-[166px] w-[284px] h-[52px] bg-brand-field opacity-50 rounded-lg"></div>
         <input type="email"
                autocomplete="off"
                data-season-modal-target="guestsInput"
                data-action="keydown->season-modal#guestsKeydown"
-               style="position:absolute;left:49px;top:166px;width:250px;height:52px;background:transparent;border:none;padding:0;font-family:Montserrat;font-weight:500;font-size:22px;line-height:52px;letter-spacing:0.03em;color:rgba(147,58,53,0.5);outline:none;"
+               class="absolute left-[49px] top-[166px] w-[250px] h-[52px] bg-transparent border-none p-0 font-medium text-[22px] leading-[52px] tracking-[0.03em] text-brand-primary/50 outline-none"
                placeholder="Add email address">
 
-        <%# Guest list %>
         <div data-season-modal-target="guestsList"
-             style="position:absolute;left:32px;top:228px;width:284px;max-height:120px;overflow-y:auto;display:flex;flex-direction:column;gap:4px;scrollbar-width:none;">
+             class="absolute left-[32px] top-[228px] w-[284px] max-h-[120px] overflow-y-auto flex flex-col gap-1 [scrollbar-width:none]">
         </div>
 
-        <%# Submit button %>
         <div data-season-modal-target="guestsSubmitBg"
-             style="position:absolute;left:32px;top:241px;width:284px;height:52px;background:#933A35;border-radius:8px;transition:top 0.25s ease;"></div>
+             class="absolute left-[32px] top-[241px] w-[284px] h-[52px] bg-brand-primary rounded-lg transition-[top] duration-[250ms] ease-in-out"></div>
         <button type="button" data-action="click->season-modal#addGuest"
                 data-season-modal-target="guestsSubmitBtn"
-                style="position:absolute;left:32px;top:241px;width:284px;height:52px;background:transparent;border:none;cursor:pointer;padding:0;display:flex;align-items:center;justify-content:center;font-family:Montserrat;font-weight:500;font-size:22px;line-height:27px;letter-spacing:0.03em;color:#fff;transition:top 0.25s ease;">Invite Guests</button>
+                class="absolute left-[32px] top-[241px] w-[284px] h-[52px] bg-transparent border-none cursor-pointer p-0 flex items-center justify-center font-medium text-[22px] leading-[27px] tracking-[0.03em] text-white transition-[top] duration-[250ms] ease-in-out">Invite Guests</button>
       </div>
     </div>
 
@@ -629,17 +603,15 @@
     <div data-season-modal-target="repeatBackdrop" class="hidden fixed inset-0 bg-black/40 z-50"></div>
     <div data-season-modal-target="repeatModal" role="dialog" aria-modal="true" aria-label="Repeat"
          class="hidden fixed inset-0 z-50 flex items-center justify-center">
-      <div style="width:361px;height:776px;background:#fff;border-radius:29px;box-shadow:0 24px 64px rgba(0,0,0,0.16);position:relative;overflow-y:auto;scrollbar-width:none;">
+      <div class="w-[361px] h-[776px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] relative overflow-y-auto [scrollbar-width:none]">
 
-        <%# Close button %>
         <button type="button" data-action="click->season-modal#closeRepeat"
-                style="position:absolute;left:304px;top:13px;width:37px;height:37px;background:transparent;border:none;cursor:pointer;padding:0;z-index:2;">
+                class="absolute left-[304px] top-[13px] w-[37px] h-[37px] bg-transparent border-none cursor-pointer p-0 z-[2]">
           <svg width="37" height="37" viewBox="0 0 53 53" fill="none"><path d="M35.8 16.2L36 16.4C36.2 16.6 36.4 17 36.4 17.4C36.4 17.7 36.3 18.1 36.1 18.4L36 18.5L28.3 26.2L36 33.8C36.2 34.1 36.4 34.4 36.4 34.8C36.4 35.2 36.3 35.5 36.1 35.8L36 36C35.7 36.2 35.4 36.4 35 36.4C34.6 36.4 34.2 36.3 33.9 36.1L33.8 36L26.2 28.3L18.5 36C18.3 36.2 17.9 36.4 17.5 36.4C17.2 36.4 16.8 36.3 16.5 36.1L16.4 36C16.1 35.7 16 35.4 15.9 35C15.9 34.6 16 34.2 16.2 33.9L16.4 33.8L24 26.2L16.4 18.5C16.1 18.3 16 17.9 15.9 17.5C15.9 17.2 16 16.8 16.2 16.5L16.4 16.4C16.6 16.1 17 16 17.4 15.9C17.7 15.9 18.1 16 18.4 16.2L18.5 16.4L26.2 24L33.8 16.4C34.1 16.1 34.4 16 34.8 15.9C35.2 15.9 35.5 16 35.8 16.2L36 16.4L35.8 16.2Z" fill="#A43600" /></svg>
         </button>
 
-        <%# Title %>
-        <p style="position:absolute;left:50%;transform:translateX(-50%);top:34px;font-family:Montserrat;font-weight:500;font-size:22px;line-height:27px;letter-spacing:0.03em;color:#933A35;white-space:nowrap;">Repeat this event</p>
-        <div style="position:absolute;left:13px;top:96px;width:335px;height:0;border:1px solid #EDE1D5;"></div>
+        <p class="absolute left-1/2 -translate-x-1/2 top-[34px] font-medium text-[22px] leading-[27px] tracking-[0.03em] text-brand-primary whitespace-nowrap">Repeat this event</p>
+        <div class="absolute left-[13px] top-[96px] w-[335px] h-0 border border-brand-field"></div>
 
         <% repeat_opts = [['daily','Daily'],['weekly','Weekly'],['monthly','Monthly'],['yearly','Every Year'],['custom','Custom']] %>
         <% sel_repeat = 'monthly' %>
@@ -649,57 +621,56 @@
           <div data-season-modal-target="repeatOption"
                data-repeat-value="<%= val %>"
                data-action="click->season-modal#selectRepeat"
-               style="position:absolute;left:29px;top:<%= tops[idx] %>px;width:289px;height:38px;background:<%= active ? '#EDE1D5' : 'rgba(237,225,213,0.5)' %>;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.15s;">
-            <span style="font-family:Montserrat;font-weight:500;font-size:16px;letter-spacing:0.07em;color:#933A35;"><%= label %></span>
+               class="absolute left-[29px] w-[289px] h-[38px] rounded-[10px] cursor-pointer flex items-center justify-center transition-colors duration-[150ms]"
+               style="top:<%= tops[idx] %>px;background:<%= active ? '#EDE1D5' : 'rgba(237,225,213,0.5)' %>">
+            <span class="font-medium text-base tracking-[0.07em] text-brand-primary"><%= label %></span>
           </div>
         <% end %>
 
-        <%# Divider %>
-        <div style="position:absolute;left:30px;top:430px;width:287px;height:0;border:1px solid #EDE1D5;"></div>
+        <div class="absolute left-[30px] top-[430px] w-[287px] h-0 border border-brand-field"></div>
 
-        <%# Sub-options section %>
-        <div data-season-modal-target="repeatSubOptions" style="position:absolute;left:30px;right:30px;top:456px;">
+        <div data-season-modal-target="repeatSubOptions" class="absolute left-[30px] right-[30px] top-[456px]">
           <% sub_opts = [
             {val:'endless', label:'Repeat endlessly', active:true, top:0},
             {val:'until', label:'Repeat until', active:false, top:49},
             {val:'count', label:'Repeat', active:false, top:98}
           ] %>
           <% sub_opts.each do |opt| %>
-            <div style="position:absolute;top:<%= opt[:top] %>px;left:0;right:0;height:34px;display:flex;align-items:center;justify-content:space-between;">
-              <span style="font-family:Montserrat;font-weight:500;font-size:16px;letter-spacing:0.07em;color:#933A35;"><%= opt[:label] %></span>
-              <div style="width:63px;height:34px;border-radius:17px;background:<%= opt[:active] ? '#933A35' : '#D9D9D9' %>;cursor:pointer;position:relative;flex-shrink:0;"
+            <div class="absolute left-0 right-0 h-[34px] flex items-center justify-between" style="top:<%= opt[:top] %>px">
+              <span class="font-medium text-base tracking-[0.07em] text-brand-primary"><%= opt[:label] %></span>
+              <div class="w-[63px] h-[34px] rounded-[17px] cursor-pointer relative shrink-0"
                    data-action="click->season-modal#toggleRepeatSub"
-                   data-sub-value="<%= opt[:val] %>">
-                <div style="position:absolute;top:2px;<%= opt[:active] ? 'right:2px;' : 'left:2px;' %>width:30px;height:30px;background:#fff;border-radius:50%;box-shadow:0 1px 4px rgba(0,0,0,0.2);transition:all 0.2s;"></div>
+                   data-sub-value="<%= opt[:val] %>"
+                   style="background:<%= opt[:active] ? '#933A35' : '#D9D9D9' %>">
+                <div class="absolute top-[2px] w-[30px] h-[30px] bg-white rounded-full shadow-[0_1px_4px_rgba(0,0,0,0.2)] transition-all duration-200" style="<%= opt[:active] ? 'right:2px;' : 'left:2px;' %>"></div>
               </div>
             </div>
           <% end %>
         </div>
 
-        <%# Save button %>
-        <div style="position:absolute;left:33px;top:676px;width:290px;height:52px;background:#933A35;border-radius:8px;"></div>
+        <div class="absolute left-[33px] top-[676px] w-[290px] h-[52px] bg-brand-primary rounded-lg"></div>
         <button type="button" data-action="click->season-modal#confirmRepeat"
-                style="position:absolute;left:33px;top:676px;width:290px;height:52px;background:transparent;border:none;cursor:pointer;padding:0;display:flex;align-items:center;justify-content:center;font-family:Montserrat;font-weight:500;font-size:16px;line-height:20px;letter-spacing:0.07em;color:#fff;">Save</button>
+                class="absolute left-[33px] top-[676px] w-[290px] h-[52px] bg-transparent border-none cursor-pointer p-0 flex items-center justify-center font-medium text-base leading-5 tracking-[0.07em] text-white">Save</button>
       </div>
     </div>
 
   </div>
 
-    <%# ── Attention dialogs (shared, content swapped by JS) ── %>
+    <%# ── Attention dialogs ── %>
     <div data-season-modal-target="attentionBackdrop" class="hidden fixed inset-0 bg-black/40 z-[200]"></div>
     <div data-season-modal-target="attentionModal" role="alertdialog" aria-modal="true"
          class="hidden fixed inset-0 z-[200] flex items-center justify-center">
-      <div style="width:337px;background:#fff;border-radius:29px;box-shadow:0 24px 64px rgba(0,0,0,0.16);padding:32px 28px 24px;position:relative;">
-        <p style="font-family:Montserrat;font-weight:700;font-size:18px;color:#933A35;margin:0 0 12px;">Attention</p>
-        <p data-season-modal-target="attentionBody" style="font-family:Montserrat;font-weight:400;font-size:14px;line-height:1.5;color:#933A35;margin:0 0 24px;"></p>
+      <div class="w-[337px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] px-7 pt-8 pb-6 relative">
+        <p class="font-bold text-lg text-brand-primary mb-3 mt-0">Attention</p>
+        <p data-season-modal-target="attentionBody" class="font-normal text-sm leading-relaxed text-brand-primary mb-6 mt-0"></p>
         <div class="flex gap-3">
           <button type="button" data-action="click->season-modal#closeAttention"
                   data-season-modal-target="attentionCancel"
-                  style="flex:1;height:44px;background:#EDE1D5;border:none;border-radius:10px;font-family:Montserrat;font-weight:500;font-size:15px;color:#933A35;cursor:pointer;">
+                  class="flex-1 h-11 bg-brand-field border-none rounded-[10px] font-medium text-[15px] text-brand-primary cursor-pointer">
             Keep editing
           </button>
           <button type="button" data-season-modal-target="attentionConfirm"
-                  style="flex:1;height:44px;background:#933A35;border:none;border-radius:10px;font-family:Montserrat;font-weight:500;font-size:15px;color:#fff;cursor:pointer;">
+                  class="flex-1 h-11 bg-brand-primary border-none rounded-[10px] font-medium text-[15px] text-white cursor-pointer">
             OK
           </button>
         </div>
@@ -710,17 +681,15 @@
     <div data-season-modal-target="customRepeatBackdrop" class="hidden fixed inset-0 bg-black/40 z-50"></div>
     <div data-season-modal-target="customRepeatModal" role="dialog" aria-modal="true" aria-label="Custom repeat"
          class="hidden fixed inset-0 z-50 flex items-center justify-center">
-      <div style="width:361px;height:451px;background:#fff;border-radius:29px;box-shadow:0 24px 64px rgba(0,0,0,0.16);position:relative;overflow-y:auto;scrollbar-width:none;">
+      <div class="w-[361px] h-[451px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] relative overflow-y-auto [scrollbar-width:none]">
 
-        <%# Close button %>
         <button type="button" data-action="click->season-modal#closeCustomRepeat"
-                style="position:absolute;left:304px;top:13px;width:37px;height:37px;background:transparent;border:none;cursor:pointer;padding:0;z-index:2;">
+                class="absolute left-[304px] top-[13px] w-[37px] h-[37px] bg-transparent border-none cursor-pointer p-0 z-[2]">
           <svg width="37" height="37" viewBox="0 0 53 53" fill="none"><path d="M35.8 16.2L36 16.4C36.2 16.6 36.4 17 36.4 17.4C36.4 17.7 36.3 18.1 36.1 18.4L36 18.5L28.3 26.2L36 33.8C36.2 34.1 36.4 34.4 36.4 34.8C36.4 35.2 36.3 35.5 36.1 35.8L36 36C35.7 36.2 35.4 36.4 35 36.4C34.6 36.4 34.2 36.3 33.9 36.1L33.8 36L26.2 28.3L18.5 36C18.3 36.2 17.9 36.4 17.5 36.4C17.2 36.4 16.8 36.3 16.5 36.1L16.4 36C16.1 35.7 16 35.4 15.9 35C15.9 34.6 16 34.2 16.2 33.9L16.4 33.8L24 26.2L16.4 18.5C16.1 18.3 16 17.9 15.9 17.5C15.9 17.2 16 16.8 16.2 16.5L16.4 16.4C16.6 16.1 17 16 17.4 15.9C17.7 15.9 18.1 16 18.4 16.2L18.5 16.4L26.2 24L33.8 16.4C34.1 16.1 34.4 16 34.8 15.9C35.2 15.9 35.5 16 35.8 16.2L36 16.4L35.8 16.2Z" fill="#A43600" /></svg>
         </button>
 
-        <%# Title %>
-        <p style="position:absolute;left:50%;transform:translateX(-50%);top:34px;font-family:Montserrat;font-weight:500;font-size:22px;line-height:27px;letter-spacing:0.03em;color:#933A35;white-space:nowrap;">Custom repeat</p>
-        <div style="position:absolute;left:36px;top:100px;width:287px;height:0;border:1px solid #EDE1D5;"></div>
+        <p class="absolute left-1/2 -translate-x-1/2 top-[34px] font-medium text-[22px] leading-[27px] tracking-[0.03em] text-brand-primary whitespace-nowrap">Custom repeat</p>
+        <div class="absolute left-[36px] top-[100px] w-[287px] h-0 border border-brand-field"></div>
 
         <% custom_rows = [
           {label:'Every', unit:'days', max:365, top:140, default:1},
@@ -728,17 +697,16 @@
           {label:'Every', unit:'months', max:24, top:270, default:1}
         ] %>
         <% custom_rows.each do |row| %>
-          <div style="position:absolute;left:36px;top:<%= row[:top] %>px;width:287px;height:38px;background:rgba(237,225,213,0.5);border-radius:10px;display:flex;align-items:center;padding:0 16px;gap:4px;">
-            <span style="font-family:Montserrat;font-weight:500;font-size:16px;letter-spacing:0.07em;color:#933A35;"><%= row[:label] %></span>
-            <input type="number" inputmode="numeric" min="1" max="<%= row[:max] %>" value="<%= row[:default] %>" autocomplete="off" style="width:56px;height:100%;background:transparent;border:none;font-family:Montserrat;font-weight:700;font-size:16px;color:#933A35;text-align:center;outline:none;">
-            <span style="font-family:Montserrat;font-weight:500;font-size:16px;letter-spacing:0.07em;color:#933A35;"><%= row[:unit] %></span>
+          <div class="absolute left-[36px] w-[287px] h-[38px] bg-brand-field/50 rounded-[10px] flex items-center px-4 gap-1" style="top:<%= row[:top] %>px">
+            <span class="font-medium text-base tracking-[0.07em] text-brand-primary"><%= row[:label] %></span>
+            <input type="number" inputmode="numeric" min="1" max="<%= row[:max] %>" value="<%= row[:default] %>" autocomplete="off" class="w-14 h-full bg-transparent border-none font-bold text-base text-brand-primary text-center outline-none">
+            <span class="font-medium text-base tracking-[0.07em] text-brand-primary"><%= row[:unit] %></span>
           </div>
         <% end %>
 
-        <%# Save button %>
-        <div style="position:absolute;left:36px;top:352px;width:287px;height:52px;background:#933A35;border-radius:8px;"></div>
+        <div class="absolute left-[36px] top-[352px] w-[287px] h-[52px] bg-brand-primary rounded-lg"></div>
         <button type="button" data-action="click->season-modal#confirmCustomRepeat"
-                style="position:absolute;left:36px;top:352px;width:287px;height:52px;background:transparent;border:none;cursor:pointer;padding:0;display:flex;align-items:center;justify-content:center;font-family:Montserrat;font-weight:500;font-size:16px;line-height:20px;letter-spacing:0.07em;color:#fff;">Save</button>
+                class="absolute left-[36px] top-[352px] w-[287px] h-[52px] bg-transparent border-none cursor-pointer p-0 flex items-center justify-center font-medium text-base leading-5 tracking-[0.07em] text-white">Save</button>
       </div>
     </div>
 
@@ -746,59 +714,50 @@
     <div data-season-modal-target="repeatUntilBackdrop" class="hidden fixed inset-0 bg-black/40 z-50" data-action="click->season-modal#closeRepeatUntil"></div>
     <div data-season-modal-target="repeatUntilModal" role="dialog" aria-modal="true" aria-label="Repeat until"
          class="hidden fixed inset-0 z-50 flex items-center justify-center">
-      <div style="width:361px;height:438px;background:#fff;border-radius:29px;box-shadow:0 24px 64px rgba(0,0,0,0.16);position:relative;">
+      <div class="w-[361px] h-[438px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] relative">
 
-        <%# Close button %>
         <button type="button" data-action="click->season-modal#closeRepeatUntil"
-                style="position:absolute;left:304px;top:13px;width:37px;height:37px;background:transparent;border:none;cursor:pointer;padding:0;z-index:2;">
+                class="absolute left-[304px] top-[13px] w-[37px] h-[37px] bg-transparent border-none cursor-pointer p-0 z-[2]">
           <svg width="37" height="37" viewBox="0 0 53 53" fill="none"><path d="M35.8 16.2L36 16.4C36.2 16.6 36.4 17 36.4 17.4C36.4 17.7 36.3 18.1 36.1 18.4L36 18.5L28.3 26.2L36 33.8C36.2 34.1 36.4 34.4 36.4 34.8C36.4 35.2 36.3 35.5 36.1 35.8L36 36C35.7 36.2 35.4 36.4 35 36.4C34.6 36.4 34.2 36.3 33.9 36.1L33.8 36L26.2 28.3L18.5 36C18.3 36.2 17.9 36.4 17.5 36.4C17.2 36.4 16.8 36.3 16.5 36.1L16.4 36C16.1 35.7 16 35.4 15.9 35C15.9 34.6 16 34.2 16.2 33.9L16.4 33.8L24 26.2L16.4 18.5C16.1 18.3 16 17.9 15.9 17.5C15.9 17.2 16 16.8 16.2 16.5L16.4 16.4C16.6 16.1 17 16 17.4 15.9C17.7 15.9 18.1 16 18.4 16.2L18.5 16.4L26.2 24L33.8 16.4C34.1 16.1 34.4 16 34.8 15.9C35.2 15.9 35.5 16 35.8 16.2L36 16.4L35.8 16.2Z" fill="#A43600" /></svg>
         </button>
 
-        <%# Title %>
         <% until_date = evt_date + 30 %>
         <% days_count = (until_date - evt_date).to_i %>
         <% day_names = %w[Su Mo Tu We Th Fr Sa] %>
         <% d = until_date.day; m = until_date.month; y = until_date.year %>
         <% date_label = "#{day_names[until_date.wday]} #{format('%02d', d)}.#{format('%02d', m)}.#{y}" %>
-        <p style="position:absolute;left:50%;transform:translateX(-50%);top:34px;font-family:Montserrat;font-weight:500;font-size:22px;line-height:27px;letter-spacing:0.03em;color:#933A35;white-space:nowrap;">Repeat until day <%= days_count %></p>
-        <div style="position:absolute;left:36px;top:100px;width:287px;height:0;border:1px solid #EDE1D5;"></div>
+        <p class="absolute left-1/2 -translate-x-1/2 top-[34px] font-medium text-[22px] leading-[27px] tracking-[0.03em] text-brand-primary whitespace-nowrap">Repeat until day <%= days_count %></p>
+        <div class="absolute left-[36px] top-[100px] w-[287px] h-0 border border-brand-field"></div>
 
-        <%# Selected date display above scrollers %>
-        <p style="position:absolute;left:50%;transform:translateX(-50%);top:136px;font-family:Montserrat;font-weight:700;font-size:16px;letter-spacing:0.07em;color:#933A35;white-space:nowrap;"><%= date_label %></p>
+        <p class="absolute left-1/2 -translate-x-1/2 top-[136px] font-bold text-base tracking-[0.07em] text-brand-primary whitespace-nowrap"><%= date_label %></p>
 
-        <%# Date scroll picker — 3 vertical columns with center highlight %>
-        <div style="position:absolute;left:36px;top:176px;width:287px;height:100px;background:#fff;border-radius:8px;display:flex;align-items:center;justify-content:center;gap:12px;position:relative;overflow:hidden;">
-          <%# Center highlight bar (behind selected row) %>
-          <div style="position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);height:44px;background:#EDE1D5;border-radius:8px;pointer-events:none;"></div>
-          <%# Day column %>
-          <div style="overflow-y:auto;scroll-snap-type:y mandatory;height:100%;width:44px;scrollbar-width:none;text-align:center;position:relative;z-index:1;"
+        <div class="relative left-[36px] top-[176px] w-[287px] h-[100px] bg-white rounded-lg flex items-center justify-center gap-3 overflow-hidden">
+          <div class="absolute inset-x-0 top-1/2 -translate-y-1/2 h-11 bg-brand-field rounded-lg pointer-events-none"></div>
+          <div class="overflow-y-auto snap-y snap-mandatory h-full w-11 [scrollbar-width:none] text-center relative z-[1]"
                onscroll="const t=this;t.querySelectorAll('div').forEach(el=>{const r=el.getBoundingClientRect(),p=t.getBoundingClientRect(),c=r.top-p.top+r.height/2-t.clientHeight/2;el.style.opacity=Math.abs(c)<22?'1':'0.35';el.style.fontWeight=Math.abs(c)<22?'700':'400';el.style.color=Math.abs(c)<22?'#933A35':'#933A35'})">
             <% (1..31).each do |day| %>
-              <div style="height:44px;display:flex;align-items:center;justify-content:center;font-family:Montserrat;font-size:16px;color:#933A35;scroll-snap-align:center;font-weight:<%= day == d ? '700' : '400' %>;opacity:<%= day == d ? '1' : '0.35' %>"><%= format('%02d', day) %></div>
+              <div class="h-11 flex items-center justify-center text-base text-brand-primary snap-center" style="font-weight:<%= day == d ? '700' : '400' %>;opacity:<%= day == d ? '1' : '0.35' %>"><%= format('%02d', day) %></div>
             <% end %>
           </div>
-          <%# Month column %>
           <% months = %w[Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec] %>
-          <div style="overflow-y:auto;scroll-snap-type:y mandatory;height:100%;width:52px;scrollbar-width:none;text-align:center;position:relative;z-index:1;"
+          <div class="overflow-y-auto snap-y snap-mandatory h-full w-[52px] [scrollbar-width:none] text-center relative z-[1]"
                onscroll="const t=this;t.querySelectorAll('div').forEach(el=>{const r=el.getBoundingClientRect(),p=t.getBoundingClientRect(),c=r.top-p.top+r.height/2-t.clientHeight/2;el.style.opacity=Math.abs(c)<22?'1':'0.35';el.style.fontWeight=Math.abs(c)<22?'700':'400'})">
             <% months.each_with_index do |mon, mi| %>
               <% mo = mi + 1 %>
-              <div style="height:44px;display:flex;align-items:center;justify-content:center;font-family:Montserrat;font-size:16px;color:#933A35;scroll-snap-align:center;font-weight:<%= mo == m ? '700' : '400' %>;opacity:<%= mo == m ? '1' : '0.35' %>"><%= mon %></div>
+              <div class="h-11 flex items-center justify-center text-base text-brand-primary snap-center" style="font-weight:<%= mo == m ? '700' : '400' %>;opacity:<%= mo == m ? '1' : '0.35' %>"><%= mon %></div>
             <% end %>
           </div>
-          <%# Year column %>
-          <div style="overflow-y:auto;scroll-snap-type:y mandatory;height:100%;width:60px;scrollbar-width:none;text-align:center;position:relative;z-index:1;"
+          <div class="overflow-y-auto snap-y snap-mandatory h-full w-[60px] [scrollbar-width:none] text-center relative z-[1]"
                onscroll="const t=this;t.querySelectorAll('div').forEach(el=>{const r=el.getBoundingClientRect(),p=t.getBoundingClientRect(),c=r.top-p.top+r.height/2-t.clientHeight/2;el.style.opacity=Math.abs(c)<22?'1':'0.35';el.style.fontWeight=Math.abs(c)<22?'700':'400'})">
             <% (2025..2035).each do |yr| %>
-              <div style="height:44px;display:flex;align-items:center;justify-content:center;font-family:Montserrat;font-size:16px;color:#933A35;scroll-snap-align:center;font-weight:<%= yr == y ? '700' : '400' %>;opacity:<%= yr == y ? '1' : '0.35' %>"><%= yr %></div>
+              <div class="h-11 flex items-center justify-center text-base text-brand-primary snap-center" style="font-weight:<%= yr == y ? '700' : '400' %>;opacity:<%= yr == y ? '1' : '0.35' %>"><%= yr %></div>
             <% end %>
           </div>
         </div>
 
-        <%# Save button %>
-        <div style="position:absolute;left:36px;top:341px;width:287px;height:52px;background:#933A35;border-radius:8px;"></div>
+        <div class="absolute left-[36px] top-[341px] w-[287px] h-[52px] bg-brand-primary rounded-lg"></div>
         <button type="button" data-action="click->season-modal#confirmRepeatUntil"
-                style="position:absolute;left:36px;top:341px;width:287px;height:52px;background:transparent;border:none;cursor:pointer;padding:0;display:flex;align-items:center;justify-content:center;font-family:Montserrat;font-weight:500;font-size:16px;line-height:20px;letter-spacing:0.07em;color:#fff;">Save</button>
+                class="absolute left-[36px] top-[341px] w-[287px] h-[52px] bg-transparent border-none cursor-pointer p-0 flex items-center justify-center font-medium text-base leading-5 tracking-[0.07em] text-white">Save</button>
       </div>
     </div>
 

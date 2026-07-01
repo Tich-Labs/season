@@ -22,10 +22,10 @@
       </svg>
     </a>
 
-    <%# My Subscriptions %>
+    <%# My Abonnements %>
     <a href="<%= subscriptions_settings_path %>" class="flex items-center gap-4 py-4">
       <%= vuesax_icon "bag", size: 24 %>
-      <span class="flex-1 text-brand-primary text-base font-medium">My Subscriptions</span>
+      <span class="flex-1 text-brand-primary text-base font-medium">My Abonnements</span>
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="text-brand-primary">
         <polyline points="9 18 15 12 9 6" />
       </svg>
@@ -48,7 +48,7 @@
     <%# Notifications & Reminders %>
     <a href="<%= notifications_settings_path %>" class="flex items-center gap-4 py-4">
       <%= vuesax_icon "notification", size: 24 %>
-      <span class="flex-1 text-brand-primary text-base font-medium">Notifications & Reminders</span>
+      <span class="flex-1 text-brand-primary text-base font-medium">Notifications &amp; reminder</span>
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="text-brand-primary">
         <polyline points="9 18 15 12 9 6" />
       </svg>
@@ -80,60 +80,60 @@
     </a>
 
     <%# Darkmode %>
-    <div style="display:flex; align-items:center; gap:16px; padding:16px 0; cursor:pointer;" onclick="alert('Dark mode toggle - coming soon!')">
-      <svg style="width:24px; height:24px;" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#933a35" stroke-width="1.5" viewBox="0 0 24 24">
+    <div class="flex items-center gap-4 py-4 cursor-pointer" onclick="alert('Dark mode toggle - coming soon!')">
+      <svg class="w-6 h-6 text-brand-primary shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
       </svg>
-      <span style="flex:1; color:#933a35; font-size:16px; font-weight:500;">Darkmode</span>
-      <div style="width:40px; height:20px; background:#933a35; border-radius:25px; padding:2px;">
-        <div style="width:16px; height:16px; background:white; border-radius:50%; margin-left:auto;"></div>
+      <span class="flex-1 text-brand-primary text-base font-medium">Darkmode</span>
+      <div class="w-10 h-5 bg-brand-primary rounded-[25px] p-0.5">
+        <div class="w-4 h-4 bg-white rounded-full ml-auto"></div>
       </div>
     </div>
 
     <%# ── About Season ── %>
-    <div style="padding:24px 0 8px;">
-      <h2 style="color:#933a35; font-size:16px; font-weight:700;">About Season</h2>
+    <div class="pt-6 pb-2">
+      <h2 class="text-brand-primary text-base font-bold">About Season</h2>
     </div>
-    <div style="border-bottom:1px solid #DDD0CB;"></div>
-
-    <%# Rate in the App Store %>
-    <div style="position:relative;">
-      <a href="#" style="display:flex; align-items:center; gap:16px; padding:16px; background:#899884; border-radius:8px; margin-top:16px; text-decoration:none;">
-        <%= vuesax_icon "star", size: 32, colour: "white" %>
-        <div style="flex:1;">
-          <span style="display:block; color:white; font-size:16px; font-weight:700;">Rate in the App Store</span>
-          <span style="color:white; font-size:14px;">for even more benefits!</span>
-        </div>
-      </a>
-      <div style="position:absolute; right:8px; top:8px; background:#EDE1D5; border-radius:9999px; padding:4px 10px;">
-        <span style="color:#933a35; font-size:12px;">Coming soon</span>
-      </div>
-    </div>
+    <div class="border-b border-brand-divider"></div>
 
     <%# Support %>
     <button type="button"
             data-controller="open-feedback"
             data-open-feedback-type-value="support"
             data-action="click->open-feedback#open"
-            style="display:flex; align-items:center; gap:16px; padding:16px; background:#899884; border-radius:8px; margin-top:8px; width:100%; border:none; cursor:pointer; text-align:left;">
+            class="flex items-center gap-4 p-4 bg-[#899884] rounded-lg mt-4 w-full border-0 cursor-pointer text-left">
       <%= vuesax_icon "message-question", size: 32, colour: "white" %>
-      <div style="flex:1;">
-        <span style="display:block; color:white; font-size:16px; font-weight:700;">Support</span>
-        <span style="color:white; font-size:14px;">Contact us!</span>
+      <div class="flex-1">
+        <span class="block text-white text-base font-bold">Support</span>
+        <span class="text-white text-sm">Contact us!</span>
       </div>
     </button>
 
-    <%# Share Season with friends %>
-    <div style="position:relative;">
-      <a href="#" style="display:flex; align-items:center; gap:16px; padding:16px; background:#899884; border-radius:8px; margin-top:8px; margin-bottom:16px; text-decoration:none;">
-        <%= vuesax_icon "share", size: 32, colour: "white" %>
-        <div style="flex:1;">
-          <span style="display:block; color:white; font-size:16px; font-weight:700;">Share Season with friends</span>
-          <span style="color:white; font-size:14px;">for even more benefits!</span>
+    <%# Rate in the App Store %>
+    <div class="relative mt-2">
+      <a href="#" class="flex items-center gap-4 p-4 bg-[#899884] rounded-lg no-underline">
+        <%= vuesax_icon "star", size: 32, colour: "white" %>
+        <div class="flex-1">
+          <span class="block text-white text-base font-bold">Rate in the App Store</span>
+          <span class="text-white text-sm">for even more benefits!</span>
         </div>
       </a>
-      <div style="position:absolute; right:8px; top:8px; background:#EDE1D5; border-radius:9999px; padding:4px 10px;">
-        <span style="color:#933a35; font-size:12px;">Coming soon</span>
+      <div class="absolute right-2 top-2 bg-brand-field rounded-full px-2.5 py-1">
+        <span class="text-brand-primary text-xs">Coming soon</span>
+      </div>
+    </div>
+
+    <%# Share Season with friends %>
+    <div class="relative mt-2 mb-4">
+      <a href="#" class="flex items-center gap-4 p-4 bg-[#899884] rounded-lg no-underline">
+        <%= vuesax_icon "share", size: 32, colour: "white" %>
+        <div class="flex-1">
+          <span class="block text-white text-base font-bold">Share Season with friends</span>
+          <span class="text-white text-sm">for even more benefits!</span>
+        </div>
+      </a>
+      <div class="absolute right-2 top-2 bg-brand-field rounded-full px-2.5 py-1">
+        <span class="text-brand-primary text-xs">Coming soon</span>
       </div>
     </div>
 

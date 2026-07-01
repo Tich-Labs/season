@@ -178,10 +178,43 @@
         </svg>
       <% end %>
 
+      <%= link_to calendar_path,
+            class: "flex justify-between items-center rounded-lg px-5 min-h-[3rem] py-3 bg-white no-underline" do %>
+        <span class="flex-1 min-w-0 text-xl font-medium text-brand-primary font-['Montserrat']">Calendar</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none"
+             stroke="<%= phase_colour %>" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true" class="shrink-0">
+          <polyline points="9 18 15 12 9 6" />
+        </svg>
+      <% end %>
+
     </div>
 
   </div>
 </div>
+
+<%# ── Post-period-save prediction modal ── %>
+<% if params[:period_saved] == "1" %>
+  <div id="period-saved-modal"
+       class="fixed inset-0 z-[200] flex items-center justify-center bg-[#121212]/90"
+       role="dialog" aria-modal="true" aria-label="Period saved"
+       onclick="this.remove()">
+    <div class="w-[337px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] px-7 pt-8 pb-8 flex flex-col items-center gap-5">
+      <div class="flex items-center justify-center w-11 h-11 rounded-full bg-brand-field shrink-0">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M20 6L9 17L4 12" stroke="#933A35" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <%= image_tag "screen1logo.png", alt: "Season", class: "w-[87px] h-[88px] object-contain" %>
+      <p class="text-brand-primary font-medium text-[24px] leading-[30px] text-center font-sans m-0">
+        Your prediction will be adjusted based on the info
+      </p>
+      <button type="button" onclick="document.getElementById('period-saved-modal').remove()"
+              class="w-full h-[52px] bg-brand-primary text-white rounded-xl border-none font-medium text-[18px] font-sans cursor-pointer">
+        Done
+      </button>
+    </div>
+  </div>
+<% end %>
 
 <%# Render feedback modal inline for iOS Ruby Native compatibility %>
 <%= render "shared/feedback_modal" %>

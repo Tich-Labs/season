@@ -27,112 +27,14 @@
 
     <%# ── Section header ── %>
     <div class="flex items-center gap-3 py-5 pb-2">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="25" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" class="text-brand-primary">
-        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-        <polyline points="22,6 12,13 2,6" />
-      </svg>
+      <%= vuesax_icon "sms-notification", size: 24 %>
       <h2 class="text-brand-primary text-base font-bold">Notifications &amp; reminder</h2>
     </div>
     <div class="border-b border-brand-divider"></div>
 
-    <%# Good morning set %>
-    <div class="flex items-center justify-between py-3.5 pb-1">
-      <span class="text-brand-primary text-base font-medium">Good morning set</span>
-      <%= render "shared/toggle_switch",
-            field_id: "cycle_reminder",
-            checked: @notifications.cycle_reminder,
-            aria_label: "Good morning set",
-            onchange: "toggleSetting('cycle_reminder')" %>
-    </div>
-    <div class="flex items-center justify-between mb-3">
-      <p class="text-brand-muted text-sm font-medium m-0">Summary → 9:00 a.m.</p>
-      <%= link_to "edit", notification_morning_settings_path, class: "text-brand-muted text-sm font-medium no-underline" %>
-    </div>
-    <div class="border-b border-brand-divider"></div>
-
-    <%# Period reminder %>
-    <div class="flex items-center justify-between py-3.5 pb-1">
-      <span class="text-brand-primary text-base font-medium">Period reminder</span>
-      <%= render "shared/toggle_switch",
-            field_id: "period_prediction",
-            checked: @notifications.period_prediction,
-            aria_label: "Period reminder",
-            onchange: "toggleSetting('period_prediction')" %>
-    </div>
-    <div class="flex items-center justify-between mb-3">
-      <div class="flex gap-4">
-        <p class="text-brand-muted text-sm font-medium m-0">Start → 12:00 a.m.</p>
-        <p class="text-brand-muted text-sm font-medium m-0">End → 12:00 a.m.</p>
-      </div>
-      <%= link_to "edit", notification_period_settings_path, class: "text-brand-muted text-sm font-medium no-underline" %>
-    </div>
-    <div class="border-b border-brand-divider"></div>
-
-    <%# Birth control reminder %>
-    <div class="flex items-center justify-between py-3.5 pb-1">
-      <span class="text-brand-primary text-base font-medium">Birth control reminder</span>
-      <%= render "shared/toggle_switch",
-            field_id: "ovulation_alert",
-            checked: @notifications.ovulation_alert,
-            aria_label: "Birth control reminder",
-            onchange: "toggleSetting('ovulation_alert')" %>
-    </div>
-    <div class="flex items-center justify-between mb-3">
-      <div>
-        <p class="text-brand-muted text-sm font-medium m-0 mb-0.5">Daily → 09:00 p.m.</p>
-        <p class="text-brand-primary text-xs font-medium m-0 leading-relaxed">
-          Keep track of: Today is day 15 of taking the pill
-        </p>
-      </div>
-      <%= link_to "edit", notification_birth_control_settings_path, class: "text-brand-muted text-sm font-medium no-underline self-start" %>
-    </div>
-    <div class="border-b border-brand-divider"></div>
-
-    <%# Supplement reminder %>
-    <div class="flex items-center justify-between py-3.5 pb-1">
-      <span class="text-brand-primary text-base font-medium">Supplement reminder</span>
-      <%= render "shared/toggle_switch",
-            field_id: "newsletter",
-            checked: @notifications.newsletter,
-            aria_label: "Supplement reminder",
-            onchange: "toggleSetting('newsletter')" %>
-    </div>
-    <div class="flex items-center justify-between mb-3">
-      <p class="text-brand-muted text-sm font-medium m-0">Daily → 06:00 p.m.</p>
-    </div>
-    <div class="border-b border-brand-divider"></div>
-
-    <%# In-App Popups %>
-    <% inapp_on = @notifications.email_notifications %>
-    <div class="flex items-center justify-between py-3.5 pb-2">
-      <span class="text-brand-primary text-base font-medium">In-App Popups</span>
-      <%= render "shared/toggle_switch",
-            field_id: "email_notifications",
-            checked: inapp_on,
-            aria_label: "In-App Popups",
-            onchange: "toggleSetting('email_notifications')" %>
-    </div>
-    <% prefs = current_user.notification_preferences || {} %>
-    <% [
-      ["in_app_new_appt_synced",   "New appointments synced"],
-      ["in_app_tracking_reminder", "Tracking reminder"],
-      ["in_app_new_feedback",      "New Feedback available"],
-      ["in_app_app_updates",       "App-Updates"],
-      ["in_app_appointments",      "Appointments"]
-    ].each do |field, label| %>
-      <div class="flex items-center justify-between py-1.5">
-        <span class="text-brand-secondary text-sm font-medium"><%= label %></span>
-        <%= render "shared/toggle_switch",
-              field_id: field,
-              checked: prefs[field].nil? ? true : prefs[field],
-              aria_label: label,
-              onchange: %(toggleSetting(#{field.to_json})) %>
-      </div>
-    <% end %>
-    <div class="border-b border-brand-divider mt-2"></div>
-
     <%# General Push-Notifications %>
     <% push_on = @notifications.push_notifications %>
+    <% prefs = current_user.notification_preferences || {} %>
     <div data-controller="push-subscription"
          data-vapid-key="<%= Rails.application.credentials.dig(:vapid, :public_key) %>"
          class="flex items-center justify-between py-3.5 pb-2">
@@ -165,9 +67,107 @@
               onchange: %(toggleSetting(#{field.to_json})) %>
       </div>
     <% end %>
-    <p class="text-brand-primary text-[10px] font-medium mt-3 leading-relaxed">
-      Superpower of the day, pay attention to, mood, sport, nutrition, fertility
-    </p>
+    <div class="border-b border-brand-divider mt-2"></div>
+
+    <%# Good morning set %>
+    <div class="flex items-center justify-between py-3.5 pb-1">
+      <span class="text-brand-primary text-base font-medium">Good morning set</span>
+      <%= render "shared/toggle_switch",
+            field_id: "cycle_reminder",
+            checked: @notifications.cycle_reminder,
+            aria_label: "Good morning set",
+            onchange: "toggleSetting('cycle_reminder')" %>
+    </div>
+    <div class="mb-3">
+      <p class="text-brand-muted text-sm font-medium m-0">Summary → 9:00 a.m.</p>
+      <p class="text-brand-primary text-[10px] font-medium mt-1 leading-relaxed">
+        Superpower of the day, pay attention to, mood, sport, nutrition, fertility
+      </p>
+    </div>
+    <div class="border-b border-brand-divider"></div>
+
+    <%# Period reminder %>
+    <div class="flex items-center justify-between py-3.5 pb-1">
+      <span class="text-brand-primary text-base font-medium">Period reminder</span>
+      <%= render "shared/toggle_switch",
+            field_id: "period_prediction",
+            checked: @notifications.period_prediction,
+            aria_label: "Period reminder",
+            onchange: "toggleSetting('period_prediction')" %>
+    </div>
+    <div class="flex items-center justify-between mb-3">
+      <div class="flex gap-4">
+        <p class="text-brand-muted text-sm font-medium m-0">Start → 12:00 a.m.</p>
+        <p class="text-brand-muted text-sm font-medium m-0">End → 12:00 a.m.</p>
+      </div>
+      <%= link_to "edit", notification_period_settings_path, class: "text-brand-muted text-sm font-medium no-underline" %>
+    </div>
+    <div class="border-b border-brand-divider"></div>
+
+    <%# Birth control reminder %>
+    <div class="flex items-center justify-between py-3.5 pb-1">
+      <span class="text-brand-primary text-base font-medium">Birth control reminder</span>
+      <%= render "shared/toggle_switch",
+            field_id: "ovulation_alert",
+            checked: @notifications.ovulation_alert,
+            aria_label: "Birth control reminder",
+            onchange: "toggleSetting('ovulation_alert')" %>
+    </div>
+    <div class="flex items-center justify-between mb-3">
+      <div>
+        <p class="text-brand-muted text-sm font-medium m-0 mb-0.5">birth control pill</p>
+        <p class="text-brand-muted text-sm font-medium m-0 mb-0.5">Daily → 09:00 p.m.</p>
+        <p class="text-brand-muted text-sm font-medium m-0 mb-0.5">Taking the pill → 21 Days</p>
+        <p class="text-brand-muted text-sm font-medium m-0 mb-0.5">Pillbreak → 7 Days</p>
+        <p class="text-brand-primary text-[10px] font-medium m-0 leading-relaxed">
+          Keep track of: Today is day 15 of taking the pill
+        </p>
+      </div>
+      <%= link_to "edit", notification_birth_control_settings_path, class: "text-brand-muted text-sm font-medium no-underline self-start" %>
+    </div>
+    <div class="border-b border-brand-divider"></div>
+
+    <%# Supplement reminder %>
+    <div class="flex items-center justify-between py-3.5 pb-1">
+      <span class="text-brand-primary text-base font-medium">Supplement reminder</span>
+      <%= render "shared/toggle_switch",
+            field_id: "newsletter",
+            checked: @notifications.newsletter,
+            aria_label: "Supplement reminder",
+            onchange: "toggleSetting('newsletter')" %>
+    </div>
+    <div class="flex items-center justify-between mb-3">
+      <p class="text-brand-muted text-sm font-medium m-0">Daily → 06:00 p.m.</p>
+      <span class="text-brand-muted text-sm font-medium">edit</span>
+    </div>
+    <div class="border-b border-brand-divider"></div>
+
+    <%# In-App Popups %>
+    <% inapp_on = @notifications.email_notifications %>
+    <div class="flex items-center justify-between py-3.5 pb-2">
+      <span class="text-brand-primary text-base font-medium">In-App Popups</span>
+      <%= render "shared/toggle_switch",
+            field_id: "email_notifications",
+            checked: inapp_on,
+            aria_label: "In-App Popups",
+            onchange: "toggleSetting('email_notifications')" %>
+    </div>
+    <% [
+      ["in_app_new_appt_synced",   "New appointments synced"],
+      ["in_app_tracking_reminder", "Tracking reminder"],
+      ["in_app_new_feedback",      "New Feedback available"],
+      ["in_app_app_updates",       "App-Updates"],
+      ["in_app_appointments",      "Appointments"]
+    ].each do |field, label| %>
+      <div class="flex items-center justify-between py-1.5">
+        <span class="text-brand-secondary text-sm font-medium"><%= label %></span>
+        <%= render "shared/toggle_switch",
+              field_id: field,
+              checked: prefs[field].nil? ? true : prefs[field],
+              aria_label: label,
+              onchange: %(toggleSetting(#{field.to_json})) %>
+      </div>
+    <% end %>
 
   </div>
 </div>

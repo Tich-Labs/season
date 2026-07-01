@@ -1,26 +1,23 @@
-<div class="bg-white min-h-screen min-h-dvh flex flex-col justify-between p-16 max-w-app mx-auto" style="padding-top:calc(7rem + env(safe-area-inset-top,0px));padding-bottom:calc(3rem + env(safe-area-inset-bottom,0px))">
+<div class="bg-white min-h-screen min-h-dvh flex flex-col items-center justify-between px-8 max-w-app mx-auto" style="padding-top:calc(4rem + env(safe-area-inset-top,0px));padding-bottom:calc(3rem + env(safe-area-inset-bottom,0px))">
 
-  <%# Empty top for spacing %>
   <div></div>
 
-  <%# Content centered %>
   <div class="w-full flex flex-col items-center">
-    <div class="w-64 h-64 rounded-full bg-brand-field overflow-hidden mb-10">
+    <div class="w-[219px] h-[219px] rounded-full bg-brand-field overflow-hidden mb-10">
       <%= image_tag("error_screens_login/errorscreen-contact-support.png", alt: "Contact support", class: "w-full h-full object-contain") %>
     </div>
 
-    <p class="text-brand-primary text-lg font-normal letter-spacing-wide text-center max-w-xs mb-12">
+    <p class="text-brand-primary text-lg font-normal tracking-[1.62px] text-center max-w-[290px] mb-12">
       Something seems off here—please contact our support team!
     </p>
 
     <div class="w-full mb-4">
-      <a href="mailto:info@season.vision" class="block w-64 h-12 bg-brand-primary text-white text-center leading-12 text-2xl font-medium letter-spacing-wider no-underline rounded-lg mx-auto">contact support</a>
+      <a href="mailto:info@season.vision" class="block w-[322px] h-[52px] bg-brand-primary text-white text-center leading-[52px] text-[22px] font-medium tracking-[0.66px] no-underline rounded-lg mx-auto">contact support</a>
     </div>
 
     <a href="<%= new_session_path %>" class="text-brand-primary text-base font-normal no-underline">Go back to LogIn</a>
   </div>
 
-  <%# Empty bottom for spacing %>
   <div></div>
 
 </div>

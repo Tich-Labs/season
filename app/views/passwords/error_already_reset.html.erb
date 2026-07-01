@@ -1,18 +1,19 @@
-<div style="background:#ffffff; min-height:100vh;min-height:100dvh; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding-top:calc(60px + env(safe-area-inset-top,0px)); padding-right:32px; padding-bottom:calc(48px + env(safe-area-inset-bottom,0px)); padding-left:32px; max-width:430px; margin:0 auto;">
+<div class="bg-white min-h-screen min-h-dvh flex flex-col items-center justify-between px-8 max-w-app mx-auto" style="padding-top:calc(4rem + env(safe-area-inset-top,0px));padding-bottom:calc(3rem + env(safe-area-inset-bottom,0px))">
 
   <div></div>
 
-  <div style="width:100%; display:flex; flex-direction:column; align-items:center;">
-    <div style="width:220px; height:220px; border-radius:110px; background:#ede1d5; overflow:hidden; margin-bottom:40px;">
+  <div class="w-full flex flex-col items-center">
+    <div class="w-[219px] h-[219px] rounded-full bg-brand-field overflow-hidden mb-10">
       <%= image_tag("error_screens_login/errorscreen-already-reset.png", alt: "Already reset", class: "w-full h-full object-contain") %>
     </div>
 
-    <p style="color:#933a35; font-size:18px; font-weight:400; letter-spacing:1.62px; text-align:center; max-width:290px; margin-bottom:48px;">
+    <p class="text-brand-primary text-lg font-normal tracking-[1.62px] text-center max-w-[290px] mb-12">
       We already sent you an email an hour ago to help you reset your password; you'll need to wait an hour before you can try again
     </p>
 
-    <div style="width:100%;">
-      <a href="<%= new_session_path %>" style="display:block; width:322px; height:52px; background:#933a35; color:#ffffff; text-align:center; line-height:52px; font-size:22px; font-weight:500; letter-spacing:0.66px; text-decoration:none; border-radius:8px; margin:0 auto;">Go back to login</a>
+    <div class="w-full">
+      <%= link_to "Go back to login", new_session_path,
+          class: "block w-[322px] h-[52px] bg-brand-primary text-white text-center leading-[52px] text-[22px] font-medium tracking-[0.66px] no-underline rounded-lg mx-auto" %>
     </div>
   </div>
 

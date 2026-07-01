@@ -15,8 +15,15 @@ class OnboardingController < ApplicationController
     @hide_nav = true
     @no_regular_cycle = params[:no_regular].present?
 
-    if authenticated? && current_user.profile_complete?
+    return unless authenticated?
+
+    if current_user.profile_complete?
       redirect_to user_root_path and return
+    end
+
+    resume_step = current_user.next_onboarding_step
+    if resume_step && resume_step > @step
+      redirect_to onboarding_path(resume_step) and return
     end
   end
 

@@ -1,6 +1,5 @@
-<%# My Subscriptions screen - matches Figma node 12048-37893 %>
+<%# My Subscriptions screen - matches Figma node 12048:16129 %>
 <%= native_navbar_tag("My Subscriptions") if native_app? %>
-<%# Dark header auto-applied by layout; only back arrow override needed %>
 <% content_for(:header_left) do %>
   <%= link_to edit_settings_path, class: "p-2 flex items-center" do %>
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
@@ -10,100 +9,96 @@
   <% end %>
 <% end %>
 
-<div style="background:#ffffff; min-height:100%;">
+<div class="bg-white min-h-screen">
+  <div class="max-w-app mx-auto px-4 pb-20">
 
-  <%# Content - max-width 430px centered %>
-  <div style="max-width:430px; margin:0 auto; padding:0 16px 80px;">
-
-    <%# ── My Subscription ── %>
-    <div style="padding:20px 0 8px;">
-      <h2 style="color:#933a35; font-size:16px; font-weight:700;">My Subscription</h2>
+    <%# ── My Abonement ── %>
+    <div class="flex items-center gap-4 py-5 pb-2">
+      <%= vuesax_icon "bag", size: 24 %>
+      <h2 class="text-brand-primary text-base font-bold">My Abonement</h2>
     </div>
-    <div style="border-bottom:1px solid #DDD0CB;"></div>
+    <div class="border-b border-brand-divider"></div>
 
     <%# My Plan %>
-    <div style="display:flex; align-items:center; gap:16px; padding:16px 0;">
-      <%= image_tag "icons/vuesax/linear/note-2.svg", style: "width:24px; height:24px;" %>
-      <span style="flex:1; color:#933a35; font-size:16px; font-weight:500;">MyPlan</span>
-      <span style="color:#D18D83; font-size:14px;"><%= @subscription.plan %></span>
+    <div class="flex items-center gap-4 py-4">
+      <%= image_tag "icons/vuesax/linear/note-2.svg", class: "w-6 h-6" %>
+      <span class="flex-1 text-brand-primary text-base font-medium">My Plan</span>
+      <span class="text-brand-muted text-sm"><%= @subscription.plan %></span>
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
         <polyline points="9 18 15 12 9 6" />
       </svg>
     </div>
 
     <%# View invoices %>
-    <div style="display:flex; align-items:center; gap:16px; padding:16px 0;">
-      <%= image_tag "icons/vuesax/linear/receipt-item.svg", style: "width:24px; height:24px;" %>
-      <span style="flex:1; color:#933a35; font-size:16px; font-weight:500;">View invoices</span>
+    <div class="flex items-center gap-4 py-4">
+      <%= image_tag "icons/vuesax/linear/receipt-item.svg", class: "w-6 h-6" %>
+      <span class="flex-1 text-brand-primary text-base font-medium">View invoices</span>
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
         <polyline points="9 18 15 12 9 6" />
       </svg>
     </div>
 
     <%# Payment method %>
-    <div style="display:flex; align-items:center; gap:16px; padding:16px 0;">
-      <%= image_tag "icons/vuesax/linear/card-pos.svg", style: "width:24px; height:24px;" %>
-      <span style="flex:1; color:#933a35; font-size:16px; font-weight:500;">Payment method</span>
-      <span style="color:#D18D83; font-size:14px;"><%= @subscription.payment_method %></span>
+    <div class="flex items-center gap-4 py-4">
+      <%= image_tag "icons/vuesax/linear/card-pos.svg", class: "w-6 h-6" %>
+      <span class="flex-1 text-brand-primary text-base font-medium">Payment method</span>
+      <span class="text-brand-muted text-sm"><%= @subscription.payment_method %></span>
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
         <polyline points="9 18 15 12 9 6" />
       </svg>
     </div>
 
-    <%# Premium Box - positioned at x:59, y:412 %>
-    <div style="margin-top:32px; padding-left:59px;">
-      <div style="background:#50715B; border-radius:8px; padding:20px; width:309px;">
-        <span style="color:white; font-size:14px;">Change to</span>
-        <div style="margin-top:8px;">
-          <span style="color:white; font-size:20px; font-weight:700; letter-spacing:1px;">Season Premium</span>
-        </div>
-        <div style="border-bottom:1px solid rgba(255,255,255,0.5); margin-top:8px;"></div>
+    <%# Season Premium card %>
+    <div class="mt-8 bg-[#50715B] rounded-lg p-5">
+      <span class="text-white text-sm">Change to</span>
+      <div class="mt-2">
+        <span class="text-white text-xl font-bold tracking-wide">Season Premium</span>
+      </div>
+      <div class="border-b border-white/50 mt-2"></div>
 
-        <%# Yearly option - selectable %>
-        <div onclick="selectPlan('yearly')" id="plan-yearly" style="display:flex; align-items:center; gap:12px; margin-top:16px; cursor:pointer;">
-          <div id="radio-yearly" style="width:20px; height:20px; background:#A8A29E; border-radius:50%; border:2px solid white; display:flex; align-items:center; justify-content:center;">
-            <div id="dot-yearly" style="width:10px; height:10px; background:white; border-radius:50%; display:none;"></div>
-          </div>
-          <div>
-            <span style="color:white; font-size:16px; font-weight:700;">Yearly · 59,95€</span>
-            <span style="display:block; color:white; font-size:14px;">4,99€ / month</span>
-          </div>
+      <%# Yearly option %>
+      <div onclick="selectPlan('yearly')" id="plan-yearly" class="flex items-center gap-3 mt-4 cursor-pointer">
+        <div id="radio-yearly" class="w-5 h-5 bg-[#A8A29E] rounded-full border-2 border-white flex items-center justify-center">
+          <div id="dot-yearly" class="hidden w-2.5 h-2.5 bg-white rounded-full"></div>
         </div>
+        <div>
+          <span class="text-white text-base font-bold">Yearly · 59,95€</span>
+          <span class="block text-white text-sm">4,99€ / month</span>
+        </div>
+      </div>
 
-        <%# Monthly option - selectable %>
-        <div onclick="selectPlan('monthly')" id="plan-monthly" style="display:flex; align-items:center; gap:12px; margin-top:12px; cursor:pointer;">
-          <div id="radio-monthly" style="width:20px; height:20px; background:#A8A29E; border-radius:50%; border:2px solid white; display:flex; align-items:center; justify-content:center;">
-            <div id="dot-monthly" style="width:10px; height:10px; background:white; border-radius:50%; display:none;"></div>
-          </div>
-          <div>
-            <span style="color:white; font-size:16px; font-weight:700;">Monthly · 9,95€</span>
-            <span style="display:block; color:white; font-size:14px;">119,40€ / year</span>
-          </div>
+      <%# Monthly option %>
+      <div onclick="selectPlan('monthly')" id="plan-monthly" class="flex items-center gap-3 mt-3 cursor-pointer">
+        <div id="radio-monthly" class="w-5 h-5 bg-[#A8A29E] rounded-full border-2 border-white flex items-center justify-center">
+          <div id="dot-monthly" class="hidden w-2.5 h-2.5 bg-white rounded-full"></div>
         </div>
+        <div>
+          <span class="text-white text-base font-bold">Monthly · 9,95€</span>
+          <span class="block text-white text-sm">119,40€ / year</span>
+        </div>
+      </div>
 
-        <%# Upgrade button %>
-        <div onclick="alert('Upgrade clicked!'); return false;" style="background:white; border-radius:8px; padding:12px; margin-top:16px; text-align:center; cursor:pointer;">
-          <span style="color:#6B6B6B; font-size:16px; font-weight:500;">Upgrade</span>
-        </div>
+      <%# Upgrade button %>
+      <div onclick="alert('Upgrade clicked!'); return false;" class="bg-white rounded-lg p-3 mt-4 text-center cursor-pointer">
+        <span class="text-brand-secondary text-base font-medium">Upgrade</span>
+      </div>
 
-        <%# Student discount - inside card below upgrade %>
-        <div style="text-align:center; margin-top:16px; padding:8px;">
-          <a href="#" onclick="alert('Student discount - coming soon!'); return false;" style="text-decoration:none; color:white; cursor:pointer; display:inline-block;">
-            I am a student <span style="font-weight:700;">-50%</span>
-          </a>
-        </div>
+      <%# Student discount %>
+      <div class="text-center mt-4 pb-1">
+        <a href="#" onclick="alert('Student discount - coming soon!'); return false;" class="text-white no-underline underline">
+          I am a student <span class="font-bold">-50%</span>
+        </a>
       </div>
     </div>
 
     <script nonce="<%= content_security_policy_nonce %>">
       function selectPlan(plan) {
-        document.getElementById('dot-yearly').style.display = 'none';
-        document.getElementById('dot-monthly').style.display = 'none';
-
+        document.getElementById('dot-yearly').classList.add('hidden');
+        document.getElementById('dot-monthly').classList.add('hidden');
         if (plan === 'yearly') {
-          document.getElementById('dot-yearly').style.display = 'block';
+          document.getElementById('dot-yearly').classList.remove('hidden');
         } else if (plan === 'monthly') {
-          document.getElementById('dot-monthly').style.display = 'block';
+          document.getElementById('dot-monthly').classList.remove('hidden');
         }
       }
     </script>

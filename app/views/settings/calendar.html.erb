@@ -43,6 +43,58 @@
     </div>
     <div class="border-b border-brand-divider"></div>
 
+    <%# Links & Syncs (first per Figma) %>
+    <div class="flex items-center gap-3 pt-5 pb-2">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#933a35" stroke-width="1.5" viewBox="0 0 24 24">
+        <path d="M21 12A9 9 0 0 1 12 21" stroke-dasharray="3 3" />
+        <path d="M3 12a9 9 0 0 1 9-9" />
+      </svg>
+      <span class="text-brand-primary text-base font-medium">Links &amp; Syncs</span>
+    </div>
+
+    <div>
+      <div class="py-3">
+        <span class="text-brand-muted text-sm font-medium">user@gmail.com</span>
+        <span class="block text-brand-primary/60 text-xs">Gmail</span>
+      </div>
+      <div class="flex items-center justify-between py-2">
+        <span class="text-brand-primary/60 text-xs">Gmail Calendar Sync</span>
+        <button type="button" class="toggle-btn" data-action="click->calendar-toggle#toggle" data-field="gmail_sync">
+          <div class="toggle-track">
+            <div class="toggle-thumb"></div>
+          </div>
+        </button>
+      </div>
+
+      <div class="py-3">
+        <span class="text-brand-muted text-sm font-medium">user@outlook.com</span>
+        <span class="block text-brand-primary/60 text-xs">Microsoft</span>
+      </div>
+      <div class="flex items-center justify-between py-2">
+        <span class="text-brand-primary/60 text-xs">Microsoft Outlook Sync</span>
+        <button type="button" class="toggle-btn" data-action="click->calendar-toggle#toggle" data-field="microsoft_sync">
+          <div class="toggle-track">
+            <div class="toggle-thumb"></div>
+          </div>
+        </button>
+      </div>
+
+      <div class="py-3">
+        <span class="text-brand-muted text-sm font-medium">user@icloud.com</span>
+        <span class="block text-brand-primary/60 text-xs">icloud</span>
+      </div>
+      <div class="flex items-center justify-between py-2">
+        <span class="text-brand-primary/60 text-xs">Apple iCloud Sync</span>
+        <button type="button" class="toggle-btn" data-action="click->calendar-toggle#toggle" data-field="icloud_sync">
+          <div class="toggle-track">
+            <div class="toggle-thumb"></div>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <div class="border-b border-brand-divider my-2"></div>
+
     <%# Show features title %>
     <div class="flex items-center gap-3 pt-5 pb-2">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
@@ -56,62 +108,46 @@
     <%# Toggle items %>
     <div class="space-y-0">
       <div class="flex items-center justify-between py-3">
-        <div>
-          <div class="text-brand-muted text-sm font-medium">Appointments</div>
-          <div class="text-gray-400 text-xs mt-1">Show scheduled appointments on your calendar</div>
-        </div>
+        <span class="text-brand-muted text-sm font-medium">Appointments</span>
         <button type="button" class="toggle-btn <%= "active" if @user.show_appointments? %>" data-action="click->calendar-toggle#toggle" data-field="show_appointments">
-          <div class="toggle-track">
-            <div class="toggle-thumb"></div>
-          </div>
+          <div class="toggle-track"><div class="toggle-thumb"></div></div>
         </button>
       </div>
 
       <div class="flex items-center justify-between py-3">
-        <div>
-          <div class="text-brand-muted text-sm font-medium">Cycle Days</div>
-          <div class="text-gray-400 text-xs mt-1">Show your menstrual cycle days</div>
-        </div>
+        <span class="text-brand-muted text-sm font-medium">Cycle Days</span>
         <button type="button" class="toggle-btn <%= "active" if @user.show_cycledays? %>" data-action="click->calendar-toggle#toggle" data-field="show_cycledays">
-          <div class="toggle-track">
-            <div class="toggle-thumb"></div>
-          </div>
+          <div class="toggle-track"><div class="toggle-thumb"></div></div>
         </button>
       </div>
 
       <div class="flex items-center justify-between py-3">
-        <div>
-          <div class="text-brand-muted text-sm font-medium">Moon Phases</div>
-          <div class="text-gray-400 text-xs mt-1">Show moon phase information</div>
-        </div>
+        <span class="text-brand-muted text-sm font-medium">Tracking Reminder</span>
+        <button type="button" class="toggle-btn" data-action="click->calendar-toggle#toggle" data-field="tracking_reminder">
+          <div class="toggle-track"><div class="toggle-thumb"></div></div>
+        </button>
+      </div>
+
+      <div class="flex items-center justify-between py-3">
+        <span class="text-brand-muted text-sm font-medium">Moon Phases</span>
         <button type="button" class="toggle-btn <%= "active" if @user.show_moonphases? %>" data-action="click->calendar-toggle#toggle" data-field="show_moonphases">
-          <div class="toggle-track">
-            <div class="toggle-thumb"></div>
-          </div>
+          <div class="toggle-track"><div class="toggle-thumb"></div></div>
         </button>
       </div>
 
       <div class="flex items-center justify-between py-3">
         <div>
-          <div class="text-brand-muted text-sm font-medium">Holidays</div>
-          <div class="text-gray-400 text-xs mt-1">Show national holidays and observances</div>
+          <span class="text-brand-muted text-sm font-medium">Holidays</span>
         </div>
         <button type="button" class="toggle-btn <%= "active" if @user.show_holidays? %>" data-action="click->calendar-toggle#toggle" data-field="show_holidays">
-          <div class="toggle-track">
-            <div class="toggle-thumb"></div>
-          </div>
+          <div class="toggle-track"><div class="toggle-thumb"></div></div>
         </button>
       </div>
 
       <div class="flex items-center justify-between py-3">
-        <div>
-          <div class="text-brand-muted text-sm font-medium">Week Numbers</div>
-          <div class="text-gray-400 text-xs mt-1">Display ISO week numbers on the calendar</div>
-        </div>
+        <span class="text-brand-muted text-sm font-medium">Week Numbers</span>
         <button type="button" class="toggle-btn <%= "active" if @user.show_week_numbers? %>" data-action="click->calendar-toggle#toggle" data-field="show_week_numbers">
-          <div class="toggle-track">
-            <div class="toggle-thumb"></div>
-          </div>
+          <div class="toggle-track"><div class="toggle-thumb"></div></div>
         </button>
       </div>
     </div>
@@ -170,55 +206,6 @@
         <option value="JST">Japan Standard Time (JST)</option>
         <option value="AEST">Australian Eastern (AEST)</option>
       </select>
-    </div>
-
-    <div class="border-b border-brand-divider my-2"></div>
-
-    <%# Links & Syncs %>
-    <div class="flex items-center gap-3 pt-5 pb-2">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#933a35" stroke-width="1.5" viewBox="0 0 24 24">
-        <path d="M21 12A9 9 0 0 1 12 21" stroke-dasharray="3 3" />
-        <path d="M3 12a9 9 0 0 1 9-9" />
-      </svg>
-      <span class="text-brand-primary text-base font-medium">Links & Syncs</span>
-    </div>
-
-    <div>
-      <div class="py-3">
-        <span class="text-brand-muted text-sm font-medium">user@gmail.com</span>
-      </div>
-      <div class="flex items-center justify-between py-2">
-        <span class="text-brand-primary/60 text-xs">Gmail Calendar Sync</span>
-        <button type="button" class="toggle-btn" data-action="click->calendar-toggle#toggle" data-field="gmail_sync">
-          <div class="toggle-track">
-            <div class="toggle-thumb"></div>
-          </div>
-        </button>
-      </div>
-
-      <div class="py-3">
-        <span class="text-brand-muted text-sm font-medium">user@outlook.com</span>
-      </div>
-      <div class="flex items-center justify-between py-2">
-        <span class="text-brand-primary/60 text-xs">Microsoft Outlook Sync</span>
-        <button type="button" class="toggle-btn" data-action="click->calendar-toggle#toggle" data-field="microsoft_sync">
-          <div class="toggle-track">
-            <div class="toggle-thumb"></div>
-          </div>
-        </button>
-      </div>
-
-      <div class="py-3">
-        <span class="text-brand-muted text-sm font-medium">user@icloud.com</span>
-      </div>
-      <div class="flex items-center justify-between py-2">
-        <span class="text-brand-primary/60 text-xs">Apple iCloud Sync</span>
-        <button type="button" class="toggle-btn" data-action="click->calendar-toggle#toggle" data-field="icloud_sync">
-          <div class="toggle-track">
-            <div class="toggle-thumb"></div>
-          </div>
-        </button>
-      </div>
     </div>
 
     <%# Auto-save status %>

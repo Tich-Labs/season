@@ -50,7 +50,7 @@ class TrackingController < ApplicationController
           redirect_to period_tracking_index_path, alert: t("tracking.period_update.end_before_start") and return
         end
         current_user.update!(last_period_end: date)
-        redirect_to period_tracking_index_path, notice: t("tracking.period_update.end_saved")
+        redirect_to tracking_index_path(period_saved: "1"), notice: t("tracking.period_update.end_saved")
       else
         current_user.update!(last_period_start: date)
         current_user.cycle_entries.where(period_start: true, date: date).destroy_all
@@ -61,7 +61,7 @@ class TrackingController < ApplicationController
           cycle_day: 1,
           period_start: true
         )
-        redirect_to period_tracking_index_path, notice: t("tracking.period_update.saved")
+        redirect_to tracking_index_path(period_saved: "1"), notice: t("tracking.period_update.saved")
       end
       return
     end

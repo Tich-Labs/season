@@ -1,4 +1,17 @@
-<div class="onboarding-layout h-dvh overflow-y-auto bg-white flex flex-col max-w-[430px] mx-auto px-8" style="padding-top:calc(20px + env(safe-area-inset-top,0px));padding-bottom:calc(3rem + env(safe-area-inset-bottom,0px))">
+<div class="onboarding-layout overflow-y-auto bg-white flex flex-col max-w-[430px] mx-auto px-8" style="min-height:100dvh;padding-top:calc(20px + env(safe-area-inset-top,0px));padding-bottom:calc(3rem + env(safe-area-inset-bottom,0px))">
+
+  <%# ── Step progress indicator ─────────────────────────────────── %>
+  <div class="flex items-center justify-center gap-1.5 pt-6 pb-12">
+    <% (1..11).each do |s| %>
+      <% if s == @step %>
+        <div class="h-2 w-6 rounded-full bg-brand-primary transition-all duration-300"></div>
+      <% elsif s < @step %>
+        <div class="h-2 w-2 rounded-full bg-brand-primary transition-all duration-300"></div>
+      <% else %>
+        <div class="h-2 w-2 rounded-full bg-brand-primary opacity-25 transition-all duration-300"></div>
+      <% end %>
+    <% end %>
+  </div>
 
   <% if @error %>
     <div class="bg-brand-error rounded-xl px-4 py-3 text-sm text-brand-primary mb-4">
@@ -8,7 +21,7 @@
 
   <%# ── Step 1: Name ──────────────────────────────────────────────── %>
   <% case @step when 1 %>
-    <div class="mt-[113px]">
+    <div class="mt-0">
       <h2 class="text-brand-primary text-xl font-medium leading-7 tracking-wider mb-[41px]">
         <%= t('onboarding.step1.heading') %>
       </h2>
@@ -20,18 +33,17 @@
             name: "user[name]",
             placeholder: t('onboarding.step1.name_placeholder'),
             autocomplete: "name",
-            class: "w-80 h-12 bg-brand-field opacity-50 rounded-lg px-4 text-brand-primary text-xl font-medium placeholder-brand-primary/50 tracking-wide" %>
+            class: "w-80 h-12 bg-brand-field rounded-lg px-4 text-brand-primary text-xl font-medium placeholder:text-brand-primary/40 tracking-wide" %>
       <% end %>
 
       <%= button_tag t('onboarding.step1.submit'),
           form: "step1-form", type: "submit",
-          class: "w-80 h-12 bg-brand-primary text-white rounded-lg text-xl font-medium tracking-wide mt-[81px]" %>
+          class: "w-80 h-12 bg-brand-primary text-white rounded-lg text-xl font-medium tracking-wide mt-10" %>
     </div>
-    <div class="flex-1"></div>
 
   <%# ── Step 2: Birthday ──────────────────────────────────────────── %>
   <% when 2 %>
-    <div class="mt-[113px]">
+    <div class="mt-0">
       <h2 class="text-brand-primary text-[22px] font-medium leading-[27px] tracking-[1.32px] mb-[43px]">
         <%= t('onboarding.step2.heading_html', name: current_user.first_name) %>
       </h2>
@@ -41,17 +53,17 @@
           <div class="flex flex-col items-start gap-2">
             <label for="birthday_day" class="text-brand-primary text-xs font-normal tracking-wide"><%= t('onboarding.step2.label_day') %></label>
             <input type="number" name="birthday_day" id="birthday_day" min="1" max="31" placeholder="<%= t('onboarding.step2.placeholder_day') %>" autocomplete="bday-day"
-                   class="w-16 h-[52px] bg-brand-field opacity-50 rounded-lg px-3 text-brand-primary text-[22px] font-medium text-center placeholder-brand-primary/50 tracking-[0.66px]">
+                   class="w-16 h-[52px] bg-brand-field rounded-lg px-3 text-brand-primary text-[22px] font-medium text-center placeholder:text-brand-primary/40 tracking-[0.66px]">
           </div>
           <div class="flex flex-col items-start gap-2">
             <label for="birthday_month" class="text-brand-primary text-xs font-normal tracking-wide"><%= t('onboarding.step2.label_month') %></label>
             <input type="number" name="birthday_month" id="birthday_month" min="1" max="12" placeholder="<%= t('onboarding.step2.placeholder_month') %>" autocomplete="bday-month"
-                   class="w-16 h-[52px] bg-brand-field opacity-50 rounded-lg px-3 text-brand-primary text-[22px] font-medium text-center placeholder-brand-primary/50 tracking-[0.66px]">
+                   class="w-16 h-[52px] bg-brand-field rounded-lg px-3 text-brand-primary text-[22px] font-medium text-center placeholder:text-brand-primary/40 tracking-[0.66px]">
           </div>
           <div class="flex flex-col items-start gap-2">
             <label for="birthday_year" class="text-brand-primary text-xs font-normal tracking-wide"><%= t('onboarding.step2.label_year') %></label>
             <input type="number" name="birthday_year" id="birthday_year" min="1900" max="<%= Time.zone.today.year %>" placeholder="<%= t('onboarding.step2.placeholder_year') %>" autocomplete="bday-year"
-                   class="w-24 h-[52px] bg-brand-field opacity-50 rounded-lg px-3 text-brand-primary text-[22px] font-medium text-center placeholder-brand-primary/50 tracking-[0.66px]">
+                   class="w-24 h-[52px] bg-brand-field rounded-lg px-3 text-brand-primary text-[22px] font-medium text-center placeholder:text-brand-primary/40 tracking-[0.66px]">
           </div>
         </div>
       <% end %>
@@ -236,8 +248,8 @@
 
   <%# ── Step 5: Regular cycle? ────────────────────────────────────── %>
   <% when 5 %>
-    <div class="mt-[113px]">
-      <h2 class="text-brand-primary text-[22px] font-medium leading-[27px] tracking-[1.32px] mb-[43px]">
+    <div class="flex-1 flex flex-col justify-center">
+      <h2 class="text-brand-primary text-[22px] font-medium leading-[27px] tracking-[1.32px] mb-10">
         <%= t('onboarding.step5.heading') %>
       </h2>
 
@@ -255,7 +267,6 @@
         <% end %>
       </div>
     </div>
-    <div class="flex-1"></div>
 
   <%# ── Step 6: Cycle length (scroll picker) ──────────────────────── %>
   <% when 6 %>
@@ -286,7 +297,7 @@
       </script>
     <% end %>
 
-    <div class="mt-[113px]">
+    <div class="mt-0">
       <h2 class="text-brand-primary text-[22px] font-medium leading-[27px] tracking-[1.32px] mb-1">
         <%= t('onboarding.step6.heading') %>
       </h2>
@@ -338,8 +349,8 @@
 
   <%# ── Step 7: Hormonal birth control? ───────────────────────────── %>
   <% when 7 %>
-    <div class="mt-[113px]">
-      <h2 class="text-brand-primary text-[22px] font-medium leading-[27px] tracking-[1.32px] mb-[43px]">
+    <div class="flex-1 flex flex-col justify-center">
+      <h2 class="text-brand-primary text-[22px] font-medium leading-[27px] tracking-[1.32px] mb-10">
         <%= t('onboarding.step7.heading') %>
       </h2>
 
@@ -356,11 +367,9 @@
               class: "w-[322px] bg-transparent text-brand-primary py-4 text-[22px] font-medium tracking-[0.66px] cursor-pointer border-none" %>
         <% end %>
       </div>
-
     </div>
-    <div class="flex-1"></div>
 
-    <div class="w-full max-w-80">
+    <div class="w-full max-w-80 pb-4">
       <p class="text-brand-primary text-sm leading-relaxed">
         <%= t('onboarding.step7.info') %>
       </p>
@@ -368,8 +377,8 @@
 
   <%# ── Step 8: Birth control reminder ────────────────────────────── %>
   <% when 8 %>
-    <div class="mt-[113px]">
-      <h2 class="text-brand-primary text-[22px] font-medium leading-[27px] tracking-[1.32px] mb-[43px]">
+    <div class="flex-1 flex flex-col justify-center">
+      <h2 class="text-brand-primary text-[22px] font-medium leading-[27px] tracking-[1.32px] mb-10">
         <%= t('onboarding.step8.heading') %>
       </h2>
 
@@ -387,12 +396,11 @@
         <% end %>
       </div>
     </div>
-    <div class="flex-1"></div>
 
   <%# ── Step 9: Birth control method ──────────────────────────────── %>
   <%# TODO: On submit, redirect to Settings for reminder setup instead of next step %>
   <% when 9 %>
-    <div class="mt-[113px]">
+    <div class="mt-0">
       <h2 class="text-brand-primary text-[22px] font-medium leading-[27px] tracking-[1.32px] mb-[43px]">
         <%= t('onboarding.step9.heading') %>
       </h2>
@@ -410,7 +418,7 @@
 
   <%# ── Step 10: Cycle stage reminder ─────────────────────────────── %>
   <% when 10 %>
-    <div class="mt-[113px]">
+    <div class="mt-0">
       <div class="flex justify-center mb-6">
         <svg class="w-14 h-14 text-brand-primary" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round"
@@ -443,7 +451,7 @@
 
   <%# ── Step 11: Food preferences ─────────────────────────────────── %>
   <% when 11 %>
-    <div class="mt-[113px]">
+    <div class="mt-0">
       <h2 class="text-brand-primary text-[22px] font-medium leading-[27px] tracking-[1.32px] mb-[43px]">
         <%= t('onboarding.step11.heading_html', name: current_user.first_name) %>
       </h2>
