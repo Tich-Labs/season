@@ -1,8 +1,4 @@
 {
-  "settings": {
-    "tab_bar_background_color": "#FAF7F4",
-    "tab_bar_tint_color": "#933a35"
-  },
   "rules": [
     {
       "patterns": [

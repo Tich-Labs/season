@@ -4,17 +4,18 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
 
-    private lazy var tabBarController = HotwireTabBarController(
-        navigatorDelegate: self
+    private lazy var navigator = Navigator(
+        delegate: self,
+        rootViewController: UINavigationController()
     )
 
     private lazy var notificationRouter = NotificationRouter(
-        navigationHandler: tabBarController
+        navigationHandler: navigator
     )
 
     func scene(
         _ scene: UIScene,
-        willConnectTo session: UISceneSession,
+        willConnectTo session: UISession,
         options connectionOptions: UIScene.ConnectionOptions
     ) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
@@ -22,12 +23,20 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         UNUserNotificationCenter.current().delegate = notificationRouter
 
         let window = UIWindow(windowScene: windowScene)
-        window.rootViewController = tabBarController
+        window.rootViewController = navigator.rootViewController
         window.makeKeyAndVisible()
         self.window = window
 
-        tabBarController.load(HotwireTab.all)
+        navigator.route(baseURL)
+        navigator.start()
     }
+}
+
+extension SceneDelegate: NavigatorDelegate {
+    func handle(proposal: VisitProposal, from navigator: Navigator) -> ProposalResult {
+        return .accept
+    }
+}
 }
 
 extension SceneDelegate: NavigatorDelegate {

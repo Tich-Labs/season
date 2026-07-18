@@ -10,11 +10,6 @@
   display: block !important;
 }
 
-/* Native tab bar takes ~49pt + safe area at bottom — pad web content */
-[data-ruby-native] main {
-  padding-bottom: calc(49pt + env(safe-area-inset-bottom, 0px));
-}
-
 /* Onboarding: strip the 20px web base padding — native nav bar handles that space */
 [data-ruby-native] .onboarding-layout {
   padding-top: env(safe-area-inset-top, 0px) !important;

@@ -54,23 +54,18 @@
 <div class="bg-brand-background min-h-screen pb-20">
   <div class="max-w-app mx-auto px-4 pt-3">
 
-    <%# ── Greeting ── %>
-    <div class="mb-3.5">
-      <p class="text-brand-primary text-4xl font-medium m-0 mb-0.5 leading-tight font-montserrat">
+    <%# ── Greeting + Streak ── %>
+    <div class="flex items-center justify-between mb-3.5">
+      <p class="text-brand-primary text-4xl font-medium m-0 leading-tight font-montserrat">
         Hello <%= current_user.first_name || "there" %>
       </p>
-      <p class="text-brand-primary text-2xl font-light m-0 leading-snug font-montserrat">
-        <% if @current_season %>You are in <%= @current_season %><% else %>This is your month<% end %>
-      </p>
+      <% if @streak > 0 %>
+        <div class="flex items-center gap-2 bg-white px-3 py-2.5 rounded-lg shrink-0">
+          <span class="text-lg">🔥</span>
+          <span class="text-brand-primary text-sm font-medium"><%= @streak %> day streak</span>
+        </div>
+      <% end %>
     </div>
-
-    <%# ── Streak ── %>
-    <% if @streak > 0 %>
-      <div class="flex items-center gap-2 bg-white px-3 py-2.5 rounded-lg mb-3.5">
-        <span class="text-lg">🔥</span>
-        <span class="text-brand-primary text-sm font-medium"><%= @streak %> day streak</span>
-      </div>
-    <% end %>
 
     <%# ── Filter chips (no JS — plain GET links) ── %>
     <div class="flex gap-2 flex-wrap mb-4">
