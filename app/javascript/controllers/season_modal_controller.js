@@ -556,8 +556,6 @@ export default class extends Controller {
 
   confirmCustomReminder () {
     if (!this.hasCustomReminderNumTarget) return
-    const numEl = this.customReminderNumTarget.querySelector('[data-value]')
-    const unitEl = this.customReminderUnitTarget.querySelector('[data-value]')
     const scrolledNum = this.#scrolledValue(this.customReminderNumTarget) || 5
     const scrolledUnit = this.#scrolledUnit(this.customReminderUnitTarget) || 'minutes'
     let totalMinutes = scrolledNum
@@ -576,7 +574,7 @@ export default class extends Controller {
     const items = container.querySelectorAll('[data-value]')
     const rect = container.getBoundingClientRect()
     const center = rect.top + rect.height / 2
-    let closest = null, minDist = Infinity
+    let closest = null; let minDist = Infinity
     items.forEach(el => {
       const er = el.getBoundingClientRect()
       const dist = Math.abs(er.top + er.height / 2 - center)
@@ -589,7 +587,7 @@ export default class extends Controller {
     const items = container.querySelectorAll('[data-value]')
     const rect = container.getBoundingClientRect()
     const center = rect.top + rect.height / 2
-    let closest = null, minDist = Infinity
+    let closest = null; let minDist = Infinity
     items.forEach(el => {
       const er = el.getBoundingClientRect()
       const dist = Math.abs(er.top + er.height / 2 - center)
@@ -770,13 +768,13 @@ export default class extends Controller {
     if (modal) {
       const dayCol = modal.querySelector('[style*="width:44px"]')
       const monCol = modal.querySelector('[style*="width:52px"]')
-      const yrCol  = modal.querySelector('[style*="width:60px"]')
+      const yrCol = modal.querySelector('[style*="width:60px"]')
       const picked = (col) => {
         if (!col) return null
         const items = col.querySelectorAll('div[style*="height:44px"]')
         const rect = col.getBoundingClientRect()
         const center = rect.top + rect.height / 2
-        let best = null, min = Infinity
+        let best = null; let min = Infinity
         items.forEach(el => {
           const er = el.getBoundingClientRect()
           const d = Math.abs(er.top + er.height / 2 - center)
@@ -786,9 +784,9 @@ export default class extends Controller {
       }
       const d = picked(dayCol); const m = picked(monCol); const y = picked(yrCol)
       if (d && m && y) {
-        const monthMap = { Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11 }
+        const monthMap = { Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5, Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11 }
         const pickedDate = new Date(parseInt(y), monthMap[m] ?? 0, parseInt(d))
-        const today = new Date(); today.setHours(0,0,0,0)
+        const today = new Date(); today.setHours(0, 0, 0, 0)
         if (pickedDate < today) {
           this.closeRepeatUntil()
           this.openAttention({

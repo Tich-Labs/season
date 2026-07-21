@@ -1,12 +1,12 @@
 <div class="bg-white min-h-screen min-h-dvh flex flex-col items-center justify-between px-8 max-w-app mx-auto" style="padding-top:calc(60px + env(safe-area-inset-top,0px));padding-bottom:calc(60px + env(safe-area-inset-bottom,0px))">
 
   <div class="w-full">
-    <%= link_to "< back", new_session_path, class: "text-brand-primary text-base font-normal no-underline" %>
+    <%= link_to t("passwords.edit.back"), new_session_path, class: "text-brand-primary text-base font-normal no-underline" %>
   </div>
 
   <div class="w-full">
     <h1 class="text-brand-primary text-[36px] font-bold uppercase tracking-[3.24px] text-center leading-tight">
-      NEW<br>PASSWORD
+      <%= t("passwords.edit.title").html_safe %>
     </h1>
   </div>
 
@@ -23,13 +23,13 @@
       <% end %>
 
       <div class="mt-[29px] relative" data-controller="password-visibility">
-        <label for="password" class="sr-only">New password</label>
+        <label for="password" class="sr-only"><%= t("passwords.edit.new_password") %></label>
         <%= f.password_field :password,
             autofocus: true,
-            placeholder: "New password...",
+            placeholder: t("passwords.edit.new_password_placeholder"),
             autocomplete: "new-password",
             class: "w-full bg-brand-field rounded-lg px-[21px] pr-[50px] h-[52px] text-[22px] font-medium text-brand-primary outline-none border-0 box-border",
-            "aria-label": "New password",
+            "aria-label": t("passwords.edit.new_password"),
             data: { "password-visibility-target": "input" } %>
         <button type="button" aria-label="Toggle password visibility" data-action="click->password-visibility#toggle" class="absolute right-4 top-1/2 -translate-y-1/2 bg-transparent border-0 p-0 cursor-pointer z-10">
           <svg data-password-visibility-target="eyeOpen" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(147,58,53,0.5)" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
@@ -38,12 +38,12 @@
       </div>
 
       <div class="mt-4 relative" data-controller="password-visibility">
-        <label for="password_confirmation" class="sr-only">Confirm new password</label>
+        <label for="password_confirmation" class="sr-only"><%= t("passwords.edit.confirm_password") %></label>
         <%= f.password_field :password_confirmation,
-            placeholder: "Confirm password...",
+            placeholder: t("passwords.edit.confirm_placeholder"),
             autocomplete: "new-password",
             class: "w-full bg-brand-field rounded-lg px-[21px] pr-[50px] h-[52px] text-[22px] font-medium text-brand-primary outline-none border-0 box-border",
-            "aria-label": "Confirm new password",
+            "aria-label": t("passwords.edit.confirm_password"),
             data: { "password-visibility-target": "input" } %>
         <button type="button" aria-label="Toggle password visibility" data-action="click->password-visibility#toggle" class="absolute right-4 top-1/2 -translate-y-1/2 bg-transparent border-0 p-0 cursor-pointer z-10">
           <svg data-password-visibility-target="eyeOpen" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(147,58,53,0.5)" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
@@ -52,9 +52,9 @@
       </div>
 
       <div class="mt-4">
-        <%= f.submit "Save new password",
+        <%= f.submit t("passwords.edit.save"),
             class: "w-[322px] h-[52px] bg-brand-primary text-white text-[22px] font-medium tracking-[0.66px] rounded-lg border-0 cursor-pointer block mx-auto",
-            "data-disable-with": "Saving..." %>
+            "data-disable-with": t("passwords.edit.saving") %>
       </div>
     <% end %>
   </div>

@@ -6,12 +6,12 @@
 
 <%
   card_config = [
-    { key: "superpower",    title: "Super Power" },
-    { key: "watch_out_for", title: "Watch Out For" },
-    { key: "mood",          title: "Mood" },
-    { key: "sport",         title: "Sport" },
-    { key: "nutrition",     title: "Nutrition" },
-    { key: "fertility",     title: "Fertility" },
+    { key: "superpower",    title: t("forecast.index.superpower") },
+    { key: "watch_out_for", title: t("forecast.index.watch_out") },
+    { key: "mood",          title: t("forecast.index.mood") },
+    { key: "sport",         title: t("forecast.index.sport") },
+    { key: "nutrition",     title: t("forecast.index.nutrition") },
+    { key: "fertility",     title: t("forecast.index.fertility") },
   ]
   pc = @phase_colour
   phase_name = case @cycle_day
@@ -29,16 +29,16 @@
     <%# ── Greeting ─────────────────────────────────────────────────────── %>
     <div class="pt-8 pb-2">
       <p class="italic font-medium text-[36px] leading-[44px] font-sans m-0" style="color:<%= pc %>;">
-        Hello <%= current_user.name&.split&.first || "there" %>
+        <%= t("forecast.index.greeting", name: current_user.name&.split&.first || "there") %>
       </p>
       <p class="font-medium text-2xl leading-[29px] font-sans m-0 mt-1" style="color:<%= pc %>;">
-        You are in your <%= phase_name %>
+        <%= t("forecast.index.phase_prefix") %> <%= phase_name %>
       </p>
     </div>
 
     <%# ── Dynamic label ────────────────────────────────────────────────── %>
     <p data-forecast-tabs-target="label" class="text-brand-primary font-normal text-base font-sans m-0 mt-2">
-      And this is your day:
+      <%= t("forecast.index.and_this") %>
     </p>
 
     <%# ── Progress bar toggle ──────────────────────────────────────────── %>
@@ -97,12 +97,12 @@
       <% else %>
         <div class="text-center py-8">
           <div class="flex justify-center mb-6">
-            <%= image_tag "avatars/no-appointments.png", alt: "No appointments", class: "w-[220px] h-[220px] object-contain" %>
+            <%= image_tag "avatars/no-appointments.png", alt: t("forecast.index.no_appointments"), class: "w-[220px] h-[220px] object-contain" %>
           </div>
           <p class="font-medium text-2xl leading-[29px] font-sans m-0 mb-8" style="color:<%= pc %>;">
-            You haven't entered any appointments yet
+            <%= t("forecast.index.no_appointments_text") %>
           </p>
-              <%= link_to "Create appointment", new_calendar_event_path(date: @selected_date),
+              <%= link_to t("forecast.index.create_appointment"), new_calendar_event_path(date: @selected_date),
                 class: "inline-block w-[253px] rounded-lg py-[14px] text-white text-xl font-medium font-sans no-underline",
                 style: "background:#{pc};" %>
         </div>
@@ -141,7 +141,7 @@
                   </p>
                   <%= mood_icon %>
                   <p class="text-sm leading-5 font-sans m-0" style="color:<%= pc %>;">
-                    <%= content&.short_text || "No content yet for this day." %>
+                    <%= content&.short_text || t("forecast.index.no_content") %>
                   </p>
                 </div>
               <% else %>
@@ -150,7 +150,7 @@
                     <%= card[:title] %>
                   </p>
                   <p class="text-sm leading-5 font-sans m-0 mt-2" style="color:<%= pc %>;">
-                    <%= content&.short_text || "No content yet for this day." %>
+                    <%= content&.short_text || t("forecast.index.no_content") %>
                   </p>
                 </div>
               <% end %>

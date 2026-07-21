@@ -45,6 +45,7 @@ module Users
       user = User.find_or_create_from_oauth(provider_name, auth)
 
       if user.persisted?
+        user.store_google_tokens!(auth) if provider_name == "google_oauth2"
         login user
         redirect_to after_sign_in_path
       else

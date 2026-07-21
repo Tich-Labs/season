@@ -6,10 +6,10 @@ class OnboardingControllerTest < ActionDispatch::IntegrationTest
     @carol = users(:carol)
   end
 
-  test "GET /onboarding/1 renders step 1" do
+  test "GET /onboarding/1 redirects to next incomplete step" do
     sign_in_as(@carol)
     get onboarding_path(1)
-    assert_response :success
+    assert_redirected_to onboarding_path(2)
   end
 
   test "GET /onboarding/1 is accessible without login" do

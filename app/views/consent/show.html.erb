@@ -13,13 +13,13 @@
 
     <%# Header %>
     <div class="py-5 border-b border-brand-divider mb-4">
-      <h2 class="text-brand-primary text-lg font-bold">Data & Privacy</h2>
+      <h2 class="text-brand-primary text-lg font-bold"><%= t("consent.show.title") %></h2>
     </div>
 
     <%# Intro %>
     <div class="bg-brand-error rounded-xl p-4 mb-5">
       <p class="text-brand-primary text-sm font-medium m-0">
-        Your health data is processed only with your explicit consent.
+        <%= t("consent.show.intro") %>
       </p>
     </div>
 
@@ -31,9 +31,9 @@
                <%= current_user.consent?("health_data_processing") ? "checked" : "" %>
                class="w-5 h-5 accent-brand-primary mt-0.5 flex-shrink-0">
         <div class="flex-1">
-          <span class="block text-brand-primary text-sm font-semibold">Health Data</span>
+          <span class="block text-brand-primary text-sm font-semibold"><%= t("consent.show.health_data") %></span>
           <span class="block text-brand-secondary text-xs mt-1">
-            Cycle dates, symptoms, mood, energy, and other health information you log.
+            <%= t("consent.show.health_data_desc") %>
           </span>
         </div>
       </label>
@@ -44,9 +44,9 @@
                <%= current_user.consent?("symptom_tracking") ? "checked" : "" %>
                class="w-5 h-5 accent-brand-primary mt-0.5 flex-shrink-0">
         <div class="flex-1">
-          <span class="block text-brand-primary text-sm font-semibold">Symptom Tracking</span>
+          <span class="block text-brand-primary text-sm font-semibold"><%= t("consent.show.symptom_tracking") %></span>
           <span class="block text-brand-secondary text-xs mt-1">
-            Daily symptom logs including pain, mood, energy, sleep, and discharge.
+            <%= t("consent.show.symptom_tracking_desc") %>
           </span>
         </div>
       </label>
@@ -57,9 +57,9 @@
                <%= current_user.consent?("cycle_tracking") ? "checked" : "" %>
                class="w-5 h-5 accent-brand-primary mt-0.5 flex-shrink-0">
         <div class="flex-1">
-          <span class="block text-brand-primary text-sm font-semibold">Cycle Tracking</span>
+          <span class="block text-brand-primary text-sm font-semibold"><%= t("consent.show.cycle_tracking") %></span>
           <span class="block text-brand-secondary text-xs mt-1">
-            Menstrual dates, cycle phases, and predictions.
+            <%= t("consent.show.cycle_tracking_desc") %>
           </span>
         </div>
       </label>
@@ -70,28 +70,28 @@
                <%= current_user.consent?("menstrual_data") ? "checked" : "" %>
                class="w-5 h-5 accent-brand-primary mt-0.5 flex-shrink-0">
         <div class="flex-1">
-          <span class="block text-brand-primary text-sm font-semibold">Menstrual Data</span>
+          <span class="block text-brand-primary text-sm font-semibold"><%= t("consent.show.menstrual_data") %></span>
           <span class="block text-brand-secondary text-xs mt-1">
-            Period start/end dates and flow intensity.
+            <%= t("consent.show.menstrual_data_desc") %>
           </span>
         </div>
       </label>
 
       <button type="submit" class="w-full bg-brand-primary text-white rounded-xl p-4 text-base font-medium">
-        Save Preferences
+        <%= t("consent.show.save_preferences") %>
       </button>
     <% end %>
 
     <%# Info text %>
     <div class="mt-6 p-4 bg-brand-background rounded-xl">
       <p class="text-brand-secondary text-xs leading-relaxed m-0">
-        <strong class="text-brand-primary">Your Rights:</strong><br>
-        You can withdraw consent at any time. Your data will be deleted according to our retention policy.
+        <strong class="text-brand-primary"><%= t("consent.show.your_rights") %></strong><br>
+        <%= t("consent.show.rights_text") %>
       </p>
     </div>
 
     <%# Link to Privacy Policy %>
-    <%= link_to "View Privacy Policy", privacy_legal_path,
+    <%= link_to t("consent.show.view_privacy"), privacy_legal_path,
           class: "block text-center text-brand-primary text-sm mt-4 underline" %>
 
   </div>

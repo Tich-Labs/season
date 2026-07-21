@@ -10,6 +10,7 @@ class CalendarController < ApplicationController
     @show_moonphases = current_user.show_moonphases?
     @show_holidays = current_user.show_holidays?
     @show_week_numbers = current_user.show_week_numbers?
+    @show_cycle_day_on_band = current_user.show_cycle_day_on_band?
   end
 
   public
@@ -89,31 +90,44 @@ class CalendarController < ApplicationController
     @month = @date.month
     @mode = VALID_MODES.include?(params[:mode]) ? params[:mode] : "all"
 
-    month_range = Date.new(@year, @month, 1)..Date.new(@year, @month, -1)
+    month_start = Date.new(@year, @month, 1)
+    month_end = Date.new(@year, @month, -1)
+    first_weekday = (month_start.wday == 0) ? 6 : month_start.wday - 1
+    trailing = (7 - ((first_weekday + month_end.day) % 7)) % 7
+    prev_tail_dates = (month_start - first_weekday..month_start - 1).to_a
+    next_head_dates = (month_end + 1..month_end + trailing).to_a
+    @calendar_dates = prev_tail_dates + (month_start..month_end).to_a + next_head_dates
 
-    # Cycle phase data — keyed by date, O(1) lookup
+    full_start = prev_tail_dates.first || month_start
+    full_end = next_head_dates.last || month_end
+
+    # Cycle phase data — keyed by date, covers adjacent months
     if current_user.last_period_start && (@show_cycledays || @mode == "cycle")
       calculator = CycleCalculatorService.new(current_user)
-      @cycle_by_date = calculator.month_data(@year, @month).index_by { |d| d[:date] }
+      @cycle_by_date = (
+        calculator.month_data(full_start.year, full_start.month) +
+        calculator.month_data(@year, @month) +
+        calculator.month_data(full_end.year, full_end.month)
+      ).index_by { |d| d[:date] }
       @current_phase = calculator.current_phase
     else
       @cycle_by_date = {}
       @current_phase = nil
     end
 
-    # Events — keyed by date as Set for O(1) presence check, list for detail
+    # Events — keyed by date, covers adjacent months
     @events_by_date = if @show_appointments
       current_user.calendar_events
-        .where(date: month_range)
+        .where(date: full_start..full_end)
         .order(:date, :start_time)
         .group_by(&:date)
     else
       {}
     end
 
-    # Tracked days — Set for O(1) lookup
+    # Tracked days — Set for O(1) lookup, covers adjacent months
     @tracked_days_set = current_user.symptom_logs
-      .where(date: month_range)
+      .where(date: full_start..full_end)
       .pluck(:date)
       .to_set
 

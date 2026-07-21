@@ -1,5 +1,5 @@
 <%# My Profile screen - matches Figma node 12048-37877 %>
-<%= native_navbar_tag("My Profile") if native_app? %>
+<%= native_navbar_tag(t("settings.profile.title")) if native_app? %>
 <% content_for(:header_left) do %>
   <%= link_to edit_settings_path, class: "p-2 flex items-center" do %>
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
@@ -14,7 +14,7 @@
   <div class="max-w-app mx-auto px-4 pb-20">
 
     <div class="py-5 pb-2">
-      <h2 class="text-brand-primary text-base font-bold">My profile</h2>
+      <h2 class="text-brand-primary text-base font-bold"><%= t("settings.profile.my_profile") %></h2>
     </div>
     <div class="border-b border-brand-divider"></div>
 
@@ -35,7 +35,7 @@
           <%= vuesax_icon "user", size: 24 %>
         </div>
       <% end %>
-      <span class="flex-1 text-brand-primary text-base font-medium">Profile Picture</span>
+      <span class="flex-1 text-brand-primary text-base font-medium"><%= t("settings.profile.profile_picture") %></span>
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
         <polyline points="9 18 15 12 9 6" />
       </svg>
@@ -45,7 +45,7 @@
     <div id="avatar-modal" role="dialog" aria-modal="true" aria-labelledby="avatar-modal-title" class="hidden fixed inset-0 bg-black/50 z-[100] items-center justify-center">
       <div class="bg-brand-background rounded-2xl p-6 w-[90%] max-w-[340px] mx-4">
         <div class="flex justify-between items-center mb-5">
-          <h3 id="avatar-modal-title" class="text-brand-primary text-lg font-semibold m-0">Profile Picture</h3>
+          <h3 id="avatar-modal-title" class="text-brand-primary text-lg font-semibold m-0"><%= t("settings.profile.profile_picture") %></h3>
           <button data-action="click->profile-modal#closeAvatarModal" class="bg-transparent border-none cursor-pointer">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
               <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
@@ -54,7 +54,7 @@
         </div>
 
         <div class="mb-5">
-          <label class="block text-brand-primary text-[13px] font-medium mb-3">Choose a cat avatar</label>
+          <label class="block text-brand-primary text-[13px] font-medium mb-3"><%= t("settings.profile.choose_cat_avatar") %></label>
           <div class="grid grid-cols-4 gap-3">
             <% AvatarService.all.each do |preset| %>
               <%= form_with url: update_avatar_settings_path, method: :patch, data: { turbo: false }, local: true do %>
@@ -81,22 +81,22 @@
               <circle cx="8.5" cy="8.5" r="1.5" />
               <polyline points="21 15 16 10 5 21" />
             </svg>
-            <span class="text-brand-primary text-base font-medium">Upload from device</span>
+            <span class="text-brand-primary text-base font-medium"><%= t("settings.profile.upload_from_device") %></span>
           </button>
         <% end %>
 
         <%= form_with url: update_avatar_settings_path, method: :patch, data: { turbo: false } do %>
-          <label for="avatar-url-input" class="block text-brand-primary text-[13px] font-medium mb-1.5">Or paste image URL</label>
+          <label for="avatar-url-input" class="block text-brand-primary text-[13px] font-medium mb-1.5"><%= t("settings.profile.or_paste_url") %></label>
           <input type="text" id="avatar-url-input" name="avatar_url" placeholder="https://..." autocomplete="url"
                  class="w-full bg-white border border-brand-divider rounded-xl p-4 text-base text-brand-primary box-border mb-3">
           <button type="submit" class="w-full bg-brand-primary text-white border-none rounded-xl py-3.5 text-base font-medium cursor-pointer">
-            Add Photo
+            <%= t("settings.profile.add_photo") %>
           </button>
         <% end %>
 
         <button data-action="click->profile-modal#closeAvatarModal"
                 class="w-full bg-transparent text-brand-primary border border-brand-divider rounded-xl py-3.5 text-base font-medium cursor-pointer mt-2">
-          Cancel
+          <%= t("settings.profile.cancel") %>
         </button>
       </div>
     </div>
@@ -105,7 +105,7 @@
     <button data-action="click->profile-modal#openEmailModal" class="bg-transparent border-none w-full flex items-center gap-4 py-4 cursor-pointer">
       <%= vuesax_icon "sms", size: 24 %>
       <div class="flex-1 text-left">
-        <span class="text-brand-primary text-base font-medium">E-Mail Address</span>
+        <span class="text-brand-primary text-base font-medium"><%= t("settings.profile.email_address") %></span>
         <span class="block text-brand-muted text-sm mt-1"><%= @user.email %></span>
       </div>
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
@@ -116,7 +116,7 @@
     <%# Change password %>
     <%= link_to edit_user_password_path, class: "flex items-center gap-4 py-4 no-underline" do %>
       <%= vuesax_icon "lock", size: 24 %>
-      <span class="flex-1 text-brand-primary text-base font-medium">Change password</span>
+      <span class="flex-1 text-brand-primary text-base font-medium"><%= t("settings.profile.change_password") %></span>
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
         <polyline points="9 18 15 12 9 6" />
       </svg>
@@ -127,9 +127,9 @@
       <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#933a35" stroke-width="1.5" viewBox="0 0 24 24">
         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
       </svg>
-      <span class="flex-1 text-brand-primary text-base font-medium">Access code</span>
+      <span class="flex-1 text-brand-primary text-base font-medium"><%= t("settings.profile.access_code") %></span>
       <div class="flex items-center gap-2">
-        <span class="text-brand-muted text-sm" id="access-code-label">FaceID</span>
+        <span class="text-brand-muted text-sm" id="access-code-label"><%= t("settings.profile.face_id") %></span>
         <button role="switch" aria-checked="true" aria-labelledby="access-code-label"
                 tabindex="0"
                 class="w-10 h-5 bg-brand-primary rounded-[25px] p-0.5 border-none cursor-pointer">
@@ -146,29 +146,29 @@
         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
         <circle cx="12" cy="7" r="4" />
       </svg>
-      <h2 class="text-brand-primary text-base font-bold flex-1 text-left">Personal information</h2>
+      <h2 class="text-brand-primary text-base font-bold flex-1 text-left"><%= t("settings.profile.personal_information") %></h2>
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
         <polyline points="9 18 15 12 9 6" />
       </svg>
     </button>
 
     <button data-action="click->profile-modal#openPersonalInfoModal" class="bg-transparent border-none w-full flex items-center py-2 pl-8 cursor-pointer">
-      <span class="flex-1 text-brand-muted text-sm text-left">Name: <%= @user.first_name %></span>
+      <span class="flex-1 text-brand-muted text-sm text-left"><%= t("settings.profile.name") %> <%= @user.first_name %></span>
       <svg class="w-1.5 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
         <polyline points="9 18 15 12 9 6" />
       </svg>
     </button>
 
     <div class="flex items-center py-2 pl-8">
-      <span class="flex-1 text-brand-muted text-sm">Age: <%= @user.birthday ? ((Time.zone.today - @user.birthday).to_i / 365) : "—" %></span>
+      <span class="flex-1 text-brand-muted text-sm"><%= t("settings.profile.age") %> <%= @user.birthday ? ((Time.zone.today - @user.birthday).to_i / 365) : "—" %></span>
     </div>
 
     <div class="flex items-center py-2 pl-8">
-      <span class="flex-1 text-brand-muted text-sm">Cycle days: <%= @user.cycle_length || "—" %></span>
+      <span class="flex-1 text-brand-muted text-sm"><%= t("settings.profile.cycle_days") %> <%= @user.cycle_length || "—" %></span>
     </div>
 
     <div class="flex items-center py-2 pl-8">
-      <span class="flex-1 text-brand-muted text-sm">Last Menstruation: <%= @user.last_period_start&.strftime("%d %b %Y") || "—" %></span>
+      <span class="flex-1 text-brand-muted text-sm"><%= t("settings.profile.last_menstruation") %> <%= @user.last_period_start&.strftime("%d %b %Y") || "—" %></span>
     </div>
 
     <div class="border-b border-brand-divider pt-4"></div>
@@ -179,7 +179,7 @@
         <polyline points="3 6 5 6 21 6" />
         <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
       </svg>
-      <span class="flex-1 text-brand-primary text-base font-medium">Delete Account</span>
+      <span class="flex-1 text-brand-primary text-base font-medium"><%= t("settings.profile.delete_account") %></span>
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
         <polyline points="9 18 15 12 9 6" />
       </svg>
@@ -191,7 +191,7 @@
 <div id="email-modal" role="dialog" aria-modal="true" aria-labelledby="email-modal-title" class="hidden fixed inset-0 bg-black/50 z-[100] items-center justify-center">
   <div class="bg-brand-background rounded-2xl p-6 w-[90%] max-w-[340px] mx-4">
     <div class="flex justify-between items-center mb-5">
-      <h3 id="email-modal-title" class="text-brand-primary text-lg font-semibold m-0">Change Email</h3>
+      <h3 id="email-modal-title" class="text-brand-primary text-lg font-semibold m-0"><%= t("settings.profile.change_email") %></h3>
       <button data-action="click->profile-modal#closeEmailModal" class="bg-transparent border-none cursor-pointer">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
           <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
@@ -201,21 +201,21 @@
 
     <%= form_with url: update_profile_settings_path, method: :patch, local: true do %>
       <%= native_form_tag if native_app? %>
-      <label class="block text-brand-primary text-[13px] font-medium mb-1.5">New email address</label>
+      <label class="block text-brand-primary text-[13px] font-medium mb-1.5"><%= t("settings.profile.new_email") %></label>
       <input type="email" name="email" value="<%= @user.email %>" required autocomplete="email"
              class="w-full bg-white border border-brand-divider rounded-xl p-4 text-base text-brand-primary box-border mb-3">
-      <label class="block text-brand-primary text-[13px] font-medium mb-1.5">Current password</label>
+      <label class="block text-brand-primary text-[13px] font-medium mb-1.5"><%= t("settings.profile.current_password") %></label>
       <input type="password" name="current_password" required autocomplete="current-password"
              placeholder="Enter your password to confirm"
              class="w-full bg-white border border-brand-divider rounded-xl p-4 text-base text-brand-primary box-border mb-4">
       <button type="submit" class="w-full bg-brand-primary text-white border-none rounded-xl py-3.5 text-base font-medium cursor-pointer">
-        Save
+        <%= t("settings.profile.save") %>
       </button>
     <% end %>
 
     <button data-action="click->profile-modal#closeEmailModal"
             class="w-full bg-transparent text-brand-primary border border-brand-divider rounded-xl py-3.5 text-base font-medium cursor-pointer mt-2">
-      Cancel
+      <%= t("settings.profile.cancel") %>
     </button>
   </div>
 </div>
@@ -224,7 +224,7 @@
 <div id="personal-info-modal" role="dialog" aria-modal="true" aria-labelledby="personal-info-modal-title" class="hidden fixed inset-0 bg-black/50 z-[100] items-center justify-center">
   <div class="bg-brand-background rounded-2xl p-6 w-[90%] max-w-[340px] mx-4">
     <div class="flex justify-between items-center mb-5">
-      <h3 id="personal-info-modal-title" class="text-brand-primary text-lg font-semibold m-0">Personal Information</h3>
+      <h3 id="personal-info-modal-title" class="text-brand-primary text-lg font-semibold m-0"><%= t("settings.profile.personal_information") %></h3>
       <button data-action="click->profile-modal#closePersonalInfoModal" class="bg-transparent border-none cursor-pointer">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
           <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
@@ -235,31 +235,31 @@
     <%= form_with url: update_profile_settings_path, method: :patch, local: true do %>
       <%= native_form_tag if native_app? %>
       <div class="mb-3">
-        <label class="block text-brand-primary text-sm font-medium mb-1">Name</label>
+        <label class="block text-brand-primary text-sm font-medium mb-1"><%= t("settings.profile.name_field") %></label>
         <input type="text" name="name" value="<%= @user.first_name %>" required autocomplete="name"
                class="w-full bg-white border border-brand-divider rounded-xl p-4 text-base text-brand-primary box-border">
       </div>
 
       <div class="mb-3">
-        <label class="block text-brand-primary text-sm font-medium mb-1">Cycle Length (days)</label>
+        <label class="block text-brand-primary text-sm font-medium mb-1"><%= t("settings.profile.cycle_length") %></label>
         <input type="number" name="cycle_length" value="<%= @user.cycle_length || 28 %>" min="20" max="45" autocomplete="off"
                class="w-full bg-white border border-brand-divider rounded-xl p-4 text-base text-brand-primary box-border">
       </div>
 
       <div class="mb-4">
-        <label class="block text-brand-primary text-sm font-medium mb-1">Period Length (days)</label>
+        <label class="block text-brand-primary text-sm font-medium mb-1"><%= t("settings.profile.period_length") %></label>
         <input type="number" name="period_length" value="<%= @user.period_length || 5 %>" min="1" max="14" autocomplete="off"
                class="w-full bg-white border border-brand-divider rounded-xl p-4 text-base text-brand-primary box-border">
       </div>
 
       <button type="submit" class="w-full bg-brand-primary text-white border-none rounded-xl py-3.5 text-base font-medium cursor-pointer">
-        Save
+        <%= t("settings.profile.save") %>
       </button>
     <% end %>
 
     <button data-action="click->profile-modal#closePersonalInfoModal"
             class="w-full bg-transparent text-brand-primary border border-brand-divider rounded-xl py-3.5 text-base font-medium cursor-pointer mt-2">
-      Cancel
+      <%= t("settings.profile.cancel") %>
     </button>
   </div>
 </div>

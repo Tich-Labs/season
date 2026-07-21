@@ -25,6 +25,7 @@
 <% is_tracked   = tracked_days_set.include?(date) %>
 <% cycle_data   = cycle_by_date[date] %>
 <% phase_colour = cycle_data&.dig(:colour) %>
+<% cycle_day    = cycle_data&.dig(:cycle_day) %>
 <% lunar        = moon_phase(date) if local_assigns[:show_moonphases] %>
 <% holiday_name = local_assigns[:show_holidays] ? local_assigns[:holidays_by_date]&.dig(date) : nil %>
 <% week_num     = local_assigns[:show_week_numbers] && date.cwday == 1 ? date.cweek : nil %>
@@ -51,24 +52,28 @@
 <a href="<%= forecast_path(date: date.to_s) %>"
    style="display:flex; flex-direction:column; text-decoration:none; height:100%; overflow:hidden;<%= in_month ? '' : ' opacity:0.45;' %>">
 
-  <%# ── Phase band: full-bleed, 11px, no padding ── %>
-  <div style="height:11px; flex-shrink:0;<%= band_colour ? " background:#{band_colour};" : "" %>"></div>
+  <%# ── Phase band: full-bleed, 18px, no padding ── %>
+  <div style="height:18px; flex-shrink:0; display:flex; align-items:center; justify-content:center;<%= band_colour ? " background:#{band_colour};" : "" %>">
+    <% if local_assigns[:show_cycle_day_on_band] && cycle_day && band_colour %>
+      <span style="color:#FFFFFF; font-size:8px; font-weight:700; line-height:1; letter-spacing:0.03em;"><%= cycle_day %></span>
+    <% end %>
+  </div>
 
   <%# ── Cell content ── %>
-  <div style="flex:1; padding:4px 4px 3px; display:flex; flex-direction:column; gap:2px; overflow:hidden;">
+  <div style="flex:1; padding:<%= is_today ? '0' : '4px' %> 4px 3px; display:flex; flex-direction:column; gap:2px; overflow:hidden;">
 
     <%# Week number (top-left, small text) %>
     <% if week_num %>
       <span style="font-size:6px; color:#999; line-height:1; font-weight:500;"><%= week_num %></span>
     <% end %>
 
-    <%# Day number — today gets a circular pill %>
+    <%# Day number — today gets a half-pill merging with phase band above %>
     <% if is_today %>
-      <span style="display:inline-flex; align-items:center; justify-content:center; min-width:24px; height:24px; padding:0 4px; border-radius:12px; background:<%= phase_colour || '#933a35' %>; color:#FFFFFF; font-size:12px; font-weight:700; line-height:1; align-self:flex-start; box-sizing:border-box; flex-shrink:0;">
+      <span style="display:inline-flex; align-items:center; justify-content:center; min-width:24px; height:24px; padding:0 4px; border-radius:0 0 12px 12px; background:<%= phase_colour || '#933a35' %>; color:#FFFFFF; font-size:12px; font-weight:700; line-height:1; align-self:center; box-sizing:border-box; flex-shrink:0;">
         <%= date.day %>
       </span>
     <% else %>
-      <span style="font-size:13px; font-weight:<%= num_weight %>; color:<%= num_colour %>; line-height:1; flex-shrink:0;">
+      <span style="display:block; text-align:center; width:100%; font-size:13px; font-weight:<%= num_weight %>; color:<%= num_colour %>; line-height:1; flex-shrink:0;">
         <%= date.day %>
       </span>
     <% end %>

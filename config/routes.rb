@@ -137,7 +137,6 @@ Rails.application.routes.draw do
     get :notification_morning, on: :collection
     get :notification_period, on: :collection
     get :notification_birth_control, on: :collection
-    get :language, to: "settings/language#show", on: :collection
     patch :update_avatar, on: :collection
     patch :update_profile, on: :collection
     patch :update_calendar, on: :collection
@@ -149,6 +148,10 @@ Rails.application.routes.draw do
     post :pin, on: :collection, action: :update_pin
     delete :pin, on: :collection, action: :remove_pin
   end
+
+  # Language selection - explicit routes after settings resource
+  get "settings/language", to: "settings/language#show", as: :settings_language
+  patch "settings/language", to: "settings/language#update"
 
   get "unlock", to: "pin#show", as: :pin_unlock
   post "unlock", to: "pin#verify"
@@ -162,9 +165,6 @@ Rails.application.routes.draw do
   get "webauthn/authentication-challenge", to: "webauthn#authentication_challenge"
   post "webauthn/authenticate", to: "webauthn#authenticate"
   delete "webauthn/credentials/:id", to: "webauthn#destroy"
-
-  get "settings/language", to: "settings/language#show", as: :settings_language
-  patch "settings/language", to: "settings/language#update"
 
   get "settings/consent", to: "settings#consent", as: nil
   post "settings/consent", to: "settings#save_consents", as: nil

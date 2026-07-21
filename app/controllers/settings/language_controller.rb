@@ -1,17 +1,22 @@
 class Settings::LanguageController < ApplicationController
-  before_action :authenticate_user!
-
   def show
     @user = current_user
   end
 
   def update
     @user = current_user
-    if @user.update(language: params[:user][:language])
-      I18n.locale = @user.language.to_sym
-      redirect_to settings_language_path, notice: t("settings.language.updated")
+    new_language = params.dig(:user, :language)
+
+    unless new_language.present? && new_language.to_sym.in?(I18n.available_locales)
+      redirect_to edit_settings_path, alert: t("settings.language.invalid")
+      return
+    end
+
+    if @user.update(language: new_language)
+      I18n.locale = new_language.to_sym
+      redirect_to edit_settings_path, notice: t("settings.language.updated")
     else
-      render :show, status: :unprocessable_content
+      redirect_to edit_settings_path, alert: t("settings.language.error")
     end
   end
 end

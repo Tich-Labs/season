@@ -1,5 +1,5 @@
 <%# My Subscriptions screen - matches Figma node 12048:16129 %>
-<%= native_navbar_tag("My Subscriptions") if native_app? %>
+<%= native_navbar_tag(t("settings.subscriptions.title")) if native_app? %>
 <% content_for(:header_left) do %>
   <%= link_to edit_settings_path, class: "p-2 flex items-center" do %>
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
@@ -12,17 +12,17 @@
 <div class="bg-white min-h-screen">
   <div class="max-w-app mx-auto px-4 pb-20">
 
-    <%# ── My Abonement ── %>
+    <%# ── My Subscriptions ── %>
     <div class="flex items-center gap-4 py-5 pb-2">
       <%= vuesax_icon "bag", size: 24 %>
-      <h2 class="text-brand-primary text-base font-bold">My Abonement</h2>
+      <h2 class="text-brand-primary text-base font-bold"><%= t("settings.subscriptions.title") %></h2>
     </div>
     <div class="border-b border-brand-divider"></div>
 
     <%# My Plan %>
     <div class="flex items-center gap-4 py-4">
       <%= image_tag "icons/vuesax/linear/note-2.svg", class: "w-6 h-6" %>
-      <span class="flex-1 text-brand-primary text-base font-medium">My Plan</span>
+      <span class="flex-1 text-brand-primary text-base font-medium"><%= t("settings.subscriptions.my_plan") %></span>
       <span class="text-brand-muted text-sm"><%= @subscription.plan %></span>
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
         <polyline points="9 18 15 12 9 6" />
@@ -32,7 +32,7 @@
     <%# View invoices %>
     <div class="flex items-center gap-4 py-4">
       <%= image_tag "icons/vuesax/linear/receipt-item.svg", class: "w-6 h-6" %>
-      <span class="flex-1 text-brand-primary text-base font-medium">View invoices</span>
+      <span class="flex-1 text-brand-primary text-base font-medium"><%= t("settings.subscriptions.view_invoices") %></span>
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
         <polyline points="9 18 15 12 9 6" />
       </svg>
@@ -41,7 +41,7 @@
     <%# Payment method %>
     <div class="flex items-center gap-4 py-4">
       <%= image_tag "icons/vuesax/linear/card-pos.svg", class: "w-6 h-6" %>
-      <span class="flex-1 text-brand-primary text-base font-medium">Payment method</span>
+      <span class="flex-1 text-brand-primary text-base font-medium"><%= t("settings.subscriptions.payment_method") %></span>
       <span class="text-brand-muted text-sm"><%= @subscription.payment_method %></span>
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
         <polyline points="9 18 15 12 9 6" />
@@ -50,7 +50,7 @@
 
     <%# Season Premium card %>
     <div class="mt-8 bg-[#50715B] rounded-lg p-5">
-      <span class="text-white text-sm">Change to</span>
+      <span class="text-white text-sm"><%= t("settings.subscriptions.change_to") %></span>
       <div class="mt-2">
         <span class="text-white text-xl font-bold tracking-wide">Season Premium</span>
       </div>
@@ -62,8 +62,8 @@
           <div id="dot-yearly" class="hidden w-2.5 h-2.5 bg-white rounded-full"></div>
         </div>
         <div>
-          <span class="text-white text-base font-bold">Yearly · 59,95€</span>
-          <span class="block text-white text-sm">4,99€ / month</span>
+          <span class="text-white text-base font-bold"><%= t("settings.subscriptions.yearly_price") %></span>
+          <span class="block text-white text-sm"><%= t("settings.subscriptions.monthly_price") %></span>
         </div>
       </div>
 
@@ -73,20 +73,20 @@
           <div id="dot-monthly" class="hidden w-2.5 h-2.5 bg-white rounded-full"></div>
         </div>
         <div>
-          <span class="text-white text-base font-bold">Monthly · 9,95€</span>
-          <span class="block text-white text-sm">119,40€ / year</span>
+          <span class="text-white text-base font-bold"><%= t("settings.subscriptions.monthly_label") %></span>
+          <span class="block text-white text-sm"><%= t("settings.subscriptions.yearly_total") %></span>
         </div>
       </div>
 
       <%# Upgrade button %>
       <div onclick="alert('Upgrade clicked!'); return false;" class="bg-white rounded-lg p-3 mt-4 text-center cursor-pointer">
-        <span class="text-brand-secondary text-base font-medium">Upgrade</span>
+        <span class="text-brand-secondary text-base font-medium"><%= t("settings.subscriptions.upgrade") %></span>
       </div>
 
       <%# Student discount %>
       <div class="text-center mt-4 pb-1">
         <a href="#" onclick="alert('Student discount - coming soon!'); return false;" class="text-white no-underline underline">
-          I am a student <span class="font-bold">-50%</span>
+          <%= t("settings.subscriptions.student_discount") %> <span class="font-bold"><%= t("settings.subscriptions.discount") %></span>
         </a>
       </div>
     </div>

@@ -9,92 +9,83 @@
   <% end %>
 <% end %>
 
-<div style="background:#ffffff; min-height:100vh;">
-  <div style="max-width:430px; margin:0 auto; padding:0 16px 80px;">
+<div class="bg-white min-h-dvh min-h-screen">
+  <div class="max-w-app mx-auto px-4 pb-20">
+
+    <%# Success notice %>
+    <% if flash[:notice].present? %>
+      <div class="mt-4 bg-green-50 border border-green-200 rounded-xl px-4 py-3 flex items-center gap-3">
+        <svg width="20" height="20" fill="none" stroke="#2E6B3E" stroke-width="2.5" viewBox="0 0 24 24" class="shrink-0">
+          <polyline points="20 6 9 17 4 12" />
+        </svg>
+        <span class="text-green-800 text-sm font-medium"><%= flash[:notice] %></span>
+      </div>
+    <% end %>
 
     <%# Header %>
-    <div style="padding:20px 0 16px;">
-      <h2 style="color:#933a35; font-size:18px; font-weight:700;">Data & Privacy</h2>
+    <div class="py-5 pb-2">
+      <h2 class="text-brand-primary text-base font-bold">Data & Privacy</h2>
     </div>
-    <div style="border-bottom:1px solid #DDD0CB; margin-bottom:16px;"></div>
+    <div class="border-b border-brand-divider mb-4"></div>
 
     <%# Intro %>
-    <div style="background:#FDF0EE; border-radius:12px; padding:16px; margin-bottom:20px;">
-      <p style="color:#933a35; font-size:14px; font-weight:500; margin:0;">
+    <div class="bg-[#FDF0EE] rounded-xl p-4 mb-5">
+      <p class="text-brand-primary text-sm font-medium m-0">
         Your health data is processed only with your explicit consent.
       </p>
     </div>
 
     <%# Consent Form %>
     <%= form_with url: "/settings/consent", method: :post, local: true do %>
-      <%# Health Data Processing %>
-      <label style="display:flex; align-items:flex-start; gap:12px; padding:16px; background:#FFFFFF; border:1px solid #DDD0CB; border-radius:12px; margin-bottom:12px; cursor:pointer;">
-        <input type="checkbox" name="consents[health_data_processing]"
-               <%= current_user.consent?("health_data_processing") ? "checked" : "" %>
-               style="width:20px; height:20px; accent-color:#933a35; margin-top:2px;">
-        <div style="flex:1;">
-          <span style="display:block; color:#933a35; font-size:14px; font-weight:600;">Health Data</span>
-          <span style="display:block; color:#6B6B6B; font-size:12px; margin-top:4px;">
-            Cycle dates, symptoms, mood, energy, and other health information you log.
-          </span>
-        </div>
-      </label>
+      <% consents = [
+        { key: "health_data_processing", title: "Health Data", desc: "Cycle dates, symptoms, mood, energy, and other health information you log." },
+        { key: "symptom_tracking", title: "Symptom Tracking", desc: "Daily symptom logs including pain, mood, energy, sleep, and discharge." },
+        { key: "cycle_tracking", title: "Cycle Tracking", desc: "Menstrual dates, cycle phases, and predictions." },
+        { key: "menstrual_data", title: "Menstrual Data", desc: "Period start/end dates and flow intensity." }
+      ] %>
 
-      <%# Symptom Tracking %>
-      <label style="display:flex; align-items:flex-start; gap:12px; padding:16px; background:#FFFFFF; border:1px solid #DDD0CB; border-radius:12px; margin-bottom:12px; cursor:pointer;">
-        <input type="checkbox" name="consents[symptom_tracking]"
-               <%= current_user.consent?("symptom_tracking") ? "checked" : "" %>
-               style="width:20px; height:20px; accent-color:#933a35; margin-top:2px;">
-        <div style="flex:1;">
-          <span style="display:block; color:#933a35; font-size:14px; font-weight:600;">Symptom Tracking</span>
-          <span style="display:block; color:#6B6B6B; font-size:12px; margin-top:4px;">
-            Daily symptom logs including pain, mood, energy, sleep, and discharge.
-          </span>
-        </div>
-      </label>
-
-      <%# Cycle Tracking %>
-      <label style="display:flex; align-items:flex-start; gap:12px; padding:16px; background:#FFFFFF; border:1px solid #DDD0CB; border-radius:12px; margin-bottom:12px; cursor:pointer;">
-        <input type="checkbox" name="consents[cycle_tracking]"
-               <%= current_user.consent?("cycle_tracking") ? "checked" : "" %>
-               style="width:20px; height:20px; accent-color:#933a35; margin-top:2px;">
-        <div style="flex:1;">
-          <span style="display:block; color:#933a35; font-size:14px; font-weight:600;">Cycle Tracking</span>
-          <span style="display:block; color:#6B6B6B; font-size:12px; margin-top:4px;">
-            Menstrual dates, cycle phases, and predictions.
-          </span>
-        </div>
-      </label>
-
-      <%# Menstrual Data %>
-      <label style="display:flex; align-items:flex-start; gap:12px; padding:16px; background:#FFFFFF; border:1px solid #DDD0CB; border-radius:12px; margin-bottom:20px; cursor:pointer;">
-        <input type="checkbox" name="consents[menstrual_data]"
-               <%= current_user.consent?("menstrual_data") ? "checked" : "" %>
-               style="width:20px; height:20px; accent-color:#933a35; margin-top:2px;">
-        <div style="flex:1;">
-          <span style="display:block; color:#933a35; font-size:14px; font-weight:600;">Menstrual Data</span>
-          <span style="display:block; color:#6B6B6B; font-size:12px; margin-top:4px;">
-            Period start/end dates and flow intensity.
-          </span>
-        </div>
-      </label>
+      <% consents.each do |c| %>
+        <label class="flex items-start gap-3 p-4 bg-white border border-brand-field rounded-xl mb-3 cursor-pointer">
+          <input type="checkbox" name="consents[<%= c[:key] %>]"
+                 <%= current_user.consent?(c[:key]) ? "checked" : "" %>
+                 class="w-5 h-5 accent-brand-primary mt-0.5 shrink-0">
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2">
+              <span class="text-brand-primary text-sm font-semibold"><%= c[:title] %></span>
+              <button type="button"
+                      onclick="document.dispatchEvent(new CustomEvent('consent-info:open', { detail: { type: '<%= c[:key] %>' } }))"
+                      class="bg-none border-none p-0 cursor-pointer text-brand-muted hover:text-brand-primary shrink-0"
+                      aria-label="Learn more about <%= c[:title] %>">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="16" x2="12" y2="12" />
+                  <line x1="12" y1="8" x2="12.01" y2="8" />
+                </svg>
+              </button>
+            </div>
+            <span class="block text-brand-muted text-xs mt-1"><%= c[:desc] %></span>
+          </div>
+        </label>
+      <% end %>
 
       <button type="submit"
-              style="width:100%; background:#933a35; color:white; border:none; border-radius:12px; padding:16px; font-size:16px; font-weight:500; cursor:pointer;">
+              class="w-full h-12 bg-brand-primary text-white rounded-xl text-base font-medium tracking-wide mt-2 cursor-pointer">
         Save Preferences
       </button>
     <% end %>
 
     <%# Info text %>
-    <div style="margin-top:24px; padding:16px; background:#FAF7F4; border-radius:12px;">
-      <p style="color:#6B6B6B; font-size:12px; line-height:1.5; margin:0;">
-        <strong style="color:#933a35;">Your Rights:</strong><br>
+    <div class="mt-6 p-4 bg-brand-field rounded-xl">
+      <p class="text-brand-muted text-xs leading-relaxed m-0">
+        <strong class="text-brand-primary">Your Rights:</strong><br>
         You can withdraw consent at any time. Your data will be deleted according to our retention policy.
       </p>
     </div>
 
     <%# Link to Privacy Policy %>
-    <%= link_to "View Privacy Policy", privacy_path, style: "display:block; text-align:center; color:#933a35; font-size:14px; margin-top:16px; text-decoration:underline;" %>
+    <%= link_to "View Privacy Policy", privacy_path, class: "block text-center text-brand-primary text-sm underline mt-4" %>
 
   </div>
 </div>
+
+<%= render "shared/consent_info_modal" %>

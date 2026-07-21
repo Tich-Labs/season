@@ -29,12 +29,7 @@
 <% end %>
 
 <%
-  phase_colours = {
-    "menstrual" => "#933a35",
-    "follicular" => "#D18D83",
-    "ovulation" => "#F5C6AD",
-    "luteal" => "#EDE1D5"
-  }
+  phase_colours = CycleCalculatorService::PHASE_COLOURS
   hour_px = 48
   timeline_hours = (6..22).to_a
 %>

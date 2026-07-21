@@ -134,6 +134,7 @@ class User < ApplicationRecord
       :name => auth.info.name.presence || user.name,
       uid_column => auth.uid
     )
+    user.language = I18n.locale.to_s if user.new_record?
 
     if user.new_record?
       user.skip_confirmation!
@@ -156,5 +157,39 @@ class User < ApplicationRecord
     when "apple" then "apple_uid"
     else raise ArgumentError, "Unknown OAuth provider: #{provider}"
     end
+  end
+
+  def store_google_tokens!(auth)
+    creds = auth.credentials
+    update!(
+      google_access_token: creds.token,
+      google_refresh_token: creds.refresh_token.presence || google_refresh_token,
+      google_token_expires_at: creds.expires_at ? Time.zone.at(creds.expires_at) : nil
+    )
+  end
+
+  def google_calendar_connected?
+    google_access_token.present? && google_refresh_token.present?
+  end
+
+  def refresh_google_token_if_needed!
+    return false unless google_calendar_connected?
+    return false if google_token_expires_at.nil? || google_token_expires_at > 5.minutes.from_now
+
+    client = Signet::OAuth2::Client.new(
+      client_id: ENV["GOOGLE_CLIENT_ID"],
+      client_secret: ENV["GOOGLE_CLIENT_SECRET"],
+      token_credential_uri: "https://oauth2.googleapis.com/token",
+      refresh_token: google_refresh_token
+    )
+    client.fetch_access_token!
+    update!(
+      google_access_token: client.access_token,
+      google_token_expires_at: Time.zone.at(client.expires_at)
+    )
+    true
+  rescue Signet::AuthorizationError => e
+    Rails.logger.error "[Google Calendar] Token refresh failed: #{e.message}"
+    false
   end
 end

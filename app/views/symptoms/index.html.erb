@@ -5,7 +5,7 @@
   phase_season = phase_meta[:season]
 
   # Phase-specific symptom name
-  discharge_label = @phase == "menstrual" ? "Bleeding" : "Vaginal Discharge"
+  discharge_label = @phase == "menstrual" ? t("symptoms.index.bleeding") : t("symptoms.index.vaginal_discharge")
 
   # Completion flags (for checkmarks)
   mood_done         = @log.moods.present?
@@ -34,15 +34,15 @@
 
   # Intercourse labels
   intercourse_labels = {
-    'keiner' => 'None', 'ungeschuetzt' => 'Unprotected', 'geschuetzt' => 'Protected',
-    'orgasmus' => 'Orgasm', 'kein-orgasmus' => 'No orgasm', 'masturbation' => 'Masturbation'
+    'keiner' => t("symptoms.index.intercourse_none"), 'ungeschuetzt' => t("symptoms.index.intercourse_unprotected"), 'geschuetzt' => t("symptoms.index.intercourse_protected"),
+    'orgasmus' => t("symptoms.index.intercourse_orgasm"), 'kein-orgasmus' => t("symptoms.index.intercourse_no_orgasm"), 'masturbation' => t("symptoms.index.intercourse_masturbation")
   }
   intercourse_selected = intercourse_list.map { |t| intercourse_labels[t] || t }
 
   # Cravings labels
   craving_labels = {
-    'fatty-fried' => 'Fatty & fried', 'salty-food' => 'Salty food', 'bread-noodles' => 'Bread & noodles',
-    'chocolate' => 'Chocolate', 'sugar' => 'Sugar drinks & food'
+    'fatty-fried' => t("symptoms.index.craving_fatty"), 'salty-food' => t("symptoms.index.craving_salty"), 'bread-noodles' => t("symptoms.index.craving_bread"),
+    'chocolate' => t("symptoms.index.craving_chocolate"), 'sugar' => t("symptoms.index.craving_sugar")
   }
   cravings_selected = cravings_list.map { |c| craving_labels[c] || c }
 
@@ -624,7 +624,7 @@
       <button type="button" data-action="click->submit-modal#open"
               class="block w-full text-white text-center rounded-lg py-4 text-xl font-medium tracking-wide font-['Montserrat'] border-0 cursor-pointer"
               style="background:<%= phase_colour %>;">
-        Submit
+        <%= t("symptoms.index.submit") %>
       </button>
 
       <%# ── Pre-submit review modal ─────────────────────────────────────── %>
@@ -642,7 +642,7 @@
           </button>
 
           <%# Title %>
-          <p class="text-brand-primary font-medium text-[22px] text-center pt-8 pb-2 leading-tight font-['Montserrat']">My Symptoms</p>
+          <p class="text-brand-primary font-medium text-[22px] text-center pt-8 pb-2 leading-tight font-['Montserrat']"><%= t("tracking.index.my_symptoms") %></p>
           <div class="mx-[30px] border-t border-brand-field mb-4"></div>
 
           <%# Count %>
@@ -658,11 +658,11 @@
           </div>
 
           <%# Buttons %>
-          <%= link_to "Submit tracking", tracking_index_path,
+          <%= link_to t("symptoms.index.submit_tracking"), tracking_index_path,
                 class: "block mx-[25px] text-center bg-brand-primary text-white rounded-lg py-[14px] text-base font-medium tracking-[0.03em] font-['Montserrat'] no-underline mb-3" %>
           <button data-action="click->submit-modal#close"
                   class="block w-full text-center text-brand-primary text-base font-medium tracking-[0.03em] font-['Montserrat'] pb-6 border-0 bg-transparent cursor-pointer">
-            Go back to change
+            <%= t("symptoms.index.go_back") %>
           </button>
         </div>
       </div>

@@ -24,6 +24,7 @@ gem "puma", ">= 5.0"
 # Auth & Permissions
 gem "devise"
 gem "omniauth-google-oauth2"
+gem "google-apis-calendar_v3"
 gem "omniauth-facebook"
 gem "omniauth-apple"
 gem "omniauth-rails_csrf_protection"

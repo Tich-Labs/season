@@ -27,7 +27,7 @@ class RegistrationsController < ApplicationController
       @user = User.new(user_params)
       render :new, status: :unprocessable_content
     else
-      @user = User.new(user_params.merge(email: email, name: name))
+      @user = User.new(user_params.merge(email: email, name: name, language: I18n.locale.to_s))
       @user.skip_confirmation! if native_app?
 
       if @user.save

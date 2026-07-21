@@ -20,9 +20,9 @@
     </button>
     <div class="absolute left-0 top-full mt-1 w-40 bg-white rounded-lg shadow-lg hidden z-50"
          id="view-dropdown-menu">
-      <%= link_to "Day View", daily_view_path(Time.zone.today), class: "block px-4 py-2 text-sm text-brand-primary hover:bg-brand-field", data: { turbo_action: "replace" } %>
-      <%= link_to "Week View", calendar_weekly_path, class: "block px-4 py-2 text-sm text-brand-primary hover:bg-brand-field", data: { turbo_action: "replace" } %>
-      <%= link_to "Month View", user_root_path, class: "block px-4 py-2 text-sm text-brand-primary hover:bg-brand-field", data: { turbo_action: "replace" } %>
+      <%= link_to t("calendar.index.day_view"), daily_view_path(Time.zone.today), class: "block px-4 py-2 text-sm text-brand-primary hover:bg-brand-field", data: { turbo_action: "replace" } %>
+      <%= link_to t("calendar.index.week_view"), calendar_weekly_path, class: "block px-4 py-2 text-sm text-brand-primary hover:bg-brand-field", data: { turbo_action: "replace" } %>
+      <%= link_to t("calendar.index.month_view"), user_root_path, class: "block px-4 py-2 text-sm text-brand-primary hover:bg-brand-field", data: { turbo_action: "replace" } %>
     </div>
   </div>
 <% end %>
@@ -41,13 +41,13 @@
 <%# ── No-cycle banner (shown when user has no period data) ── %>
 <% if current_user.onboarding_completed? && current_user.last_period_start.nil? %>
   <div class="bg-brand-error px-4 py-3 text-center border-b border-brand-primary">
-    <p class="text-brand-primary text-sm mb-2">
-      We haven't received your period data yet. Add your last period start date to see your cycle phases.
-    </p>
-    <a href="/tracking/period"
-       class="inline-block bg-brand-primary text-white rounded-full px-4 py-2 text-sm font-semibold">
-      Log period start
-    </a>
+      <p class="text-brand-primary text-sm mb-2">
+        <%= t("calendar.index.no_period_data") %>
+      </p>
+      <a href="/tracking/period"
+         class="inline-block bg-brand-primary text-white rounded-full px-4 py-2 text-sm font-semibold">
+        <%= t("calendar.index.log_period_start") %>
+      </a>
   </div>
 <% end %>
 
@@ -57,19 +57,19 @@
     <%# ── Greeting + Streak ── %>
     <div class="flex items-center justify-between mb-3.5">
       <p class="text-brand-primary text-4xl font-medium m-0 leading-tight font-montserrat">
-        Hello <%= current_user.first_name || "there" %>
+        <%= t("calendar.index.hello") %> <%= current_user.first_name || "there" %>
       </p>
       <% if @streak > 0 %>
         <div class="flex items-center gap-2 bg-white px-3 py-2.5 rounded-lg shrink-0">
           <span class="text-lg">🔥</span>
-          <span class="text-brand-primary text-sm font-medium"><%= @streak %> day streak</span>
+          <span class="text-brand-primary text-sm font-medium"><%= @streak %> <%= t("calendar.index.day_streak") %></span>
         </div>
       <% end %>
     </div>
 
     <%# ── Filter chips (no JS — plain GET links) ── %>
     <div class="flex gap-2 flex-wrap mb-4">
-      <% [["all", "All"], ["events", "Events"], ["tracking", "Tracked"], ["cycle", "Cycle"]].each do |value, label| %>
+      <% [["all", t("calendar.index.filter_all")], ["events", t("calendar.index.filter_events")], ["tracking", t("calendar.index.filter_tracked")], ["cycle", t("calendar.index.filter_cycle")]].each do |value, label| %>
         <% active = @mode == value %>
         <%= link_to label,
               user_root_path(date: @date.to_s, mode: value),
@@ -79,7 +79,10 @@
     </div>
 
     <%# ── Day-of-week headers ── %>
-    <div class="grid grid-cols-7 gap-0 mb-1.5">
+    <div class="grid gap-0 mb-1.5 <%= @show_week_numbers ? 'grid-cols-8' : 'grid-cols-7' %>">
+      <% if @show_week_numbers %>
+        <div class="text-center text-brand-secondary text-xs font-semibold tracking-wider py-1"><%= t("calendar.index.wk") %></div>
+      <% end %>
       <% %w[Mo Tu We Th Fr Sa Su].each do |d| %>
         <div class="text-center text-brand-secondary text-xs font-semibold tracking-wider py-1">
           <%= d %>
@@ -90,10 +93,10 @@
     <%# ── Phase Legend ── %>
     <% if @cycle_by_date.present? %>
       <div class="flex gap-3 justify-center flex-wrap mb-3" data-controller="auto-hide" data-auto-hide-delay-value="50">
-        <% [["Menstrual", "#933a35"], ["Follicular", "#D18D83"], ["Ovulation", "#F5C6AD"], ["Luteal", "#EDE1D5"]].each do |label, color| %>
+        <% CycleCalculatorService::PHASE_META.each do |phase, meta| %>
           <div class="flex items-center gap-1">
-            <span class="w-2.5 h-2.5 rounded-full" style="background: <%= color %>;"></span>
-            <span class="text-xs text-brand-secondary"><%= label %></span>
+            <span class="w-2.5 h-2.5 rounded-full" style="background: <%= meta[:colour] %>;"></span>
+            <span class="text-xs text-brand-secondary"><%= phase.titleize %></span>
           </div>
         <% end %>
 
@@ -101,25 +104,33 @@
     <% end %>
 
     <%# ── Calendar grid: 85px rows, 0 column-gap so phase bands merge ── %>
-    <div class="grid grid-cols-7 auto-rows-calendar gap-x-0 gap-y-2">
+    <%
+      cols = @show_week_numbers ? 8 : 7
+      cell_idx = 0
+    %>
+    <div class="grid auto-rows-calendar gap-x-0 gap-y-2 <%= cols == 8 ? 'grid-cols-8' : 'grid-cols-7' %>">
 
-      <%# Leading blank cells so day 1 lands on the right weekday (Mon=0) %>
-      <% first_weekday = @date.beginning_of_month.wday == 0 ? 6 : @date.beginning_of_month.wday - 1 %>
-      <% first_weekday.times { concat(tag.div) } %>
-
-      <%# Day cells — all data lookups are O(1) via pre-built hashes/sets %>
-      <% (@date.beginning_of_month..@date.end_of_month).each do |date| %>
+      <%# All day cells — prev month tail + current month %>
+      <% @calendar_dates.each do |date| %>
+        <%# Week number column %>
+        <% if @show_week_numbers && (cell_idx == 0 || (cell_idx > 0 && cell_idx % cols == 0)) %>
+          <div class="h-[18px] flex items-center justify-center text-[9px] font-semibold text-brand-secondary"><%= date.cweek %></div>
+          <% cell_idx += 1 %>
+        <% end %>
         <%= render "calendar/day_cell",
-              date:             date,
-              current_month:    @month,
-              events_by_date:   @events_by_date,
-              tracked_days_set: @tracked_days_set,
-              cycle_by_date:    @cycle_by_date,
-              mode:             @mode,
-              show_moonphases:  @show_moonphases,
-              show_holidays:    @show_holidays,
-              show_week_numbers: @show_week_numbers %>
+              date:                date,
+              current_month:       @month,
+              events_by_date:      @events_by_date,
+              tracked_days_set:    @tracked_days_set,
+              cycle_by_date:       @cycle_by_date,
+              mode:                @mode,
+              show_moonphases:     @show_moonphases,
+              show_holidays:       @show_holidays,
+              show_week_numbers:   false,
+              show_cycle_day_on_band: @show_cycle_day_on_band %>
+        <% cell_idx += 1 %>
       <% end %>
+
     </div>
 
   </div>
@@ -170,16 +181,16 @@
         <span aria-label="<%= season_info[:title].downcase %> phase emoji"><%= season_info[:emoji] %></span>
       </div>
       <h2 id="season-modal-title" class="text-brand-primary text-xl font-semibold m-0"><%= season_info[:title] %></h2>
-      <p class="text-brand-secondary text-sm mt-1 mb-0">You're in <%= season_info[:title].downcase %> phase</p>
+      <p class="text-brand-secondary text-sm mt-1 mb-0"><%= t("forecast.index.you_are_in", phase: season_info[:title].downcase) %></p>
     </div>
 
-    <p class="text-brand-primary text-sm leading-relaxed m-0 mb-4 text-center">
-      <%= season_info[:description] %>
-    </p>
+      <p class="text-brand-primary text-sm leading-relaxed m-0 mb-4 text-center">
+        <%= season_info[:description] %>
+      </p>
 
-    <% if season_info[:tips].any? %>
-      <div class="bg-white rounded-lg p-3 mb-4">
-        <p class="text-brand-primary text-xs font-semibold m-0 mb-2">Tips for this phase</p>
+      <% if season_info[:tips].any? %>
+        <div class="bg-white rounded-lg p-3 mb-4">
+          <p class="text-brand-primary text-xs font-semibold m-0 mb-2"><%= t("calendar.index.season_modal_tips") %></p>
         <ul class="m-0 pl-4">
           <% season_info[:tips].each do |tip| %>
             <li class="text-brand-secondary text-xs mb-1"><%= tip %></li>
@@ -191,7 +202,7 @@
     <button data-season-modal-target="closeBtn"
             data-action="click->season-modal#close"
             class="w-full bg-brand-primary text-white border-none rounded-lg px-4 py-3.5 text-base font-medium cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-primary">
-      Got it
+      <%= t("calendar.index.season_modal_got_it") %>
     </button>
   </div>
 </div>

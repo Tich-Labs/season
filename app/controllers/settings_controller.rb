@@ -26,6 +26,10 @@ class SettingsController < ApplicationController
     preferences = {
       show_appointments: params[:show_appointments] == "1",
       show_cycledays: params[:show_cycledays] == "1",
+      show_moonphases: params[:show_moonphases] == "1",
+      show_holidays: params[:show_holidays] == "1",
+      show_week_numbers: params[:show_week_numbers] == "1",
+      show_cycle_day_on_band: params[:show_cycle_day_on_band] == "1",
       show_phases: params[:show_phases] == "1",
       show_prediction: params[:show_prediction] == "1",
       show_forecast: params[:show_forecast] == "1",
@@ -226,7 +230,7 @@ class SettingsController < ApplicationController
       end
     end
 
-    redirect_to user_root_path, notice: t("consent.saved")
+    redirect_to "/settings/consent", notice: t("consent.saved")
   end
 
   private

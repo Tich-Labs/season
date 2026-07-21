@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_16_000001) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_19_081800) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -255,6 +255,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_16_000001) do
     t.string "encrypted_password", default: "", null: false
     t.string "facebook_uid"
     t.string "food_preference"
+    t.string "google_access_token"
+    t.string "google_refresh_token"
+    t.datetime "google_token_expires_at"
     t.string "google_uid"
     t.boolean "has_regular_cycle"
     t.boolean "hide_past_events"
@@ -278,6 +281,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_16_000001) do
     t.datetime "reset_password_sent_at"
     t.string "reset_password_token"
     t.boolean "show_appointments", default: true
+    t.boolean "show_cycle_day_on_band", default: false
     t.boolean "show_cycledays", default: true
     t.boolean "show_forecast"
     t.boolean "show_holidays", default: false

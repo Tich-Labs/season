@@ -25,12 +25,12 @@
           <polyline points="20 6 9 17 4 12" />
         </svg>
       </div>
-      <p class="text-brand-primary text-lg font-semibold mb-2">Already completed</p>
-      <p class="text-brand-secondary text-sm mb-6">You've already submitted feedback for this week. Thank you!</p>
+      <p class="text-brand-primary text-lg font-semibold mb-2"><%= t("shared.weekly_feedback_modal.already_completed") %></p>
+      <p class="text-brand-secondary text-sm mb-6"><%= t("shared.weekly_feedback_modal.already_completed_text") %></p>
       <button type="button"
               data-action="click->weekly-feedback-modal#close"
               class="bg-brand-primary text-white rounded-xl py-3 px-8 text-[15px] font-semibold font-['Montserrat']">
-        Close
+        <%= t("shared.weekly_feedback_modal.close") %>
       </button>
     </div>
 
@@ -44,7 +44,7 @@
 
         <button type="submit"
                 class="w-full py-3 bg-brand-primary text-white rounded-xl text-base font-medium font-['Montserrat'] hover:bg-[#7a2f2a] transition-colors">
-          Submit
+          <%= t("shared.weekly_feedback_modal.submit") %>
         </button>
       </form>
     </div>
@@ -56,12 +56,12 @@
           <polyline points="20 6 9 17 4 12" />
         </svg>
       </div>
-      <p class="text-brand-primary text-lg font-semibold mb-2">Thank you!</p>
-      <p class="text-brand-secondary text-sm mb-6">Your feedback helps us improve Season.</p>
+      <p class="text-brand-primary text-lg font-semibold mb-2"><%= t("shared.weekly_feedback_modal.thank_you") %></p>
+      <p class="text-brand-secondary text-sm mb-6"><%= t("shared.weekly_feedback_modal.success_text") %></p>
       <button type="button"
               data-action="click->weekly-feedback-modal#close"
               class="bg-brand-primary text-white rounded-xl py-3 px-8 text-[15px] font-semibold font-['Montserrat']">
-        Close
+        <%= t("shared.weekly_feedback_modal.close") %>
       </button>
     </div>
   </div>
@@ -78,20 +78,20 @@
       <div class="wf-yesno-wrapper" style="display:none;">
         <div class="flex gap-3 mb-3">
           <button type="button" data-value="yes" class="wf-yesno-btn flex-1 py-2 px-4 rounded-lg text-sm font-medium border font-['Montserrat']" style="background:#FFFFFF;color:#933a35;border-color:#EDE1D5;"
-                  data-action="click->weekly-feedback-modal#toggleYesNo">Yes</button>
+                  data-action="click->weekly-feedback-modal#toggleYesNo"><%= t("shared.weekly_feedback_modal.yes") %></button>
           <button type="button" data-value="no" class="wf-yesno-btn flex-1 py-2 px-4 rounded-lg text-sm font-medium border font-['Montserrat']" style="background:#FFFFFF;color:#933a35;border-color:#EDE1D5;"
-                  data-action="click->weekly-feedback-modal#toggleYesNo">No</button>
+                  data-action="click->weekly-feedback-modal#toggleYesNo"><%= t("shared.weekly_feedback_modal.no") %></button>
         </div>
         <div class="wf-why-input" style="display:none;">
           <textarea class="wf-why-textarea w-full px-4 py-3 rounded-xl border border-brand-field bg-white text-gray-800 text-base font-['Montserrat'] placeholder-gray-400 focus:border-brand-primary focus:outline-none resize-none"
-                    rows="2" placeholder="Why? (optional)"></textarea>
+                    rows="2" placeholder="<%= t("shared.weekly_feedback_modal.why_placeholder") %>"></textarea>
         </div>
       </div>
 
       <%# Text only %>
       <div class="wf-text-wrapper" style="display:none;">
         <textarea class="wf-text-textarea w-full px-4 py-3 rounded-xl border border-brand-field bg-white text-gray-800 text-base font-['Montserrat'] placeholder-gray-400 focus:border-brand-primary focus:outline-none resize-none"
-                  rows="3" placeholder="Your answer..."></textarea>
+                  rows="3" placeholder="<%= t("shared.weekly_feedback_modal.answer_placeholder") %>"></textarea>
       </div>
     </div>
   </template>

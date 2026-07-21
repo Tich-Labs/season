@@ -1,32 +1,35 @@
-<%# Language settings - matches Figma %>
+<%# Language settings - simple list of options, native form submit (reliable on iOS) %>
 <%= native_navbar_tag(t("settings.language.title")) if native_app? %>
 <div class="bg-white min-h-screen">
   <div class="max-w-app mx-auto px-4 pb-20">
     <%# Header %>
-    <div class="py-5 pb-2">
-      <h2 class="text-brand-primary text-base font-bold"><%= t("settings.language.title") %></h2>
+    <div class="py-5 flex items-center gap-3">
+      <a href="<%= edit_settings_path %>" class="text-brand-primary shrink-0">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <polyline points="15 18 9 12 15 6" />
+        </svg>
+      </a>
+      <h1 class="text-brand-primary text-xl font-bold"><%= t("settings.language.title") %></h1>
     </div>
-    <div class="border-b border-brand-divider"></div>
+    <div class="border-b border-brand-divider mb-2"></div>
 
-    <%= form_with model: @user, url: settings_language_path, method: :patch, local: true do |f| %>
-      <div class="py-6 space-y-4">
-        <%# English %>
-        <label class="flex items-center gap-4 py-3 cursor-pointer">
-          <%= f.radio_button :language, "en", class: "w-5 h-5 accent-[#933a35]", checked: @user.language == "en" || @user.language.blank? %>
-          <span class="text-brand-primary text-base font-medium">English</span>
+    <%= form_tag settings_language_path, method: :patch, "data-turbo": false do %>
+      <% current_language = @user.language.presence || I18n.default_locale.to_s %>
+      <% I18n.available_locales.each do |locale| %>
+        <label class="flex items-center justify-between gap-4 py-4 border-b border-brand-divider cursor-pointer">
+          <span class="text-brand-primary text-base font-medium">
+            <%= I18n.t("language.names.#{locale}", default: locale.to_s.upcase) %>
+          </span>
+          <input type="radio" name="user[language]" value="<%= locale %>"
+                 <%= "checked" if current_language == locale.to_s %>
+                 class="w-5 h-5 accent-brand-primary shrink-0">
         </label>
-        <div class="border-b border-brand-field"></div>
-
-        <%# German %>
-        <label class="flex items-center gap-4 py-3 cursor-pointer">
-          <%= f.radio_button :language, "de", class: "w-5 h-5 accent-[#933a35]", checked: @user.language == "de" %>
-          <span class="text-brand-primary text-base font-medium">Deutsch</span>
-        </label>
-        <div class="border-b border-brand-field"></div>
+      <% end %>
+      <div class="pt-6">
+        <%= submit_tag t("settings.language.save", default: "Save Language"),
+              class: "w-full bg-brand-primary text-white text-base font-semibold rounded-lg py-3 cursor-pointer" %>
       </div>
-
-      <%= f.submit t("settings.language.save"),
-          class: "w-full h-12 bg-brand-primary text-white rounded-lg text-base font-medium tracking-wide mt-4" %>
     <% end %>
   </div>
 </div>
+

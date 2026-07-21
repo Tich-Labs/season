@@ -1,6 +1,6 @@
 <%# Settings screen - matches Figma node 12048-37859 %>
 <%# Header auto-rendered by layout (controller_name == 'settings') %>
-<%= native_navbar_tag("Settings") if native_app? %>
+<%= native_navbar_tag(t("settings.edit.personal_settings")) if native_app? %>
 
 <div class="bg-white min-h-screen">
 
@@ -9,23 +9,23 @@
 
     <%# ── Personal Settings ── %>
     <div class="py-5 pb-2">
-      <h2 class="text-brand-primary text-base font-bold">Personal Settings</h2>
+      <h2 class="text-brand-primary text-base font-bold"><%= t("settings.edit.personal_settings") %></h2>
     </div>
     <div class="border-b border-brand-divider"></div>
 
     <%# My Profile %>
     <a href="<%= profile_settings_path %>" class="flex items-center gap-4 py-4">
       <%= vuesax_icon "user", size: 24 %>
-      <span class="flex-1 text-brand-primary text-base font-medium">My Profile</span>
+      <span class="flex-1 text-brand-primary text-base font-medium"><%= t("settings.edit.my_profile") %></span>
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="text-brand-primary">
         <polyline points="9 18 15 12 9 6" />
       </svg>
     </a>
 
-    <%# My Abonnements %>
+    <%# My Subscriptions %>
     <a href="<%= subscriptions_settings_path %>" class="flex items-center gap-4 py-4">
       <%= vuesax_icon "bag", size: 24 %>
-      <span class="flex-1 text-brand-primary text-base font-medium">My Abonnements</span>
+      <span class="flex-1 text-brand-primary text-base font-medium"><%= t("settings.edit.my_subscriptions") %></span>
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="text-brand-primary">
         <polyline points="9 18 15 12 9 6" />
       </svg>
@@ -33,7 +33,7 @@
     <%# My Calendar %>
     <a href="<%= calendar_settings_path %>" class="flex items-center gap-4 py-4">
       <%= vuesax_icon "calendar", size: 24 %>
-      <span class="flex-1 text-brand-primary text-base font-medium">My Calendar</span>
+      <span class="flex-1 text-brand-primary text-base font-medium"><%= t("settings.edit.my_calendar") %></span>
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="text-brand-primary">
         <polyline points="9 18 15 12 9 6" />
       </svg>
@@ -41,14 +41,14 @@
 
     <%# ── App Settings ── %>
     <div class="py-6 pb-2">
-      <h2 class="text-brand-primary text-base font-bold">App Settings</h2>
+      <h2 class="text-brand-primary text-base font-bold"><%= t("settings.edit.app_settings") %></h2>
     </div>
     <div class="border-b border-brand-divider"></div>
 
     <%# Notifications & Reminders %>
     <a href="<%= notifications_settings_path %>" class="flex items-center gap-4 py-4">
       <%= vuesax_icon "notification", size: 24 %>
-      <span class="flex-1 text-brand-primary text-base font-medium">Notifications &amp; reminder</span>
+      <span class="flex-1 text-brand-primary text-base font-medium"><%= t("settings.edit.notifications_and_reminder") %></span>
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="text-brand-primary">
         <polyline points="9 18 15 12 9 6" />
       </svg>
@@ -59,32 +59,41 @@
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" class="text-brand-primary">
         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
       </svg>
-      <span class="flex-1 text-brand-primary text-base font-medium">Data & Privacy</span>
+      <span class="flex-1 text-brand-primary text-base font-medium"><%= t("settings.edit.data_and_privacy") %></span>
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="text-brand-primary">
         <polyline points="9 18 15 12 9 6" />
       </svg>
     </a>
 
-    <%# Language %>
-    <a href="/settings/language" data-turbo="false" class="flex items-center gap-4 py-4">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" class="text-brand-primary">
-        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-      </svg>
-      <div class="flex-1">
-        <span class="text-brand-primary text-base font-medium"><%= t("settings.language.title", default: "Language") %></span>
-        <span class="block text-brand-muted text-sm mt-1"><%= current_user.language == "de" ? "Deutsch" : "English" %></span>
+    <%# Language — inline selector with AJAX (stays on page, no modal close) %>
+    <div data-controller="language-selector"
+         data-language-selector-current-language-value="<%= current_user.language.presence || I18n.default_locale %>">
+      <div class="flex items-center gap-4 py-4">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" class="text-brand-primary shrink-0">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+        </svg>
+        <span class="flex-1 text-brand-primary text-base font-medium"><%= t("settings.language.title", default: "Language") %></span>
       </div>
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="text-brand-primary">
-        <polyline points="9 18 15 12 9 6" />
-      </svg>
-    </a>
+      <div class="ml-9 mb-4">
+        <select data-language-selector-target="select"
+                data-action="change->language-selector#handleChange"
+                class="w-full bg-brand-field border border-brand-primary rounded-lg px-3 py-2 text-sm text-brand-primary font-medium focus:outline-none focus:ring-2 focus:ring-brand-primary cursor-pointer appearance-none">
+          <% I18n.available_locales.each do |locale| %>
+            <option value="<%= locale %>"
+                    <%= current_user.language == locale.to_s || (current_user.language.blank? && locale == I18n.default_locale) ? "selected" : "" %>>
+              <%= I18n.t("language.names.#{locale}", default: locale.to_s.upcase) %>
+            </option>
+          <% end %>
+        </select>
+      </div>
+    </div>
 
     <%# Darkmode %>
     <div class="flex items-center gap-4 py-4 cursor-pointer" onclick="alert('Dark mode toggle - coming soon!')">
       <svg class="w-6 h-6 text-brand-primary shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
       </svg>
-      <span class="flex-1 text-brand-primary text-base font-medium">Darkmode</span>
+      <span class="flex-1 text-brand-primary text-base font-medium"><%= t("settings.edit.darkmode") %></span>
       <div class="w-10 h-5 bg-brand-primary rounded-[25px] p-0.5">
         <div class="w-4 h-4 bg-white rounded-full ml-auto"></div>
       </div>
@@ -92,7 +101,7 @@
 
     <%# ── About Season ── %>
     <div class="pt-6 pb-2">
-      <h2 class="text-brand-primary text-base font-bold">About Season</h2>
+      <h2 class="text-brand-primary text-base font-bold"><%= t("settings.edit.about_season") %></h2>
     </div>
     <div class="border-b border-brand-divider"></div>
 
@@ -104,8 +113,8 @@
             class="flex items-center gap-4 p-4 bg-[#899884] rounded-lg mt-4 w-full border-0 cursor-pointer text-left">
       <%= vuesax_icon "message-question", size: 32, colour: "white" %>
       <div class="flex-1">
-        <span class="block text-white text-base font-bold">Support</span>
-        <span class="text-white text-sm">Contact us!</span>
+        <span class="block text-white text-base font-bold"><%= t("settings.edit.support") %></span>
+        <span class="text-white text-sm"><%= t("settings.edit.contact_us") %></span>
       </div>
     </button>
 
@@ -114,12 +123,12 @@
       <a href="#" class="flex items-center gap-4 p-4 bg-[#899884] rounded-lg no-underline">
         <%= vuesax_icon "star", size: 32, colour: "white" %>
         <div class="flex-1">
-          <span class="block text-white text-base font-bold">Rate in the App Store</span>
-          <span class="text-white text-sm">for even more benefits!</span>
+          <span class="block text-white text-base font-bold"><%= t("settings.edit.rate_app_store") %></span>
+          <span class="text-white text-sm"><%= t("settings.edit.for_more_benefits") %></span>
         </div>
       </a>
       <div class="absolute right-2 top-2 bg-brand-field rounded-full px-2.5 py-1">
-        <span class="text-brand-primary text-xs">Coming soon</span>
+        <span class="text-brand-primary text-xs"><%= t("settings.edit.coming_soon") %></span>
       </div>
     </div>
 
@@ -128,12 +137,12 @@
       <a href="#" class="flex items-center gap-4 p-4 bg-[#899884] rounded-lg no-underline">
         <%= vuesax_icon "share", size: 32, colour: "white" %>
         <div class="flex-1">
-          <span class="block text-white text-base font-bold">Share Season with friends</span>
-          <span class="text-white text-sm">for even more benefits!</span>
+          <span class="block text-white text-base font-bold"><%= t("settings.edit.share_season") %></span>
+          <span class="text-white text-sm"><%= t("settings.edit.for_more_benefits") %></span>
         </div>
       </a>
       <div class="absolute right-2 top-2 bg-brand-field rounded-full px-2.5 py-1">
-        <span class="text-brand-primary text-xs">Coming soon</span>
+        <span class="text-brand-primary text-xs"><%= t("settings.edit.coming_soon") %></span>
       </div>
     </div>
 
@@ -148,7 +157,7 @@
         <polyline points="16 17 21 12 16 7" />
         <line x1="21" y1="12" x2="9" y2="12" />
       </svg>
-      <span class="flex-1 text-brand-primary text-base font-medium">Log out</span>
+      <span class="flex-1 text-brand-primary text-base font-medium"><%= t("settings.edit.log_out") %></span>
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="text-brand-primary">
         <polyline points="9 18 15 12 9 6" />
       </svg>

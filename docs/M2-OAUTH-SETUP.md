@@ -4,9 +4,9 @@ layout: default
 
 # M2 OAuth Credentials Setup — Render Deployment
 
-**Version:** 3.0 (2026-05-31)  
-**Updated:** 2026-05-31  
-**Changes:** Apple OAuth config corrected (uses PEM private key, not JWT), all providers live on Render
+**Version:** 4.0 (2026-07-19)  
+**Updated:** 2026-07-19  
+**Changes:** Google Calendar API scope added, offline access, token persistence, Google OAuth consent screen now requests calendar scopes
 
 ---
 
@@ -44,14 +44,17 @@ All OAuth environment variables are configured in `config/initializers/devise.rb
 
 1. Go to [Google Cloud Console](https://console.cloud.google.com/)
 2. Create a new project or use an existing one
-3. Navigate to **APIs & Services > Credentials**
-4. Click **Create Credentials > OAuth 2.0 Client ID**
-5. Choose **Web Application**
-6. Under **Authorized redirect URIs**, add:
+3. Navigate to **APIs & Services > Library** and enable **Google Calendar API**
+4. Navigate to **APIs & Services > OAuth consent screen**
+   - Add scope: `https://www.googleapis.com/auth/calendar` (View and manage calendars)
+5. Navigate to **APIs & Services > Credentials**
+6. Click **Create Credentials > OAuth 2.0 Client ID**
+7. Choose **Web Application**
+8. Under **Authorized redirect URIs**, add:
    - `https://seasonv2.onrender.com/users/auth/google_oauth2/callback`
    - `http://localhost:3000/users/auth/google_oauth2/callback` (local dev)
-7. Copy **Client ID** → `GOOGLE_CLIENT_ID`
-8. Copy **Client Secret** → `GOOGLE_CLIENT_SECRET`
+9. Copy **Client ID** → `GOOGLE_CLIENT_ID`
+10. Copy **Client Secret** → `GOOGLE_CLIENT_SECRET`
 
 ---
 
@@ -164,7 +167,9 @@ Expected output:
 
 ```ruby
 config.omniauth :google_oauth2, ENV["GOOGLE_CLIENT_ID"], ENV["GOOGLE_CLIENT_SECRET"],
-  scope: "email,profile", prompt: "select_account"
+  scope: "email,profile,https://www.googleapis.com/auth/calendar",
+  access_type: "offline",
+  prompt: "consent"
 config.omniauth :facebook, ENV["FACEBOOK_APP_ID"], ENV["FACEBOOK_APP_SECRET"],
   scope: "email", prompt: "select_account"
 config.omniauth :apple, ENV["APPLE_CLIENT_ID"], "",
@@ -200,7 +205,7 @@ If any ENV var is missing, OmniAuth will skip that provider silently.
 
 ## Status
 
-> **Updated 31 May 2026** — All three providers live on Render.
+> **Updated 19 Jul 2026** — All three providers live on Render. Google Calendar API integration added.
 
 | Area | Status |
 |------|--------|
@@ -208,6 +213,9 @@ If any ENV var is missing, OmniAuth will skip that provider silently.
 | Callbacks controller | ✅ Complete |
 | Custom OAuth conflicts | ✅ Removed — Devise only |
 | Google on Render | ✅ Live |
+| Google Calendar API scope | ✅ Added (`calendar`, offline access) |
+| Google Calendar token storage | ✅ Complete (access + refresh token persisted) |
+| GoogleCalendarService | ✅ Complete (list/create/delete events) |
 | Facebook on Render | ✅ Live |
 | Apple on Render | ✅ Live |
 

@@ -1,5 +1,5 @@
 <%# Settings - My Calendar screen %>
-<%= native_navbar_tag("My Calendar") if native_app? %>
+<%= native_navbar_tag(t("settings.calendar.title")) if native_app? %>
 <% content_for(:header_left) do %>
   <%= link_to edit_settings_path, class: "p-2 flex items-center" do %>
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
@@ -39,7 +39,7 @@
         <line x1="8" y1="2" x2="8" y2="6" />
         <line x1="3" y1="10" x2="21" y2="10" />
       </svg>
-      <span class="text-brand-primary text-lg font-bold">My Calendar</span>
+      <span class="text-brand-primary text-lg font-bold"><%= t("settings.calendar.title") %></span>
     </div>
     <div class="border-b border-brand-divider"></div>
 
@@ -49,16 +49,16 @@
         <path d="M21 12A9 9 0 0 1 12 21" stroke-dasharray="3 3" />
         <path d="M3 12a9 9 0 0 1 9-9" />
       </svg>
-      <span class="text-brand-primary text-base font-medium">Links &amp; Syncs</span>
+      <span class="text-brand-primary text-base font-medium"><%= t("settings.calendar.links_and_syncs") %></span>
     </div>
 
     <div>
       <div class="py-3">
         <span class="text-brand-muted text-sm font-medium">user@gmail.com</span>
-        <span class="block text-brand-primary/60 text-xs">Gmail</span>
+        <span class="block text-brand-primary/60 text-xs"><%= t("settings.calendar.gmail") %></span>
       </div>
       <div class="flex items-center justify-between py-2">
-        <span class="text-brand-primary/60 text-xs">Gmail Calendar Sync</span>
+        <span class="text-brand-primary/60 text-xs"><%= t("settings.calendar.gmail_sync") %></span>
         <button type="button" class="toggle-btn" data-action="click->calendar-toggle#toggle" data-field="gmail_sync">
           <div class="toggle-track">
             <div class="toggle-thumb"></div>
@@ -68,10 +68,10 @@
 
       <div class="py-3">
         <span class="text-brand-muted text-sm font-medium">user@outlook.com</span>
-        <span class="block text-brand-primary/60 text-xs">Microsoft</span>
+        <span class="block text-brand-primary/60 text-xs"><%= t("settings.calendar.microsoft") %></span>
       </div>
       <div class="flex items-center justify-between py-2">
-        <span class="text-brand-primary/60 text-xs">Microsoft Outlook Sync</span>
+        <span class="text-brand-primary/60 text-xs"><%= t("settings.calendar.microsoft_sync") %></span>
         <button type="button" class="toggle-btn" data-action="click->calendar-toggle#toggle" data-field="microsoft_sync">
           <div class="toggle-track">
             <div class="toggle-thumb"></div>
@@ -81,10 +81,10 @@
 
       <div class="py-3">
         <span class="text-brand-muted text-sm font-medium">user@icloud.com</span>
-        <span class="block text-brand-primary/60 text-xs">icloud</span>
+        <span class="block text-brand-primary/60 text-xs"><%= t("settings.calendar.icloud") %></span>
       </div>
       <div class="flex items-center justify-between py-2">
-        <span class="text-brand-primary/60 text-xs">Apple iCloud Sync</span>
+        <span class="text-brand-primary/60 text-xs"><%= t("settings.calendar.icloud_sync") %></span>
         <button type="button" class="toggle-btn" data-action="click->calendar-toggle#toggle" data-field="icloud_sync">
           <div class="toggle-track">
             <div class="toggle-thumb"></div>
@@ -102,34 +102,34 @@
         <line x1="12" y1="8" x2="12" y2="16" />
         <line x1="8" y1="12" x2="16" y2="12" />
       </svg>
-      <span class="text-brand-primary text-base font-medium">Show features</span>
+      <span class="text-brand-primary text-base font-medium"><%= t("settings.calendar.show_features") %></span>
     </div>
 
     <%# Toggle items %>
     <div class="space-y-0">
       <div class="flex items-center justify-between py-3">
-        <span class="text-brand-muted text-sm font-medium">Appointments</span>
+        <span class="text-brand-muted text-sm font-medium"><%= t("settings.calendar.appointments") %></span>
         <button type="button" class="toggle-btn <%= "active" if @user.show_appointments? %>" data-action="click->calendar-toggle#toggle" data-field="show_appointments">
           <div class="toggle-track"><div class="toggle-thumb"></div></div>
         </button>
       </div>
 
       <div class="flex items-center justify-between py-3">
-        <span class="text-brand-muted text-sm font-medium">Cycle Days</span>
+        <span class="text-brand-muted text-sm font-medium"><%= t("settings.calendar.cycle_days") %></span>
         <button type="button" class="toggle-btn <%= "active" if @user.show_cycledays? %>" data-action="click->calendar-toggle#toggle" data-field="show_cycledays">
           <div class="toggle-track"><div class="toggle-thumb"></div></div>
         </button>
       </div>
 
       <div class="flex items-center justify-between py-3">
-        <span class="text-brand-muted text-sm font-medium">Tracking Reminder</span>
+        <span class="text-brand-muted text-sm font-medium"><%= t("settings.calendar.tracking_reminder") %></span>
         <button type="button" class="toggle-btn" data-action="click->calendar-toggle#toggle" data-field="tracking_reminder">
           <div class="toggle-track"><div class="toggle-thumb"></div></div>
         </button>
       </div>
 
       <div class="flex items-center justify-between py-3">
-        <span class="text-brand-muted text-sm font-medium">Moon Phases</span>
+        <span class="text-brand-muted text-sm font-medium"><%= t("settings.calendar.moon_phases") %></span>
         <button type="button" class="toggle-btn <%= "active" if @user.show_moonphases? %>" data-action="click->calendar-toggle#toggle" data-field="show_moonphases">
           <div class="toggle-track"><div class="toggle-thumb"></div></div>
         </button>
@@ -137,7 +137,7 @@
 
       <div class="flex items-center justify-between py-3">
         <div>
-          <span class="text-brand-muted text-sm font-medium">Holidays</span>
+          <span class="text-brand-muted text-sm font-medium"><%= t("settings.calendar.holidays") %></span>
         </div>
         <button type="button" class="toggle-btn <%= "active" if @user.show_holidays? %>" data-action="click->calendar-toggle#toggle" data-field="show_holidays">
           <div class="toggle-track"><div class="toggle-thumb"></div></div>
@@ -145,8 +145,15 @@
       </div>
 
       <div class="flex items-center justify-between py-3">
-        <span class="text-brand-muted text-sm font-medium">Week Numbers</span>
+        <span class="text-brand-muted text-sm font-medium"><%= t("settings.calendar.week_numbers") %></span>
         <button type="button" class="toggle-btn <%= "active" if @user.show_week_numbers? %>" data-action="click->calendar-toggle#toggle" data-field="show_week_numbers">
+          <div class="toggle-track"><div class="toggle-thumb"></div></div>
+        </button>
+      </div>
+
+      <div class="flex items-center justify-between py-3">
+        <span class="text-brand-muted text-sm font-medium"><%= t("settings.calendar.cycle_day_on_band") %></span>
+        <button type="button" class="toggle-btn <%= "active" if @user.show_cycle_day_on_band? %>" data-action="click->calendar-toggle#toggle" data-field="show_cycle_day_on_band">
           <div class="toggle-track"><div class="toggle-thumb"></div></div>
         </button>
       </div>
@@ -158,6 +165,7 @@
     <input type="hidden" name="show_moonphases" value="<%= @user.show_moonphases ? "1" : "0" %>">
     <input type="hidden" name="show_holidays" value="<%= @user.show_holidays ? "1" : "0" %>">
     <input type="hidden" name="show_week_numbers" value="<%= @user.show_week_numbers ? "1" : "0" %>">
+    <input type="hidden" name="show_cycle_day_on_band" value="<%= @user.show_cycle_day_on_band ? "1" : "0" %>">
     <input type="hidden" name="gmail_sync" value="0">
     <input type="hidden" name="microsoft_sync" value="0">
     <input type="hidden" name="icloud_sync" value="0">
@@ -173,13 +181,13 @@
         <line x1="3" y1="10" x2="21" y2="10" />
         <polyline points="14 14 17 17 20 13" />
       </svg>
-      <span class="text-brand-primary text-base font-medium">Day of the Week</span>
+      <span class="text-brand-primary text-base font-medium"><%= t("settings.calendar.day_of_week") %></span>
     </div>
     <div class="py-3">
       <select name="week_start_day" data-action="change->calendar-toggle#submitForm" class="w-full bg-brand-field rounded-xl px-4 py-3 text-brand-primary text-sm font-medium">
-        <option value="monday" <%= "selected" if @user.week_start_day == "monday" || @user.week_start_day.nil? %>>Monday</option>
-        <option value="sunday" <%= "selected" if @user.week_start_day == "sunday" %>>Sunday</option>
-        <option value="saturday" <%= "selected" if @user.week_start_day == "saturday" %>>Saturday</option>
+        <option value="monday" <%= "selected" if @user.week_start_day == "monday" || @user.week_start_day.nil? %>><%= t("settings.calendar.monday") %></option>
+        <option value="sunday" <%= "selected" if @user.week_start_day == "sunday" %>><%= t("settings.calendar.sunday") %></option>
+        <option value="saturday" <%= "selected" if @user.week_start_day == "saturday" %>><%= t("settings.calendar.saturday") %></option>
       </select>
     </div>
 
@@ -194,7 +202,7 @@
         <line x1="9" y1="14" x2="12" y2="14" />
         <line x1="9" y1="18" x2="12" y2="18" />
       </svg>
-      <span class="text-brand-primary text-base font-medium">Timezone</span>
+      <span class="text-brand-primary text-base font-medium"><%= t("settings.calendar.timezone") %></span>
     </div>
     <div class="py-3">
       <select name="timezone" class="w-full bg-brand-field rounded-xl px-4 py-3 text-brand-primary text-sm font-medium">
@@ -210,7 +218,7 @@
 
     <%# Auto-save status %>
     <div class="mt-8 pt-4 text-center text-xs text-gray-400" data-notification="auto-save" style="display:none;">
-      Saving...
+      <%= t("settings.calendar.saving") %>
     </div>
 
     <% end %>

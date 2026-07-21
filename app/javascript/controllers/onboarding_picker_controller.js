@@ -1,11 +1,11 @@
-import { Controller } from "@hotwired/stimulus"
+import { Controller } from '@hotwired/stimulus'
 
 // Cycle-length scroll picker for onboarding step 6.
 // Reads scroll position on the snap-track, highlights the centred item,
 // and keeps the hidden <input> in sync so the form always submits the
 // day the user has scrolled to.
 export default class extends Controller {
-  static targets = ["track", "input"]
+  static targets = ['track', 'input']
 
   #itemHeight = 42
   #debounceTimer = null
@@ -16,9 +16,9 @@ export default class extends Controller {
     this.#scrollToValue(initial, false)
     this.#highlightCentred()
 
-    this.trackTarget.addEventListener("scroll", () => this.#onScroll(), { passive: true })
-    this.trackTarget.addEventListener("click",  (e) => this.#onClick(e))
-    this.trackTarget.addEventListener("keydown", (e) => this.#onKeydown(e))
+    this.trackTarget.addEventListener('scroll', () => this.#onScroll(), { passive: true })
+    this.trackTarget.addEventListener('click', (e) => this.#onClick(e))
+    this.trackTarget.addEventListener('keydown', (e) => this.#onKeydown(e))
   }
 
   disconnect () {
@@ -35,7 +35,7 @@ export default class extends Controller {
   }
 
   #onClick (event) {
-    const item = event.target.closest("[data-days]")
+    const item = event.target.closest('[data-days]')
     if (!item) return
     const days = parseInt(item.dataset.days)
     this.#scrollToValue(days, true)
@@ -49,21 +49,21 @@ export default class extends Controller {
 
   #onKeydown (event) {
     const current = parseInt(this.inputTarget.value) || 28
-    if (event.key === "ArrowDown") {
+    if (event.key === 'ArrowDown') {
       event.preventDefault()
       this.#scrollToValue(Math.min(current + 1, 45), true)
-    } else if (event.key === "ArrowUp") {
+    } else if (event.key === 'ArrowUp') {
       event.preventDefault()
       this.#scrollToValue(Math.max(current - 1, 20), true)
     }
   }
 
   #scrollToValue (days, smooth) {
-    const items = this.trackTarget.querySelectorAll("[data-days]")
+    const items = this.trackTarget.querySelectorAll('[data-days]')
     const firstDay = parseInt(items[0]?.dataset.days || 20)
     const index = days - firstDay
     const targetScroll = index * this.#itemHeight
-    this.trackTarget.scrollTo({ top: targetScroll, behavior: smooth ? "smooth" : "instant" })
+    this.trackTarget.scrollTo({ top: targetScroll, behavior: smooth ? 'smooth' : 'instant' })
   }
 
   #centredIndex () {
@@ -75,16 +75,16 @@ export default class extends Controller {
 
   #highlightCentred () {
     const centred = this.#centredIndex()
-    this.trackTarget.querySelectorAll("[data-days]").forEach((item, i) => {
+    this.trackTarget.querySelectorAll('[data-days]').forEach((item, i) => {
       const isCentred = i === centred
-      item.style.opacity = isCentred ? "1" : "0.45"
-      item.style.fontWeight = isCentred ? "600" : "400"
-      item.setAttribute("aria-selected", isCentred ? "true" : "false")
+      item.style.opacity = isCentred ? '1' : '0.45'
+      item.style.fontWeight = isCentred ? '600' : '400'
+      item.setAttribute('aria-selected', isCentred ? 'true' : 'false')
     })
   }
 
   #commitCentred () {
-    const items = this.trackTarget.querySelectorAll("[data-days]")
+    const items = this.trackTarget.querySelectorAll('[data-days]')
     const centred = this.#centredIndex()
     const item = items[centred]
     if (!item) return

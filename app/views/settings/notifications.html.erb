@@ -1,5 +1,5 @@
 <%# Notifications & Reminders screen - matches Figma node 12048:16741 %>
-<%= native_navbar_tag("Notifications & Reminders") if native_app? %>
+<%= native_navbar_tag(t("settings.notifications.title")) if native_app? %>
 <% content_for(:header_left) do %>
   <%= link_to edit_settings_path, class: "p-2 flex items-center", aria: { label: "Back to settings" } do %>
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
@@ -28,7 +28,7 @@
     <%# ── Section header ── %>
     <div class="flex items-center gap-3 py-5 pb-2">
       <%= vuesax_icon "sms-notification", size: 24 %>
-      <h2 class="text-brand-primary text-base font-bold">Notifications &amp; reminder</h2>
+      <h2 class="text-brand-primary text-base font-bold"><%= t("settings.notifications.heading") %></h2>
     </div>
     <div class="border-b border-brand-divider"></div>
 
@@ -39,7 +39,7 @@
          data-vapid-key="<%= Rails.application.credentials.dig(:vapid, :public_key) %>"
          class="flex items-center justify-between py-3.5 pb-2">
       <div>
-        <span class="text-brand-primary text-base font-medium">General Push-Notifications</span>
+        <span class="text-brand-primary text-base font-medium"><%= t("settings.notifications.general_push") %></span>
         <span data-push-subscription-target="status" class="text-brand-secondary text-xs ml-2"></span>
       </div>
       <label class="relative w-[41px] h-5 cursor-pointer shrink-0">
@@ -52,11 +52,11 @@
       </label>
     </div>
     <% [
-      ["push_new_appt_synced",   "New appointments synced"],
-      ["push_tracking_reminder", "Tracking reminder"],
-      ["push_new_feedback",      "New Feedback available"],
-      ["push_app_updates",       "App-Updates"],
-      ["push_appointments",      "Appointments"]
+      ["push_new_appt_synced",   t("settings.notifications.push_new_appt")],
+      ["push_tracking_reminder", t("settings.notifications.push_tracking")],
+      ["push_new_feedback",      t("settings.notifications.push_new_feedback")],
+      ["push_app_updates",       t("settings.notifications.push_app_updates")],
+      ["push_appointments",      t("settings.notifications.push_appointments")]
     ].each do |field, label| %>
       <div class="flex items-center justify-between py-1.5">
         <span class="text-brand-secondary text-sm font-medium"><%= label %></span>
@@ -71,7 +71,7 @@
 
     <%# Good morning set %>
     <div class="flex items-center justify-between py-3.5 pb-1">
-      <span class="text-brand-primary text-base font-medium">Good morning set</span>
+      <span class="text-brand-primary text-base font-medium"><%= t("settings.notifications.good_morning") %></span>
       <%= render "shared/toggle_switch",
             field_id: "cycle_reminder",
             checked: @notifications.cycle_reminder,
@@ -79,7 +79,7 @@
             onchange: "toggleSetting('cycle_reminder')" %>
     </div>
     <div class="mb-3">
-      <p class="text-brand-muted text-sm font-medium m-0">Summary → 9:00 a.m.</p>
+      <p class="text-brand-muted text-sm font-medium m-0"><%= t("settings.notifications.summary_time") %></p>
       <p class="text-brand-primary text-[10px] font-medium mt-1 leading-relaxed">
         Superpower of the day, pay attention to, mood, sport, nutrition, fertility
       </p>
@@ -88,7 +88,7 @@
 
     <%# Period reminder %>
     <div class="flex items-center justify-between py-3.5 pb-1">
-      <span class="text-brand-primary text-base font-medium">Period reminder</span>
+      <span class="text-brand-primary text-base font-medium"><%= t("settings.notifications.period_reminder") %></span>
       <%= render "shared/toggle_switch",
             field_id: "period_prediction",
             checked: @notifications.period_prediction,
@@ -97,16 +97,16 @@
     </div>
     <div class="flex items-center justify-between mb-3">
       <div class="flex gap-4">
-        <p class="text-brand-muted text-sm font-medium m-0">Start → 12:00 a.m.</p>
-        <p class="text-brand-muted text-sm font-medium m-0">End → 12:00 a.m.</p>
+        <p class="text-brand-muted text-sm font-medium m-0"><%= t("settings.notifications.start_time") %></p>
+        <p class="text-brand-muted text-sm font-medium m-0"><%= t("settings.notifications.end_time") %></p>
       </div>
-      <%= link_to "edit", notification_period_settings_path, class: "text-brand-muted text-sm font-medium no-underline" %>
+      <%= link_to t("settings.notifications.edit"), notification_period_settings_path, class: "text-brand-muted text-sm font-medium no-underline" %>
     </div>
     <div class="border-b border-brand-divider"></div>
 
     <%# Birth control reminder %>
     <div class="flex items-center justify-between py-3.5 pb-1">
-      <span class="text-brand-primary text-base font-medium">Birth control reminder</span>
+      <span class="text-brand-primary text-base font-medium"><%= t("settings.notifications.birth_control") %></span>
       <%= render "shared/toggle_switch",
             field_id: "ovulation_alert",
             checked: @notifications.ovulation_alert,
@@ -123,13 +123,13 @@
           Keep track of: Today is day 15 of taking the pill
         </p>
       </div>
-      <%= link_to "edit", notification_birth_control_settings_path, class: "text-brand-muted text-sm font-medium no-underline self-start" %>
+      <%= link_to t("settings.notifications.edit"), notification_birth_control_settings_path, class: "text-brand-muted text-sm font-medium no-underline self-start" %>
     </div>
     <div class="border-b border-brand-divider"></div>
 
     <%# Supplement reminder %>
     <div class="flex items-center justify-between py-3.5 pb-1">
-      <span class="text-brand-primary text-base font-medium">Supplement reminder</span>
+      <span class="text-brand-primary text-base font-medium"><%= t("settings.notifications.supplement") %></span>
       <%= render "shared/toggle_switch",
             field_id: "newsletter",
             checked: @notifications.newsletter,
@@ -137,15 +137,15 @@
             onchange: "toggleSetting('newsletter')" %>
     </div>
     <div class="flex items-center justify-between mb-3">
-      <p class="text-brand-muted text-sm font-medium m-0">Daily → 06:00 p.m.</p>
-      <span class="text-brand-muted text-sm font-medium">edit</span>
+      <p class="text-brand-muted text-sm font-medium m-0"><%= t("settings.notifications.daily_pm") %></p>
+      <span class="text-brand-muted text-sm font-medium"><%= t("settings.notifications.edit") %></span>
     </div>
     <div class="border-b border-brand-divider"></div>
 
     <%# In-App Popups %>
     <% inapp_on = @notifications.email_notifications %>
     <div class="flex items-center justify-between py-3.5 pb-2">
-      <span class="text-brand-primary text-base font-medium">In-App Popups</span>
+      <span class="text-brand-primary text-base font-medium"><%= t("settings.notifications.in_app_popups") %></span>
       <%= render "shared/toggle_switch",
             field_id: "email_notifications",
             checked: inapp_on,
@@ -153,11 +153,11 @@
             onchange: "toggleSetting('email_notifications')" %>
     </div>
     <% [
-      ["in_app_new_appt_synced",   "New appointments synced"],
-      ["in_app_tracking_reminder", "Tracking reminder"],
-      ["in_app_new_feedback",      "New Feedback available"],
-      ["in_app_app_updates",       "App-Updates"],
-      ["in_app_appointments",      "Appointments"]
+      ["in_app_new_appt_synced",   t("settings.notifications.in_app_new_appt")],
+      ["in_app_tracking_reminder", t("settings.notifications.in_app_tracking")],
+      ["in_app_new_feedback",      t("settings.notifications.in_app_new_feedback")],
+      ["in_app_app_updates",       t("settings.notifications.in_app_app_updates")],
+      ["in_app_appointments",      t("settings.notifications.in_app_appointments")]
     ].each do |field, label| %>
       <div class="flex items-center justify-between py-1.5">
         <span class="text-brand-secondary text-sm font-medium"><%= label %></span>
