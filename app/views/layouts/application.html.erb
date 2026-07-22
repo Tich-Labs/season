@@ -137,7 +137,7 @@
     <% end %>
 
     <main class="w-full flex-1 no-ptr <%= 'native-inset' if native_app? %>" data-controller="pull-to-refresh" style="<%= is_authenticated_view ? "padding-top: calc(5rem + env(safe-area-inset-top, 0px));" : '' %>">
-      <div class="max-w-md mx-auto h-full">
+      <div class="max-w-app mx-auto h-full">
         <%= yield %>
       </div>
     </main>
