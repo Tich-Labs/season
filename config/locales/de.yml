@@ -163,7 +163,7 @@ de:
       filter_events: "Termine"
       filter_tracked: "Getrackt"
       filter_cycle: "Zyklus"
-      wk: "KW"
+
       season_modal_tips: "Tipps für diese Phase"
       season_modal_got_it: "Verstanden"
   consent:

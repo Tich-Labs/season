@@ -169,7 +169,7 @@ en:
       filter_events: "Events"
       filter_tracked: "Tracked"
       filter_cycle: "Cycle"
-      wk: "Wk"
+
       season_modal_tips: "Tips for this phase"
       season_modal_got_it: "Got it"
   consent:

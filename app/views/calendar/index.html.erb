@@ -98,7 +98,7 @@
     <%# ── Day-of-week headers ── %>
     <div class="grid gap-0 mb-1.5 <%= @show_week_numbers ? 'grid-cols-8' : 'grid-cols-7' %>">
       <% if @show_week_numbers %>
-        <div class="text-center text-brand-secondary text-xs font-semibold tracking-wider py-1"><%= t("calendar.index.wk") %></div>
+        <div class="text-center py-1"></div>
       <% end %>
       <% %w[Mo Tu We Th Fr Sa Su].each do |d| %>
         <div class="text-center text-brand-secondary text-xs font-semibold tracking-wider py-1">
