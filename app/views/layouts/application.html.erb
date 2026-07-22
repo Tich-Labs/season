@@ -143,11 +143,13 @@
       </div>
     </main>
 
-    <% if is_authenticated_view && !native_app? %>
-      <%= render "shared/feedback_modal" %>
-      <%= render "shared/support_modal" %>
-      <%= render "shared/weekly_feedback_modal" %>
+    <% if is_authenticated_view %>
       <%= render "shared/quick_actions" %>
+      <% unless native_app? %>
+        <%= render "shared/feedback_modal" %>
+        <%= render "shared/support_modal" %>
+        <%= render "shared/weekly_feedback_modal" %>
+      <% end %>
     <% end %>
 
   </body>

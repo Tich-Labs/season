@@ -1,7 +1,7 @@
 <% cal_index_phase_colour = @current_phase ? (CycleCalculatorService::PHASE_META[@current_phase]&.dig(:colour) || "#933a35") : "#933a35" %>
 <% cal_index_title = @date.strftime("%B") %>
 <% content_for(:page_title) { cal_index_title } %>
-<%= native_navbar_tag(cal_index_title) if native_app? %>
+<!-- <%= native_navbar_tag(cal_index_title) if native_app? %> -->
 <% content_for(:header_color) { cal_index_phase_colour } %>
 <% content_for(:header_dark) { "true" } %>
 <% content_for(:header_left) do %>
