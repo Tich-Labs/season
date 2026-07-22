@@ -1,5 +1,4 @@
 <%# My Profile screen - matches Figma node 12048-37877 %>
-<%= native_navbar_tag(t("settings.profile.title")) if native_app? %>
 <% content_for(:header_left) do %>
   <%= link_to edit_settings_path, class: "p-2 flex items-center" do %>
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">

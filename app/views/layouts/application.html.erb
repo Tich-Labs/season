@@ -44,9 +44,8 @@
 
     <% if is_authenticated_view %>
     <div data-controller="menu">
-      <%# --- TOP APP BAR — constrained to mobile viewport --- %>
-      <%# Settings controller auto-applies dark theme; any view can opt in via content_for(:header_dark) %>
-      <%# Views can also pass content_for(:header_color) with a hex string for a phase-specific bg color %>
+      <%# Views can pass content_for(:header_color) with a hex string for a phase-specific bg color, %>
+      <%# or content_for(:header_dark) to force dark theme on non-settings pages. %>
       <% is_settings = controller_name == 'settings' %>
       <% dark_header = is_settings || content_for?(:header_dark) %>
       <% hdr_bg      = dark_header ? "bg-[#933a35]" : "bg-[#ede1d5]" %>

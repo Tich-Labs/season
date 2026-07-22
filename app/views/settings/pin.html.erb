@@ -1,5 +1,4 @@
 <% content_for(:title) { t("settings.pin.title", default: "Access Code") } %>
-<%= native_navbar_tag(t("settings.pin.title", default: "Access Code")) if native_app? %>
 <% content_for(:header_dark) { true } %>
 <% content_for(:header_left) do %>
   <%= link_to profile_settings_path, class: "min-w-11 min-h-11 flex items-center justify-center" do %>

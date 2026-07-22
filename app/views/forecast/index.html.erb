@@ -1,6 +1,5 @@
 <% page_title = @selected_date.strftime("%-d %B") %>
 <% content_for(:page_title) { page_title } %>
-<%= native_navbar_tag(page_title) if native_app? %>
 <% content_for(:header_color) { @phase_colour } %>
 <% content_for(:header_dark) { "true" } %>
 
@@ -22,7 +21,7 @@
   end
 %>
 
-<div class="bg-brand-background min-h-screen pb-32" data-controller="forecast-tabs forecast-modal"
+<div class="bg-white min-h-screen pb-32" data-controller="forecast-tabs forecast-modal"
      data-forecast-tabs-colour-value="<%= pc %>">
   <div class="max-w-app mx-auto px-4">
 

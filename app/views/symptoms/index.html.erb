@@ -55,7 +55,6 @@
   total_symptoms += 1 if temperature_done
   total_symptoms += 1 if weight_done
 %>
-<%= native_navbar_tag("#{phase_label} Symptoms") if native_app? %>
 <% content_for(:page_title) { "My Symptoms" } %>
 <% content_for(:header_dark) { "true" } %>
 <% content_for(:header_color) { phase_colour } %>

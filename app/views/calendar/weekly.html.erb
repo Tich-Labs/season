@@ -1,6 +1,5 @@
 <% weekly_phase_colour = @current_phase ? (CycleCalculatorService::PHASE_META[@current_phase]&.dig(:colour) || "#933a35") : "#933a35" %>
 <% content_for(:page_title) { "Week" } %>
-<%= native_navbar_tag("Week") if native_app? %>
 <% content_for(:header_color) { weekly_phase_colour } %>
 <% content_for(:header_dark) { "true" } %>
 <% content_for(:header_right) do %>

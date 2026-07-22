@@ -1,6 +1,5 @@
 <% dv_page_title = @date.strftime("%B") %>
 <% content_for(:page_title) { dv_page_title } %>
-<%= native_navbar_tag(dv_page_title) if native_app? %>
 <% content_for(:header_color) { @phase_colour || "#933a35" } %>
 <% content_for(:header_dark) { "true" } %>
 <% content_for(:header_left) do %>

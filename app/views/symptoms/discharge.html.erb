@@ -3,7 +3,6 @@
   phase_colour = phase_meta[:colour] || "#933a35"
 %>
 <% content_for(:page_title) { "Discharge" } %>
-<%= native_navbar_tag("Discharge") if native_app? %>
 <% content_for(:header_color) { phase_colour } %>
 <% content_for(:header_dark) { "true" } %>
 <% content_for(:header_left) do %>
