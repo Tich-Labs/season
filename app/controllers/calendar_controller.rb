@@ -6,7 +6,7 @@ class CalendarController < ApplicationController
 
   def load_calendar_preferences
     @show_appointments = current_user.show_appointments?
-    @show_cycledays = current_user.show_cycledays?
+    @show_cycledays = true
     @show_moonphases = current_user.show_moonphases?
     @show_holidays = current_user.show_holidays?
     @show_week_numbers = current_user.show_week_numbers?

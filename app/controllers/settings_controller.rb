@@ -8,7 +8,7 @@ class SettingsController < ApplicationController
   end
 
   SubscriptionData = Struct.new(:plan, :payment_method)
-  CalendarSettings = Struct.new(:appointments, :cycledays, :tracking_reminder, :moonphases,
+  CalendarSettings = Struct.new(:appointments, :tracking_reminder, :moonphases,
     :holidays, :kalenderwochen, :day_of_week, :keep_timezone)
   NotificationSettings = Struct.new(:cycle_reminder, :period_prediction, :ovulation_alert,
     :appointment_reminder, :newsletter, :push_notifications, :email_notifications, :reminder_time)
@@ -25,7 +25,6 @@ class SettingsController < ApplicationController
     @user = current_user
     preferences = {
       show_appointments: params[:show_appointments] == "1",
-      show_cycledays: params[:show_cycledays] == "1",
       show_moonphases: params[:show_moonphases] == "1",
       show_holidays: params[:show_holidays] == "1",
       show_week_numbers: params[:show_week_numbers] == "1",
