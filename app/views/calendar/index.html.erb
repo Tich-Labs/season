@@ -1,4 +1,5 @@
 <% cal_index_phase_colour = @current_phase ? (CycleCalculatorService::PHASE_META[@current_phase]&.dig(:colour) || "#933a35") : "#933a35" %>
+<% cal_index_text_colour = @current_phase ? (CycleCalculatorService::PHASE_META[@current_phase]&.dig(:text_colour) || "#FFFFFF") : "#FFFFFF" %>
 <% cal_index_title = @date.strftime("%B") %>
 <% content_for(:page_title) { cal_index_title } %>
 <!-- <%= native_navbar_tag(cal_index_title) if native_app? %> -->
@@ -6,7 +7,7 @@
 <% content_for(:header_dark) { "true" } %>
 <% content_for(:header_left) do %>
   <button class="p-2" data-action="click->menu#open">
-    <svg class="w-6 h-6 text-brand-primary" viewBox="0 0 24 24" fill="currentColor">
+    <svg class="w-6 h-6" style="color: <%= cal_index_text_colour %>;" viewBox="0 0 24 24" fill="currentColor">
       <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
     </svg>
   </button>
@@ -27,9 +28,32 @@
   </div>
 <% end %>
 <% content_for(:header_right) do %>
-  <div class="flex items-center gap-3">
-    <%= link_to informations_path do %>
-      <svg class="w-6 h-6 text-brand-primary" viewBox="0 0 25 25" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+  <div class="flex items-center gap-2">
+    <% if @streak > 0 %>
+      <div class="flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-full shrink-0">
+        <span class="text-base leading-none">🔥</span>
+        <span class="text-brand-primary text-xs font-semibold whitespace-nowrap"><%= @streak %> <%= t("calendar.index.day_streak") %></span>
+      </div>
+    <% end %>
+
+    <%= link_to settings_language_path,
+          class: "w-8 h-8 flex items-center justify-center rounded-md border text-xs font-semibold shrink-0",
+          style: "border-color: #{cal_index_text_colour}; color: #{cal_index_text_colour};" do %>
+      <%= I18n.locale.to_s.upcase %>
+    <% end %>
+
+    <%= link_to calendar_settings_path,
+          class: "w-8 h-8 flex items-center justify-center shrink-0" do %>
+      <svg class="w-5 h-5" style="color: <%= cal_index_text_colour %>;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M17 2.1l4 4-4 4" />
+        <path d="M3 12.6v-1a4 4 0 0 1 4-4h14" />
+        <path d="M7 21.9l-4-4 4-4" />
+        <path d="M21 11.4v1a4 4 0 0 1-4 4H3" />
+      </svg>
+    <% end %>
+
+    <%= link_to informations_path, class: "w-8 h-8 flex items-center justify-center shrink-0" do %>
+      <svg class="w-6 h-6" style="color: <%= cal_index_text_colour %>;" viewBox="0 0 25 25" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
         <path d="M12.4998 22.9168C18.2289 22.9168 22.9164 18.2293 22.9164 12.5001C22.9164 6.77094 18.2289 2.08344 12.4998 2.08344C6.7706 2.08344 2.0831 6.77094 2.0831 12.5001C2.0831 18.2293 6.7706 22.9168 12.4998 22.9168Z" />
         <path d="M12.4998 8.33344V13.5418" stroke-width="1.7" />
         <path d="M12.4957 16.6667H12.5051" stroke-width="2" />
@@ -54,17 +78,11 @@
 <div class="bg-brand-background min-h-screen pb-20">
   <div class="max-w-app mx-auto px-4 pt-3">
 
-    <%# ── Greeting + Streak ── %>
-    <div class="flex items-center justify-between mb-3.5">
+    <%# ── Greeting ── %>
+    <div class="mb-3.5">
       <p class="text-brand-primary text-4xl font-medium m-0 leading-tight font-montserrat">
         <%= t("calendar.index.hello") %> <%= current_user.first_name || "there" %>
       </p>
-      <% if @streak > 0 %>
-        <div class="flex items-center gap-2 bg-white px-3 py-2.5 rounded-lg shrink-0">
-          <span class="text-lg">🔥</span>
-          <span class="text-brand-primary text-sm font-medium"><%= @streak %> <%= t("calendar.index.day_streak") %></span>
-        </div>
-      <% end %>
     </div>
 
     <%# ── Filter chips (no JS — plain GET links) ── %>
