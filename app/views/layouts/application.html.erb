@@ -51,9 +51,7 @@
       <% hdr_bg      = dark_header ? "bg-[#933a35]" : "bg-[#ede1d5]" %>
       <% bar_color   = dark_header ? "bg-white"     : "bg-[#933a35]" %>
       <% hdr_fg      = dark_header ? "text-white"   : "text-[#933a35]" %>
-      <% hdr_safe = native_app? ? '' : 'padding-top: env(safe-area-inset-top, 0px);' %>
-      <% hdr_min_h = native_app? ? '3.5rem' : 'calc(3.5rem + env(safe-area-inset-top, 0px))' %>
-      <header class="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-app <%= hdr_bg %> z-40 flex items-center px-4<%= ' native-inset-top' if native_app? %>" style="<%= hdr_safe %>min-height: <%= hdr_min_h %>;<%= content_for?(:header_color) ? " background:#{yield(:header_color)};" : '' %>">
+      <header class="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-app <%= hdr_bg %> z-40 flex items-center px-4" style="padding-top: env(safe-area-inset-top, 0px); min-height: calc(3.5rem + env(safe-area-inset-top, 0px));<%= content_for?(:header_color) ? " background:#{yield(:header_color)};" : '' %>">
 
         <%# Left: custom back-arrow OR default hamburger %>
         <% if content_for?(:header_left) %>
@@ -132,8 +130,7 @@
     </div>
     <% end %>
 
-    <% main_pt = is_authenticated_view ? (native_app? ? '3.5rem' : 'calc(3.5rem + env(safe-area-inset-top, 0px))') : '' %>
-    <main class="w-full flex-1 no-ptr <%= 'native-inset' if native_app? %>" data-controller="pull-to-refresh" style="padding-top: <%= main_pt %>;">
+    <main class="w-full flex-1 no-ptr <%= 'native-inset' if native_app? %>" data-controller="pull-to-refresh" style="<%= is_authenticated_view ? "padding-top: calc(3.5rem + env(safe-area-inset-top, 0px));" : '' %>">
       <div class="max-w-app mx-auto h-full">
         <%= yield %>
       </div>
