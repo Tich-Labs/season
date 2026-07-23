@@ -120,11 +120,14 @@
         </button>
       </div>
 
-      <div class="flex items-center justify-between py-3">
+      <div class="relative flex items-center justify-between py-3">
         <span class="text-brand-muted text-sm font-medium"><%= t("settings.calendar.moon_phases") %></span>
-        <button type="button" class="toggle-btn <%= "active" if @user.show_moonphases? %>" data-action="click->calendar-toggle#toggle" data-field="show_moonphases">
+        <div class="toggle-btn opacity-40 pointer-events-none">
           <div class="toggle-track"><div class="toggle-thumb"></div></div>
-        </button>
+        </div>
+        <div class="absolute right-2 top-2 bg-brand-field rounded-full px-2.5 py-1">
+          <span class="text-brand-primary text-xs"><%= t("settings.edit.coming_soon") %></span>
+        </div>
       </div>
 
       <div class="flex items-center justify-between py-3">

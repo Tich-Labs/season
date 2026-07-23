@@ -76,14 +76,17 @@
       </svg>
     </a>
 
-    <%# Darkmode %>
-    <div class="flex items-center gap-4 py-4 cursor-pointer" onclick="alert('Dark mode toggle - coming soon!')">
+    <%# Darkmode — coming soon %>
+    <div class="relative flex items-center gap-4 py-4">
       <svg class="w-6 h-6 text-brand-primary shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
       </svg>
       <span class="flex-1 text-brand-primary text-base font-medium"><%= t("settings.edit.darkmode") %></span>
-      <div class="w-10 h-5 bg-brand-primary rounded-[25px] p-0.5">
-        <div class="w-4 h-4 bg-white rounded-full ml-auto"></div>
+      <div class="w-10 h-5 bg-brand-field/50 rounded-[25px] p-0.5 opacity-50">
+        <div class="w-4 h-4 bg-white rounded-full"></div>
+      </div>
+      <div class="absolute right-2 top-2 bg-brand-field rounded-full px-2.5 py-1">
+        <span class="text-brand-primary text-xs"><%= t("settings.edit.coming_soon") %></span>
       </div>
     </div>
 
