@@ -83,13 +83,7 @@
         <% if content_for?(:header_right) %>
           <%= yield(:header_right) %>
         <% elsif is_settings %>
-          <button class="min-w-11 min-h-11 flex flex-col items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" width="4" height="20" fill="white" viewBox="0 0 4 20">
-              <circle cx="2" cy="2" r="1.5" />
-              <circle cx="2" cy="10" r="1.5" />
-              <circle cx="2" cy="18" r="1.5" />
-            </svg>
-          </button>
+          <div class="w-10"></div>
         <% else %>
           <div class="w-10"></div>
         <% end %>

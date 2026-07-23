@@ -138,9 +138,9 @@
         </button>
 
         <%# Log out %>
-        <%= link_to session_path,
-                    data: { turbo_method: :delete },
-                    class: "absolute left-0 top-[746px] w-full h-[45px] flex items-center hover:bg-stone-50" do %>
+        <%= button_to session_path, method: :delete,
+              form_class: "contents",
+              class: "absolute left-0 top-[746px] w-full h-[45px] flex items-center hover:bg-stone-50 cursor-pointer bg-transparent border-0 text-inherit font-inherit text-base" do %>
           <svg class="absolute left-[30px] top-[9px]" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#933a35" stroke-width="1.5">
             <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
             <polyline points="16 17 21 12 16 7" />

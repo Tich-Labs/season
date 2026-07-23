@@ -13,7 +13,7 @@
     <div class="border-b border-brand-divider"></div>
 
     <%# My Profile %>
-    <a href="<%= profile_settings_path %>" class="flex items-center gap-4 py-4">
+    <a href="<%= profile_settings_path %>" data-turbo-action="replace" class="flex items-center gap-4 py-4">
       <%= vuesax_icon "user", size: 24 %>
       <span class="flex-1 text-brand-primary text-base font-medium"><%= t("settings.edit.my_profile") %></span>
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="text-brand-primary">
@@ -22,7 +22,7 @@
     </a>
 
     <%# My Subscriptions %>
-    <a href="<%= subscriptions_settings_path %>" class="flex items-center gap-4 py-4">
+    <a href="<%= subscriptions_settings_path %>" data-turbo-action="replace" class="flex items-center gap-4 py-4">
       <%= vuesax_icon "bag", size: 24 %>
       <span class="flex-1 text-brand-primary text-base font-medium"><%= t("settings.edit.my_subscriptions") %></span>
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="text-brand-primary">
@@ -30,7 +30,7 @@
       </svg>
     </a>
     <%# My Calendar %>
-    <a href="<%= calendar_settings_path %>" class="flex items-center gap-4 py-4">
+    <a href="<%= calendar_settings_path %>" data-turbo-action="replace" class="flex items-center gap-4 py-4">
       <%= vuesax_icon "calendar", size: 24 %>
       <span class="flex-1 text-brand-primary text-base font-medium"><%= t("settings.edit.my_calendar") %></span>
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="text-brand-primary">
@@ -45,7 +45,7 @@
     <div class="border-b border-brand-divider"></div>
 
     <%# Notifications & Reminders %>
-    <a href="<%= notifications_settings_path %>" class="flex items-center gap-4 py-4">
+    <a href="<%= notifications_settings_path %>" data-turbo-action="replace" class="flex items-center gap-4 py-4">
       <%= vuesax_icon "notification", size: 24 %>
       <span class="flex-1 text-brand-primary text-base font-medium"><%= t("settings.edit.notifications_and_reminder") %></span>
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="text-brand-primary">
@@ -54,7 +54,7 @@
     </a>
 
     <%# Data & Privacy (GDPR Consent) %>
-    <a href="/settings/consent" class="flex items-center gap-4 py-4">
+    <a href="/settings/consent" data-turbo-action="replace" class="flex items-center gap-4 py-4">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" class="text-brand-primary">
         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
       </svg>
