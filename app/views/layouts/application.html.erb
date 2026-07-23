@@ -53,7 +53,7 @@
       <% hdr_fg      = dark_header ? "text-white"   : "text-[#933a35]" %>
       <header class="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-app <%= hdr_bg %> z-40 flex items-center px-4" style="padding-top: env(safe-area-inset-top, 0px); min-height: calc(3.5rem + env(safe-area-inset-top, 0px));<%= content_for?(:header_color) ? " background:#{yield(:header_color)};" : '' %>">
 
-        <div class="flex-1 flex justify-start items-center min-w-0">
+        <div class="flex-none flex items-center min-w-0">
           <%# Left: custom back-arrow OR default hamburger %>
           <% if content_for?(:header_left) %>
             <%= yield(:header_left) %>
@@ -69,17 +69,17 @@
         <div class="flex-1 flex justify-center items-center gap-1 min-w-0">
           <%# Centre: custom title OR settings default (gear + "Settings") %>
           <% if content_for?(:page_title) %>
-            <span class="<%= hdr_fg %> text-base font-medium font-['Montserrat'] truncate"><%= yield(:page_title) %></span>
+            <span class="<%= hdr_fg %> text-[16px] font-medium font-['Montserrat'] truncate"><%= yield(:page_title) %></span>
           <% elsif is_settings %>
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24" class="shrink-0">
               <circle cx="12" cy="12" r="3" />
               <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
             </svg>
-            <span class="text-white text-base font-medium font-['Montserrat'] truncate">Settings</span>
+            <span class="text-white text-[16px] font-medium font-['Montserrat'] truncate">Settings</span>
           <% end %>
         </div>
 
-        <div class="flex-1 flex justify-end items-center min-w-0">
+        <div class="flex-none flex items-center min-w-0">
           <%# Right: custom content OR blank spacer %>
           <% if content_for?(:header_right) %>
             <%= yield(:header_right) %>
