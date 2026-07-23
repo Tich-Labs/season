@@ -35,8 +35,10 @@ class CalendarController < ApplicationController
     if current_user.last_period_start
       calculator = CycleCalculatorService.new(current_user)
       @cycle_by_date = calculator.month_data(@year, @month).index_by { |d| d[:date] }
+      @current_phase = calculator.current_phase
     else
       @cycle_by_date = {}
+      @current_phase = nil
     end
 
     @holidays_by_date = @show_holidays ? holidays_for_month(@year, @month) : {}

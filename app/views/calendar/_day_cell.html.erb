@@ -52,15 +52,15 @@
 <a href="<%= forecast_path(date: date.to_s) %>"
    style="display:flex; flex-direction:column; text-decoration:none; height:100%; overflow:hidden;<%= in_month ? '' : ' opacity:0.45;' %>">
 
-  <%# ── Phase band: full-bleed, 18px, no padding ── %>
-  <div style="height:18px; flex-shrink:0; display:flex; align-items:center; justify-content:center;<%= band_colour ? " background:#{band_colour};" : "" %>">
-    <% if local_assigns[:show_cycle_day_on_band] && cycle_day && band_colour %>
-      <span style="color:#FFFFFF; font-size:8px; font-weight:700; line-height:1; letter-spacing:0.03em;"><%= cycle_day %></span>
+  <%# ── Phase band: full-bleed, 14px, #EDE1D5 fallback bg ── %>
+  <div style="height:14px; flex-shrink:0; display:flex; align-items:flex-end; justify-content:center; padding-bottom:1px; background:<%= band_colour || '#EDE1D5' %>;">
+    <% if local_assigns[:show_cycle_day_on_band] && cycle_day %>
+      <span style="color:#FFFFFF; font-size:7px; font-weight:700; line-height:1; letter-spacing:0.03em;"><%= cycle_day %></span>
     <% end %>
   </div>
 
   <%# ── Cell content ── %>
-  <div style="flex:1; padding:<%= is_today ? '0' : '4px' %> 4px 3px; display:flex; flex-direction:column; gap:2px; overflow:hidden;">
+  <div style="flex:1; padding:<%= is_today ? '0' : '1px' %> 4px 3px; display:flex; flex-direction:column; gap:1px; overflow:hidden;">
 
     <%# Week number (top-left, small text) %>
     <% if week_num %>

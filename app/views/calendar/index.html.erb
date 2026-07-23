@@ -27,32 +27,90 @@
   </div>
 <% end %>
 <% content_for(:header_right) do %>
-  <div class="flex items-center gap-2">
+  <div class="flex items-center gap-1">
     <% if @streak > 0 %>
-      <div class="flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-full shrink-0">
-        <span class="text-base leading-none">🔥</span>
-        <span class="text-brand-primary text-xs font-semibold whitespace-nowrap"><%= @streak %> <%= t("calendar.index.day_streak") %></span>
+      <div class="flex items-center gap-1 bg-white px-2 py-1 rounded-full shrink-0">
+        <span class="text-sm leading-none">🔥</span>
+        <span class="text-brand-primary text-xs font-semibold"><%= @streak %></span>
       </div>
     <% end %>
 
     <%= link_to settings_language_path,
-          class: "w-8 h-8 flex items-center justify-center rounded-md border text-xs font-semibold shrink-0",
+          class: "w-7 h-7 flex items-center justify-center rounded-md border text-[10px] font-semibold shrink-0",
           style: "border-color: #{cal_index_text_colour}; color: #{cal_index_text_colour};" do %>
       <%= I18n.locale.to_s.upcase %>
     <% end %>
 
-    <%= link_to calendar_settings_path,
-          class: "w-8 h-8 flex items-center justify-center shrink-0" do %>
-      <svg class="w-5 h-5" style="color: <%= cal_index_text_colour %>;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M17 2.1l4 4-4 4" />
-        <path d="M3 12.6v-1a4 4 0 0 1 4-4h14" />
-        <path d="M7 21.9l-4-4 4-4" />
-        <path d="M21 11.4v1a4 4 0 0 1-4 4H3" />
-      </svg>
-    <% end %>
+    <div data-controller="calendar-menu" class="relative">
+      <button data-action="click->calendar-menu#toggle"
+            class="w-7 h-7 flex items-center justify-center shrink-0">
+        <svg class="w-4 h-4" style="color: <%= cal_index_text_colour %>;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 2.1l4 4-4 4" />
+          <path d="M3 12.6v-1a4 4 0 0 1 4-4h14" />
+          <path d="M7 21.9l-4-4 4-4" />
+          <path d="M21 11.4v1a4 4 0 0 1-4 4H3" />
+        </svg>
+      </button>
 
-    <%= link_to informations_path, class: "w-8 h-8 flex items-center justify-center shrink-0" do %>
-      <svg class="w-6 h-6" style="color: <%= cal_index_text_colour %>;" viewBox="0 0 25 25" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <div data-calendar-menu-target="backdrop"
+           class="hidden fixed inset-0 z-50"
+           data-action="click->calendar-menu#close">
+        <div data-calendar-menu-target="panel"
+             class="absolute shadow-xl"
+             data-action="click->calendar-menu#stopPropagation"
+             style="right:0; top:0; width:268px; background:#EDE1D5; border-radius:0 0 0 40px; transform:translateX(100%); transition:transform 250ms ease-out;">
+          <div class="py-2">
+            <%= link_to calendar_appointments_path,
+                  class: "flex items-center gap-4 px-6 py-3 hover:bg-brand-primary/5 no-underline",
+                  data: { turbo_action: "replace", action: "click->calendar-menu#close" } do %>
+              <div class="flex flex-col gap-[1.5px] shrink-0" style="width:20px;">
+                <div class="flex gap-[1px] items-center"><div class="w-[3px] h-[4px] bg-brand-primary rounded-[0.8px]"></div><div class="w-[15px] h-[4px] bg-brand-primary rounded-[0.8px]"></div></div>
+                <div class="flex gap-[1px] items-center"><div class="w-[3px] h-[4.5px] bg-brand-primary rounded-[0.8px]"></div><div class="w-[15px] h-[4.5px] bg-brand-primary rounded-[0.8px]"></div></div>
+                <div class="flex gap-[1px] items-center"><div class="w-[3px] h-[4px] bg-brand-primary rounded-[0.8px]"></div><div class="w-[15px] h-[4px] bg-brand-primary rounded-[0.8px]"></div></div>
+              </div>
+              <span class="text-brand-primary text-base font-medium"><%= t("nav.menu.schedule_overview") %></span>
+            <% end %>
+
+            <%= link_to daily_view_path(Time.zone.today),
+                  class: "flex items-center gap-4 px-6 py-3 hover:bg-brand-primary/5 no-underline",
+                  data: { turbo_action: "replace", action: "click->calendar-menu#close" } do %>
+              <div class="flex flex-col gap-[1px] shrink-0" style="width:20px;">
+                <div class="w-[19px] h-[2.5px] bg-brand-primary rounded-[0.8px]"></div>
+                <div class="w-[19px] h-[8px] bg-brand-primary rounded-[0.8px]"></div>
+                <div class="w-[19px] h-[2.5px] bg-brand-primary rounded-[0.8px]"></div>
+              </div>
+              <span class="text-brand-primary text-base font-medium"><%= t("nav.menu.day_view") %></span>
+            <% end %>
+
+            <%= link_to calendar_weekly_path,
+                  class: "flex items-center gap-4 px-6 py-3 hover:bg-brand-primary/5 no-underline",
+                  data: { turbo_action: "replace", action: "click->calendar-menu#close" } do %>
+              <div class="flex gap-[1.4px] shrink-0" style="width:20px; height:16px;">
+                <div class="w-[5.5px] h-[16px] bg-brand-primary rounded-[0.8px]"></div>
+                <div class="w-[5.5px] h-[16px] bg-brand-primary rounded-[0.8px]"></div>
+                <div class="w-[5.5px] h-[16px] bg-brand-primary rounded-[0.8px]"></div>
+              </div>
+              <span class="text-brand-primary text-base font-medium"><%= t("nav.menu.weekly_view") %></span>
+            <% end %>
+
+            <%= link_to user_root_path,
+                  class: "flex items-center gap-4 px-6 py-3 hover:bg-brand-primary/5 no-underline",
+                  data: { turbo_action: "replace", action: "click->calendar-menu#close" } do %>
+              <div class="grid grid-cols-2 gap-[2px] shrink-0" style="width:19px; height:16px;">
+                <div class="border border-brand-primary rounded-[0.8px]"></div>
+                <div class="border border-brand-primary rounded-[0.8px]"></div>
+                <div class="border border-brand-primary rounded-[0.8px]"></div>
+                <div class="border border-brand-primary rounded-[0.8px]"></div>
+              </div>
+              <span class="text-brand-primary text-base font-medium"><%= t("nav.menu.monthly_view") %></span>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%= link_to informations_path, class: "w-7 h-7 flex items-center justify-center shrink-0" do %>
+      <svg class="w-4 h-4" style="color: <%= cal_index_text_colour %>;" viewBox="0 0 25 25" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
         <path d="M12.4998 22.9168C18.2289 22.9168 22.9164 18.2293 22.9164 12.5001C22.9164 6.77094 18.2289 2.08344 12.4998 2.08344C6.7706 2.08344 2.0831 6.77094 2.0831 12.5001C2.0831 18.2293 6.7706 22.9168 12.4998 22.9168Z" />
         <path d="M12.4998 8.33344V13.5418" stroke-width="1.7" />
         <path d="M12.4957 16.6667H12.5051" stroke-width="2" />
