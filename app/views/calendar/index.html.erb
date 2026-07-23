@@ -27,24 +27,24 @@
   </div>
 <% end %>
 <% content_for(:header_right) do %>
-  <div class="flex items-center gap-1">
+  <div class="flex items-center gap-[2px]">
     <% if @streak > 0 %>
-      <div class="flex items-center gap-1 bg-white px-2 py-1 rounded-full shrink-0">
-        <span class="text-sm leading-none">🔥</span>
-        <span class="text-brand-primary text-xs font-semibold"><%= @streak %></span>
+      <div class="flex items-center gap-1 bg-white px-1.5 py-0.5 rounded-full shrink-0">
+        <span class="text-xs leading-none">🔥</span>
+        <span class="text-brand-primary text-[9px] font-semibold"><%= @streak %></span>
       </div>
     <% end %>
 
     <%= link_to settings_language_path,
-          class: "w-7 h-7 flex items-center justify-center rounded-md border text-[10px] font-semibold shrink-0",
+          class: "w-6 h-6 flex items-center justify-center rounded-md border text-[9px] font-semibold shrink-0",
           style: "border-color: #{cal_index_text_colour}; color: #{cal_index_text_colour};" do %>
       <%= I18n.locale.to_s.upcase %>
     <% end %>
 
     <div data-controller="calendar-menu" class="relative">
       <button data-action="click->calendar-menu#toggle"
-            class="w-7 h-7 flex items-center justify-center shrink-0">
-        <svg class="w-4 h-4" style="color: <%= cal_index_text_colour %>;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            class="w-6 h-6 flex items-center justify-center shrink-0">
+        <svg class="w-3.5 h-3.5" style="color: <%= cal_index_text_colour %>;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M17 2.1l4 4-4 4" />
           <path d="M3 12.6v-1a4 4 0 0 1 4-4h14" />
           <path d="M7 21.9l-4-4 4-4" />
@@ -109,8 +109,8 @@
       </div>
     </div>
 
-    <%= link_to informations_path, class: "w-7 h-7 flex items-center justify-center shrink-0" do %>
-      <svg class="w-4 h-4" style="color: <%= cal_index_text_colour %>;" viewBox="0 0 25 25" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <%= link_to informations_path, class: "w-6 h-6 flex items-center justify-center shrink-0" do %>
+      <svg class="w-3.5 h-3.5" style="color: <%= cal_index_text_colour %>;" viewBox="0 0 25 25" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
         <path d="M12.4998 22.9168C18.2289 22.9168 22.9164 18.2293 22.9164 12.5001C22.9164 6.77094 18.2289 2.08344 12.4998 2.08344C6.7706 2.08344 2.0831 6.77094 2.0831 12.5001C2.0831 18.2293 6.7706 22.9168 12.4998 22.9168Z" />
         <path d="M12.4998 8.33344V13.5418" stroke-width="1.7" />
         <path d="M12.4957 16.6667H12.5051" stroke-width="2" />
