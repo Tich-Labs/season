@@ -20,6 +20,13 @@
       <% end %>
     </div>
 
+    <%= link_to calendar_appointments_path,
+          class: "w-9 h-9 flex items-center justify-center shrink-0 text-white" do %>
+      <svg width="23" height="23" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M8.62517 21.0834H14.3752C19.1668 21.0834 21.0835 19.1668 21.0835 14.3751V8.6251C21.0835 3.83343 19.1668 1.91676 14.3752 1.91676H8.62517C3.83351 1.91676 1.91684 3.83343 1.91684 8.6251V14.3751C1.91684 19.1668 3.83351 21.0834 8.62517 21.0834Z" stroke="currentColor" stroke-width="1.4375" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    <% end %>
+
     <div data-controller="calendar-menu" class="relative">
       <button data-action="click->calendar-menu#toggle"
             class="w-9 h-9 flex items-center justify-center shrink-0">
