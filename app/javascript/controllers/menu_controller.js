@@ -30,6 +30,12 @@ export default class extends Controller {
   openFeedback (event) {
     const type = event.currentTarget.dataset.type
     this.element.dispatchEvent(new CustomEvent('close-menu', { bubbles: true }))
-    setTimeout(() => window.openFeedbackModal?.(type), 350)
+    setTimeout(() => {
+      if (type === 'bug_report') {
+        window.openSupportModal?.(type)
+      } else {
+        window.openFeedbackModal?.()
+      }
+    }, 350)
   }
 }
