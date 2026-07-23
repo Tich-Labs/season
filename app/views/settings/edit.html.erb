@@ -64,28 +64,17 @@
       </svg>
     </a>
 
-    <%# Language — inline selector with AJAX (stays on page, no modal close) %>
-    <div data-controller="language-selector"
-         data-language-selector-current-language-value="<%= current_user.language.presence || I18n.default_locale %>">
-      <div class="flex items-center gap-4 py-4">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" class="text-brand-primary shrink-0">
-          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-        </svg>
-        <span class="flex-1 text-brand-primary text-base font-medium"><%= t("settings.language.title", default: "Language") %></span>
-      </div>
-      <div class="ml-9 mb-4">
-        <select data-language-selector-target="select"
-                data-action="change->language-selector#handleChange"
-                class="w-full bg-brand-field border border-brand-primary rounded-lg px-3 py-2 text-sm text-brand-primary font-medium focus:outline-none focus:ring-2 focus:ring-brand-primary cursor-pointer appearance-none">
-          <% I18n.available_locales.each do |locale| %>
-            <option value="<%= locale %>"
-                    <%= current_user.language == locale.to_s || (current_user.language.blank? && locale == I18n.default_locale) ? "selected" : "" %>>
-              <%= I18n.t("language.names.#{locale}", default: locale.to_s.upcase) %>
-            </option>
-          <% end %>
-        </select>
-      </div>
-    </div>
+    <%# Language — navigates to dedicated language page (same as header language button) %>
+    <% cur_lang = current_user.language.presence || I18n.default_locale.to_s %>
+    <a href="<%= settings_language_path %>" data-turbo-action="replace" class="flex items-center gap-4 py-4">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" class="text-brand-primary shrink-0">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+      </svg>
+      <span class="flex-1 text-brand-primary text-base font-medium"><%= I18n.t("language.names.#{cur_lang}", default: cur_lang.upcase) %></span>
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="text-brand-primary">
+        <polyline points="9 18 15 12 9 6" />
+      </svg>
+    </a>
 
     <%# Darkmode %>
     <div class="flex items-center gap-4 py-4 cursor-pointer" onclick="alert('Dark mode toggle - coming soon!')">
