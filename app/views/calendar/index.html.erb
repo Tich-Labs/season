@@ -35,6 +35,12 @@
       </div>
     <% end %>
 
+    <%= link_to settings_language_path,
+          class: "w-9 h-9 flex items-center justify-center rounded-md border text-[11px] font-semibold shrink-0",
+          style: "border-color: #{cal_index_text_colour}; color: #{cal_index_text_colour};" do %>
+      <%= I18n.locale.to_s.upcase %>
+    <% end %>
+
     <%= link_to calendar_appointments_path,
           class: "w-9 h-9 flex items-center justify-center shrink-0" do %>
       <svg width="23" height="23" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
