@@ -159,6 +159,7 @@ de:
       no_period_data: "Wir haben noch keine Periodendaten erhalten. Füge dein letztes Periodenstartdatum hinzu, um deine Zyklusphasen zu sehen."
       log_period_start: "Periodenstart eintragen"
       hello: "Hallo"
+      subheading: "Das ist dein Monat"
       day_streak: "Tage am Stück"
       streak_days:
         one: "Tag"

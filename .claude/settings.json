@@ -23,7 +23,9 @@
       "Bash(curl -s http://localhost:3000/welcome -o /dev/null -w \"welcome status: %{http_code}\\\\n\")",
       "Bash(curl -s http://localhost:3000/assets/tailwind-*.css)",
       "Bash(curl -s http://localhost:3000/welcome)",
-      "Bash(curl -s http://localhost:3000/assets/tailwind-cc51e70d.css -o /tmp/live_tailwind.css)"
+      "Bash(curl -s http://localhost:3000/assets/tailwind-cc51e70d.css -o /tmp/live_tailwind.css)",
+      "Bash(git commit -m ' *)",
+      "Bash(xargs sed -i '' 's/max-w-app mx-auto px-2\\\\b/max-w-app mx-auto px-4/g')"
     ]
   },
   "enabledPlugins": {

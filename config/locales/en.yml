@@ -165,6 +165,7 @@ en:
       no_period_data: "We haven't received your period data yet. Add your last period start date to see your cycle phases."
       log_period_start: "Log period start"
       hello: "Hello"
+      subheading: "This is your month"
       day_streak: "day streak"
       streak_days:
         one: "Day"

@@ -9,7 +9,7 @@
 <% end %>
 
 <div class="bg-white min-h-screen pb-24 font-sans">
-  <div class="max-w-app mx-auto px-2 pt-5">
+  <div class="max-w-app mx-auto px-4 pt-5">
 
     <% if @events.any? %>
       <% @events.group_by { |e| e.date }.sort.each do |date, events| %>

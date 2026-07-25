@@ -42,7 +42,7 @@
 <% phase_season = @meta&.dig(:season) %>
 
 <div class="min-h-screen pb-24 bg-brand-field">
-  <div class="max-w-app mx-auto px-2">
+  <div class="max-w-app mx-auto px-4">
 
     <%# ── Avatar (tap to change) ──────────────────────────────────────── %>
     <div class="flex justify-center pt-8 pb-5">
@@ -117,7 +117,7 @@
           </button>
 
           <%# Analysis text %>
-          <p class="text-brand-primary font-medium text-base leading-snug text-center font-sans">
+          <p class="text-brand-primary font-medium text-base leading-snug text-center font-sans pt-8">
             <%= analysis_text %>
           </p>
         </div>
@@ -156,7 +156,7 @@
 
       <%= link_to superpowers_path,
             class: "flex justify-between items-center rounded-lg px-5 min-h-[3rem] py-3 bg-white no-underline" do %>
-        <span class="flex-1 min-w-0 text-xl font-medium text-brand-primary font-sans">My Superpower</span>
+        <span class="flex-1 min-w-0 text-xl font-medium text-brand-primary font-sans">My Superpowers</span>
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none"
              stroke="<%= phase_colour %>" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true" class="shrink-0">
           <polyline points="9 18 15 12 9 6" />
@@ -165,16 +165,7 @@
 
       <%= link_to period_tracking_index_path,
             class: "flex justify-between items-center rounded-lg px-5 min-h-[3rem] py-3 bg-white no-underline" do %>
-        <span class="flex-1 min-w-0 text-xl font-medium text-brand-primary font-sans">Track my Period</span>
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none"
-             stroke="<%= phase_colour %>" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true" class="shrink-0">
-          <polyline points="9 18 15 12 9 6" />
-        </svg>
-      <% end %>
-
-      <%= link_to calendar_path,
-            class: "flex justify-between items-center rounded-lg px-5 min-h-[3rem] py-3 bg-white no-underline" do %>
-        <span class="flex-1 min-w-0 text-xl font-medium text-brand-primary font-sans">Calendar</span>
+        <span class="flex-1 min-w-0 text-xl font-medium text-brand-primary font-sans">Track My Period</span>
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none"
              stroke="<%= phase_colour %>" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true" class="shrink-0">
           <polyline points="9 18 15 12 9 6" />

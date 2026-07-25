@@ -122,12 +122,15 @@
 <% end %>
 
 <div class="bg-white min-h-screen pb-20">
-  <div class="max-w-app mx-auto px-2 pt-3">
+  <div class="max-w-app mx-auto px-4 pt-3">
 
     <%# ── Greeting ── %>
     <div class="mb-3.5">
-      <p class="text-brand-primary text-4xl font-medium m-0 leading-tight font-montserrat">
+      <p class="text-brand-primary text-4xl font-medium m-0 leading-tight">
         <%= t("calendar.index.hello") %> <%= current_user.first_name || "there" %>
+      </p>
+      <p class="text-brand-primary text-base font-medium m-0">
+        <%= t("calendar.index.subheading") %>
       </p>
     </div>
 
@@ -142,21 +145,9 @@
       <% end %>
     </div>
 
-    <%# ── Day-of-week headers ── %>
-    <div class="grid gap-0 mb-1.5 <%= @show_week_numbers ? 'grid-cols-8' : 'grid-cols-7' %>">
-      <% if @show_week_numbers %>
-        <div class="text-center py-1"></div>
-      <% end %>
-      <% %w[Mo Tu We Th Fr Sa Su].each do |d| %>
-        <div class="text-center text-brand-secondary text-xs font-semibold tracking-wider py-1">
-          <%= d %>
-        </div>
-      <% end %>
-    </div>
-
     <%# ── Phase Legend ── %>
     <% if @cycle_by_date.present? %>
-      <div class="flex gap-3 justify-center flex-wrap mb-3" data-controller="auto-hide" data-auto-hide-delay-value="50">
+      <div class="flex gap-3 justify-start flex-wrap mb-3" data-controller="auto-hide" data-auto-hide-delay-value="50">
         <% CycleCalculatorService::PHASE_META.each do |phase, meta| %>
           <div class="flex items-center gap-1">
             <span class="w-2.5 h-2.5 rounded-full" style="background: <%= meta[:colour] %>;"></span>
@@ -166,19 +157,34 @@
 
       </div>
     <% end %>
+  </div>
+
+  <%# ── Day-of-week headers + calendar grid: full-bleed edge-to-edge, no horizontal padding ── %>
+  <div class="max-w-app mx-auto">
+    <% week_number_grid_style = "display:grid; grid-template-columns:#{@show_week_numbers ? "auto repeat(7, 1fr)" : "repeat(7, 1fr)"};" %>
+    <div class="gap-0" style="<%= week_number_grid_style %>">
+      <% if @show_week_numbers %>
+        <div class="text-center py-1" style="min-width:18px;"></div>
+      <% end %>
+      <% %w[Mo Tu We Th Fr Sa Su].each do |d| %>
+        <div class="text-center text-brand-secondary text-xs font-semibold tracking-wider py-1">
+          <%= d %>
+        </div>
+      <% end %>
+    </div>
 
     <%# ── Calendar grid: 85px rows, 0 column-gap so phase bands merge ── %>
     <%
       cols = @show_week_numbers ? 8 : 7
       cell_idx = 0
     %>
-    <div class="grid auto-rows-calendar gap-x-0 gap-y-2 <%= cols == 8 ? 'grid-cols-8' : 'grid-cols-7' %>">
+    <div class="auto-rows-calendar gap-x-0 gap-y-2" style="<%= week_number_grid_style %>">
 
       <%# All day cells — prev month tail + current month %>
       <% @calendar_dates.each do |date| %>
         <%# Week number column %>
         <% if @show_week_numbers && (cell_idx == 0 || (cell_idx > 0 && cell_idx % cols == 0)) %>
-          <div style="display:flex; align-items:flex-start; justify-content:flex-end; height:100%;"><div style="height:14px; min-width:14px; display:flex; align-items:center; justify-content:center; background:#EDE1D5; padding:0 2px;"><span style="color:#933A35; font-size:9px; font-weight:700; line-height:1; letter-spacing:0.03em;"><%= date.cweek %></span></div></div>
+          <div style="display:flex; align-items:flex-start; height:100%; min-width:18px;"><div style="width:100%; height:14px; display:flex; align-items:center; justify-content:center; background:#EDE1D5; box-sizing:border-box; padding:0 2px;"><span style="color:#933A35; font-size:9px; font-weight:700; line-height:1; letter-spacing:0.03em;"><%= date.cweek %></span></div></div>
           <% cell_idx += 1 %>
         <% end %>
         <%= render "calendar/day_cell",
@@ -196,7 +202,6 @@
       <% end %>
 
     </div>
-
   </div>
 </div>
 
