@@ -38,11 +38,12 @@ class OnboardingControllerTest < ActionDispatch::IntegrationTest
   end
 
   # Date guard — step 3
-  test "PATCH /onboarding/3 with valid ISO date saves last_period_start" do
+  test "PATCH /onboarding/3 with valid ISO date saves last_period_start and creates period_start log" do
     sign_in_as(@carol)
     patch onboarding_path(3), params: {last_period_start: 10.days.ago.to_date.to_s}
     assert_response :redirect
     assert_not_nil @carol.reload.last_period_start
+    assert @carol.period_starts.exists?(started_on: 10.days.ago.to_date)
   end
 
   test "PATCH /onboarding/3 with garbage date returns 422 not 500" do

@@ -16,6 +16,7 @@ class User < ApplicationRecord
   has_many :weekly_feedback_responses, dependent: :destroy
   has_many :user_consents, dependent: :destroy
   has_many :push_subscriptions, dependent: :destroy
+  has_many :period_starts, dependent: :destroy
 
   store_accessor :notification_preferences,
     :in_app_new_appt_synced, :in_app_tracking_reminder, :in_app_new_feedback,
@@ -26,22 +27,10 @@ class User < ApplicationRecord
   has_many :notifications, dependent: :destroy
   has_one :streak, dependent: :destroy
 
-  has_secure_token :native_auth_token
-
   def current_feedback_week
     return nil if created_at.nil?
     week = ((Time.current - created_at) / 7.days).ceil.clamp(1, 8)
     (week > 8) ? nil : week
-  end
-
-  def valid_native_auth_token?
-    native_auth_token.present?
-  end
-
-  def regenerate_native_auth_token!
-    regenerate_native_auth_token
-    save!
-    native_auth_token
   end
 
   def self.ransackable_attributes(auth_object = nil)
@@ -100,13 +89,13 @@ class User < ApplicationRecord
   end
 
   def current_phase
-    return nil unless last_period_start
+    return nil unless last_period_start || period_starts.any?
     CycleCalculatorService.new(self).current_phase
   end
 
   def current_cycle_day(date = Time.zone.today)
-    return nil unless last_period_start
-    (date.to_date - last_period_start.to_date).to_i + 1
+    return nil unless last_period_start || period_starts.any?
+    (date.to_date - (period_starts.ordered.last&.started_on || last_period_start).to_date).to_i + 1
   end
 
   def first_name
@@ -170,6 +159,25 @@ class User < ApplicationRecord
 
   def google_calendar_connected?
     google_access_token.present? && google_refresh_token.present?
+  end
+
+  def set_pin(raw)
+    self.pin_digest = BCrypt::Password.create(raw)
+    save!
+  end
+
+  def authenticate_pin(raw)
+    return false if pin_digest.blank?
+    BCrypt::Password.new(pin_digest) == raw
+  end
+  alias_method :verify_pin, :authenticate_pin
+
+  def pin_set?
+    pin_digest.present?
+  end
+
+  def remove_pin
+    update!(pin_digest: nil)
   end
 
   def refresh_google_token_if_needed!

@@ -1,1 +1,385 @@
 @import "tailwindcss";
+
+@theme {
+  --font-sans: 'Montserrat', sans-serif;
+
+  --color-brand-primary: #933a35;
+  --color-brand-primary-dark: #7a2f2a;
+  --color-brand-secondary: #6B6B6B;
+  --color-brand-background: #FAF7F4;
+  --color-brand-white: #FFFFFF;
+  --color-brand-field: #EDE1D5;
+  --color-brand-error: #FDF0EE;
+  --color-brand-muted: #D18D83;
+  --color-brand-divider: #DDD0CB;
+  --color-brand-dark: #3d2b28;
+  --color-brand-graytext: #AFAFAF;
+  --color-brand-lightgray: #D9D9D9;
+  --color-brand-overlay: #121212;
+  --color-brand-warm: #D1C4C2;
+  --color-brand-light: #f5ede8;
+  --color-brand-month: #C8A49A;
+
+  --color-phase-menstrual: #933a35;
+  --color-phase-follicular: #899884;
+  --color-phase-ovulation: #50715b;
+  --color-phase-luteal: #D18D84;
+
+  --color-google-blue: #448AFF;
+
+  --color-streak-green: #2E6B3E;
+
+  --max-width-app: 430px;
+
+  --grid-auto-rows-calendar: 85px;
+
+  --spacing-2.25: 0.5625rem;
+  --spacing-4.5: 1.125rem;
+
+  --min-width-20: 5rem;
+
+  --min-height-dvh: 100dvh;
+  --min-height-svh: 100svh;
+
+  --line-height-11: 2.75rem;
+
+  --text-11: 11px;
+  --text-13: 13px;
+  --text-15: 15px;
+  --text-17: 17px;
+  --text-22: 22px;
+  --text-28: 28px;
+
+  --tracking-007: 0.07em;
+  --tracking-003: 0.03em;
+  --tracking-p66: 0.66px;
+}
+
+@layer base {
+  :root {
+    --pull-distance: 0px;
+  }
+
+  @keyframes ptr-spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* iOS Safari UX best practices */
+  button, a, input, select, textarea, [role="button"], .cursor-pointer, summary {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Prevent text selection on tappable elements */
+  button, summary, [role="button"], [data-action] {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /* Haptic press feedback for touch devices */
+  @media (hover: none) and (pointer: coarse) {
+    button:active, a:active, label:active, [role="button"]:active {
+      opacity: 0.7;
+      transition: opacity 0.05s;
+    }
+  }
+
+}
+
+@layer base {
+  *:focus-visible {
+    outline: 2px solid #933a35;
+    outline-offset: 2px;
+  }
+}
+
+/* Hide scrollbar while keeping scroll functionality */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;      /* Firefox */
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;              /* Chrome, Safari, Opera */
+}
+
+/* ── Physical symptom sliders ───────────────────────────────────────────── */
+.symptom-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 9px;
+  border-radius: 47px;
+  outline: none;
+  cursor: pointer;
+  background: #EDE1D5;
+  display: block;
+  width: 100%;
+}
+.symptom-slider:focus,
+.symptom-slider:focus-visible {
+  outline: none;
+}
+.symptom-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, #933a35 10px, transparent 10px);
+  cursor: pointer;
+  margin-top: -17.5px;
+  border: none;
+  box-shadow: none;
+  outline: none;
+}
+.symptom-slider::-moz-range-thumb {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, #933a35 10px, transparent 10px);
+  cursor: pointer;
+  border: none;
+}
+.symptom-slider::-webkit-slider-runnable-track {
+  height: 9px;
+  border-radius: 47px;
+}
+.symptom-slider::-moz-range-track {
+  height: 9px;
+  border-radius: 47px;
+  background: transparent;
+}
+
+/* ── Scroll Picker ──────────────────────────────────────────────────────── */
+.picker-display {
+  text-align: center;
+  font-weight: 700;
+  font-size: 36px;
+  color: #933a35;
+  padding: 8px 0 4px;
+  font-family: 'Montserrat', sans-serif;
+  min-height: 52px;
+  line-height: 1;
+}
+.picker-track {
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  padding: 0 calc(50% - 15px);
+  scrollbar-width: none;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.picker-track:active {
+  cursor: grabbing;
+}
+.picker-track::-webkit-scrollbar {
+  display: none;
+}
+.picker-tick {
+  flex: 0 0 30px;
+  height: 44px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  scroll-snap-align: center;
+  position: relative;
+  font-family: 'Montserrat', sans-serif;
+}
+.picker-tick::before {
+  content: '';
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1px;
+  height: 6px;
+  background: #D18D83;
+  border-radius: 1px;
+}
+.picker-tick--mid::before {
+  height: 12px;
+  width: 1.5px;
+  background: #933a35;
+}
+.picker-tick--major {
+  font-size: 11px;
+  font-weight: 500;
+  color: #6B6B6B;
+  padding-bottom: 20px;
+}
+.picker-tick--major::before {
+  height: 18px;
+  width: 2px;
+  background: #933a35;
+}
+.picker-indicator {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 0;
+  top: 0;
+  width: 2px;
+  background: #933a35;
+  border-radius: 1px;
+  pointer-events: none;
+  z-index: 1;
+}
+.picker-wrap {
+  position: relative;
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%);
+}
+
+/* ── Vertical Scroll Picker ─────────────────────────────────────────────── */
+.vp-display {
+  text-align: center;
+  font-weight: 700;
+  font-size: 28px;
+  color: #933a35;
+  font-family: 'Montserrat', sans-serif;
+  line-height: 1;
+}
+.vp-track {
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.vp-track:active {
+  cursor: grabbing;
+}
+.vp-track::-webkit-scrollbar {
+  display: none;
+}
+.vp-item {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  scroll-snap-align: center;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: #933a35;
+  letter-spacing: 0.07em;
+  transition: opacity 0.15s;
+}
+.vp-bg {
+  background: #EDE1D5;
+  border-radius: 8px;
+}
+.vp-unit {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: #933a35;
+  letter-spacing: 0.07em;
+  line-height: 20px;
+}
+
+/* ── Time Picker ──────────────────────────────────────────────────────── */
+.tp-select {
+  background: transparent;
+  border: none;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+  font-size: 22px;
+  color: #ffffff;
+  cursor: pointer;
+  padding: 0;
+  min-width: 38px;
+  min-height: 44px;
+  appearance: none;
+  -webkit-appearance: none;
+  text-align: center;
+  outline: none;
+  line-height: 44px;
+}
+.tp-select option {
+  color: #933a35;
+  background: #fff;
+}
+.tp-select-modal {
+  background: transparent;
+  border: none;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+  font-size: 22px;
+  color: #933a35;
+  cursor: pointer;
+  padding: 0 2px;
+  min-width: 38px;
+  min-height: 44px;
+  appearance: none;
+  -webkit-appearance: none;
+  text-align: center;
+  outline: none;
+  line-height: 44px;
+}
+.tp-select-modal option {
+  color: #933a35;
+  background: #fff;
+}
+/* Hide scrollbar on time picker scrolls */
+[data-appointment-date-picker-target="hourScroll"]::-webkit-scrollbar,
+[data-appointment-date-picker-target="minuteScroll"]::-webkit-scrollbar {
+  display: none;
+}
+.tp-done {
+  background: transparent;
+  border: none;
+  font-size: 22px;
+  color: #ffffff;
+  cursor: pointer;
+  padding: 0 4px;
+  min-width: 44px;
+  min-height: 44px;
+  line-height: 44px;
+  touch-action: manipulation;
+}
+
+/* ── Craving button grid ────────────────────────────────────────────────── */
+/* Icon-selection follow the same opacity/grayscale pattern as moods */
+.craving-btn {
+  @apply bg-transparent border-none cursor-pointer p-0 transition-all duration-150;
+}
+.craving-btn img {
+  @apply w-full h-full object-contain;
+}
+
+/* ── Toggle switch ──────────────────────────────────────────────────────── */
+.toggle-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+.toggle-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+.toggle-track {
+  @apply w-10 h-5 rounded-full relative transition-colors duration-200;
+  background: #933a3520;
+}
+.toggle-thumb {
+  @apply w-4 h-4 bg-white rounded-full absolute top-0.5 shadow-sm transition-all duration-200;
+  left: 2px;
+}
+.toggle-btn.active .toggle-track {
+  @apply bg-brand-primary;
+}
+.toggle-btn.active .toggle-thumb {
+  left: 22px;
+}
+.toggle-btn:disabled .toggle-track {
+  background: #ccc;
+}
+.toggle-btn:disabled.active .toggle-track {
+  background: #999;
+}

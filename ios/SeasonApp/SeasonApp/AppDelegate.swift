@@ -15,8 +15,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         Hotwire.registerBridgeComponents([
             ButtonComponent.self,
-            NotificationTokenComponent.self,
-            NativeAuthTokenComponent.self
+            NotificationTokenComponent.self
         ])
 
         return true

@@ -68,15 +68,24 @@
     <% end %>
 
     <%# Day number — today gets a half-pill merging with phase band above %>
-    <% if is_today %>
-      <span style="display:inline-flex; align-items:center; justify-content:center; min-width:24px; height:24px; padding:0 4px; border-radius:0 0 12px 12px; background:<%= phase_colour || '#933a35' %>; color:#FFFFFF; font-size:12px; font-weight:700; line-height:1; align-self:center; box-sizing:border-box; flex-shrink:0;">
-        <%= date.day %>
-      </span>
-    <% else %>
-      <span style="display:block; text-align:center; width:100%; font-size:13px; font-weight:<%= num_weight %>; color:<%= num_colour %>; line-height:1; flex-shrink:0;">
-        <%= date.day %>
-      </span>
-    <% end %>
+    <div style="display:flex; align-items:center; justify-content:center; gap:2px; flex-shrink:0;">
+      <% if show_tracking && is_tracked %>
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;">
+          <circle cx="6.58203" cy="6.58203" r="6.58203" fill="#899884"/>
+          <line x1="2.50692" y1="7.25601" x2="4.86225" y2="9.61134" stroke="white" stroke-width="1.35512" stroke-linecap="round"/>
+          <line x1="5.02649" y1="9.54056" x2="10.6954" y2="3.8717" stroke="white" stroke-width="1.35512" stroke-linecap="round"/>
+        </svg>
+      <% end %>
+      <% if is_today %>
+        <span style="display:inline-flex; align-items:center; justify-content:center; min-width:24px; height:24px; padding:0 4px; border-radius:0 0 12px 12px; background:<%= phase_colour || '#933a35' %>; color:#FFFFFF; font-size:12px; font-weight:700; line-height:1; box-sizing:border-box; flex-shrink:0;">
+          <%= date.day %>
+        </span>
+      <% else %>
+        <span style="display:block; text-align:center; font-size:13px; font-weight:<%= num_weight %>; color:<%= num_colour %>; line-height:1; flex-shrink:0;">
+          <%= date.day %>
+        </span>
+      <% end %>
+    </div>
 
     <%# Holiday indicator %>
     <% if holiday_name %>
@@ -100,17 +109,12 @@
       </div>
     <% end %>
 
-    <%# Moon phase + tracking row at bottom %>
-    <div style="display:flex; align-items:center; justify-content:space-between; margin-top:auto; flex-shrink:0;">
+    <%# Moon phase at bottom %>
+    <div style="display:flex; align-items:center; justify-content:center; margin-top:auto; flex-shrink:0;">
       <% if local_assigns[:show_moonphases] && lunar == :full_moon %>
         <span style="width:7px; height:7px; border-radius:50%; background:#fff2ca; border:1px solid #d4c27a; display:inline-block;"></span>
       <% elsif local_assigns[:show_moonphases] && lunar == :new_moon %>
         <span style="width:7px; height:7px; border-radius:50%; background:#4d4d4c; display:inline-block;"></span>
-      <% else %>
-        <span style="width:7px; height:7px; display:inline-block;"></span>
-      <% end %>
-      <% if show_tracking && is_tracked %>
-        <div style="width:5px; height:5px; border-radius:50%; background:#2E6B3E;"></div>
       <% end %>
     </div>
 

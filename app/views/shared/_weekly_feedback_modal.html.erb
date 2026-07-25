@@ -7,7 +7,7 @@
        class="bg-brand-background rounded-t-3xl p-8 pt-8 w-full max-w-app relative max-h-[85dvh] overflow-y-auto" style="padding-bottom: calc(8rem + env(safe-area-inset-bottom, 0px));">
 
     <%# Drag handle %>
-    <div class="w-10 h-1 bg-[#D1C4C2] rounded mx-auto mb-6"></div>
+    <div class="w-10 h-1 bg-brand-warm rounded mx-auto mb-6"></div>
 
     <%# Close %>
     <button type="button"
@@ -29,7 +29,7 @@
       <p class="text-brand-secondary text-sm mb-6"><%= t("shared.weekly_feedback_modal.already_completed_text") %></p>
       <button type="button"
               data-action="click->weekly-feedback-modal#close"
-              class="bg-brand-primary text-white rounded-xl py-3 px-8 text-[15px] font-semibold font-['Montserrat']">
+              class="bg-brand-primary text-white rounded-xl py-3 px-8 text-15 font-semibold font-sans">
         <%= t("shared.weekly_feedback_modal.close") %>
       </button>
     </div>
@@ -43,7 +43,7 @@
         </div>
 
         <button type="submit"
-                class="w-full py-3 bg-brand-primary text-white rounded-xl text-base font-medium font-['Montserrat'] hover:bg-[#7a2f2a] transition-colors">
+                class="w-full py-3 bg-brand-primary text-white rounded-xl text-base font-medium font-sans hover:bg-brand-primary-dark transition-colors">
           <%= t("shared.weekly_feedback_modal.submit") %>
         </button>
       </form>
@@ -60,7 +60,7 @@
       <p class="text-brand-secondary text-sm mb-6"><%= t("shared.weekly_feedback_modal.success_text") %></p>
       <button type="button"
               data-action="click->weekly-feedback-modal#close"
-              class="bg-brand-primary text-white rounded-xl py-3 px-8 text-[15px] font-semibold font-['Montserrat']">
+              class="bg-brand-primary text-white rounded-xl py-3 px-8 text-15 font-semibold font-sans">
         <%= t("shared.weekly_feedback_modal.close") %>
       </button>
     </div>
@@ -77,20 +77,20 @@
       <%# Yes / No + input %>
       <div class="wf-yesno-wrapper" style="display:none;">
         <div class="flex gap-3 mb-3">
-          <button type="button" data-value="yes" class="wf-yesno-btn flex-1 py-2 px-4 rounded-lg text-sm font-medium border font-['Montserrat']" style="background:#FFFFFF;color:#933a35;border-color:#EDE1D5;"
+          <button type="button" data-value="yes" class="wf-yesno-btn flex-1 py-2 px-4 rounded-lg text-sm font-medium border font-sans" style="background:#FFFFFF;color:#933a35;border-color:#EDE1D5;"
                   data-action="click->weekly-feedback-modal#toggleYesNo"><%= t("shared.weekly_feedback_modal.yes") %></button>
-          <button type="button" data-value="no" class="wf-yesno-btn flex-1 py-2 px-4 rounded-lg text-sm font-medium border font-['Montserrat']" style="background:#FFFFFF;color:#933a35;border-color:#EDE1D5;"
+          <button type="button" data-value="no" class="wf-yesno-btn flex-1 py-2 px-4 rounded-lg text-sm font-medium border font-sans" style="background:#FFFFFF;color:#933a35;border-color:#EDE1D5;"
                   data-action="click->weekly-feedback-modal#toggleYesNo"><%= t("shared.weekly_feedback_modal.no") %></button>
         </div>
         <div class="wf-why-input" style="display:none;">
-          <textarea class="wf-why-textarea w-full px-4 py-3 rounded-xl border border-brand-field bg-white text-gray-800 text-base font-['Montserrat'] placeholder-gray-400 focus:border-brand-primary focus:outline-none resize-none"
+          <textarea class="wf-why-textarea w-full px-4 py-3 rounded-xl border border-brand-field bg-white text-gray-800 text-base font-sans placeholder:text-gray-400 focus:border-brand-primary focus:outline-none resize-none"
                     rows="2" placeholder="<%= t("shared.weekly_feedback_modal.why_placeholder") %>"></textarea>
         </div>
       </div>
 
       <%# Text only %>
       <div class="wf-text-wrapper" style="display:none;">
-        <textarea class="wf-text-textarea w-full px-4 py-3 rounded-xl border border-brand-field bg-white text-gray-800 text-base font-['Montserrat'] placeholder-gray-400 focus:border-brand-primary focus:outline-none resize-none"
+        <textarea class="wf-text-textarea w-full px-4 py-3 rounded-xl border border-brand-field bg-white text-gray-800 text-base font-sans placeholder:text-gray-400 focus:border-brand-primary focus:outline-none resize-none"
                   rows="3" placeholder="<%= t("shared.weekly_feedback_modal.answer_placeholder") %>"></textarea>
       </div>
     </div>

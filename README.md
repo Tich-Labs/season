@@ -57,5 +57,5 @@ Pre-commit hook runs: lint → test → push.
 ## Docs
 
 - `AGENTS.md` — critical defaults, gotchas, iOS best practices
-- `docs/` — Figma notes, iOS integration, audit system
+- `docs/` — Figma notes, iOS integration, audit system, future build plans
 - `ios/SeasonApp/` — Xcode project for iOS Turbo Native app

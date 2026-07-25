@@ -29,7 +29,7 @@ class CalendarEventsControllerTest < ActionDispatch::IntegrationTest
         }
       }
     end
-    assert_redirected_to edit_calendar_event_path(CalendarEvent.last)
+    assert_redirected_to forecast_path
   end
 
   test "POST /calendar_events with blank title renders 422" do

@@ -35,7 +35,7 @@
             <%= link_to notification_path(notification),
                   class: "block rounded-2xl bg-white px-4 py-3 hover:bg-brand-background transition #{notification.read? ? 'opacity-60' : ''}" do %>
               <div class="flex items-start gap-3">
-                <div class="flex-shrink-0 w-4 h-4 mt-1.5 rounded-full <%= notification.unread? ? 'bg-brand-primary' : 'bg-brand-field' %>"></div>
+                <div class="shrink-0 w-4 h-4 mt-1.5 rounded-full <%= notification.unread? ? 'bg-brand-primary' : 'bg-brand-field' %>"></div>
                 <div class="flex-1 min-w-0">
                   <h3 class="text-sm font-semibold text-brand-dark truncate">
                     <%= notification.title %>
@@ -49,7 +49,7 @@
                     <%= time_ago_in_words(notification.created_at) %> ago
                   </p>
                 </div>
-                <div class="flex-shrink-0 text-brand-secondary">
+                <div class="shrink-0 text-brand-secondary">
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <polyline points="9 18 15 12 9 6" />
                   </svg>

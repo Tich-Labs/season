@@ -132,6 +132,7 @@ class CalendarController < ApplicationController
       .where(date: full_start..full_end)
       .pluck(:date)
       .to_set
+      .merge(current_user.superpower_logs.where(date: full_start..full_end).pluck(:date))
 
     @prev_month = @date - 1.month
     @next_month = @date + 1.month

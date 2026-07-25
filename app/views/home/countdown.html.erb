@@ -30,18 +30,18 @@
         <div class="flex will-change-transform" data-feature-slides-target="track">
 
 <%# ── Slide 1: Introduction (no phone, mascot illustration) ── %>
-          <div class="flex-shrink-0 bg-brand-field flex flex-col items-center px-6 py-8 min-h-[320px]">
+          <div class="shrink-0 bg-brand-field flex flex-col items-center px-6 py-8 min-h-[320px]">
             <%= image_tag "slides/intro-mascot.png",
                 class: "w-28 h-28 object-contain mb-6",
                 alt: "SEASON mascot" %>
             <div class="text-center flex-1 flex flex-col justify-center">
-              <h2 class="font-['Montserrat'] font-semibold text-xl text-brand-primary text-center mb-3 leading-tight">
+              <h2 class="font-sans font-semibold text-xl text-brand-primary text-center mb-3 leading-tight">
                 Find Your Superpower with SEASON
               </h2>
-              <p class="font-['Montserrat'] text-sm text-brand-primary text-center leading-relaxed mb-2 max-w-xs">
+              <p class="font-sans text-sm text-brand-primary text-center leading-relaxed mb-2 max-w-xs">
                 Your cycle is more than your period. Design your everyday life in harmony with your hormonal cycle.
               </p>
-              <p class="font-['Montserrat'] text-xs text-brand-primary text-center font-semibold leading-relaxed max-w-xs">
+              <p class="font-sans text-xs text-brand-primary text-center font-semibold leading-relaxed max-w-xs">
                 Plan, work, love and live according to your cycle.
               </p>
             </div>
@@ -85,7 +85,7 @@
             body:  "Explore the app, track your cycle, and let us know what you think. Welcome to SEASON."
           }
         ].each do |slide| %>
-          <div class="flex-shrink-0 bg-white flex flex-col items-center pt-8 pb-8 px-6">
+          <div class="shrink-0 bg-white flex flex-col items-center pt-8 pb-8 px-6">
             <%# Phone mockup: SVG frame overlays the screenshot %>
             <div class="relative mx-auto" style="width:190px; height:394px;">
               <%# App screenshot sits behind the frame %>
@@ -100,10 +100,10 @@
                   class: "absolute inset-0 w-full h-full pointer-events-none select-none",
                   alt: "" %>
             </div>
-            <h2 class="font-['Montserrat'] font-semibold text-[22px] text-brand-primary text-center mt-8 mb-2 leading-tight">
+            <h2 class="font-sans font-semibold text-22 text-brand-primary text-center mt-8 mb-2 leading-tight">
               <%= slide[:title] %>
             </h2>
-            <p class="font-['Montserrat'] text-[15px] text-brand-primary text-center leading-relaxed max-w-xs">
+            <p class="font-sans text-15 text-brand-primary text-center leading-relaxed max-w-xs">
               <%= slide[:body] %>
             </p>
           </div>
@@ -120,7 +120,7 @@
                 data-feature-slides-target="dot"
                 data-feature-slides-index="<%= i %>"
                 data-action="click->feature-slides#goTo"
-                class="h-3 rounded-full bg-[#50715b] transition-all duration-300 <%= i == 0 ? 'w-[52px]' : 'w-3 opacity-30' %>">
+                class="h-3 rounded-full bg-phase-ovulation transition-all duration-300 <%= i == 0 ? 'w-[52px]' : 'w-3 opacity-30' %>">
         </button>
       <% end %>
     </div>

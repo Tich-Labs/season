@@ -8,7 +8,7 @@
 %>
 <div class="symptom-row flex items-center gap-3" style="margin-bottom:25px;">
   <%# Symptom name — 16px Montserrat Medium, letter-spacing 1.12px %>
-  <span class="shrink-0 font-medium font-['Montserrat']"
+  <span class="shrink-0 font-medium font-sans"
         style="min-width:144px; font-size:16px; color:#933a35; letter-spacing:1.12px;">
     <%= symptom[:label] %>
   </span>
@@ -31,7 +31,7 @@
     <% end %>
 
     <%# Level label — 10px Montserrat Regular, letter-spacing 0.4px %>
-    <span class="slider-label absolute font-['Montserrat'] font-normal"
+    <span class="slider-label absolute font-sans font-normal"
           style="bottom:-8px; font-size:10px; letter-spacing:0.4px; color:#933a35;
                  left:<%= fill_pct %>%; transform:translateX(-50%);
                  <%= val.zero? ? 'display:none;' : '' %>">

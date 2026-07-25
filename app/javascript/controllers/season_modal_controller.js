@@ -41,15 +41,18 @@ export default class extends Controller {
 
     // Track whether the user has actually modified the form
     this._formDirty = false
+    this._submitting = false
     const _watchForm = this.element.querySelector('form')
     if (_watchForm) {
       _watchForm.addEventListener('input', () => { this._formDirty = true })
       _watchForm.addEventListener('change', () => { this._formDirty = true })
+      _watchForm.addEventListener('submit', () => { this._submitting = true })
     }
 
     this._turboBeforeVisit = (event) => {
       if (!this.hasAttentionModalTarget) return
       if (!this._formDirty) return
+      if (this._submitting) return
       const form = this.element.querySelector('form')
       if (!form) return
       const title = (new FormData(form).get('calendar_event[title]') || '').trim()
@@ -253,7 +256,7 @@ export default class extends Controller {
     if (!this.hasLocationLabelTarget) return
     if (value) {
       this.locationLabelTarget.textContent = value
-      this.locationLabelTarget.classList.remove('text-[#AFAFAF]')
+      this.locationLabelTarget.classList.remove('text-brand-graytext')
       this.locationLabelTarget.classList.add('text-brand-primary')
       if (this.hasLocationIconBgTarget) {
         this.locationIconBgTarget.classList.remove('bg-brand-field/50')
@@ -263,7 +266,7 @@ export default class extends Controller {
       }
     } else {
       this.locationLabelTarget.textContent = 'Add location'
-      this.locationLabelTarget.classList.add('text-[#AFAFAF]')
+      this.locationLabelTarget.classList.add('text-brand-graytext')
       this.locationLabelTarget.classList.remove('text-brand-primary')
       if (this.hasLocationIconBgTarget) {
         this.locationIconBgTarget.classList.add('bg-brand-field/50')
@@ -306,7 +309,7 @@ export default class extends Controller {
     if (!this.hasNotesLabelTarget) return
     if (value) {
       this.notesLabelTarget.textContent = value.length > 30 ? value.substring(0, 30) + '...' : value
-      this.notesLabelTarget.classList.remove('text-[#AFAFAF]')
+      this.notesLabelTarget.classList.remove('text-brand-graytext')
       this.notesLabelTarget.classList.add('text-brand-primary')
       if (this.hasNotesIconBgTarget) {
         this.notesIconBgTarget.classList.remove('bg-brand-field/50')
@@ -316,7 +319,7 @@ export default class extends Controller {
       }
     } else {
       this.notesLabelTarget.textContent = 'Notes...'
-      this.notesLabelTarget.classList.add('text-[#AFAFAF]')
+      this.notesLabelTarget.classList.add('text-brand-graytext')
       this.notesLabelTarget.classList.remove('text-brand-primary')
       if (this.hasNotesIconBgTarget) {
         this.notesIconBgTarget.classList.add('bg-brand-field/50')
@@ -436,7 +439,7 @@ export default class extends Controller {
     let html = ''
     guests.forEach((email) => {
       html += '<div class="flex items-center justify-between gap-2">' +
-        '<span class="text-brand-primary text-base font-medium tracking-[0.07em] font-sans truncate">' + email + '</span>' +
+        '<span class="text-brand-primary text-base font-medium tracking-007 font-sans truncate">' + email + '</span>' +
         '<button type="button" data-action="click->season-modal#removeGuest" data-guest-email="' + email + '" class="shrink-0 bg-transparent border-none cursor-pointer p-0 w-6 h-6 flex items-center justify-center">' +
         '<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M9 3L3 9M3 3l6 6" stroke="#933A35" stroke-width="1.5" stroke-linecap="round"/></svg>' +
         '</button>' +
@@ -619,7 +622,7 @@ export default class extends Controller {
     const label = labels[minutes] || `${minutes} minutes before`
     this.reminderLabelTarget.textContent = label
     if (minutes === 0) {
-      this.reminderLabelTarget.classList.add('text-[#AFAFAF]')
+      this.reminderLabelTarget.classList.add('text-brand-graytext')
       this.reminderLabelTarget.classList.remove('text-brand-primary')
       if (this.hasReminderIconBgTarget) {
         this.reminderIconBgTarget.classList.add('bg-brand-field/50')
@@ -628,7 +631,7 @@ export default class extends Controller {
         if (svg) svg.setAttribute('opacity', '0.5')
       }
     } else {
-      this.reminderLabelTarget.classList.remove('text-[#AFAFAF]')
+      this.reminderLabelTarget.classList.remove('text-brand-graytext')
       this.reminderLabelTarget.classList.add('text-brand-primary')
       if (this.hasReminderIconBgTarget) {
         this.reminderIconBgTarget.classList.remove('bg-brand-field/50')
@@ -698,7 +701,7 @@ export default class extends Controller {
     const label = labels[this._selectedRepeat] || 'Repeat'
     if (this.hasRepeatLabelTarget) {
       this.repeatLabelTarget.textContent = label
-      this.repeatLabelTarget.classList.remove('text-[#AFAFAF]')
+      this.repeatLabelTarget.classList.remove('text-brand-graytext')
       this.repeatLabelTarget.classList.add('text-brand-primary')
     }
     if (this.hasRepeatIconBgTarget) {
@@ -733,7 +736,7 @@ export default class extends Controller {
     const label = 'Custom'
     if (this.hasRepeatLabelTarget) {
       this.repeatLabelTarget.textContent = label
-      this.repeatLabelTarget.classList.remove('text-[#AFAFAF]')
+      this.repeatLabelTarget.classList.remove('text-brand-graytext')
       this.repeatLabelTarget.classList.add('text-brand-primary')
     }
     if (this.hasRepeatIconBgTarget) {
@@ -800,7 +803,7 @@ export default class extends Controller {
         const label = `Repeat until ${m} ${d}, ${y}`
         if (this.hasRepeatLabelTarget) {
           this.repeatLabelTarget.textContent = label
-          this.repeatLabelTarget.classList.remove('text-[#AFAFAF]')
+          this.repeatLabelTarget.classList.remove('text-brand-graytext')
           this.repeatLabelTarget.classList.add('text-brand-primary')
         }
         if (this.hasRepeatIconBgTarget) {

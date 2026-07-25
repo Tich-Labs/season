@@ -9,7 +9,7 @@
 <% end %>
 
 <div class="bg-white min-h-screen">
-  <div class="max-w-app mx-auto px-4 pb-20">
+  <div class="max-w-app mx-auto px-2 pb-20">
 
     <%# Flash message toast %>
     <% if notice.present? %>
@@ -120,13 +120,15 @@
         </button>
       </div>
 
-      <div class="relative flex items-center justify-between py-3">
+      <div class="flex items-center justify-between py-3 opacity-40 pointer-events-none">
         <span class="text-brand-muted text-sm font-medium"><%= t("settings.calendar.moon_phases") %></span>
-        <div class="toggle-btn opacity-40 pointer-events-none">
-          <div class="toggle-track"><div class="toggle-thumb"></div></div>
-        </div>
-        <div class="absolute right-2 top-2 bg-brand-field rounded-full px-2.5 py-1">
-          <span class="text-brand-primary text-xs"><%= t("settings.edit.coming_soon") %></span>
+        <div class="flex items-center gap-2">
+          <div class="bg-brand-field rounded-full px-2 py-0.5">
+            <span class="text-brand-primary text-xs"><%= t("settings.edit.coming_soon") %></span>
+          </div>
+          <div class="toggle-btn">
+            <div class="toggle-track"><div class="toggle-thumb"></div></div>
+          </div>
         </div>
       </div>
 
@@ -220,5 +222,4 @@
   </div>
 </div>
 
-<%= stylesheet_link_tag "toggle", media: "all" %>
 <%= javascript_import_module_tag "controllers/calendar_toggle_controller" %>

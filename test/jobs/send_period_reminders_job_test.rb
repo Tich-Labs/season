@@ -3,16 +3,22 @@ require "test_helper"
 class SendPeriodRemindersJobTest < ActiveJob::TestCase
   include ActionMailer::TestHelper
 
+  def set_period_start(user, date)
+    user.update!(last_period_start: date)
+    user.period_starts.destroy_all
+    user.period_starts.create!(started_on: date)
+  end
+
   test "sends period_start email when period is exactly advance_days away" do
     alice = users(:alice)
     reminder = reminders(:alice_period_start)
     advance = reminder.advance_days
 
-    # Set last_period_start so next period falls exactly advance_days from today
+    # Set period start so next period falls exactly advance_days from today
     cycle = alice.cycle_length
     target_start = Time.zone.today + advance
     new_last = target_start - cycle
-    alice.update!(last_period_start: new_last)
+    set_period_start(alice, new_last)
 
     assert_emails 1 do
       SendPeriodRemindersJob.perform_now
@@ -31,7 +37,7 @@ class SendPeriodRemindersJobTest < ActiveJob::TestCase
     reminder = reminders(:alice_period_start)
     advance = reminder.advance_days
     cycle = alice.cycle_length
-    alice.update!(last_period_start: Time.zone.today + advance - cycle)
+    set_period_start(alice, Time.zone.today + advance - cycle)
 
     reminders(:alice_period_start).update!(active: false)
     reminders(:alice_period_end).update!(active: false)

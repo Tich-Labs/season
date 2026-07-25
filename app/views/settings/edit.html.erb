@@ -4,7 +4,7 @@
 <div class="bg-white min-h-screen">
 
   <%# Content - max-width 430px centered %>
-  <div class="max-w-app mx-auto px-4 pb-20">
+  <div class="max-w-app mx-auto px-2 pb-20">
 
     <%# ── Personal Settings ── %>
     <div class="py-5 pb-2">
@@ -53,6 +53,21 @@
       </svg>
     </a>
 
+    <%# App Lock %>
+    <a href="<%= pin_settings_path %>" data-turbo-action="replace" class="flex items-center gap-4 py-4">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" class="text-brand-primary shrink-0">
+        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+      </svg>
+      <span class="flex-1 text-brand-primary text-base font-medium"><%= t("settings.edit.app_lock") %></span>
+      <div class="flex items-center gap-2">
+        <span class="text-xs <%= current_user.pin_set? ? 'text-brand-primary' : 'text-brand-muted' %>"><%= current_user.pin_set? ? t("settings.edit.on") : t("settings.edit.off") %></span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="text-brand-primary">
+          <polyline points="9 18 15 12 9 6" />
+        </svg>
+      </div>
+    </a>
+
     <%# Data & Privacy (GDPR Consent) %>
     <a href="/settings/consent" data-turbo-action="replace" class="flex items-center gap-4 py-4">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" class="text-brand-primary">
@@ -77,15 +92,17 @@
     </a>
 
     <%# Darkmode — coming soon %>
-    <div class="relative flex items-center gap-4 py-4">
-      <svg class="w-6 h-6 text-brand-primary shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-      </svg>
-      <span class="flex-1 text-brand-primary text-base font-medium"><%= t("settings.edit.darkmode") %></span>
-      <div class="w-10 h-5 bg-brand-field/50 rounded-[25px] p-0.5 opacity-50">
-        <div class="w-4 h-4 bg-white rounded-full"></div>
+    <div class="relative">
+      <div class="flex items-center gap-4 py-4 opacity-40 pointer-events-none">
+        <svg class="w-6 h-6 text-brand-primary shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+        </svg>
+        <span class="flex-1 text-brand-primary text-base font-medium"><%= t("settings.edit.darkmode") %></span>
+        <div class="w-10 h-5 bg-brand-field/50 rounded-[25px] p-0.5">
+          <div class="w-4 h-4 bg-white rounded-full"></div>
+        </div>
       </div>
-      <div class="absolute right-2 top-2 bg-brand-field rounded-full px-2.5 py-1">
+      <div class="absolute right-2 top-2 bg-brand-field rounded-full px-2.5 py-1 z-10">
         <span class="text-brand-primary text-xs"><%= t("settings.edit.coming_soon") %></span>
       </div>
     </div>
@@ -101,7 +118,7 @@
             data-controller="open-feedback"
             data-open-feedback-type-value="support"
             data-action="click->open-feedback#open"
-            class="flex items-center gap-4 p-4 bg-[#899884] rounded-lg mt-4 w-full border-0 cursor-pointer text-left">
+            class="flex items-center gap-4 p-4 bg-phase-follicular rounded-lg mt-4 w-full border-0 cursor-pointer text-left">
       <%= vuesax_icon "message-question", size: 32, colour: "white" %>
       <div class="flex-1">
         <span class="block text-white text-base font-bold"><%= t("settings.edit.support") %></span>
@@ -111,28 +128,32 @@
 
     <%# Rate in the App Store %>
     <div class="relative mt-2">
-      <a href="#" class="flex items-center gap-4 p-4 bg-[#899884] rounded-lg no-underline">
-        <%= vuesax_icon "star", size: 32, colour: "white" %>
-        <div class="flex-1">
-          <span class="block text-white text-base font-bold"><%= t("settings.edit.rate_app_store") %></span>
-          <span class="text-white text-sm"><%= t("settings.edit.for_more_benefits") %></span>
-        </div>
-      </a>
-      <div class="absolute right-2 top-2 bg-brand-field rounded-full px-2.5 py-1">
+      <div class="opacity-40 pointer-events-none">
+        <a href="#" class="flex items-center gap-4 p-4 bg-phase-follicular rounded-lg no-underline">
+          <%= vuesax_icon "star", size: 32, colour: "white" %>
+          <div class="flex-1">
+            <span class="block text-white text-base font-bold"><%= t("settings.edit.rate_app_store") %></span>
+            <span class="text-white text-sm"><%= t("settings.edit.for_more_benefits") %></span>
+          </div>
+        </a>
+      </div>
+      <div class="absolute right-2 -top-1 bg-brand-field rounded-full px-2.5 py-1 z-10">
         <span class="text-brand-primary text-xs"><%= t("settings.edit.coming_soon") %></span>
       </div>
     </div>
 
     <%# Share Season with friends %>
     <div class="relative mt-2 mb-4">
-      <a href="#" class="flex items-center gap-4 p-4 bg-[#899884] rounded-lg no-underline">
-        <%= vuesax_icon "share", size: 32, colour: "white" %>
-        <div class="flex-1">
-          <span class="block text-white text-base font-bold"><%= t("settings.edit.share_season") %></span>
-          <span class="text-white text-sm"><%= t("settings.edit.for_more_benefits") %></span>
-        </div>
-      </a>
-      <div class="absolute right-2 top-2 bg-brand-field rounded-full px-2.5 py-1">
+      <div class="opacity-40 pointer-events-none">
+        <a href="#" class="flex items-center gap-4 p-4 bg-phase-follicular rounded-lg no-underline">
+          <%= vuesax_icon "share", size: 32, colour: "white" %>
+          <div class="flex-1">
+            <span class="block text-white text-base font-bold"><%= t("settings.edit.share_season") %></span>
+            <span class="text-white text-sm"><%= t("settings.edit.for_more_benefits") %></span>
+          </div>
+        </a>
+      </div>
+      <div class="absolute right-2 -top-1 bg-brand-field rounded-full px-2.5 py-1 z-10">
         <span class="text-brand-primary text-xs"><%= t("settings.edit.coming_soon") %></span>
       </div>
     </div>

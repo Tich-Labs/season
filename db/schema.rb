@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_19_081800) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_23_134701) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -146,6 +146,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_19_081800) do
     t.index ["user_id"], name: "index_notifications_on_user_id"
   end
 
+  create_table "period_starts", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.date "started_on", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["user_id", "started_on"], name: "index_period_starts_on_user_id_and_started_on", unique: true
+    t.index ["user_id"], name: "index_period_starts_on_user_id"
+  end
+
   create_table "push_subscriptions", force: :cascade do |t|
     t.string "auth_key", null: false
     t.datetime "created_at", null: false
@@ -269,8 +278,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_19_081800) do
     t.date "last_period_start"
     t.string "life_stage", default: "menstrual"
     t.string "name", null: false
-    t.string "native_auth_token"
-    t.datetime "native_auth_token_created_at"
     t.jsonb "notification_preferences"
     t.boolean "onboarding_completed", default: false, null: false
     t.integer "period_length"
@@ -297,7 +304,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_19_081800) do
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["invite_token"], name: "index_users_on_invite_token"
     t.index ["language"], name: "index_users_on_language"
-    t.index ["native_auth_token"], name: "index_users_on_native_auth_token", unique: true
     t.index ["public_id"], name: "index_users_on_public_id", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
@@ -348,6 +354,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_19_081800) do
   add_foreign_key "feedbacks", "users"
   add_foreign_key "native_devices", "users"
   add_foreign_key "notifications", "users"
+  add_foreign_key "period_starts", "users"
   add_foreign_key "push_subscriptions", "users"
   add_foreign_key "reminders", "users"
   add_foreign_key "streaks", "users"

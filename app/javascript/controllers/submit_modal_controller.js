@@ -28,8 +28,8 @@ export default class extends Controller {
     const moods = JSON.parse(root.dataset.activeMoods || '[]')
     if (this.hasMoodTarget) {
       this.moodTarget.innerHTML = moods.length > 0
-        ? `<p class="text-brand-primary font-medium text-base tracking-[0.03em] font-['Montserrat'] mb-1">Mood (${moods.length})</p>
-           <p class="text-brand-muted font-medium text-sm tracking-[0.03em] font-['Montserrat'] mb-3">${moods.map(m => m.charAt(0).toUpperCase() + m.slice(1)).join(', ')}</p>`
+        ? `<p class="text-brand-primary font-medium text-base tracking-003 font-sans mb-1">Mood (${moods.length})</p>
+           <p class="text-brand-muted font-medium text-sm tracking-003 font-sans mb-3">${moods.map(m => m.charAt(0).toUpperCase() + m.slice(1)).join(', ')}</p>`
         : ''
     }
 
@@ -37,8 +37,8 @@ export default class extends Controller {
     const physical = this.#gatherSliders('physical')
     if (this.hasPhysicalTarget) {
       this.physicalTarget.innerHTML = physical.length > 0
-        ? `<p class="text-brand-primary font-medium text-base tracking-[0.03em] font-['Montserrat'] mb-1">Physical (${physical.length})</p>
-           ${physical.map(p => `<p class="text-brand-muted font-medium text-sm tracking-[0.03em] font-['Montserrat'] ml-2 mb-0.5">${p.label} → ${p.level}</p>`).join('')}
+        ? `<p class="text-brand-primary font-medium text-base tracking-003 font-sans mb-1">Physical (${physical.length})</p>
+           ${physical.map(p => `<p class="text-brand-muted font-medium text-sm tracking-003 font-sans ml-2 mb-0.5">${p.label} → ${p.level}</p>`).join('')}
            <div class="mb-3"></div>`
         : ''
     }
@@ -47,8 +47,8 @@ export default class extends Controller {
     const mental = this.#gatherSliders('mental')
     if (this.hasMentalTarget) {
       this.mentalTarget.innerHTML = mental.length > 0
-        ? `<p class="text-brand-primary font-medium text-base tracking-[0.03em] font-['Montserrat'] mb-1">Mental (${mental.length})</p>
-           ${mental.map(p => `<p class="text-brand-muted font-medium text-sm tracking-[0.03em] font-['Montserrat'] ml-2 mb-0.5">${p.label} → ${p.level}</p>`).join('')}
+        ? `<p class="text-brand-primary font-medium text-base tracking-003 font-sans mb-1">Mental (${mental.length})</p>
+           ${mental.map(p => `<p class="text-brand-muted font-medium text-sm tracking-003 font-sans ml-2 mb-0.5">${p.label} → ${p.level}</p>`).join('')}
            <div class="mb-3"></div>`
         : ''
     }
@@ -95,8 +95,8 @@ export default class extends Controller {
 
     if (this.hasOtherTarget) {
       this.otherTarget.innerHTML = other.length > 0
-        ? `<p class="text-brand-primary font-medium text-base tracking-[0.03em] font-['Montserrat'] mb-2">Other</p>
-           ${other.map(o => `<p class="text-brand-muted font-medium text-sm tracking-[0.03em] font-['Montserrat'] ml-2 mb-0.5">${o}</p>`).join('')}`
+        ? `<p class="text-brand-primary font-medium text-base tracking-003 font-sans mb-2">Other</p>
+           ${other.map(o => `<p class="text-brand-muted font-medium text-sm tracking-003 font-sans ml-2 mb-0.5">${o}</p>`).join('')}`
         : ''
     }
 

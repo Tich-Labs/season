@@ -5,7 +5,7 @@
      data-menu-target="slider">
 
   <%# Overlay — dismisses menu on tap %>
-  <div class="absolute inset-0 bg-[#121212]/40" data-action="click->menu#close"></div>
+  <div class="absolute inset-0 bg-brand-overlay/40" data-action="click->menu#close"></div>
 
   <%# Mobile viewport container — same max-w-app as content %>
   <div class="relative w-full max-w-app h-full">
@@ -105,11 +105,13 @@
           <span class="text-brand-primary text-xs font-normal tracking-wide"><%= t("nav.menu.coming_soon") %></span>
         </div>
 
-        <%# E-Mail to partner %>
-        <a href="#" class="absolute left-0 top-[551px] w-full h-[38px] flex items-center hover:bg-stone-50">
-          <%= vuesax_icon "sms", size: 20, class: "absolute left-[30px] top-[7px]" %>
-          <span class="absolute left-[71px] top-[10px] text-brand-primary text-base font-medium tracking-wide"><%= t("nav.menu.email_partner") %></span>
-        </a>
+        <%# E-Mail to partner — coming soon %>
+        <div class="opacity-40 pointer-events-none">
+          <a href="#" class="absolute left-0 top-[551px] w-full h-[38px] flex items-center">
+            <%= vuesax_icon "sms", size: 20, class: "absolute left-[30px] top-[7px]" %>
+            <span class="absolute left-[71px] top-[10px] text-brand-primary text-base font-medium tracking-wide"><%= t("nav.menu.email_partner") %></span>
+          </a>
+        </div>
 
         <%# Divider Line 23 %>
         <div class="absolute left-0 top-[589px] w-80 h-px bg-brand-field"></div>

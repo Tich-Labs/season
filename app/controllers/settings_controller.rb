@@ -182,6 +182,8 @@ class SettingsController < ApplicationController
     save_single_reminder("pill", "21:00", notification_birth_control_settings_path, "birth_control_saved")
   end
 
+  allow_pin_bypass only: [:pin, :update_pin, :remove_pin]
+
   def pin
     @user = current_user
   end

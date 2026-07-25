@@ -31,7 +31,7 @@
 
     <%# ── Greeting ── %>
     <div class="pt-8 pb-2 px-4">
-      <p class="text-brand-primary italic font-medium text-[36px] leading-[44px] font-sans m-0">
+      <p class="text-brand-primary italic font-medium text-4xl leading-[44px] font-sans m-0">
         Hello <%= current_user.name&.split&.first || "there" %>
       </p>
       <p class="text-brand-primary font-light text-2xl leading-[29px] font-sans m-0 mt-1">
@@ -45,7 +45,7 @@
             class: "flex items-center justify-center w-9 h-9 rounded-full bg-brand-field no-underline" do %>
         <svg width="16" height="16" fill="none" stroke="#933a35" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6" /></svg>
       <% end %>
-      <span class="font-medium text-base text-brand-primary font-sans tracking-[0.07em]"><%= @month.strftime("%B") %></span>
+      <span class="font-medium text-base text-brand-primary font-sans tracking-007"><%= @month.strftime("%B") %></span>
       <%= link_to period_tracking_index_path(date: next_month),
             class: "flex items-center justify-center w-9 h-9 rounded-full bg-brand-field no-underline" do %>
         <svg width="16" height="16" fill="none" stroke="#933a35" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6" /></svg>
@@ -53,7 +53,7 @@
     </div>
 
     <%# ── Title ── %>
-    <p class="text-center text-[22px] font-medium text-brand-primary font-sans tracking-[0.03em] mb-2 mt-0">
+    <p class="text-center text-22 font-medium text-brand-primary font-sans tracking-003 mb-2 mt-0">
       Track my period
     </p>
 
@@ -85,7 +85,7 @@
           <div class="flex flex-col h-full overflow-hidden">
             <div class="h-[11px] shrink-0" style="background:transparent;"></div>
             <div class="flex-1 pt-1 px-1 pb-[3px] flex flex-col overflow-hidden">
-              <span class="text-[13px] shrink-0 leading-none" style="font-weight:<%= num_wt %>;color:<%= num_col %>;"><%= day.day %></span>
+              <span class="text-13 shrink-0 leading-none" style="font-weight:<%= num_wt %>;color:<%= num_col %>;"><%= day.day %></span>
             </div>
           </div>
         <% else %>
@@ -94,12 +94,12 @@
             <div class="h-[11px] shrink-0" style="background:<%= band_colour %>;"></div>
             <div class="flex-1 pt-1 px-1 pb-[3px] flex flex-col overflow-hidden">
               <% if is_today || is_selected %>
-                <span class="inline-flex items-center justify-center min-w-[24px] h-6 px-1 rounded-full self-start shrink-0 text-[12px] font-bold leading-none"
+                <span class="inline-flex items-center justify-center min-w-[24px] h-6 px-1 rounded-full self-start shrink-0 text-xs font-bold leading-none"
                       style="background:<%= num_bg %>;color:<%= num_col %>;">
                   <%= day.day %>
                 </span>
               <% else %>
-                <span class="text-[13px] shrink-0 leading-none" style="font-weight:<%= num_wt %>;color:<%= num_col %>;"><%= day.day %></span>
+                <span class="text-13 shrink-0 leading-none" style="font-weight:<%= num_wt %>;color:<%= num_col %>;"><%= day.day %></span>
               <% end %>
             </div>
           </a>
@@ -112,7 +112,7 @@
       <%= link_to "Submit",
             period_tracking_index_path(save: 1, field: save_field, date: @selected),
             data: { turbo: false },
-            class: "flex items-center justify-center w-[253px] h-[52px] no-underline text-white bg-brand-primary rounded-lg text-[24px] font-medium font-sans" %>
+            class: "flex items-center justify-center w-[253px] h-[52px] no-underline text-white bg-brand-primary rounded-lg text-2xl font-medium font-sans" %>
     </div>
 
     <%# ── Existing period info ── %>

@@ -10,13 +10,23 @@
       <%= raw t('home.welcome_text', default: 'Welcome to Season!<br>Maximize your productivity with the help of your cycle.') %>
     </p>
 
-    <%= link_to t('home.lets_go', default: 'Create Account'),
-        new_registration_path,
-        class: "block w-[322px] h-[52px] leading-[52px] bg-brand-primary text-white text-center rounded-lg font-medium text-[22px] no-underline mx-auto mb-5" %>
+    <% if returning_user? %>
+      <%= link_to t('home.login', default: 'Login'),
+          new_session_path,
+          class: "block w-[322px] h-[52px] leading-[52px] bg-brand-primary text-white text-center rounded-lg font-medium text-22 no-underline mx-auto mb-5" %>
 
-    <%= link_to t('home.have_account', default: 'I already have an account'),
-        new_session_path,
-        class: "block text-brand-primary text-center font-medium text-[22px] no-underline" %>
+      <%= link_to t('home.lets_go', default: 'Create Account'),
+          new_registration_path,
+          class: "block text-brand-primary text-center font-medium text-22 no-underline" %>
+    <% else %>
+      <%= link_to t('home.lets_go', default: 'Create Account'),
+          new_registration_path,
+          class: "block w-[322px] h-[52px] leading-[52px] bg-brand-primary text-white text-center rounded-lg font-medium text-22 no-underline mx-auto mb-5" %>
+
+      <%= link_to t('home.have_account', default: 'I already have an account'),
+          new_session_path,
+          class: "block text-brand-primary text-center font-medium text-22 no-underline" %>
+    <% end %>
   </div>
 
 </div>

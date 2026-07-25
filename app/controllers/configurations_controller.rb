@@ -1,5 +1,6 @@
 class ConfigurationsController < ApplicationController
   allow_unauthenticated_access
+  allow_pin_bypass
 
   def ios_v1
     render json: {

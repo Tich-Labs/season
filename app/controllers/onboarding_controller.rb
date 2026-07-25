@@ -2,6 +2,7 @@ class OnboardingController < ApplicationController
   layout "launch", except: [:invite]
   allow_unauthenticated_access only: [:show, :invite, :finish]
   skip_onboarding_requirement
+  allow_pin_bypass
 
   TOTAL_STEPS = 11
 
@@ -71,7 +72,11 @@ class OnboardingController < ApplicationController
         return
       end
       begin
-        current_user.update!(last_period_start: Date.iso8601(date))
+        parsed = Date.iso8601(date)
+        ApplicationRecord.transaction do
+          current_user.update!(last_period_start: parsed)
+          current_user.period_starts.find_or_create_by!(started_on: parsed)
+        end
       rescue ArgumentError, TypeError
         @error = "Invalid date — please select again"
         render :show, status: :unprocessable_content and return

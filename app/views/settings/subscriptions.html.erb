@@ -9,7 +9,7 @@
 <% end %>
 
 <div class="bg-white min-h-screen">
-  <div class="max-w-app mx-auto px-4 pb-20">
+  <div class="max-w-app mx-auto px-2 pb-20">
 
     <%# ── My Subscriptions ── %>
     <div class="flex items-center gap-4 py-5 pb-2">
@@ -47,46 +47,51 @@
       </svg>
     </div>
 
-    <%# Season Premium card %>
-    <div class="mt-8 bg-[#50715B] rounded-lg p-5">
-      <span class="text-white text-sm"><%= t("settings.subscriptions.change_to") %></span>
-      <div class="mt-2">
-        <span class="text-white text-xl font-bold tracking-wide">Season Premium</span>
-      </div>
-      <div class="border-b border-white/50 mt-2"></div>
-
-      <%# Yearly option %>
-      <div onclick="selectPlan('yearly')" id="plan-yearly" class="flex items-center gap-3 mt-4 cursor-pointer">
-        <div id="radio-yearly" class="w-5 h-5 bg-[#A8A29E] rounded-full border-2 border-white flex items-center justify-center">
-          <div id="dot-yearly" class="hidden w-2.5 h-2.5 bg-white rounded-full"></div>
+    <%# Season Premium card (Coming Soon) %>
+    <div class="relative mt-8">
+      <div class="bg-phase-ovulation rounded-lg p-5 opacity-40 pointer-events-none">
+        <span class="text-white text-sm"><%= t("settings.subscriptions.change_to") %></span>
+        <div class="mt-2">
+          <span class="text-white text-xl font-bold tracking-wide">Season Premium</span>
         </div>
-        <div>
-          <span class="text-white text-base font-bold"><%= t("settings.subscriptions.yearly_price") %></span>
-          <span class="block text-white text-sm"><%= t("settings.subscriptions.monthly_price") %></span>
+        <div class="border-b border-white/50 mt-2"></div>
+
+        <%# Yearly option %>
+        <div id="plan-yearly" class="flex items-center gap-3 mt-4">
+          <div class="w-5 h-5 bg-stone-400 rounded-full border-2 border-white flex items-center justify-center">
+            <div class="hidden w-2.5 h-2.5 bg-white rounded-full"></div>
+          </div>
+          <div>
+            <span class="text-white text-base font-bold"><%= t("settings.subscriptions.yearly_price") %></span>
+            <span class="block text-white text-sm"><%= t("settings.subscriptions.monthly_price") %></span>
+          </div>
+        </div>
+
+        <%# Monthly option %>
+        <div id="plan-monthly" class="flex items-center gap-3 mt-3">
+          <div class="w-5 h-5 bg-stone-400 rounded-full border-2 border-white flex items-center justify-center">
+            <div class="hidden w-2.5 h-2.5 bg-white rounded-full"></div>
+          </div>
+          <div>
+            <span class="text-white text-base font-bold"><%= t("settings.subscriptions.monthly_label") %></span>
+            <span class="block text-white text-sm"><%= t("settings.subscriptions.yearly_total") %></span>
+          </div>
+        </div>
+
+        <%# Upgrade button %>
+        <div class="bg-white rounded-lg p-3 mt-4 text-center">
+          <span class="text-brand-secondary text-base font-medium"><%= t("settings.subscriptions.upgrade") %></span>
+        </div>
+
+        <%# Student discount %>
+        <div class="text-center mt-4 pb-1">
+          <a href="#" class="text-white no-underline underline">
+            <%= t("settings.subscriptions.student_discount") %> <span class="font-bold"><%= t("settings.subscriptions.discount") %></span>
+          </a>
         </div>
       </div>
-
-      <%# Monthly option %>
-      <div onclick="selectPlan('monthly')" id="plan-monthly" class="flex items-center gap-3 mt-3 cursor-pointer">
-        <div id="radio-monthly" class="w-5 h-5 bg-[#A8A29E] rounded-full border-2 border-white flex items-center justify-center">
-          <div id="dot-monthly" class="hidden w-2.5 h-2.5 bg-white rounded-full"></div>
-        </div>
-        <div>
-          <span class="text-white text-base font-bold"><%= t("settings.subscriptions.monthly_label") %></span>
-          <span class="block text-white text-sm"><%= t("settings.subscriptions.yearly_total") %></span>
-        </div>
-      </div>
-
-      <%# Upgrade button %>
-      <div onclick="alert('Upgrade clicked!'); return false;" class="bg-white rounded-lg p-3 mt-4 text-center cursor-pointer">
-        <span class="text-brand-secondary text-base font-medium"><%= t("settings.subscriptions.upgrade") %></span>
-      </div>
-
-      <%# Student discount %>
-      <div class="text-center mt-4 pb-1">
-        <a href="#" onclick="alert('Student discount - coming soon!'); return false;" class="text-white no-underline underline">
-          <%= t("settings.subscriptions.student_discount") %> <span class="font-bold"><%= t("settings.subscriptions.discount") %></span>
-        </a>
+      <div class="absolute right-2 -top-1 bg-brand-field rounded-full px-2.5 py-1 z-10">
+        <span class="text-brand-primary text-xs"><%= t("settings.edit.coming_soon") %></span>
       </div>
     </div>
 

@@ -19,7 +19,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
-    <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <% if native_app? %>
       <%= stylesheet_link_tag "native", "data-turbo-track": "reload" %>
       <%= stylesheet_link_tag :ruby_native, "data-turbo-track": "reload" %>
@@ -39,8 +39,10 @@
   <%# Logic check: Only show App Bar/Menu if user is logged in and past the splash/auth screens %>
   <% is_authenticated_view = authenticated? && !controller_name.in?(%w[sessions registrations home onboarding]) %>
 
-  <body class="bg-[#FCF9F7] font-['Montserrat'] antialiased h-full overflow-x-hidden"
-        data-controller="update-prompt install haptic">
+  <% app_lock_enabled = authenticated? && current_user.pin_set? %>
+  <body class="bg-brand-background font-sans antialiased h-full overflow-x-hidden"
+        data-controller="update-prompt install haptic<%= ' app-lock' if app_lock_enabled %>"
+        <%= "data-app-lock-timeout-value=\"#{PinProtection::PIN_TIMEOUT.to_i * 1000}\"".html_safe if app_lock_enabled %>>
 
     <% if is_authenticated_view %>
     <div data-controller="menu">
@@ -48,9 +50,9 @@
       <%# or content_for(:header_dark) to force dark theme on non-settings pages. %>
       <% is_settings = controller_name == 'settings' %>
       <% dark_header = is_settings || content_for?(:header_dark) %>
-      <% hdr_bg      = dark_header ? "bg-[#933a35]" : "bg-[#ede1d5]" %>
-      <% bar_color   = dark_header ? "bg-white"     : "bg-[#933a35]" %>
-      <% hdr_fg      = dark_header ? "text-white"   : "text-[#933a35]" %>
+      <% hdr_bg      = dark_header ? "bg-brand-primary" : "bg-brand-field" %>
+      <% bar_color   = dark_header ? "bg-white"     : "bg-brand-primary" %>
+      <% hdr_fg      = dark_header ? "text-white"   : "text-brand-primary" %>
       <header class="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-app <%= hdr_bg %> z-40 flex items-center px-4" style="padding-top: env(safe-area-inset-top, 0px); min-height: calc(3.5rem + env(safe-area-inset-top, 0px));<%= content_for?(:header_color) ? " background:#{yield(:header_color)};" : '' %>">
 
         <div class="flex-none flex items-center min-w-0">
@@ -69,13 +71,13 @@
         <div class="flex-1 flex justify-center items-center gap-1 min-w-0">
           <%# Centre: custom title OR settings default (gear + "Settings") %>
           <% if content_for?(:page_title) %>
-            <span class="<%= hdr_fg %> text-[16px] font-medium font-['Montserrat'] truncate"><%= yield(:page_title) %></span>
+            <span class="<%= hdr_fg %> inline-flex items-center gap-1.5 text-base font-medium font-sans truncate"><%= yield(:page_title) %></span>
           <% elsif is_settings %>
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24" class="shrink-0">
               <circle cx="12" cy="12" r="3" />
               <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
             </svg>
-            <span class="text-white text-[16px] font-medium font-['Montserrat'] truncate">Settings</span>
+            <span class="text-white text-base font-medium font-sans truncate">Settings</span>
           <% end %>
         </div>
 
@@ -99,7 +101,7 @@
     <% unless native_app? %>
     <div data-update-prompt-target="banner"
          class="fixed left-1/2 -translate-x-1/2 w-full max-w-app px-4 z-50 hidden" style="bottom: calc(6rem + env(safe-area-inset-bottom, 0px));">
-      <div class="bg-[#3d2b28] text-white rounded-2xl px-4 py-3 flex items-center justify-between shadow-xl">
+      <div class="bg-brand-dark text-white rounded-2xl px-4 py-3 flex items-center justify-between shadow-xl">
         <span class="text-sm font-medium">New version of Season available</span>
         <button data-action="click->update-prompt#updateApp"
                 class="bg-brand-primary text-white text-sm font-semibold min-w-11 min-h-11 flex items-center justify-center px-4 rounded-xl ml-3 shrink-0">
@@ -111,8 +113,8 @@
     <%# PWA install banner — shown by install_controller when app is installable %>
     <div data-install-target="banner"
          class="fixed left-1/2 -translate-x-1/2 w-full max-w-app px-4 z-50 hidden" style="bottom: calc(6rem + env(safe-area-inset-bottom, 0px));">
-      <div class="bg-white border border-[#ede1d5] rounded-2xl px-4 py-3 flex items-center justify-between shadow-xl">
-        <span class="text-sm font-medium text-[#3d2b28]">Add Season to your home screen</span>
+      <div class="bg-white border border-brand-field rounded-2xl px-4 py-3 flex items-center justify-between shadow-xl">
+        <span class="text-sm font-medium text-brand-dark">Add Season to your home screen</span>
         <div class="flex gap-2 ml-3 shrink-0">
           <button data-action="click->install#install"
                   data-install-target="button"
@@ -120,23 +122,23 @@
             Add
           </button>
           <button data-action="click->install#dismiss"
-                  class="text-[#6b6b6b] text-sm min-w-11 min-h-11 flex items-center justify-center">✕</button>
+                  class="text-brand-secondary text-sm min-w-11 min-h-11 flex items-center justify-center">✕</button>
         </div>
       </div>
       <div data-install-target="iosHint"
-           class="hidden mt-2 bg-white border border-[#ede1d5] rounded-xl px-4 py-3 text-sm text-[#3d2b28]">
+           class="hidden mt-2 bg-white border border-brand-field rounded-xl px-4 py-3 text-sm text-brand-dark">
         Tap <strong>Share</strong> then <strong>"Add to Home Screen"</strong>
       </div>
     </div>
     <% end %>
 
-    <main class="w-full flex-1 no-ptr <%= 'native-inset' if native_app? %>" data-controller="pull-to-refresh" style="<%= is_authenticated_view ? "padding-top: calc(3.5rem + env(safe-area-inset-top, 0px));" : '' %>">
+    <main class="w-full flex-1 overscroll-contain <%= 'native-inset' if native_app? %>" data-controller="pull-to-refresh" style="<%= is_authenticated_view ? "padding-top: calc(3.5rem + env(safe-area-inset-top, 0px));" : '' %><%= ";--phase-color:#{yield(:phase_color)}" if content_for?(:phase_color) %>">
       <div class="max-w-app mx-auto h-full">
         <%= yield %>
       </div>
     </main>
 
-    <% if is_authenticated_view %>
+    <% if is_authenticated_view && !content_for?(:hide_quick_actions) && !controller_name.in?(%w[information]) %>
       <%= render "shared/quick_actions" %>
       <% unless native_app? %>
         <%= render "shared/feedback_modal" %>
@@ -144,6 +146,8 @@
         <%= render "shared/weekly_feedback_modal" %>
       <% end %>
     <% end %>
+
+    <%= render "pin/unlock_modal" %>
 
   </body>
 </html>

@@ -16,12 +16,16 @@ class TrackingController < ApplicationController
 
   def create
     if params[:period_start]
-      current_user.update!(last_period_start: Time.zone.today)
+      today = Time.zone.today
+      ApplicationRecord.transaction do
+        current_user.update!(last_period_start: today)
+        current_user.period_starts.find_or_create_by!(started_on: today)
+      end
 
       cycle_day = current_user.current_cycle_day || 1
 
       current_user.cycle_entries.create!(
-        date: Time.zone.today,
+        date: today,
         phase: "menstrual",
         season_name: "Winter",
         cycle_day: cycle_day,
@@ -52,7 +56,10 @@ class TrackingController < ApplicationController
         current_user.update!(last_period_end: date)
         redirect_to tracking_index_path(period_saved: "1"), notice: t("tracking.period_update.end_saved")
       else
-        current_user.update!(last_period_start: date)
+        ApplicationRecord.transaction do
+          current_user.update!(last_period_start: date)
+          current_user.period_starts.find_or_create_by!(started_on: date)
+        end
         current_user.cycle_entries.where(period_start: true, date: date).destroy_all
         current_user.cycle_entries.create!(
           date: date,
@@ -89,7 +96,10 @@ class TrackingController < ApplicationController
       rescue ArgumentError, TypeError
         redirect_to period_tracking_index_path, alert: t(".invalid_date") and return
       end
-      current_user.update!(last_period_start: date)
+      ApplicationRecord.transaction do
+        current_user.update!(last_period_start: date)
+        current_user.period_starts.find_or_create_by!(started_on: date)
+      end
 
       # Remove any existing period_start cycle entry for this date then re-create
       current_user.cycle_entries.where(period_start: true, date: date).destroy_all

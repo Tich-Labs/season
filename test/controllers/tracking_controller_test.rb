@@ -23,11 +23,12 @@ class TrackingControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  test "PATCH /tracking/period updates last_period_start" do
+  test "PATCH /tracking/period updates last_period_start and creates period_start log" do
     new_date = Time.zone.today
     patch period_tracking_index_path, params: {period: {date: new_date.to_s}}
     @alice.reload
     assert_equal new_date, @alice.last_period_start
+    assert @alice.period_starts.exists?(started_on: new_date)
   end
 
   test "PATCH /tracking/period redirects after update" do

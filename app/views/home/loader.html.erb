@@ -2,6 +2,7 @@
      style="min-height: 100vh;"
      data-controller="loader"
      data-loader-signed-in-value="<%= authenticated? %>"
+     data-loader-pin-pending-value="<%= @pin_unlock_required.present? %>"
      data-loader-calendar-url-value="<%= user_root_path %>"
      data-loader-welcome-url-value="<%= welcome_path %>"
      data-loader-app-url-value="<%= app_landing_path %>">

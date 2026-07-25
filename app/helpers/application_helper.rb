@@ -9,4 +9,12 @@ module ApplicationHelper
     return :full_moon if days.between?(13.5, 15.5)
     nil
   end
+
+  # Sets --phase-color CSS custom property so child elements can reference
+  # it via var(--phase-color) instead of per-element inline styles.
+  # Call in any view that renders phase-colored elements:
+  #   <% phase_color(@phase_colour) %>
+  def phase_color(hex)
+    content_for(:phase_color, hex)
+  end
 end

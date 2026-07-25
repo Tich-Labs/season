@@ -4,8 +4,7 @@ module Authentication
   VALID_SESSION_DAYS = 7
 
   included do
-    helper_method :authenticated?
-    before_action :authenticate_native_token
+    helper_method :authenticated?, :returning_user?
     before_action :authenticate_user, unless: :devise_controller?
     before_action :require_onboarding_completed, if: :authenticated?
   end
@@ -22,14 +21,6 @@ module Authentication
 
   private
 
-  def authenticate_native_token
-    token = request.headers["X-Native-Auth-Token"] || cookies[:native_auth_token]
-    return if token.blank?
-
-    user = User.find_by(native_auth_token: token)
-    Current.user ||= user if user&.valid_native_auth_token?
-  end
-
   def authenticate_user
     return if authenticated?
 
@@ -40,14 +31,26 @@ module Authentication
   def login(user)
     reset_session
     session[:user_id] = user.id
-    cookies.encrypted[:user_id] = {
-      value: user.id,
-      expires: VALID_SESSION_DAYS.days.from_now,
-      httponly: true,
-      secure: Rails.env.production?,
-      same_site: :lax
-    }
-    user.regenerate_native_auth_token! if native_app?
+    # Survives logout (unlike the user_id cookie below) so the welcome screen can
+    # tell a returning device from a genuinely new one and show Login as the
+    # primary action instead of Create Account.
+    cookies.permanent[:known_device] = "1"
+    if native_app?
+      cookies.encrypted.permanent[:user_id] = {
+        value: user.id,
+        httponly: true,
+        secure: Rails.env.production?,
+        same_site: :lax
+      }
+    else
+      cookies.encrypted[:user_id] = {
+        value: user.id,
+        expires: VALID_SESSION_DAYS.days.from_now,
+        httponly: true,
+        secure: Rails.env.production?,
+        same_site: :lax
+      }
+    end
     Current.user = user
   end
 
@@ -63,6 +66,10 @@ module Authentication
 
   def authenticated?
     current_user.present?
+  end
+
+  def returning_user?
+    cookies[:known_device].present?
   end
 
   def redirect_if_authenticated

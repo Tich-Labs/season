@@ -13,8 +13,8 @@ export default class extends Controller {
       const items = JSON.parse(btn.dataset.forecastModalFood)
       this.foodTarget.innerHTML = items.map(item =>
         `<div>
-          <p class="text-brand-primary font-semibold text-base font-['Montserrat'] m-0 mb-1">${item.name}</p>
-          <p class="text-brand-primary text-sm leading-snug font-['Montserrat'] m-0">${item.description}</p>
+          <p class="text-brand-primary font-semibold text-base font-sans m-0 mb-1">${item.name}</p>
+          <p class="text-brand-primary text-sm leading-snug font-sans m-0">${item.description}</p>
         </div>`
       ).join('')
     } else {

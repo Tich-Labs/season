@@ -18,8 +18,11 @@ class Admin::UsersController < Admin::BaseController
 
   def show
     @user = User.find(params[:id])
-    @period_dates = @user.cycle_entries.where(phase: "menstrual").order(date: :desc).limit(12).pluck(:date)
+    @period_dates = @user.period_starts.ordered.pluck(:started_on)
     @avg_cycle_length = calculate_avg_cycle_length
+    @next_period = if @user.last_period_start || @user.period_starts.any?
+      CycleCalculatorService.new(@user).next_period_start
+    end
   end
 
   def update
@@ -40,12 +43,10 @@ class Admin::UsersController < Admin::BaseController
   private
 
   def calculate_avg_cycle_length
-    periods = @user.cycle_entries.where(phase: "menstrual").order(:date).pluck(:date)
-    return nil if periods.size < 2
+    starts = @user.period_starts.ordered.pluck(:started_on)
+    return nil if starts.size < 2
 
-    gaps = periods.first(periods.size - 1).each_with_index.map do |date, i|
-      (date - periods[i + 1]).to_i
-    end
+    gaps = starts.each_cons(2).map { |a, b| (b - a).to_i }
     (gaps.sum.to_f / gaps.size).round
   end
 

@@ -72,7 +72,10 @@ Rails.application.routes.draw do
   resource :registration, only: [:new, :create] do
     get :check_email, on: :collection
   end
-  resource :session, only: [:new, :create, :destroy]
+  resource :session, only: [:new, :create, :destroy] do
+    get :user_status, on: :collection
+    post :pin_login, on: :collection
+  end
 
   # Redirect Devise's default /users/sign_in to our custom Season login page.
   # Warden's failure app and any external links pointing here will land on Season UI.
@@ -234,8 +237,8 @@ Rails.application.routes.draw do
     }
   end
 
-  get "informations", to: "informations#index", as: :informations
-  get "informations/:phase", to: "informations#show", as: :informations_phase
+  get "information", to: "information#index", as: :information
+  get "information/:phase", to: "information#show", as: :information_phase
 
   get "/launch", to: "launch#index", as: :launch
   get "/countdown", to: "home#countdown", as: :countdown_page

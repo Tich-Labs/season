@@ -20,7 +20,7 @@ class CalendarEventsController < ApplicationController
   def create
     @event = current_user.calendar_events.build(event_params)
     if @event.save
-      redirect_to edit_calendar_event_path(@event), notice: t(".created")
+      redirect_to forecast_path, notice: t(".created")
     else
       render :new, status: :unprocessable_content
     end

@@ -9,11 +9,11 @@
 <% end %>
 
 <div class="bg-white min-h-screen pb-32 font-sans">
-  <div class="max-w-app mx-auto px-4 pt-5">
+  <div class="max-w-app mx-auto px-2 pt-5">
 
     <%# Title %>
     <div class="pr-4">
-      <h1 class="text-[22px] font-medium text-brand-primary font-sans m-0"><%= @event.title %></h1>
+      <h1 class="text-22 font-medium text-brand-primary font-sans m-0"><%= @event.title %></h1>
     </div>
 
     <hr class="border-brand-primary mx-0 my-8" style="width:304px;">
@@ -25,10 +25,10 @@
           <path d="M0 19C0 8.50659 8.50659 0 19 0H341C351.493 0 360 8.50659 360 19V106C360 116.493 351.493 125 341 125H19C8.50659 125 0 116.493 0 106V19Z" fill="#933A35" />
         </svg>
         <div class="relative z-10 flex flex-col justify-center items-center gap-2 h-full text-center">
-          <p class="text-white text-[22px] font-medium tracking-wide font-sans m-0">
+          <p class="text-white text-22 font-medium tracking-wide font-sans m-0">
             <%= @event.date.strftime("%a. %B ") %><%= @event.date.day.ordinalize %><%= @event.date.strftime(" %Y") %>
           </p>
-          <p class="text-white text-[22px] font-medium tracking-wide font-sans m-0">
+          <p class="text-white text-22 font-medium tracking-wide font-sans m-0">
             <% if @event.start_time.present? %>
               <%= @event.start_time.strftime("%l:%M %p").strip %> - <%= @event.end_time&.strftime("%l:%M %p")&.strip || "..." %>
             <% else %>
@@ -50,7 +50,7 @@
         </svg>
       </div>
       <% mins = @event.reminder_minutes || 15 %>
-      <span class="text-brand-primary text-base font-medium tracking-[0.07em] flex-1 font-sans"><%= case mins when 1440 then '1 day before' when 120 then '2 hours before' when 60 then '1 hour before' else "#{mins} minutes before" end %></span>
+      <span class="text-brand-primary text-base font-medium tracking-007 flex-1 font-sans"><%= case mins when 1440 then '1 day before' when 120 then '2 hours before' when 60 then '1 hour before' else "#{mins} minutes before" end %></span>
     </div>
 
     <hr class="border-brand-primary/50 mx-0 my-8">
@@ -64,7 +64,7 @@
           <path d="M12 13.75C13.657 13.75 15 12.519 15 11C15 9.481 13.657 8.25 12 8.25C10.343 8.25 9 9.481 9 11C9 12.519 10.343 13.75 12 13.75Z" />
         </svg>
       </div>
-      <span class="text-base font-medium tracking-[0.07em] flex-1 font-sans <%= loc ? 'text-brand-primary' : 'text-[#AFAFAF]' %>"><%= loc ? @event.location : 'Add location' %></span>
+      <span class="text-base font-medium tracking-007 flex-1 font-sans <%= loc ? 'text-brand-primary' : 'text-brand-graytext' %>"><%= loc ? @event.location : 'Add location' %></span>
     </div>
 
     <%# Guests %>
@@ -80,11 +80,11 @@
         <% if guest_list.any? %>
           <div class="flex flex-col gap-1">
             <% guest_list.each do |email| %>
-              <span class="text-brand-primary text-base font-medium tracking-[0.07em] font-sans"><%= email %></span>
+              <span class="text-brand-primary text-base font-medium tracking-007 font-sans"><%= email %></span>
             <% end %>
           </div>
         <% else %>
-          <span class="text-[#AFAFAF] text-base font-medium tracking-[0.07em] font-sans">Invite guests</span>
+          <span class="text-brand-graytext text-base font-medium tracking-007 font-sans">Invite guests</span>
         <% end %>
       </div>
     </div>
@@ -98,16 +98,16 @@
           <path d="M15 2H9C8.448 2 8 2.448 8 3V5C8 5.552 8.448 6 9 6H15C15.552 6 16 5.552 16 5V3C16 2.448 15.552 2 15 2Z" />
         </svg>
       </div>
-      <span class="text-base font-medium tracking-[0.07em] flex-1 font-sans <%= has_notes ? 'text-brand-primary' : 'text-[#AFAFAF]' %>"><%= has_notes ? @event.notes : 'Notes...' %></span>
+      <span class="text-base font-medium tracking-007 flex-1 font-sans <%= has_notes ? 'text-brand-primary' : 'text-brand-graytext' %>"><%= has_notes ? @event.notes : 'Notes...' %></span>
     </div>
 
     <%# ── Buttons ── %>
     <div class="flex flex-col gap-3 pt-7">
       <%= link_to "Edit appointment", edit_calendar_event_path(@event),
-            class: "block w-full text-center text-white py-3.5 rounded-lg text-[22px] font-medium font-sans tracking-[0.03em] bg-brand-primary no-underline" %>
+            class: "block w-full text-center text-white py-3.5 rounded-lg text-22 font-medium font-sans tracking-003 bg-brand-primary no-underline" %>
       <%= button_to "Delete appointment", calendar_event_path(@event),
             method: :delete, data: { turbo_confirm: "Are you sure?" },
-            class: "w-full bg-transparent text-brand-primary rounded-lg text-[22px] font-medium font-sans cursor-pointer tracking-[0.03em] py-3.5 border-0" %>
+            class: "w-full bg-transparent text-brand-primary rounded-lg text-22 font-medium font-sans cursor-pointer tracking-003 py-3.5 border-0" %>
     </div>
 
   </div>

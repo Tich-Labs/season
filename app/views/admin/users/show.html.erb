@@ -67,7 +67,7 @@
               admin_user_path(@user, user: { admin: true }),
               method: :patch,
               data: { turbo_confirm: "Grant admin access to #{@user.name || @user.email}?" },
-              class: "px-4 py-2 rounded-lg text-sm font-medium bg-brand-primary text-white hover:bg-[#7a2f2a] transition-colors" %>
+              class: "px-4 py-2 rounded-lg text-sm font-medium bg-brand-primary text-white hover:bg-brand-primary-dark transition-colors" %>
       <% end %>
     </div>
   </div>
@@ -186,7 +186,7 @@
       </div>
       <div>
         <dt class="text-xs text-gray-500">Last Period</dt>
-        <dd class="text-sm font-medium text-brand-primary mt-0.5"><%= @user.last_period_start || "\u2014" %></dd>
+        <dd class="text-sm font-medium text-brand-primary mt-0.5"><%= @user.last_period_start || @user.period_starts.ordered.last&.started_on || "\u2014" %></dd>
       </div>
       <div>
         <dt class="text-xs text-gray-500">Current Phase</dt>
@@ -199,8 +199,8 @@
       <div>
         <dt class="text-xs text-gray-500">Next Period</dt>
         <dd class="text-sm font-medium text-brand-primary mt-0.5">
-          <% if @user.last_period_start && @user.cycle_length %>
-            <%= begin (@user.last_period_start.to_date + @user.cycle_length.days).strftime("%Y-%m-%d") rescue "\u2014" end %>
+          <% if @next_period %>
+            <%= @next_period.strftime("%Y-%m-%d") %>
           <% else %>
             <span class="text-gray-400">\u2014</span>
           <% end %>

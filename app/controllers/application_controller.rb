@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
   include Authentication
+  include PinProtection
 
   before_action :set_locale
 

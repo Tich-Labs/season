@@ -1,57 +1,40 @@
-<% cal_index_phase_colour = @current_phase ? (CycleCalculatorService::PHASE_META[@current_phase]&.dig(:colour) || "#933a35") : "#933a35" %>
-<% cal_index_text_colour = @current_phase ? (CycleCalculatorService::PHASE_META[@current_phase]&.dig(:text_colour) || "#FFFFFF") : "#FFFFFF" %>
 <% cal_index_title = @date.strftime("%B") %>
-<% content_for(:page_title) { cal_index_title } %>
-<% content_for(:header_color) { cal_index_phase_colour } %>
-<% content_for(:header_dark) { "true" } %>
+<% content_for(:page_title) { content_tag(:span, cal_index_title, class: "text-22 font-medium leading-[1.15] tracking-003") } %>
 <% content_for(:header_left) do %>
   <button class="p-2" data-action="click->menu#open">
-    <svg class="w-6 h-6" style="color: <%= cal_index_text_colour %>;" viewBox="0 0 24 24" fill="currentColor">
+    <svg class="w-6 h-6 text-brand-primary" viewBox="0 0 24 24" fill="currentColor">
       <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
     </svg>
   </button>
 <% end %>
-<% content_for(:header_center_dropdown) do %>
-  <div class="relative" id="view-dropdown" data-controller="calendar-index">
-    <button type="button" class="p-2" data-action="click->calendar-index#toggleDropdown">
-      <svg class="w-5 h-5 text-brand-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M6 9l6 6 6-6" />
-      </svg>
-    </button>
-    <div class="absolute left-0 top-full mt-1 w-40 bg-white rounded-lg shadow-lg hidden z-50"
-         id="view-dropdown-menu">
-      <%= link_to t("calendar.index.day_view"), daily_view_path(Time.zone.today), class: "block px-4 py-2 text-sm text-brand-primary hover:bg-brand-field", data: { turbo_action: "replace" } %>
-      <%= link_to t("calendar.index.week_view"), calendar_weekly_path, class: "block px-4 py-2 text-sm text-brand-primary hover:bg-brand-field", data: { turbo_action: "replace" } %>
-      <%= link_to t("calendar.index.month_view"), user_root_path, class: "block px-4 py-2 text-sm text-brand-primary hover:bg-brand-field", data: { turbo_action: "replace" } %>
-    </div>
-  </div>
-<% end %>
 <% content_for(:header_right) do %>
   <div class="flex items-center gap-1">
     <% if @streak > 0 %>
-      <div class="flex items-center gap-1 bg-white px-2 py-1 rounded-full shrink-0">
-        <span class="text-xs leading-none">🔥</span>
-        <span class="text-brand-primary text-[11px] font-semibold"><%= @streak %></span>
+      <div class="flex items-center gap-1 bg-white px-2.5 py-1.5 rounded-full shrink-0">
+        <svg width="14" height="17" viewBox="0 0 49 59" fill="none" xmlns="http://www.w3.org/2000/svg" class="shrink-0">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M22.3284 2.02183C22.4593 1.94131 22.6147 1.94955 22.7381 2.04107C23.7366 2.78121 28.2868 6.32067 32.4203 12.2611C32.5759 12.4847 32.9074 12.4911 33.0716 12.2738C34.4048 10.5102 35.5312 9.40879 36.0088 8.97024C36.1489 8.84154 36.3557 8.83933 36.4959 8.96797C38.0496 10.3935 46.5386 18.8945 46.5387 34.4666V35.2733C46.5387 35.4128 46.5236 35.5498 46.5026 35.6834C46.3654 38.1946 45.8051 40.668 44.8405 42.9969C43.7206 45.7004 42.0795 48.1572 40.0104 50.2264C37.941 52.2957 35.4836 53.9375 32.7799 55.0575C30.0762 56.1773 27.178 56.7537 24.2516 56.7537C21.3251 56.7537 18.4269 56.1773 15.7233 55.0575C13.0196 53.9375 10.5631 52.2957 8.49377 50.2264C6.4245 48.1571 4.78266 45.7005 3.66272 42.9969C2.61276 40.4621 2.04069 37.7562 1.97327 35.0164L1.96643 34.4686C1.9671 15.121 20.1647 3.35268 22.3284 2.02183Z" fill="#933A35" />
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M24.0291 26.0535C24.1635 25.9525 24.3325 25.9526 24.4669 26.0537C26.0719 27.2602 35.9631 35.0647 36.2401 44.3519C36.2443 44.4838 36.2479 44.6163 36.2479 44.7493C36.2479 51.3767 30.8752 56.7493 24.2479 56.7493C17.6206 56.7493 12.2479 51.3766 12.2479 44.7493C12.2479 44.6163 12.2504 44.4838 12.2547 44.3519C12.5316 35.0646 22.4239 27.2601 24.0291 26.0535Z" fill="#EDE1D5" />
+        </svg>
+        <span class="text-brand-primary text-[10px] font-normal"><%= @streak %> <%= t("calendar.index.streak_days", count: @streak) %></span>
       </div>
     <% end %>
 
     <%= link_to settings_language_path,
-          class: "w-9 h-9 flex items-center justify-center rounded-md border text-[11px] font-semibold shrink-0",
-          style: "border-color: #{cal_index_text_colour}; color: #{cal_index_text_colour};" do %>
+          class: "w-6 h-6 flex items-center justify-center rounded-lg border border-brand-primary text-brand-primary text-[9px] font-semibold shrink-0" do %>
       <%= I18n.locale.to_s.upcase %>
     <% end %>
 
-    <%= link_to calendar_appointments_path,
+    <!-- <%= link_to calendar_appointments_path,
           class: "w-9 h-9 flex items-center justify-center shrink-0" do %>
       <svg width="23" height="23" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M8.62517 21.0834H14.3752C19.1668 21.0834 21.0835 19.1668 21.0835 14.3751V8.6251C21.0835 3.83343 19.1668 1.91676 14.3752 1.91676H8.62517C3.83351 1.91676 1.91684 3.83343 1.91684 8.6251V14.3751C1.91684 19.1668 3.83351 21.0834 8.62517 21.0834Z" stroke="#933A35" stroke-width="1.4375" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
-    <% end %>
+    <% end %> -->
 
     <div data-controller="calendar-menu" class="relative">
       <button data-action="click->calendar-menu#toggle"
-            class="w-9 h-9 flex items-center justify-center shrink-0">
-        <svg class="w-4 h-4" style="color: <%= cal_index_text_colour %>;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            class="w-6 h-6 flex items-center justify-center rounded-lg border border-brand-primary shrink-0">
+        <svg class="w-3 h-3 text-brand-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M17 2.1l4 4-4 4" />
           <path d="M3 12.6v-1a4 4 0 0 1 4-4h14" />
           <path d="M7 21.9l-4-4 4-4" />
@@ -67,7 +50,7 @@
              data-action="click->calendar-menu#stopPropagation"
              style="right:0; top:calc(3.5rem + env(safe-area-inset-top, 0px)); width:268px; background:#EDE1D5; border-radius:0 0 0 40px; transform:translateX(100%); transition:transform 250ms ease-out;">
           <div class="py-2">
-            <%= link_to calendar_appointments_path,
+            <!-- <%= link_to calendar_appointments_path,
                   class: "flex items-center gap-4 px-6 py-3 hover:bg-brand-primary/5 no-underline",
                   data: { turbo_action: "replace", action: "click->calendar-menu#close" } do %>
               <div class="flex flex-col gap-[1.5px] shrink-0" style="width:20px;">
@@ -76,7 +59,7 @@
                 <div class="flex gap-[1px] items-center"><div class="w-[3px] h-[4px] bg-brand-primary rounded-[0.8px]"></div><div class="w-[15px] h-[4px] bg-brand-primary rounded-[0.8px]"></div></div>
               </div>
               <span class="text-brand-primary text-base font-medium"><%= t("nav.menu.schedule_overview") %></span>
-            <% end %>
+            <% end %> -->
 
             <%= link_to daily_view_path(Time.zone.today),
                   class: "flex items-center gap-4 px-6 py-3 hover:bg-brand-primary/5 no-underline",
@@ -116,9 +99,8 @@
       </div>
     </div>
 
-    <%= link_to informations_path, class: "w-9 h-9 flex items-center justify-center shrink-0" do %>
-      <svg class="w-4 h-4" style="color: <%= cal_index_text_colour %>;" viewBox="0 0 25 25" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M12.4998 22.9168C18.2289 22.9168 22.9164 18.2293 22.9164 12.5001C22.9164 6.77094 18.2289 2.08344 12.4998 2.08344C6.7706 2.08344 2.0831 6.77094 2.0831 12.5001C2.0831 18.2293 6.7706 22.9168 12.4998 22.9168Z" />
+    <%= link_to information_path, class: "w-6 h-6 flex items-center justify-center rounded-full border border-brand-primary shrink-0" do %>
+      <svg class="w-3.5 h-3.5 text-brand-primary" viewBox="0 0 25 25" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
         <path d="M12.4998 8.33344V13.5418" stroke-width="1.7" />
         <path d="M12.4957 16.6667H12.5051" stroke-width="2" />
       </svg>
@@ -127,7 +109,7 @@
 <% end %>
 
 <%# ── No-cycle banner (shown when user has no period data) ── %>
-<% if current_user.onboarding_completed? && current_user.last_period_start.nil? %>
+    <% if current_user.onboarding_completed? && current_user.last_period_start.nil? && current_user.period_starts.empty? %>
   <div class="bg-brand-error px-4 py-3 text-center border-b border-brand-primary">
       <p class="text-brand-primary text-sm mb-2">
         <%= t("calendar.index.no_period_data") %>
@@ -140,7 +122,7 @@
 <% end %>
 
 <div class="bg-white min-h-screen pb-20">
-  <div class="max-w-app mx-auto px-4 pt-3">
+  <div class="max-w-app mx-auto px-2 pt-3">
 
     <%# ── Greeting ── %>
     <div class="mb-3.5">
@@ -196,7 +178,7 @@
       <% @calendar_dates.each do |date| %>
         <%# Week number column %>
         <% if @show_week_numbers && (cell_idx == 0 || (cell_idx > 0 && cell_idx % cols == 0)) %>
-          <div class="h-[18px] flex items-center justify-center text-[9px] font-semibold text-brand-secondary"><%= date.cweek %></div>
+          <div style="display:flex; align-items:flex-start; justify-content:flex-end; height:100%;"><div style="height:14px; min-width:14px; display:flex; align-items:center; justify-content:center; background:#EDE1D5; padding:0 2px;"><span style="color:#933A35; font-size:9px; font-weight:700; line-height:1; letter-spacing:0.03em;"><%= date.cweek %></span></div></div>
           <% cell_idx += 1 %>
         <% end %>
         <%= render "calendar/day_cell",

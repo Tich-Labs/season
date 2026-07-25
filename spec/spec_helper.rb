@@ -24,6 +24,12 @@ FactoryBot.define do
     onboarding_step { 1 }
     last_period_start { Time.zone.today - 14 }
 
+    after(:create) do |user|
+      if user.last_period_start
+        user.period_starts.find_or_create_by!(started_on: user.last_period_start)
+      end
+    end
+
     trait :onboarded do
       after(:create) do |user|
         user.update!(
@@ -34,6 +40,7 @@ FactoryBot.define do
           onboarding_completed: true,
           onboarding_step: 11
         )
+        user.period_starts.find_or_create_by!(started_on: user.last_period_start)
       end
     end
   end

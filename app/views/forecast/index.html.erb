@@ -2,6 +2,7 @@
 <% content_for(:page_title) { page_title } %>
 <% content_for(:header_color) { @phase_colour } %>
 <% content_for(:header_dark) { "true" } %>
+<% phase_color(@phase_colour) %>
 
 <%
   card_config = [
@@ -10,7 +11,7 @@
     { key: "mood",          title: t("forecast.index.mood") },
     { key: "sport",         title: t("forecast.index.sport") },
     { key: "nutrition",     title: t("forecast.index.nutrition") },
-    { key: "fertility",     title: t("forecast.index.fertility") },
+    # { key: "fertility",     title: t("forecast.index.fertility") },
   ]
   pc = @phase_colour
   phase_name = case @cycle_day
@@ -23,14 +24,14 @@
 
 <div class="bg-white min-h-screen pb-32" data-controller="forecast-tabs forecast-modal"
      data-forecast-tabs-colour-value="<%= pc %>">
-  <div class="max-w-app mx-auto px-4">
+  <div class="max-w-app mx-auto px-2">
 
     <%# ── Greeting ─────────────────────────────────────────────────────── %>
     <div class="pt-8 pb-2">
-      <p class="italic font-medium text-[36px] leading-[44px] font-sans m-0" style="color:<%= pc %>;">
+      <p class="italic font-medium text-4xl leading-[44px] font-sans m-0" style="color:var(--phase-color)">
         <%= t("forecast.index.greeting", name: current_user.name&.split&.first || "there") %>
       </p>
-      <p class="font-medium text-2xl leading-[29px] font-sans m-0 mt-1" style="color:<%= pc %>;">
+      <p class="font-medium text-2xl leading-[29px] font-sans m-0 mt-1" style="color:var(--phase-color)">
         <%= t("forecast.index.phase_prefix") %> <%= phase_name %>
       </p>
     </div>
@@ -45,12 +46,12 @@
       <button data-action="click->forecast-tabs#showAppointments"
               data-forecast-tabs-target="leftBar"
               class="h-full border-0 p-0 cursor-pointer"
-              style="width:50%; background:<%= pc %>;">
+              style="width:50%;background:var(--phase-color)">
       </button>
       <button data-action="click->forecast-tabs#showForecast"
               data-forecast-tabs-target="rightBar"
               class="h-full border-0 p-0 cursor-pointer"
-              style="width:50%; background:<%= pc %>33;">
+              style="width:50%;background:color-mix(in srgb, var(--phase-color) 20%, transparent)">
       </button>
     </div>
 
@@ -98,12 +99,12 @@
           <div class="flex justify-center mb-6">
             <%= image_tag "avatars/no-appointments.png", alt: t("forecast.index.no_appointments"), class: "w-[220px] h-[220px] object-contain" %>
           </div>
-          <p class="font-medium text-2xl leading-[29px] font-sans m-0 mb-8" style="color:<%= pc %>;">
+          <p class="font-medium text-2xl leading-[29px] font-sans m-0 mb-8" style="color:var(--phase-color)">
             <%= t("forecast.index.no_appointments_text") %>
           </p>
               <%= link_to t("forecast.index.create_appointment"), new_calendar_event_path(date: @selected_date),
                 class: "inline-block w-[253px] rounded-lg py-[14px] text-white text-xl font-medium font-sans no-underline",
-                style: "background:#{pc};" %>
+                style: "background:var(--phase-color)" %>
         </div>
       <% end %>
     </div>
@@ -131,30 +132,29 @@
                   data-forecast-modal-body="<%= card[:key] == 'mood' ? '' : h(content&.long_text || 'No content yet for this day.') %>"
                   data-forecast-modal-food="<%= card[:key] == 'mood' || card[:key] != 'nutrition' || !content&.food_items.present? ? '' : h(content.food_items.to_json) %>"
                   class="rounded-xl p-4 text-center w-full <%= card[:key] == 'mood' ? '' : 'cursor-pointer hover:shadow-md' %> transition-shadow border-0"
-                  style="min-height:95px; background:<%= pc %>1A;">
+                  style="min-height:95px;background:color-mix(in srgb, var(--phase-color) 10%, transparent)">
             <div class="flex items-start gap-3">
               <% if mood_icon %>
                 <div class="flex-1 flex flex-col items-center gap-1">
-                  <p class="font-medium text-2xl leading-[29px] font-sans m-0" style="color:<%= pc %>;">
+                  <p class="font-medium text-2xl leading-[29px] font-sans m-0" style="color:var(--phase-color)">
                     <%= card[:title] %>
                   </p>
-                  <%= mood_icon %>
-                  <p class="text-sm leading-5 font-sans m-0" style="color:<%= pc %>;">
+                  <p class="text-sm leading-5 font-sans m-0" style="color:var(--phase-color)">
                     <%= content&.short_text || t("forecast.index.no_content") %>
                   </p>
                 </div>
               <% else %>
                 <div class="flex-1 min-w-0">
-                  <p class="font-medium text-2xl leading-[29px] font-sans m-0" style="color:<%= pc %>;">
+                  <p class="font-medium text-2xl leading-[29px] font-sans m-0" style="color:var(--phase-color)">
                     <%= card[:title] %>
                   </p>
-                  <p class="text-sm leading-5 font-sans m-0 mt-2" style="color:<%= pc %>;">
+                  <p class="text-sm leading-5 font-sans m-0 mt-2" style="color:var(--phase-color)">
                     <%= content&.short_text || t("forecast.index.no_content") %>
                   </p>
                 </div>
               <% end %>
               <% unless card[:key] == "mood" %>
-                <svg class="shrink-0 mt-1" width="16" height="16" fill="none" stroke="<%= pc %>" stroke-width="2" viewBox="0 0 24 24">
+                <svg class="shrink-0 mt-1" width="16" height="16" fill="none" stroke="var(--phase-color)" stroke-width="2" viewBox="0 0 24 24">
                   <polyline points="9 18 15 12 9 6" />
                 </svg>
               <% end %>
@@ -172,10 +172,10 @@
         <button data-action="click->forecast-modal#close" aria-label="Close"
                 class="absolute top-3 right-3 w-[44px] h-[44px] rounded-full flex items-center justify-center border-0 cursor-pointer"
                 style="background:#EDE1D5;">
-          <span class="text-2xl font-medium leading-none font-sans" style="color:<%= pc %>;">&times;</span>
+          <span class="text-2xl font-medium leading-none font-sans" style="color:var(--phase-color)">&times;</span>
         </button>
-        <p data-forecast-modal-target="title" class="font-medium text-2xl text-center font-sans m-0 mb-4" style="color:<%= pc %>;"></p>
-        <div data-forecast-modal-target="body" class="text-base leading-5 text-center font-sans" style="color:<%= pc %>;"></div>
+        <p data-forecast-modal-target="title" class="font-medium text-2xl text-center font-sans m-0 mb-4" style="color:var(--phase-color)"></p>
+        <div data-forecast-modal-target="body" class="text-base leading-5 text-center font-sans" style="color:var(--phase-color)"></div>
         <div data-forecast-modal-target="food" class="mt-4 flex flex-col gap-4"></div>
       </div>
     </div>

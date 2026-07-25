@@ -62,7 +62,7 @@
     </div>
   </div>
 
-  <div class="max-w-app mx-auto px-4 pt-5">
+  <div class="max-w-app mx-auto px-2 pt-5">
 
     <p class="text-sm mb-5 leading-relaxed text-brand-secondary">
       Tracking your cervical mucus helps predict your fertile window.
@@ -84,7 +84,7 @@
                 style="background:#ffffff; cursor:pointer; <%= border_style %>">
 
           <%# Colour swatch %>
-          <div class="flex-shrink-0 w-10 h-10 rounded-full mt-0.5"
+          <div class="shrink-0 w-10 h-10 rounded-full mt-0.5"
                style="background:<%= type[:colour] %>;"></div>
 
           <div class="flex-1">
@@ -99,7 +99,7 @@
           <% if selected %>
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none"
                  stroke="<%= phase_colour %>" stroke-width="2.5" viewBox="0 0 24 24"
-                 class="flex-shrink-0 mt-0.5" aria-hidden="true">
+                 class="shrink-0 mt-0.5" aria-hidden="true">
               <polyline points="20 6 9 17 4 12" />
             </svg>
           <% end %>

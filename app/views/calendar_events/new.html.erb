@@ -1,12 +1,14 @@
 <% content_for(:page_title) { "Appointment" } %>
 <% content_for(:header_left) do %>
-  <%= link_to (params[:date] ? daily_view_path(date: params[:date]) : user_root_path),
-        class: "inline-flex items-center justify-center w-10 h-10 rounded-xl text-brand-primary" do %>
+  <a href="javascript:history.back()"
+     class="inline-flex items-center justify-center w-10 h-10 rounded-xl text-brand-primary"
+     aria-label="Back">
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-      <path d="M3 18H21V16H3V18ZM3 13H21V11H3V13ZM3 6V8H21V6H3Z" fill="#933A35" />
+      <path d="M15 6l-6 6 6 6" stroke="#933A35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
     </svg>
-  <% end %>
+  </a>
 <% end %>
+<% content_for(:hide_quick_actions) { true } %>
 
 <%
   evt_date  = params[:date] ? Date.parse(params[:date]) : Time.zone.tomorrow.to_date
@@ -17,7 +19,7 @@
 
 <div class="bg-white min-h-screen pb-32 font-sans" data-controller="season-modal appointment-date-picker"
      data-appointment-date-picker-selected-date-value="<%= evt_date %>">
-  <div class="max-w-app mx-auto px-4 pt-5">
+  <div class="max-w-app mx-auto px-2 pt-5">
 
     <% category_icons = {
       'Friends' => 'family.svg', 'Dinner' => 'dinner.svg', 'Date' => 'date.svg',
@@ -48,7 +50,7 @@
           <%= f.text_field :title,
                 placeholder: "Enter title",
                 required: true,
-                class: "w-full bg-transparent border-none text-[22px] font-medium text-brand-primary p-0 outline-none font-sans" %>
+                class: "w-full bg-transparent border-none text-22 font-medium text-brand-primary p-0 outline-none font-sans" %>
         </div>
 
         <div class="mx-5 my-8 w-[304px] h-px bg-brand-primary"></div>
@@ -64,7 +66,7 @@
             <% multi_day = evt_end_date.present? && evt_end_date != evt_date %>
             <button type="button" data-action="click->appointment-date-picker#open"
                     data-appointment-date-picker-target="dateDisplay"
-                    class="text-white text-[22px] font-medium tracking-wide font-sans bg-transparent border-none cursor-pointer p-0 text-center leading-snug">
+                    class="text-white text-22 font-medium tracking-wide font-sans bg-transparent border-none cursor-pointer p-0 text-center leading-snug">
               <% if multi_day %>
                 <%= evt_date.strftime("%a. %B ") %><%= evt_date.day.ordinalize %><%= evt_date.strftime(" %Y") %><br>
                 <%= evt_end_date.strftime("%a. %B ") %><%= evt_end_date.day.ordinalize %><%= evt_end_date.strftime(" %Y") %>
@@ -89,12 +91,12 @@
                  class="inline-flex items-center gap-0">
               <button type="button" data-action="click->time-picker#open"
                       data-time-picker-target="display"
-                      class="text-white text-[22px] font-medium tracking-wide font-sans bg-transparent border-none cursor-pointer p-0 min-w-[44px] min-h-[44px] select-none"><%= st_h %>:<%= format('%02d', st_m) %> <%= st_ampm %></button>
+                      class="text-white text-22 font-medium tracking-wide font-sans bg-transparent border-none cursor-pointer p-0 min-w-[44px] min-h-[44px] select-none"><%= st_h %>:<%= format('%02d', st_m) %> <%= st_ampm %></button>
               <div data-time-picker-target="edit" class="hidden items-center gap-0">
                 <select data-time-picker-target="hourSelect" data-action="change->time-picker#update" class="tp-select">
                   <% (1..12).each do |h| %><option value="<%= h %>" <%= 'selected' if h == st_h %>><%= h %></option><% end %>
                 </select>
-                <span class="text-white text-[22px] font-light font-sans w-[8px] text-center">:</span>
+                <span class="text-white text-22 font-light font-sans w-[8px] text-center">:</span>
                 <select data-time-picker-target="minuteSelect" data-action="change->time-picker#update" class="tp-select">
                   <% [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55].each do |m| %><option value="<%= m %>" <%= 'selected' if m == st_m %>><%= format('%02d', m) %></option><% end %>
                 </select>
@@ -106,7 +108,7 @@
               </div>
               <input type="hidden" name="calendar_event[start_time]" data-time-picker-target="field" data-appointment-date-picker-target="startField" value="<%= default_start.strftime('%H:%M') %>">
             </div>
-            <span class="text-white text-[22px] font-light font-sans">-</span>
+            <span class="text-white text-22 font-light font-sans">-</span>
             <div data-controller="time-picker"
                  data-time-picker-hour-value="<%= et_h %>"
                  data-time-picker-minute-value="<%= et_m %>"
@@ -115,12 +117,12 @@
                  class="inline-flex items-center gap-0">
               <button type="button" data-action="click->time-picker#open"
                       data-time-picker-target="display"
-                      class="text-white text-[22px] font-medium tracking-wide font-sans bg-transparent border-none cursor-pointer p-0 min-w-[44px] min-h-[44px] select-none"><%= et_h %>:<%= format('%02d', et_m) %> <%= et_ampm %></button>
+                      class="text-white text-22 font-medium tracking-wide font-sans bg-transparent border-none cursor-pointer p-0 min-w-[44px] min-h-[44px] select-none"><%= et_h %>:<%= format('%02d', et_m) %> <%= et_ampm %></button>
               <div data-time-picker-target="edit" class="hidden items-center gap-0">
                 <select data-time-picker-target="hourSelect" data-action="change->time-picker#update" class="tp-select">
                   <% (1..12).each do |h| %><option value="<%= h %>" <%= 'selected' if h == et_h %>><%= h %></option><% end %>
                 </select>
-                <span class="text-white text-[22px] font-light font-sans w-[8px] text-center">:</span>
+                <span class="text-white text-22 font-light font-sans w-[8px] text-center">:</span>
                 <select data-time-picker-target="minuteSelect" data-action="change->time-picker#update" class="tp-select">
                   <% [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55].each do |m| %><option value="<%= m %>" <%= 'selected' if m == et_m %>><%= format('%02d', m) %></option><% end %>
                 </select>
@@ -154,7 +156,7 @@
             <path d="M13.73 21a2 2 0 0 1-3.46 0" />
           </svg>
         </div>
-        <span data-season-modal-target="reminderLabel" class="text-base font-medium tracking-[0.07em] flex-1 font-sans <%= rem == 0 ? 'text-[#AFAFAF]' : 'text-brand-primary' %>"><%= rem_label %></span>
+        <span data-season-modal-target="reminderLabel" class="text-base font-medium tracking-007 flex-1 font-sans <%= rem == 0 ? 'text-brand-graytext' : 'text-brand-primary' %>"><%= rem_label %></span>
       </div>
 
       <hr class="border-brand-primary/50 my-8 mx-5">
@@ -168,7 +170,7 @@
             <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
           </svg>
         </div>
-        <span data-season-modal-target="locationLabel" class="text-base font-medium tracking-[0.07em] flex-1 font-sans <%= loc ? 'text-brand-primary' : 'text-[#AFAFAF]' %>"><%= loc ? @event.location : 'Add location' %></span>
+        <span data-season-modal-target="locationLabel" class="text-base font-medium tracking-007 flex-1 font-sans <%= loc ? 'text-brand-primary' : 'text-brand-graytext' %>"><%= loc ? @event.location : 'Add location' %></span>
       </div>
 
       <%# Notes row %>
@@ -181,7 +183,7 @@
             <path d="M15 2H9C8.44772 2 8 2.44772 8 3V5C8 5.55228 8.44772 6 9 6H15C15.5523 6 16 5.55228 16 5V3C16 2.44772 15.5523 2 15 2Z" stroke="#933A35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
           </svg>
         </div>
-        <span data-season-modal-target="notesLabel" class="text-base font-medium tracking-[0.07em] flex-1 font-sans <%= has_notes ? 'text-brand-primary' : 'text-[#AFAFAF]' %>"><%= has_notes ? @event.notes.truncate(30) : 'Notes...' %></span>
+        <span data-season-modal-target="notesLabel" class="text-base font-medium tracking-007 flex-1 font-sans <%= has_notes ? 'text-brand-primary' : 'text-brand-graytext' %>"><%= has_notes ? @event.notes.truncate(30) : 'Notes...' %></span>
       </div>
 
       <%# Guests row %>
@@ -195,11 +197,11 @@
           </svg>
         </div>
         <div class="flex-1 min-w-0">
-          <span data-season-modal-target="guestsLabel" class="text-[#AFAFAF] text-base font-medium tracking-[0.07em] font-sans <%= guest_list.any? ? 'hidden' : '' %>">Invite guests</span>
+          <span data-season-modal-target="guestsLabel" class="text-brand-graytext text-base font-medium tracking-007 font-sans <%= guest_list.any? ? 'hidden' : '' %>">Invite guests</span>
           <div data-season-modal-target="guestsInlineList" class="<%= guest_list.any? ? '' : 'hidden' %> flex flex-col gap-1">
             <% guest_list.each do |email| %>
               <div class="flex items-center justify-between gap-2">
-                <span class="text-brand-primary text-base font-medium tracking-[0.07em] font-sans truncate"><%= email %></span>
+                <span class="text-brand-primary text-base font-medium tracking-007 font-sans truncate"><%= email %></span>
                 <button type="button" data-action="click->season-modal#removeGuest"
                         data-guest-email="<%= email %>"
                         class="shrink-0 bg-transparent border-none cursor-pointer p-0 w-6 h-6 flex items-center justify-center">
@@ -220,13 +222,13 @@
             <path d="M18.486 12.998C17.836 14.838 16.606 16.417 14.98 17.497C13.355 18.576 11.422 19.099 9.474 18.985C7.526 18.871 5.668 18.127 4.18 16.865C2.691 15.603 1.653 13.891 1.222 11.988C0.791 10.085 0.99 8.093 1.79 6.313C2.589 4.533 3.946 3.061 5.654 2.119C7.363 1.176 9.332 0.815 11.264 1.089C13.196 1.363 14.987 2.258 16.366 3.638L20.996 7.998" />
           </svg>
         </div>
-        <span data-season-modal-target="repeatLabel" class="text-[#AFAFAF] text-base font-medium tracking-[0.07em] flex-1 font-sans">Repeat</span>
+        <span data-season-modal-target="repeatLabel" class="text-brand-graytext text-base font-medium tracking-007 flex-1 font-sans">Repeat</span>
       </div>
 
       <%# ── Submit button ── %>
       <div class="flex justify-center pt-7">
         <%= f.submit "Set appointment",
-              class: "w-full text-white py-3.5 rounded-lg border-none text-[22px] font-medium font-sans cursor-pointer tracking-[0.03em] bg-brand-primary" %>
+              class: "w-full text-white py-3.5 rounded-lg border-none text-22 font-medium font-sans cursor-pointer tracking-003 bg-brand-primary" %>
       </div>
 
       <%= f.hidden_field :repeat_frequency, value: 'monthly', data: { season_modal_target: 'repeatField' } %>
@@ -241,10 +243,21 @@
           <%= button_to "Delete appointment",
                 calendar_event_path(@event),
                 method: :delete,
-                class: "w-full bg-transparent text-brand-primary rounded-lg text-[22px] font-medium font-sans cursor-pointer tracking-[0.03em] py-3.5 border-0" %>
+                class: "w-full bg-transparent text-brand-primary rounded-lg text-22 font-medium font-sans cursor-pointer tracking-003 py-3.5 border-0" %>
         </div>
       <% end %>
 
+    <% end %>
+
+    <%# ── Calendar home button (replaces FAB) ── %>
+    <%= link_to calendar_path,
+          class: "fixed left-1/2 -translate-x-1/2 z-40
+                 w-[66px] h-[66px] rounded-full bg-brand-field
+                 flex items-center justify-center
+                 active:scale-95 transition-all duration-150 shadow-[0px_4px_9px_rgba(0,0,0,0.07)]",
+          style: "bottom: calc(2.5rem + env(safe-area-inset-bottom, 0px));",
+          aria_label: "Home" do %>
+      <%= image_tag "icons/vuesax/linear/calendar-add.svg", class: "w-[33px] h-[33px]", alt: "" %>
     <% end %>
 
     <%# ── Set Date modal ── %>
@@ -254,92 +267,92 @@
 
         <%# ── Stage 1 ── %>
         <div data-appointment-date-picker-target="stage1">
-          <span data-appointment-date-picker-target="dateTitle" class="absolute left-[54px] top-[65px] w-[228px] font-medium text-[22px] leading-[27px] tracking-[0.03em] text-brand-primary text-center"></span>
+          <span data-appointment-date-picker-target="dateTitle" class="absolute left-[54px] top-[65px] w-[228px] font-medium text-22 leading-[27px] tracking-003 text-brand-primary text-center"></span>
           <button type="button" data-action="click->appointment-date-picker#close" class="absolute left-[278px] top-[13px] w-[37px] h-[37px] bg-transparent border-none cursor-pointer p-0">
             <svg width="37" height="37" viewBox="0 0 53 53" fill="none"><path d="M35.8 16.2L36 16.4C36.2 16.6 36.4 17 36.4 17.4C36.4 17.7 36.3 18.1 36.1 18.4L36 18.5L28.3 26.2L36 33.8C36.2 34.1 36.4 34.4 36.4 34.8C36.4 35.2 36.3 35.5 36.1 35.8L36 36C35.7 36.2 35.4 36.4 35 36.4C34.6 36.4 34.2 36.3 33.9 36.1L33.8 36L26.2 28.3L18.5 36C18.3 36.2 17.9 36.4 17.5 36.4C17.2 36.4 16.8 36.3 16.5 36.1L16.4 36C16.1 35.7 16 35.4 15.9 35C15.9 34.6 16 34.2 16.2 33.9L16.4 33.8L24 26.2L16.4 18.5C16.1 18.3 16 17.9 15.9 17.5C15.9 17.2 16 16.8 16.2 16.5L16.4 16.4C16.6 16.1 17 16 17.4 15.9C17.7 15.9 18.1 16 18.4 16.2L18.5 16.4L26.2 24L33.8 16.4C34.1 16.1 34.4 16 34.8 15.9C35.2 15.9 35.5 16 35.8 16.2L36 16.4L35.8 16.2Z" fill="#A43600" /></svg>
           </button>
           <hr class="absolute left-[110px] top-[107px] w-[132px] border-none h-px bg-black opacity-20">
           <div class="absolute left-[38px] right-[38px] top-[122px] h-[30px] flex items-center justify-between">
             <button type="button" data-action="click->appointment-date-picker#editDate1" data-appointment-date-picker-target="slot1Btn" class="bg-transparent border-none cursor-pointer p-0 flex items-center gap-[5px]">
-              <span class="text-[11px] font-semibold tracking-[0.08em] text-brand-primary opacity-50 uppercase">From</span>
-              <span data-appointment-date-picker-target="slot1Label" class="font-medium text-base tracking-[0.07em] text-brand-primary"></span>
+              <span class="text-11 font-semibold tracking-[0.08em] text-brand-primary opacity-50 uppercase">From</span>
+              <span data-appointment-date-picker-target="slot1Label" class="font-medium text-base tracking-007 text-brand-primary"></span>
             </button>
             <button type="button" data-action="click->appointment-date-picker#editTime1" class="bg-transparent border-none cursor-pointer p-0">
-              <span data-appointment-date-picker-target="slot1Time" class="font-medium text-base tracking-[0.07em] text-brand-primary"></span>
+              <span data-appointment-date-picker-target="slot1Time" class="font-medium text-base tracking-007 text-brand-primary"></span>
             </button>
           </div>
           <div class="absolute left-[38px] right-[38px] top-[168px] h-[30px] flex items-center justify-between">
             <button type="button" data-action="click->appointment-date-picker#editDate2" data-appointment-date-picker-target="slot2Btn" class="bg-transparent border-none cursor-pointer p-0 flex items-center gap-[5px]">
-              <span class="text-[11px] font-semibold tracking-[0.08em] text-brand-primary opacity-50 uppercase">To</span>
-              <span data-appointment-date-picker-target="slot2Label" class="font-medium text-base tracking-[0.07em] text-brand-primary"></span>
+              <span class="text-11 font-semibold tracking-[0.08em] text-brand-primary opacity-50 uppercase">To</span>
+              <span data-appointment-date-picker-target="slot2Label" class="font-medium text-base tracking-007 text-brand-primary"></span>
             </button>
             <button type="button" data-action="click->appointment-date-picker#editTime2" class="bg-transparent border-none cursor-pointer p-0">
-              <span data-appointment-date-picker-target="slot2Time" class="font-medium text-base tracking-[0.07em] text-brand-primary"></span>
+              <span data-appointment-date-picker-target="slot2Time" class="font-medium text-base tracking-007 text-brand-primary"></span>
             </button>
           </div>
           <div class="absolute left-[38px] right-[38px] top-[228px] flex items-center justify-between">
-            <span class="font-medium text-base tracking-[0.07em] text-brand-primary">All day</span>
-            <button type="button" data-action="click->appointment-date-picker#toggleAllDay" data-appointment-date-picker-target="allDayToggle" class="w-[63px] h-[34px] rounded-[17px] bg-[#D9D9D9] border-none cursor-pointer relative p-0">
+            <span class="font-medium text-base tracking-007 text-brand-primary">All day</span>
+            <button type="button" data-action="click->appointment-date-picker#toggleAllDay" data-appointment-date-picker-target="allDayToggle" class="w-[63px] h-[34px] rounded-[17px] bg-brand-lightgray border-none cursor-pointer relative p-0">
               <span class="absolute left-[3px] top-[2px] w-[30px] h-[30px] bg-white rounded-full shadow-[0_1px_4px_rgba(0,0,0,0.2)] transition-transform duration-200"></span>
             </button>
           </div>
-          <button type="button" data-action="click->appointment-date-picker#confirm" class="absolute left-[38px] top-[313px] w-[257px] h-12 bg-brand-primary rounded-lg border-none cursor-pointer font-medium text-[22px] leading-[27px] tracking-[0.03em] text-white text-center">Set date</button>
+          <button type="button" data-action="click->appointment-date-picker#confirm" class="absolute left-[38px] top-[313px] w-[257px] h-12 bg-brand-primary rounded-lg border-none cursor-pointer font-medium text-22 leading-[27px] tracking-003 text-white text-center">Set date</button>
         </div>
 
         <%# ── Stage 2 ── %>
         <div data-appointment-date-picker-target="stage2" class="hidden">
-          <span data-appointment-date-picker-target="stage2Title" class="absolute left-[54px] top-[65px] w-[228px] font-medium text-lg leading-[27px] tracking-[0.03em] text-brand-primary text-center"></span>
+          <span data-appointment-date-picker-target="stage2Title" class="absolute left-[54px] top-[65px] w-[228px] font-medium text-lg leading-[27px] tracking-003 text-brand-primary text-center"></span>
           <button type="button" data-action="click->appointment-date-picker#close" class="absolute left-[278px] top-[13px] w-[37px] h-[37px] bg-transparent border-none cursor-pointer p-0">
             <svg width="37" height="37" viewBox="0 0 53 53" fill="none"><path d="M35.8 16.2L36 16.4C36.2 16.6 36.4 17 36.4 17.4C36.4 17.7 36.3 18.1 36.1 18.4L36 18.5L28.3 26.2L36 33.8C36.2 34.1 36.4 34.4 36.4 34.8C36.4 35.2 36.3 35.5 36.1 35.8L36 36C35.7 36.2 35.4 36.4 35 36.4C34.6 36.4 34.2 36.3 33.9 36.1L33.8 36L26.2 28.3L18.5 36C18.3 36.2 17.9 36.4 17.5 36.4C17.2 36.4 16.8 36.3 16.5 36.1L16.4 36C16.1 35.7 16 35.4 15.9 35C15.9 34.6 16 34.2 16.2 33.9L16.4 33.8L24 26.2L16.4 18.5C16.1 18.3 16 17.9 15.9 17.5C15.9 17.2 16 16.8 16.2 16.5L16.4 16.4C16.6 16.1 17 16 17.4 15.9C17.7 15.9 18.1 16 18.4 16.2L18.5 16.4L26.2 24L33.8 16.4C34.1 16.1 34.4 16 34.8 15.9C35.2 15.9 35.5 16 35.8 16.2L36 16.4L35.8 16.2Z" fill="#A43600" /></svg>
           </button>
           <hr class="absolute left-[110px] top-[107px] w-[132px] border-none h-px bg-black opacity-20">
           <div class="absolute left-[38px] right-[38px] top-[122px] h-[30px] flex items-center justify-between">
             <span class="flex items-center gap-[5px]">
-              <span class="text-[11px] font-semibold tracking-[0.08em] text-brand-primary opacity-50 uppercase">From</span>
-              <span data-appointment-date-picker-target="slot1Label" class="font-medium text-base tracking-[0.07em] text-brand-primary"></span>
+              <span class="text-11 font-semibold tracking-[0.08em] text-brand-primary opacity-50 uppercase">From</span>
+              <span data-appointment-date-picker-target="slot1Label" class="font-medium text-base tracking-007 text-brand-primary"></span>
             </span>
-            <span data-appointment-date-picker-target="slot1Time" class="font-medium text-base tracking-[0.07em] text-brand-primary"></span>
+            <span data-appointment-date-picker-target="slot1Time" class="font-medium text-base tracking-007 text-brand-primary"></span>
           </div>
           <hr class="absolute left-[110px] top-[170px] w-[132px] border-none h-px bg-black opacity-20">
           <div data-picker="date" class="absolute left-[38px] top-[195px] w-[256px] h-[60px] flex items-center justify-center gap-1.5">
             <div class="absolute inset-0 my-3 bg-brand-field rounded-lg"></div>
             <div data-appointment-date-picker-target="monthScroll" data-action="scroll->appointment-date-picker#onMonthScroll" class="overflow-y-auto snap-y snap-mandatory h-full w-12 [scrollbar-width:none] relative z-[1]">
-              <% (1..12).each do |m| %><div data-value="<%= m %>" class="h-5 flex items-center justify-center text-base tracking-[0.07em] text-brand-primary"><%= format('%02d', m) %></div><% end %>
+              <% (1..12).each do |m| %><div data-value="<%= m %>" class="h-5 flex items-center justify-center text-base tracking-007 text-brand-primary"><%= format('%02d', m) %></div><% end %>
             </div>
             <span class="text-base text-brand-primary relative z-[1]">/</span>
             <div data-appointment-date-picker-target="dayScroll" data-action="scroll->appointment-date-picker#onDayScroll" class="overflow-y-auto snap-y snap-mandatory h-full w-12 [scrollbar-width:none] relative z-[1]">
-              <% (1..31).each do |d| %><div data-value="<%= d %>" class="h-5 flex items-center justify-center text-base tracking-[0.07em] text-brand-primary"><%= format('%02d', d) %></div><% end %>
+              <% (1..31).each do |d| %><div data-value="<%= d %>" class="h-5 flex items-center justify-center text-base tracking-007 text-brand-primary"><%= format('%02d', d) %></div><% end %>
             </div>
             <span class="text-base text-brand-primary relative z-[1]">/</span>
             <div data-appointment-date-picker-target="yearScroll" data-action="scroll->appointment-date-picker#onYearScroll" class="overflow-y-auto snap-y snap-mandatory h-full w-16 [scrollbar-width:none] relative z-[1]">
-              <% ((Time.zone.today.year - 5)..(Time.zone.today.year + 5)).each do |y| %><div data-value="<%= y %>" class="h-5 flex items-center justify-center text-base tracking-[0.07em] text-brand-primary"><%= y %></div><% end %>
+              <% ((Time.zone.today.year - 5)..(Time.zone.today.year + 5)).each do |y| %><div data-value="<%= y %>" class="h-5 flex items-center justify-center text-base tracking-007 text-brand-primary"><%= y %></div><% end %>
             </div>
           </div>
           <div data-picker="time" class="hidden items-center justify-center gap-1 absolute left-[38px] top-[195px] w-[256px] h-[60px]">
             <div class="absolute inset-0 my-3 bg-brand-field rounded-lg"></div>
             <div data-appointment-date-picker-target="hourScroll" data-action="scroll->appointment-date-picker#onHourScroll" class="overflow-y-auto snap-y snap-mandatory h-full w-[50px] [scrollbar-width:none] relative z-[1]">
-              <% (0..23).each do |h| %><div data-value="<%= h %>" class="h-5 flex items-center justify-center text-base tracking-[0.07em] text-brand-primary"><%= format('%02d', h) %></div><% end %>
+              <% (0..23).each do |h| %><div data-value="<%= h %>" class="h-5 flex items-center justify-center text-base tracking-007 text-brand-primary"><%= format('%02d', h) %></div><% end %>
             </div>
             <span class="font-bold text-base text-brand-primary relative z-[1]">:</span>
             <div data-appointment-date-picker-target="minuteScroll" data-action="scroll->appointment-date-picker#onMinuteScroll" class="overflow-y-auto snap-y snap-mandatory h-full w-14 [scrollbar-width:none] relative z-[1]">
-              <% [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55].each do |m| %><div data-value="<%= m %>" class="h-5 flex items-center justify-center text-base tracking-[0.07em] text-brand-primary"><%= format('%02d', m) %></div><% end %>
+              <% [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55].each do |m| %><div data-value="<%= m %>" class="h-5 flex items-center justify-center text-base tracking-007 text-brand-primary"><%= format('%02d', m) %></div><% end %>
             </div>
           </div>
           <hr data-stage2-divider class="absolute left-[110px] top-[306px] w-[132px] border-none h-px bg-black opacity-20">
           <div data-stage2-slot2 class="absolute left-[38px] right-[38px] top-[320px] h-[30px] flex items-center justify-between">
             <span class="flex items-center gap-[5px]">
-              <span class="text-[11px] font-semibold tracking-[0.08em] text-brand-primary opacity-50 uppercase">To</span>
-              <span data-appointment-date-picker-target="slot2Label" class="font-medium text-base tracking-[0.07em] text-brand-primary"></span>
+              <span class="text-11 font-semibold tracking-[0.08em] text-brand-primary opacity-50 uppercase">To</span>
+              <span data-appointment-date-picker-target="slot2Label" class="font-medium text-base tracking-007 text-brand-primary"></span>
             </span>
-            <span data-appointment-date-picker-target="slot2Time" class="font-medium text-base tracking-[0.07em] text-brand-primary"></span>
+            <span data-appointment-date-picker-target="slot2Time" class="font-medium text-base tracking-007 text-brand-primary"></span>
           </div>
           <div data-stage2-allday class="absolute left-[38px] right-[38px] top-[375px] flex items-center justify-between">
-            <span class="font-medium text-base tracking-[0.07em] text-brand-primary">All day</span>
-            <button type="button" data-action="click->appointment-date-picker#toggleAllDay" data-appointment-date-picker-target="allDayToggle" class="w-[63px] h-[34px] rounded-[17px] bg-[#D9D9D9] border-none cursor-pointer relative p-0">
+            <span class="font-medium text-base tracking-007 text-brand-primary">All day</span>
+            <button type="button" data-action="click->appointment-date-picker#toggleAllDay" data-appointment-date-picker-target="allDayToggle" class="w-[63px] h-[34px] rounded-[17px] bg-brand-lightgray border-none cursor-pointer relative p-0">
               <span class="absolute left-[3px] top-[2px] w-[30px] h-[30px] bg-white rounded-full shadow-[0_1px_4px_rgba(0,0,0,0.2)] transition-transform duration-200"></span>
             </button>
           </div>
-          <button type="button" data-action="click->appointment-date-picker#confirmTime" data-stage2-button class="absolute left-[38px] top-[440px] w-[257px] h-12 bg-brand-primary rounded-lg border-none cursor-pointer font-medium text-[22px] leading-[27px] tracking-[0.03em] text-white text-center">Done</button>
+          <button type="button" data-action="click->appointment-date-picker#confirmTime" data-stage2-button class="absolute left-[38px] top-[440px] w-[257px] h-12 bg-brand-primary rounded-lg border-none cursor-pointer font-medium text-22 leading-[27px] tracking-003 text-white text-center">Done</button>
         </div>
       </div>
     </div>
@@ -352,7 +365,7 @@
 
         <%# Modal header %>
         <div class="flex justify-center items-center relative mb-4">
-          <h2 id="choose-icon-modal-title" class="text-[22px] font-medium text-brand-primary text-center font-sans leading-[45px]">Choose an icon.</h2>
+          <h2 id="choose-icon-modal-title" class="text-22 font-medium text-brand-primary text-center font-sans leading-[45px]">Choose an icon.</h2>
           <button type="button" data-season-modal-target="closeBtn" data-action="click->season-modal#close"
                   class="absolute right-0 top-1/2 -translate-y-1/2 bg-transparent border-none text-brand-primary text-[26px] w-9 h-9 flex items-center justify-center cursor-pointer font-sans">×</button>
         </div>
@@ -378,7 +391,7 @@
                     data-action="click->season-modal#selectCategory"
                     data-category-name-value="<%= item[:label] %>"
                     data-season-modal-target="categoryOption"
-                    class="absolute left-0 w-full h-[45px] flex items-center gap-3 border-none bg-transparent text-left font-medium text-[22px] font-sans leading-[45px] cursor-pointer p-0"
+                    class="absolute left-0 w-full h-[45px] flex items-center gap-3 border-none bg-transparent text-left font-medium text-22 font-sans leading-[45px] cursor-pointer p-0"
                     style="top:<%= item[:top] %>px; color:<%= selected ? '#933A35' : '#EDE1D5' %>;">
               <%= image_tag "icons/appointment/#{item[:icon]}", alt: item[:label], class: "w-[47px] h-[45px]" %>
               <span><%= item[:label] %></span>
@@ -389,9 +402,9 @@
         <%# Modal footer %>
         <div class="flex flex-col gap-2.5 mt-auto">
           <button type="button" data-action="click->season-modal#close"
-                  class="w-full h-[52px] bg-brand-primary text-white rounded-lg border-none font-medium text-[22px] font-sans leading-[45px] text-center cursor-pointer">Add Icon</button>
+                  class="w-full h-[52px] bg-brand-primary text-white rounded-lg border-none font-medium text-22 font-sans leading-[45px] text-center cursor-pointer">Add Icon</button>
           <button type="button" data-action="click->season-modal#deleteCategory click->season-modal#close"
-                  class="w-full bg-transparent text-brand-primary border-none font-medium text-[22px] font-sans leading-[45px] cursor-pointer">Delete Icon</button>
+                  class="w-full bg-transparent text-brand-primary border-none font-medium text-22 font-sans leading-[45px] cursor-pointer">Delete Icon</button>
         </div>
       </div>
     </div>
@@ -425,7 +438,7 @@
                data-season-modal-target="locationInput"
                data-action="input->season-modal#searchLocations"
                value="<%= @event.location %>"
-               class="absolute left-[50px] top-[130px] w-[249px] h-[52px] bg-transparent border-none p-0 font-medium text-[22px] leading-[52px] tracking-[0.03em] text-brand-primary/50 outline-none"
+               class="absolute left-[50px] top-[130px] w-[249px] h-[52px] bg-transparent border-none p-0 font-medium text-22 leading-[52px] tracking-003 text-brand-primary/50 outline-none"
                placeholder="Add Location">
 
         <div data-season-modal-target="locationResults"
@@ -436,7 +449,7 @@
              class="absolute left-[33px] top-[203px] w-[283px] h-11 bg-brand-primary opacity-50 rounded-lg transition-[top,opacity] duration-[250ms] ease-in-out"></div>
         <button type="button" data-action="click->season-modal#submitLocation"
                 data-season-modal-target="locationSubmitBtn"
-                class="absolute left-[33px] top-[203px] w-[283px] h-11 bg-transparent border-none cursor-pointer p-0 flex items-center justify-center font-medium text-base tracking-[0.03em] text-white transition-[top] duration-[250ms] ease-in-out">Submit</button>
+                class="absolute left-[33px] top-[203px] w-[283px] h-11 bg-transparent border-none cursor-pointer p-0 flex items-center justify-center font-medium text-base tracking-003 text-white transition-[top] duration-[250ms] ease-in-out">Submit</button>
       </div>
     </div>
 
@@ -458,16 +471,16 @@
 
         <div class="absolute left-[33px] top-[101px] w-[320px] h-0 border border-brand-field"></div>
 
-        <span class="absolute left-[32px] top-[127px] font-medium text-base leading-5 tracking-[0.07em] text-brand-primary">Your Notes</span>
+        <span class="absolute left-[32px] top-[127px] font-medium text-base leading-5 tracking-007 text-brand-primary">Your Notes</span>
 
         <div class="absolute left-[32px] top-[158px] w-[322px] h-[225px] bg-brand-field opacity-50 rounded-lg"></div>
         <textarea data-season-modal-target="notesInput"
-                  class="absolute left-[53px] top-[158px] w-[280px] h-[225px] bg-transparent border-none py-4 px-0 font-medium text-base leading-5 tracking-[0.07em] text-brand-primary/50 outline-none resize-none"
+                  class="absolute left-[53px] top-[158px] w-[280px] h-[225px] bg-transparent border-none py-4 px-0 font-medium text-base leading-5 tracking-007 text-brand-primary/50 outline-none resize-none"
                   placeholder="Enter your notes here..."></textarea>
 
         <div class="absolute left-[32px] top-[392px] w-[322px] h-[52px] bg-brand-primary rounded-lg"></div>
         <button type="button" data-action="click->season-modal#submitNotes"
-                class="absolute left-[32px] top-[392px] w-[322px] h-[52px] bg-transparent border-none cursor-pointer p-0 flex items-center justify-center font-medium text-[22px] leading-[27px] tracking-[0.03em] text-white">Submit</button>
+                class="absolute left-[32px] top-[392px] w-[322px] h-[52px] bg-transparent border-none cursor-pointer p-0 flex items-center justify-center font-medium text-22 leading-[27px] tracking-003 text-white">Submit</button>
       </div>
     </div>
 
@@ -510,7 +523,7 @@
 
         <div class="absolute left-[37px] top-[505px] w-[281px] h-[52px] bg-brand-primary rounded-lg"></div>
         <button type="button" data-action="click->season-modal#confirmReminder"
-                class="absolute left-[37px] top-[505px] w-[281px] h-[52px] bg-transparent border-none cursor-pointer p-0 flex items-center justify-center font-medium text-base leading-5 tracking-[0.07em] text-white">Set reminder</button>
+                class="absolute left-[37px] top-[505px] w-[281px] h-[52px] bg-transparent border-none cursor-pointer p-0 flex items-center justify-center font-medium text-base leading-5 tracking-007 text-white">Set reminder</button>
       </div>
     </div>
 
@@ -539,20 +552,20 @@
           <div data-season-modal-target="customReminderNum"
                class="overflow-y-auto snap-y snap-mandatory h-full w-14 [scrollbar-width:none] text-center relative z-[1]">
             <% (1..60).each do |n| %>
-              <div data-value="<%= n %>" class="h-11 flex items-center justify-center text-[22px] tracking-[0.03em] text-brand-primary snap-center" style="font-weight:<%= n == 5 ? '700' : '400' %>;opacity:<%= n == 5 ? '1' : '0.4' %>"><%= format('%02d', n) %></div>
+              <div data-value="<%= n %>" class="h-11 flex items-center justify-center text-22 tracking-003 text-brand-primary snap-center" style="font-weight:<%= n == 5 ? '700' : '400' %>;opacity:<%= n == 5 ? '1' : '0.4' %>"><%= format('%02d', n) %></div>
             <% end %>
           </div>
           <div data-season-modal-target="customReminderUnit"
                class="overflow-y-auto snap-y snap-mandatory h-full w-[90px] [scrollbar-width:none] text-center relative z-[1]">
             <% [['minutes', 'Minutes'], ['hours', 'Hours'], ['days', 'Days']].each_with_index do |(val, label), i| %>
-              <div data-value="<%= val %>" class="h-11 flex items-center justify-center text-base tracking-[0.07em] text-brand-primary snap-center" style="font-weight:<%= i == 0 ? '700' : '400' %>;opacity:<%= i == 0 ? '1' : '0.4' %>"><%= label %></div>
+              <div data-value="<%= val %>" class="h-11 flex items-center justify-center text-base tracking-007 text-brand-primary snap-center" style="font-weight:<%= i == 0 ? '700' : '400' %>;opacity:<%= i == 0 ? '1' : '0.4' %>"><%= label %></div>
             <% end %>
           </div>
         </div>
 
         <div class="absolute left-[37px] top-[285px] w-[281px] h-[52px] bg-brand-primary rounded-lg"></div>
         <button type="button" data-action="click->season-modal#confirmCustomReminder"
-                class="absolute left-[37px] top-[285px] w-[281px] h-[52px] bg-transparent border-none cursor-pointer p-0 flex items-center justify-center font-medium text-base leading-5 tracking-[0.07em] text-white">Add reminder</button>
+                class="absolute left-[37px] top-[285px] w-[281px] h-[52px] bg-transparent border-none cursor-pointer p-0 flex items-center justify-center font-medium text-base leading-5 tracking-007 text-white">Add reminder</button>
       </div>
     </div>
 
@@ -577,14 +590,14 @@
 
         <div class="absolute left-[34px] top-[100px] w-[280px] h-0 border border-brand-field"></div>
 
-        <span class="absolute left-1/2 -translate-x-1/2 top-[120px] font-medium text-[22px] leading-[27px] tracking-[0.03em] text-brand-primary whitespace-nowrap">Invite Guests</span>
+        <span class="absolute left-1/2 -translate-x-1/2 top-[120px] font-medium text-22 leading-[27px] tracking-003 text-brand-primary whitespace-nowrap">Invite Guests</span>
 
         <div class="absolute left-[32px] top-[166px] w-[284px] h-[52px] bg-brand-field opacity-50 rounded-lg"></div>
         <input type="email"
                autocomplete="off"
                data-season-modal-target="guestsInput"
                data-action="keydown->season-modal#guestsKeydown"
-               class="absolute left-[49px] top-[166px] w-[250px] h-[52px] bg-transparent border-none p-0 font-medium text-[22px] leading-[52px] tracking-[0.03em] text-brand-primary/50 outline-none"
+               class="absolute left-[49px] top-[166px] w-[250px] h-[52px] bg-transparent border-none p-0 font-medium text-22 leading-[52px] tracking-003 text-brand-primary/50 outline-none"
                placeholder="Add email address">
 
         <div data-season-modal-target="guestsList"
@@ -595,7 +608,7 @@
              class="absolute left-[32px] top-[241px] w-[284px] h-[52px] bg-brand-primary rounded-lg transition-[top] duration-[250ms] ease-in-out"></div>
         <button type="button" data-action="click->season-modal#addGuest"
                 data-season-modal-target="guestsSubmitBtn"
-                class="absolute left-[32px] top-[241px] w-[284px] h-[52px] bg-transparent border-none cursor-pointer p-0 flex items-center justify-center font-medium text-[22px] leading-[27px] tracking-[0.03em] text-white transition-[top] duration-[250ms] ease-in-out">Invite Guests</button>
+                class="absolute left-[32px] top-[241px] w-[284px] h-[52px] bg-transparent border-none cursor-pointer p-0 flex items-center justify-center font-medium text-22 leading-[27px] tracking-003 text-white transition-[top] duration-[250ms] ease-in-out">Invite Guests</button>
       </div>
     </div>
 
@@ -610,7 +623,7 @@
           <svg width="37" height="37" viewBox="0 0 53 53" fill="none"><path d="M35.8 16.2L36 16.4C36.2 16.6 36.4 17 36.4 17.4C36.4 17.7 36.3 18.1 36.1 18.4L36 18.5L28.3 26.2L36 33.8C36.2 34.1 36.4 34.4 36.4 34.8C36.4 35.2 36.3 35.5 36.1 35.8L36 36C35.7 36.2 35.4 36.4 35 36.4C34.6 36.4 34.2 36.3 33.9 36.1L33.8 36L26.2 28.3L18.5 36C18.3 36.2 17.9 36.4 17.5 36.4C17.2 36.4 16.8 36.3 16.5 36.1L16.4 36C16.1 35.7 16 35.4 15.9 35C15.9 34.6 16 34.2 16.2 33.9L16.4 33.8L24 26.2L16.4 18.5C16.1 18.3 16 17.9 15.9 17.5C15.9 17.2 16 16.8 16.2 16.5L16.4 16.4C16.6 16.1 17 16 17.4 15.9C17.7 15.9 18.1 16 18.4 16.2L18.5 16.4L26.2 24L33.8 16.4C34.1 16.1 34.4 16 34.8 15.9C35.2 15.9 35.5 16 35.8 16.2L36 16.4L35.8 16.2Z" fill="#A43600" /></svg>
         </button>
 
-        <p class="absolute left-1/2 -translate-x-1/2 top-[34px] font-medium text-[22px] leading-[27px] tracking-[0.03em] text-brand-primary whitespace-nowrap">Repeat this event</p>
+        <p class="absolute left-1/2 -translate-x-1/2 top-[34px] font-medium text-22 leading-[27px] tracking-003 text-brand-primary whitespace-nowrap">Repeat this event</p>
         <div class="absolute left-[13px] top-[96px] w-[335px] h-0 border border-brand-field"></div>
 
         <% repeat_opts = [['daily','Daily'],['weekly','Weekly'],['monthly','Monthly'],['yearly','Every Year'],['custom','Custom']] %>
@@ -623,7 +636,7 @@
                data-action="click->season-modal#selectRepeat"
                class="absolute left-[29px] w-[289px] h-[38px] rounded-[10px] cursor-pointer flex items-center justify-center transition-colors duration-[150ms]"
                style="top:<%= tops[idx] %>px;background:<%= active ? '#EDE1D5' : 'rgba(237,225,213,0.5)' %>">
-            <span class="font-medium text-base tracking-[0.07em] text-brand-primary"><%= label %></span>
+            <span class="font-medium text-base tracking-007 text-brand-primary"><%= label %></span>
           </div>
         <% end %>
 
@@ -637,7 +650,7 @@
           ] %>
           <% sub_opts.each do |opt| %>
             <div class="absolute left-0 right-0 h-[34px] flex items-center justify-between" style="top:<%= opt[:top] %>px">
-              <span class="font-medium text-base tracking-[0.07em] text-brand-primary"><%= opt[:label] %></span>
+              <span class="font-medium text-base tracking-007 text-brand-primary"><%= opt[:label] %></span>
               <div class="w-[63px] h-[34px] rounded-[17px] cursor-pointer relative shrink-0"
                    data-action="click->season-modal#toggleRepeatSub"
                    data-sub-value="<%= opt[:val] %>"
@@ -650,7 +663,7 @@
 
         <div class="absolute left-[33px] top-[676px] w-[290px] h-[52px] bg-brand-primary rounded-lg"></div>
         <button type="button" data-action="click->season-modal#confirmRepeat"
-                class="absolute left-[33px] top-[676px] w-[290px] h-[52px] bg-transparent border-none cursor-pointer p-0 flex items-center justify-center font-medium text-base leading-5 tracking-[0.07em] text-white">Save</button>
+                class="absolute left-[33px] top-[676px] w-[290px] h-[52px] bg-transparent border-none cursor-pointer p-0 flex items-center justify-center font-medium text-base leading-5 tracking-007 text-white">Save</button>
       </div>
     </div>
 
@@ -666,11 +679,11 @@
         <div class="flex gap-3">
           <button type="button" data-action="click->season-modal#closeAttention"
                   data-season-modal-target="attentionCancel"
-                  class="flex-1 h-11 bg-brand-field border-none rounded-[10px] font-medium text-[15px] text-brand-primary cursor-pointer">
+                  class="flex-1 h-11 bg-brand-field border-none rounded-[10px] font-medium text-15 text-brand-primary cursor-pointer">
             Keep editing
           </button>
           <button type="button" data-season-modal-target="attentionConfirm"
-                  class="flex-1 h-11 bg-brand-primary border-none rounded-[10px] font-medium text-[15px] text-white cursor-pointer">
+                  class="flex-1 h-11 bg-brand-primary border-none rounded-[10px] font-medium text-15 text-white cursor-pointer">
             OK
           </button>
         </div>
@@ -688,7 +701,7 @@
           <svg width="37" height="37" viewBox="0 0 53 53" fill="none"><path d="M35.8 16.2L36 16.4C36.2 16.6 36.4 17 36.4 17.4C36.4 17.7 36.3 18.1 36.1 18.4L36 18.5L28.3 26.2L36 33.8C36.2 34.1 36.4 34.4 36.4 34.8C36.4 35.2 36.3 35.5 36.1 35.8L36 36C35.7 36.2 35.4 36.4 35 36.4C34.6 36.4 34.2 36.3 33.9 36.1L33.8 36L26.2 28.3L18.5 36C18.3 36.2 17.9 36.4 17.5 36.4C17.2 36.4 16.8 36.3 16.5 36.1L16.4 36C16.1 35.7 16 35.4 15.9 35C15.9 34.6 16 34.2 16.2 33.9L16.4 33.8L24 26.2L16.4 18.5C16.1 18.3 16 17.9 15.9 17.5C15.9 17.2 16 16.8 16.2 16.5L16.4 16.4C16.6 16.1 17 16 17.4 15.9C17.7 15.9 18.1 16 18.4 16.2L18.5 16.4L26.2 24L33.8 16.4C34.1 16.1 34.4 16 34.8 15.9C35.2 15.9 35.5 16 35.8 16.2L36 16.4L35.8 16.2Z" fill="#A43600" /></svg>
         </button>
 
-        <p class="absolute left-1/2 -translate-x-1/2 top-[34px] font-medium text-[22px] leading-[27px] tracking-[0.03em] text-brand-primary whitespace-nowrap">Custom repeat</p>
+        <p class="absolute left-1/2 -translate-x-1/2 top-[34px] font-medium text-22 leading-[27px] tracking-003 text-brand-primary whitespace-nowrap">Custom repeat</p>
         <div class="absolute left-[36px] top-[100px] w-[287px] h-0 border border-brand-field"></div>
 
         <% custom_rows = [
@@ -698,15 +711,15 @@
         ] %>
         <% custom_rows.each do |row| %>
           <div class="absolute left-[36px] w-[287px] h-[38px] bg-brand-field/50 rounded-[10px] flex items-center px-4 gap-1" style="top:<%= row[:top] %>px">
-            <span class="font-medium text-base tracking-[0.07em] text-brand-primary"><%= row[:label] %></span>
+            <span class="font-medium text-base tracking-007 text-brand-primary"><%= row[:label] %></span>
             <input type="number" inputmode="numeric" min="1" max="<%= row[:max] %>" value="<%= row[:default] %>" autocomplete="off" class="w-14 h-full bg-transparent border-none font-bold text-base text-brand-primary text-center outline-none">
-            <span class="font-medium text-base tracking-[0.07em] text-brand-primary"><%= row[:unit] %></span>
+            <span class="font-medium text-base tracking-007 text-brand-primary"><%= row[:unit] %></span>
           </div>
         <% end %>
 
         <div class="absolute left-[36px] top-[352px] w-[287px] h-[52px] bg-brand-primary rounded-lg"></div>
         <button type="button" data-action="click->season-modal#confirmCustomRepeat"
-                class="absolute left-[36px] top-[352px] w-[287px] h-[52px] bg-transparent border-none cursor-pointer p-0 flex items-center justify-center font-medium text-base leading-5 tracking-[0.07em] text-white">Save</button>
+                class="absolute left-[36px] top-[352px] w-[287px] h-[52px] bg-transparent border-none cursor-pointer p-0 flex items-center justify-center font-medium text-base leading-5 tracking-007 text-white">Save</button>
       </div>
     </div>
 
@@ -726,10 +739,10 @@
         <% day_names = %w[Su Mo Tu We Th Fr Sa] %>
         <% d = until_date.day; m = until_date.month; y = until_date.year %>
         <% date_label = "#{day_names[until_date.wday]} #{format('%02d', d)}.#{format('%02d', m)}.#{y}" %>
-        <p class="absolute left-1/2 -translate-x-1/2 top-[34px] font-medium text-[22px] leading-[27px] tracking-[0.03em] text-brand-primary whitespace-nowrap">Repeat until day <%= days_count %></p>
+        <p class="absolute left-1/2 -translate-x-1/2 top-[34px] font-medium text-22 leading-[27px] tracking-003 text-brand-primary whitespace-nowrap">Repeat until day <%= days_count %></p>
         <div class="absolute left-[36px] top-[100px] w-[287px] h-0 border border-brand-field"></div>
 
-        <p class="absolute left-1/2 -translate-x-1/2 top-[136px] font-bold text-base tracking-[0.07em] text-brand-primary whitespace-nowrap"><%= date_label %></p>
+        <p class="absolute left-1/2 -translate-x-1/2 top-[136px] font-bold text-base tracking-007 text-brand-primary whitespace-nowrap"><%= date_label %></p>
 
         <div class="relative left-[36px] top-[176px] w-[287px] h-[100px] bg-white rounded-lg flex items-center justify-center gap-3 overflow-hidden">
           <div class="absolute inset-x-0 top-1/2 -translate-y-1/2 h-11 bg-brand-field rounded-lg pointer-events-none"></div>
@@ -757,7 +770,7 @@
 
         <div class="absolute left-[36px] top-[341px] w-[287px] h-[52px] bg-brand-primary rounded-lg"></div>
         <button type="button" data-action="click->season-modal#confirmRepeatUntil"
-                class="absolute left-[36px] top-[341px] w-[287px] h-[52px] bg-transparent border-none cursor-pointer p-0 flex items-center justify-center font-medium text-base leading-5 tracking-[0.07em] text-white">Save</button>
+                class="absolute left-[36px] top-[341px] w-[287px] h-[52px] bg-transparent border-none cursor-pointer p-0 flex items-center justify-center font-medium text-base leading-5 tracking-007 text-white">Save</button>
       </div>
     </div>
 

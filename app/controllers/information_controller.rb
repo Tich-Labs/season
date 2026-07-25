@@ -1,4 +1,4 @@
-class InformationsController < ApplicationController
+class InformationController < ApplicationController
   PHASES = CycleEntry::PHASES
 
   def index
@@ -11,7 +11,7 @@ class InformationsController < ApplicationController
 
   def show
     phase = params[:phase]
-    redirect_to informations_path and return unless PHASES.include?(phase)
+    redirect_to information_path and return unless PHASES.include?(phase)
 
     @phase = phase
     @content = CyclePhaseContent.for(phase, I18n.locale.to_s, dietary_preference: current_user.food_preference || "")

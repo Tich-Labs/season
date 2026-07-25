@@ -9,7 +9,7 @@
 
 <div class="bg-brand-background min-h-full pb-32">
 
-  <div class="max-w-app mx-auto px-4">
+  <div class="max-w-app mx-auto px-2">
 
     <%# ── Date picker drum ────────────────────────────────────────────── %>
     <div class="flex justify-center pt-6 pb-2" data-controller="date-picker">
@@ -17,7 +17,7 @@
            style="width:155px; height:31px; border-radius:133px;"
            data-date-picker-target="drum">
 
-        <button class="w-full h-[31px] flex items-center justify-center gap-2 text-brand-primary font-medium text-base font-['Montserrat'] focus:outline-none"
+        <button class="w-full h-[31px] flex items-center justify-center gap-2 text-brand-primary font-medium text-base font-sans focus:outline-none"
                 data-action="click->date-picker#toggle"
                 aria-label="Select date">
           <%= @date.strftime("%-d %B") %>
@@ -41,7 +41,7 @@
             <% ((Date.today - 29)..Date.today).each do |d| %>
               <li class="<%= d == @date ? 'bg-white/60 rounded-lg mx-2' : '' %>" style="scroll-snap-align:center;">
                 <%= link_to d.strftime("%-d %B"), superpowers_path(date: d),
-                      class: "block py-2 font-['Montserrat'] #{d == @date ? 'font-bold text-base text-brand-primary' : 'font-normal text-sm text-brand-primary opacity-50'}",
+                      class: "block py-2 font-sans #{d == @date ? 'font-bold text-base text-brand-primary' : 'font-normal text-sm text-brand-primary opacity-50'}",
                       data: (d == @date ? { selected: true } : {}) %>
               </li>
             <% end %>
@@ -54,8 +54,8 @@
     <div class="bg-white rounded-xl p-5 mb-3"
          data-controller="superpower"
          data-superpower-url-value="<%= superpowers_path %>">
-      <p class="text-brand-primary text-lg font-medium text-center font-['Montserrat']">You are in your</p>
-      <p class="font-extrabold text-3xl leading-tight text-center font-['Montserrat'] mb-6" style="color:<%= @phase_colour %>;">
+      <p class="text-brand-primary text-lg font-medium text-center font-sans">You are in your</p>
+      <p class="font-extrabold text-3xl leading-tight text-center font-sans mb-6" style="color:<%= @phase_colour %>;">
         <%= @phase.capitalize %> Phase
       </p>
 
@@ -70,7 +70,7 @@
             dot_positions = ["left:calc(33.33% - 2.5px)", "left:calc(66.67% - 2.5px)", "right:2.5px"]
           %>
           <div class="sp-row" style="margin-bottom:25px;">
-            <span class="block font-medium font-['Montserrat'] mb-2"
+            <span class="block font-medium font-sans mb-2"
                   style="font-size:16px; color:#933a35; letter-spacing:0.07em;">
               <%= sp %>
             </span>
@@ -89,7 +89,7 @@
                       style="width:5px;height:5px;top:20px;<%= position %>;background:<%= val >= level ? '#933a35' : '#EDE1D5' %>;"></span>
               <% end %>
 
-              <span class="sp-label absolute font-['Montserrat'] font-normal"
+              <span class="sp-label absolute font-sans font-normal"
                     style="bottom:-8px; font-size:10px; letter-spacing:0.4px; color:#933a35;
                            left:<%= fill_pct %>%; transform:translateX(-50%);
                            <%= val.zero? ? 'display:none;' : '' %>">
@@ -103,7 +103,7 @@
       <%# Submit button %>
       <div class="mt-6">
         <%= link_to "Submit", tracking_index_path,
-              class: "block w-[253px] mx-auto text-white text-center rounded-lg py-4 text-xl font-medium tracking-wide font-['Montserrat'] no-underline bg-brand-primary" %>
+              class: "block w-[253px] mx-auto text-white text-center rounded-lg py-4 text-xl font-medium tracking-wide font-sans no-underline bg-brand-primary" %>
       </div>
     </div>
 

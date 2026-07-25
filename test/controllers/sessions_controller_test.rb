@@ -34,18 +34,70 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
     assert_response :unprocessable_entity
   end
 
-  # --- DELETE /session (destroy) ---
+  # --- Cookie expiry behavior (web vs native) ---
 
-  test "DELETE /session signs out the user and redirects to root" do
-    sign_in_as(@alice)
-    delete session_path
-    assert_redirected_to root_path
+  test "POST /session from web sets 7-day user_id cookie" do
+    post session_path, params: {email: @alice.email, password: "password123"}
+    set_cookies = Array(response.headers["Set-Cookie"])
+    uid_cookie = set_cookies.find { |c| c.start_with?("user_id=") }
+    assert_includes uid_cookie, "expires="
+    expires = uid_cookie.match(/expires=([^;]+)/)[1]
+    assert_in_delta 7.days.from_now, Time.zone.parse(expires), 5.seconds
   end
 
-  test "DELETE /session clears the session so subsequent requests are unauthenticated" do
-    sign_in_as(@alice)
+  test "POST /session from native sets permanent (20-year) user_id cookie" do
+    post session_path, params: {email: @alice.email, password: "password123"},
+      headers: {"User-Agent" => "Ruby Native iOS"}
+    set_cookies = Array(response.headers["Set-Cookie"])
+    uid_cookie = set_cookies.find { |c| c.start_with?("user_id=") }
+    assert_includes uid_cookie, "expires="
+    expires = uid_cookie.match(/expires=([^;]+)/)[1]
+    assert_in_delta 20.years.from_now, Time.zone.parse(expires), 5.seconds
+  end
+
+  # --- Long-lived session persistence ---
+
+  test "native session survives past old 7-day boundary" do
+    post session_path, params: {email: @alice.email, password: "password123"},
+      headers: {"User-Agent" => "Ruby Native iOS"}
+
+    travel_to 10.days.from_now do
+      get tracking_index_path
+      assert_response :success
+    end
+  end
+
+  test "web session expires after session cookie expiry (7 days)" do
+    post session_path, params: {email: @alice.email, password: "password123"}
+
+    travel_to 10.days.from_now do
+      cookies.delete("user_id")
+      get tracking_index_path
+      assert_redirected_to new_session_path
+    end
+  end
+
+  # --- Logout revokes permanent cookie ---
+
+  test "DELETE /session revokes permanent native cookie" do
+    post session_path, params: {email: @alice.email, password: "password123"},
+      headers: {"User-Agent" => "Ruby Native iOS"}
     delete session_path
-    get user_root_path
+    assert_redirected_to root_path
+
+    get tracking_index_path
     assert_redirected_to new_session_path
+  end
+
+  # --- Unauthenticated redirect ---
+
+  test "unauthenticated request redirects to login for web" do
+    get tracking_index_path
+    assert_redirected_to new_session_path
+  end
+
+  test "unauthenticated request redirects to root for native" do
+    get tracking_index_path, headers: {"User-Agent" => "Ruby Native iOS"}
+    assert_redirected_to root_path
   end
 end

@@ -9,7 +9,7 @@
 <% end %>
 
 <div class="bg-white min-h-screen">
-  <div class="max-w-app mx-auto px-4 pb-20">
+  <div class="max-w-app mx-auto px-2 pb-20">
 
     <%# Header %>
     <div class="py-5 border-b border-brand-divider mb-4">
@@ -29,7 +29,7 @@
       <label class="flex items-start gap-3 p-4 bg-white border border-brand-divider rounded-xl mb-3 cursor-pointer">
         <input type="checkbox" name="consents[health_data_processing]"
                <%= current_user.consent?("health_data_processing") ? "checked" : "" %>
-               class="w-5 h-5 accent-brand-primary mt-0.5 flex-shrink-0">
+               class="w-5 h-5 accent-brand-primary mt-0.5 shrink-0">
         <div class="flex-1">
           <span class="block text-brand-primary text-sm font-semibold"><%= t("consent.show.health_data") %></span>
           <span class="block text-brand-secondary text-xs mt-1">
@@ -42,7 +42,7 @@
       <label class="flex items-start gap-3 p-4 bg-white border border-brand-divider rounded-xl mb-3 cursor-pointer">
         <input type="checkbox" name="consents[symptom_tracking]"
                <%= current_user.consent?("symptom_tracking") ? "checked" : "" %>
-               class="w-5 h-5 accent-brand-primary mt-0.5 flex-shrink-0">
+               class="w-5 h-5 accent-brand-primary mt-0.5 shrink-0">
         <div class="flex-1">
           <span class="block text-brand-primary text-sm font-semibold"><%= t("consent.show.symptom_tracking") %></span>
           <span class="block text-brand-secondary text-xs mt-1">
@@ -55,7 +55,7 @@
       <label class="flex items-start gap-3 p-4 bg-white border border-brand-divider rounded-xl mb-3 cursor-pointer">
         <input type="checkbox" name="consents[cycle_tracking]"
                <%= current_user.consent?("cycle_tracking") ? "checked" : "" %>
-               class="w-5 h-5 accent-brand-primary mt-0.5 flex-shrink-0">
+               class="w-5 h-5 accent-brand-primary mt-0.5 shrink-0">
         <div class="flex-1">
           <span class="block text-brand-primary text-sm font-semibold"><%= t("consent.show.cycle_tracking") %></span>
           <span class="block text-brand-secondary text-xs mt-1">
@@ -68,7 +68,7 @@
       <label class="flex items-start gap-3 p-4 bg-white border border-brand-divider rounded-xl mb-5 cursor-pointer">
         <input type="checkbox" name="consents[menstrual_data]"
                <%= current_user.consent?("menstrual_data") ? "checked" : "" %>
-               class="w-5 h-5 accent-brand-primary mt-0.5 flex-shrink-0">
+               class="w-5 h-5 accent-brand-primary mt-0.5 shrink-0">
         <div class="flex-1">
           <span class="block text-brand-primary text-sm font-semibold"><%= t("consent.show.menstrual_data") %></span>
           <span class="block text-brand-secondary text-xs mt-1">

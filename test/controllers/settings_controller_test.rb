@@ -66,4 +66,43 @@ class SettingsControllerTest < ActionDispatch::IntegrationTest
       assert_redirected_to new_session_path, "Expected #{path} to require auth"
     end
   end
+
+  test "GET /settings/pin returns 200" do
+    get pin_settings_path
+    assert_response :success
+  end
+
+  test "POST /settings/pin sets pin" do
+    assert_not @alice.pin_set?
+    post pin_settings_path, params: {pin: "1234", pin_confirmation: "1234"}
+    assert_redirected_to profile_settings_path
+    assert @alice.reload.pin_set?
+  end
+
+  test "POST /settings/pin rejects mismatch" do
+    post pin_settings_path, params: {pin: "1234", pin_confirmation: "5678"}
+    assert_redirected_to pin_settings_path
+    assert_not @alice.reload.pin_set?
+  end
+
+  test "DELETE /settings/pin removes pin" do
+    @alice.set_pin("1234")
+    delete pin_settings_path, params: {pin: "1234"}
+    assert_redirected_to profile_settings_path
+    assert_not @alice.reload.pin_set?
+  end
+
+  test "DELETE /settings/pin with wrong pin does not remove" do
+    @alice.set_pin("1234")
+    delete pin_settings_path, params: {pin: "9999"}
+    assert_redirected_to profile_settings_path
+    assert @alice.reload.pin_set?
+  end
+
+  test "settings edit page shows unlock modal when PIN is set" do
+    @alice.set_pin("1234")
+    get edit_settings_path
+    assert_response :success
+    assert_includes response.body, "pin-unlock-modal"
+  end
 end

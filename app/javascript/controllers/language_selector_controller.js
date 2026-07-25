@@ -56,7 +56,7 @@ export default class extends Controller {
 
   showError (message) {
     const el = document.createElement('div')
-    el.className = 'fixed top-4 left-4 right-4 bg-[#FDF0EE] text-[#933a35] px-4 py-3 rounded-lg z-50 text-sm font-medium text-center shadow-lg'
+    el.className = 'fixed top-4 left-4 right-4 bg-brand-error text-brand-primary px-4 py-3 rounded-lg z-50 text-sm font-medium text-center shadow-lg'
     el.textContent = message
     el.style.maxWidth = 'calc(100% - 32px)'
     el.style.margin = '0 auto'

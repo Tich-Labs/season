@@ -75,7 +75,7 @@
          data-date-picker-target="drum">
 
       <%# Collapsed pill header %>
-      <button class="w-full h-[31px] flex items-center justify-center gap-2 text-brand-primary font-medium text-base font-['Montserrat'] focus:outline-none"
+      <button class="w-full h-[31px] flex items-center justify-center gap-2 text-brand-primary font-medium text-base font-sans focus:outline-none"
               data-action="click->date-picker#toggle"
               aria-label="Select date">
         <%= @date.strftime("%-d %B") %>
@@ -100,7 +100,7 @@
           <% ((Date.today - 29)..Date.today).each do |d| %>
             <li class="<%= d == @date ? 'bg-white/60 rounded-lg mx-2' : '' %>" style="scroll-snap-align:center;">
               <%= link_to d.strftime("%-d %B"), symptoms_path(date: d),
-                    class: "block py-2 font-['Montserrat'] #{d == @date ? 'font-bold text-base text-brand-primary' : 'font-normal text-sm text-brand-primary opacity-50'}",
+                    class: "block py-2 font-sans #{d == @date ? 'font-bold text-base text-brand-primary' : 'font-normal text-sm text-brand-primary opacity-50'}",
                     data: (d == @date ? { selected: true } : {}) %>
             </li>
           <% end %>
@@ -111,8 +111,8 @@
 
   <%# ── Phase label ───────────────────────────────────────────────────── %>
   <div class="text-center pt-6 pb-5">
-    <p class="text-brand-primary text-lg font-medium font-['Montserrat']">You are in your</p>
-    <p class="font-extrabold text-3xl leading-tight font-['Montserrat']" style="color:<%= phase_colour %>;">
+    <p class="text-brand-primary text-lg font-medium font-sans">You are in your</p>
+    <p class="font-extrabold text-3xl leading-tight font-sans" style="color:<%= phase_colour %>;">
       <%= phase_label %> Phase
     </p>
   </div>
@@ -130,7 +130,7 @@
                fill="none" stroke="<%= phase_colour %>" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
             <polyline points="9 18 15 12 9 6" />
           </svg>
-          <span class="font-medium text-[22px] tracking-[0.66px]" id="mood-summary-label" style="color:<%= phase_colour %>;">
+          <span class="font-medium text-22 tracking-p66" id="mood-summary-label" style="color:<%= phase_colour %>;">
             Mood<%= " (#{@log.moods.length})" if @log.moods.present? %>
           </span>
         </div>
@@ -166,7 +166,7 @@
                fill="none" stroke="<%= phase_colour %>" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
             <polyline points="9 18 15 12 9 6" />
           </svg>
-          <span class="font-medium text-[22px] tracking-[0.66px]" style="color:<%= phase_colour %>;">Physical</span>
+          <span class="font-medium text-22 tracking-p66" style="color:<%= phase_colour %>;">Physical</span>
         </div>
         <% if physical_done %><%= render 'symptoms/bi_check', colour: phase_colour %><% end %>
       </summary>
@@ -190,7 +190,7 @@
                fill="none" stroke="<%= phase_colour %>" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
             <polyline points="9 18 15 12 9 6" />
           </svg>
-          <span class="font-medium text-[22px] tracking-[0.66px]" style="color:<%= phase_colour %>;">Mental</span>
+          <span class="font-medium text-22 tracking-p66" style="color:<%= phase_colour %>;">Mental</span>
         </div>
         <% if mental_done %><%= render 'symptoms/bi_check', colour: phase_colour %><% end %>
       </summary>
@@ -213,7 +213,7 @@
                fill="none" stroke="<%= phase_colour %>" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
             <polyline points="9 18 15 12 9 6" />
           </svg>
-          <span class="font-medium text-[22px] tracking-[0.66px]" style="color:<%= phase_colour %>;"><%= discharge_label %></span>
+          <span class="font-medium text-22 tracking-p66" style="color:<%= phase_colour %>;"><%= discharge_label %></span>
         </div>
         <span id="section-discharge-check" style="display:<%= (discharge_done || bleeding_done) ? '' : 'none' %>"><%= render 'symptoms/bi_check', colour: phase_colour %></span>
       </summary>
@@ -329,7 +329,7 @@
                     <%= image_tag "icons/vaginal_discharge/check-11.png", alt: "", class: "w-full h-full" %>
                   </span>
                 </div>
-                <span class="text-[11px] font-medium text-center leading-tight text-brand-primary tracking-[0.07em]"
+                <span class="text-11 font-medium text-center leading-tight text-brand-primary tracking-007"
                       style="opacity:<%= sel ? 1 : 0.5 %>;"><%= item[:label] %></span>
               </button>
             <% end %>
@@ -347,15 +347,15 @@
                fill="none" stroke="<%= phase_colour %>" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
             <polyline points="9 18 15 12 9 6" />
           </svg>
-          <span class="font-medium text-[22px] tracking-[0.66px]" style="color:<%= phase_colour %>;">Sexual Intercourse</span>
+          <span class="font-medium text-22 tracking-p66" style="color:<%= phase_colour %>;">Sexual Intercourse</span>
         </div>
         <span id="section-intercourse-check" style="display:<%= intercourse_done ? '' : 'none' %>"><%= render 'symptoms/bi_check', colour: phase_colour %></span>
       </summary>
       <div class="pb-5">
         <div class="flex justify-around text-center mb-3">
-          <span class="flex-1 text-brand-primary font-medium text-sm tracking-[0.07em]">None</span>
-          <span class="flex-1 text-brand-primary font-medium text-sm tracking-[0.07em]">Unprotected</span>
-          <span class="flex-1 text-brand-primary font-medium text-sm tracking-[0.07em]">Protected</span>
+          <span class="flex-1 text-brand-primary font-medium text-sm tracking-007">None</span>
+          <span class="flex-1 text-brand-primary font-medium text-sm tracking-007">Unprotected</span>
+          <span class="flex-1 text-brand-primary font-medium text-sm tracking-007">Protected</span>
         </div>
         <div class="flex justify-around mb-4">
           <% sel = intercourse_list.include?('keiner') %>
@@ -384,9 +384,9 @@
           </button>
         </div>
         <div class="flex justify-around text-center mb-3">
-          <span class="flex-1 text-brand-primary font-medium text-sm tracking-[0.07em]">Orgasm</span>
-          <span class="flex-1 text-brand-primary font-medium text-sm tracking-[0.07em]">No Orgasm</span>
-          <span class="flex-1 text-brand-primary font-medium text-sm tracking-[0.07em]">Masturbation</span>
+          <span class="flex-1 text-brand-primary font-medium text-sm tracking-007">Orgasm</span>
+          <span class="flex-1 text-brand-primary font-medium text-sm tracking-007">No Orgasm</span>
+          <span class="flex-1 text-brand-primary font-medium text-sm tracking-007">Masturbation</span>
         </div>
         <div class="flex justify-around">
           <% sel = intercourse_list.include?('orgasmus') %>
@@ -426,7 +426,7 @@
                fill="none" stroke="<%= phase_colour %>" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
             <polyline points="9 18 15 12 9 6" />
           </svg>
-          <span class="font-medium text-[22px] tracking-[0.66px]" style="color:<%= phase_colour %>;">Cravings</span>
+          <span class="font-medium text-22 tracking-p66" style="color:<%= phase_colour %>;">Cravings</span>
         </div>
         <span id="section-cravings-check" style="display:<%= cravings_done ? '' : 'none' %>"><%= render 'symptoms/bi_check', colour: phase_colour %></span>
       </summary>
@@ -441,7 +441,7 @@
             <div class="w-[65px] h-[65px] flex items-center justify-center">
               <%= image_tag "cravings/fries.svg", alt: "Fries and burger" %>
             </div>
-            <span class="text-brand-primary font-medium text-xs tracking-[0.07em] text-center w-[80px] leading-tight">Fatty and fried food</span>
+            <span class="text-brand-primary font-medium text-xs tracking-007 text-center w-[80px] leading-tight">Fatty and fried food</span>
           </button>
 
           <% sel = cravings_list.include?('salty-food') %>
@@ -452,7 +452,7 @@
             <div class="w-[65px] h-[65px] flex items-center justify-center">
               <%= image_tag "cravings/macarons.svg", alt: "Macarons / Salty food" %>
             </div>
-            <span class="text-brand-primary font-medium text-xs tracking-[0.07em] text-center w-[80px] leading-tight">Salty food</span>
+            <span class="text-brand-primary font-medium text-xs tracking-007 text-center w-[80px] leading-tight">Salty food</span>
           </button>
 
           <% sel = cravings_list.include?('bread-noodles') %>
@@ -463,7 +463,7 @@
             <div class="w-[65px] h-[65px] flex items-center justify-center">
               <%= image_tag "cravings/noodles.svg", alt: "Noodles bowl" %>
             </div>
-            <span class="text-brand-primary font-medium text-xs tracking-[0.07em] text-center w-[80px] leading-tight">Bread &amp; noodles</span>
+            <span class="text-brand-primary font-medium text-xs tracking-007 text-center w-[80px] leading-tight">Bread &amp; noodles</span>
           </button>
         </div>
 
@@ -477,7 +477,7 @@
             <div class="w-[65px] h-[65px] flex items-center justify-center">
               <%= image_tag "cravings/chocolate.svg", alt: "Chocolate bar" %>
             </div>
-            <span class="text-brand-primary font-medium text-xs tracking-[0.07em] text-center w-[80px] leading-tight">Chocolate</span>
+            <span class="text-brand-primary font-medium text-xs tracking-007 text-center w-[80px] leading-tight">Chocolate</span>
           </button>
 
           <% sel = cravings_list.include?('sugar') %>
@@ -489,7 +489,7 @@
               <%= image_tag "cravings/doughnut.svg", alt: "", class: "absolute left-0 top-0 w-[55px] h-[55px]" %>
               <%= image_tag "cravings/donut.png", alt: "", class: "absolute right-0 bottom-0 w-[45px] h-[45px]" %>
             </div>
-            <span class="text-brand-primary font-medium text-xs tracking-[0.07em] text-center w-[90px] leading-tight">Sugar drinks &amp; food</span>
+            <span class="text-brand-primary font-medium text-xs tracking-007 text-center w-[90px] leading-tight">Sugar drinks &amp; food</span>
           </button>
         </div>
       </div>
@@ -504,7 +504,7 @@
                fill="none" stroke="<%= phase_colour %>" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
             <polyline points="9 18 15 12 9 6" />
           </svg>
-          <span class="font-medium text-[22px] tracking-[0.66px]" style="color:<%= phase_colour %>;">Sleep</span>
+          <span class="font-medium text-22 tracking-p66" style="color:<%= phase_colour %>;">Sleep</span>
         </div>
         <% if sleep_done %><%= render 'symptoms/bi_check', colour: phase_colour %><% end %>
       </summary>
@@ -537,7 +537,7 @@
                fill="none" stroke="<%= phase_colour %>" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
             <polyline points="9 18 15 12 9 6" />
           </svg>
-          <span class="font-medium text-[22px] tracking-[0.66px]" style="color:<%= phase_colour %>;">Temperature</span>
+          <span class="font-medium text-22 tracking-p66" style="color:<%= phase_colour %>;">Temperature</span>
         </div>
         <% if temperature_done %><%= render 'symptoms/bi_check', colour: phase_colour %><% end %>
       </summary>
@@ -570,7 +570,7 @@
                fill="none" stroke="<%= phase_colour %>" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
             <polyline points="9 18 15 12 9 6" />
           </svg>
-          <span class="font-medium text-[22px] tracking-[0.66px]" style="color:<%= phase_colour %>;">Weight</span>
+          <span class="font-medium text-22 tracking-p66" style="color:<%= phase_colour %>;">Weight</span>
         </div>
         <% if weight_done %><%= render 'symptoms/bi_check', colour: phase_colour %><% end %>
       </summary>
@@ -603,7 +603,7 @@
                fill="none" stroke="<%= phase_colour %>" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
             <polyline points="9 18 15 12 9 6" />
           </svg>
-          <span class="font-medium text-[22px] tracking-[0.66px]" style="color:<%= phase_colour %>;">Notes regarding today</span>
+          <span class="font-medium text-22 tracking-p66" style="color:<%= phase_colour %>;">Notes regarding today</span>
         </div>
         <% if notes_done %><%= render 'symptoms/bi_check', colour: phase_colour %><% end %>
       </summary>
@@ -613,7 +613,7 @@
                   placeholder="Enter your notes here..."
                   data-action="input->symptom#saveNotes"
                   aria-label="Notes regarding today"
-                  class="w-full rounded-xl px-4 py-3 text-base border-0 resize-none outline-none font-['Montserrat']"
+                  class="w-full rounded-xl px-4 py-3 text-base border-0 resize-none outline-none font-sans"
                   style="background:#EDE1D5; color:#3d2b28;"><%= @log.notes %></textarea>
       </div>
     </details>
@@ -621,7 +621,7 @@
     <%# Submit %>
     <div class="pt-6 pb-8" data-controller="submit-modal">
       <button type="button" data-action="click->submit-modal#open"
-              class="block w-full text-white text-center rounded-lg py-4 text-xl font-medium tracking-wide font-['Montserrat'] border-0 cursor-pointer"
+              class="block w-full text-white text-center rounded-lg py-4 text-xl font-medium tracking-wide font-sans border-0 cursor-pointer"
               style="background:<%= phase_colour %>;">
         <%= t("symptoms.index.submit") %>
       </button>
@@ -641,12 +641,12 @@
           </button>
 
           <%# Title %>
-          <p class="text-brand-primary font-medium text-[22px] text-center pt-8 pb-2 leading-tight font-['Montserrat']"><%= t("tracking.index.my_symptoms") %></p>
+          <p class="text-brand-primary font-medium text-22 text-center pt-8 pb-2 leading-tight font-sans"><%= t("tracking.index.my_symptoms") %></p>
           <div class="mx-[30px] border-t border-brand-field mb-4"></div>
 
           <%# Count %>
           <p data-submit-modal-target="count"
-             class="text-brand-primary font-medium text-base tracking-[0.03em] px-[25px] mb-3 font-['Montserrat']"></p>
+             class="text-brand-primary font-medium text-base tracking-003 px-[25px] mb-3 font-sans"></p>
 
           <%# Scrollable list — populated dynamically by JS %>
           <div class="mx-[15px] bg-brand-field/50 rounded-[30px] py-3 px-4 mb-5" style="max-height:280px; overflow-y:auto;">
@@ -658,9 +658,9 @@
 
           <%# Buttons %>
           <%= link_to t("symptoms.index.submit_tracking"), tracking_index_path,
-                class: "block mx-[25px] text-center bg-brand-primary text-white rounded-lg py-[14px] text-base font-medium tracking-[0.03em] font-['Montserrat'] no-underline mb-3" %>
+                class: "block mx-[25px] text-center bg-brand-primary text-white rounded-lg py-[14px] text-base font-medium tracking-003 font-sans no-underline mb-3" %>
           <button data-action="click->submit-modal#close"
-                  class="block w-full text-center text-brand-primary text-base font-medium tracking-[0.03em] font-['Montserrat'] pb-6 border-0 bg-transparent cursor-pointer">
+                  class="block w-full text-center text-brand-primary text-base font-medium tracking-003 font-sans pb-6 border-0 bg-transparent cursor-pointer">
             <%= t("symptoms.index.go_back") %>
           </button>
         </div>

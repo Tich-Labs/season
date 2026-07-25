@@ -4,6 +4,15 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
 
+    // Guards against re-visiting on the very first activation, which immediately
+    // follows willConnectTo(_:options:) on cold launch and already issued its own visit.
+    private var hasBecomeActiveOnce = false
+
+    // Timestamp of the last genuine background entry. Must stay in sync with
+    // PinProtection::PIN_TIMEOUT (5 minutes) on the Rails side.
+    private var backgroundedAt: Date?
+    private static let pinTimeout: TimeInterval = 5 * 60
+
     private lazy var navigator = Navigator(
         delegate: self,
         rootViewController: UINavigationController()
@@ -30,6 +39,34 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         navigator.rootViewController.navigationBar.isHidden = true
         navigator.route(baseURL)
         navigator.start()
+    }
+
+    // App Lock: only fires on genuine background entry, not on transient
+    // occlusions (Control Center, call banners, system alerts), which trigger
+    // resignActive/becomeActive without ever backgrounding the scene.
+    func sceneDidEnterBackground(_ scene: UIScene) {
+        backgroundedAt = Date()
+    }
+
+    // Force a fresh visit of whatever's on screen when the app returns to the
+    // foreground after being genuinely backgrounded past the PIN timeout, so the
+    // pending server-side pin_unlock_required? check (and the pin/_unlock_modal
+    // overlay) fires immediately instead of waiting for the next tap. Applies
+    // regardless of whether Face ID/WebAuthn is registered — the visit itself is
+    // what triggers the check, same as any other navigation would.
+    func sceneDidBecomeActive(_ scene: UIScene) {
+        guard hasBecomeActiveOnce else {
+            hasBecomeActiveOnce = true
+            return
+        }
+
+        defer { backgroundedAt = nil }
+
+        guard let backgroundedAt,
+              Date().timeIntervalSince(backgroundedAt) >= Self.pinTimeout else { return }
+
+        guard let visitable = navigator.rootViewController.visibleViewController as? Visitable else { return }
+        navigator.route(visitable.visitableURL, options: VisitOptions(action: .replace), animated: false)
     }
 }
 

@@ -5,7 +5,7 @@
   </div>
 
   <div class="w-full">
-    <h1 class="text-brand-primary text-[36px] font-bold uppercase tracking-[3.24px] text-center leading-tight">
+    <h1 class="text-brand-primary text-4xl font-bold uppercase tracking-[3.24px] text-center leading-tight">
       <%= t("passwords.edit.title").html_safe %>
     </h1>
   </div>
@@ -28,7 +28,7 @@
             autofocus: true,
             placeholder: t("passwords.edit.new_password_placeholder"),
             autocomplete: "new-password",
-            class: "w-full bg-brand-field rounded-lg px-[21px] pr-[50px] h-[52px] text-[22px] font-medium text-brand-primary outline-none border-0 box-border",
+            class: "w-full bg-brand-field rounded-lg px-[21px] pr-[50px] h-[52px] text-22 font-medium text-brand-primary outline-none border-0 box-border",
             "aria-label": t("passwords.edit.new_password"),
             data: { "password-visibility-target": "input" } %>
         <button type="button" aria-label="Toggle password visibility" data-action="click->password-visibility#toggle" class="absolute right-4 top-1/2 -translate-y-1/2 bg-transparent border-0 p-0 cursor-pointer z-10">
@@ -42,7 +42,7 @@
         <%= f.password_field :password_confirmation,
             placeholder: t("passwords.edit.confirm_placeholder"),
             autocomplete: "new-password",
-            class: "w-full bg-brand-field rounded-lg px-[21px] pr-[50px] h-[52px] text-[22px] font-medium text-brand-primary outline-none border-0 box-border",
+            class: "w-full bg-brand-field rounded-lg px-[21px] pr-[50px] h-[52px] text-22 font-medium text-brand-primary outline-none border-0 box-border",
             "aria-label": t("passwords.edit.confirm_password"),
             data: { "password-visibility-target": "input" } %>
         <button type="button" aria-label="Toggle password visibility" data-action="click->password-visibility#toggle" class="absolute right-4 top-1/2 -translate-y-1/2 bg-transparent border-0 p-0 cursor-pointer z-10">
@@ -53,7 +53,7 @@
 
       <div class="mt-4">
         <%= f.submit t("passwords.edit.save"),
-            class: "w-[322px] h-[52px] bg-brand-primary text-white text-[22px] font-medium tracking-[0.66px] rounded-lg border-0 cursor-pointer block mx-auto",
+            class: "w-[322px] h-[52px] bg-brand-primary text-white text-22 font-medium tracking-p66 rounded-lg border-0 cursor-pointer block mx-auto",
             "data-disable-with": t("passwords.edit.saving") %>
       </div>
     <% end %>

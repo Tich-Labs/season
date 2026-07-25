@@ -6,7 +6,9 @@ class SendPeriodRemindersJob < ApplicationJob
 
     Reminder.active.where(reminder_type: "period_start").includes(:user).find_each do |reminder|
       user = reminder.user
-      next unless user&.email.present? && user.last_period_start && user.cycle_length
+      next if user&.email.blank?
+      has_data = user.last_period_start || user.period_starts.any?
+      next unless has_data
 
       advance = reminder.advance_days || 2
       next_start = CycleCalculatorService.new(user).next_period_start
@@ -17,7 +19,9 @@ class SendPeriodRemindersJob < ApplicationJob
 
     Reminder.active.where(reminder_type: "period_end").includes(:user).find_each do |reminder|
       user = reminder.user
-      next unless user&.email.present? && user.last_period_start && user.cycle_length && user.period_length
+      next if user&.email.blank?
+      has_data = user.last_period_start || user.period_starts.any?
+      next unless has_data && user.period_length
 
       advance = reminder.advance_days || 1
       next_end = CycleCalculatorService.new(user).next_period_start + (user.period_length || 5) - 1

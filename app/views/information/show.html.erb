@@ -1,10 +1,28 @@
-<% content_for(:page_title) { "Informations" } %>
+<% content_for(:page_title) do %>
+  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="white" stroke-width="1.5" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="9" />
+    <line x1="12" y1="11" x2="12" y2="16" />
+    <circle cx="12" cy="7.5" r="0.75" fill="white" stroke="none" />
+  </svg>
+  Information
+<% end %>
+<% content_for(:hide_quick_actions) { true } %>
 <% content_for(:header_dark) { "true" } %>
 <% phase_colour = @meta[:colour] %>
 <% content_for(:header_color) { phase_colour || "#933a35" } %>
 
 <div class="bg-white min-h-screen pb-20">
-  <div class="max-w-app mx-auto px-4 pt-6 pb-10">
+  <div class="max-w-app mx-auto px-2 pt-6 pb-10">
+
+    <div class="mb-6">
+      <%# Falls back to the phase list when there's no in-app history to go back to
+          (deep link, native push into a fresh WebView, opened in a new tab, etc.) %>
+      <a href="<%= information_path %>"
+         onclick="if (window.history.length > 1) { window.history.back(); return false; }"
+         class="text-brand-primary no-underline text-base font-normal">
+        &lt; back
+      </a>
+    </div>
 
     <%# Section 1: Phase title + hormone note %>
     <div class="mb-12">

@@ -10,7 +10,7 @@
             placeholder: "Search name or User ID…",
             class: "flex-1 bg-gray-100 rounded-lg px-3 py-2 text-sm border-0 focus:ring-2 focus:ring-brand-primary focus:outline-none" %>
         <%= f.submit "Search",
-            class: "bg-brand-primary text-white px-4 py-2 rounded-lg text-sm font-medium cursor-pointer hover:bg-[#7a2f2a] transition-colors" %>
+            class: "bg-brand-primary text-white px-4 py-2 rounded-lg text-sm font-medium cursor-pointer hover:bg-brand-primary-dark transition-colors" %>
       <% end %>
 
       <div class="flex items-center gap-2 flex-wrap">
@@ -93,7 +93,7 @@
                       admin_user_path(user, user: { admin: true }),
                       method: :patch,
                       data: { turbo_confirm: "Make #{user.name || user.email} an admin?" },
-                      class: "px-2 py-0.5 rounded text-xs font-medium bg-brand-field text-brand-primary hover:bg-[#d4c8b8] transition-colors" %>
+                      class: "px-2 py-0.5 rounded text-xs font-medium bg-brand-field text-brand-primary hover:bg-brand-warm transition-colors" %>
               <% end %>
             </td>
             <td class="px-4 py-3">

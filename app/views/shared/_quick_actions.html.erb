@@ -41,7 +41,8 @@
 
         <%# Track my day %>
         <%= link_to tracking_index_path,
-              class: "flex items-center px-7 h-[102px] text-brand-primary text-2xl font-medium font-['Montserrat'] hover:bg-brand-background transition-colors" do %>
+              data: { turbo: false },
+              class: "flex items-center px-7 h-[102px] text-brand-primary text-2xl font-medium font-sans hover:bg-brand-background transition-colors" do %>
           <%= t('menu.track_day') %>
         <% end %>
 
@@ -50,7 +51,8 @@
 
         <%# Create appointment %>
         <%= link_to new_calendar_event_path,
-              class: "flex items-center px-7 h-[102px] text-brand-primary text-2xl font-medium font-['Montserrat'] hover:bg-brand-background transition-colors" do %>
+              data: { turbo: false },
+              class: "flex items-center px-7 h-[102px] text-brand-primary text-2xl font-medium font-sans hover:bg-brand-background transition-colors" do %>
           <%= t('menu.create_appointment') %>
         <% end %>
 
