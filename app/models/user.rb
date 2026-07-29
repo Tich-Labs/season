@@ -42,28 +42,28 @@ class User < ApplicationRecord
   end
 
   # Required fields per onboarding step. Steps with a "skip" option
-  # (3, 4, 6, 8, 9, 10) are intentionally omitted — users may legitimately leave those nil.
+  # (3, 5, 7, 8, 9) are intentionally omitted — users may legitimately leave those nil.
   REQUIRED_ONBOARDING_STEPS = {
     1 => ->(u) { u.name.present? },
     2 => ->(u) { u.birthday.present? },
-    5 => ->(u) { !u.has_regular_cycle.nil? },
-    7 => ->(u) { !u.uses_hormonal_birth_control.nil? },
-    11 => ->(u) { u.food_preference.present? }
+    4 => ->(u) { !u.has_regular_cycle.nil? },
+    6 => ->(u) { !u.uses_hormonal_birth_control.nil? },
+    10 => ->(u) { u.food_preference.present? }
   }.freeze
 
-  # All 11 onboarding steps in sequence. Used for resume redirect on sign-in.
+  # All 10 onboarding steps in sequence. Used for resume redirect on sign-in.
+  # Step 3 covers both period start and end (a single date-range picker).
   ALL_ONBOARDING_STEPS = {
     1 => ->(u) { u.name.present? },
     2 => ->(u) { u.birthday.present? },
     3 => ->(u) { u.last_period_start.present? },
-    4 => ->(u) { u.last_period_end.present? },
-    5 => ->(u) { !u.has_regular_cycle.nil? },
-    6 => ->(u) { u.cycle_length.present? },
-    7 => ->(u) { !u.uses_hormonal_birth_control.nil? },
-    8 => ->(u) { u.uses_hormonal_birth_control == true || !u.birth_control_reminder.nil? },
-    9 => ->(u) { u.contraception_type.present? && u.contraception_type != "none" },
-    10 => ->(u) { !u.cycle_stage_reminder.nil? },
-    11 => ->(u) { u.food_preference.present? }
+    4 => ->(u) { !u.has_regular_cycle.nil? },
+    5 => ->(u) { u.cycle_length.present? },
+    6 => ->(u) { !u.uses_hormonal_birth_control.nil? },
+    7 => ->(u) { u.uses_hormonal_birth_control == true || !u.birth_control_reminder.nil? },
+    8 => ->(u) { u.contraception_type.present? && u.contraception_type != "none" },
+    9 => ->(u) { !u.cycle_stage_reminder.nil? },
+    10 => ->(u) { u.food_preference.present? }
   }.freeze
 
   # Returns the first step number where data is still missing (in sequential

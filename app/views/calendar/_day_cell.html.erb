@@ -71,9 +71,9 @@
     <div style="display:flex; align-items:center; justify-content:center; gap:2px; flex-shrink:0;">
       <% if show_tracking && is_tracked %>
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;">
-          <circle cx="6.58203" cy="6.58203" r="6.58203" fill="#899884"/>
-          <line x1="2.50692" y1="7.25601" x2="4.86225" y2="9.61134" stroke="white" stroke-width="1.35512" stroke-linecap="round"/>
-          <line x1="5.02649" y1="9.54056" x2="10.6954" y2="3.8717" stroke="white" stroke-width="1.35512" stroke-linecap="round"/>
+          <circle cx="6.58203" cy="6.58203" r="6.58203" fill="#899884" />
+          <line x1="2.50692" y1="7.25601" x2="4.86225" y2="9.61134" stroke="white" stroke-width="1.35512" stroke-linecap="round" />
+          <line x1="5.02649" y1="9.54056" x2="10.6954" y2="3.8717" stroke="white" stroke-width="1.35512" stroke-linecap="round" />
         </svg>
       <% end %>
       <% if is_today %>
@@ -109,12 +109,17 @@
       </div>
     <% end %>
 
-    <%# Moon phase at bottom %>
+    <%# Moon phase at bottom — small two-tone SVG icon, not a flat dot %>
     <div style="display:flex; align-items:center; justify-content:center; margin-top:auto; flex-shrink:0;">
       <% if local_assigns[:show_moonphases] && lunar == :full_moon %>
-        <span style="width:7px; height:7px; border-radius:50%; background:#fff2ca; border:1px solid #d4c27a; display:inline-block;"></span>
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Full moon" style="flex-shrink:0;">
+          <circle cx="5" cy="5" r="4.5" fill="#F5D786" stroke="#B8933A" stroke-width="0.8" />
+          <circle cx="6.3" cy="5.9" r="0.9" fill="#DCB765" />
+        </svg>
       <% elsif local_assigns[:show_moonphases] && lunar == :new_moon %>
-        <span style="width:7px; height:7px; border-radius:50%; background:#4d4d4c; display:inline-block;"></span>
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="New moon" style="flex-shrink:0;">
+          <path d="M6.5 1A4.5 4.5 0 1 0 6.5 9 3.6 3.6 0 0 1 6.5 1Z" fill="#4D4D4C" />
+        </svg>
       <% end %>
     </div>
 

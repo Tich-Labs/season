@@ -13,9 +13,13 @@
 </div>
 
 <script nonce="<%= content_security_policy_nonce %>">
-  window.addEventListener('DOMContentLoaded', function() {
+  // This page is always reached via a Turbo Drive visit (redirected from the
+  // final onboarding step's form submission), so 'DOMContentLoaded' never
+  // fires here — Turbo swaps the body without a full page load. 'turbo:load'
+  // fires on every Turbo-driven visit (and on a true fresh load too).
+  document.addEventListener('turbo:load', function() {
     setTimeout(function() {
-      window.location.href = <%= calendar_path.to_json %>;
+      window.location.href = <%= raw calendar_path.to_json %>;
     }, 1500);
-  });
+  }, { once: true });
 </script>

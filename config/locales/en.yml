@@ -96,19 +96,15 @@ en:
       submit: "Submit"
     step3:
       heading: "%{name}, when was the first day of your last menstruation?"
+      heading_end: "And when was the last day?"
       clear: "Clear"
       submit: "Submit"
       unsure: "Unsure..."
     step4:
-      heading: "%{name}, when was the last day of your last menstruation?"
-      clear: "Clear"
-      submit: "Submit"
-      unsure: "Unsure..."
-    step5:
       heading: "Do you have a regular cycle?"
       "yes": "Yes"
       "no": "No"
-    step6:
+    step5:
       no_problem_title: "No Problem"
       no_problem_body: "We'll help you get your cycle back on track with exercise and nutrition tips"
       no_problem_ok: "Okay, next"
@@ -117,16 +113,16 @@ en:
       days_suffix: "Days"
       submit: "Submit"
       not_sure: "Not sure"
-    step7:
+    step6:
       heading: "Are you using hormonal birth control?"
       "yes": "Yes"
       "no": "No"
       info: "Hormonal birth control alters your natural cycle. Season currently aligns with your natural cycle, but by tracking your symptoms and Superpower Moments, we create a personalized forecast for you."
-    step8:
+    step7:
       heading: "Would you like to set up a reminder for your birth control?"
       "yes": "Yes"
       "no": "No"
-    step9:
+    step8:
       heading: "What method of birth control do you use?"
       methods:
         - "None"
@@ -136,12 +132,12 @@ en:
         - "Hormone injection"
         - "IUD"
         - "Hormonal implant"
-    step10:
+    step9:
       heading: "Would you like a reminder of your cycle stages to be more prepared?"
       body: "You will receive it two days before the predicted start date of your cycle phase. You can change these later."
       submit: "Submit"
       maybe_later: "Maybe later"
-    step11:
+    step10:
       heading_html: "Hello %{name},<br>Do you have any food preferences?"
       foods:
         - "None"

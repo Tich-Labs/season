@@ -23,12 +23,11 @@ class OnboardingControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  test "PATCH /onboarding/10 saves last period date and advances" do
+  test "PATCH /onboarding/9 saves cycle stage reminder and advances" do
     sign_in_as(@carol)
-    patch onboarding_path(10), params: {
-      last_period_date: 14.days.ago.to_date.to_s
-    }
+    patch onboarding_path(9), params: {}
     assert_response :redirect
+    assert_equal true, @carol.reload.cycle_stage_reminder
   end
 
   test "GET /onboarding redirects to calendar if onboarding already complete" do
@@ -37,13 +36,25 @@ class OnboardingControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to user_root_path
   end
 
-  # Date guard — step 3
-  test "PATCH /onboarding/3 with valid ISO date saves last_period_start and creates period_start log" do
+  # Date guard — step 3 (combined start/end range picker)
+  test "PATCH /onboarding/3 with valid ISO start date saves last_period_start and creates period_start log" do
     sign_in_as(@carol)
     patch onboarding_path(3), params: {last_period_start: 10.days.ago.to_date.to_s}
     assert_response :redirect
     assert_not_nil @carol.reload.last_period_start
     assert @carol.period_starts.exists?(started_on: 10.days.ago.to_date)
+  end
+
+  test "PATCH /onboarding/3 with start and end date saves both" do
+    sign_in_as(@carol)
+    patch onboarding_path(3), params: {
+      last_period_start: 10.days.ago.to_date.to_s,
+      last_period_end: 5.days.ago.to_date.to_s
+    }
+    assert_response :redirect
+    @carol.reload
+    assert_not_nil @carol.last_period_start
+    assert_not_nil @carol.last_period_end
   end
 
   test "PATCH /onboarding/3 with garbage date returns 422 not 500" do
@@ -55,26 +66,6 @@ class OnboardingControllerTest < ActionDispatch::IntegrationTest
   test "PATCH /onboarding/3 with empty date returns 422 not 500" do
     sign_in_as(@carol)
     patch onboarding_path(3), params: {last_period_start: ""}
-    assert_response :unprocessable_entity
-  end
-
-  # Date guard — step 4
-  test "PATCH /onboarding/4 with valid ISO date saves last_period_end" do
-    sign_in_as(@carol)
-    patch onboarding_path(4), params: {last_period_end: 5.days.ago.to_date.to_s}
-    assert_response :redirect
-    assert_not_nil @carol.reload.last_period_end
-  end
-
-  test "PATCH /onboarding/4 with garbage date returns 422 not 500" do
-    sign_in_as(@carol)
-    patch onboarding_path(4), params: {last_period_end: "not-a-date"}
-    assert_response :unprocessable_entity
-  end
-
-  test "PATCH /onboarding/4 with empty date returns 422 not 500" do
-    sign_in_as(@carol)
-    patch onboarding_path(4), params: {last_period_end: ""}
     assert_response :unprocessable_entity
   end
 

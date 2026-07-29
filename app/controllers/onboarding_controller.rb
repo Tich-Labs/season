@@ -4,7 +4,7 @@ class OnboardingController < ApplicationController
   skip_onboarding_requirement
   allow_pin_bypass
 
-  TOTAL_STEPS = 11
+  TOTAL_STEPS = 10
 
   def invite
     @token = params[:token]
@@ -23,9 +23,19 @@ class OnboardingController < ApplicationController
     end
 
     resume_step = current_user.next_onboarding_step
-    if resume_step && resume_step > @step
+    previously_reached = session[:onboarding_reached_step].to_i
+
+    # Only force the user forward to their resume point if this session
+    # hasn't already reached it — e.g. a fresh sign-in after dropping off
+    # mid-onboarding. If they've already reached the resume point once in
+    # this session, landing on an earlier step (via the back button or
+    # browser back) is an intentional revisit to review or change an
+    # answer, not a stale resume — so let it through.
+    if resume_step && resume_step > @step && previously_reached < resume_step
       redirect_to onboarding_path(resume_step) and return
     end
+
+    session[:onboarding_reached_step] = [previously_reached, @step].max
   end
 
   def update
@@ -61,21 +71,25 @@ class OnboardingController < ApplicationController
       redirect_to onboarding_path(3) and return
 
     when 3
-      # First day of last period
+      # First & last day of last period (single date-range picker)
       if params[:skip_last_period].present?
         redirect_to onboarding_path(4) and return
       end
-      date = params[:last_period_start]
-      if date.blank?
+      start_date = params[:last_period_start]
+      end_date = params[:last_period_end]
+      if start_date.blank?
         @error = "Please select a date or tap Unsure"
         render :show, status: :unprocessable_content
         return
       end
       begin
-        parsed = Date.iso8601(date)
+        parsed_start = Date.iso8601(start_date)
+        parsed_end = end_date.present? ? Date.iso8601(end_date) : nil
         ApplicationRecord.transaction do
-          current_user.update!(last_period_start: parsed)
-          current_user.period_starts.find_or_create_by!(started_on: parsed)
+          updates = {last_period_start: parsed_start}
+          updates[:last_period_end] = parsed_end if parsed_end
+          current_user.update!(updates)
+          current_user.period_starts.find_or_create_by!(started_on: parsed_start)
         end
       rescue ArgumentError, TypeError
         @error = "Invalid date — please select again"
@@ -84,25 +98,6 @@ class OnboardingController < ApplicationController
       redirect_to onboarding_path(4) and return
 
     when 4
-      # Last day of last period
-      if params[:skip_last_period].present?
-        redirect_to onboarding_path(5) and return
-      end
-      date = params[:last_period_end]
-      if date.blank?
-        @error = "Please select a date or tap Unsure"
-        render :show, status: :unprocessable_content
-        return
-      end
-      begin
-        current_user.update!(last_period_end: Date.iso8601(date))
-      rescue ArgumentError, TypeError
-        @error = "Invalid date — please select again"
-        render :show, status: :unprocessable_content and return
-      end
-      redirect_to onboarding_path(5) and return
-
-    when 5
       # Regular cycle?
       regular = params[:has_regular_cycle]
       if regular.blank?
@@ -113,17 +108,17 @@ class OnboardingController < ApplicationController
       has_regular = regular == "true"
       current_user.update!(has_regular_cycle: has_regular)
       if has_regular
-        redirect_to onboarding_path(6) and return
+        redirect_to onboarding_path(5) and return
       else
-        redirect_to onboarding_path(6, no_regular: true) and return
+        redirect_to onboarding_path(5, no_regular: true) and return
       end
 
-    when 6
+    when 5
       # Cycle length
       if params[:skip_cycle_length].present?
         # TODO: Auto-calculate from user's tracking data over time
         current_user.update!(cycle_length: 28)
-        redirect_to onboarding_path(7) and return
+        redirect_to onboarding_path(6) and return
       end
       cycle_length = params[:cycle_length].to_i
       if cycle_length < 20 || cycle_length > 45
@@ -132,9 +127,9 @@ class OnboardingController < ApplicationController
         return
       end
       current_user.update!(cycle_length: cycle_length)
-      redirect_to onboarding_path(7) and return
+      redirect_to onboarding_path(6) and return
 
-    when 7
+    when 6
       # Hormonal birth control?
       hormonal = params[:uses_hormonal_birth_control]
       if hormonal.blank?
@@ -145,12 +140,12 @@ class OnboardingController < ApplicationController
       uses_hormonal = hormonal == "true"
       current_user.update!(uses_hormonal_birth_control: uses_hormonal)
       if uses_hormonal
-        redirect_to onboarding_path(9) and return
-      else
         redirect_to onboarding_path(8) and return
+      else
+        redirect_to onboarding_path(7) and return
       end
 
-    when 8
+    when 7
       # Birth control reminder
       reminder = params[:birth_control_reminder]
       if reminder.blank?
@@ -159,9 +154,9 @@ class OnboardingController < ApplicationController
         return
       end
       current_user.update!(birth_control_reminder: reminder == "true")
-      redirect_to onboarding_path(9) and return
+      redirect_to onboarding_path(8) and return
 
-    when 9
+    when 8
       # Birth control method
       method = params[:birth_control_method]
       if method.blank?
@@ -170,18 +165,18 @@ class OnboardingController < ApplicationController
         return
       end
       current_user.update!(contraception_type: method)
-      redirect_to onboarding_path(10) and return
+      redirect_to onboarding_path(9) and return
 
-    when 10
+    when 9
       # Cycle stage reminder
       if params[:skip_reminder].present?
         current_user.update!(cycle_stage_reminder: false)
       else
         current_user.update!(cycle_stage_reminder: true)
       end
-      redirect_to onboarding_path(11) and return
+      redirect_to onboarding_path(10) and return
 
-    when 11
+    when 10
       # Food preferences
       food_pref = params[:food_preference]
       if food_pref.blank?
