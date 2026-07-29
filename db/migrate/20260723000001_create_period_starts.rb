@@ -12,7 +12,7 @@ class CreatePeriodStarts < ActiveRecord::Migration[8.1]
       dir.up do
         # Backfill existing last_period_start values into period_starts
         # so no user loses their data.
-        execute <<~SQL
+        execute <<~SQL.squish
           INSERT INTO period_starts (user_id, started_on, created_at, updated_at)
           SELECT id, last_period_start, NOW(), NOW()
           FROM users
