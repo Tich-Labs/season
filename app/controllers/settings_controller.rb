@@ -58,6 +58,83 @@ class SettingsController < ApplicationController
     )
   end
 
+  def connect_google_calendar
+    client = build_google_oauth_client
+    auth_url = client.authorization_uri(
+      scope: "https://www.googleapis.com/auth/calendar",
+      access_type: "offline",
+      prompt: "consent",
+      redirect_uri: google_calendar_callback_url
+    ).to_s
+    redirect_to auth_url, allow_other_host: true
+  end
+
+  def google_calendar_callback
+    if params[:code].present?
+      client = build_google_oauth_client
+      client.code = params[:code]
+      client.redirect_uri = google_calendar_callback_url
+      client.fetch_access_token!
+
+      email = fetch_google_email(client.access_token)
+
+      current_user.update!(
+        google_access_token: client.access_token,
+        google_refresh_token: client.refresh_token.presence || current_user.google_refresh_token,
+        google_token_expires_at: client.expires_at ? Time.zone.at(client.expires_at) : nil,
+        google_calendar_email: email
+      )
+      redirect_to calendar_settings_path, notice: t("settings.calendar.google_connected", default: "Google Calendar connected")
+    else
+      redirect_to calendar_settings_path, alert: t("settings.calendar.google_failed", default: "Failed to connect Google Calendar")
+    end
+  end
+
+  def disconnect_google_calendar
+    current_user.update!(
+      google_access_token: nil,
+      google_refresh_token: nil,
+      google_token_expires_at: nil,
+      google_calendar_email: nil,
+      google_uid: nil
+    )
+    redirect_to calendar_settings_path, notice: t("settings.calendar.google_disconnected", default: "Google Calendar disconnected")
+  end
+
+  def sync_google_calendar
+    service = GoogleCalendarService.new(current_user)
+    events = service.list_events(
+      time_min: 3.months.ago.iso8601,
+      time_max: 3.months.from_now.iso8601,
+      max_results: 250
+    )
+
+    imported = 0
+
+    (events || []).each do |event|
+      next if event.start.nil?
+      next if event.start.date_time.nil? && event.start.date.nil?
+      next if CalendarEvent.exists?(google_event_id: event.id)
+
+      start_time = event.start.date_time || event.start.date.to_time
+      end_time = event.end&.date_time || event.end&.date&.to_time
+
+      CalendarEvent.create!(
+        user: current_user,
+        google_event_id: event.id,
+        title: event.summary.presence || "Untitled",
+        date: start_time.to_date,
+        start_time: start_time.respond_to?(:strftime) ? start_time.strftime("%H:%M") : nil,
+        end_time: end_time&.respond_to?(:strftime) ? end_time.strftime("%H:%M") : nil,
+        notes: event.description,
+        location: event.location
+      )
+      imported += 1
+    end
+
+    redirect_to calendar_settings_path, notice: t("settings.calendar.google_synced", count: imported, default: "Synced #{imported} events from Google Calendar")
+  end
+
   KEY_TO_REMINDER = {
     "cycle_reminder" => ["morning", "09:00"],
     "period_prediction" => ["period_start", "00:00"],
@@ -246,5 +323,30 @@ class SettingsController < ApplicationController
 
   def user_params
     params.expect(user: [:name, :language, :cycle_length, :period_length, :contraception_type, :life_stage])
+  end
+
+  def build_google_oauth_client
+    Signet::OAuth2::Client.new(
+      client_id: ENV["GOOGLE_CLIENT_ID"],
+      client_secret: ENV["GOOGLE_CLIENT_SECRET"],
+      authorization_uri: "https://accounts.google.com/o/oauth2/auth",
+      token_credential_uri: "https://oauth2.googleapis.com/token"
+    )
+  end
+
+  def google_calendar_callback_url
+    "#{request.base_url}/settings/google_calendar_callback"
+  end
+
+  def fetch_google_email(access_token)
+    uri = URI("https://www.googleapis.com/oauth2/v3/userinfo")
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.use_ssl = true
+    request = Net::HTTP::Get.new(uri)
+    request["Authorization"] = "Bearer #{access_token}"
+    response = http.request(request)
+    JSON.parse(response.body)["email"]
+  rescue
+    nil
   end
 end

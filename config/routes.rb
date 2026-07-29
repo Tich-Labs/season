@@ -150,6 +150,10 @@ Rails.application.routes.draw do
     get :pin, on: :collection
     post :pin, on: :collection, action: :update_pin
     delete :pin, on: :collection, action: :remove_pin
+    get :connect_google_calendar, on: :collection
+    get :google_calendar_callback, on: :collection
+    post :disconnect_google_calendar, on: :collection
+    post :sync_google_calendar, on: :collection
   end
 
   # Language selection - explicit routes after settings resource

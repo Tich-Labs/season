@@ -52,43 +52,68 @@
     </div>
 
     <div>
+      <%# Google Calendar — fully functional %>
       <div class="py-3">
-        <span class="text-brand-muted text-sm font-medium">user@gmail.com</span>
+        <% if @user.google_calendar_connected? %>
+          <span class="text-brand-muted text-sm font-medium"><%= @user.google_calendar_email %></span>
+        <% else %>
+          <span class="text-brand-muted text-sm font-medium"><%= t("settings.calendar.not_connected", default: "Not connected") %></span>
+        <% end %>
         <span class="block text-brand-primary/60 text-xs"><%= t("settings.calendar.gmail") %></span>
       </div>
       <div class="flex items-center justify-between py-2">
-        <span class="text-brand-primary/60 text-xs"><%= t("settings.calendar.gmail_sync") %></span>
-        <button type="button" class="toggle-btn" data-action="click->calendar-toggle#toggle" data-field="gmail_sync">
-          <div class="toggle-track">
-            <div class="toggle-thumb"></div>
+        <% if @user.google_calendar_connected? %>
+          <div class="flex items-center gap-2">
+            <svg width="16" height="16" fill="none" stroke="#2E6B3E" stroke-width="2.5" viewBox="0 0 24 24">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+            <span class="text-brand-primary/60 text-xs"><%= t("settings.calendar.connected", default: "Connected") %></span>
           </div>
-        </button>
+          <div class="flex items-center gap-3">
+            <%= button_to sync_google_calendar_settings_path, method: :post,
+                  class: "px-4 py-2 bg-brand-primary text-white text-xs font-semibold rounded-lg" do %>
+              <%= t("settings.calendar.sync_now", default: "Sync now") %>
+            <% end %>
+            <%= button_to disconnect_google_calendar_settings_path, method: :post,
+                  class: "text-brand-muted text-xs underline" do %>
+              <%= t("settings.calendar.disconnect", default: "Disconnect") %>
+            <% end %>
+          </div>
+        <% else %>
+          <span class="text-brand-primary/60 text-xs"><%= t("settings.calendar.gmail_sync") %></span>
+          <%= link_to connect_google_calendar_settings_path,
+                class: "px-4 py-2 bg-brand-primary text-white text-xs font-semibold rounded-lg no-underline" do %>
+            <%= t("settings.calendar.connect", default: "Connect") %>
+          <% end %>
+        <% end %>
       </div>
 
-      <div class="py-3">
-        <span class="text-brand-muted text-sm font-medium">user@outlook.com</span>
-        <span class="block text-brand-primary/60 text-xs"><%= t("settings.calendar.microsoft") %></span>
-      </div>
-      <div class="flex items-center justify-between py-2">
-        <span class="text-brand-primary/60 text-xs"><%= t("settings.calendar.microsoft_sync") %></span>
-        <button type="button" class="toggle-btn" data-action="click->calendar-toggle#toggle" data-field="microsoft_sync">
-          <div class="toggle-track">
-            <div class="toggle-thumb"></div>
+      <%# Microsoft — grayed out, coming soon %>
+      <div class="opacity-40 pointer-events-none">
+        <div class="py-3 flex items-center gap-2">
+          <span class="text-brand-muted text-sm font-medium">user@outlook.com</span>
+          <span class="bg-brand-field rounded-full px-2 py-0.5 text-brand-primary text-xs"><%= t("settings.edit.coming_soon") %></span>
+        </div>
+        <div class="flex items-center justify-between py-2">
+          <span class="text-brand-primary/60 text-xs"><%= t("settings.calendar.microsoft_sync") %></span>
+          <div class="toggle-btn">
+            <div class="toggle-track"><div class="toggle-thumb"></div></div>
           </div>
-        </button>
+        </div>
       </div>
 
-      <div class="py-3">
-        <span class="text-brand-muted text-sm font-medium">user@icloud.com</span>
-        <span class="block text-brand-primary/60 text-xs"><%= t("settings.calendar.icloud") %></span>
-      </div>
-      <div class="flex items-center justify-between py-2">
-        <span class="text-brand-primary/60 text-xs"><%= t("settings.calendar.icloud_sync") %></span>
-        <button type="button" class="toggle-btn" data-action="click->calendar-toggle#toggle" data-field="icloud_sync">
-          <div class="toggle-track">
-            <div class="toggle-thumb"></div>
+      <%# iCloud — grayed out, coming soon %>
+      <div class="opacity-40 pointer-events-none">
+        <div class="py-3 flex items-center gap-2">
+          <span class="text-brand-muted text-sm font-medium">user@icloud.com</span>
+          <span class="bg-brand-field rounded-full px-2 py-0.5 text-brand-primary text-xs"><%= t("settings.edit.coming_soon") %></span>
+        </div>
+        <div class="flex items-center justify-between py-2">
+          <span class="text-brand-primary/60 text-xs"><%= t("settings.calendar.icloud_sync") %></span>
+          <div class="toggle-btn">
+            <div class="toggle-track"><div class="toggle-thumb"></div></div>
           </div>
-        </button>
+        </div>
       </div>
     </div>
 
@@ -162,9 +187,6 @@
     <input type="hidden" name="show_holidays" value="<%= @user.show_holidays ? "1" : "0" %>">
     <input type="hidden" name="show_week_numbers" value="<%= @user.show_week_numbers ? "1" : "0" %>">
     <input type="hidden" name="show_cycle_day_on_band" value="<%= @user.show_cycle_day_on_band ? "1" : "0" %>">
-    <input type="hidden" name="gmail_sync" value="0">
-    <input type="hidden" name="microsoft_sync" value="0">
-    <input type="hidden" name="icloud_sync" value="0">
 
     <div class="border-b border-brand-divider my-2"></div>
 

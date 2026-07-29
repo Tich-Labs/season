@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_23_134701) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_26_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -49,6 +49,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_23_134701) do
     t.date "date", null: false
     t.date "end_date"
     t.time "end_time"
+    t.string "google_event_id"
     t.text "guests"
     t.string "location"
     t.text "notes"
@@ -58,6 +59,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_23_134701) do
     t.string "title", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
+    t.index ["google_event_id"], name: "index_calendar_events_on_google_event_id"
     t.index ["user_id", "date"], name: "index_calendar_events_on_user_id_and_date"
     t.index ["user_id"], name: "index_calendar_events_on_user_id"
   end
@@ -265,6 +267,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_23_134701) do
     t.string "facebook_uid"
     t.string "food_preference"
     t.string "google_access_token"
+    t.string "google_calendar_email"
     t.string "google_refresh_token"
     t.datetime "google_token_expires_at"
     t.string "google_uid"

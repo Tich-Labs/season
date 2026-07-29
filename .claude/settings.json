@@ -26,7 +26,8 @@
       "Bash(curl -s http://localhost:3000/assets/tailwind-cc51e70d.css -o /tmp/live_tailwind.css)",
       "Bash(git commit -m ' *)",
       "Bash(xargs sed -i '' 's/max-w-app mx-auto px-2\\\\b/max-w-app mx-auto px-4/g')",
-      "Bash(bin/rails runner *)"
+      "Bash(bin/rails runner *)",
+      "Bash(pip3 install *)"
     ]
   },
   "enabledPlugins": {

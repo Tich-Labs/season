@@ -51,10 +51,51 @@ All OAuth environment variables are configured in `config/initializers/devise.rb
 6. Click **Create Credentials > OAuth 2.0 Client ID**
 7. Choose **Web Application**
 8. Under **Authorized redirect URIs**, add:
+
+   **For Login (via Devise OmniAuth):**
    - `https://seasonv2.onrender.com/users/auth/google_oauth2/callback`
    - `http://localhost:3000/users/auth/google_oauth2/callback` (local dev)
+
+   **For Calendar Sync (via Settings page — `/settings/calendar`):**
+   - `https://seasonv2.onrender.com/settings/google_calendar_callback`
+   - `http://127.0.0.1:3000/settings/google_calendar_callback` (local dev)
+
+   > The Calendar Sync flow uses a separate OAuth dance initiated from the Settings page, NOT the Devise login flow. Both callback URLs must be registered.
+
 9. Copy **Client ID** → `GOOGLE_CLIENT_ID`
 10. Copy **Client Secret** → `GOOGLE_CLIENT_SECRET`
+
+### 1b. Google Calendar Sync (Settings → Calendar)
+
+In addition to login OAuth, the app supports **Google Calendar sync** from the user's Settings page (`/settings/calendar`). This uses a separate OAuth flow (not Devise OmniAuth) built with `Signet::OAuth2::Client` directly:
+
+| Action | Route | Method | Description |
+|--------|-------|--------|-------------|
+| Connect | `/settings/connect_google_calendar` | GET | Builds OAuth URL and redirects to Google consent |
+| Callback | `/settings/google_calendar_callback` | GET | Exchanges auth code for access/refresh tokens |
+| Disconnect | `/settings/disconnect_google_calendar` | POST | Clears stored tokens |
+| Sync | `/settings/sync_google_calendar` | POST | Imports Google Calendar events as `CalendarEvent` records |
+
+**Flow:**
+1. User clicks **Connect** on `/settings/calendar`
+2. Redirected to Google consent screen (scope: `https://www.googleapis.com/auth/calendar`, offline access)
+3. After authorization, Google redirects to `/settings/google_calendar_callback?code=...`
+4. Server exchanges code for tokens and stores them on the User record
+5. User can then click **Sync now** to import events
+
+**Required Google Cloud Console setup:**
+- Add redirect URI: `http://127.0.0.1:3000/settings/google_calendar_callback` (dev) and `https://seasonv2.onrender.com/settings/google_calendar_callback` (prod)
+- OAuth consent scope: `https://www.googleapis.com/auth/calendar` (already required for login)
+
+**Env vars for `.env` file:**
+```bash
+GOOGLE_CLIENT_ID=your_client_id_here
+GOOGLE_CLIENT_SECRET=your_client_secret_here
+```
+
+The same `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` are used for both login and calendar sync — Google differentiates them by callback URL.
+
+**Error: `Missing required parameter: client_id`** — means `GOOGLE_CLIENT_ID` is not set or empty. Add it to `.env` and restart `bin/dev`.
 
 ---
 

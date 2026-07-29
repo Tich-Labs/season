@@ -8,7 +8,7 @@
     </svg>
   </a>
 <% end %>
-<% content_for(:hide_quick_actions) { true } %>
+<% content_for(:hide_quick_actions) { "true" } %>
 
 <%
   evt_date  = params[:date] ? Date.parse(params[:date]) : Time.zone.tomorrow.to_date
