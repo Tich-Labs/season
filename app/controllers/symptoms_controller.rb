@@ -15,6 +15,8 @@ class SymptomsController < ApplicationController
 
   def show
     @symptom_log = current_user.symptom_logs.find(params[:id])
+    @phase = current_user.current_phase
+    @phase_colour = CycleCalculatorService::PHASE_META[@phase]&.dig(:colour) || "#933a35"
   end
 
   def discharge

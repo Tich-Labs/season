@@ -7,7 +7,7 @@
 
   <div class="w-full text-center">
     <p class="text-brand-primary text-base font-normal mb-10 leading-relaxed">
-      <%= raw t('home.welcome_text', default: 'Welcome to Season!<br>Maximize your productivity with the help of your cycle.') %>
+      <%= sanitize t('home.welcome_text', default: 'Welcome to Season!<br>Maximize your productivity with the help of your cycle.') %>
     </p>
 
     <% if returning_user? %>

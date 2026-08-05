@@ -10,6 +10,13 @@ export default class extends Controller {
 
     const container = this.element
     const target = this.currentTarget
-    container.scrollLeft = target.offsetLeft - (container.clientWidth / 2) + (target.offsetWidth / 2)
+
+    // getBoundingClientRect avoids relying on offsetLeft's offsetParent chain,
+    // which can land outside `container` and throw the centering off.
+    const containerRect = container.getBoundingClientRect()
+    const targetRect = target.getBoundingClientRect()
+    const targetOffset = (targetRect.left - containerRect.left) + container.scrollLeft
+
+    container.scrollLeft = targetOffset - (container.clientWidth / 2) + (target.offsetWidth / 2)
   }
 }

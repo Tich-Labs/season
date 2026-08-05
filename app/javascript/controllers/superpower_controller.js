@@ -2,7 +2,7 @@ import { Controller } from '@hotwired/stimulus'
 
 const FILLED_COLOR = '#933a35'
 const EMPTY_COLOR = '#EDE1D5'
-const LEVEL_NAMES = ['', 'low', 'medium', 'high']
+
 const DEBOUNCE_MS = 500
 
 export default class extends Controller {
@@ -54,14 +54,8 @@ export default class extends Controller {
     const row = slider.closest('.sp-row')
     if (!row) return
 
-    row.querySelectorAll('[data-dot]').forEach(dot => {
-      dot.style.background = parseInt(dot.dataset.dot) <= value ? FILLED_COLOR : EMPTY_COLOR
+    row.querySelectorAll('[data-level]').forEach(el => {
+      el.style.color = parseInt(el.dataset.level) === value ? FILLED_COLOR : '#999'
     })
-
-    const label = row.querySelector('.sp-label')
-    if (!label) return
-    label.textContent = LEVEL_NAMES[value] || ''
-    label.style.left = `${pct}%`
-    label.style.display = value > 0 ? 'block' : 'none'
   }
 }

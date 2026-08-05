@@ -1,15 +1,17 @@
+<% content_for(:header_color) { @phase_colour } %>
+
 <div style="background:#FAF7F4; min-height:100%; padding-bottom:16px;">
 
   <!-- Header -->
   <div style="background:#ffffff; padding:20px 24px 16px; border-bottom:1px solid #EDE1D5;">
     <div style="display:flex; align-items:center; max-width:430px; margin:0 auto; gap:12px;">
-      <a href="<%= symptoms_path %>" style="color:#933a35;">
+      <a href="<%= symptoms_path %>" style="color:<%= @phase_colour %>;">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <polyline points="15 18 9 12 15 6" />
         </svg>
       </a>
       <div>
-        <h1 style="color:#933a35; font-size:20px; font-weight:700;"><%= @symptom_log.date.strftime("%A, %d %B") %></h1>
+        <h1 style="color:<%= @phase_colour %>; font-size:20px; font-weight:700;"><%= @symptom_log.date.strftime("%A, %d %B") %></h1>
       </div>
     </div>
   </div>

@@ -95,8 +95,6 @@
     </div>
     <% end %>
 
-
-
     <%# PWA update banner — shown by update_prompt_controller when a new SW is waiting %>
     <% unless native_app? %>
     <div data-update-prompt-target="banner"
@@ -147,7 +145,7 @@
       <% end %>
     <% end %>
 
-    <%= render "pin/unlock_modal" %>
+    <%= render "pin/unlock_modal", pin_unlock_required: @pin_unlock_required %>
 
   </body>
 </html>
