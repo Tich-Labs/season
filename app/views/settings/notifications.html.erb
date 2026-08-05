@@ -37,6 +37,9 @@
         <div class="toggle-track"><div class="toggle-thumb"></div></div>
       </button>
     </div>
+    <%# Not yet wired to anything — persisted to notification_preferences but
+        nothing in the app reads that column back out. Locked until that
+        exists so the toggles don't imply a control that does nothing. %>
     <% [
       ["push_new_appt_synced",   t("settings.notifications.push_new_appt")],
       ["push_tracking_reminder", t("settings.notifications.push_tracking")],
@@ -44,8 +47,11 @@
       ["push_app_updates",       t("settings.notifications.push_app_updates")],
       ["push_appointments",      t("settings.notifications.push_appointments")]
     ].each do |field, label| %>
-      <div class="flex items-center justify-between py-1.5">
-        <span class="text-brand-secondary text-sm font-medium"><%= label %></span>
+      <div class="flex items-center justify-between py-1.5 opacity-40 pointer-events-none">
+        <div class="flex items-center gap-2">
+          <span class="text-brand-secondary text-sm font-medium"><%= label %></span>
+          <span class="bg-brand-field rounded-full px-2 py-0.5 text-brand-primary text-xs"><%= t("settings.edit.coming_soon") %></span>
+        </div>
         <%= render "shared/toggle_switch",
               field_id: field,
               checked: prefs[field].nil? ? true : prefs[field],
@@ -109,44 +115,57 @@
     </div>
     <div class="border-b border-brand-divider"></div>
 
-    <%# Supplement reminder %>
-    <div class="flex items-center justify-between py-3.5 pb-1">
-      <span class="text-brand-primary text-base font-medium"><%= t("settings.notifications.supplement") %></span>
-      <%= render "shared/toggle_switch",
-            field_id: "newsletter",
-            checked: @notifications.newsletter,
-            aria_label: "Supplement reminder" %>
-    </div>
-    <div class="flex items-center justify-between mb-3">
-      <p class="text-brand-muted text-sm font-medium m-0"><%= t("settings.notifications.daily_pm") %></p>
-      <span class="text-brand-muted text-sm font-medium"><%= t("settings.notifications.edit") %></span>
+    <%# Supplement reminder — no SendSupplementRemindersJob exists at all (unlike
+        morning/period/birth-control), and "Edit" was never a real link, so
+        there's no way to configure this. Locked until the feature is built. %>
+    <div class="opacity-40 pointer-events-none">
+      <div class="flex items-center justify-between py-3.5 pb-1">
+        <div class="flex items-center gap-2">
+          <span class="text-brand-primary text-base font-medium"><%= t("settings.notifications.supplement") %></span>
+          <span class="bg-brand-field rounded-full px-2 py-0.5 text-brand-primary text-xs"><%= t("settings.edit.coming_soon") %></span>
+        </div>
+        <%= render "shared/toggle_switch",
+              field_id: "newsletter",
+              checked: @notifications.newsletter,
+              aria_label: "Supplement reminder" %>
+      </div>
+      <div class="flex items-center justify-between mb-3">
+        <p class="text-brand-muted text-sm font-medium m-0"><%= t("settings.notifications.daily_pm") %></p>
+        <span class="text-brand-muted text-sm font-medium"><%= t("settings.notifications.edit") %></span>
+      </div>
     </div>
     <div class="border-b border-brand-divider"></div>
 
-    <%# In-App Popups %>
+    <%# In-App Popups — same gap as the push sub-toggles above: nothing reads
+        the in_app reminder or notification_preferences back out yet. %>
     <% inapp_on = @notifications.email_notifications %>
-    <div class="flex items-center justify-between py-3.5 pb-2">
-      <span class="text-brand-primary text-base font-medium"><%= t("settings.notifications.in_app_popups") %></span>
-      <%= render "shared/toggle_switch",
-            field_id: "email_notifications",
-            checked: inapp_on,
-            aria_label: "In-App Popups" %>
-    </div>
-    <% [
-      ["in_app_new_appt_synced",   t("settings.notifications.in_app_new_appt")],
-      ["in_app_tracking_reminder", t("settings.notifications.in_app_tracking")],
-      ["in_app_new_feedback",      t("settings.notifications.in_app_new_feedback")],
-      ["in_app_app_updates",       t("settings.notifications.in_app_app_updates")],
-      ["in_app_appointments",      t("settings.notifications.in_app_appointments")]
-    ].each do |field, label| %>
-      <div class="flex items-center justify-between py-1.5">
-        <span class="text-brand-secondary text-sm font-medium"><%= label %></span>
+    <div class="opacity-40 pointer-events-none">
+      <div class="flex items-center justify-between py-3.5 pb-2">
+        <div class="flex items-center gap-2">
+          <span class="text-brand-primary text-base font-medium"><%= t("settings.notifications.in_app_popups") %></span>
+          <span class="bg-brand-field rounded-full px-2 py-0.5 text-brand-primary text-xs"><%= t("settings.edit.coming_soon") %></span>
+        </div>
         <%= render "shared/toggle_switch",
-              field_id: field,
-              checked: prefs[field].nil? ? true : prefs[field],
-              aria_label: label %>
+              field_id: "email_notifications",
+              checked: inapp_on,
+              aria_label: "In-App Popups" %>
       </div>
-    <% end %>
+      <% [
+        ["in_app_new_appt_synced",   t("settings.notifications.in_app_new_appt")],
+        ["in_app_tracking_reminder", t("settings.notifications.in_app_tracking")],
+        ["in_app_new_feedback",      t("settings.notifications.in_app_new_feedback")],
+        ["in_app_app_updates",       t("settings.notifications.in_app_app_updates")],
+        ["in_app_appointments",      t("settings.notifications.in_app_appointments")]
+      ].each do |field, label| %>
+        <div class="flex items-center justify-between py-1.5">
+          <span class="text-brand-secondary text-sm font-medium"><%= label %></span>
+          <%= render "shared/toggle_switch",
+                field_id: field,
+                checked: prefs[field].nil? ? true : prefs[field],
+                aria_label: label %>
+        </div>
+      <% end %>
+    </div>
 
   </div>
 </div>
