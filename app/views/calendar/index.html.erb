@@ -216,25 +216,29 @@
   season = @current_season || CycleCalculatorService::SEASON_NAMES[phase]
   cycle_day = current_user.streak&.current_streak
 
+  # Colours come from CycleCalculatorService::PHASE_META (the single source
+  # of truth, shared with the calendar bands/legend) rather than a second
+  # hardcoded copy — a prior hardcoded copy here drifted to a stale palette
+  # that no longer matched the rest of the calendar.
   season_info = case season
   when "Winter"
-    { title: "Winter", colour: "#933a35", emoji: "❄️",
+    { title: "Winter", colour: CycleCalculatorService::PHASE_META["menstrual"][:colour], emoji: "❄️",
       description: "This is your menstruation phase — a time for rest and reflection.",
       tips: ["Rest and prioritize sleep", "Gentle movement like yoga", "Stay hydrated"] }
   when "Spring"
-    { title: "Spring", colour: "#D18D83", emoji: "🌸",
+    { title: "Spring", colour: CycleCalculatorService::PHASE_META["follicular"][:colour], emoji: "🌸",
       description: "You're in the follicular phase — energy and creativity are rising!",
       tips: ["Start new projects", "High energy workouts", "Social activities"] }
   when "Summer"
-    { title: "Summer", colour: "#F5C6AD", emoji: "☀️",
+    { title: "Summer", colour: CycleCalculatorService::PHASE_META["ovulation"][:colour], emoji: "☀️",
       description: "You're ovulating — peak energy and confidence!",
       tips: ["Network and collaborate", "Creative brainstorming", "Focus on relationships"] }
   when "Autumn"
-    { title: "Autumn", colour: "#EDE1D5", emoji: "🍂",
+    { title: "Autumn", colour: CycleCalculatorService::PHASE_META["luteal"][:colour], emoji: "🍂",
       description: "You're in the luteal phase — time for introspection and planning.",
       tips: ["Organize and plan", "Self-care routines", "Reflect on goals"] }
   else
-    { title: "Your Cycle", colour: "#933a35", emoji: "🌙",
+    { title: "Your Cycle", colour: CycleCalculatorService::PHASE_META["menstrual"][:colour], emoji: "🌙",
       description: "Track your cycle to see your phase.",
       tips: [] }
   end

@@ -14,12 +14,7 @@
     # { key: "fertility",     title: t("forecast.index.fertility") },
   ]
   pc = @phase_colour
-  phase_name = case @cycle_day
-    when 1..7   then "Winter"
-    when 8..14  then "Spring"
-    when 15..21 then "Summer"
-    else             "Autumn"
-  end
+  phase_name = CycleCalculatorService::PHASE_META[@phase][:season]
 %>
 
 <div class="bg-white min-h-screen pb-32" data-controller="forecast-tabs forecast-modal"

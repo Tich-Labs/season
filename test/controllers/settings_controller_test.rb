@@ -111,4 +111,27 @@ class SettingsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_includes response.body, "pin-unlock-modal"
   end
+
+  test "PATCH /settings/update_notifications saves a reminder-backed toggle" do
+    patch update_notifications_settings_path, params: {cycle_reminder: "1"}, as: :json
+    assert_response :success
+    reminder = @alice.reminders.find_by(reminder_type: "morning")
+    assert reminder.active?
+  end
+
+  test "PATCH /settings/update_notifications saves a preference-only toggle" do
+    patch update_notifications_settings_path, params: {push_new_appt_synced: "0"}, as: :json
+    assert_response :success
+    assert_equal false, @alice.reload.notification_preferences["push_new_appt_synced"]
+  end
+
+  # Regression test: reminder_type "in_app" (mapped from the email_notifications
+  # key) wasn't in Reminder::TYPES, so this request 500'd via an unrescued
+  # ActiveRecord::RecordInvalid from reminder.save! — see app/models/reminder.rb.
+  test "PATCH /settings/update_notifications saves the in-app popups toggle" do
+    patch update_notifications_settings_path, params: {email_notifications: "1"}, as: :json
+    assert_response :success
+    reminder = @alice.reminders.find_by(reminder_type: "in_app")
+    assert reminder.active?
+  end
 end
