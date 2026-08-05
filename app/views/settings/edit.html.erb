@@ -175,8 +175,14 @@
       </svg>
     <% end %>
 
-    <%# Render support modal inline for iOS Ruby Native modal compatibility %>
-    <%= render "shared/support_modal" %>
+    <%# Render support modal inline only for iOS Ruby Native modal compatibility.
+        On web the layout already renders this partial (unless native_app?), so
+        rendering it here unconditionally duplicated #support-modal-container,
+        causing two overlapping modal instances and a close (x) button that only
+        ever closed the top one. %>
+    <% if native_app? %>
+      <%= render "shared/support_modal" %>
+    <% end %>
 
   </div>
 </div>

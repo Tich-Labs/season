@@ -157,14 +157,7 @@
         </div>
       </div>
 
-      <div class="flex items-center justify-between py-3">
-        <div>
-          <span class="text-brand-muted text-sm font-medium"><%= t("settings.calendar.holidays") %></span>
-        </div>
-        <button type="button" class="toggle-btn <%= "active" if @user.show_holidays? %>" data-action="click->calendar-toggle#toggle" data-field="show_holidays">
-          <div class="toggle-track"><div class="toggle-thumb"></div></div>
-        </button>
-      </div>
+      <%= render "shared/holiday_settings" %>
 
       <div class="flex items-center justify-between py-3">
         <span class="text-brand-muted text-sm font-medium"><%= t("settings.calendar.week_numbers") %></span>
@@ -184,7 +177,6 @@
     <%# Hidden form inputs for toggles %>
     <input type="hidden" name="show_appointments" value="<%= @user.show_appointments ? "1" : "0" %>">
     <input type="hidden" name="show_moonphases" value="<%= @user.show_moonphases ? "1" : "0" %>">
-    <input type="hidden" name="show_holidays" value="<%= @user.show_holidays ? "1" : "0" %>">
     <input type="hidden" name="show_week_numbers" value="<%= @user.show_week_numbers ? "1" : "0" %>">
     <input type="hidden" name="show_cycle_day_on_band" value="<%= @user.show_cycle_day_on_band ? "1" : "0" %>">
 

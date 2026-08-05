@@ -258,5 +258,9 @@ Rails.application.routes.draw do
   # Native device registration for APNs
   post "/native_devices/register", to: "native_devices#register", defaults: {format: :json}
 
+  namespace :api do
+    get "holidays", to: "holidays#index", defaults: {format: :json}
+  end
+
   root "home#welcome"
 end

@@ -255,6 +255,7 @@ GEM
     hashie (5.1.0)
       logger
     hkdf (0.3.0)
+    holidays (11.3.0)
     http-2 (1.1.3)
     httparty (0.24.2)
       csv
@@ -743,6 +744,7 @@ DEPENDENCIES
   faker
   google-apis-calendar_v3
   groupdate
+  holidays
   httparty
   importmap-rails
   kamal
@@ -868,6 +870,7 @@ CHECKSUMS
   groupdate (6.8.0) sha256=16f90ea18ca981c38e41e592416480b28353aa5e5cc3e7cb13a68b8fb5d40510
   hashie (5.1.0) sha256=c266471896f323c446ea8207f8ffac985d2718df0a0ba98651a3057096ca3870
   hkdf (0.3.0) sha256=34c62c7708451aaccbbafde62c471d837aa174dc30302381dfc486a2c0ebd111
+  holidays (11.3.0) sha256=6fbc2921ccc0ead01d47e9eacc0216dca5d7749106c6e3ea9a15c242cce0d834
   http-2 (1.1.3) sha256=1b2f379d35a11dbae94f8a1a52c053d8c161eb4a0c98b5d1605ff1b2bf171c9c
   httparty (0.24.2) sha256=8fca6a54aa0c4aa4303a0fd33e5e2156175d6a5334f714263b458abd7fda9c38
   i18n (1.14.8) sha256=285778639134865c5e0f6269e0b818256017e8cde89993fdfcbfb64d088824a5

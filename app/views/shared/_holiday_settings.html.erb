@@ -1,0 +1,42 @@
+<%# Public Holidays settings section — localStorage-only, no server persistence.
+    Drives /api/holidays + holiday_controller.js. Emits holidays:loaded / holidays:cleared.
+    Beta: holidays are the country's default public-holiday set — no per-religion picker. %>
+<div class="border-t border-brand-divider my-4"></div>
+
+<div data-controller="holiday" class="py-3">
+  <div class="flex items-center justify-between">
+    <span class="text-brand-muted text-sm font-medium"><%= t("settings.calendar.holidays") %></span>
+    <button type="button"
+            class="toggle-btn"
+            data-holiday-target="toggle"
+            data-action="click->holiday#toggle"
+            role="switch"
+            aria-pressed="false">
+      <div class="toggle-track"><div class="toggle-thumb"></div></div>
+    </button>
+  </div>
+
+  <details class="mt-2 group" data-holiday-target="countrySection" hidden>
+    <summary class="flex items-center justify-between py-2 cursor-pointer select-none list-none [&::-webkit-details-marker]:hidden">
+      <span class="text-brand-muted text-xs font-medium"><%= t("settings.calendar.holidays_country_and_calendars") %></span>
+      <svg class="w-4 h-4 text-brand-primary transition-transform group-open:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </summary>
+
+    <div class="pt-2">
+      <p class="text-brand-muted text-xs mb-2"><%= t("settings.calendar.holidays_country") %></p>
+
+      <div class="relative">
+        <input type="text"
+               data-holiday-target="countryInput"
+               data-action="input->holiday#searchCountries blur->holiday#closeResults"
+               placeholder="<%= t("settings.calendar.holidays_country_search") %>"
+               autocomplete="off"
+               class="w-full bg-brand-field rounded-xl px-4 py-3 text-brand-primary text-base font-medium outline-none">
+        <div data-holiday-target="countryResults"
+             class="hidden absolute left-0 right-0 mt-1 bg-white rounded-xl shadow-lg overflow-hidden z-20"></div>
+      </div>
+    </div>
+  </details>
+</div>

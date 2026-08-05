@@ -160,7 +160,8 @@
   </div>
 
   <%# ── Day-of-week headers + calendar grid: full-bleed edge-to-edge, no horizontal padding ── %>
-  <div class="max-w-app mx-auto">
+  <%# data-controller="holiday-dots": headless, paints dots per the Settings > Calendar preference %>
+  <div class="max-w-app mx-auto" data-controller="holiday-dots">
     <% week_number_grid_style = "display:grid; grid-template-columns:#{@show_week_numbers ? "auto repeat(7, 1fr)" : "repeat(7, 1fr)"};" %>
     <div class="gap-0" style="<%= week_number_grid_style %>">
       <% if @show_week_numbers %>

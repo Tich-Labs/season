@@ -87,6 +87,10 @@
       <% end %>
     </div>
 
+    <%# Holiday dot indicator (localStorage overlay) — filled by holiday_controller via holidays:loaded %>
+    <div data-holiday-date="<%= date.iso8601 %>"
+         style="display:flex; align-items:center; justify-content:center; gap:2px; min-height:5px; flex-shrink:0;"></div>
+
     <%# Holiday indicator %>
     <% if holiday_name %>
       <div style="background:#FFD700; border-radius:2px; padding:1px 3px; overflow:hidden;">
