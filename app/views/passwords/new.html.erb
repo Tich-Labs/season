@@ -16,6 +16,7 @@
         <%= f.email_field :email,
             id: "email",
             name: "email",
+            value: current_user&.email,
             autofocus: true,
             autocomplete: "email",
             placeholder: "E–mail...",

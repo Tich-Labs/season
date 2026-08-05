@@ -318,6 +318,8 @@ en:
       change_email: "Change Email"
       new_email: "New email address"
       current_password: "Current password"
+      new_password: "New password"
+      confirm_password: "Confirm new password"
       save: "Save"
       name_field: "Name"
       cycle_length: "Cycle Length (days)"
@@ -389,6 +391,9 @@ en:
     update_profile:
       confirmation_sent: "Confirmation email sent. Please check your inbox."
       saved: "Saved"
+    update_password:
+      invalid_password: "Current password is incorrect."
+      saved: "Password updated."
     reminders:
       morning_saved: "Morning reminder saved."
       period_saved: "Period reminder saved."

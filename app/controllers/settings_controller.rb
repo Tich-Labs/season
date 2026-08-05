@@ -213,6 +213,20 @@ class SettingsController < ApplicationController
     end
   end
 
+  def update_password
+    @user = current_user
+    unless @user.valid_password?(params[:current_password].to_s)
+      redirect_to profile_settings_path, alert: t(".invalid_password", default: "Current password is incorrect.")
+      return
+    end
+
+    if @user.update(password: params[:password], password_confirmation: params[:password_confirmation])
+      redirect_to profile_settings_path, notice: t(".saved", default: "Password updated.")
+    else
+      redirect_to profile_settings_path, alert: @user.errors.full_messages.to_sentence
+    end
+  end
+
   def update
     @user = current_user
     if @user&.update(user_params)

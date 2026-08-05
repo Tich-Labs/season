@@ -300,6 +300,8 @@ de:
       change_email: "E-Mail ändern"
       new_email: "Neue E-Mail-Adresse"
       current_password: "Aktuelles Passwort"
+      new_password: "Neues Passwort"
+      confirm_password: "Neues Passwort bestätigen"
       save: "Speichern"
       name_field: "Name"
       cycle_length: "Zykluslänge (Tage)"
@@ -371,6 +373,9 @@ de:
     update_profile:
       confirmation_sent: "Bestätigungsmail gesendet. Bitte überprüfe deinen Posteingang."
       saved: "Gespeichert"
+    update_password:
+      invalid_password: "Aktuelles Passwort ist falsch."
+      saved: "Passwort aktualisiert."
     reminders:
       morning_saved: "Morgen-Erinnerung gespeichert."
       period_saved: "Perioden-Erinnerung gespeichert."
