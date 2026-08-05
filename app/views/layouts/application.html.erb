@@ -130,7 +130,7 @@
     </div>
     <% end %>
 
-    <main class="w-full flex-1 overscroll-contain <%= 'native-inset' if native_app? %>" data-controller="pull-to-refresh" style="<%= is_authenticated_view ? "padding-top: calc(3.5rem + env(safe-area-inset-top, 0px));" : '' %><%= ";--phase-color:#{yield(:phase_color)}" if content_for?(:phase_color) %>">
+    <main class="w-full flex-1 overscroll-contain <%= 'native-inset' if native_app? %>" data-controller="pull-to-refresh" style="<%= is_authenticated_view ? (native_app? ? "padding-top: 3.5rem;" : "padding-top: calc(3.5rem + env(safe-area-inset-top, 0px));") : '' %><%= ";--phase-color:#{yield(:phase_color)}" if content_for?(:phase_color) %>">
       <div class="max-w-app mx-auto h-full">
         <%= yield %>
       </div>
