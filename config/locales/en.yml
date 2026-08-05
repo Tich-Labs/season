@@ -168,7 +168,7 @@ en:
         one: "Day"
         other: "Days"
       filter_all: "All"
-      filter_events: "Events"
+      filter_events: "Appointments"
       filter_tracked: "Tracked"
       filter_cycle: "Cycle"
 
@@ -235,11 +235,11 @@ en:
   admin:
     cycle_phase_contents:
       create:
-        created: "Informations content created."
+        created: "Information content created."
       update:
-        updated: "Informations content updated."
+        updated: "Information content updated."
       destroy:
-        destroyed: "Informations content deleted."
+        destroyed: "Information content deleted."
   invites:
     show:
       already_used: "This invite has already been used."
@@ -330,7 +330,7 @@ en:
       links_and_syncs: "Links & Syncs"
       show_features: "Show features"
       appointments: "Appointments"
-      tracking_reminder: "Tracking Reminder"
+      tracking_reminder: "Tracked Days"
       moon_phases: "Moon Phases"
       holidays: "Holidays"
       holidays_country: "Holiday country"
@@ -456,6 +456,7 @@ en:
     create_appointment: "Create appointment"
     quick_actions_label: "Open quick actions"
     close: "Close"
+    back_to_calendar: "Back to calendar"
   registrations:
     check_email:
       title: "Check your inbox"

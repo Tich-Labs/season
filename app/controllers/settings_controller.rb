@@ -25,6 +25,7 @@ class SettingsController < ApplicationController
     @user = current_user
     preferences = {
       show_appointments: params[:show_appointments] == "1",
+      show_tracked_days: params[:show_tracked_days] == "1",
       show_moonphases: params[:show_moonphases] == "1",
       show_holidays: params[:show_holidays] == "1",
       show_week_numbers: params[:show_week_numbers] == "1",

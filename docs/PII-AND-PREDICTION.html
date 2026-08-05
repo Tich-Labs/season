@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Privacy & Predictions — Season</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      color: #1a1a1a;
+      line-height: 1.6;
+      background: #fff;
+    }
+    .container { max-width: 720px; margin: 0 auto; padding: 2rem 1.5rem; }
+    h1 { font-size: 2rem; font-weight: 600; margin-bottom: 0.5rem; }
+    .subtitle { color: #666; font-size: 1.05rem; margin-bottom: 2rem; }
+    h2 {
+      font-size: 1.35rem;
+      font-weight: 600;
+      margin-top: 2.5rem;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.3rem;
+      border-bottom: 2px solid #933a35;
+    }
+    h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-top: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+    p { margin-bottom: 1rem; }
+    .highlight { background: #fef3e9; border-left: 4px solid #933a35; padding: 1rem 1.25rem; border-radius: 0 8px 8px 0; margin: 1.25rem 0; }
+    .highlight p:last-child { margin-bottom: 0; }
+    .tension-box {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: #e0d6cc;
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 1.25rem 0;
+    }
+    .tension-box > div { padding: 1rem; background: #faf6f2; }
+    .tension-box .goal { font-weight: 600; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; color: #933a35; margin-bottom: 0.25rem; }
+    .tension-box h4 { font-size: 1.05rem; margin-bottom: 0.3rem; }
+    .tension-box ul { padding-left: 1.25rem; font-size: 0.92rem; }
+    .tension-box li { margin-bottom: 0.15rem; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+      margin: 1rem 0;
+    }
+    th {
+      background: #933a35;
+      color: #fff;
+      text-align: left;
+      padding: 0.5rem 0.6rem;
+      font-weight: 500;
+      font-size: 0.82rem;
+    }
+    td { padding: 0.5rem 0.6rem; border-bottom: 1px solid #e8e0d8; }
+    tr:nth-child(even) td { background: #faf6f2; }
+    .tag { display: inline-block; font-size: 0.75rem; padding: 0.15rem 0.5rem; border-radius: 4px; font-weight: 500; }
+    .tag-critical { background: #933a35; color: #fff; }
+    .tag-high { background: #d46a5e; color: #fff; }
+    .tag-medium { background: #e8a87c; color: #1a1a1a; }
+    .tag-low { background: #e0d6cc; color: #555; }
+    .tag-none { background: #eee; color: #999; }
+    .option-card {
+      border: 1px solid #e0d6cc;
+      border-radius: 10px;
+      padding: 1.25rem;
+      margin: 1rem 0;
+      background: #faf6f2;
+    }
+    .option-card h3 { margin-top: 0; }
+    .option-card .rating { display: inline-block; font-size: 0.8rem; background: #933a35; color: #fff; padding: 0.15rem 0.5rem; border-radius: 4px; margin-left: 0.5rem; vertical-align: middle; }
+    .rating-grid { display: grid; gap: 0.4rem; margin: 0.75rem 0; font-size: 0.92rem; }
+    .rating-grid .label { color: #666; }
+    .bad { color: #b33; }
+    .good { color: #3a7; }
+    .neutral { color: #c90; }
+    .arrow { text-align: center; font-size: 1.2rem; color: #933a35; margin: 0.5rem 0; }
+    .preset-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1px; background: #e0d6cc; border-radius: 10px; overflow: hidden; margin: 1.25rem 0; }
+    .preset-grid > div { padding: 1rem; background: #faf6f2; }
+    .preset-grid h4 { font-size: 1rem; margin-bottom: 0.3rem; }
+    .preset-grid p { font-size: 0.88rem; margin-bottom: 0.3rem; }
+    .preset-grid .best { font-size: 0.8rem; color: #666; }
+    .flowchart {
+      background: #faf6f2;
+      border: 1px solid #e0d6cc;
+      border-radius: 10px;
+      padding: 1.5rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      line-height: 1.7;
+      white-space: pre;
+      overflow-x: auto;
+      margin: 1.25rem 0;
+    }
+    .must-have { background: #f0faf5; border-left: 4px solid #2a8; padding: 1rem 1.25rem; border-radius: 0 8px 8px 0; margin: 1.25rem 0; }
+    .never { background: #fef0f0; border-left: 4px solid #b33; padding: 1rem 1.25rem; border-radius: 0 8px 8px 0; margin: 1.25rem 0; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; }
+    @media (max-width: 600px) { .two-col, .tension-box, .preset-grid { grid-template-columns: 1fr; } }
+    footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid #e0d6cc; font-size: 0.85rem; color: #888; }
+    a { color: #933a35; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <h1>Your Privacy &amp; Predictions</h1>
+  <p class="subtitle">How Season protects your data while giving you accurate cycle predictions — explained simply.</p>
+
+  <!-- ============================================================ -->
+  <!-- CORE TENSION -->
+  <!-- ============================================================ -->
+  <h2>The Balancing Act</h2>
+
+  <p>Season's most useful feature is prediction — knowing when your next period starts, when you're ovulating, how your symptoms change across your cycle. But good predictions need data, and privacy means limiting what data is stored.</p>
+
+  <p>These two goals pull in different directions:</p>
+
+  <div class="tension-box">
+    <div>
+      <div class="goal">Goal: Accurate Predictions</div>
+      <h4>Needs</h4>
+      <ul>
+        <li>A lot of your health data over time</li>
+        <li>Server-side analysis across users</li>
+        <li>Many different data points</li>
+      </ul>
+    </div>
+    <div>
+      <div class="goal">Goal: Your Privacy</div>
+      <h4>Needs</h4>
+      <ul>
+        <li>Data kept on your phone</li>
+        <li>Strong encryption</li>
+        <li>Minimum data collection</li>
+      </ul>
+    </div>
+  </div>
+
+  <p>We don't pretend this tension doesn't exist. Instead, we make clear tradeoffs and let you choose what's right for you.</p>
+
+  <!-- ============================================================ -->
+  <!-- WHAT WE COLLECT -->
+  <!-- ============================================================ -->
+  <h2>What We Collect &amp; Why</h2>
+
+  <p>Every piece of health data you enter has a role. Some are essential for predictions; others are nice extras. Here's the honest breakdown:</p>
+
+  <h3>Essential — predictions break without these</h3>
+
+  <div class="must-have">
+    <p><strong>Your period dates.</strong> When your period starts and ends, and where you are in your cycle. This is the foundation of everything.</p>
+    <p><strong>Your typical cycle length</strong> and <strong>period length.</strong> The model uses these as starting assumptions.</p>
+    <p><strong>Whether you use hormonal birth control.</strong> Hormonal contraception completely changes cycle dynamics, so the model needs to account for it separately.</p>
+    <p><strong>Bleeding level, cervical mucus (discharge), and body temperature.</strong> These are the three strongest signals for detecting ovulation and predicting your next period.</p>
+    <p><strong>Physical and mental symptoms.</strong> 24 physical symptom types (cramps, headaches, bloating, etc.) and 8 mental symptom types (anxiety, insomnia, etc.) — these are deeply linked to your cycle phase.</p>
+  </div>
+
+  <h3>Helpful but not essential</h3>
+
+  <p>Your mood rating, energy level, sleep hours, pain level, and cravings can improve prediction accuracy, but we can still make good predictions without them.</p>
+
+  <h3>Safe to skip — no impact on predictions</h3>
+
+  <p>Mood descriptions you write in your own words, intercourse tags, weight, and personal notes don't affect predictions at all. These are purely for your own tracking.</p>
+
+  <div class="never">
+    <p><strong>What the model should never see:</strong> Your email address, your name, your exact birthday, and any notes you write. These are kept separate from the prediction system.</p>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SUPERPOWERS -->
+  <!-- ============================================================ -->
+  <h2>Superpowers</h2>
+
+  <p>The 20 self-assessment sliders in Superpowers show personal trends across your cycle. They're <strong>moderately useful</strong> for prediction — they could help identify phase transitions at a population level, but they're not needed for core period prediction.</p>
+
+  <!-- ============================================================ -->
+  <!-- STORAGE OPTIONS -->
+  <!-- ============================================================ -->
+  <h2>How Your Data Is Stored</h2>
+
+  <p>We offer three storage approaches, ranked from most private to least. The right choice depends on your situation and comfort level.</p>
+
+  <div class="option-card">
+    <h3>Option A: Secure Server Storage <span class="rating">Recommended</span></h3>
+    <div class="rating-grid">
+      <div><span class="label">Privacy:</span> <span class="neutral">Good</span> — health data is encrypted on the server, but visible to the app while you're using it</div>
+      <div><span class="label">Prediction quality:</span> <span class="good">Excellent</span></div>
+      <div><span class="label">What if there's a data breach?</span> <span class="neutral">Limited damage</span> — encrypted health data can't be read without the decryption key. Identity data (email) could still be exposed.</div>
+    </div>
+    <p>Your data is encrypted before it's stored on our servers. The app decrypts it briefly while you're using it to generate predictions, then it stays encrypted at rest. Your email, name, and password are stored separately from your health data.</p>
+  </div>
+
+  <div class="option-card">
+    <h3>Option B: Local-Only (On Your Phone)</h3>
+    <div class="rating-grid">
+      <div><span class="label">Privacy:</span> <span class="good">Maximum</span> — data never leaves your device</div>
+      <div><span class="label">Prediction quality:</span> <span class="neutral">Good, with limits</span></div>
+      <div><span class="label">What if there's a data breach?</span> <span class="good">No impact</span> — no health data exists on our servers</div>
+    </div>
+    <p>Your data stays entirely on your phone. Predictions are made locally. The tradeoff? The first few cycles will have less accurate predictions (the model needs to learn your patterns from scratch), and we can't detect rare conditions that benefit from broader data. Model improvements require app updates.</p>
+    <p><strong>Best for:</strong> Users in restrictive jurisdictions where period tracking carries legal risk, and privacy-maximalist users.</p>
+  </div>
+
+  <div class="option-card">
+    <h3>Option C: Local + Encrypted Sync <span class="rating">Future</span></h3>
+    <div class="rating-grid">
+      <div><span class="label">Privacy:</span> <span class="good">Very high</span> — server never stores plaintext</div>
+      <div><span class="label">Prediction quality:</span> <span class="good">Excellent</span></div>
+      <div><span class="label">What if there's a data breach?</span> <span class="good">No impact</span> — only encrypted blobs stored</div>
+    </div>
+    <p>This aspirational approach keeps data on your phone, backs it up encrypted to our servers, and only decrypts it for a split second to run a prediction before discarding it. This is the best of both worlds but technically complex to build. It's on our roadmap for the future.</p>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- DECISION GUIDE -->
+  <!-- ============================================================ -->
+  <h2>Which Approach Is Right for You?</h2>
+
+  <div class="flowchart">What's your situation?
+  │
+  ├─ You live somewhere where period tracking
+  │  carries legal risk (e.g. abortion criminalised)
+  │  → Use Local-Only or Local + Encrypted Sync
+  │
+  ├─ You value privacy but aren't at legal risk
+  │  → Local-Only is available as an opt-in
+  │  → Secure Server Storage is the smart default
+  │
+  └─ You want the most accurate predictions
+    → Secure Server Storage
+      (encrypted at rest recommended for everyone)</div>
+
+  <!-- ============================================================ -->
+  <!-- PRESETS -->
+  <!-- ============================================================ -->
+  <h2>Privacy Presets</h2>
+
+  <p>Rather than a confusing binary choice, we offer three clear tiers:</p>
+
+  <div class="preset-grid">
+    <div>
+      <h4>Standard</h4>
+      <p>Server storage, encrypted at rest</p>
+      <p>Full prediction accuracy</p>
+      <p class="best">Best for most users</p>
+    </div>
+    <div>
+      <h4>Local</h4>
+      <p>On your phone only</p>
+      <p>On-device predictions</p>
+      <p class="best">Best for privacy-conscious users</p>
+    </div>
+    <div>
+      <h4>Local + Sync</h4>
+      <p>On your phone + encrypted backup</p>
+      <p>Full accuracy via temporary decryption</p>
+      <p class="best">Coming in a future update</p>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- IMPLEMENTATION ROADMAP -->
+  <!-- ============================================================ -->
+  <h2>Implementation Roadmap</h2>
+
+  <p>Here's exactly what we're doing, phase by phase:</p>
+
+  <div class="option-card">
+    <h3>Phase 0: Now — Encrypt Sensitive Data</h3>
+    <p>We're adding encryption to the most sensitive fields: temperature, weight, notes, intercourse tags, personal mood descriptions, cravings, and Superpowers ratings. Your predictions won't change at all — the encryption happens automatically behind the scenes. The prediction system continues reading the data as if nothing changed.</p>
+    <p><strong>Impact on predictions:</strong> Zero. Everything works exactly as before, just encrypted.</p>
+  </div>
+
+  <div class="option-card">
+    <h3>Phase 1: Feature Audit</h3>
+    <p>We'll train a baseline prediction model on current data and measure exactly which data points contribute to accuracy. Any field that turns out to have zero value gets removed entirely. We'll also produce a clear table showing which features are critical and why, and send it back to the product team.</p>
+    <p><strong>Candidates for removal:</strong> Mood descriptions in your own words, intercourse tags, and weight — these likely add no prediction value.</p>
+    <p><strong>Impact on predictions:</strong> The model may become slightly smaller and faster. Accuracy stays the same if we remove the right fields.</p>
+  </div>
+
+  <div class="option-card">
+    <h3>Phase 2: Local-Only Mode (Pilot)</h3>
+    <p>We'll build a version of Season that runs entirely on your phone — data stored locally, predictions made locally. This means defining exactly what data the on-device model needs, porting the prediction logic to run on your phone, and using your phone's built-in storage (IndexedDB on Android, HealthKit on iOS).</p>
+    <p><strong>The honest limitation:</strong> Without data from other users, the first few cycles will have less accurate predictions — it's a cold start with just your data. The server model won't change; the local model is a separate, simpler implementation.</p>
+  </div>
+
+  <div class="option-card">
+    <h3>Phase 3: Encrypted Sync + Ephemeral Inference (Future)</h3>
+    <p>This is the holy grail: your data stays on your phone, synced to our servers in encrypted form. When you need a prediction, the server decrypts it for a split second, runs the model, sends the result back, and immediately wipes the plaintext. No health data persists on the server beyond that single request.</p>
+    <p><strong>What it requires:</strong> An encryption key derived from your device, strict guarantees that decrypted data never gets written to disk, and an audit to prove no plaintext survives beyond each request.</p>
+    <p><strong>Impact on predictions:</strong> The same powerful model, but the data pipeline changes to be ephemeral.</p>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SUMMARY -->
+  <!-- ============================================================ -->
+  <div class="highlight">
+    <p><strong>The bottom line:</strong> We built this document to be honest with you and with ourselves. Prediction needs data. Privacy restricts data. We won't pretend there's a perfect answer — but we will give you clear choices, encrypt what we store, and never sell or expose your health information.</p>
+    <p style="margin-bottom:0;">If you have questions, reach out. Your health data belongs to you.</p>
+  </div>
+
+  <footer>
+    <p>Last updated 2 July 2026 &middot; Season Health</p>
+  </footer>
+
+</div>
+</body>
+</html>

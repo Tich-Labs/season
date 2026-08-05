@@ -21,10 +21,14 @@ export default class extends Controller {
     if (this.inputTarget.value) {
       this.#scrollTo(parseFloat(this.inputTarget.value), false)
       this.#updateDisplay()
-    } else if (this.placeholderValue) {
+    } else if (this.placeholder) {
       this.#showPlaceholder()
     }
     this.#highlight()
+  }
+
+  get placeholder () {
+    return this.element.dataset.scrollPickerPlaceholder || this.placeholderValue
   }
 
   disconnect () {
@@ -128,7 +132,7 @@ export default class extends Controller {
   #showPlaceholder () {
     if (this.hasDisplayTarget) {
       this.displayTarget.style.display = ''
-      this.displayTarget.textContent = this.placeholderValue
+      this.displayTarget.textContent = this.placeholder
     }
   }
 }

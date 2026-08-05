@@ -157,21 +157,16 @@
 
       <div class="flex items-center justify-between py-3">
         <span class="text-brand-muted text-sm font-medium"><%= t("settings.calendar.tracking_reminder") %></span>
-        <button type="button" class="toggle-btn" data-action="click->calendar-toggle#toggle" data-field="tracking_reminder">
+        <button type="button" class="toggle-btn <%= "active" if @user.show_tracked_days? %>" data-action="click->calendar-toggle#toggle" data-field="show_tracked_days">
           <div class="toggle-track"><div class="toggle-thumb"></div></div>
         </button>
       </div>
 
-      <div class="flex items-center justify-between py-3 opacity-40 pointer-events-none">
+      <div class="flex items-center justify-between py-3">
         <span class="text-brand-muted text-sm font-medium"><%= t("settings.calendar.moon_phases") %></span>
-        <div class="flex items-center gap-2">
-          <div class="bg-brand-field rounded-full px-2 py-0.5">
-            <span class="text-brand-primary text-xs"><%= t("settings.edit.coming_soon") %></span>
-          </div>
-          <div class="toggle-btn">
-            <div class="toggle-track"><div class="toggle-thumb"></div></div>
-          </div>
-        </div>
+        <button type="button" class="toggle-btn <%= "active" if @user.show_moonphases? %>" data-action="click->calendar-toggle#toggle" data-field="show_moonphases">
+          <div class="toggle-track"><div class="toggle-thumb"></div></div>
+        </button>
       </div>
 
       <%= render "shared/holiday_settings" %>
@@ -193,6 +188,7 @@
 
     <%# Hidden form inputs for toggles %>
     <input type="hidden" name="show_appointments" value="<%= @user.show_appointments ? "1" : "0" %>">
+    <input type="hidden" name="show_tracked_days" value="<%= @user.show_tracked_days ? "1" : "0" %>">
     <input type="hidden" name="show_moonphases" value="<%= @user.show_moonphases ? "1" : "0" %>">
     <input type="hidden" name="show_week_numbers" value="<%= @user.show_week_numbers ? "1" : "0" %>">
     <input type="hidden" name="show_cycle_day_on_band" value="<%= @user.show_cycle_day_on_band ? "1" : "0" %>">

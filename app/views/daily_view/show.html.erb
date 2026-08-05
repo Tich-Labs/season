@@ -178,12 +178,14 @@
             </div>
           <% end %>
 
-          <%# Fertility %>
-          <% if fertility_status %>
-            <div class="rounded-lg px-3.5 py-3" style="background: <%= phase_col %>;">
-              <p class="text-white text-xs font-semibold uppercase tracking-widest m-0 mb-0.5 opacity-80">Fertility</p>
-              <p class="text-white text-base font-medium m-0"><%= fertility_status %></p>
-            </div>
+          <%# Fertility (commented out: not in M1 milestones) %>
+          <% if false %>
+            <% if fertility_status %>
+              <div class="rounded-lg px-3.5 py-3" style="background: <%= phase_col %>;">
+                <p class="text-white text-xs font-semibold uppercase tracking-widest m-0 mb-0.5 opacity-80">Fertility</p>
+                <p class="text-white text-base font-medium m-0"><%= fertility_status %></p>
+              </div>
+            <% end %>
           <% end %>
 
           <%# Mood %>

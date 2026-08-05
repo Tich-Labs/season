@@ -1,5 +1,5 @@
 <% cal_index_title = @date.strftime("%B") %>
-<% content_for(:page_title) { content_tag(:span, cal_index_title, class: "text-22 font-medium leading-[1.15] tracking-003") } %>
+<% content_for(:page_title) { cal_index_title } %>
 <% content_for(:header_left) do %>
   <button class="p-2" data-action="click->menu#open">
     <svg class="w-6 h-6 text-brand-primary" viewBox="0 0 24 24" fill="currentColor">
@@ -50,7 +50,7 @@
              data-action="click->calendar-menu#stopPropagation"
              style="right:0; top:calc(3.5rem + env(safe-area-inset-top, 0px)); width:268px; background:#EDE1D5; border-radius:0 0 0 40px; transform:translateX(100%); transition:transform 250ms ease-out;">
           <div class="py-2">
-            <!-- <%= link_to calendar_appointments_path,
+            <%= link_to calendar_appointments_path,
                   class: "flex items-center gap-4 px-6 py-3 hover:bg-brand-primary/5 no-underline",
                   data: { turbo_action: "replace", action: "click->calendar-menu#close" } do %>
               <div class="flex flex-col gap-[1.5px] shrink-0" style="width:20px;">
@@ -59,7 +59,7 @@
                 <div class="flex gap-[1px] items-center"><div class="w-[3px] h-[4px] bg-brand-primary rounded-[0.8px]"></div><div class="w-[15px] h-[4px] bg-brand-primary rounded-[0.8px]"></div></div>
               </div>
               <span class="text-brand-primary text-base font-medium"><%= t("nav.menu.schedule_overview") %></span>
-            <% end %> -->
+            <% end %>
 
             <%= link_to daily_view_path(Time.zone.today),
                   class: "flex items-center gap-4 px-6 py-3 hover:bg-brand-primary/5 no-underline",
@@ -86,12 +86,14 @@
             <%= link_to user_root_path,
                   class: "flex items-center gap-4 px-6 py-3 hover:bg-brand-primary/5 no-underline",
                   data: { turbo_action: "replace", action: "click->calendar-menu#close" } do %>
-              <div class="grid grid-cols-2 gap-[2px] shrink-0" style="width:19px; height:16px;">
-                <div class="border border-brand-primary rounded-[0.8px]"></div>
-                <div class="border border-brand-primary rounded-[0.8px]"></div>
-                <div class="border border-brand-primary rounded-[0.8px]"></div>
-                <div class="border border-brand-primary rounded-[0.8px]"></div>
-              </div>
+              <%# table-fixed + border-collapse guarantees genuinely equal cells —
+                  percentage-based absolute dividers don't, since left-1/3 resolves
+                  against the padding box (inside the border), not the full width. %>
+              <table class="table-fixed border-collapse rounded-[1px] shrink-0" style="width:18px; height:18px;">
+                <tr><td class="border-[1.5px] border-brand-primary"></td><td class="border-[1.5px] border-brand-primary"></td><td class="border-[1.5px] border-brand-primary"></td></tr>
+                <tr><td class="border-[1.5px] border-brand-primary"></td><td class="border-[1.5px] border-brand-primary"></td><td class="border-[1.5px] border-brand-primary"></td></tr>
+                <tr><td class="border-[1.5px] border-brand-primary"></td><td class="border-[1.5px] border-brand-primary"></td><td class="border-[1.5px] border-brand-primary"></td></tr>
+              </table>
               <span class="text-brand-primary text-base font-medium"><%= t("nav.menu.monthly_view") %></span>
             <% end %>
           </div>
@@ -134,13 +136,15 @@
       </p>
     </div>
 
-    <%# ── Filter chips (no JS — plain GET links) ── %>
-    <div class="flex gap-2 flex-wrap mb-4">
+    <%# ── Filter chips (no JS — plain GET links). Each pill sizes to its own
+         label (flex, not equal-width grid columns) so "Appointments" isn't
+         squeezed against padding sized for "All"/"Cycle"; wraps if needed. ── %>
+    <div class="flex flex-wrap gap-2 mb-4">
       <% [["all", t("calendar.index.filter_all")], ["events", t("calendar.index.filter_events")], ["tracking", t("calendar.index.filter_tracked")], ["cycle", t("calendar.index.filter_cycle")]].each do |value, label| %>
         <% active = @mode == value %>
         <%= link_to label,
               user_root_path(date: @date.to_s, mode: value),
-              class: "px-3.5 py-1.5 rounded-full text-xs font-semibold no-underline " +
+              class: "text-center px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap no-underline " +
                      (active ? "bg-brand-primary text-white" : "bg-white text-brand-primary border border-brand-primary") %>
       <% end %>
     </div>

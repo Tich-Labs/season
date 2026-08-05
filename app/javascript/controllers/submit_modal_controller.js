@@ -75,22 +75,18 @@ export default class extends Controller {
       other.push('Cravings: ' + cravings.map(c => labels[c] || c).join(', '))
     }
 
-    const sleepVal = root.querySelector('[data-scroll-picker-field-value="sleep"]')
-    if (sleepVal) {
-      const v = sleepVal.closest('[data-controller~="scroll-picker"]')?.querySelector('[data-scroll-picker-target="display"]')?.textContent
-      if (v && v !== '--') other.push('Sleep: ' + v)
-    }
-
-    const tempVal = root.querySelector('[data-scroll-picker-field-value="temperature"]')
-    if (tempVal) {
-      const v = tempVal.closest('[data-controller~="scroll-picker"]')?.querySelector('[data-scroll-picker-target="display"]')?.textContent
-      if (v && v !== '--') other.push('Temperature: ' + v)
-    }
-
-    const weightVal = root.querySelector('[data-scroll-picker-field-value="weight"]')
-    if (weightVal) {
-      const v = weightVal.closest('[data-controller~="scroll-picker"]')?.querySelector('[data-scroll-picker-target="display"]')?.textContent
-      if (v && v !== '--') other.push('Weight: ' + v)
+    const pickers = [
+      ['sleep', 'Sleep'],
+      ['temperature', 'Temperature'],
+      ['weight', 'Weight']
+    ]
+    for (const [field, label] of pickers) {
+      const picker = root.querySelector(`[data-scroll-picker-field-value="${field}"]`)
+      if (!picker) continue
+      const input = picker.querySelector('[data-scroll-picker-target="input"]')
+      if (input && input.value !== '') {
+        other.push(`${label}: ${input.value}${picker.dataset.scrollPickerUnitValue || ''}`)
+      }
     }
 
     if (this.hasOtherTarget) {

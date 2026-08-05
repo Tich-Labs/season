@@ -312,7 +312,7 @@ de:
       links_and_syncs: "Links & Syncs"
       show_features: "Funktionen anzeigen"
       appointments: "Termine"
-      tracking_reminder: "Tracking-Erinnerung"
+      tracking_reminder: "Verfolgte Tage"
       moon_phases: "Mondphasen"
       holidays: "Feiertage"
       holidays_country: "Feiertagsland"
@@ -452,6 +452,7 @@ de:
     create_appointment: "Termin erstellen"
     quick_actions_label: "Schnellaktionen öffnen"
     close: "Schließen"
+    back_to_calendar: "Zurück zum Kalender"
   oauth:
     errors:
       authentication_failed: "Authentifizierung fehlgeschlagen. Bitte versuche es erneut."

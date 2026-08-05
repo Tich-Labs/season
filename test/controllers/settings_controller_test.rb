@@ -47,6 +47,12 @@ class SettingsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "PATCH /settings/calendar saves show_tracked_days" do
+    patch update_calendar_settings_path, params: {show_tracked_days: "0"}
+    assert_redirected_to calendar_settings_path
+    assert_equal false, @alice.reload.show_tracked_days
+  end
+
   test "PATCH /settings updates user language" do
     patch settings_path, params: {user: {language: "de"}}
     assert_redirected_to edit_settings_path
