@@ -67,3 +67,7 @@ android/gradlew.bat
 
 # Ruby Native
 .ruby_native/
+
+# IDE / local tooling
+.idea/
+.claude/

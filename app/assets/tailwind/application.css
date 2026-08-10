@@ -148,6 +148,65 @@
   background: transparent;
 }
 
+/* ── Unified Scroll Picker (replaces onboarding-picker + vertical-picker) ─ */
+.sp-track {
+  position: relative;
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  outline: none;
+}
+.sp-track:active {
+  cursor: grabbing;
+}
+.sp-track::-webkit-scrollbar {
+  display: none;
+}
+.sp-item {
+  height: 42px;
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  scroll-snap-align: center;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  color: #933a35;
+  cursor: pointer;
+  opacity: 0.45;
+  transition: opacity 0.15s;
+  flex-shrink: 0;
+}
+.sp-highlight {
+  position: absolute;
+  left: 0;
+  right: 0;
+  background: #EDE1D5;
+  border-radius: 8px;
+  pointer-events: none;
+  z-index: 0;
+}
+.sp-display {
+  position: absolute;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  color: #933a35;
+  background: #EDE1D5;
+  pointer-events: none;
+  z-index: 2;
+}
+
 /* ── Scroll Picker ──────────────────────────────────────────────────────── */
 .picker-display {
   text-align: center;
