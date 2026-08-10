@@ -43,4 +43,36 @@ class ChangePasswordFlowTest < ActionDispatch::IntegrationTest
     assert_not user.reload.valid_password?("NewPass456!")
     assert user.valid_password?("OldPass123!")
   end
+
+  test "changing password with mismatched confirmation fails and shows an error" do
+    user = onboarded_user(email: "changepwtest3@example.com")
+    post session_path, params: {email: user.email, password: "OldPass123!"}
+
+    patch update_password_settings_path, params: {
+      current_password: "OldPass123!",
+      password: "NewPass456!",
+      password_confirmation: "SomethingElse789!"
+    }
+    assert_redirected_to profile_settings_path
+    assert_match(/doesn't match|does not match/i, flash[:alert].to_s)
+
+    assert_not user.reload.valid_password?("NewPass456!")
+    assert user.valid_password?("OldPass123!"), "old password should still work since the update was rejected"
+  end
+
+  test "changing password to something too short fails and shows an error" do
+    user = onboarded_user(email: "changepwtest4@example.com")
+    post session_path, params: {email: user.email, password: "OldPass123!"}
+
+    patch update_password_settings_path, params: {
+      current_password: "OldPass123!",
+      password: "abc",
+      password_confirmation: "abc"
+    }
+    assert_redirected_to profile_settings_path
+    assert flash[:alert].present?
+
+    assert_not user.reload.valid_password?("abc")
+    assert user.valid_password?("OldPass123!"), "old password should still work since the update was rejected"
+  end
 end

@@ -263,9 +263,6 @@ en:
       password_updated: "Password updated"
       password_updated_notice: "Password updated successfully"
       unable_to_update: "Unable to update password"
-  sessions:
-    rate_limited:
-      too_many_attempts: "Too many login attempts. Please try again later."
   settings:
     language:
       title: "Language"
@@ -474,6 +471,8 @@ en:
         wrong_password: "Wrong E-mail or password."
         wrong_email: "Wrong E-mail or password."
         unconfirmed: "Please confirm your email first. Check your inbox or request a new confirmation link."
+    rate_limited:
+      too_many_attempts: "Too many login attempts. Please try again later."
   symptoms:
     index:
       mood: "Mood"

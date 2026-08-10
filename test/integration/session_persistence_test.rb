@@ -13,7 +13,7 @@ class SessionPersistenceTest < ActionDispatch::IntegrationTest
     user = onboarded_user(email: "deeplinktest@example.com")
 
     # Try to hit a protected deep link while logged out.
-    get symptoms_path
+    get superpowers_path
     assert_redirected_to new_session_path
 
     post session_path, params: {email: user.email, password: "CorrectHorse123!"}
