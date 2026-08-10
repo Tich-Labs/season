@@ -1,22 +1,24 @@
 <%#
   Locals:
-    field_id   — String, id attribute for the input
+    field_id   — String, id attribute for the button AND the notification
+                 preference key sent to the server (matches every call site)
     checked    — Boolean, initial state
     aria_label — String, screen-reader label
-    onchange   — String (optional), inline JS handler e.g. "toggleSetting('key')"
 
-  Renders a 44×24 accessible toggle switch using server-rendered state.
-  Standardised size matches notification sub-screens (more finger-friendly than old 41×20).
+  Reuses the .toggle-btn/.toggle-track/.toggle-thumb CSS already proven on
+  Settings > Calendar (app/assets/tailwind/application.css). Persists via a
+  real Stimulus data-action — see notification_toggle_controller.js for why
+  this can't be an inline onclick/onchange attribute under this app's CSP.
 %>
-<label class="relative w-11 h-6 cursor-pointer shrink-0"
-       aria-label="<%= aria_label %>">
-  <input type="checkbox"
-         id="<%= field_id %>"
-         role="switch"
-         aria-checked="<%= checked %>"
-         <%= "checked" if checked %>
-         <%= "onchange=\"#{onchange}\"" if local_assigns[:onchange] %>
-         class="opacity-0 w-0 h-0 absolute">
-  <span class="absolute inset-0 rounded-full transition-colors duration-200" style="background:<%= checked ? '#933a35' : '#ccc' %>;"></span>
-  <span class="absolute top-0.5 w-5 h-5 bg-white rounded-full shadow-sm transition-all duration-200" style="left:<%= checked ? '22px' : '2px' %>;"></span>
-</label>
+<button type="button"
+        id="<%= field_id %>"
+        role="switch"
+        aria-label="<%= aria_label %>"
+        aria-checked="<%= checked %>"
+        class="toggle-btn <%= "active" if checked %>"
+        data-controller="notification-toggle"
+        data-notification-toggle-key-value="<%= field_id %>"
+        data-notification-toggle-url-value="<%= update_notifications_settings_path %>"
+        data-action="click->notification-toggle#toggle">
+  <div class="toggle-track"><div class="toggle-thumb"></div></div>
+</button>

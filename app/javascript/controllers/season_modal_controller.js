@@ -1,5 +1,7 @@
 import { Controller } from '@hotwired/stimulus'
 
+const BRAND_RED_FILTER = 'brightness(0) saturate(100%) invert(28%) sepia(84%) saturate(1607%) hue-rotate(342deg) brightness(63%) contrast(94%)'
+
 export default class extends Controller {
   static targets = ['modal', 'backdrop', 'closeBtn', 'categoryInput', 'categoryOption', 'triggerButton', 'locationModal', 'locationBackdrop', 'locationInput', 'locationField', 'locationCard', 'locationResults', 'locationSubmitBg', 'locationSubmitBtn', 'locationLabel', 'locationIconBg', 'notesModal', 'notesBackdrop', 'notesInput', 'notesField', 'notesLabel', 'notesIconBg', 'guestsModal', 'guestsBackdrop', 'guestsInput', 'guestsField', 'guestsLabel', 'guestsIconBg', 'guestsList', 'guestsCard', 'guestsSubmitBg', 'guestsSubmitBtn', 'guestsInlineList', 'reminderModal', 'reminderBackdrop', 'reminderField', 'reminderLabel', 'reminderIconBg', 'reminderOption', 'repeatModal', 'repeatBackdrop', 'repeatLabel', 'repeatIconBg', 'repeatOption', 'repeatSubOptions', 'repeatField', 'customRepeatModal', 'customRepeatBackdrop', 'repeatUntilModal', 'repeatUntilBackdrop', 'customReminderModal', 'customReminderBackdrop', 'customReminderNum', 'customReminderUnit', 'attentionModal', 'attentionBackdrop', 'attentionTitle', 'attentionBody', 'attentionConfirm', 'attentionCancel', 'recurringModal', 'recurringBackdrop', 'notifyModal', 'notifyBackdrop']
   static values = {
@@ -139,8 +141,10 @@ export default class extends Controller {
       const icon = option.querySelector('img')
       const wrapper = icon ? icon.parentElement : null
       if (icon) {
-        icon.style.opacity = '1'
-        icon.style.filter = isSelected ? 'brightness(0) saturate(100%) invert(28%) sepia(84%) saturate(1607%) hue-rotate(342deg) brightness(63%) contrast(94%)' : 'none'
+        // Swap to the exact pale/red asset variant rather than approximating
+        // the colour with opacity+filter — filters can't reproduce #EDE1D5
+        // precisely from an arbitrary source, so it drifted from the text colour.
+        icon.src = isSelected ? icon.dataset.iconSelectedSrc : icon.dataset.iconPaleSrc
       }
       if (wrapper) {
         wrapper.style.background = 'transparent'
@@ -161,8 +165,7 @@ export default class extends Controller {
       option.style.opacity = '1'
       const icon = option.querySelector('img')
       if (icon) {
-        icon.style.opacity = '1'
-        icon.style.filter = 'none'
+        icon.src = icon.dataset.iconPaleSrc
       }
       const wrapper = icon ? icon.parentElement : null
       if (wrapper) {
@@ -185,7 +188,7 @@ export default class extends Controller {
     const clone = iconImg.cloneNode(true)
     clone.style.width = '36px'
     clone.style.height = '36px'
-    clone.style.filter = 'brightness(0) saturate(100%) invert(28%) sepia(84%) saturate(1607%) hue-rotate(342deg) brightness(63%) contrast(94%)'
+    clone.style.filter = BRAND_RED_FILTER
     this.triggerButtonTarget.appendChild(clone)
     this.triggerButtonTarget.style.background = ''
   }

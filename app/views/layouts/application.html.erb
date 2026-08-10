@@ -130,7 +130,7 @@
     </div>
     <% end %>
 
-    <main class="w-full flex-1 overscroll-contain <%= 'native-inset' if native_app? %>" data-controller="pull-to-refresh" style="<%= is_authenticated_view ? "padding-top: calc(3.5rem + env(safe-area-inset-top, 0px));" : '' %><%= ";--phase-color:#{yield(:phase_color)}" if content_for?(:phase_color) %>">
+    <main class="w-full flex-1 overscroll-contain <%= 'native-inset' if native_app? %>" data-controller="pull-to-refresh" style="<%= is_authenticated_view ? (native_app? ? "padding-top: 3.5rem;" : "padding-top: calc(3.5rem + env(safe-area-inset-top, 0px));") : '' %><%= is_authenticated_view ? "padding-bottom: calc(8rem + env(safe-area-inset-bottom, 0px));" : '' %><%= ";--phase-color:#{yield(:phase_color)}" if content_for?(:phase_color) %>">
       <div class="max-w-app mx-auto h-full">
         <%= yield %>
       </div>
@@ -143,6 +143,12 @@
         <%= render "shared/support_modal" %>
         <%= render "shared/weekly_feedback_modal" %>
       <% end %>
+    <% end %>
+
+    <%# Calendar "home" FAB — every authenticated screen except the monthly
+        calendar itself, which is already home. %>
+    <% unless controller_name == "calendar" && action_name == "index" %>
+      <%= render "shared/calendar_home_fab" if is_authenticated_view %>
     <% end %>
 
     <%= render "pin/unlock_modal", pin_unlock_required: @pin_unlock_required %>

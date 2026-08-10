@@ -42,9 +42,3 @@ Layout/SpaceInsideArrayLiteralBrackets:
 Style/StringLiterals:
   Exclude:
     - 'db/migrate/**/*.rb'
-
-Rails/UniqueValidationWithoutIndex:
-  Exclude:
-    - 'app/models/symptom_log.rb'
-    - 'app/models/superpower_log.rb'
-    - 'app/models/cycle_phase_content.rb'

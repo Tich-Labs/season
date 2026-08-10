@@ -52,40 +52,57 @@
     </div>
 
     <div>
-      <%# Google Calendar — fully functional %>
-      <div class="py-3">
-        <% if @user.google_calendar_connected? %>
-          <span class="text-brand-muted text-sm font-medium"><%= @user.google_calendar_email %></span>
-        <% else %>
-          <span class="text-brand-muted text-sm font-medium"><%= t("settings.calendar.not_connected", default: "Not connected") %></span>
-        <% end %>
-        <span class="block text-brand-primary/60 text-xs"><%= t("settings.calendar.gmail") %></span>
-      </div>
-      <div class="flex items-center justify-between py-2">
-        <% if @user.google_calendar_connected? %>
-          <div class="flex items-center gap-2">
-            <svg width="16" height="16" fill="none" stroke="#2E6B3E" stroke-width="2.5" viewBox="0 0 24 24">
-              <polyline points="20 6 9 17 4 12" />
-            </svg>
-            <span class="text-brand-primary/60 text-xs"><%= t("settings.calendar.connected", default: "Connected") %></span>
-          </div>
-          <div class="flex items-center gap-3">
-            <%= button_to sync_google_calendar_settings_path, method: :post,
-                  class: "px-4 py-2 bg-brand-primary text-white text-xs font-semibold rounded-lg" do %>
-              <%= t("settings.calendar.sync_now", default: "Sync now") %>
-            <% end %>
-            <%= button_to disconnect_google_calendar_settings_path, method: :post,
-                  class: "text-brand-muted text-xs underline" do %>
-              <%= t("settings.calendar.disconnect", default: "Disconnect") %>
-            <% end %>
-          </div>
-        <% else %>
-          <span class="text-brand-primary/60 text-xs"><%= t("settings.calendar.gmail_sync") %></span>
-          <%= link_to connect_google_calendar_settings_path,
-                class: "px-4 py-2 bg-brand-primary text-white text-xs font-semibold rounded-lg no-underline" do %>
-            <%= t("settings.calendar.connect", default: "Connect") %>
+      <%# Google Calendar — coming soon (functionality disabled for now, re-enable below) %>
+      <% if false %>
+        <%# Google Calendar — fully functional %>
+        <div class="py-3">
+          <% if @user.google_calendar_connected? %>
+            <span class="text-brand-muted text-sm font-medium"><%= @user.google_calendar_email %></span>
+          <% else %>
+            <span class="text-brand-muted text-sm font-medium"><%= t("settings.calendar.not_connected", default: "Not connected") %></span>
           <% end %>
-        <% end %>
+          <span class="block text-brand-primary/60 text-xs"><%= t("settings.calendar.gmail") %></span>
+        </div>
+        <div class="flex items-center justify-between py-2">
+          <% if @user.google_calendar_connected? %>
+            <div class="flex items-center gap-2">
+              <svg width="16" height="16" fill="none" stroke="#2E6B3E" stroke-width="2.5" viewBox="0 0 24 24">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+              <span class="text-brand-primary/60 text-xs"><%= t("settings.calendar.connected", default: "Connected") %></span>
+            </div>
+            <div class="flex items-center gap-3">
+              <%= button_to sync_google_calendar_settings_path, method: :post,
+                    class: "px-4 py-2 bg-brand-primary text-white text-xs font-semibold rounded-lg" do %>
+                <%= t("settings.calendar.sync_now", default: "Sync now") %>
+              <% end %>
+              <%= button_to disconnect_google_calendar_settings_path, method: :post,
+                    class: "text-brand-muted text-xs underline" do %>
+                <%= t("settings.calendar.disconnect", default: "Disconnect") %>
+              <% end %>
+            </div>
+          <% else %>
+            <span class="text-brand-primary/60 text-xs"><%= t("settings.calendar.gmail_sync") %></span>
+            <%= link_to connect_google_calendar_settings_path,
+                  class: "px-4 py-2 bg-brand-primary text-white text-xs font-semibold rounded-lg no-underline" do %>
+              <%= t("settings.calendar.connect", default: "Connect") %>
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
+
+      <%# Gmail — grayed out, coming soon %>
+      <div class="opacity-40 pointer-events-none">
+        <div class="py-3 flex items-center gap-2">
+          <span class="text-brand-muted text-sm font-medium"><%= t("settings.calendar.not_connected", default: "Not connected") %></span>
+          <span class="bg-brand-field rounded-full px-2 py-0.5 text-brand-primary text-xs"><%= t("settings.edit.coming_soon") %></span>
+        </div>
+        <div class="flex items-center justify-between py-2">
+          <span class="text-brand-primary/60 text-xs"><%= t("settings.calendar.gmail_sync") %></span>
+          <div class="toggle-btn">
+            <div class="toggle-track"><div class="toggle-thumb"></div></div>
+          </div>
+        </div>
       </div>
 
       <%# Microsoft — grayed out, coming soon %>
@@ -140,31 +157,19 @@
 
       <div class="flex items-center justify-between py-3">
         <span class="text-brand-muted text-sm font-medium"><%= t("settings.calendar.tracking_reminder") %></span>
-        <button type="button" class="toggle-btn" data-action="click->calendar-toggle#toggle" data-field="tracking_reminder">
+        <button type="button" class="toggle-btn <%= "active" if @user.show_tracked_days? %>" data-action="click->calendar-toggle#toggle" data-field="show_tracked_days">
           <div class="toggle-track"><div class="toggle-thumb"></div></div>
         </button>
-      </div>
-
-      <div class="flex items-center justify-between py-3 opacity-40 pointer-events-none">
-        <span class="text-brand-muted text-sm font-medium"><%= t("settings.calendar.moon_phases") %></span>
-        <div class="flex items-center gap-2">
-          <div class="bg-brand-field rounded-full px-2 py-0.5">
-            <span class="text-brand-primary text-xs"><%= t("settings.edit.coming_soon") %></span>
-          </div>
-          <div class="toggle-btn">
-            <div class="toggle-track"><div class="toggle-thumb"></div></div>
-          </div>
-        </div>
       </div>
 
       <div class="flex items-center justify-between py-3">
-        <div>
-          <span class="text-brand-muted text-sm font-medium"><%= t("settings.calendar.holidays") %></span>
-        </div>
-        <button type="button" class="toggle-btn <%= "active" if @user.show_holidays? %>" data-action="click->calendar-toggle#toggle" data-field="show_holidays">
+        <span class="text-brand-muted text-sm font-medium"><%= t("settings.calendar.moon_phases") %></span>
+        <button type="button" class="toggle-btn <%= "active" if @user.show_moonphases? %>" data-action="click->calendar-toggle#toggle" data-field="show_moonphases">
           <div class="toggle-track"><div class="toggle-thumb"></div></div>
         </button>
       </div>
+
+      <%= render "shared/holiday_settings" %>
 
       <div class="flex items-center justify-between py-3">
         <span class="text-brand-muted text-sm font-medium"><%= t("settings.calendar.week_numbers") %></span>
@@ -183,8 +188,8 @@
 
     <%# Hidden form inputs for toggles %>
     <input type="hidden" name="show_appointments" value="<%= @user.show_appointments ? "1" : "0" %>">
+    <input type="hidden" name="show_tracked_days" value="<%= @user.show_tracked_days ? "1" : "0" %>">
     <input type="hidden" name="show_moonphases" value="<%= @user.show_moonphases ? "1" : "0" %>">
-    <input type="hidden" name="show_holidays" value="<%= @user.show_holidays ? "1" : "0" %>">
     <input type="hidden" name="show_week_numbers" value="<%= @user.show_week_numbers ? "1" : "0" %>">
     <input type="hidden" name="show_cycle_day_on_band" value="<%= @user.show_cycle_day_on_band ? "1" : "0" %>">
 

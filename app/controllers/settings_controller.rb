@@ -25,6 +25,7 @@ class SettingsController < ApplicationController
     @user = current_user
     preferences = {
       show_appointments: params[:show_appointments] == "1",
+      show_tracked_days: params[:show_tracked_days] == "1",
       show_moonphases: params[:show_moonphases] == "1",
       show_holidays: params[:show_holidays] == "1",
       show_week_numbers: params[:show_week_numbers] == "1",
@@ -210,6 +211,20 @@ class SettingsController < ApplicationController
       redirect_to profile_settings_path, notice: t(".saved")
     else
       redirect_to profile_settings_path
+    end
+  end
+
+  def update_password
+    @user = current_user
+    unless @user.valid_password?(params[:current_password].to_s)
+      redirect_to profile_settings_path, alert: t(".invalid_password", default: "Current password is incorrect.")
+      return
+    end
+
+    if @user.update(password: params[:password], password_confirmation: params[:password_confirmation])
+      redirect_to profile_settings_path, notice: t(".saved", default: "Password updated.")
+    else
+      redirect_to profile_settings_path, alert: @user.errors.full_messages.to_sentence
     end
   end
 

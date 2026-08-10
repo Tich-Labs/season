@@ -37,6 +37,7 @@ gem "pagy"
 gem "csv"
 gem "ransack"
 gem "groupdate"
+gem "holidays"
 gem "dotenv-rails", groups: [:development, :test]
 
 # Infrastructure

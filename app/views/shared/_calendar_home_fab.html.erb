@@ -1,0 +1,17 @@
+<%# Calendar "home" FAB — sticky bottom, shown on every authenticated screen
+    except the monthly calendar itself (already home). Lets the user jump
+    straight back to /calendar without opening the burger menu.
+
+    Positioned via the same "full-width-within-max-w-app column, then align
+    inside it" technique the PWA update/install banners use, rather than a
+    raw `right-4` — a raw right offset would pin to the browser viewport's
+    edge on desktop, not the app's centered mobile-width column. %>
+<div class="fixed left-1/2 -translate-x-1/2 w-full max-w-app px-4 z-40 flex justify-end pointer-events-none"
+     style="bottom: calc(2.5rem + env(safe-area-inset-bottom, 0px));">
+  <%= link_to user_root_path,
+        class: "pointer-events-auto w-14 h-14 rounded-full bg-white shadow-[0px_4px_9px_rgba(0,0,0,0.15)] flex items-center justify-center active:scale-95 transition-all duration-150",
+        "data-turbo-action": "replace",
+        aria: { label: t("menu.back_to_calendar") } do %>
+    <%= vuesax_icon "calendar", size: 26 %>
+  <% end %>
+</div>

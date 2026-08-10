@@ -435,8 +435,10 @@
         <span id="section-cravings-check" style="display:<%= cravings_done ? '' : 'none' %>"><%= render 'symptoms/bi_check', colour: phase_colour %></span>
       </summary>
       <div class="pb-5">
-        <%# Row 1 — 3 items %>
-        <div class="flex justify-around mb-4">
+        <%# 3-column grid — 5 items wrap naturally onto 2 rows, leaving row 2's
+            third column empty rather than spreading 2 items across the full
+            width (which is what a `flex justify-around` row did before). %>
+        <div class="grid grid-cols-3 gap-y-4 justify-items-center">
           <% sel = cravings_list.include?('fatty-fried') %>
           <button class="craving-btn flex flex-col items-center gap-2" data-craving="fatty-fried"
                   data-action="click->symptom#toggleCravings"
@@ -469,10 +471,7 @@
             </div>
             <span class="text-brand-primary font-medium text-xs tracking-007 text-center w-[80px] leading-tight">Bread &amp; noodles</span>
           </button>
-        </div>
 
-        <%# Row 2 — 2 items %>
-        <div class="flex justify-around">
           <% sel = cravings_list.include?('chocolate') %>
           <button class="craving-btn flex flex-col items-center gap-2" data-craving="chocolate"
                   data-action="click->symptom#toggleCravings"
@@ -508,7 +507,7 @@
                fill="none" stroke="<%= phase_colour %>" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
             <polyline points="9 18 15 12 9 6" />
           </svg>
-          <span class="font-medium text-22 tracking-p66" style="color:<%= phase_colour %>;">Sleep</span>
+          <span class="font-medium text-xl tracking-p66" style="color:<%= phase_colour %>;">Sleep</span>
         </div>
         <% if sleep_done %><%= render 'symptoms/bi_check', colour: phase_colour %><% end %>
       </summary>
@@ -522,12 +521,15 @@
            data-action="scroll-picker:change->symptom#saveFromPicker">
         <div class="relative mx-auto w-[310px] h-[150px]">
           <div class="sp-highlight" style="top:54px; height:42px;"></div>
-          <div data-scroll-picker-target="display" class="sp-display" style="top:54px; height:42px;"></div>
           <div class="relative flex items-center justify-center gap-3 h-full">
-            <div data-scroll-picker-target="track" class="sp-track"
-                 style="height:150px; padding:54px 0; width:55px;"
-                 data-action="scroll->scroll-picker#scroll click->scroll-picker#click keydown->scroll-picker#keydown"
-                 role="listbox" aria-label="Sleep hours" tabindex="0">
+            <div class="relative">
+              <div data-scroll-picker-target="display" class="sp-display" style="top:54px; height:42px;"></div>
+              <div data-scroll-picker-target="track" class="sp-track"
+                   style="height:150px; padding:54px 0; width:55px;"
+                   data-action="scroll->scroll-picker#scroll click->scroll-picker#click keydown->scroll-picker#keydown"
+                   role="listbox" aria-label="Sleep hours" tabindex="0">
+              </div>
+            </div>
             </div>
             <span class="font-sans font-bold text-base text-brand-primary tracking-007 leading-5">h</span>
           </div>
@@ -545,7 +547,7 @@
                fill="none" stroke="<%= phase_colour %>" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
             <polyline points="9 18 15 12 9 6" />
           </svg>
-          <span class="font-medium text-22 tracking-p66" style="color:<%= phase_colour %>;">Temperature</span>
+          <span class="font-medium text-xl tracking-p66" style="color:<%= phase_colour %>;">Temperature</span>
         </div>
         <% if temperature_done %><%= render 'symptoms/bi_check', colour: phase_colour %><% end %>
       </summary>
@@ -559,12 +561,15 @@
            data-action="scroll-picker:change->symptom#saveFromPicker">
         <div class="relative mx-auto w-[310px] h-[150px]">
           <div class="sp-highlight" style="top:54px; height:42px;"></div>
-          <div data-scroll-picker-target="display" class="sp-display" style="top:54px; height:42px;"></div>
           <div class="relative flex items-center justify-center gap-3 h-full">
-            <div data-scroll-picker-target="track" class="sp-track"
-                 style="height:150px; padding:54px 0; width:65px;"
-                 data-action="scroll->scroll-picker#scroll click->scroll-picker#click keydown->scroll-picker#keydown"
-                 role="listbox" aria-label="Temperature" tabindex="0">
+            <div class="relative">
+              <div data-scroll-picker-target="display" class="sp-display" style="top:54px; height:42px;"></div>
+              <div data-scroll-picker-target="track" class="sp-track"
+                   style="height:150px; padding:54px 0; width:65px;"
+                   data-action="scroll->scroll-picker#scroll click->scroll-picker#click keydown->scroll-picker#keydown"
+                   role="listbox" aria-label="Temperature" tabindex="0">
+              </div>
+            </div>
             </div>
             <span class="font-sans font-bold text-base text-brand-primary tracking-007 leading-5">°C</span>
           </div>
@@ -582,7 +587,7 @@
                fill="none" stroke="<%= phase_colour %>" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
             <polyline points="9 18 15 12 9 6" />
           </svg>
-          <span class="font-medium text-22 tracking-p66" style="color:<%= phase_colour %>;">Weight</span>
+          <span class="font-medium text-xl tracking-p66" style="color:<%= phase_colour %>;">Weight</span>
         </div>
         <% if weight_done %><%= render 'symptoms/bi_check', colour: phase_colour %><% end %>
       </summary>
@@ -596,12 +601,15 @@
            data-action="scroll-picker:change->symptom#saveFromPicker">
         <div class="relative mx-auto w-[310px] h-[150px]">
           <div class="sp-highlight" style="top:54px; height:42px;"></div>
-          <div data-scroll-picker-target="display" class="sp-display" style="top:54px; height:42px;"></div>
           <div class="relative flex items-center justify-center gap-3 h-full">
-            <div data-scroll-picker-target="track" class="sp-track"
-                 style="height:150px; padding:54px 0; width:70px;"
-                 data-action="scroll->scroll-picker#scroll click->scroll-picker#click keydown->scroll-picker#keydown"
-                 role="listbox" aria-label="Weight" tabindex="0">
+            <div class="relative">
+              <div data-scroll-picker-target="display" class="sp-display" style="top:54px; height:42px;"></div>
+              <div data-scroll-picker-target="track" class="sp-track"
+                   style="height:150px; padding:54px 0; width:70px;"
+                   data-action="scroll->scroll-picker#scroll click->scroll-picker#click keydown->scroll-picker#keydown"
+                   role="listbox" aria-label="Weight" tabindex="0">
+              </div>
+            </div>
             </div>
             <span class="font-sans font-bold text-base text-brand-primary tracking-007 leading-5">kg</span>
           </div>

@@ -1,5 +1,6 @@
 <%# Settings screen - matches Figma node 12048-37859 %>
 <%# Header auto-rendered by layout (controller_name == 'settings') %>
+<% content_for(:hide_quick_actions) { "true" } %>
 
 <div class="bg-white min-h-screen">
 
@@ -175,8 +176,37 @@
       </svg>
     <% end %>
 
-    <%# Render support modal inline for iOS Ruby Native modal compatibility %>
-    <%= render "shared/support_modal" %>
+    <%# Render support modal inline only for iOS Ruby Native modal compatibility.
+        On web the layout already renders this partial (unless native_app?), so
+        rendering it here unconditionally duplicated #support-modal-container,
+        causing two overlapping modal instances and a close (x) button that only
+        ever closed the top one. %>
+    <% if native_app? %>
+      <%= render "shared/support_modal" %>
+    <% end %>
 
   </div>
 </div>
+
+<%# ── Calendar button — fixed bottom-centre, replaces the quick-actions FAB on this page ── %>
+<%= link_to user_root_path,
+      class: "fixed left-1/2 -translate-x-1/2 z-[60]
+             w-[66px] h-[66px] rounded-full bg-brand-field
+             flex items-center justify-center
+             active:scale-95 transition-all duration-150 shadow-[0px_4px_9px_rgba(0,0,0,0.07)]",
+      style: "bottom: calc(2.5rem + env(safe-area-inset-bottom, 0px));",
+      data: { turbo_action: "replace" },
+      aria: { label: "Go to calendar" } do %>
+  <svg width="42" height="42" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M14.001 3.5V8.75" stroke="#933A35" stroke-width="3" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M28 3.5V8.75" stroke="#933A35" stroke-width="3" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M6.125 15.9072H35.875" stroke="#933A35" stroke-width="3" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M36.75 14.875V29.75C36.75 35 34.125 38.5 28 38.5H14C7.875 38.5 5.25 35 5.25 29.75V14.875C5.25 9.625 7.875 6.125 14 6.125H28C34.125 6.125 36.75 9.625 36.75 14.875Z" stroke="#933A35" stroke-width="3" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M27.464 23.9756H27.4797" stroke="#933A35" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M27.464 29.2256H27.4797" stroke="#933A35" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M20.9914 23.9756H21.0071" stroke="#933A35" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M20.9914 29.2256H21.0071" stroke="#933A35" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M14.5168 23.9756H14.5325" stroke="#933A35" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M14.5168 29.2256H14.5325" stroke="#933A35" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+  </svg>
+<% end %>

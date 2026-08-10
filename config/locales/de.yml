@@ -15,6 +15,7 @@ de:
       monthly_view: "Monatsansicht"
       forecast: "Heutige Prognose"
       email_partner: "E-Mail an Partner"
+      settings: "Einstellungen"
       feedback: "Feedback"
       bug_report: "Fehler melden"
       log_out: "Abmelden"
@@ -300,6 +301,8 @@ de:
       change_email: "E-Mail ändern"
       new_email: "Neue E-Mail-Adresse"
       current_password: "Aktuelles Passwort"
+      new_password: "Neues Passwort"
+      confirm_password: "Neues Passwort bestätigen"
       save: "Speichern"
       name_field: "Name"
       cycle_length: "Zykluslänge (Tage)"
@@ -309,9 +312,12 @@ de:
       links_and_syncs: "Links & Syncs"
       show_features: "Funktionen anzeigen"
       appointments: "Termine"
-      tracking_reminder: "Tracking-Erinnerung"
+      tracking_reminder: "Verfolgte Tage"
       moon_phases: "Mondphasen"
       holidays: "Feiertage"
+      holidays_country: "Feiertagsland"
+      holidays_country_and_calendars: "Land"
+      holidays_country_search: "Land suchen…"
       week_numbers: "Wochennummern"
       cycle_day_on_band: "Zyklustag"
       day_of_week: "Wochentag"
@@ -368,6 +374,9 @@ de:
     update_profile:
       confirmation_sent: "Bestätigungsmail gesendet. Bitte überprüfe deinen Posteingang."
       saved: "Gespeichert"
+    update_password:
+      invalid_password: "Aktuelles Passwort ist falsch."
+      saved: "Passwort aktualisiert."
     reminders:
       morning_saved: "Morgen-Erinnerung gespeichert."
       period_saved: "Perioden-Erinnerung gespeichert."
@@ -443,6 +452,7 @@ de:
     create_appointment: "Termin erstellen"
     quick_actions_label: "Schnellaktionen öffnen"
     close: "Schließen"
+    back_to_calendar: "Zurück zum Kalender"
   oauth:
     errors:
       authentication_failed: "Authentifizierung fehlgeschlagen. Bitte versuche es erneut."

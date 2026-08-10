@@ -11,6 +11,7 @@ class CalendarController < ApplicationController
     @show_holidays = current_user.show_holidays?
     @show_week_numbers = current_user.show_week_numbers?
     @show_cycle_day_on_band = current_user.show_cycle_day_on_band?
+    @show_tracked_days = current_user.show_tracked_days?
   end
 
   public
@@ -141,12 +142,17 @@ class CalendarController < ApplicationController
       {}
     end
 
-    # Tracked days — Set for O(1) lookup, covers adjacent months
-    @tracked_days_set = current_user.symptom_logs
-      .where(date: full_start..full_end)
-      .pluck(:date)
-      .to_set
-      .merge(current_user.superpower_logs.where(date: full_start..full_end).pluck(:date))
+    # Tracked days — Set for O(1) lookup, covers adjacent months.
+    # Hidden entirely when the user disables "Tracked Days" in Settings > Calendar.
+    @tracked_days_set = if @show_tracked_days
+      current_user.symptom_logs
+        .where(date: full_start..full_end)
+        .pluck(:date)
+        .to_set
+        .merge(current_user.superpower_logs.where(date: full_start..full_end).pluck(:date))
+    else
+      Set.new
+    end
 
     @prev_month = @date - 1.month
     @next_month = @date + 1.month

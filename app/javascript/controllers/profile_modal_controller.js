@@ -48,6 +48,20 @@ export default class extends Controller {
     modal.removeEventListener('keydown', this.handleEmailKeydown)
   }
 
+  openPasswordModal () {
+    const modal = document.getElementById('password-modal')
+    if (!modal) return
+    modal.style.display = 'flex'
+    this.trapFocusIn(modal)
+  }
+
+  closePasswordModal () {
+    const modal = document.getElementById('password-modal')
+    if (!modal) return
+    modal.style.display = 'none'
+    modal.removeEventListener('keydown', this.handlePasswordKeydown)
+  }
+
   clickAvatarUpload () {
     const fileInput = document.getElementById('avatar-file')
     if (fileInput) fileInput.click()
@@ -67,10 +81,12 @@ export default class extends Controller {
         const avatarModal = document.getElementById('avatar-modal')
         const personalModal = document.getElementById('personal-info-modal')
         const emailModal = document.getElementById('email-modal')
+        const passwordModal = document.getElementById('password-modal')
 
         if (avatarModal?.style.display === 'flex') this.closeAvatarModal()
         if (personalModal?.style.display === 'flex') this.closePersonalInfoModal()
         if (emailModal?.style.display === 'flex') this.closeEmailModal()
+        if (passwordModal?.style.display === 'flex') this.closePasswordModal()
       }
     })
   }
@@ -108,5 +124,6 @@ export default class extends Controller {
     if (event.target.id === 'avatar-modal') this.closeAvatarModal()
     if (event.target.id === 'personal-info-modal') this.closePersonalInfoModal()
     if (event.target.id === 'email-modal') this.closeEmailModal()
+    if (event.target.id === 'password-modal') this.closePasswordModal()
   }
 }

@@ -11,19 +11,6 @@
 <div class="bg-white min-h-screen">
   <div class="max-w-app mx-auto px-4 pb-20">
 
-    <script nonce="<%= content_security_policy_nonce %>">
-      function toggleSetting(key) {
-        fetch(<%= update_notifications_settings_path.to_json %>, {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-Token': <%= form_authenticity_token.to_json %>
-          },
-          body: JSON.stringify({ [key]: document.getElementById(key).checked })
-        });
-      }
-    </script>
-
     <%# ── Section header ── %>
     <div class="flex items-center gap-3 py-5 pb-2">
       <%= vuesax_icon "sms-notification", size: 24 %>
@@ -41,15 +28,18 @@
         <span class="text-brand-primary text-base font-medium"><%= t("settings.notifications.general_push") %></span>
         <span data-push-subscription-target="status" class="text-brand-secondary text-xs ml-2"></span>
       </div>
-      <label class="relative w-[41px] h-5 cursor-pointer shrink-0">
-        <input type="checkbox" aria-label="General Push-Notifications"
-               data-action="change->push-subscription#subscribe"
-               class="opacity-0 w-0 h-0"
-               <%= push_on ? 'checked' : '' %>>
-        <span class="absolute inset-0 rounded-[20px] transition-all duration-200" style="background:<%= push_on ? '#933a35' : '#ccc' %>;"></span>
-        <span class="absolute top-px w-[18px] h-[18px] bg-white rounded-full transition-all duration-200" style="left:<%= push_on ? '22px' : '2px' %>;"></span>
-      </label>
+      <button type="button" id="general_push_toggle" role="switch"
+              aria-label="General Push-Notifications"
+              aria-checked="<%= push_on %>"
+              data-action="click->push-subscription#toggle"
+              data-push-subscription-target="toggle"
+              class="toggle-btn <%= "active" if push_on %>">
+        <div class="toggle-track"><div class="toggle-thumb"></div></div>
+      </button>
     </div>
+    <%# Not yet wired to anything — persisted to notification_preferences but
+        nothing in the app reads that column back out. Locked until that
+        exists so the toggles don't imply a control that does nothing. %>
     <% [
       ["push_new_appt_synced",   t("settings.notifications.push_new_appt")],
       ["push_tracking_reminder", t("settings.notifications.push_tracking")],
@@ -57,13 +47,15 @@
       ["push_app_updates",       t("settings.notifications.push_app_updates")],
       ["push_appointments",      t("settings.notifications.push_appointments")]
     ].each do |field, label| %>
-      <div class="flex items-center justify-between py-1.5">
-        <span class="text-brand-secondary text-sm font-medium"><%= label %></span>
+      <div class="flex items-center justify-between py-1.5 opacity-40 pointer-events-none">
+        <div class="flex items-center gap-2">
+          <span class="text-brand-secondary text-sm font-medium"><%= label %></span>
+          <span class="bg-brand-field rounded-full px-2 py-0.5 text-brand-primary text-xs"><%= t("settings.edit.coming_soon") %></span>
+        </div>
         <%= render "shared/toggle_switch",
               field_id: field,
               checked: prefs[field].nil? ? true : prefs[field],
-              aria_label: label,
-              onchange: %(toggleSetting(#{field.to_json})) %>
+              aria_label: label %>
       </div>
     <% end %>
     <div class="border-b border-brand-divider mt-2"></div>
@@ -74,8 +66,7 @@
       <%= render "shared/toggle_switch",
             field_id: "cycle_reminder",
             checked: @notifications.cycle_reminder,
-            aria_label: "Good morning set",
-            onchange: "toggleSetting('cycle_reminder')" %>
+            aria_label: "Good morning set" %>
     </div>
     <div class="mb-3">
       <p class="text-brand-muted text-sm font-medium m-0"><%= t("settings.notifications.summary_time") %></p>
@@ -91,8 +82,7 @@
       <%= render "shared/toggle_switch",
             field_id: "period_prediction",
             checked: @notifications.period_prediction,
-            aria_label: "Period reminder",
-            onchange: "toggleSetting('period_prediction')" %>
+            aria_label: "Period reminder" %>
     </div>
     <div class="flex items-center justify-between mb-3">
       <div class="flex gap-4">
@@ -109,8 +99,7 @@
       <%= render "shared/toggle_switch",
             field_id: "ovulation_alert",
             checked: @notifications.ovulation_alert,
-            aria_label: "Birth control reminder",
-            onchange: "toggleSetting('ovulation_alert')" %>
+            aria_label: "Birth control reminder" %>
     </div>
     <div class="flex items-center justify-between mb-3">
       <div>
@@ -126,47 +115,57 @@
     </div>
     <div class="border-b border-brand-divider"></div>
 
-    <%# Supplement reminder %>
-    <div class="flex items-center justify-between py-3.5 pb-1">
-      <span class="text-brand-primary text-base font-medium"><%= t("settings.notifications.supplement") %></span>
-      <%= render "shared/toggle_switch",
-            field_id: "newsletter",
-            checked: @notifications.newsletter,
-            aria_label: "Supplement reminder",
-            onchange: "toggleSetting('newsletter')" %>
-    </div>
-    <div class="flex items-center justify-between mb-3">
-      <p class="text-brand-muted text-sm font-medium m-0"><%= t("settings.notifications.daily_pm") %></p>
-      <span class="text-brand-muted text-sm font-medium"><%= t("settings.notifications.edit") %></span>
+    <%# Supplement reminder — no SendSupplementRemindersJob exists at all (unlike
+        morning/period/birth-control), and "Edit" was never a real link, so
+        there's no way to configure this. Locked until the feature is built. %>
+    <div class="opacity-40 pointer-events-none">
+      <div class="flex items-center justify-between py-3.5 pb-1">
+        <div class="flex items-center gap-2">
+          <span class="text-brand-primary text-base font-medium"><%= t("settings.notifications.supplement") %></span>
+          <span class="bg-brand-field rounded-full px-2 py-0.5 text-brand-primary text-xs"><%= t("settings.edit.coming_soon") %></span>
+        </div>
+        <%= render "shared/toggle_switch",
+              field_id: "newsletter",
+              checked: @notifications.newsletter,
+              aria_label: "Supplement reminder" %>
+      </div>
+      <div class="flex items-center justify-between mb-3">
+        <p class="text-brand-muted text-sm font-medium m-0"><%= t("settings.notifications.daily_pm") %></p>
+        <span class="text-brand-muted text-sm font-medium"><%= t("settings.notifications.edit") %></span>
+      </div>
     </div>
     <div class="border-b border-brand-divider"></div>
 
-    <%# In-App Popups %>
+    <%# In-App Popups — same gap as the push sub-toggles above: nothing reads
+        the in_app reminder or notification_preferences back out yet. %>
     <% inapp_on = @notifications.email_notifications %>
-    <div class="flex items-center justify-between py-3.5 pb-2">
-      <span class="text-brand-primary text-base font-medium"><%= t("settings.notifications.in_app_popups") %></span>
-      <%= render "shared/toggle_switch",
-            field_id: "email_notifications",
-            checked: inapp_on,
-            aria_label: "In-App Popups",
-            onchange: "toggleSetting('email_notifications')" %>
-    </div>
-    <% [
-      ["in_app_new_appt_synced",   t("settings.notifications.in_app_new_appt")],
-      ["in_app_tracking_reminder", t("settings.notifications.in_app_tracking")],
-      ["in_app_new_feedback",      t("settings.notifications.in_app_new_feedback")],
-      ["in_app_app_updates",       t("settings.notifications.in_app_app_updates")],
-      ["in_app_appointments",      t("settings.notifications.in_app_appointments")]
-    ].each do |field, label| %>
-      <div class="flex items-center justify-between py-1.5">
-        <span class="text-brand-secondary text-sm font-medium"><%= label %></span>
+    <div class="opacity-40 pointer-events-none">
+      <div class="flex items-center justify-between py-3.5 pb-2">
+        <div class="flex items-center gap-2">
+          <span class="text-brand-primary text-base font-medium"><%= t("settings.notifications.in_app_popups") %></span>
+          <span class="bg-brand-field rounded-full px-2 py-0.5 text-brand-primary text-xs"><%= t("settings.edit.coming_soon") %></span>
+        </div>
         <%= render "shared/toggle_switch",
-              field_id: field,
-              checked: prefs[field].nil? ? true : prefs[field],
-              aria_label: label,
-              onchange: %(toggleSetting(#{field.to_json})) %>
+              field_id: "email_notifications",
+              checked: inapp_on,
+              aria_label: "In-App Popups" %>
       </div>
-    <% end %>
+      <% [
+        ["in_app_new_appt_synced",   t("settings.notifications.in_app_new_appt")],
+        ["in_app_tracking_reminder", t("settings.notifications.in_app_tracking")],
+        ["in_app_new_feedback",      t("settings.notifications.in_app_new_feedback")],
+        ["in_app_app_updates",       t("settings.notifications.in_app_app_updates")],
+        ["in_app_appointments",      t("settings.notifications.in_app_appointments")]
+      ].each do |field, label| %>
+        <div class="flex items-center justify-between py-1.5">
+          <span class="text-brand-secondary text-sm font-medium"><%= label %></span>
+          <%= render "shared/toggle_switch",
+                field_id: field,
+                checked: prefs[field].nil? ? true : prefs[field],
+                aria_label: label %>
+        </div>
+      <% end %>
+    </div>
 
   </div>
 </div>

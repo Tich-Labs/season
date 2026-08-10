@@ -20,6 +20,7 @@ en:
       monthly_view: "Monthly-View"
       forecast: "Today's Forecast"
       email_partner: "E-Mail to your partner"
+      settings: "Settings"
       feedback: "Feedback"
       bug_report: "Bug Report"
       log_out: "Log out"
@@ -167,7 +168,7 @@ en:
         one: "Day"
         other: "Days"
       filter_all: "All"
-      filter_events: "Events"
+      filter_events: "Appointments"
       filter_tracked: "Tracked"
       filter_cycle: "Cycle"
 
@@ -234,11 +235,11 @@ en:
   admin:
     cycle_phase_contents:
       create:
-        created: "Informations content created."
+        created: "Information content created."
       update:
-        updated: "Informations content updated."
+        updated: "Information content updated."
       destroy:
-        destroyed: "Informations content deleted."
+        destroyed: "Information content deleted."
   invites:
     show:
       already_used: "This invite has already been used."
@@ -318,6 +319,8 @@ en:
       change_email: "Change Email"
       new_email: "New email address"
       current_password: "Current password"
+      new_password: "New password"
+      confirm_password: "Confirm new password"
       save: "Save"
       name_field: "Name"
       cycle_length: "Cycle Length (days)"
@@ -327,9 +330,12 @@ en:
       links_and_syncs: "Links & Syncs"
       show_features: "Show features"
       appointments: "Appointments"
-      tracking_reminder: "Tracking Reminder"
+      tracking_reminder: "Tracked Days"
       moon_phases: "Moon Phases"
       holidays: "Holidays"
+      holidays_country: "Holiday country"
+      holidays_country_and_calendars: "Country"
+      holidays_country_search: "Search country…"
       week_numbers: "Week Numbers"
       cycle_day_on_band: "Cycle Day"
       day_of_week: "Day of the Week"
@@ -386,6 +392,9 @@ en:
     update_profile:
       confirmation_sent: "Confirmation email sent. Please check your inbox."
       saved: "Saved"
+    update_password:
+      invalid_password: "Current password is incorrect."
+      saved: "Password updated."
     reminders:
       morning_saved: "Morning reminder saved."
       period_saved: "Period reminder saved."
@@ -447,6 +456,7 @@ en:
     create_appointment: "Create appointment"
     quick_actions_label: "Open quick actions"
     close: "Close"
+    back_to_calendar: "Back to calendar"
   registrations:
     check_email:
       title: "Check your inbox"

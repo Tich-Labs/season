@@ -113,13 +113,13 @@
     </button>
 
     <%# Change password %>
-    <%= link_to edit_user_password_path, class: "flex items-center gap-4 py-4 no-underline" do %>
+    <button data-action="click->profile-modal#openPasswordModal" class="bg-transparent border-none w-full flex items-center gap-4 py-4 cursor-pointer">
       <%= vuesax_icon "lock", size: 24 %>
-      <span class="flex-1 text-brand-primary text-base font-medium"><%= t("settings.profile.change_password") %></span>
+      <span class="flex-1 text-left text-brand-primary text-base font-medium"><%= t("settings.profile.change_password") %></span>
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
         <polyline points="9 18 15 12 9 6" />
       </svg>
-    <% end %>
+    </button>
 
     <%# Access code %>
     <%= link_to pin_settings_path, class: "flex items-center gap-4 py-4 no-underline" do %>
@@ -215,6 +215,56 @@
     <% end %>
 
     <button data-action="click->profile-modal#closeEmailModal"
+            class="w-full bg-transparent text-brand-primary border border-brand-divider rounded-xl py-3.5 text-base font-medium cursor-pointer mt-2">
+      <%= t("settings.profile.cancel") %>
+    </button>
+  </div>
+</div>
+
+<%# ── Change Password Modal ── %>
+<div id="password-modal" role="dialog" aria-modal="true" aria-labelledby="password-modal-title" class="hidden fixed inset-0 bg-black/50 z-[100] items-center justify-center">
+  <div class="bg-brand-background rounded-2xl p-6 w-[90%] max-w-[340px] mx-4">
+    <div class="flex justify-between items-center mb-5">
+      <h3 id="password-modal-title" class="text-brand-primary text-lg font-semibold m-0"><%= t("settings.profile.change_password") %></h3>
+      <button data-action="click->profile-modal#closePasswordModal" class="bg-transparent border-none cursor-pointer">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
+          <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
+    </div>
+
+    <%= form_with url: update_password_settings_path, method: :patch, local: true do %>
+      <%= native_form_tag if native_app? %>
+      <label for="current_password_field" class="block text-brand-primary text-13 font-medium mb-1.5"><%= t("settings.profile.current_password") %></label>
+      <div class="relative mb-3" data-controller="password-visibility">
+        <input type="password" id="current_password_field" name="current_password" required autocomplete="current-password"
+               data-password-visibility-target="input"
+               class="w-full bg-white border border-brand-divider rounded-xl pl-4 pr-12 py-4 text-base text-brand-primary box-border">
+        <%= render "shared/password_visibility_toggle" %>
+      </div>
+
+      <label for="new_password_field" class="block text-brand-primary text-13 font-medium mb-1.5"><%= t("settings.profile.new_password") %></label>
+      <div class="relative mb-3" data-controller="password-visibility">
+        <input type="password" id="new_password_field" name="password" required autocomplete="new-password"
+               data-password-visibility-target="input"
+               class="w-full bg-white border border-brand-divider rounded-xl pl-4 pr-12 py-4 text-base text-brand-primary box-border">
+        <%= render "shared/password_visibility_toggle" %>
+      </div>
+
+      <label for="password_confirmation_field" class="block text-brand-primary text-13 font-medium mb-1.5"><%= t("settings.profile.confirm_password") %></label>
+      <div class="relative mb-4" data-controller="password-visibility">
+        <input type="password" id="password_confirmation_field" name="password_confirmation" required autocomplete="new-password"
+               data-password-visibility-target="input"
+               class="w-full bg-white border border-brand-divider rounded-xl pl-4 pr-12 py-4 text-base text-brand-primary box-border">
+        <%= render "shared/password_visibility_toggle" %>
+      </div>
+
+      <button type="submit" class="w-full bg-brand-primary text-white border-none rounded-xl py-3.5 text-base font-medium cursor-pointer">
+        <%= t("settings.profile.save") %>
+      </button>
+    <% end %>
+
+    <button data-action="click->profile-modal#closePasswordModal"
             class="w-full bg-transparent text-brand-primary border border-brand-divider rounded-xl py-3.5 text-base font-medium cursor-pointer mt-2">
       <%= t("settings.profile.cancel") %>
     </button>

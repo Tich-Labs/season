@@ -238,11 +238,14 @@ Brand colors are defined as CSS variables - use these classes:
 - `text-brand-muted` / `bg-brand-muted` → #D18D83
 - `text-brand-dark` / `bg-brand-dark` → #3d2b28
 
-Phase colors:
+Phase colors (source of truth: `CycleCalculatorService::PHASE_META` and the
+`--color-phase-*` tokens in `app/assets/tailwind/application.css` — both
+agree; this doc previously listed a stale pink/peach/beige palette that
+didn't match either):
 - `text-phase-menstrual` / `bg-phase-menstrual` → #933a35
-- `text-phase-follicular` / `bg-phase-follicular` → #D18D83
-- `text-phase-ovulation` / `bg-phase-ovulation` → #F5C6AD
-- `text-phase-luteal` / `bg-phase-luteal` → #EDE1D5
+- `text-phase-follicular` / `bg-phase-follicular` → #899884
+- `text-phase-ovulation` / `bg-phase-ovulation` → #50715b
+- `text-phase-luteal` / `bg-phase-luteal` → #D18D84
 
 ### Container Standard
 - All main views: `max-w-app mx-auto px-4` (430px max-width, centered)

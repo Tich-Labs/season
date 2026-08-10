@@ -1,3 +1,4 @@
+/* global localStorage */
 import { Controller } from '@hotwired/stimulus'
 
 export default class extends Controller {
@@ -71,7 +72,7 @@ export default class extends Controller {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json',
+          Accept: 'application/json',
           'X-CSRF-Token': csrf
         },
         body: JSON.stringify({ pin, email: this.email })

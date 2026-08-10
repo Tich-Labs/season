@@ -22,3 +22,12 @@ production:
   weekly_feedback_nudges:
     class: SendWeeklyFeedbackNudgesJob
     schedule: at 10am every day
+  send_morning_reminders:
+    class: SendMorningRemindersJob
+    schedule: at 9am every day
+  send_period_reminders:
+    class: SendPeriodRemindersJob
+    schedule: at 8am every day
+  send_birth_control_reminders:
+    class: SendBirthControlRemindersJob
+    schedule: at 9pm every day

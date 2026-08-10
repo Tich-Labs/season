@@ -1,10 +1,24 @@
 /* global Notification */import { Controller } from '@hotwired/stimulus'
 
 export default class extends Controller {
-  static targets = ['status']
+  static targets = ['status', 'toggle']
 
   connect () {
     this._updateStatus()
+    this._syncToggle()
+  }
+
+  // Single entry point for the visible switch — routes to subscribe/unsubscribe
+  // based on which way it's being flipped, instead of always subscribing
+  // (which used to fire on every click, including turning it off).
+  async toggle () {
+    const willEnable = this.hasToggleTarget && !this.toggleTarget.classList.contains('active')
+    if (willEnable) {
+      await this.subscribe()
+    } else {
+      await this.unsubscribe()
+    }
+    this._syncToggle()
   }
 
   async subscribe () {
@@ -62,6 +76,24 @@ export default class extends Controller {
     } else {
       this.statusTarget.textContent = Notification.permission === 'denied' ? 'Blocked' : 'Off'
     }
+  }
+
+  // Reflects real subscription state on the switch — not just whatever was
+  // last clicked — so e.g. a denied permission prompt correctly snaps the
+  // toggle back off instead of showing on.
+  _syncToggle () {
+    if (!this.hasToggleTarget) return
+    if (!('Notification' in window) || Notification.permission !== 'granted') {
+      this.toggleTarget.classList.remove('active')
+      this.toggleTarget.setAttribute('aria-checked', 'false')
+      return
+    }
+    navigator.serviceWorker.ready.then((reg) => {
+      reg.pushManager.getSubscription().then((sub) => {
+        this.toggleTarget.classList.toggle('active', !!sub)
+        this.toggleTarget.setAttribute('aria-checked', String(!!sub))
+      })
+    })
   }
 
   _csrf () {

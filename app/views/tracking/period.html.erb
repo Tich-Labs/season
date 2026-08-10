@@ -1,4 +1,5 @@
 <% content_for(:page_title) { "Track my period" } %>
+<% content_for(:header_dark) { "true" } %>
 <% content_for(:header_color) { @phase_col } %>
 
 <%
@@ -119,7 +120,6 @@
             class: "flex items-center justify-center w-[253px] h-[52px] text-white bg-brand-primary rounded-lg text-2xl font-medium font-sans border-0 cursor-pointer #{'hidden' unless @existing}" %>
     </div>
   <% end %>
-
   <%# ── Existing period info ── %>
   <% if @existing || @period_end %>
     <div class="max-w-app mx-auto px-4 text-center text-xs text-brand-secondary font-sans space-y-1 pb-4">

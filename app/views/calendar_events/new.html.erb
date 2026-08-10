@@ -1,6 +1,7 @@
 <% content_for(:page_title) { "Appointment" } %>
 <% content_for(:header_left) do %>
-  <a href="javascript:history.back()"
+  <a href="<%= user_root_path %>"
+     onclick="if (window.history.length > 1) { window.history.back(); return false; }"
      class="inline-flex items-center justify-center w-10 h-10 rounded-xl text-brand-primary"
      aria-label="Back">
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -361,39 +362,42 @@
     <div data-season-modal-target="backdrop" class="hidden fixed inset-0 bg-black/40 z-50"></div>
     <div data-season-modal-target="modal" role="dialog" aria-modal="true" aria-labelledby="choose-icon-modal-title"
          class="hidden fixed inset-0 z-50 flex items-center justify-center">
-      <div class="w-[351px] h-[845px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] p-6 relative flex flex-col">
+      <div class="w-[310px] max-h-[92vh] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] p-6 relative flex flex-col">
 
         <%# Modal header %>
         <div class="flex justify-center items-center relative mb-4">
-          <h2 id="choose-icon-modal-title" class="text-22 font-medium text-brand-primary text-center font-sans leading-[45px]">Choose an icon.</h2>
+          <h2 id="choose-icon-modal-title" class="text-22 font-medium text-brand-primary text-center font-sans leading-[45px]">Choose an icon</h2>
           <button type="button" data-season-modal-target="closeBtn" data-action="click->season-modal#close"
-                  class="absolute right-0 top-1/2 -translate-y-1/2 bg-transparent border-none text-brand-primary text-[26px] w-9 h-9 flex items-center justify-center cursor-pointer font-sans">×</button>
+                  class="absolute right-0 top-1/2 -translate-y-1/2 bg-transparent border-none text-brand-primary text-[34px] w-11 h-11 flex items-center justify-center cursor-pointer font-sans">×</button>
         </div>
 
         <hr class="border-brand-field mb-4">
 
         <%# Category list %>
-        <div class="relative flex-1 min-h-0 overflow-y-auto [scrollbar-width:none]">
+        <div class="flex-1 min-h-0 overflow-y-auto [scrollbar-width:none] py-2 flex flex-col gap-2.5">
           <% items = [
-            { label: 'Friends', icon: 'family.svg', top: 0 },
-            { label: 'Dinner', icon: 'dinner.svg', top: 62 },
-            { label: 'Date', icon: 'date.svg', top: 125 },
-            { label: 'Sports', icon: 'sport.svg', top: 187 },
-            { label: 'Medical', icon: 'medical.svg', top: 249 },
-            { label: 'Birthday', icon: 'birthday.svg', top: 311 },
-            { label: 'Work', icon: 'work.svg', top: 371 },
-            { label: 'Coffee', icon: 'coffee.svg', top: 435 },
-            { label: 'Shopping', icon: 'shopping.svg', top: 499 }
+            { label: 'Friends', icon: 'family.svg' },
+            { label: 'Dinner', icon: 'dinner.svg' },
+            { label: 'Date', icon: 'date.svg' },
+            { label: 'Sports', icon: 'sport.svg' },
+            { label: 'Medical', icon: 'medical.svg' },
+            { label: 'Birthday', icon: 'birthday.svg' },
+            { label: 'Work', icon: 'work.svg' },
+            { label: 'Coffee', icon: 'coffee.svg' },
+            { label: 'Shopping', icon: 'shopping.svg' }
           ] %>
           <% items.each do |item| %>
             <% selected = @event.category.present? && @event.category == item[:label] %>
+            <% pale_src = "icons/appointment/#{item[:icon]}" %>
+            <% selected_src = "icons/appointment/#{item[:icon].sub(".svg", "-selected.svg")}" %>
             <button type="button"
                     data-action="click->season-modal#selectCategory"
                     data-category-name-value="<%= item[:label] %>"
                     data-season-modal-target="categoryOption"
-                    class="absolute left-0 w-full h-[45px] flex items-center gap-3 border-none bg-transparent text-left font-medium text-22 font-sans leading-[45px] cursor-pointer p-0"
-                    style="top:<%= item[:top] %>px; color:<%= selected ? '#933A35' : '#EDE1D5' %>;">
-              <%= image_tag "icons/appointment/#{item[:icon]}", alt: item[:label], class: "w-[47px] h-[45px]" %>
+                    class="w-full h-[52px] flex items-center gap-3 pl-6 pr-3 border-none bg-transparent text-left font-medium text-lg font-sans leading-[52px] cursor-pointer"
+                    style="color:<%= selected ? '#933A35' : '#EDE1D5' %>;">
+              <%= image_tag(selected ? selected_src : pale_src, alt: item[:label], class: "w-[30px] h-[30px] shrink-0",
+                            data: { icon_pale_src: image_path(pale_src), icon_selected_src: image_path(selected_src) }) %>
               <span><%= item[:label] %></span>
             </button>
           <% end %>
@@ -402,9 +406,9 @@
         <%# Modal footer %>
         <div class="flex flex-col gap-2.5 mt-auto">
           <button type="button" data-action="click->season-modal#close"
-                  class="w-full h-[52px] bg-brand-primary text-white rounded-lg border-none font-medium text-22 font-sans leading-[45px] text-center cursor-pointer">Add Icon</button>
+                  class="w-full h-[52px] bg-brand-primary text-white rounded-lg border-none font-medium text-lg font-sans leading-[45px] text-center cursor-pointer">Add Icon</button>
           <button type="button" data-action="click->season-modal#deleteCategory click->season-modal#close"
-                  class="w-full bg-transparent text-brand-primary border-none font-medium text-22 font-sans leading-[45px] cursor-pointer">Delete Icon</button>
+                  class="w-full bg-transparent text-brand-primary border-none font-medium text-lg font-sans leading-[45px] cursor-pointer">Delete Icon</button>
         </div>
       </div>
     </div>

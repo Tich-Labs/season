@@ -142,6 +142,7 @@ Rails.application.routes.draw do
     get :notification_birth_control, on: :collection
     patch :update_avatar, on: :collection
     patch :update_profile, on: :collection
+    patch :update_password, on: :collection
     patch :update_calendar, on: :collection
     patch :update_notifications, on: :collection
     patch :save_morning_reminder, on: :collection
@@ -257,6 +258,10 @@ Rails.application.routes.draw do
 
   # Native device registration for APNs
   post "/native_devices/register", to: "native_devices#register", defaults: {format: :json}
+
+  namespace :api do
+    get "holidays", to: "holidays#index", defaults: {format: :json}
+  end
 
   root "home#welcome"
 end

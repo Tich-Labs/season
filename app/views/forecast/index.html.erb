@@ -14,20 +14,23 @@
     # { key: "fertility",     title: t("forecast.index.fertility") },
   ]
   pc = @phase_colour
-  phase_name = case @cycle_day
-    when 1..7   then "Winter"
-    when 8..14  then "Spring"
-    when 15..21 then "Summer"
-    else             "Autumn"
-  end
+  phase_name = CycleCalculatorService::PHASE_META[@phase][:season]
 %>
 
 <div class="bg-white min-h-screen pb-32" data-controller="forecast-tabs forecast-modal"
      data-forecast-tabs-colour-value="<%= pc %>">
   <div class="max-w-app mx-auto px-4">
 
+    <%# ── Back ────────────────────────────────────────────────────────── %>
+    <div class="pt-4">
+      <a href="<%= calendar_path %>"
+         onclick="if (window.history.length > 1) { window.history.back(); return false; }"
+         class="text-sm font-medium no-underline font-sans"
+         style="color:var(--phase-color)">&lt; back</a>
+    </div>
+
     <%# ── Greeting ─────────────────────────────────────────────────────── %>
-    <div class="pt-8 pb-2">
+    <div class="pt-2 pb-2">
       <p class="italic font-medium text-4xl leading-[44px] font-sans m-0" style="color:var(--phase-color)">
         <%= t("forecast.index.greeting", name: current_user.name&.split&.first || "there") %>
       </p>
