@@ -1,4 +1,6 @@
 <%# GDPR Consent screen - Article 9 %>
+<%# This page renders its own styled success notice below, so opt out of the shared flash banner. %>
+<% content_for(:hide_flash) { "true" } %>
 <% content_for(:header_left) do %>
   <%= link_to user_root_path, class: "p-2 flex items-center" do %>
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">

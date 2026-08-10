@@ -1,8 +1,6 @@
 module Authentication
   extend ActiveSupport::Concern
 
-  VALID_SESSION_DAYS = 7
-
   included do
     helper_method :authenticated?, :returning_user?
     before_action :authenticate_user, unless: :devise_controller?
@@ -24,10 +22,10 @@ module Authentication
   def authenticate_user
     return if authenticated?
 
-    store_location_for(:user, request.fullpath) if request.get? || request.head?
     redirect_to native_app? ? root_path : new_session_path
   end
 
+  # Persistent until logout, on web and native alike — no time-based expiry.
   def login(user)
     reset_session
     session[:user_id] = user.id
@@ -35,22 +33,12 @@ module Authentication
     # tell a returning device from a genuinely new one and show Login as the
     # primary action instead of Create Account.
     cookies.permanent[:known_device] = "1"
-    if native_app?
-      cookies.encrypted.permanent[:user_id] = {
-        value: user.id,
-        httponly: true,
-        secure: Rails.env.production?,
-        same_site: :lax
-      }
-    else
-      cookies.encrypted[:user_id] = {
-        value: user.id,
-        expires: VALID_SESSION_DAYS.days.from_now,
-        httponly: true,
-        secure: Rails.env.production?,
-        same_site: :lax
-      }
-    end
+    cookies.encrypted.permanent[:user_id] = {
+      value: user.id,
+      httponly: true,
+      secure: Rails.env.production?,
+      same_site: :lax
+    }
     Current.user = user
   end
 
@@ -78,19 +66,17 @@ module Authentication
     redirect_to user_root_path
   end
 
+  # Always the monthly calendar — deliberately ignores any deep link the user
+  # was trying to reach before being asked to log in.
   def after_sign_in_path
     step = current_user.next_onboarding_step
     return onboarding_path(step) if step
 
-    session.delete("user_return_to") || user_root_path
+    user_root_path
   end
 
   def require_onboarding_completed
     step = current_user.first_incomplete_onboarding_step
     redirect_to onboarding_path(step) if step
-  end
-
-  def store_location_for(resource, location)
-    session["#{resource}_return_to"] = location if location.present?
   end
 end

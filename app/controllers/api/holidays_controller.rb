@@ -10,11 +10,11 @@ module Api
 
       year = Date.current.year
 
-      holidays = Holidays.between(Date.new(year, 1, 1), Date.new(year, 12, 31), country.to_sym)
+      holidays = ::Holidays.between(Date.new(year, 1, 1), Date.new(year, 12, 31), country.to_sym)
         .map { |h| {date: h[:date].iso8601, name: h[:name]} }
 
       render json: {holidays: holidays}
-    rescue Holidays::InvalidRegion, ArgumentError, NoMethodError
+    rescue ::Holidays::InvalidRegion, ArgumentError, NoMethodError
       render json: {holidays: []}
     end
   end

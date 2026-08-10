@@ -1,6 +1,8 @@
 <%# Settings screen - matches Figma node 12048-37859 %>
 <%# Header auto-rendered by layout (controller_name == 'settings') %>
 <% content_for(:hide_quick_actions) { "true" } %>
+<%# This page renders its own centred calendar button below, so opt out of the shared bottom-right FAB. %>
+<% content_for(:hide_calendar_fab) { "true" } %>
 
 <div class="bg-white min-h-screen">
 
@@ -47,7 +49,7 @@
 
     <%# Notifications & Reminders %>
     <a href="<%= notifications_settings_path %>" data-turbo-action="replace" class="flex items-center gap-4 py-4">
-      <%= vuesax_icon "notification", size: 24 %>
+      <%= image_tag "icons/notifications-reminder.svg", alt: "Notifications", class: "w-6 h-6 shrink-0 object-contain" %>
       <span class="flex-1 text-brand-primary text-base font-medium"><%= t("settings.edit.notifications_and_reminder") %></span>
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="text-brand-primary">
         <polyline points="9 18 15 12 9 6" />
@@ -83,9 +85,7 @@
     <%# Language — navigates to dedicated language page (same as header language button) %>
     <% cur_lang = current_user.language.presence || I18n.default_locale.to_s %>
     <a href="<%= settings_language_path %>" data-turbo-action="replace" class="flex items-center gap-4 py-4">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" class="text-brand-primary shrink-0">
-        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-      </svg>
+      <%= image_tag "icons/language.svg", alt: "Language", class: "w-6 h-6 shrink-0 object-contain" %>
       <span class="flex-1 text-brand-primary text-base font-medium"><%= I18n.t("language.names.#{cur_lang}", default: cur_lang.upcase) %></span>
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="text-brand-primary">
         <polyline points="9 18 15 12 9 6" />
@@ -176,16 +176,12 @@
       </svg>
     <% end %>
 
-    <%# Render support modal inline only for iOS Ruby Native modal compatibility.
-        On web the layout already renders this partial (unless native_app?), so
-        rendering it here unconditionally duplicated #support-modal-container,
-        causing two overlapping modal instances and a close (x) button that only
-        ever closed the top one. %>
-    <% if native_app? %>
-      <%= render "shared/support_modal" %>
-    <% end %>
-
+    <%# Render support modal inline. This page sets hide_quick_actions, which
+        suppresses the layout's modal block (application.html.erb), so the modal
+        must be rendered here for both web and iOS Ruby Native. %>
+    <%= render "shared/support_modal" %>
   </div>
+</div>
 </div>
 
 <%# ── Calendar button — fixed bottom-centre, replaces the quick-actions FAB on this page ── %>

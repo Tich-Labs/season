@@ -61,7 +61,7 @@ class OnboardingController < ApplicationController
       year = params[:birthday_year].to_i
       begin
         birthday = Date.new(year, month, day)
-        raise ArgumentError if birthday > Time.zone.today || year < 1900
+        raise ArgumentError if birthday > Time.zone.today || year < 1946
         current_user.update!(birthday: birthday)
       rescue ArgumentError, TypeError
         @error = "Please enter a valid date of birth"

@@ -1,4 +1,8 @@
 <%# Settings - My Calendar screen %>
+<%# Renders its own notice toast below, so opt out of the shared flash banner. %>
+<% content_for(:hide_flash) { "true" } %>
+<%# Already reachable via Settings > My Calendar back-arrow, so drop the redundant bottom-right calendar FAB. %>
+<% content_for(:hide_calendar_fab) { "true" } %>
 <% content_for(:header_left) do %>
   <%= link_to edit_settings_path, class: "p-2 flex items-center" do %>
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">

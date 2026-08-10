@@ -131,10 +131,9 @@ class CycleCalculatorService
 
   # Returns recent cycle days for the Self Analysis day strip.
   # Produces `count` entries centred on today (past_days before + today + future_days after).
-  def strip_data(past_days: 6, future_days: 6)
+  def strip_data(past_days: 6, future_days: 6, center: Time.zone.today)
     return [] if @period_starts.empty?
-    today = Time.zone.today
-    ((today - past_days)..(today + future_days)).map do |date|
+    ((center - past_days)..(center + future_days)).map do |date|
       phase = effective_phase_for_date(date)
       prev_start, gap = cycle_bounds_for(date)
       cycle_day = prev_start ? ((date - prev_start).to_i % gap) + 1 : nil
@@ -143,7 +142,7 @@ class CycleCalculatorService
         cycle_day: cycle_day,
         phase: phase,
         colour: PHASE_COLOURS[phase],
-        current: date == today
+        current: date == center
       }
     end
   end

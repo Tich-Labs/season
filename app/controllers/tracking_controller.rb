@@ -1,6 +1,10 @@
 class TrackingController < ApplicationController
   def index
-    @date = Time.zone.today
+    @date = begin
+      params[:date].present? ? Date.iso8601(params[:date]) : Time.zone.today
+    rescue ArgumentError, TypeError
+      Time.zone.today
+    end
     @phase = current_user.current_phase
     @meta = CycleCalculatorService::PHASE_META[@phase] || {}
     @cycle_day = current_user.current_cycle_day
@@ -8,9 +12,11 @@ class TrackingController < ApplicationController
 
     if current_user.last_period_start
       svc = CycleCalculatorService.new(current_user)
-      @cycle_day = svc.current_cycle_day
-      @strip = svc.strip_data(past_days: 6, future_days: 6)
+      @cycle_day = current_user.current_cycle_day(@date)
+      @strip = svc.strip_data(past_days: 6, future_days: 6, center: @date)
       @arcs = svc.wheel_arcs
+      @phase = svc.effective_phase_for_date(@date)
+      @meta = CycleCalculatorService::PHASE_META[@phase] || {}
     end
   end
 

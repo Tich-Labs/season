@@ -5,10 +5,9 @@
      events_by_date  — Hash<Date, Array<CalendarEvent>>
      tracked_days_set— Set<Date>
      cycle_by_date   — Hash<Date, Hash> with keys :colour, :phase, etc.
-     mode            — String "all"|"events"|"tracking"|"cycle"
-     show_moonphases — Boolean from user preference
-     show_holidays   — Boolean from user preference
-     show_week_numbers— Boolean from user preference
+      mode            — String "all"|"events"|"tracking"|"cycle"
+      show_moonphases — Boolean from user preference
+      show_week_numbers— Boolean from user preference
 
    Layout (matches Figma node 12055:13821):
      1. Full-bleed 11px phase band at the very top (no padding)
@@ -27,7 +26,6 @@
 <% phase_colour = cycle_data&.dig(:colour) %>
 <% cycle_day    = cycle_data&.dig(:cycle_day) %>
 <% lunar        = moon_phase(date) if local_assigns[:show_moonphases] %>
-<% holiday_name = local_assigns[:show_holidays] ? local_assigns[:holidays_by_date]&.dig(date) : nil %>
 <% week_num     = local_assigns[:show_week_numbers] && date.cwday == 1 ? date.cweek : nil %>
 
 <%# ── Phase band colour (full-bleed top strip) ── %>
@@ -90,13 +88,6 @@
     <%# Holiday dot indicator (localStorage overlay) — filled by holiday_controller via holidays:loaded %>
     <div data-holiday-date="<%= date.iso8601 %>"
          style="display:flex; align-items:center; justify-content:center; gap:2px; min-height:5px; flex-shrink:0;"></div>
-
-    <%# Holiday indicator %>
-    <% if holiday_name %>
-      <div style="background:#FFD700; border-radius:2px; padding:1px 3px; overflow:hidden;">
-        <span style="color:#333; font-size:6px; font-weight:600; white-space:nowrap; display:block; overflow:hidden; text-overflow:ellipsis; line-height:8px;"><%= holiday_name %></span>
-      </div>
-    <% end %>
 
     <%# Event labels — up to 2, rest collapsed to +N %>
     <% if show_events && has_event %>

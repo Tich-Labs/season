@@ -8,7 +8,6 @@ class CalendarController < ApplicationController
     @show_appointments = current_user.show_appointments?
     @show_cycledays = true
     @show_moonphases = current_user.show_moonphases?
-    @show_holidays = current_user.show_holidays?
     @show_week_numbers = current_user.show_week_numbers?
     @show_cycle_day_on_band = current_user.show_cycle_day_on_band?
     @show_tracked_days = current_user.show_tracked_days?
@@ -42,7 +41,6 @@ class CalendarController < ApplicationController
       @current_phase = nil
     end
 
-    @holidays_by_date = @show_holidays ? holidays_for_month(@year, @month) : {}
     @prev_month = @date - 1.month
     @next_month = @date + 1.month
   end
@@ -82,7 +80,6 @@ class CalendarController < ApplicationController
     end
 
     @current_season = CycleCalculatorService::SEASON_NAMES[@current_phase]
-    @holidays_by_date = @show_holidays ? holidays_for_month(@date.year, @date.month) : {}
     @week_dates_with_numbers = @week_dates.index_with { |d| iso_week_number(d) }
   end
 
@@ -159,6 +156,5 @@ class CalendarController < ApplicationController
 
     @current_season = CycleCalculatorService::SEASON_NAMES[@current_phase]
     @streak = current_user.streak&.current_streak || 0
-    @holidays_by_date = @show_holidays ? holidays_for_month(@year, @month) : {}
   end
 end

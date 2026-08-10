@@ -10,6 +10,8 @@
   </a>
 <% end %>
 <% content_for(:hide_quick_actions) { "true" } %>
+<%# Already has a back-to-calendar arrow in the header above, matching new.html.erb. %>
+<% content_for(:hide_calendar_fab) { "true" } %>
 
 <%
   evt_date       = @event.date

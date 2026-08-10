@@ -1,4 +1,6 @@
 <% content_for(:page_title) { "Birth Control Reminder" } %>
+<%# Renders its own notice toast below, so opt out of the shared flash banner. %>
+<% content_for(:hide_flash) { "true" } %>
 <% content_for(:header_left) do %>
   <%= link_to notifications_settings_path,
         style: "color:#933a35; font-size:15px; font-weight:500; text-decoration:none; padding:8px 4px; font-family:'Montserrat',sans-serif;" do %>

@@ -6,12 +6,15 @@ export default class extends Controller {
   }
 
   connect () {
-    this.timer = setTimeout(() => {
-      this.element.style.display = 'none'
-    }, this.delayValue * 1000)
+    this.timer = setTimeout(() => this.dismiss(), this.delayValue * 1000)
   }
 
   disconnect () {
+    if (this.timer) clearTimeout(this.timer)
+  }
+
+  dismiss () {
+    this.element.style.display = 'none'
     if (this.timer) clearTimeout(this.timer)
   }
 }

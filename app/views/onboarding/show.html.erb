@@ -44,11 +44,9 @@
             placeholder: t('onboarding.step1.name_placeholder'),
             autocomplete: "name",
             class: "w-80 h-12 bg-brand-field rounded-lg px-4 text-brand-primary text-xl font-medium placeholder:text-brand-primary/40 tracking-wide" %>
+        <%= f.submit t('onboarding.step1.submit'),
+            class: "w-80 h-12 bg-brand-primary text-white rounded-lg text-xl font-medium tracking-wide mt-10" %>
       <% end %>
-
-      <%= button_tag t('onboarding.step1.submit'),
-          form: "step1-form", type: "submit",
-          class: "w-80 h-12 bg-brand-primary text-white rounded-lg text-xl font-medium tracking-wide mt-10" %>
     </div>
 
   <%# ── Step 2: Birthday ──────────────────────────────────────────── %>
@@ -101,7 +99,7 @@
           <div class="flex flex-col items-center gap-2">
             <span class="text-brand-primary text-xs font-normal tracking-wide"><%= t('onboarding.step2.label_year') %></span>
             <div data-controller="scroll-picker"
-                 data-scroll-picker-min-value="1900"
+                 data-scroll-picker-min-value="1946"
                  data-scroll-picker-max-value="<%= Time.zone.today.year %>"
                  data-scroll-picker-step-value="1"
                  data-scroll-picker-placeholder="<%= t('onboarding.step2.placeholder_year') %>">
@@ -118,11 +116,9 @@
             </div>
           </div>
         </div>
+        <%= f.submit t('onboarding.step2.submit'),
+            class: "w-[322px] h-[52px] bg-brand-primary text-white rounded-lg text-22 font-medium tracking-p66 mt-[77px]" %>
       <% end %>
-
-      <%= button_tag t('onboarding.step2.submit'),
-          form: "step2-form", type: "submit",
-          class: "w-[322px] h-[52px] bg-brand-primary text-white rounded-lg text-22 font-medium tracking-p66 mt-[77px]" %>
     </div>
 
   <%# ── Step 3: First & last day of last period (single range picker) ── %>
@@ -299,12 +295,12 @@
             <div style="min-height:84px; flex-shrink:0;"></div>
           </div>
         </div>
+
+        <%= f.submit t('onboarding.step5.submit'),
+            class: "w-[322px] h-[52px] bg-brand-primary text-white rounded-lg text-22 font-medium tracking-p66 mt-10" %>
       <% end %>
 
-      <div class="w-full flex flex-col gap-3 items-center mt-10">
-        <%= button_tag t('onboarding.step5.submit'), form: "step5-form", type: "submit",
-            class: "w-[322px] h-[52px] bg-brand-primary text-white rounded-lg text-22 font-medium tracking-p66" %>
-
+      <div class="w-full flex flex-col gap-3 items-center mt-3">
         <%# TODO: Auto-calculate cycle length from user's tracking data over time %>
         <%= form_with url: onboarding_path(5), method: :patch, local: true do |f| %>
           <%= f.hidden_field :skip_cycle_length, value: "1" %>

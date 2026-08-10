@@ -27,7 +27,6 @@ class SettingsController < ApplicationController
       show_appointments: params[:show_appointments] == "1",
       show_tracked_days: params[:show_tracked_days] == "1",
       show_moonphases: params[:show_moonphases] == "1",
-      show_holidays: params[:show_holidays] == "1",
       show_week_numbers: params[:show_week_numbers] == "1",
       show_cycle_day_on_band: params[:show_cycle_day_on_band] == "1",
       show_phases: params[:show_phases] == "1",

@@ -34,15 +34,15 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
     assert_response :unprocessable_entity
   end
 
-  # --- Cookie expiry behavior (web vs native) ---
+  # --- Cookie expiry behavior (web and native are both persistent) ---
 
-  test "POST /session from web sets 7-day user_id cookie" do
+  test "POST /session from web sets permanent (20-year) user_id cookie" do
     post session_path, params: {email: @alice.email, password: "password123"}
     set_cookies = Array(response.headers["Set-Cookie"])
     uid_cookie = set_cookies.find { |c| c.start_with?("user_id=") }
     assert_includes uid_cookie, "expires="
     expires = uid_cookie.match(/expires=([^;]+)/)[1]
-    assert_in_delta 7.days.from_now, Time.zone.parse(expires), 5.seconds
+    assert_in_delta 20.years.from_now, Time.zone.parse(expires), 5.seconds
   end
 
   test "POST /session from native sets permanent (20-year) user_id cookie" do
@@ -57,7 +57,7 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
 
   # --- Long-lived session persistence ---
 
-  test "native session survives past old 7-day boundary" do
+  test "native session survives past the old 7-day boundary" do
     post session_path, params: {email: @alice.email, password: "password123"},
       headers: {"User-Agent" => "Ruby Native iOS"}
 
@@ -67,13 +67,12 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
-  test "web session expires after session cookie expiry (7 days)" do
+  test "web session also survives past the old 7-day boundary" do
     post session_path, params: {email: @alice.email, password: "password123"}
 
     travel_to 10.days.from_now do
-      cookies.delete("user_id")
       get tracking_index_path
-      assert_redirected_to new_session_path
+      assert_response :success
     end
   end
 

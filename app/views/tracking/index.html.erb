@@ -2,6 +2,8 @@
 <% content_for(:header_dark) { "true" } %>
 <% content_for(:header_color) { @meta.dig(:colour) || "#933a35" } %>
 <% content_for(:hide_quick_actions) { "true" } %>
+<%# This page renders its own centred calendar button below, so opt out of the shared bottom-right FAB. %>
+<% content_for(:hide_calendar_fab) { "true" } %>
 
 <%
   def arc_path(cx, cy, r_out, r_in, start_deg, end_deg)
@@ -112,7 +114,7 @@
         <div class="flex gap-3 pt-2 pb-1 w-max px-4">
           <% @strip.each do |day| %>
             <% dot_colour = day[:colour] || "#D18D83" %>
-            <%= link_to daily_view_path(date: day[:date].to_s),
+            <%= link_to tracking_index_path(date: day[:date].to_s),
                   class: "no-underline",
                   "aria-label": day[:date].strftime("%A, %d %B") do %>
               <div class="w-12 h-12 rounded-full flex items-center justify-center text-base font-semibold <%= day[:current] ? 'text-white ring-2 ring-offset-2 ring-white' : 'text-white opacity-75' %>"
