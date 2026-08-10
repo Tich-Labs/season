@@ -25,14 +25,31 @@ class TrackingControllerTest < ActionDispatch::IntegrationTest
 
   test "PATCH /tracking/period updates last_period_start and creates period_start log" do
     new_date = Time.zone.today
-    patch period_tracking_index_path, params: {period: {date: new_date.to_s}}
+    patch period_tracking_index_path, params: {last_period_start: new_date.to_s}
     @alice.reload
     assert_equal new_date, @alice.last_period_start
     assert @alice.period_starts.exists?(started_on: new_date)
   end
 
+  test "PATCH /tracking/period saves both start and end dates together" do
+    start_date = 5.days.ago.to_date
+    end_date = Time.zone.today
+    patch period_tracking_index_path, params: {last_period_start: start_date.to_s, last_period_end: end_date.to_s}
+    @alice.reload
+    assert_equal start_date, @alice.last_period_start
+    assert_equal end_date, @alice.last_period_end
+  end
+
+  test "PATCH /tracking/period rejects an end date before the start date" do
+    patch period_tracking_index_path,
+      params: {last_period_start: Time.zone.today.to_s, last_period_end: 3.days.ago.to_date.to_s}
+    assert_redirected_to period_tracking_index_path
+    @alice.reload
+    assert_nil @alice.last_period_end
+  end
+
   test "PATCH /tracking/period redirects after update" do
-    patch period_tracking_index_path, params: {period_start: Time.zone.today.to_s}
+    patch period_tracking_index_path, params: {last_period_start: Time.zone.today.to_s}
     assert_response :redirect
   end
 end

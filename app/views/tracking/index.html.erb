@@ -109,14 +109,15 @@
         analysis_text = analysis_messages[@phase] || "Track your symptoms daily to unlock personalized insights."
       %>
       <div class="flex justify-center mb-6" data-controller="dismissible">
-        <div class="relative bg-white rounded-[29px] px-5 pt-12 pb-7" style="width:300px;" data-dismissible-target="card">
-          <button data-action="click->dismissible#close" aria-label="Dismiss" class="absolute top-2 right-2 w-8 h-8 rounded-full flex items-center justify-center border-0 cursor-pointer" style="background:#EDE1D5;">
-            <span class="text-brand-primary text-lg font-medium leading-none font-sans">×</span>
-          </button>
-
-          <p class="text-brand-primary font-medium text-base leading-snug text-center font-sans pr-4">
+        <div class="relative bg-white rounded-[29px] pl-5 pr-3 py-5 w-full max-w-[400px] flex items-center gap-1" data-dismissible-target="card">
+          <p class="flex-1 min-w-0 text-brand-primary font-medium text-sm leading-snug font-sans line-clamp-3">
             <%= analysis_text %>
           </p>
+          <button data-action="click->dismissible#close" aria-label="Dismiss"
+                  class="shrink-0 w-8 h-8 rounded-full flex items-center justify-center border-0 cursor-pointer"
+                  style="background:#EDE1D5;">
+            <span class="text-brand-primary text-lg font-medium leading-none font-sans">×</span>
+          </button>
         </div>
       </div>
     <% end %>

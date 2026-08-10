@@ -98,7 +98,21 @@ class CalendarController < ApplicationController
     trailing = (7 - ((first_weekday + month_end.day) % 7)) % 7
     prev_tail_dates = (month_start - first_weekday..month_start - 1).to_a
     next_head_dates = (month_end + 1..month_end + trailing).to_a
-    @calendar_dates = prev_tail_dates + (month_start..month_end).to_a + next_head_dates
+    full_dates = prev_tail_dates + (month_start..month_end).to_a + next_head_dates
+
+    # A month can need 6 calendar rows (e.g. a 31-day month starting on a
+    # Saturday) but the screen only has room for 5. Cap it: while we're still
+    # in the first row, show the first 5 weeks; once the first row's date
+    # range has passed, drop it and show the last 5 weeks instead. Either way
+    # we only ever render 5 rows.
+    weeks = full_dates.each_slice(7).to_a
+    @calendar_dates = if weeks.size > 5
+      reference_date = (@date.month == @month) ? @date : Time.zone.today
+      in_first_week = weeks.first.include?(reference_date)
+      (in_first_week ? weeks.first(5) : weeks.last(5)).flatten
+    else
+      full_dates
+    end
 
     full_start = prev_tail_dates.first || month_start
     full_end = next_head_dates.last || month_end
