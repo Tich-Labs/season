@@ -130,7 +130,7 @@
             <div class="w-12 h-12 rounded-full flex items-center justify-center text-base font-semibold <%= day[:current] ? 'text-white ring-2 ring-offset-2 ring-white' : 'text-white opacity-75' %>"
                  style="background:<%= dot_colour %>;"
                  <%= 'data-center-scroll-target="current"'.html_safe if day[:current] %>>
-              <%= day[:cycle_day] %>
+              <%= day[:date].day %>
             </div>
           <% end %>
         </div>

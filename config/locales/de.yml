@@ -193,7 +193,7 @@ de:
       my_symptoms: "Meine Symptome"
       give_feedback: "Feedback geben"
     period_update:
-      saved: "Startdatum der Periode gespeichert."
+      saved: "Periodendaten gespeichert."
       end_saved: "Enddatum der Periode gespeichert."
       date_required: "Bitte wähle ein Datum aus."
       invalid_date: "Ungültiges Datum — bitte versuche es erneut."
@@ -202,6 +202,8 @@ de:
         selected: "Ausgewählt:"
         set_start: "Als Periodenstart setzen"
         set_end: "Als Periodenende setzen"
+        select_start_heading: "Wann hat deine Periode begonnen?"
+        select_end_heading: "Und wann hat sie geendet?"
         label_start: "Start:"
         label_end: "Ende:"
   calendar_events:

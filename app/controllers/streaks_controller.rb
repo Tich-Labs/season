@@ -8,5 +8,7 @@ class StreaksController < ApplicationController
     @milestones = Streak::MILESTONES
     @next_milestone = @streak.next_milestone
     @days_to_next = @next_milestone ? @next_milestone - @streak.current_streak.to_i : nil
+    @phase = current_user.current_phase
+    @phase_colour = CycleCalculatorService::PHASE_META[@phase]&.dig(:colour) || "#933a35"
   end
 end

@@ -1,46 +1,40 @@
-<% editing = @existing.present? %>
 <% content_for(:page_title) { "Track my period" } %>
 <% content_for(:header_color) { @phase_col } %>
 
 <%
-  today      = Time.zone.today
-  first_day  = @month
-  last_day   = @month.end_of_month
-  start_pad  = (first_day.wday == 0 ? 6 : first_day.wday - 1)
-  prev_month = @month.prev_month
-  next_month = @month.next_month
+  today       = Time.zone.today
+  first_day   = @month.beginning_of_month
+  last_day    = @month.end_of_month
+  first_dow   = (first_day.wday == 0) ? 6 : first_day.wday - 1
+  trailing    = (7 - ((first_dow + last_day.day) % 7)) % 7
+  prev_tail   = (first_day - first_dow..first_day - 1).to_a
+  next_head   = (last_day + 1..last_day + trailing).to_a
+  all_dates   = prev_tail + (first_day..last_day).to_a + next_head
+  prev_month  = @month.prev_month
+  next_month  = @month.next_month
 
-  period_start = @existing
-  period_end   = @period_end
-  period_days  = if period_start && period_end
-    range_start = [period_start, first_day].max
-    range_end   = [period_end, last_day].min
-    range_start <= range_end ? (range_start..range_end).to_a : []
-  elsif period_start && period_start.year == @month.year && period_start.month == @month.month
-    range_end = [today, last_day].min
-    period_start <= range_end ? (period_start..range_end).to_a : []
-  else
-    []
-  end
-
-  save_field = (@existing.present? && @selected > @existing) ? "end" : "start"
+  start_heading = t("tracking.period_update.period.select_start_heading")
+  end_heading   = t("tracking.period_update.period.select_end_heading")
 %>
 
-<div class="bg-white min-h-screen pb-20">
-  <div class="max-w-app mx-auto">
+<div class="bg-white min-h-screen pb-20"
+     data-controller="onboarding-calendar"
+     data-onboarding-calendar-start-heading-value="<%= start_heading %>"
+     data-onboarding-calendar-end-heading-value="<%= end_heading %>">
+  <div class="max-w-app mx-auto px-4 pt-3">
 
     <%# ── Greeting ── %>
-    <div class="pt-8 pb-2 px-4">
-      <p class="text-brand-primary italic font-medium text-4xl leading-[44px] font-sans m-0">
+    <div class="mb-3.5">
+      <p class="text-brand-primary text-4xl font-medium m-0 leading-tight">
         Hello <%= current_user.name&.split&.first || "there" %>
       </p>
-      <p class="text-brand-primary font-light text-2xl leading-[29px] font-sans m-0 mt-1">
-        This is your month
+      <p class="text-brand-primary text-base font-medium m-0" data-onboarding-calendar-target="heading">
+        <%= start_heading %>
       </p>
     </div>
 
     <%# ── Month navigation ── %>
-    <div class="flex items-center justify-start gap-4 pt-2 pb-4 px-4">
+    <div class="flex items-center gap-4 mb-4">
       <%= link_to period_tracking_index_path(date: prev_month),
             class: "flex items-center justify-center w-9 h-9 rounded-full bg-brand-field no-underline" do %>
         <svg width="16" height="16" fill="none" stroke="#933a35" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6" /></svg>
@@ -52,80 +46,89 @@
       <% end %>
     </div>
 
-    <%# ── Title ── %>
-    <p class="text-center text-22 font-medium text-brand-primary font-sans tracking-003 mb-2 mt-0">
-      Track my period
-    </p>
+  </div>
 
-    <%# ── Day-of-week headers ── %>
-    <div class="grid grid-cols-7 gap-0 px-4 mb-1">
-      <% %w[Mo Tu We Th Fr Sa Su].each do |d| %>
-        <div class="text-center text-brand-secondary text-xs font-semibold tracking-wider py-1"><%= d %></div>
-      <% end %>
-    </div>
+  <%= form_with url: period_tracking_index_path, method: :patch, local: true do |f| %>
+    <%= f.hidden_field :last_period_start, value: @existing&.iso8601,
+          data: { onboarding_calendar_target: "startInput" } %>
+    <%= f.hidden_field :last_period_end, value: @period_end&.iso8601,
+          data: { onboarding_calendar_target: "endInput" } %>
 
-    <%# ── Calendar grid ── %>
-    <div class="grid grid-cols-7 auto-rows-calendar gap-x-0 gap-y-2 px-4">
-      <% start_pad.times { concat(tag.div) } %>
-
-      <% (first_day..last_day).each do |day| %>
-        <%
-          is_period_day = period_days.include?(day)
-          is_selected   = day == @selected
-          is_today      = day == today
-          is_future     = day > today
-          is_past       = day <= today
-
-          band_colour = is_period_day ? '#933a35' : (is_past ? '#EDE1D5' : 'transparent')
-          num_bg      = is_selected ? @phase_col : (is_today ? '#933a35' : 'transparent')
-          num_col     = is_selected || is_today ? '#FFFFFF' : (is_future ? '#C4B8B8' : (is_period_day ? '#933a35' : '#3d2b28'))
-          num_wt      = (is_selected || is_today) ? '700' : (is_period_day ? '600' : '400')
-        %>
-        <% if is_future %>
-          <div class="flex flex-col h-full overflow-hidden">
-            <div class="h-[11px] shrink-0" style="background:transparent;"></div>
-            <div class="flex-1 pt-1 px-1 pb-[3px] flex flex-col overflow-hidden">
-              <span class="text-13 shrink-0 leading-none" style="font-weight:<%= num_wt %>;color:<%= num_col %>;"><%= day.day %></span>
-            </div>
-          </div>
-        <% else %>
-          <a href="<%= period_tracking_index_path(selected_date: day) %>" data-turbo="false"
-             class="flex flex-col no-underline h-full overflow-hidden">
-            <div class="h-[11px] shrink-0" style="background:<%= band_colour %>;"></div>
-            <div class="flex-1 pt-1 px-1 pb-[3px] flex flex-col overflow-hidden">
-              <% if is_today || is_selected %>
-                <span class="inline-flex items-center justify-center min-w-[24px] h-6 px-1 rounded-full self-start shrink-0 text-xs font-bold leading-none"
-                      style="background:<%= num_bg %>;color:<%= num_col %>;">
-                  <%= day.day %>
-                </span>
-              <% else %>
-                <span class="text-13 shrink-0 leading-none" style="font-weight:<%= num_wt %>;color:<%= num_col %>;"><%= day.day %></span>
-              <% end %>
-            </div>
-          </a>
-        <% end %>
-      <% end %>
-    </div>
-
-    <%# ── Submit ── %>
-    <div class="px-4 pt-6 pb-4 flex justify-center">
-      <%= link_to "Submit",
-            period_tracking_index_path(save: 1, field: save_field, date: @selected),
-            data: { turbo: false },
-            class: "flex items-center justify-center w-[253px] h-[52px] no-underline text-white bg-brand-primary rounded-lg text-2xl font-medium font-sans" %>
-    </div>
-
-    <%# ── Existing period info ── %>
-    <% if @existing || @period_end %>
-      <div class="text-center text-xs text-brand-secondary font-sans space-y-1 pb-4">
-        <% if @existing %>
-          <p class="m-0"><%= t("tracking.period_update.period.label_start") %> <%= @existing.strftime("%-d %B %Y") %></p>
-        <% end %>
-        <% if @period_end %>
-          <p class="m-0"><%= t("tracking.period_update.period.label_end") %> <%= @period_end.strftime("%-d %B %Y") %></p>
+    <%# ── Day-of-week headers + calendar grid: full-bleed edge-to-edge, no horizontal padding ── %>
+    <div class="max-w-app mx-auto">
+      <div class="grid grid-cols-7 gap-0 mb-1">
+        <% %w[Mo Tu We Th Fr Sa Su].each do |d| %>
+          <div class="text-center text-brand-secondary text-xs font-semibold tracking-wider py-1"><%= d %></div>
         <% end %>
       </div>
-    <% end %>
 
-  </div>
+      <div class="grid grid-cols-7 auto-rows-calendar gap-x-0 gap-y-2">
+        <% all_dates.each do |day| %>
+          <%
+            in_month   = day.month == @month.month
+            is_today   = day == today
+            is_future  = day > today
+          %>
+          <% if !in_month || is_future %>
+            <div style="display:flex; flex-direction:column; height:100%; overflow:hidden;<%= in_month ? '' : ' opacity:0.45;' %>">
+              <div style="height:14px; flex-shrink:0; background:#EDE1D5;"></div>
+              <div style="flex:1; padding:1px 4px 3px; display:flex; flex-direction:column;">
+                <div style="display:flex; align-items:center; justify-content:center;">
+                  <span style="font-size:13px; font-weight:400; color:#C4B8B8; line-height:1;">
+                    <%= day.day %>
+                  </span>
+                </div>
+              </div>
+            </div>
+          <% else %>
+            <button type="button"
+                    data-action="click->onboarding-calendar#select"
+                    data-onboarding-calendar-target="day"
+                    data-date="<%= day.iso8601 %>"
+                    data-today="<%= is_today %>"
+                    style="display:flex; flex-direction:column; height:100%; overflow:hidden; background:transparent; border:none; padding:0; cursor:pointer;">
+              <span data-onboarding-calendar-target="band"
+                    style="height:14px; flex-shrink:0; display:block; background:#EDE1D5;"></span>
+              <div style="flex:1; padding:<%= is_today ? '0' : '1px' %> 4px 3px; display:flex; flex-direction:column;">
+                <div style="display:flex; align-items:center; justify-content:center;">
+                  <% if is_today %>
+                    <span style="display:inline-flex; align-items:center; justify-content:center; min-width:24px; height:24px; padding:0 4px; border-radius:0 0 12px 12px; background:#933a35; color:#FFF; font-size:12px; font-weight:700; line-height:1; box-sizing:border-box;">
+                      <%= day.day %>
+                    </span>
+                  <% else %>
+                    <span style="font-size:13px; font-weight:600; color:#1A1A1A; line-height:1;">
+                      <%= day.day %>
+                    </span>
+                  <% end %>
+                </div>
+              </div>
+            </button>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+
+    <a href="#" data-action="click->onboarding-calendar#clear"
+       data-onboarding-calendar-target="clear"
+       class="block text-center text-brand-primary text-sm mt-4 <%= @existing ? '' : 'hidden' %>">Clear</a>
+
+    <%# ── Submit ── %>
+    <div class="max-w-app mx-auto px-4 pt-6 pb-4 flex justify-center">
+      <%= f.submit "Submit",
+            data: { onboarding_calendar_target: "submit" },
+            class: "flex items-center justify-center w-[253px] h-[52px] text-white bg-brand-primary rounded-lg text-2xl font-medium font-sans border-0 cursor-pointer #{'hidden' unless @existing}" %>
+    </div>
+  <% end %>
+
+  <%# ── Existing period info ── %>
+  <% if @existing || @period_end %>
+    <div class="max-w-app mx-auto px-4 text-center text-xs text-brand-secondary font-sans space-y-1 pb-4">
+      <% if @existing %>
+        <p class="m-0"><%= t("tracking.period_update.period.label_start") %> <%= @existing.strftime("%-d %B %Y") %></p>
+      <% end %>
+      <% if @period_end %>
+        <p class="m-0"><%= t("tracking.period_update.period.label_end") %> <%= @period_end.strftime("%-d %B %Y") %></p>
+      <% end %>
+    </div>
+  <% end %>
 </div>

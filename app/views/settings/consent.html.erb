@@ -52,7 +52,7 @@
             <div class="flex items-center gap-2">
               <span class="text-brand-primary text-sm font-semibold"><%= c[:title] %></span>
               <button type="button"
-                      onclick="document.dispatchEvent(new CustomEvent('consent-info:open', { detail: { type: '<%= c[:key] %>' } }))"
+                      onclick="document.dispatchEvent(new CustomEvent('consent-info:open', { detail: { type: <%= c[:key].to_json %> } }))"
                       class="bg-none border-none p-0 cursor-pointer text-brand-muted hover:text-brand-primary shrink-0"
                       aria-label="Learn more about <%= c[:title] %>">
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">

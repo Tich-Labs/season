@@ -53,10 +53,10 @@
                 class: "w-full bg-transparent border-none text-22 font-medium text-brand-primary p-0 outline-none font-sans" %>
         </div>
 
-        <div class="mx-5 my-8 w-[304px] h-px bg-brand-primary"></div>
+        <div class="mx-5 my-5 w-[304px] h-px bg-brand-primary"></div>
 
         <%# Date + time — SVG block %>
-        <div class="py-8">
+        <div class="py-5">
           <div class="mx-auto relative w-[360px] h-[125px]">
           <svg width="360" height="125" viewBox="0 0 360 125" fill="none" xmlns="http://www.w3.org/2000/svg" class="absolute inset-0 pointer-events-none">
             <path d="M0 19C0 8.50659 8.50659 0 19 0H341C351.493 0 360 8.50659 360 19V106C360 116.493 351.493 125 341 125H19C8.50659 125 0 116.493 0 106V19Z" fill="#933A35" />
@@ -143,7 +143,7 @@
       </div>
 
       <%# hr %>
-      <hr class="border-brand-primary/50 my-8 mx-5">
+      <hr class="border-brand-primary/50 my-5 mx-5">
 
       <%# Reminder row %>
       <% rem = @event.reminder_minutes || 15 %>
@@ -159,7 +159,7 @@
         <span data-season-modal-target="reminderLabel" class="text-base font-medium tracking-007 flex-1 font-sans <%= rem == 0 ? 'text-brand-graytext' : 'text-brand-primary' %>"><%= rem_label %></span>
       </div>
 
-      <hr class="border-brand-primary/50 my-8 mx-5">
+      <hr class="border-brand-primary/50 my-5 mx-5">
 
       <%# Location row %>
       <% loc = @event.location.present? %>

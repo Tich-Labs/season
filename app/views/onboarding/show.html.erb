@@ -59,21 +59,63 @@
       </h2>
 
       <%= form_with url: onboarding_path(2), method: :patch, id: "step2-form", local: true do |f| %>
-        <div class="flex gap-3">
-          <div class="flex flex-col items-start gap-2">
-            <label for="birthday_day" class="text-brand-primary text-xs font-normal tracking-wide"><%= t('onboarding.step2.label_day') %></label>
-            <input type="number" name="birthday_day" id="birthday_day" min="1" max="31" placeholder="<%= t('onboarding.step2.placeholder_day') %>" autocomplete="bday-day"
-                   class="w-16 h-[52px] bg-brand-field rounded-lg px-3 text-brand-primary text-22 font-medium text-center placeholder:text-brand-primary/40 tracking-p66">
+        <div class="flex justify-center gap-3">
+          <div class="flex flex-col items-center gap-2">
+            <span class="text-brand-primary text-xs font-normal tracking-wide"><%= t('onboarding.step2.label_day') %></span>
+            <div data-controller="scroll-picker"
+                 data-scroll-picker-min-value="1"
+                 data-scroll-picker-max-value="31"
+                 data-scroll-picker-step-value="1"
+                 data-scroll-picker-placeholder="<%= t('onboarding.step2.placeholder_day') %>">
+              <div class="relative" style="width:56px; height:180px;">
+                <div class="sp-highlight" style="top:69px; height:42px;"></div>
+                <div data-scroll-picker-target="display" class="sp-display" style="top:69px; height:42px;"></div>
+                <div data-scroll-picker-target="track" class="sp-track"
+                     style="height:180px; padding:69px 0;"
+                     data-action="scroll->scroll-picker#scroll click->scroll-picker#click keydown->scroll-picker#keydown"
+                     role="listbox" aria-label="<%= t('onboarding.step2.label_day') %>" tabindex="0">
+                </div>
+              </div>
+              <input type="hidden" data-scroll-picker-target="input" name="birthday_day" value="">
+            </div>
           </div>
-          <div class="flex flex-col items-start gap-2">
-            <label for="birthday_month" class="text-brand-primary text-xs font-normal tracking-wide"><%= t('onboarding.step2.label_month') %></label>
-            <input type="number" name="birthday_month" id="birthday_month" min="1" max="12" placeholder="<%= t('onboarding.step2.placeholder_month') %>" autocomplete="bday-month"
-                   class="w-16 h-[52px] bg-brand-field rounded-lg px-3 text-brand-primary text-22 font-medium text-center placeholder:text-brand-primary/40 tracking-p66">
+          <div class="flex flex-col items-center gap-2">
+            <span class="text-brand-primary text-xs font-normal tracking-wide"><%= t('onboarding.step2.label_month') %></span>
+            <div data-controller="scroll-picker"
+                 data-scroll-picker-min-value="1"
+                 data-scroll-picker-max-value="12"
+                 data-scroll-picker-step-value="1"
+                 data-scroll-picker-placeholder="<%= t('onboarding.step2.placeholder_month') %>">
+              <div class="relative" style="width:56px; height:180px;">
+                <div class="sp-highlight" style="top:69px; height:42px;"></div>
+                <div data-scroll-picker-target="display" class="sp-display" style="top:69px; height:42px;"></div>
+                <div data-scroll-picker-target="track" class="sp-track"
+                     style="height:180px; padding:69px 0;"
+                     data-action="scroll->scroll-picker#scroll click->scroll-picker#click keydown->scroll-picker#keydown"
+                     role="listbox" aria-label="<%= t('onboarding.step2.label_month') %>" tabindex="0">
+                </div>
+              </div>
+              <input type="hidden" data-scroll-picker-target="input" name="birthday_month" value="">
+            </div>
           </div>
-          <div class="flex flex-col items-start gap-2">
-            <label for="birthday_year" class="text-brand-primary text-xs font-normal tracking-wide"><%= t('onboarding.step2.label_year') %></label>
-            <input type="number" name="birthday_year" id="birthday_year" min="1900" max="<%= Time.zone.today.year %>" placeholder="<%= t('onboarding.step2.placeholder_year') %>" autocomplete="bday-year"
-                   class="w-24 h-[52px] bg-brand-field rounded-lg px-3 text-brand-primary text-22 font-medium text-center placeholder:text-brand-primary/40 tracking-p66">
+          <div class="flex flex-col items-center gap-2">
+            <span class="text-brand-primary text-xs font-normal tracking-wide"><%= t('onboarding.step2.label_year') %></span>
+            <div data-controller="scroll-picker"
+                 data-scroll-picker-min-value="1900"
+                 data-scroll-picker-max-value="<%= Time.zone.today.year %>"
+                 data-scroll-picker-step-value="1"
+                 data-scroll-picker-placeholder="<%= t('onboarding.step2.placeholder_year') %>">
+              <div class="relative" style="width:72px; height:180px;">
+                <div class="sp-highlight" style="top:69px; height:42px;"></div>
+                <div data-scroll-picker-target="display" class="sp-display" style="top:69px; height:42px;"></div>
+                <div data-scroll-picker-target="track" class="sp-track"
+                     style="height:180px; padding:69px 0;"
+                     data-action="scroll->scroll-picker#scroll click->scroll-picker#click keydown->scroll-picker#keydown"
+                     role="listbox" aria-label="<%= t('onboarding.step2.label_year') %>" tabindex="0">
+                </div>
+              </div>
+              <input type="hidden" data-scroll-picker-target="input" name="birthday_year" value="">
+            </div>
           </div>
         </div>
       <% end %>

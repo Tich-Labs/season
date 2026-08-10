@@ -205,8 +205,13 @@ en:
       rights_withdraw: "Withdraw consent at any time"
   tracking:
     feedback: "Give feedback"
+    index:
+      current_phase: "You are in your:"
+      log_period: "Log your last period start date to see your cycle phase and predictions."
+      my_symptoms: "My Symptoms"
+      give_feedback: "Give feedback"
     period_update:
-      saved: "Period start date saved."
+      saved: "Period dates saved."
       end_saved: "Period end date saved."
       date_required: "Please select a date."
       invalid_date: "Invalid date — please try again."
@@ -215,6 +220,8 @@ en:
         selected: "Selected:"
         set_start: "Set as period start"
         set_end: "Set as period end"
+        select_start_heading: "When did your period start?"
+        select_end_heading: "And when did it end?"
         label_start: "Start:"
         label_end: "End:"
   calendar_events:
@@ -457,12 +464,6 @@ en:
         wrong_password: "Wrong E-mail or password."
         wrong_email: "Wrong E-mail or password."
         unconfirmed: "Please confirm your email first. Check your inbox or request a new confirmation link."
-  tracking:
-    index:
-      current_phase: "You are in your:"
-      log_period: "Log your last period start date to see your cycle phase and predictions."
-      my_symptoms: "My Symptoms"
-      give_feedback: "Give feedback"
   symptoms:
     index:
       mood: "Mood"

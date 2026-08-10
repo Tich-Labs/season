@@ -87,7 +87,7 @@
 
       <%# Expanded content %>
       <div class="hidden" data-date-picker-target="content">
-        <div class="flex justify-end px-4 pt-3 pb-0">
+        <div class="flex justify-end pt-3 pr-4 pb-0">
           <button data-action="click->date-picker#close" aria-label="Close date picker"
                   class="text-brand-primary focus:outline-none">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none"
@@ -96,15 +96,19 @@
             </svg>
           </button>
         </div>
-        <ul class="overflow-y-auto text-center pb-3 scrollbar-hide" style="max-height:160px; scroll-snap-type:y mandatory;">
-          <% ((Date.today - 29)..Date.today).each do |d| %>
-            <li class="<%= d == @date ? 'bg-white/60 rounded-lg mx-2' : '' %>" style="scroll-snap-align:center;">
-              <%= link_to d.strftime("%-d %B"), symptoms_path(date: d),
-                    class: "block py-2 font-sans #{d == @date ? 'font-bold text-base text-brand-primary' : 'font-normal text-sm text-brand-primary opacity-50'}",
-                    data: (d == @date ? { selected: true } : {}) %>
-            </li>
-          <% end %>
-        </ul>
+        <div class="relative" style="height:173px;">
+          <div class="sp-highlight" style="top:65px; height:42px;"></div>
+          <ul class="overflow-y-auto text-center scrollbar-hide"
+              style="height:173px; padding:65px 0; scroll-snap-type:y mandatory;">
+            <% ((Date.today - 29)..Date.today).each do |d| %>
+              <li style="scroll-snap-align:center; height:42px; min-height:42px; display:flex; align-items:center; justify-content:center;"
+                  class="<%= d == @date ? '' : '' %>">
+                <%= link_to d.strftime("%-d %B"), symptoms_path(date: d),
+                      class: "block font-sans no-underline #{d == @date ? 'font-bold text-base text-brand-primary opacity-100' : 'font-normal text-sm text-brand-primary opacity-45'}" %>
+              </li>
+            <% end %>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
@@ -171,7 +175,7 @@
         <% if physical_done %><%= render 'symptoms/bi_check', colour: phase_colour %><% end %>
       </summary>
 
-      <div class="pb-2" role="group" aria-label="Physical symptoms">
+      <div class="pb-5" role="group" aria-label="Physical symptoms">
         <% SymptomLog::PHYSICAL_SYMPTOMS.each do |symptom| %>
           <%= render "symptoms/symptom_slider_row",
                 symptom: symptom,
@@ -194,7 +198,7 @@
         </div>
         <% if mental_done %><%= render 'symptoms/bi_check', colour: phase_colour %><% end %>
       </summary>
-      <div class="pb-2" role="group" aria-label="Mental symptoms">
+      <div class="pb-5" role="group" aria-label="Mental symptoms">
         <% SymptomLog::MENTAL_SYMPTOMS.each do |symptom| %>
           <%= render "symptoms/symptom_slider_row",
                 symptom: symptom,
@@ -508,23 +512,27 @@
         </div>
         <% if sleep_done %><%= render 'symptoms/bi_check', colour: phase_colour %><% end %>
       </summary>
-      <div class="pb-5" data-controller="vertical-picker"
-           data-vertical-picker-min-value="1"
-           data-vertical-picker-max-value="12"
-           data-vertical-picker-step-value="1"
-           data-vertical-picker-value-value="<%= @log.sleep || 8 %>"
-           data-vertical-picker-unit-value="h"
-           data-vertical-picker-field-value="sleep"
-           data-action="vertical-picker:change->symptom#saveFromPicker">
-        <span data-vertical-picker-target="display" class="sr-only">8h</span>
+      <div class="pb-5" data-controller="scroll-picker"
+           data-scroll-picker-min-value="1"
+           data-scroll-picker-max-value="12"
+           data-scroll-picker-step-value="1"
+           data-scroll-picker-unit-value="h"
+           data-scroll-picker-field-value="sleep"
+           data-scroll-picker-placeholder="--"
+           data-action="scroll-picker:change->symptom#saveFromPicker">
         <div class="relative mx-auto w-[310px] h-[150px]">
-          <div class="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[37px] vp-bg pointer-events-none"></div>
+          <div class="sp-highlight" style="top:54px; height:42px;"></div>
+          <div data-scroll-picker-target="display" class="sp-display" style="top:54px; height:42px;"></div>
           <div class="relative flex items-center justify-center gap-3 h-full">
-            <div data-vertical-picker-target="track" class="vp-track h-full py-[55px] w-[55px]"
-                 data-action="scroll->vertical-picker#scroll"></div>
-            <span class="vp-unit">Hours</span>
+            <div data-scroll-picker-target="track" class="sp-track"
+                 style="height:150px; padding:54px 0; width:55px;"
+                 data-action="scroll->scroll-picker#scroll click->scroll-picker#click keydown->scroll-picker#keydown"
+                 role="listbox" aria-label="Sleep hours" tabindex="0">
+            </div>
+            <span class="font-sans font-bold text-base text-brand-primary tracking-007 leading-5">h</span>
           </div>
         </div>
+        <input type="hidden" data-scroll-picker-target="input" value="<%= @log.sleep %>">
       </div>
     </details>
 
@@ -541,23 +549,27 @@
         </div>
         <% if temperature_done %><%= render 'symptoms/bi_check', colour: phase_colour %><% end %>
       </summary>
-      <div class="pb-5" data-controller="vertical-picker"
-           data-vertical-picker-min-value="35.0"
-           data-vertical-picker-max-value="42.0"
-           data-vertical-picker-step-value="0.1"
-           data-vertical-picker-value-value="<%= @log.temperature || 36.5 %>"
-           data-vertical-picker-unit-value="°C"
-           data-vertical-picker-field-value="temperature"
-           data-action="vertical-picker:change->symptom#saveFromPicker">
-        <span data-vertical-picker-target="display" class="sr-only">36.5°C</span>
+      <div class="pb-5" data-controller="scroll-picker"
+           data-scroll-picker-min-value="35.0"
+           data-scroll-picker-max-value="42.0"
+           data-scroll-picker-step-value="0.1"
+           data-scroll-picker-unit-value="°C"
+           data-scroll-picker-field-value="temperature"
+           data-scroll-picker-placeholder="--"
+           data-action="scroll-picker:change->symptom#saveFromPicker">
         <div class="relative mx-auto w-[310px] h-[150px]">
-          <div class="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[37px] vp-bg pointer-events-none"></div>
+          <div class="sp-highlight" style="top:54px; height:42px;"></div>
+          <div data-scroll-picker-target="display" class="sp-display" style="top:54px; height:42px;"></div>
           <div class="relative flex items-center justify-center gap-3 h-full">
-            <div data-vertical-picker-target="track" class="vp-track h-full py-[55px] w-[65px]"
-                 data-action="scroll->vertical-picker#scroll"></div>
-            <span class="vp-unit">°C</span>
+            <div data-scroll-picker-target="track" class="sp-track"
+                 style="height:150px; padding:54px 0; width:65px;"
+                 data-action="scroll->scroll-picker#scroll click->scroll-picker#click keydown->scroll-picker#keydown"
+                 role="listbox" aria-label="Temperature" tabindex="0">
+            </div>
+            <span class="font-sans font-bold text-base text-brand-primary tracking-007 leading-5">°C</span>
           </div>
         </div>
+        <input type="hidden" data-scroll-picker-target="input" value="<%= @log.temperature %>">
       </div>
     </details>
 
@@ -574,23 +586,27 @@
         </div>
         <% if weight_done %><%= render 'symptoms/bi_check', colour: phase_colour %><% end %>
       </summary>
-      <div class="pb-5" data-controller="vertical-picker"
-           data-vertical-picker-min-value="30.0"
-           data-vertical-picker-max-value="200.0"
-           data-vertical-picker-step-value="0.5"
-           data-vertical-picker-value-value="<%= @log.weight || 65.0 %>"
-           data-vertical-picker-unit-value=" kg"
-           data-vertical-picker-field-value="weight"
-           data-action="vertical-picker:change->symptom#saveFromPicker">
-        <span data-vertical-picker-target="display" class="sr-only">65.0 kg</span>
+      <div class="pb-5" data-controller="scroll-picker"
+           data-scroll-picker-min-value="30.0"
+           data-scroll-picker-max-value="200.0"
+           data-scroll-picker-step-value="0.5"
+           data-scroll-picker-unit-value=" kg"
+           data-scroll-picker-field-value="weight"
+           data-scroll-picker-placeholder="--"
+           data-action="scroll-picker:change->symptom#saveFromPicker">
         <div class="relative mx-auto w-[310px] h-[150px]">
-          <div class="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[37px] vp-bg pointer-events-none"></div>
+          <div class="sp-highlight" style="top:54px; height:42px;"></div>
+          <div data-scroll-picker-target="display" class="sp-display" style="top:54px; height:42px;"></div>
           <div class="relative flex items-center justify-center gap-3 h-full">
-            <div data-vertical-picker-target="track" class="vp-track h-full py-[55px] w-[70px]"
-                 data-action="scroll->vertical-picker#scroll"></div>
-            <span class="vp-unit">kg</span>
+            <div data-scroll-picker-target="track" class="sp-track"
+                 style="height:150px; padding:54px 0; width:70px;"
+                 data-action="scroll->scroll-picker#scroll click->scroll-picker#click keydown->scroll-picker#keydown"
+                 role="listbox" aria-label="Weight" tabindex="0">
+            </div>
+            <span class="font-sans font-bold text-base text-brand-primary tracking-007 leading-5">kg</span>
           </div>
         </div>
+        <input type="hidden" data-scroll-picker-target="input" value="<%= @log.weight %>">
       </div>
     </details>
 
@@ -613,7 +629,7 @@
                   placeholder="Enter your notes here..."
                   data-action="input->symptom#saveNotes"
                   aria-label="Notes regarding today"
-                  class="w-full rounded-xl px-4 py-3 text-base border-0 resize-none outline-none font-sans"
+                  class="w-full rounded-xl px-4 py-3 text-base border-0 resize-none outline-none font-sans placeholder-brand-primary"
                   style="background:#EDE1D5; color:#3d2b28;"><%= @log.notes %></textarea>
       </div>
     </details>

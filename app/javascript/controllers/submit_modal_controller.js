@@ -75,22 +75,22 @@ export default class extends Controller {
       other.push('Cravings: ' + cravings.map(c => labels[c] || c).join(', '))
     }
 
-    const sleepVal = root.querySelector('[data-vertical-picker-field-value="sleep"]')
+    const sleepVal = root.querySelector('[data-scroll-picker-field-value="sleep"]')
     if (sleepVal) {
-      const v = sleepVal.closest('[data-controller~="vertical-picker"]')?.querySelector('[data-vertical-picker-target="display"]')?.textContent
-      if (v && v !== '0h') other.push('Sleep: ' + v)
+      const v = sleepVal.closest('[data-controller~="scroll-picker"]')?.querySelector('[data-scroll-picker-target="display"]')?.textContent
+      if (v && v !== '--') other.push('Sleep: ' + v)
     }
 
-    const tempVal = root.querySelector('[data-vertical-picker-field-value="temperature"]')
+    const tempVal = root.querySelector('[data-scroll-picker-field-value="temperature"]')
     if (tempVal) {
-      const v = tempVal.closest('[data-controller~="vertical-picker"]')?.querySelector('[data-vertical-picker-target="display"]')?.textContent
-      if (v && !v.startsWith('0')) other.push('Temperature: ' + v)
+      const v = tempVal.closest('[data-controller~="scroll-picker"]')?.querySelector('[data-scroll-picker-target="display"]')?.textContent
+      if (v && v !== '--') other.push('Temperature: ' + v)
     }
 
-    const weightVal = root.querySelector('[data-vertical-picker-field-value="weight"]')
+    const weightVal = root.querySelector('[data-scroll-picker-field-value="weight"]')
     if (weightVal) {
-      const v = weightVal.closest('[data-controller~="vertical-picker"]')?.querySelector('[data-vertical-picker-target="display"]')?.textContent
-      if (v && !v.startsWith('0')) other.push('Weight: ' + v)
+      const v = weightVal.closest('[data-controller~="scroll-picker"]')?.querySelector('[data-scroll-picker-target="display"]')?.textContent
+      if (v && v !== '--') other.push('Weight: ' + v)
     }
 
     if (this.hasOtherTarget) {
