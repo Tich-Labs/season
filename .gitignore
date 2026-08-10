@@ -71,3 +71,8 @@ android/gradlew.bat
 # IDE / local tooling
 .idea/
 .claude/
+
+# Reference docs not shipped with the app
+/docs/Oky_Prediction_Engine_How_To_Build.pdf
+/docs/PII-AND-PREDICTION.html
+/docs/PII-AND-PREDICTION.md
