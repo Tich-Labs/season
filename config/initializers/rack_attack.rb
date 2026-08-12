@@ -25,4 +25,19 @@ if defined?(Rack::Attack)
       true
     end
   end
+
+  # Password-reset requests that hit the throttle above would otherwise get
+  # Rack::Attack's bare "Retry later" text response, which looks like the
+  # feature is broken. Send those to the same on-brand "contact support"
+  # screen the controller uses for other reset-delivery failures; leave the
+  # default responder in place for every other throttled endpoint.
+  default_throttled_responder = Rack::Attack.throttled_responder
+
+  Rack::Attack.throttled_responder = lambda do |req|
+    if req.path == "/users/password"
+      [302, {"Location" => Rails.application.routes.url_helpers.password_error_contact_path}, []]
+    else
+      default_throttled_responder.call(req)
+    end
+  end
 end
