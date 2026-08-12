@@ -166,11 +166,25 @@
         </button>
       </div>
 
-      <div class="flex items-center justify-between py-3">
-        <span class="text-brand-muted text-sm font-medium"><%= t("settings.calendar.moon_phases") %></span>
-        <button type="button" class="toggle-btn <%= "active" if @user.show_moonphases? %>" data-action="click->calendar-toggle#toggle" data-field="show_moonphases">
+      <%# Moon phases — coming soon (functionality disabled for now, re-enable below) %>
+      <% if false %>
+        <div class="flex items-center justify-between py-3">
+          <span class="text-brand-muted text-sm font-medium"><%= t("settings.calendar.moon_phases") %></span>
+          <button type="button" class="toggle-btn <%= "active" if @user.show_moonphases? %>" data-action="click->calendar-toggle#toggle" data-field="show_moonphases">
+            <div class="toggle-track"><div class="toggle-thumb"></div></div>
+          </button>
+        </div>
+      <% end %>
+
+      <%# Moon phases — grayed out, coming soon %>
+      <div class="flex items-center justify-between py-3 opacity-40 pointer-events-none">
+        <span class="text-brand-muted text-sm font-medium flex items-center gap-2">
+          <%= t("settings.calendar.moon_phases") %>
+          <span class="bg-brand-field rounded-full px-2 py-0.5 text-brand-primary text-xs"><%= t("settings.edit.coming_soon") %></span>
+        </span>
+        <div class="toggle-btn">
           <div class="toggle-track"><div class="toggle-thumb"></div></div>
-        </button>
+        </div>
       </div>
 
       <%= render "shared/holiday_settings" %>

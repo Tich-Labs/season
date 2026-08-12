@@ -7,7 +7,10 @@ class CalendarController < ApplicationController
   def load_calendar_preferences
     @show_appointments = current_user.show_appointments?
     @show_cycledays = true
-    @show_moonphases = current_user.show_moonphases?
+    # Moon phases is "coming soon" — the Settings toggle is disabled, but the
+    # `show_moonphases` DB column still defaults to true, so ignore the
+    # stored per-user value here and force it off until the feature ships.
+    @show_moonphases = false
     @show_week_numbers = current_user.show_week_numbers?
     @show_cycle_day_on_band = current_user.show_cycle_day_on_band?
     @show_tracked_days = current_user.show_tracked_days?
