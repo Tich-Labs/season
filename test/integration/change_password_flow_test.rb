@@ -36,10 +36,11 @@ class ChangePasswordFlowTest < ActionDispatch::IntegrationTest
       password_confirmation: "NewPass456!"
     }
     assert_redirected_to profile_settings_path
-    assert_equal "Current password is incorrect.", flash[:alert]
+    assert_equal "Current password is wrong, please try again", flash[:password_modal_error]
+    assert_nil flash[:alert], "should not also duplicate into the top flash banner"
 
     follow_redirect!
-    assert_match "Current password is incorrect.", response.body
+    assert_match "Current password is wrong, please try again", response.body
     assert_not user.reload.valid_password?("NewPass456!")
     assert user.valid_password?("OldPass123!")
   end
@@ -54,8 +55,10 @@ class ChangePasswordFlowTest < ActionDispatch::IntegrationTest
       password_confirmation: "SomethingElse789!"
     }
     assert_redirected_to profile_settings_path
-    assert_match(/doesn't match|does not match/i, flash[:alert].to_s)
+    assert_equal "New passwords are not identical, please try again", flash[:password_modal_error]
 
+    follow_redirect!
+    assert_match "New passwords are not identical, please try again", response.body
     assert_not user.reload.valid_password?("NewPass456!")
     assert user.valid_password?("OldPass123!"), "old password should still work since the update was rejected"
   end
@@ -70,9 +73,26 @@ class ChangePasswordFlowTest < ActionDispatch::IntegrationTest
       password_confirmation: "abc"
     }
     assert_redirected_to profile_settings_path
-    assert flash[:alert].present?
+    assert flash[:password_modal_error].present?
 
     assert_not user.reload.valid_password?("abc")
     assert user.valid_password?("OldPass123!"), "old password should still work since the update was rejected"
+  end
+
+  test "a failed password change reopens the modal with the inline error visible" do
+    user = onboarded_user(email: "changepwtest5@example.com")
+    post session_path, params: {email: user.email, password: "OldPass123!"}
+
+    patch update_password_settings_path, params: {
+      current_password: "totally-wrong",
+      password: "NewPass456!",
+      password_confirmation: "NewPass456!"
+    }
+    follow_redirect!
+
+    assert_select "#password-modal.flex"
+    assert_select "#password-modal[role=dialog]" do
+      assert_select "[role=alert]", text: "Current password is wrong, please try again"
+    end
   end
 end

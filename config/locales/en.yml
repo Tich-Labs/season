@@ -390,7 +390,8 @@ en:
       confirmation_sent: "Confirmation email sent. Please check your inbox."
       saved: "Saved"
     update_password:
-      invalid_password: "Current password is incorrect."
+      invalid_password: "Current password is wrong, please try again"
+      passwords_not_identical: "New passwords are not identical, please try again"
       saved: "Password updated."
     reminders:
       morning_saved: "Morning reminder saved."
@@ -412,6 +413,7 @@ en:
       mismatch: "Codes do not match"
       saved: "Access code saved"
       removed: "Access code removed"
+      no_pin_warning: "You haven't set an access code — anyone with this device can open Season and see your data."
       incorrect: "Incorrect code"
   pin:
     title: "Enter Access Code"

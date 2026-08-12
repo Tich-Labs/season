@@ -147,9 +147,11 @@
     <% end %>
 
     <%# Calendar "home" FAB — every authenticated screen except the monthly
-        calendar itself (already home) and screens that render their own
-        calendar button in-page (opt out via content_for(:hide_calendar_fab)). %>
-    <% unless (controller_name == "calendar" && action_name == "index") || content_for?(:hide_calendar_fab) %>
+        calendar itself (already home), the Settings section (M1: those
+        screens should show only the "+" quick-actions FAB, not this one
+        too), and screens that render their own calendar button in-page
+        (opt out via content_for(:hide_calendar_fab)). %>
+    <% unless (controller_name == "calendar" && action_name == "index") || controller_name == "settings" || content_for?(:hide_calendar_fab) %>
       <%= render "shared/calendar_home_fab" if is_authenticated_view %>
     <% end %>
 

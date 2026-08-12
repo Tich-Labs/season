@@ -216,14 +216,22 @@ class SettingsController < ApplicationController
   def update_password
     @user = current_user
     unless @user.valid_password?(params[:current_password].to_s)
-      redirect_to profile_settings_path, alert: t(".invalid_password", default: "Current password is incorrect.")
+      # Rendered inline inside the reopened password modal (see profile.html.erb),
+      # not the top-of-page flash banner — that was easy to miss since this form
+      # does a full page reload, closing the modal, with no error visible on it.
+      redirect_to profile_settings_path, flash: {password_modal_error: t(".invalid_password", default: "Current password is wrong, please try again")}
       return
     end
 
     if @user.update(password: params[:password], password_confirmation: params[:password_confirmation])
       redirect_to profile_settings_path, notice: t(".saved", default: "Password updated.")
     else
-      redirect_to profile_settings_path, alert: @user.errors.full_messages.to_sentence
+      message = if @user.errors[:password_confirmation].present?
+        t(".passwords_not_identical", default: "New passwords are not identical, please try again")
+      else
+        @user.errors.full_messages.to_sentence
+      end
+      redirect_to profile_settings_path, flash: {password_modal_error: message}
     end
   end
 

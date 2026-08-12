@@ -110,8 +110,13 @@
   </div>
 <% end %>
 
-<%# ── No-cycle banner (shown when user has no period data) ── %>
+<%# ── No-cycle banner (shown when user has no period data) ──
+     First-instance state: the calendar itself is already unfilled (no cycle
+     colouring — see the current_user.last_period_start check further down),
+     and per M1 this state shows no FAB at all, not even the usual "+"
+     quick-actions one. %>
     <% if current_user.onboarding_completed? && current_user.last_period_start.nil? && current_user.period_starts.empty? %>
+      <% content_for(:hide_quick_actions) { "true" } %>
   <div class="bg-brand-error px-4 py-3 text-center border-b border-brand-primary">
       <p class="text-brand-primary text-sm mb-2">
         <%= t("calendar.index.no_period_data") %>

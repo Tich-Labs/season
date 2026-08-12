@@ -78,6 +78,18 @@ class SettingsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "GET /settings/pin shows the no-access-code privacy warning when unset" do
+    assert_not @alice.pin_set?
+    get pin_settings_path
+    assert_match(/haven't set an access code/, CGI.unescapeHTML(response.body))
+  end
+
+  test "GET /settings/pin hides the privacy warning once a pin is set" do
+    @alice.set_pin("1234")
+    get pin_settings_path
+    assert_no_match(/haven't set an access code/, CGI.unescapeHTML(response.body))
+  end
+
   test "POST /settings/pin sets pin" do
     assert_not @alice.pin_set?
     post pin_settings_path, params: {pin: "1234", pin_confirmation: "1234"}
@@ -133,5 +145,14 @@ class SettingsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     reminder = @alice.reminders.find_by(reminder_type: "in_app")
     assert reminder.active?
+  end
+
+  # M1 — Settings screens should show only the "+" quick-actions FAB, not the
+  # calendar-home FAB too (the two used to stack on every settings page).
+  test "GET /settings/profile shows the quick-actions FAB but not the calendar-home FAB" do
+    get profile_settings_path
+    assert_response :success
+    assert_match(/quick-actions#open/, response.body)
+    assert_no_match(/Back to calendar/, response.body)
   end
 end

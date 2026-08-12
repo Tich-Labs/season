@@ -39,8 +39,9 @@
       </p>
     </div>
 
-    <%# ── Dynamic label ────────────────────────────────────────────────── %>
-    <p data-forecast-tabs-target="label" class="text-brand-primary font-normal text-base font-sans m-0 mt-2">
+    <%# ── Dynamic label ── phase-coloured, like the rest of this page's text
+         (was hardcoded text-brand-primary, so it never matched the phase). ── %>
+    <p data-forecast-tabs-target="label" class="font-normal text-base font-sans m-0 mt-2" style="color:var(--phase-color)">
       <%= t("forecast.index.and_this") %>
     </p>
 

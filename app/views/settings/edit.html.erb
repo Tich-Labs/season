@@ -24,10 +24,13 @@
       </svg>
     </a>
 
-    <%# My Subscriptions %>
+    <%# My Subscriptions — page itself works, but purchasing isn't wired up yet %>
     <a href="<%= subscriptions_settings_path %>" data-turbo-action="replace" class="flex items-center gap-4 py-4">
       <%= vuesax_icon "bag", size: 24 %>
-      <span class="flex-1 text-brand-primary text-base font-medium"><%= t("settings.edit.my_subscriptions") %></span>
+      <span class="flex-1 text-brand-primary text-base font-medium flex items-center gap-2">
+        <%= t("settings.edit.my_subscriptions") %>
+        <span class="bg-brand-field rounded-full px-2 py-0.5 text-brand-primary text-xs"><%= t("settings.edit.coming_soon") %></span>
+      </span>
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="text-brand-primary">
         <polyline points="9 18 15 12 9 6" />
       </svg>

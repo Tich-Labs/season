@@ -375,7 +375,8 @@ de:
       confirmation_sent: "Bestätigungsmail gesendet. Bitte überprüfe deinen Posteingang."
       saved: "Gespeichert"
     update_password:
-      invalid_password: "Aktuelles Passwort ist falsch."
+      invalid_password: "Aktuelles Passwort ist falsch, bitte versuche es erneut"
+      passwords_not_identical: "Die neuen Passwörter stimmen nicht überein, bitte versuche es erneut"
       saved: "Passwort aktualisiert."
     reminders:
       morning_saved: "Morgen-Erinnerung gespeichert."
@@ -398,6 +399,7 @@ de:
       saved: "Zugangscode gespeichert"
       removed: "Zugangscode entfernt"
       incorrect: "Falscher Code"
+      no_pin_warning: "Du hast keinen Zugangscode festgelegt — jeder mit Zugriff auf dieses Gerät kann Season öffnen und deine Daten sehen."
   pin:
     title: "Zugangscode eingeben"
     subtitle: "Gib deinen Code ein, um Season zu entsperren"

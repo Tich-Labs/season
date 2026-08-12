@@ -186,9 +186,16 @@
       </svg>
     <% end %>
   </div>
-</div>
 
-<%# ── Email Modal ── %>
+  <%# The modals below must stay inside the `data-controller="profile-modal"`
+      element (closed at the very end of this file) — they used to sit
+      outside it as siblings, so their own X/Cancel close buttons (all
+      data-action="click->profile-modal#close...") had no controller in
+      scope and silently did nothing when clicked. Opening them still
+      "worked" only because the *open* buttons live up in the content above,
+      which was inside the controller's scope. %>
+
+  <%# ── Email Modal ── %>
 <div id="email-modal" role="dialog" aria-modal="true" aria-labelledby="email-modal-title" class="hidden fixed inset-0 bg-black/50 z-[100] items-center justify-center">
   <div class="bg-brand-background rounded-2xl p-6 w-[90%] max-w-[340px] mx-4">
     <div class="flex justify-between items-center mb-5">
@@ -221,8 +228,12 @@
   </div>
 </div>
 
-<%# ── Change Password Modal ── %>
-<div id="password-modal" role="dialog" aria-modal="true" aria-labelledby="password-modal-title" class="hidden fixed inset-0 bg-black/50 z-[100] items-center justify-center">
+<%# ── Change Password Modal ──
+     Reopens itself on a failed submit (flash[:password_modal_error] set by
+     SettingsController#update_password) since the form is a plain full-page
+     submit — the modal would otherwise just vanish on reload with no visible
+     error. %>
+<div id="password-modal" role="dialog" aria-modal="true" aria-labelledby="password-modal-title" class="<%= flash[:password_modal_error].present? ? "flex" : "hidden" %> fixed inset-0 bg-black/50 z-[100] items-center justify-center">
   <div class="bg-brand-background rounded-2xl p-6 w-[90%] max-w-[340px] mx-4">
     <div class="flex justify-between items-center mb-5">
       <h3 id="password-modal-title" class="text-brand-primary text-lg font-semibold m-0"><%= t("settings.profile.change_password") %></h3>
@@ -232,6 +243,12 @@
         </svg>
       </button>
     </div>
+
+    <% if flash[:password_modal_error].present? %>
+      <div role="alert" class="bg-brand-error rounded-xl px-4 py-3 mb-4 text-sm text-brand-primary font-medium">
+        <%= flash[:password_modal_error] %>
+      </div>
+    <% end %>
 
     <%= form_with url: update_password_settings_path, method: :patch, data: { turbo: false }, local: true do %>
       <%= native_form_tag if native_app? %>
@@ -313,4 +330,5 @@
       <%= t("settings.profile.cancel") %>
     </button>
   </div>
+</div>
 </div>
