@@ -37,7 +37,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         self.window = window
 
         navigator.rootViewController.navigationBar.isHidden = true
-        navigator.route(baseURL)
+        // /app (HomeController#app), not the bare domain root — root maps to the
+        // Login/Create Account welcome screen with no auth check at all, so an
+        // already-logged-in user would see it flash by on every cold launch before
+        // landing on calendar. /app does the authenticated?-based redirect instead.
+        navigator.route(baseURL.appendingPathComponent("app"))
         navigator.start()
     }
 

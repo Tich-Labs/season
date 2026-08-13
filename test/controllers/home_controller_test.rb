@@ -39,6 +39,21 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
     assert_match(/data-loader-pin-pending-value="false"/, response.body)
   end
 
+  # /app is what SceneDelegate.swift's cold-launch entry point routes to
+  # instead of the bare domain root, specifically so an already-logged-in
+  # native user skips straight to calendar instead of seeing the
+  # Login/Create Account welcome screen flash by first.
+  test "GET /app redirects an authenticated user straight to calendar" do
+    sign_in_as(@bob)
+    get app_landing_path
+    assert_redirected_to user_root_path
+  end
+
+  test "GET /app redirects a signed-out user to welcome" do
+    get app_landing_path
+    assert_redirected_to welcome_path
+  end
+
   test "welcome shows create account as primary for a device that has never logged in" do
     get welcome_path
     assert_response :success
