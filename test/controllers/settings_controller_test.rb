@@ -12,6 +12,14 @@ class SettingsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  # Removed — not in Figma. Access code lives only on My Profile now, which
+  # is /settings/pin's sole entry point, so its hardcoded back link is correct.
+  test "GET /settings/edit has no App Lock row" do
+    get edit_settings_path
+    assert_no_match(/App Lock/, response.body)
+    assert_no_match(%r{href="/settings/pin"}, response.body)
+  end
+
   test "GET /settings/profile returns 200" do
     get profile_settings_path
     assert_response :success

@@ -59,20 +59,10 @@
       </svg>
     </a>
 
-    <%# App Lock %>
-    <a href="<%= pin_settings_path %>" data-turbo-action="replace" class="flex items-center gap-4 py-4">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" class="text-brand-primary shrink-0">
-        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-      </svg>
-      <span class="flex-1 text-brand-primary text-base font-medium"><%= t("settings.edit.app_lock") %></span>
-      <div class="flex items-center gap-2">
-        <span class="text-xs <%= current_user.pin_set? ? 'text-brand-primary' : 'text-brand-muted' %>"><%= current_user.pin_set? ? t("settings.edit.on") : t("settings.edit.off") %></span>
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="text-brand-primary">
-          <polyline points="9 18 15 12 9 6" />
-        </svg>
-      </div>
-    </a>
+    <%# App Lock removed from here — not in Figma's main settings menu. Access
+         code management lives only on My Profile (settings/profile.html.erb),
+         which is also its only real entry point now, so its hardcoded
+         "back" link to profile_settings_path is correct again. %>
 
     <%# Data & Privacy (GDPR Consent) %>
     <a href="/settings/consent" data-turbo-action="replace" class="flex items-center gap-4 py-4">
