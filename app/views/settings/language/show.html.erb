@@ -1,16 +1,28 @@
 <%# Language settings - simple list of options, native form submit (reliable on iOS) %>
+<%# Two real entry points — the main settings menu, and the "EN" pill on
+     /calendar — so "back" must reflect wherever the user actually came from. %>
+<% content_for(:header_left) do %>
+  <%= link_to safe_back_path(edit_settings_path), class: "p-2 flex items-center" do %>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
+      <line x1="19" y1="12" x2="5" y2="12" />
+      <polyline points="12 19 5 12 12 5" />
+    </svg>
+  <% end %>
+<% end %>
+<%# "+" quick-actions FAB hidden here, calendar FAB kept — the opposite of
+     every sibling settings page, per explicit request for this one screen. %>
+<% content_for(:hide_quick_actions) { "true" } %>
+
 <div class="bg-white min-h-screen">
   <div class="max-w-app mx-auto px-4 pb-20">
-    <%# Header %>
-    <div class="py-5 flex items-center gap-3">
-      <a href="<%= edit_settings_path %>" class="text-brand-primary shrink-0">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <polyline points="15 18 9 12 15 6" />
-        </svg>
-      </a>
-      <h1 class="text-brand-primary text-xl font-bold"><%= t("settings.language.title") %></h1>
+
+    <%# Language title — the app-bar itself just shows the generic gear+"Settings"
+         title shared by sibling settings pages, so this gives page-specific context. %>
+    <div class="flex items-center gap-4 pt-5 pb-2">
+      <%= image_tag "icons/language.svg", alt: "Language", class: "w-6 h-6 shrink-0 object-contain" %>
+      <span class="text-brand-primary text-lg font-bold"><%= t("settings.language.title") %></span>
     </div>
-    <div class="border-b border-brand-divider mb-2"></div>
+    <div class="border-b border-brand-divider"></div>
 
     <%= form_tag settings_language_path, method: :patch, "data-turbo": false do %>
       <% current_language = @user.language.presence || I18n.default_locale.to_s %>

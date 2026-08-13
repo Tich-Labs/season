@@ -48,7 +48,11 @@
     <div data-controller="menu">
       <%# Views can pass content_for(:header_color) with a hex string for a phase-specific bg color, %>
       <%# or content_for(:header_dark) to force dark theme on non-settings pages. %>
-      <% is_settings = controller_name == 'settings' %>
+      <%# controller_path (not controller_name) so namespaced controllers like
+           Settings::LanguageController ("settings/language") count as settings
+           too — controller_name alone would just return "language" and miss
+           the dark header + gear/"Settings" title every sibling page gets. %>
+      <% is_settings = controller_name == "settings" || controller_path.start_with?("settings/") %>
       <% dark_header = is_settings || content_for?(:header_dark) %>
       <% hdr_bg      = dark_header ? "bg-brand-primary" : "bg-brand-field" %>
       <% bar_color   = dark_header ? "bg-white"     : "bg-brand-primary" %>
