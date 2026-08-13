@@ -20,6 +20,15 @@ class SettingsControllerTest < ActionDispatch::IntegrationTest
     assert_no_match(%r{href="/settings/pin"}, response.body)
   end
 
+  test "GET /settings/consent returns 200 and its back link goes to the settings menu" do
+    get "/settings/consent"
+    assert_response :success
+    # Its only real entry point is /settings/edit — the back link used to be
+    # hardcoded to user_root_path (calendar), skipping past the settings menu
+    # entirely instead of returning to where the user actually came from.
+    assert_match %r{href="/settings/edit"}, response.body
+  end
+
   test "GET /settings/profile returns 200" do
     get profile_settings_path
     assert_response :success
