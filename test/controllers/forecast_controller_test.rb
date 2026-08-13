@@ -33,4 +33,12 @@ class ForecastControllerTest < ActionDispatch::IntegrationTest
     get forecast_path(date: "")
     assert_response :success
   end
+
+  test "GET /forecast shows only the calendar button, not the + FAB" do
+    get forecast_path
+    assert_response :success
+    assert_no_match(/quick-actions#open/, response.body)
+    assert_match(/aria-label="Go to calendar"/, response.body)
+    assert_no_match(/Back to calendar/, response.body)
+  end
 end
