@@ -2,6 +2,8 @@
 <% content_for(:page_title) { dv_page_title } %>
 <% content_for(:header_color) { @phase_colour || "#933a35" } %>
 <% content_for(:header_dark) { "true" } %>
+<%# A calendar view itself, same as the monthly view — no need for a FAB back to calendar. %>
+<% content_for(:hide_calendar_fab) { "true" } %>
 <% content_for(:header_left) do %>
   <%= link_to user_root_path(date: @date.to_s),
         class: "text-white font-montserrat text-base font-medium no-underline px-1 py-2 tracking-wider whitespace-nowrap" do %>

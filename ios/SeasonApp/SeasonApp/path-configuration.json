@@ -3,6 +3,8 @@
     {
       "patterns": [
         "/calendar",
+        "/calendar/appointments",
+        "/calendar/weekly",
         "/tracking",
         "/daily/*",
         "/symptoms",

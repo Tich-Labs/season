@@ -130,7 +130,12 @@
     </div>
     <% end %>
 
-    <main class="w-full flex-1 overscroll-contain <%= 'native-inset' if native_app? %>" data-controller="pull-to-refresh" style="<%= is_authenticated_view ? (native_app? ? "padding-top: 3.5rem;" : "padding-top: calc(3.5rem + env(safe-area-inset-top, 0px));") : '' %><%= is_authenticated_view ? "padding-bottom: calc(8rem + env(safe-area-inset-bottom, 0px));" : '' %><%= ";--phase-color:#{yield(:phase_color)}" if content_for?(:phase_color) %>">
+    <%# Bottom padding must mirror the top padding's native branch: when native_app? is
+         true, the "native-inset" class below already injects an ::after spacer sized to
+         env(safe-area-inset-bottom) (see the ruby_native gem's CSS). Adding env() again
+         here double-counts that inset on native builds, padding the bottom by an extra
+         safe-area-inset-bottom's worth of dead space. %>
+    <main class="w-full flex-1 overscroll-contain <%= 'native-inset' if native_app? %>" data-controller="pull-to-refresh" style="<%= is_authenticated_view ? (native_app? ? "padding-top: 3.5rem;" : "padding-top: calc(3.5rem + env(safe-area-inset-top, 0px));") : '' %><%= is_authenticated_view ? "padding-bottom: #{native_app? ? "8rem" : "calc(8rem + env(safe-area-inset-bottom, 0px))"};" : '' %><%= ";--phase-color:#{yield(:phase_color)}" if content_for?(:phase_color) %>">
       <div class="max-w-app mx-auto h-full">
         <%= render "shared/flash" %>
         <%= yield %>

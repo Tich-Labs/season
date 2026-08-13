@@ -15,8 +15,7 @@ class AccountController < ApplicationController
       user: {
         id: @user.id,
         email: @user.email,
-        first_name: @user.first_name,
-        last_name: @user.last_name,
+        name: @user.name,
         language: @user.language,
         created_at: @user.created_at&.iso8601,
         last_period_start: @user.last_period_start&.iso8601,
@@ -126,6 +125,10 @@ class AccountController < ApplicationController
     # Log out the user
     logout
 
-    redirect_to root_path, notice: t(".account_deleted")
+    # Explicit path, not the lazy t(".") lookup — the translated copy already
+    # lives under the "accounts" (plural) scope, matching how the view itself
+    # references its strings (t('accounts.show.*')); ".account_deleted" here
+    # would resolve to "account.destroy.account_deleted", which doesn't exist.
+    redirect_to root_path, notice: t("accounts.destroy.success")
   end
 end

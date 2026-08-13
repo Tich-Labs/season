@@ -6,7 +6,7 @@ class ConfigurationsController < ApplicationController
     render json: {
       rules: [
         {
-          patterns: ["/calendar", "/tracking", "/daily/*", "/symptoms", "/superpowers"],
+          patterns: ["/calendar", "/calendar/appointments", "/calendar/weekly", "/tracking", "/daily/*", "/symptoms", "/superpowers"],
           properties: {
             "presentation" => "default"
           }
@@ -25,7 +25,7 @@ class ConfigurationsController < ApplicationController
     render json: {
       rules: [
         {
-          patterns: ["/calendar", "/tracking", "/daily/*", "/symptoms", "/superpowers"],
+          patterns: ["/calendar", "/calendar/appointments", "/calendar/weekly", "/tracking", "/daily/*", "/symptoms", "/superpowers"],
           properties: {
             "presentation" => "default"
           }

@@ -1,4 +1,7 @@
 <%# Account / Delete Account screen %>
+<%# Utility/destructive-confirmation screen, not a primary app screen — no FAB. %>
+<% content_for(:hide_quick_actions) { "true" } %>
+<% content_for(:hide_calendar_fab) { "true" } %>
 <% content_for(:header_left) do %>
   <%= link_to edit_settings_path, class: "p-2 flex items-center" do %>
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">

@@ -5,6 +5,8 @@
 <% content_for(:page_title) { app_page_title } %>
 <% content_for(:header_color) { app_phase_colour } %>
 <% content_for(:header_dark) { "true" } %>
+<%# A calendar view itself, same as the monthly view — no need for a FAB back to calendar. %>
+<% content_for(:hide_calendar_fab) { "true" } %>
 <% content_for(:header_right) do %>
   <div class="flex items-center gap-1">
     <div class="flex items-center gap-1">
@@ -132,7 +134,7 @@
   end
 } %>
 
-<div class="bg-brand-background min-h-screen pb-32 px-4">
+<div class="bg-brand-background min-h-screen min-h-dvh pb-32 px-4">
   <div class="max-w-app mx-auto pt-4 pb-20">
 
     <% if @events_by_date.empty? %>

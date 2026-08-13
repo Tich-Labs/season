@@ -16,6 +16,25 @@ class CalendarControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "native app request does not double-apply safe-area-inset-bottom padding" do
+    # The "native-inset" class (added when native_app?) already injects its own
+    # safe-area-inset-bottom spacer via the ruby_native gem's CSS. The layout's
+    # inline bottom padding must not also add env(safe-area-inset-bottom) on
+    # native requests, or the inset gets counted twice.
+    sign_in_as(@alice)
+    get user_root_path, headers: {"User-Agent" => "Ruby Native iOS"}
+    assert_response :success
+    assert_match "padding-bottom: 8rem;", response.body
+    assert_no_match(/padding-bottom: calc\(8rem \+ env\(safe-area-inset-bottom/, response.body)
+  end
+
+  test "web request still adds env(safe-area-inset-bottom) to bottom padding" do
+    sign_in_as(@alice)
+    get user_root_path
+    assert_response :success
+    assert_match "padding-bottom: calc(8rem + env(safe-area-inset-bottom, 0px));", response.body
+  end
+
   test "GET /calendar?date= renders the requested month" do
     sign_in_as(@alice)
     get user_root_path(date: "2026-06-01")
@@ -47,6 +66,15 @@ class CalendarControllerTest < ActionDispatch::IntegrationTest
     sign_in_as(@alice)
     get user_root_path(date: "2026-08-01")
     assert_not_includes response.body, "1.35512"
+  end
+
+  test "GET /calendar caps a 6-week month at 5 rows, dropping the trailing week" do
+    sign_in_as(@alice)
+    get user_root_path(date: "2026-08-01")
+    assert_response :success
+    # August 2026 needs a 6th calendar row — the grid intentionally caps at 5
+    # rows, so that trailing week (31 Aug - 6 Sep) should not render.
+    assert_no_match(/forecast\?date=2026-09-06/, response.body)
   end
 
   # M1 — first-instance state: an onboarded user with no period data yet sees

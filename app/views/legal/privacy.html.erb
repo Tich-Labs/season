@@ -1,3 +1,7 @@
+<%# Utility/legal screen, not a primary app screen — no FAB. %>
+<% content_for(:hide_quick_actions) { "true" } %>
+<% content_for(:hide_calendar_fab) { "true" } %>
+
 <div class="bg-white min-h-screen max-w-app mx-auto px-8" style="padding-top:calc(60px + env(safe-area-inset-top,0px));padding-bottom:calc(3rem + env(safe-area-inset-bottom,0px))">
 
   <div class="mb-6">

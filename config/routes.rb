@@ -180,7 +180,13 @@ Rails.application.routes.draw do
   get "settings/consent", to: "settings#consent", as: nil
   post "settings/consent", to: "settings#save_consents", as: nil
 
-  resource :account, only: [:show] do
+  # controller: "account" is required — Rails' default convention for a
+  # singular `resource` still points at the *plural* controller name
+  # (AccountsController), which silently shadowed the real, fully-built
+  # AccountController (matching view at app/views/account/show.html.erb).
+  # Without this override every visit to /account 406'd with a
+  # MissingExactTemplate error from the empty AccountsController stub.
+  resource :account, only: [:show], controller: "account" do
     get :export, on: :collection
     delete :destroy, on: :collection
   end
