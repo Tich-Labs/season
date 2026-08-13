@@ -38,4 +38,17 @@ class DailyViewControllerTest < ActionDispatch::IntegrationTest
     get daily_view_path(7.days.from_now.to_date.to_s)
     assert_response :success
   end
+
+  # Reachable from the calendar-menu dropdown on /calendar or
+  # /calendar/appointments, and from the burger menu on any page — back must
+  # reflect the real referer, not assume it's always /calendar.
+  test "back link reflects the burger menu's page as referer" do
+    get daily_view_path(Time.zone.today.to_s), headers: {"HTTP_REFERER" => tracking_index_url}
+    assert_match %r{href="/tracking"}, response.body
+  end
+
+  test "back link falls back to calendar with no referer" do
+    get daily_view_path(Time.zone.today.to_s)
+    assert_match %r{href="#{Regexp.escape(user_root_path(date: Time.zone.today.to_s))}"}, response.body
+  end
 end

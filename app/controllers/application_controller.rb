@@ -3,8 +3,26 @@ class ApplicationController < ActionController::Base
   include PinProtection
 
   before_action :set_locale
+  helper_method :safe_back_path
 
   private
+
+  # For "back" links on pages reachable from more than one place — a hardcoded
+  # destination is only ever right for one of them. Falls back to `fallback`
+  # when there's no referer, and never returns anywhere off this app's own
+  # origin (a spoofed/cross-site Referer header can't turn this into an open
+  # redirect).
+  def safe_back_path(fallback)
+    referer = request.referer
+    return fallback if referer.blank?
+
+    uri = URI.parse(referer)
+    return fallback unless uri.host == request.host
+
+    uri.path.presence || fallback
+  rescue URI::InvalidURIError
+    fallback
+  end
 
   def set_locale
     I18n.locale = resolve_locale

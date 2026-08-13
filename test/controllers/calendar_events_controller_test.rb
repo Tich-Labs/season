@@ -44,6 +44,24 @@ class CalendarEventsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "GET /calendar_events/:id returns 200" do
+    get calendar_event_path(@event)
+    assert_response :success
+  end
+
+  # Its only real entry point is calendar/weekly.html.erb — was hardcoded to
+  # forecast_path (today's forecast, unrelated), which never actually
+  # returned there.
+  test "GET /calendar_events/:id back link reflects calendar/weekly as referer" do
+    get calendar_event_path(@event), headers: {"HTTP_REFERER" => calendar_weekly_url}
+    assert_match %r{href="/calendar/weekly"}, response.body
+  end
+
+  test "GET /calendar_events/:id back link falls back to calendar/weekly with no referer" do
+    get calendar_event_path(@event)
+    assert_match %r{href="/calendar/weekly"}, response.body
+  end
+
   test "PATCH /calendar_events/:id updates the event" do
     patch calendar_event_path(@event), params: {
       calendar_event: {title: "Updated title", date: @event.date.to_s}

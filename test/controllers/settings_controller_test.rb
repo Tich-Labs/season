@@ -34,6 +34,30 @@ class SettingsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  # /settings/profile has two real entry points — the main settings menu and
+  # the avatar on /tracking — so its back link must reflect the actual
+  # referer instead of assuming one fixed parent.
+  test "GET /settings/profile back link reflects the settings menu as referer" do
+    get profile_settings_path, headers: {"HTTP_REFERER" => edit_settings_url}
+    assert_match %r{href="/settings/edit"}, response.body
+  end
+
+  test "GET /settings/profile back link reflects tracking as referer" do
+    get profile_settings_path, headers: {"HTTP_REFERER" => tracking_index_url}
+    assert_match %r{href="/tracking"}, response.body
+  end
+
+  test "GET /settings/profile back link falls back to settings menu with no referer" do
+    get profile_settings_path
+    assert_match %r{href="/settings/edit"}, response.body
+  end
+
+  test "GET /settings/profile back link ignores an off-site referer" do
+    get profile_settings_path, headers: {"HTTP_REFERER" => "https://evil.example.com/phishing"}
+    assert_match %r{href="/settings/edit"}, response.body
+    assert_no_match(/evil\.example\.com/, response.body)
+  end
+
   test "GET /settings/notifications returns 200" do
     get notifications_settings_path
     assert_response :success
