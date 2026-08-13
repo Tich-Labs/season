@@ -2,8 +2,16 @@
 <%# Utility/destructive-confirmation screen, not a primary app screen — no FAB. %>
 <% content_for(:hide_quick_actions) { "true" } %>
 <% content_for(:hide_calendar_fab) { "true" } %>
+<%# AccountController isn't under the settings/ namespace, so it doesn't get
+     the dark header for free the way settings/* pages do — was rendering
+     light (bg-brand-field) with a white back-arrow icon, nearly invisible
+     against it. %>
+<% content_for(:header_dark) { "true" } %>
+<% content_for(:page_title) { t("accounts.show.title") } %>
+<%# Its only real entry point is settings/profile.html.erb's "Delete Account"
+     row — was hardcoded to edit_settings_path instead. %>
 <% content_for(:header_left) do %>
-  <%= link_to edit_settings_path, class: "p-2 flex items-center" do %>
+  <%= link_to safe_back_path(profile_settings_path), class: "p-2 flex items-center" do %>
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
       <line x1="19" y1="12" x2="5" y2="12" />
       <polyline points="12 19 5 12 12 5" />
@@ -52,7 +60,7 @@
       </button>
     <% end %>
 
-    <%= link_to t('accounts.show.cancel'), edit_settings_path,
+    <%= link_to t('accounts.show.cancel'), safe_back_path(profile_settings_path),
         class: "block w-full text-center text-brand-primary border border-brand-divider rounded-xl py-4 text-base font-medium mt-3 no-underline" %>
 
   </div>

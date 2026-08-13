@@ -28,6 +28,37 @@ class AccountControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to new_session_path
   end
 
+  # AccountController isn't under the settings/ namespace, so it doesn't get
+  # the dark header for free the way settings/* pages do -- was rendering
+  # light (bg-brand-field) with a white back-arrow icon, nearly invisible
+  # against it.
+  test "GET /account gets the branded dark header, not the light default" do
+    user = onboarded_user(email: "accounttest4@example.com")
+    sign_in_as(user, password: "CorrectHorse123!")
+
+    get account_path
+    assert_match(/bg-brand-primary/, response.body)
+    assert_match(">Delete Account<", response.body)
+  end
+
+  # Its only real entry point is settings/profile.html.erb's "Delete Account"
+  # row -- back and cancel were both hardcoded to edit_settings_path instead.
+  test "GET /account back and cancel links reflect the settings profile referer" do
+    user = onboarded_user(email: "accounttest5@example.com")
+    sign_in_as(user, password: "CorrectHorse123!")
+
+    get account_path, headers: {"HTTP_REFERER" => profile_settings_url}
+    assert_match %r{href="/settings/profile"}, response.body
+  end
+
+  test "GET /account back and cancel links fall back to settings profile with no referer" do
+    user = onboarded_user(email: "accounttest6@example.com")
+    sign_in_as(user, password: "CorrectHorse123!")
+
+    get account_path
+    assert_match %r{href="/settings/profile"}, response.body
+  end
+
   test "DELETE /account destroys the user, logs out, and redirects with a flash notice" do
     user = onboarded_user(email: "accounttest2@example.com")
     sign_in_as(user, password: "CorrectHorse123!")
