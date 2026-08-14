@@ -3,7 +3,7 @@
      forecast_path (today's forecast, unrelated), which never actually
      returned there. %>
 <% content_for(:header_left) do %>
-  <%= link_to safe_back_path(calendar_weekly_path),
+  <%= link_to safe_back_path(calendar_weekly_path, allowed: [calendar_weekly_path]),
         class: "inline-flex items-center justify-center w-10 h-10 rounded-xl text-brand-primary" do %>
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
       <path d="M3 18H21V16H3V18ZM3 13H21V11H3V13ZM3 6V8H21V6H3Z" fill="#933A35" />

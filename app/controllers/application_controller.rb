@@ -12,14 +12,25 @@ class ApplicationController < ActionController::Base
   # when there's no referer, and never returns anywhere off this app's own
   # origin (a spoofed/cross-site Referer header can't turn this into an open
   # redirect).
-  def safe_back_path(fallback)
+  #
+  # `allowed`, when given, restricts which referers get trusted at all —
+  # without it, two pages that both call safe_back_path and link to each
+  # other (e.g. A's only entry point is B, but B's back link trusts *any*
+  # referer) ping-pong forever: leaving B for A, then A back to B, makes B's
+  # own referer become A, so B's "back" now points at A instead of B's real
+  # parent. Pass the page's actual known entry points to break that.
+  def safe_back_path(fallback, allowed: nil)
     referer = request.referer
     return fallback if referer.blank?
 
     uri = URI.parse(referer)
     return fallback unless uri.host == request.host
 
-    uri.path.presence || fallback
+    path = uri.path.presence
+    return fallback if path.blank?
+    return fallback if allowed&.none?(path)
+
+    path
   rescue URI::InvalidURIError
     fallback
   end

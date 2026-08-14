@@ -59,6 +59,24 @@ class AccountControllerTest < ActionDispatch::IntegrationTest
     assert_match %r{href="/settings/profile"}, response.body
   end
 
+  # Regression for a real reported bug: /account's back link used to trust
+  # *any* same-origin referer. Since /settings/profile also dynamically
+  # resolves its own back link from its referer, leaving /account back to
+  # profile made /account the referer for that load -- so profile's back
+  # link pointed at /account, and the two pages ping-ponged forever. /account
+  # only has one real entry point (settings/profile.html.erb), so it should
+  # never trust a different referer even if same-origin.
+  test "GET /account ignores an untrusted same-origin referer" do
+    user = onboarded_user(email: "accounttest7@example.com")
+    sign_in_as(user, password: "CorrectHorse123!")
+
+    get account_path, headers: {"HTTP_REFERER" => edit_settings_url}
+    # The burger menu (present on every page) has its own unrelated "Settings"
+    # link to /settings/edit, so scope this to the header's back-link specifically.
+    assert_select "header a[href='/settings/profile']"
+    assert_select "header a[href='/settings/edit']", false
+  end
+
   test "DELETE /account destroys the user, logs out, and redirects with a flash notice" do
     user = onboarded_user(email: "accounttest2@example.com")
     sign_in_as(user, password: "CorrectHorse123!")

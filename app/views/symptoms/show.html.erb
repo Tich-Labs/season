@@ -1,4 +1,10 @@
 <% content_for(:header_color) { @phase_colour } %>
+<%# header_color alone doesn't make the title/icons white — without
+     header_dark too, dark-red text/icons render on top of a phase colour
+     that's often dark (e.g. ovulation green), unreadable. Route is
+     currently disabled (see routes.rb), so not live yet, but fixing for
+     when it's re-enabled. %>
+<% content_for(:header_dark) { "true" } %>
 
 <div style="background:#FAF7F4; min-height:100%; padding-bottom:16px;">
 

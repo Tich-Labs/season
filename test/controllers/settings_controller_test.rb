@@ -58,6 +58,22 @@ class SettingsControllerTest < ActionDispatch::IntegrationTest
     assert_no_match(/evil\.example\.com/, response.body)
   end
 
+  # Regression for a real reported bug: this used to trust *any* same-origin
+  # referer. /account's back link also resolves dynamically from its own
+  # referer, so leaving /account back to here made /account the referer for
+  # this load -- pointing this page's back link at /account and ping-ponging
+  # the two pages forever. /account isn't one of this page's two real entry
+  # points (settings menu, or the avatar on /tracking), so it must be
+  # ignored even though it's same-origin.
+  test "GET /settings/profile back link ignores /account as an untrusted referer" do
+    get profile_settings_path, headers: {"HTTP_REFERER" => account_url}
+    # This page also has its own unrelated "Delete Account" row linking to
+    # /account, so check the header's back link specifically, not just
+    # absence of "/account" anywhere on the page.
+    assert_select "header a[href='/settings/edit']"
+    assert_select "header a[href='/account']", false
+  end
+
   test "GET /settings/notifications returns 200" do
     get notifications_settings_path
     assert_response :success

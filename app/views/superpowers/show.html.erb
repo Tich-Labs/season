@@ -1,5 +1,9 @@
 <% content_for(:page_title) { "Superpowers — #{@superpower_log.date.strftime("%d %b")}" } %>
 <% content_for(:header_color) { @phase_colour } %>
+<%# header_color alone doesn't make the title/icons white — without
+     header_dark too, dark-red text/icons render on top of a phase colour
+     that's often dark (e.g. ovulation green), unreadable. %>
+<% content_for(:header_dark) { "true" } %>
 
 <div class="bg-brand-background min-h-screen pb-20">
   <div class="max-w-app mx-auto px-4 pt-5">
