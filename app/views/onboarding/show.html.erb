@@ -232,82 +232,78 @@
 
   <%# ── Step 5: Cycle length (scroll picker) ──────────────────────── %>
   <% when 5 %>
-    <% if @no_regular_cycle %>
-      <div id="no-problem-modal" role="dialog" aria-modal="true" aria-labelledby="no-problem-title"
-           class="fixed inset-0 bg-black/40 flex items-center justify-center z-50 px-8">
+    <%# "contents" keeps this wrapper out of the flex layout below (the step's
+         content div must stay a direct flex child of the page's flex column)
+         while still giving the modal, the picker, and the "Not sure" button a
+         shared Stimulus scope. Auto-shows when the user already said their
+         cycle is irregular (step 4 "No"); also opened by clicking "Not sure"
+         below, in which case confirming also submits the skip
+         (see no_problem_modal_controller.js for the two-path logic). %>
+    <div data-controller="no-problem-modal" data-no-problem-modal-auto-show-value="<%= @no_regular_cycle ? 'true' : 'false' %>" class="contents">
+      <div data-no-problem-modal-target="modal" role="dialog" aria-modal="true" aria-labelledby="no-problem-title"
+           class="hidden fixed inset-0 bg-black/40 flex items-center justify-center z-50 px-8">
         <div class="bg-brand-background rounded-2xl px-8 py-10 text-center max-w-[340px] w-full">
           <h3 id="no-problem-title" class="text-brand-primary text-2xl font-medium mb-4"><%= t('onboarding.step5.no_problem_title') %></h3>
           <p class="text-brand-primary text-sm leading-relaxed mb-8">
             <%= t('onboarding.step5.no_problem_body') %>
           </p>
-          <button id="no-problem-ok"
+          <button type="button" data-action="click->no-problem-modal#confirm"
                   class="w-full h-12 bg-brand-primary text-white rounded-lg text-xl font-medium">
             <%= t('onboarding.step5.no_problem_ok') %>
           </button>
         </div>
       </div>
-      <script nonce="<%= content_security_policy_nonce %>">
-        (function() {
-          var modal = document.getElementById('no-problem-modal');
-          if (!modal) return;
-          var btn = document.getElementById('no-problem-ok');
-          if (btn) {
-            btn.focus();
-            btn.addEventListener('click', function() { modal.remove(); });
-          }
-          modal.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') modal.remove();
-          });
-        })();
-      </script>
-    <% end %>
 
-    <div class="flex-1 flex flex-col justify-center">
-      <h2 class="text-brand-primary text-22 font-medium leading-[27px] tracking-[1.32px] mb-1">
-        <%= t('onboarding.step5.heading') %>
-      </h2>
-      <p class="text-brand-secondary text-sm mb-10"><%= t('onboarding.step5.note') %></p>
+      <div class="flex-1 flex flex-col justify-center">
+        <h2 class="text-brand-primary text-22 font-medium leading-[27px] tracking-[1.32px] mb-1">
+          <%= t('onboarding.step5.heading') %>
+        </h2>
+        <p class="text-brand-secondary text-sm mb-10"><%= t('onboarding.step5.note') %></p>
 
-      <%= form_with url: onboarding_path(5), method: :patch, id: "step5-form", local: true,
-          data: { controller: "onboarding-picker" } do |f| %>
-        <%= f.hidden_field :cycle_length, id: "cycle_length_value", value: "28",
-            data: { onboarding_picker_target: "input" } %>
+        <%= form_with url: onboarding_path(5), method: :patch, id: "step5-form", local: true,
+            data: { controller: "onboarding-picker" } do |f| %>
+          <%= f.hidden_field :cycle_length, id: "cycle_length_value", value: "28",
+              data: { onboarding_picker_target: "input" } %>
 
-        <div class="relative flex justify-center overflow-hidden" style="height:210px;">
-          <div class="absolute left-0 right-0 bg-brand-field rounded-lg pointer-events-none"
-               style="top:84px; height:42px;"></div>
+          <div class="relative flex justify-center overflow-hidden" style="height:210px;">
+            <div class="absolute left-0 right-0 bg-brand-field rounded-lg pointer-events-none"
+                 style="top:84px; height:42px;"></div>
 
-          <div data-onboarding-picker-target="track"
-               role="listbox" aria-label="Cycle length in days" aria-activedescendant="cycle-day-28"
-               tabindex="0"
-               class="relative overflow-y-scroll flex flex-col items-center"
-               style="height:210px; scroll-snap-type:y mandatory; -webkit-overflow-scrolling:touch; scrollbar-width:none;">
-            <div style="min-height:84px; flex-shrink:0;"></div>
-            <% (20..45).each do |d| %>
-              <div id="cycle-day-<%= d %>"
-                   role="option" aria-selected="<%= d == 28 ? 'true' : 'false' %>"
-                   data-days="<%= d %>"
-                   class="cycle-day-item flex items-center justify-center text-brand-primary font-medium cursor-pointer shrink-0"
-                   style="height:42px; min-height:42px; scroll-snap-align:center; font-size:16px; opacity:0.45;">
-                <%= d %> <%= t('onboarding.step5.days_suffix') %>
-              </div>
-            <% end %>
-            <div style="min-height:84px; flex-shrink:0;"></div>
+            <div data-onboarding-picker-target="track"
+                 role="listbox" aria-label="Cycle length in days" aria-activedescendant="cycle-day-28"
+                 tabindex="0"
+                 class="relative overflow-y-scroll flex flex-col items-center"
+                 style="height:210px; scroll-snap-type:y mandatory; -webkit-overflow-scrolling:touch; scrollbar-width:none;">
+              <div style="min-height:84px; flex-shrink:0;"></div>
+              <% (20..45).each do |d| %>
+                <div id="cycle-day-<%= d %>"
+                     role="option" aria-selected="<%= d == 28 ? 'true' : 'false' %>"
+                     data-days="<%= d %>"
+                     class="cycle-day-item flex items-center justify-center text-brand-primary font-medium cursor-pointer shrink-0"
+                     style="height:42px; min-height:42px; scroll-snap-align:center; font-size:16px; opacity:0.45;">
+                  <%= d %> <%= t('onboarding.step5.days_suffix') %>
+                </div>
+              <% end %>
+              <div style="min-height:84px; flex-shrink:0;"></div>
+            </div>
           </div>
-        </div>
 
-        <%= f.submit t('onboarding.step5.submit'),
-            class: "w-[322px] h-[52px] bg-brand-primary text-white rounded-lg text-22 font-medium tracking-p66 mt-10" %>
-      <% end %>
-
-      <div class="w-full flex flex-col gap-3 items-center mt-3">
-        <%# TODO: Auto-calculate cycle length from user's tracking data over time %>
-        <%= form_with url: onboarding_path(5), method: :patch, local: true do |f| %>
-          <%= f.hidden_field :skip_cycle_length, value: "1" %>
-          <%= f.submit t('onboarding.step5.not_sure'),
-              class: "w-[322px] bg-transparent text-brand-primary py-3 text-22 font-medium tracking-p66 cursor-pointer border-none" %>
+          <%= f.submit t('onboarding.step5.submit'),
+              class: "w-[322px] h-[52px] bg-brand-primary text-white rounded-lg text-22 font-medium tracking-p66 mt-10" %>
         <% end %>
+
+        <div class="w-full flex flex-col gap-3 items-center mt-3">
+          <%# TODO: Auto-calculate cycle length from user's tracking data over time %>
+          <%= form_with url: onboarding_path(5), method: :patch, local: true, data: { no_problem_modal_target: "skipForm" } do |f| %>
+            <%= f.hidden_field :skip_cycle_length, value: "1" %>
+            <button type="button" data-action="click->no-problem-modal#open"
+                    class="w-[322px] bg-transparent text-brand-primary py-3 text-22 font-medium tracking-p66 cursor-pointer border-none">
+              <%= t('onboarding.step5.not_sure') %>
+            </button>
+          <% end %>
+        </div>
       </div>
+    </div>
     </div>
 
   <%# ── Step 6: Hormonal birth control? ───────────────────────────── %>

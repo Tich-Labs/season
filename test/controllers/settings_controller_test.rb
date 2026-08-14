@@ -204,12 +204,15 @@ class SettingsControllerTest < ActionDispatch::IntegrationTest
     assert reminder.active?
   end
 
-  # M1 — Settings screens should show only the "+" quick-actions FAB, not the
-  # calendar-home FAB too (the two used to stack on every settings page).
-  test "GET /settings/profile shows the quick-actions FAB but not the calendar-home FAB" do
+  # M1 — Settings screens should show only the centred calendar FAB
+  # (bg-brand-field, aria-label "Go to calendar"), not the "+" quick-actions
+  # FAB or the default bottom-right calendar FAB (aria-label
+  # "Back to calendar") — supersedes the earlier "+"-only requirement.
+  test "GET /settings/profile shows only the centred calendar FAB" do
     get profile_settings_path
     assert_response :success
-    assert_match(/quick-actions#open/, response.body)
+    assert_no_match(/quick-actions#open/, response.body)
     assert_no_match(/Back to calendar/, response.body)
+    assert_match(/Go to calendar/, response.body)
   end
 end

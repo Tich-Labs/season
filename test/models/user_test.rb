@@ -96,4 +96,47 @@ class UserTest < ActiveSupport::TestCase
       user.destroy
     end
   end
+
+  test "record_email_bounce! sets the type and timestamp" do
+    user = users(:alice)
+    user.record_email_bounce!("inbox_full")
+
+    assert_equal "inbox_full", user.email_bounce_type
+    assert_in_delta Time.current, user.email_bounced_at, 2.seconds
+  end
+
+  test "record_email_bounce! rejects an unrecognized type" do
+    user = users(:alice)
+    user.record_email_bounce!("some_made_up_type")
+
+    assert_nil user.email_bounce_type
+  end
+
+  test "recent_email_bounce_type returns nil when no bounce is on file" do
+    assert_nil users(:alice).recent_email_bounce_type
+  end
+
+  test "recent_email_bounce_type returns the type within the relevance window" do
+    user = users(:alice)
+    user.record_email_bounce!("wrong_email")
+
+    assert_equal "wrong_email", user.recent_email_bounce_type
+  end
+
+  test "recent_email_bounce_type returns nil once the bounce is older than the window" do
+    user = users(:alice)
+    user.record_email_bounce!("wrong_email")
+    user.update!(email_bounced_at: 8.days.ago)
+
+    assert_nil user.recent_email_bounce_type
+  end
+
+  test "clear_email_bounce! removes the type and timestamp" do
+    user = users(:alice)
+    user.record_email_bounce!("wrong_email")
+    user.clear_email_bounce!
+
+    assert_nil user.email_bounce_type
+    assert_nil user.email_bounced_at
+  end
 end

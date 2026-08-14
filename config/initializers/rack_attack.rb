@@ -4,6 +4,11 @@
 if defined?(Rack::Attack)
   Rack::Attack.enabled = Rails.env.production?
 
+  # Without inserting the middleware the throttles below are defined but never
+  # run — the rack-attack gem doesn't add itself to the stack. Register it so
+  # the rate limits actually apply in production.
+  Rails.application.config.middleware.use(Rack::Attack)
+
   Rack::Attack.throttle("logins/ip", limit: 10, period: 60) do |req|
     req.ip if req.post? && req.path == "/session"
   end
@@ -18,6 +23,19 @@ if defined?(Rack::Attack)
 
   Rack::Attack.throttle("password_resets/ip", limit: 3, period: 300) do |req|
     req.ip if req.post? && req.path == "/users/password"
+  end
+
+  # Send a rate-limited password-reset request to the branded "already sent
+  # an email, wait an hour" screen instead of Rack::Attack's raw default 429
+  # text response. Every other throttle (logins, registrations, launch
+  # signups) keeps that default -- only password_resets/ip has a matching
+  # branded screen to redirect to.
+  Rack::Attack.throttled_responder = lambda do |request|
+    if request.env["rack.attack.matched"] == "password_resets/ip"
+      [302, {"Location" => Rails.application.routes.url_helpers.password_error_already_reset_path}, []]
+    else
+      [429, {"Content-Type" => "text/plain"}, ["Retry later\n"]]
+    end
   end
 
   Rack::Attack.blocklist("block/ip") do |req|

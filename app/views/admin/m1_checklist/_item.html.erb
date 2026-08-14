@@ -1,0 +1,50 @@
+<label class="block px-4 py-3 hover:bg-brand-field/50 cursor-pointer border-b border-gray-100 last:border-b-0">
+  <div class="flex items-start gap-3">
+    <input type="checkbox"
+           data-m1-checklist-target="checkbox"
+           data-item="<%= key %>"
+           data-action="change->m1-checklist#toggle"
+           class="mt-1 w-5 h-5 accent-brand-primary shrink-0"<% if checked %> checked<% end %>>
+    <span class="text-sm font-semibold text-gray-800 leading-snug">
+      <%= title %>
+      <% if local_assigns[:auto] %>
+        <span class="inline-flex items-center gap-1 ml-1 px-1.5 py-0.5 rounded text-[10px] font-semibold align-middle bg-brand-field text-brand-primary" title="The system does this on its own — your steps below just get you into position to observe it, not trigger it by hand.">⚙️ Automatic</span>
+      <% end %>
+    </span>
+  </div>
+  <% if local_assigns[:system_note].present? %>
+    <p class="mt-2 pl-8 text-xs text-brand-primary bg-brand-field/60 rounded px-2 py-1.5 leading-snug">
+      ⚙️ <%= system_note %>
+    </p>
+  <% end %>
+  <ol class="mt-2 pl-8 space-y-1">
+    <% steps.each do |step| %>
+      <% if step.start_with?("Pass:") %>
+        <li class="text-xs text-gray-600 leading-snug">
+          <span class="inline-block font-semibold text-[10px] uppercase tracking-wide text-green-700 bg-green-100 rounded px-1 py-px mr-1 align-middle">Pass</span><%= step.sub(/\APass:\s*/, "") %>
+        </li>
+      <% elsif step.start_with?("Fail:") %>
+        <li class="text-xs text-gray-600 leading-snug">
+          <span class="inline-block font-semibold text-[10px] uppercase tracking-wide text-red-700 bg-red-100 rounded px-1 py-px mr-1 align-middle">Fail</span><%= step.sub(/\AFail:\s*/, "") %>
+        </li>
+      <% elsif step.start_with?("Expected:") %>
+        <li class="text-xs text-gray-600 leading-snug">
+          <span class="inline-block font-semibold text-[10px] uppercase tracking-wide text-green-700 bg-green-100 rounded px-1 py-px mr-1 align-middle">System</span><%= step.sub(/\AExpected:\s*/, "") %>
+        </li>
+      <% elsif step.start_with?("Note:") %>
+        <li class="text-xs text-gray-500 leading-snug">
+          <span class="inline-block font-semibold text-[10px] uppercase tracking-wide text-amber-700 bg-amber-100 rounded px-1 py-px mr-1 align-middle">Info</span><%= step.sub(/\ANote:\s*/, "") %>
+        </li>
+      <% else %>
+        <li class="text-xs text-gray-600 leading-snug">
+          <span class="inline-block font-semibold text-[10px] uppercase tracking-wide text-brand-primary bg-brand-field rounded px-1 py-px mr-1 align-middle">You</span><%= step %>
+        </li>
+      <% end %>
+    <% end %>
+  </ol>
+  <% if testers.any? %>
+    <p class="mt-2 pl-8 text-xs text-brand-primary font-medium">
+      ✓ verified by <%= testers.map { |t| "#{t.user.name.presence || t.user.email} · #{t.checked_at.strftime('%b %d %H:%M')}" }.join(", ") %>
+    </p>
+  <% end %>
+</label>

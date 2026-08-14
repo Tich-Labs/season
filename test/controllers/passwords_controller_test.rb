@@ -124,6 +124,44 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to done_password_path
   end
 
+  # Wiring for error_wrong_email / error_inbox_full (previously unreachable —
+  # see Webhooks::ResendController for where the bounce actually gets
+  # recorded).
+  test "POST create redirects to the wrong-email screen for a user with a recent wrong_email bounce" do
+    @alice.record_email_bounce!("wrong_email")
+
+    assert_no_emails do
+      post user_password_path, params: {email: @alice.email}
+    end
+    assert_redirected_to password_error_wrong_email_path
+  end
+
+  test "POST create redirects to the inbox-full screen for a user with a recent inbox_full bounce" do
+    @alice.record_email_bounce!("inbox_full")
+
+    assert_no_emails do
+      post user_password_path, params: {email: @alice.email}
+    end
+    assert_redirected_to password_error_inbox_full_path
+  end
+
+  test "POST create clears the bounce flag after redirecting to the error screen" do
+    @alice.record_email_bounce!("wrong_email")
+    post user_password_path, params: {email: @alice.email}
+
+    assert_nil @alice.reload.email_bounce_type
+  end
+
+  test "POST create ignores a bounce older than the relevance window and sends normally" do
+    @alice.record_email_bounce!("wrong_email")
+    @alice.update!(email_bounced_at: 8.days.ago)
+
+    assert_emails 1 do
+      post user_password_path, params: {email: @alice.email}
+    end
+    assert_redirected_to done_password_path
+  end
+
   test "a reset token can only be used once" do
     token = @alice.send_reset_password_instructions
 

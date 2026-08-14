@@ -161,6 +161,8 @@ en:
       month_view: "Month View"
       no_period_data: "We haven't received your period data yet. Add your last period start date to see your cycle phases."
       log_period_start: "Log period start"
+      no_data_modal_message: "We haven't received any data yet and need to wait until the first day of your period"
+      no_data_modal_close: "Close"
       hello: "Hello"
       subheading: "This is your month"
       day_streak: "day streak"

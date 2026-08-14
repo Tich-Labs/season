@@ -74,4 +74,43 @@ class OnboardingControllerTest < ActionDispatch::IntegrationTest
     patch onboarding_path(3), params: {skip_last_period: "1"}
     assert_response :redirect
   end
+
+  # Figma node 12048-15617 — "No Problem" reassurance modal on step 5.
+  test "GET /onboarding/5?no_regular=true auto-shows the No Problem modal" do
+    sign_in_as(@carol)
+    get onboarding_path(5, no_regular: true)
+    assert_response :success
+    assert_match(/data-no-problem-modal-auto-show-value="true"/, response.body)
+  end
+
+  test "GET /onboarding/5 without no_regular does not auto-show the modal" do
+    sign_in_as(@carol)
+    get onboarding_path(5)
+    assert_response :success
+    assert_match(/data-no-problem-modal-auto-show-value="false"/, response.body)
+  end
+
+  # The "Not sure" control is a client-side modal trigger, not an immediate
+  # submit button — regression check for its markup, since the actual
+  # skip-and-advance behaviour it triggers is covered by the next test.
+  test "GET /onboarding/5 renders Not sure as a modal-opening button, not a submit" do
+    sign_in_as(@carol)
+    get onboarding_path(5)
+    assert_response :success
+    assert_match(/data-action="click->no-problem-modal#open"/, response.body)
+  end
+
+  test "PATCH /onboarding/5 with skip_cycle_length defaults to 28 days and advances" do
+    sign_in_as(@carol)
+    patch onboarding_path(5), params: {skip_cycle_length: "1"}
+    assert_redirected_to onboarding_path(6)
+    assert_equal 28, @carol.reload.cycle_length
+  end
+
+  test "PATCH /onboarding/5 with a chosen cycle_length saves it and advances" do
+    sign_in_as(@carol)
+    patch onboarding_path(5), params: {cycle_length: "32"}
+    assert_redirected_to onboarding_path(6)
+    assert_equal 32, @carol.reload.cycle_length
+  end
 end

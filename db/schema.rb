@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_10_000000) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_14_150000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -122,6 +122,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_10_000000) do
     t.datetime "created_at", null: false
     t.string "email"
     t.datetime "updated_at", null: false
+  end
+
+  create_table "m1_checklist_checks", force: :cascade do |t|
+    t.datetime "checked_at", null: false
+    t.datetime "created_at", null: false
+    t.string "item_key", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["user_id", "item_key"], name: "index_m1_checklist_checks_on_user_id_and_item_key", unique: true
+    t.index ["user_id"], name: "index_m1_checklist_checks_on_user_id"
   end
 
   create_table "native_devices", force: :cascade do |t|
@@ -263,6 +273,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_10_000000) do
     t.integer "cycle_length"
     t.boolean "cycle_stage_reminder"
     t.string "email", default: "", null: false
+    t.string "email_bounce_type"
+    t.datetime "email_bounced_at"
     t.string "encrypted_password", default: "", null: false
     t.string "facebook_uid"
     t.string "food_preference"
@@ -355,6 +367,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_10_000000) do
   add_foreign_key "calendar_events", "users"
   add_foreign_key "cycle_entries", "users"
   add_foreign_key "feedbacks", "users"
+  add_foreign_key "m1_checklist_checks", "users"
   add_foreign_key "native_devices", "users"
   add_foreign_key "notifications", "users"
   add_foreign_key "period_starts", "users"

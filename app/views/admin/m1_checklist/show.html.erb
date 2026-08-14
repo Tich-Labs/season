@@ -1,0 +1,502 @@
+<% content_for :page_title, "M1 Test Checklist" %>
+
+<%
+  sections = [
+    {
+      title: "A. Launch & Loader",
+      subtitle: "(M1-1, M1-2)",
+      items: [
+        {
+          key: "loader_app",
+          title: "App landing — /app",
+          auto: true,
+          steps: [
+            "Log in, then open /app.",
+            "Pass: you land on /calendar.",
+            "Fail: you ever see the Log In / Create Account screen while signed in.",
+            "Log out (bottom of Settings), then open /app again.",
+            "Pass: you land on /welcome (the Log In / Create Account screen).",
+            "Fail: you land on /calendar while logged out."
+          ]
+        },
+        {
+          key: "loader_splash",
+          title: "Loader splash — /loader",
+          auto: true,
+          steps: [
+            "Open /loader.",
+            "Pass: the Season logo shows for about a second, then you are routed automatically.",
+            "Fail: you get stuck on the splash (spinner keeps spinning), an error page, or a blank screen."
+          ]
+        }
+      ]
+    },
+    {
+      title: "B. Welcome, Sign Up & Log In",
+      subtitle: "(M1-3 to M1-5)",
+      items: [
+        {
+          key: "auth_welcome",
+          title: "Welcome screen — /welcome",
+          steps: [
+            "Log out, then open /welcome.",
+            "Pass: 'Create Account' is the main (filled) button and 'I already have an account' is the secondary link.",
+            "Pass: brand colours and logo match the design.",
+            "Fail: the buttons are missing, swapped, or an error shows."
+          ]
+        },
+        {
+          key: "auth_signup",
+          title: "Sign up — /registration/new",
+          steps: [
+            "Open /registration/new, submit with an invalid email or empty fields.",
+            "Pass: inline error text in brand red (#933a35) appears.",
+            "Fail: the form submits anyway, reloads the page, or shows a white screen.",
+            "Submit again with a valid email + password.",
+            "Pass: a success message shows and a confirmation email arrives.",
+            "Fail: no email arrives or an error page appears."
+          ]
+        },
+        {
+          key: "auth_confirmation",
+          title: "Email confirmation",
+          steps: [
+            "Sign up with an inbox you can check (also check Spam), then click the confirmation link.",
+            "Pass: you are auto-logged-in and land on onboarding step 1.",
+            "Fail: the link errors, or you are still logged out after clicking."
+          ]
+        },
+        {
+          key: "auth_login",
+          title: "Log in — /session/new",
+          steps: [
+            "Log out, open /session/new, enter a wrong password.",
+            "Pass: an 'invalid credentials' error shows.",
+            "Fail: you get logged in with a wrong password, or the page crashes.",
+            "Enter the correct email + password.",
+            "Pass: you land on /calendar (or the next onboarding step if onboarding isn't finished).",
+            "Fail: the correct credentials are rejected."
+          ]
+        },
+        {
+          key: "auth_google",
+          title: "Google OAuth",
+          auto: true,
+          system_note: "The redirect itself is already confirmed by code inspection — tapping Google 302s to accounts.google.com with the real client ID. That part isn't yours to re-check; your steps below are about what happens after Google hands control back.",
+          steps: [
+            "Log out, open /session/new, tap the Google button, sign in with a real Google test account and approve.",
+            "Pass: you are signed in and land on /calendar or onboarding.",
+            "Fail: you land back on the login screen with an error, or Google shows a consent error.",
+            "Note: needs a real Google account; the callback URI must be in the Google Cloud console (it is for prod + localhost)."
+          ]
+        },
+        {
+          key: "auth_facebook",
+          title: "Facebook OAuth",
+          auto: true,
+          system_note: "The redirect itself is already confirmed by code inspection — tapping Facebook 302s to facebook.com/dialog/oauth with the real app ID. That part isn't yours to re-check; your steps below are about what happens after Facebook hands control back.",
+          steps: [
+            "Log out, open /session/new, tap the Facebook button, log in with a real Facebook test account and approve.",
+            "Pass: you are signed in and land on /calendar or onboarding.",
+            "Fail: you land back on the login screen with an error, or Facebook shows a login error.",
+            "Note: needs a real Facebook account; the callback URI must be in the Meta app settings."
+          ]
+        },
+        {
+          key: "auth_apple",
+          title: "Apple OAuth",
+          auto: true,
+          system_note: "The redirect + client-secret signing are already confirmed by code inspection. What's NOT yet confirmed, and needs testing on the deployed site specifically: in dev (localhost) Apple rejects the redirect URI outright (\"Invalid web redirect url\") since only the production URI is registered in the Apple portal — this item can only be completed on seasonv2.onrender.com, not locally.",
+          steps: [
+            "On the deployed HTTPS site (not localhost), log out, open /session/new, tap the Apple button.",
+            "Pass: the Apple sign-in dialog opens (no 'Invalid web redirect url' error).",
+            "Sign in with a real Apple ID and approve.",
+            "Pass: you are signed in and land on /calendar or onboarding.",
+            "Sign out, then sign in with the same Apple ID again.",
+            "Pass: repeat sign-in also works (Apple only sends name/email on first authorization).",
+            "Fail: the app can't find your account on repeat sign-in, or Apple shows a redirect error."
+          ]
+        }
+      ]
+    },
+    {
+      title: "C. Password Recovery & Reset",
+      subtitle: "(M1-6 to M1-12)",
+      items: [
+        {
+          key: "pw_recover",
+          title: "Recovery form — /users/password/new",
+          steps: [
+            "Log out, open /users/password/new, enter your account email, submit.",
+            "Pass: a 'Reset password instructions' email arrives within about a minute (check Spam too).",
+            "Fail: no email arrives, or an error page shows."
+          ]
+        },
+        {
+          key: "pw_reset",
+          title: "Reset form — /users/password/edit",
+          steps: [
+            "Open the reset link from the email you just received, enter a new password, submit.",
+            "Pass: the password saves and you can log in with the new one.",
+            "Fail: the link is expired/invalid, or the new password doesn't work."
+          ]
+        },
+        {
+          key: "pw_done",
+          title: "Done screen — /password/done",
+          steps: [
+            "Submit a password-reset request (any email).",
+            "Pass: you are redirected to /password/done — a clean 'check your email' success screen.",
+            "Fail: an error page or blank screen instead."
+          ]
+        },
+        {
+          key: "pw_already_reset",
+          title: "Rate-limited reset — /password/error/already-reset",
+          auto: true,
+          system_note: "Rack::Attack is production-only (config/initializers/rack_attack.rb: enabled = Rails.env.production?), so the throttle CANNOT fire in local dev no matter how many times you submit — this item can only be completed on the deployed site.",
+          steps: [
+            "On the deployed site (not localhost), from the same browser, request a password reset 4 times within 5 minutes.",
+            "Pass: the 4th request shows the branded 'we already sent an email, wait an hour' screen.",
+            "Fail: you see a raw '429' text page or an unbranded error."
+          ]
+        },
+        {
+          key: "pw_inbox_full",
+          title: "Inbox-full error screen — /password/error/inbox-full",
+          auto: true,
+          system_note: "This screen's real trigger is Webhooks::ResendController recording a \"MailboxFull\" bounce on the user, which PasswordsController#create then redirects to on their next reset attempt. That path needs an actual bounced email from Resend (or a hand-crafted signed webhook payload) to fire — not something a manual click can force, so treat the direct-URL check below as a smoke test of the screen itself, not of the trigger.",
+          steps: [
+            "Open the URL /password/error/inbox-full directly.",
+            "Pass: the branded error screen renders with its expected text.",
+            "Fail: a 404, 500, or blank page."
+          ]
+        },
+        {
+          key: "pw_wrong_email",
+          title: "Wrong-email error screen — /password/error/wrong-email",
+          auto: true,
+          system_note: "Same real trigger path as inbox-full above (Resend bounce webhook), just for a bounce that isn't classified as mailbox-full. Same caveat: the direct-URL check below only smoke-tests the screen, not the actual webhook trigger.",
+          steps: [
+            "Open the URL /password/error/wrong-email directly.",
+            "Pass: the branded error screen renders with its expected text.",
+            "Fail: a 404, 500, or blank page."
+          ]
+        },
+        {
+          key: "pw_contact",
+          title: "Contact error screen — /password/error/contact",
+          auto: true,
+          system_note: "Real trigger is any exception raised while sending the reset email (PasswordsController#create's rescue clause) — not something to force in a checklist. Direct-URL check below only smoke-tests the screen.",
+          steps: [
+            "Open the URL /password/error/contact directly.",
+            "Pass: the branded error screen renders with its expected text.",
+            "Fail: a 404, 500, or blank page."
+          ]
+        }
+      ]
+    },
+    {
+      title: "D. Invite, Launch & Legal",
+      subtitle: "(M1-13, M1-26 to M1-28)",
+      items: [
+        {
+          key: "invite_valid",
+          title: "Valid invite — /invite/:token",
+          steps: [
+            "Create a fresh invite token (dev tools / DB) and open its /invite/:token link.",
+            "Pass: the invitee is sent into onboarding.",
+            "Fail: a 'token not found / invalid' error."
+          ]
+        },
+        {
+          key: "invite_used",
+          title: "Used / expired invite",
+          steps: [
+            "Open an invite link whose token was already accepted, or is expired.",
+            "Pass: a clear error screen shows.",
+            "Fail: the invite still works, or the page crashes / goes blank."
+          ]
+        },
+        {
+          key: "launch_page",
+          title: "Launch page — /launch",
+          steps: [
+            "Open /launch.",
+            "Pass: the launch/countdown page renders.",
+            "Fail: an error or blank page."
+          ]
+        },
+        {
+          key: "terms",
+          title: "Terms — /terms",
+          steps: [
+            "Open /terms.",
+            "Pass: the terms page renders.",
+            "Fail: an error or blank page."
+          ]
+        },
+        {
+          key: "privacy",
+          title: "Privacy — /privacy",
+          steps: [
+            "Open /privacy.",
+            "Pass: the privacy policy page renders.",
+            "Fail: an error or blank page."
+          ]
+        }
+      ]
+    },
+    {
+      title: "E. Onboarding Steps 1–10 + Finish",
+      subtitle: "(M1-14 to M1-25)",
+      items: [
+        {
+          key: "ob_step1",
+          title: "Step 1 (Name)",
+          steps: [
+            "Create a fresh account (or log out of a partially-onboarded one) to start onboarding.",
+            "On 'How would you like to be called?' type a name, tap Submit.",
+            "Pass: you advance to Step 2 (birthday).",
+            "Fail: you stay on step 1 with an error, or it skips ahead without saving."
+          ]
+        },
+        {
+          key: "ob_step2",
+          title: "Step 2 (Birthday)",
+          steps: [
+            "Pick a day, month and year using the pickers, tap Submit.",
+            "Pass: you advance to Step 3 (last period).",
+            "Fail: a picker won't scroll or a value won't select, or Submit errors."
+          ]
+        },
+        {
+          key: "ob_step3",
+          title: "Step 3 (Last period)",
+          steps: [
+            "Tap the first day, then the last day of your last period on the range calendar.",
+            "Pass: the range highlights as you pick.",
+            "Tap Submit.",
+            "Pass: you advance to Step 4.",
+            "Fail: the range doesn't highlight, or Submit errors.",
+            "Note: 'Unsure…' skips this step; 'Clear' resets the selection."
+          ]
+        },
+        {
+          key: "ob_step4",
+          title: "Step 4 (Regular cycle?)",
+          steps: [
+            "Tap 'Yes'.",
+            "Pass: you advance to Step 5.",
+            "Go back, tap 'No' instead.",
+            "Pass: you advance to Step 5 with the cycle marked irregular (Step 5 then auto-shows the modal — see that item).",
+            "Fail: either choice errors or doesn't advance."
+          ]
+        },
+        {
+          key: "ob_step5_picker",
+          title: "Step 5 (Cycle length)",
+          steps: [
+            "Scroll the wheel to a value between 20 and 45 days, tap Submit.",
+            "Pass: you advance to Step 6 and the value is saved (visible later in Settings/Calendar).",
+            "Fail: the wheel won't scroll, or Submit errors."
+          ]
+        },
+        {
+          key: "ob_step5_modal",
+          title: "Step 5 — 'Not sure' button",
+          steps: [
+            "On Step 5, tap 'Not sure'.",
+            "Pass: the 'No Problem' modal opens.",
+            "Tap 'Okay, next'.",
+            "Pass: the step is skipped and you advance to Step 6 (cycle length set to 28).",
+            "Fail: the modal doesn't open, or 'Okay, next' doesn't advance."
+          ]
+        },
+        {
+          key: "ob_step5_auto",
+          title: "Step 5 — auto modal for irregular cycles",
+          auto: true,
+          system_note: "The modal opening is automatic here — no_problem_modal_controller's auto-show fires purely off @no_regular_cycle, which step 4 set. Contrast with the 'Not sure' item above, where tapping the button is what opens the modal.",
+          steps: [
+            "Answer 'No' on Step 4 (irregular cycle), which lands you on Step 5.",
+            "Pass: the 'No Problem' modal is already open — you didn't tap anything to open it.",
+            "Tap 'Okay, next'.",
+            "Pass: the modal closes and you stay on Step 5 — you can still pick a length or 'Not sure'.",
+            "Fail: the modal doesn't auto-open, or 'Okay, next' advances (it must NOT submit here)."
+          ]
+        },
+        {
+          key: "ob_step6",
+          title: "Step 6 (Hormonal birth control?)",
+          steps: [
+            "Tap 'Yes' or 'No'.",
+            "Pass: either choice advances to Step 7.",
+            "Fail: no advance or an error."
+          ]
+        },
+        {
+          key: "ob_step7",
+          title: "Step 7 (Birth control reminder?)",
+          steps: [
+            "Tap 'Yes' or 'No'.",
+            "Pass: either choice advances to Step 8.",
+            "Fail: no advance or an error."
+          ]
+        },
+        {
+          key: "ob_step8",
+          title: "Step 8 (Birth control method)",
+          steps: [
+            "Tap one of the listed methods (or 'None').",
+            "Pass: you advance to Step 9.",
+            "Fail: no advance or an error."
+          ]
+        },
+        {
+          key: "ob_step9",
+          title: "Step 9 (Cycle-stage reminder?)",
+          steps: [
+            "Tap 'Submit' or 'Maybe later'.",
+            "Pass: either button advances to Step 10.",
+            "Fail: no advance or an error."
+          ]
+        },
+        {
+          key: "ob_step10",
+          title: "Step 10 (Food preferences)",
+          steps: [
+            "Tap one of the food preferences (or 'None').",
+            "Pass: onboarding completes and you move to the finish screen.",
+            "Fail: you stay on step 10, or an error shows."
+          ]
+        },
+        {
+          key: "ob_finish",
+          title: "Finish screen — /onboarding/finish",
+          steps: [
+            "After Step 10 you should land on the completion screen.",
+            "Pass: it shows a success message and a way forward.",
+            "Continue.",
+            "Pass: you land on /calendar (or /tracking).",
+            "Fail: the completion screen errors, or Continue goes nowhere."
+          ]
+        },
+        {
+          key: "ob_back",
+          title: "Back button + step progress",
+          steps: [
+            "On Steps 2–10 tap the back arrow.",
+            "Pass: you return to the previous step — no loop, no error.",
+            "Check the progress dots at the top.",
+            "Pass: the dots highlight your current step.",
+            "Fail: back skips steps, loops, or errors."
+          ]
+        }
+      ]
+    },
+    {
+      title: "Cross-cutting",
+      subtitle: "",
+      items: [
+        {
+          key: "cc_german",
+          title: "German language",
+          steps: [
+            "Set the language to Deutsch (Settings → Language, or the 'EN' pill on /calendar).",
+            "Log out and back in, or open onboarding with a fresh account.",
+            "Pass: auth + onboarding screens show German text throughout.",
+            "Fail: screens stay in English or show a partial/mixed translation."
+          ]
+        },
+        {
+          key: "cc_validation",
+          title: "Validation errors",
+          steps: [
+            "Submit empty / blank forms on signup and on onboarding steps.",
+            "Pass: inline error text in brand red (#933a35) shows, no page reload.",
+            "Fail: the form submits anyway, reloads, crashes, or white-screens."
+          ]
+        },
+        {
+          key: "cc_ios_forms",
+          title: "iOS native forms",
+          steps: [
+            "On an iPhone or iPad (or iOS Simulator): complete signup, login, and onboarding.",
+            "Pass: every form submits natively — no 'submit failed', no blank screen.",
+            "Pass: tapping an iOS picker opens a usable scroller.",
+            "Fail: a submit gives a blank/failed screen."
+          ]
+        },
+        {
+          key: "cc_session",
+          title: "Session resume",
+          auto: true,
+          system_note: "Landing on the right step after reopening is fully automatic — OnboardingController#show computes it from current_user.next_onboarding_step every load. You're not resuming anything by hand.",
+          steps: [
+            "Create a new account and stop halfway through onboarding.",
+            "Close and reopen the app (or the browser tab).",
+            "Pass: you resume at the next unfinished step.",
+            "Fail: you restart at step 1, land on /calendar, or an error shows."
+          ]
+        }
+      ]
+    }
+  ]
+%>
+
+<div data-controller="m1-checklist" class="space-y-4">
+
+  <%# ── Progress header ── %>
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+    <div class="flex items-center gap-3 flex-wrap">
+      <div class="flex-1 min-w-[200px]">
+        <div class="flex items-center justify-between mb-2">
+          <p class="text-sm font-semibold text-brand-primary">M1 — Signing In &amp; Onboarding</p>
+          <p class="text-xs font-semibold text-gray-500" data-m1-checklist-target="progressLabel"><%= @done %> / <%= @total %> (<%= @done_pct %>% — you)</p>
+        </div>
+        <div class="h-2.5 rounded-full bg-brand-field overflow-hidden">
+          <div data-m1-checklist-target="progressFill"
+               class="h-full rounded-full bg-brand-primary transition-all duration-300"
+               style="width: <%= @done_pct %>%;"></div>
+        </div>
+      </div>
+      <button type="button"
+              data-action="click->m1-checklist#reset"
+              class="px-3 py-2 rounded-lg text-xs font-medium text-brand-primary bg-brand-field hover:bg-brand-divider transition-colors cursor-pointer">
+        Reset
+      </button>
+    </div>
+    <p class="mt-3 text-xs text-gray-500">
+      <strong class="text-brand-primary">You</strong> = do this yourself (tap / type / open the URL).
+      <strong class="text-green-700">Pass</strong> = the test succeeds when you see this.
+      <strong class="text-red-700">Fail</strong> = it's a bug if you see this.
+      <strong class="text-amber-700">Info</strong> = context, nothing to test.
+      <span class="text-brand-primary">⚙️ Automatic</span> = nothing to click at all; the system runs the whole item.
+      Tick an item only when all its Pass conditions hold and no Fail condition appears. Checks are saved against the logged-in admin — each item shows who verified it and when.
+    </p>
+    <p class="mt-2 text-xs text-gray-500">
+      Team: <strong><%= @team_done %> / <%= @total %></strong> items checked by
+      <strong><%= @tester_count %></strong> tester<%= "s" if @tester_count != 1 %>. Design reference:
+    <code class="bg-gray-100 px-1 rounded">docs/figma_nodes.md</code> (M1 nodes) and
+    <code class="bg-gray-100 px-1 rounded">docs/screenslist.md</code> (route map).</p>
+  </div>
+
+  <%# ── Sections ── %>
+  <% sections.each do |section| %>
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+      <div class="px-4 py-3 bg-brand-field border-b border-gray-200">
+        <h2 class="text-sm font-bold text-brand-primary"><%= section[:title] %> <span class="text-xs font-normal text-gray-500"><%= section[:subtitle] %></span></h2>
+      </div>
+      <div class="divide-y-0">
+        <% section[:items].each do |item| %>
+          <% item_checks = @checks_by_item[item[:key]] || [] %>
+          <%= render "item", key: item[:key], title: item[:title], steps: item[:steps],
+               checked: @my_checked.include?(item[:key]),
+               testers: item_checks, auto: item[:auto], system_note: item[:system_note] %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+</div>

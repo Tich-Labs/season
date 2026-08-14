@@ -10,6 +10,10 @@
     </svg>
   <% end %>
 <% end %>
+<%# Every settings page/sub-page gets the centred calendar button (see
+     settings/edit.html.erb) instead of the default FABs. %>
+<% content_for(:hide_quick_actions) { "true" } %>
+<% content_for(:hide_calendar_fab) { "true" } %>
 
 <div class="bg-white min-h-full" data-controller="profile-modal" data-action="click@window->profile-modal#clickOutside">
 
@@ -335,3 +339,5 @@
   </div>
 </div>
 </div>
+
+<%= render "shared/calendar_center_fab", bg: "bg-brand-field" %>

@@ -9,9 +9,15 @@
     </svg>
   <% end %>
 <% end %>
-<%# "+" quick-actions FAB hidden here, calendar FAB kept — the opposite of
-     every sibling settings page, per explicit request for this one screen. %>
+<%# Every settings page/sub-page gets the centred calendar button (see
+     settings/edit.html.erb) instead of the default FABs — hide both shared
+     ones. This page previously kept the default bottom-right calendar FAB
+     (wrong variant) since it's Settings::LanguageController, whose
+     controller_name is "language" not "settings", so it didn't get the
+     calendar FAB auto-hidden the way every sibling under SettingsController
+     does. %>
 <% content_for(:hide_quick_actions) { "true" } %>
+<% content_for(:hide_calendar_fab) { "true" } %>
 
 <div class="bg-white min-h-screen">
   <div class="max-w-app mx-auto px-4 pb-20">
@@ -43,3 +49,5 @@
     <% end %>
   </div>
 </div>
+
+<%= render "shared/calendar_center_fab", bg: "bg-brand-field" %>

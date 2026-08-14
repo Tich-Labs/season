@@ -27,6 +27,34 @@ class User < ApplicationRecord
   has_many :notifications, dependent: :destroy
   has_one :streak, dependent: :destroy
 
+  EMAIL_BOUNCE_TYPES = %w[wrong_email inbox_full].freeze
+
+  # A bounce only means anything for a little while -- an address that
+  # bounced last month may well be fixed by now, and we don't want a stale
+  # flag silently redirecting a since-recovered user to an error screen
+  # forever.
+  EMAIL_BOUNCE_RELEVANCE_WINDOW = 7.days
+
+  # Called from the Resend bounce webhook (see Webhooks::ResendController) --
+  # async, so this can land well after the request that triggered the send
+  # has finished.
+  def record_email_bounce!(type)
+    return unless EMAIL_BOUNCE_TYPES.include?(type.to_s)
+    update!(email_bounce_type: type.to_s, email_bounced_at: Time.current)
+  end
+
+  def clear_email_bounce!
+    update!(email_bounce_type: nil, email_bounced_at: nil)
+  end
+
+  # nil unless there's a bounce on file recent enough to still be worth
+  # acting on.
+  def recent_email_bounce_type
+    return nil if email_bounce_type.blank? || email_bounced_at.blank?
+    return nil if email_bounced_at < EMAIL_BOUNCE_RELEVANCE_WINDOW.ago
+    email_bounce_type
+  end
+
   def current_feedback_week
     return nil if created_at.nil?
     week = ((Time.current - created_at) / 7.days).ceil.clamp(1, 8)

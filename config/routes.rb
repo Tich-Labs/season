@@ -214,6 +214,9 @@ Rails.application.routes.draw do
     get "weekly_feedback_responses/export_csv", to: "weekly_feedback_responses#export_csv", as: :weekly_feedback_responses_export_csv
     get "help", to: "pages#help", as: :help
     get "board", to: "board#index", as: :board
+    get "m1_checklist", to: "m1_checklist#show", as: :m1_checklist
+    post "m1_checklist/toggle", to: "m1_checklist#toggle", as: :m1_checklist_toggle
+    post "m1_checklist/reset", to: "m1_checklist#reset", as: :m1_checklist_reset
     root to: "users#index"
   end
 
@@ -267,6 +270,10 @@ Rails.application.routes.draw do
 
   namespace :api do
     get "holidays", to: "holidays#index", defaults: {format: :json}
+  end
+
+  namespace :webhooks do
+    post "resend", to: "resend#create"
   end
 
   # home#loader is the auth-aware splash screen: it shows the logo briefly, then

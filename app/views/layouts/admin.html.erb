@@ -36,6 +36,15 @@
           <% support_active  = controller_name == "inbox" && action_name == "support" %>
           <% weekly_active   = controller_name == "weekly_feedback_responses" %>
           <% board_active    = controller_name == "board" %>
+          <% checklist_active = controller_name == "m1_checklist" %>
+
+          <%= link_to admin_m1_checklist_path,
+              class: class_names("flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                                 "bg-brand-primary-dark text-white" => checklist_active,
+                                 "text-brand-light hover:bg-brand-primary-dark hover:text-white" => !checklist_active) do %>
+            <span aria-hidden="true">&#9989;</span>
+            M1 Checklist
+          <% end %>
 
           <%= link_to admin_users_path,
               class: class_names("flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",

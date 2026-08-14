@@ -117,6 +117,7 @@
      quick-actions one. %>
     <% if current_user.onboarding_completed? && current_user.last_period_start.nil? && current_user.period_starts.empty? %>
       <% content_for(:hide_quick_actions) { "true" } %>
+      <%= render "shared/no_cycle_data_modal" %>
   <div class="bg-brand-error px-4 py-3 text-center border-b border-brand-primary">
       <p class="text-brand-primary text-sm mb-2">
         <%= t("calendar.index.no_period_data") %>

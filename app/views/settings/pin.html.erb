@@ -1,5 +1,9 @@
 <% content_for(:title) { t("settings.pin.title", default: "Access Code") } %>
 <% content_for(:header_dark) { true } %>
+<%# Every settings page/sub-page gets the centred calendar button (see
+     settings/edit.html.erb) instead of the default FABs. %>
+<% content_for(:hide_quick_actions) { "true" } %>
+<% content_for(:hide_calendar_fab) { "true" } %>
 <% content_for(:header_left) do %>
   <%= link_to profile_settings_path, class: "min-w-11 min-h-11 flex items-center justify-center" do %>
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
@@ -73,3 +77,5 @@
     </div>
   <% end %>
 </div>
+
+<%= render "shared/calendar_center_fab", bg: "bg-brand-field" %>

@@ -93,4 +93,27 @@ class CalendarControllerTest < ActionDispatch::IntegrationTest
     assert_no_match(/quick-actions#open/, response.body)
     assert_no_match(/Back to calendar/, response.body)
   end
+
+  # Figma node 12048-15617 — full-screen "no data yet" modal, dismissible,
+  # shown alongside (not instead of) the persistent no_period_data banner.
+  test "GET /calendar shows the no-cycle-data modal for a first-instance user with no period data" do
+    first_instance_user = User.create!(
+      email: "firstinstance2@example.com", name: "Test", password: "password123", password_confirmation: "password123",
+      birthday: 30.years.ago, has_regular_cycle: true, uses_hormonal_birth_control: false,
+      food_preference: "omnivore", onboarding_completed: true
+    ).tap(&:confirm)
+
+    sign_in_as(first_instance_user)
+    get user_root_path
+    assert_response :success
+    assert_select "[data-controller='no-cycle-data-modal']"
+    assert_match(/haven't received any data yet/, CGI.unescapeHTML(response.body))
+  end
+
+  test "GET /calendar does not show the no-cycle-data modal once period data exists" do
+    sign_in_as(@alice)
+    get user_root_path
+    assert_response :success
+    assert_select "[data-controller='no-cycle-data-modal']", false
+  end
 end

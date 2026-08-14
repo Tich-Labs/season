@@ -1,0 +1,24 @@
+<%# Figma node 12048-15617 — shown once per session on first calendar load for
+    a user with no cycle data at all (same condition as the persistent
+    no_period_data banner further down the page, which stays as the ongoing
+    reminder after this is dismissed). Dismissal is remembered via
+    sessionStorage (see install_controller.js for the same pattern), so it
+    doesn't reappear on every page load within the session but does show
+    again next time the user opens the app fresh. %>
+<div data-controller="no-cycle-data-modal"
+     class="fixed inset-0 z-[200] bg-white flex flex-col items-center justify-center px-8">
+  <button data-action="click->no-cycle-data-modal#close"
+          aria-label="<%= t("calendar.index.no_data_modal_close") %>"
+          class="absolute top-6 right-6 w-11 h-11 bg-brand-field rounded-full flex items-center justify-center text-brand-primary text-xl font-medium">
+    X
+  </button>
+
+  <svg width="48" height="104" viewBox="0 0 48 104" fill="none" xmlns="http://www.w3.org/2000/svg" class="mb-8" aria-hidden="true">
+    <rect x="14" y="0" width="20" height="66" rx="10" fill="#933A35" />
+    <circle cx="24" cy="88" r="14" fill="#933A35" />
+  </svg>
+
+  <p class="text-brand-primary text-2xl font-semibold text-center leading-snug">
+    <%= t("calendar.index.no_data_modal_message") %>
+  </p>
+</div>

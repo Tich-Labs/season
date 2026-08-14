@@ -184,3 +184,19 @@ if (test_user = User.first)
 
   Rails.logger.debug { "Seeded #{test_user.notifications.count} notifications for user #{test_user.email}" }
 end
+
+# Shared admin account — lets the team log in at /admin (Users, M1 Checklist,
+# Inbox, Trello Board). find_or_create_by! so it's safe to re-run on every
+# deploy (render-build.sh runs db:seed). Override via SEASON_ADMIN_EMAIL /
+# SEASON_ADMIN_PASSWORD env vars; existing admin passwords are never reset.
+admin_email = ENV.fetch("SEASON_ADMIN_EMAIL", "admin@season.test")
+admin = User.find_or_create_by!(email: admin_email) do |u|
+  u.name = "Season Admin"
+  u.password = ENV.fetch("SEASON_ADMIN_PASSWORD", "password123")
+  u.password_confirmation = u.password
+  u.admin = true
+  u.onboarding_completed = true
+  u.language = "en"
+  u.confirmed_at = Time.zone.now
+end
+Rails.logger.debug { "Seeded admin user #{admin.email}" }

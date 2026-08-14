@@ -27,12 +27,14 @@ class Settings::LanguageControllerTest < ActionDispatch::IntegrationTest
     assert_match(">Settings<", response.body)
   end
 
-  # "+" hidden, calendar FAB kept — the opposite of every sibling settings
-  # page, by explicit request for this one screen.
-  test "GET /settings/language shows only the calendar FAB, not the + FAB" do
+  # Every settings page/sub-page gets the centred calendar FAB (bg-brand-field,
+  # aria-label "Go to calendar") instead of the "+" or the default bottom-right
+  # calendar FAB (aria-label "Back to calendar").
+  test "GET /settings/language shows only the centred calendar FAB" do
     get settings_language_path
     assert_no_match(/quick-actions#open/, response.body)
-    assert_match(/Back to calendar/, response.body)
+    assert_no_match(/Back to calendar/, response.body)
+    assert_match(/Go to calendar/, response.body)
   end
 
   # Two real entry points — the main settings menu, and the "EN" pill on

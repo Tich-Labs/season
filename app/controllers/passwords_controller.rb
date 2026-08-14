@@ -13,7 +13,21 @@ class PasswordsController < ApplicationController
 
   def create
     email = params[:email].to_s.strip.downcase
-    User.find_by(email: email)&.send_reset_password_instructions
+    user = User.find_by(email: email)
+
+    # A known-recent bounce on this address is worth surfacing immediately
+    # instead of quietly resending into the same dead end -- it's a narrow
+    # deviation from the "always redirect to done, don't reveal whether the
+    # email exists" rule below (an attacker now learns "this address exists
+    # and bounced recently"), accepted deliberately for this case since a
+    # bounce implies the user themselves already tried this address once.
+    if user && (bounce = user.recent_email_bounce_type)
+      user.clear_email_bounce! # consumed -- don't keep blocking their next attempt once shown
+      redirect_to (bounce == "inbox_full") ? password_error_inbox_full_path : password_error_wrong_email_path
+      return
+    end
+
+    user&.send_reset_password_instructions
 
     # Always redirect to done page (don't reveal whether the email exists).
     redirect_to done_password_path
