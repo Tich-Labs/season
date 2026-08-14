@@ -272,5 +272,11 @@ Rails.application.routes.draw do
     get "holidays", to: "holidays#index", defaults: {format: :json}
   end
 
-  root "home#welcome"
+  # home#loader is the auth-aware splash screen: it shows the logo briefly, then
+  # sends signed-in users straight to their calendar and everyone else to
+  # /welcome. Root pointed directly at home#welcome from Apr 24 (c4ecdd8) as a
+  # quick fix for an unrelated SSL redirect loop, and was never switched back
+  # once that got sorted out -- so every visit to "/" showed the Create
+  # Account/Login screen even for already-logged-in users.
+  root "home#loader"
 end

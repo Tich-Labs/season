@@ -71,4 +71,24 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
     assert_includes response.body, ">Login<"
     assert_not_includes response.body, "I already have an account"
   end
+
+  # Regression: root ("/") pointed directly at home#welcome from Apr 24
+  # (c4ecdd8) as a quick fix for an unrelated SSL redirect loop, and never got
+  # switched back once that was resolved -- so every visit to "/" showed the
+  # Create Account/Login screen even for an already-logged-in user who hadn't
+  # explicitly logged out. Root should behave like /loader: splash first,
+  # then route by auth state, same as /app already does for native.
+  test "root renders the auth-aware loader, not the welcome screen, for a signed-in user" do
+    sign_in_as(@bob)
+    get root_path
+    assert_response :success
+    assert_match(/data-loader-signed-in-value="true"/, response.body)
+    assert_not_includes response.body, "Create Account"
+  end
+
+  test "root renders the auth-aware loader for a signed-out user too" do
+    get root_path
+    assert_response :success
+    assert_match(/data-loader-signed-in-value="false"/, response.body)
+  end
 end
