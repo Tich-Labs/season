@@ -7,6 +7,10 @@
   Information
 <% end %>
 <% content_for(:hide_quick_actions) { "true" } %>
+<%# Every non-settings sub-page gets the centred calendar button (see
+     shared/_calendar_center_fab.html.erb) instead of the default
+     bottom-right one. %>
+<% content_for(:hide_calendar_fab) { "true" } %>
 <% content_for(:header_dark) { "true" } %>
 <% content_for(:header_color) { "#933a35" } %>
 
@@ -55,3 +59,5 @@
     </div>
   </div>
 </div>
+
+<%= render "shared/calendar_center_fab", bg: "bg-brand-field" %>
