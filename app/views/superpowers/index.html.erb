@@ -1,6 +1,10 @@
 <% content_for(:page_title) { "Superpowers" } %>
 <% content_for(:header_color) { @phase_colour } %>
 <% content_for(:header_dark) { "true" } %>
+<%# Not under settings/ or calendar#index, so the layout was showing both
+     the "+" quick-actions FAB and the calendar-home FAB stacked together.
+     Keep only the calendar FAB. %>
+<% content_for(:hide_quick_actions) { "true" } %>
 <% content_for(:header_left) do %>
   <%= link_to tracking_index_path, class: "text-white text-sm font-medium no-underline p-2 font-montserrat" do %>
     &lt; back

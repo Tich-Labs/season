@@ -1,6 +1,10 @@
 <% content_for(:page_title) { "Track my period" } %>
 <% content_for(:header_dark) { "true" } %>
 <% content_for(:header_color) { @phase_col } %>
+<%# Not under settings/ or calendar#index, so the layout was showing both
+     the "+" quick-actions FAB and the calendar-home FAB stacked together.
+     Keep only the calendar FAB. %>
+<% content_for(:hide_quick_actions) { "true" } %>
 
 <%
   today       = Time.zone.today

@@ -2,6 +2,10 @@
 <%# Only real entry point is calendar/weekly.html.erb — was hardcoded to
      forecast_path (today's forecast, unrelated), which never actually
      returned there. %>
+<%# This is a detail page, not under settings/ or calendar#index, so the
+     layout was showing both the "+" quick-actions FAB and the calendar-home
+     FAB stacked together. Keep only the calendar FAB. %>
+<% content_for(:hide_quick_actions) { "true" } %>
 <% content_for(:header_left) do %>
   <%= link_to safe_back_path(calendar_weekly_path, allowed: [calendar_weekly_path]),
         class: "inline-flex items-center justify-center w-10 h-10 rounded-xl text-brand-primary" do %>

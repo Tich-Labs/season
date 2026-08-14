@@ -23,6 +23,7 @@ export default class extends Controller {
     this.#applyCravingVisuals()
     this.#activeIntercourse = JSON.parse(this.element.dataset.activeIntercourse || '[]')
     this.#applyIntercourseVisuals()
+    this.#initAccordion()
   }
 
   toggleCheckbox (event) {
@@ -217,6 +218,23 @@ export default class extends Controller {
   }
 
   // ── private ──────────────────────────────────────────────────────────────
+
+  // Exclusive accordion — opening one of the 10 <details> sections closes any
+  // other that was already open, so the page doesn't grow into a long scroll
+  // as the user works through Mood/Physical/Mental/etc. Not the native HTML
+  // `name="..."` grouping (Safari only got that in 17.2 — iOS 16 WKWebView,
+  // this app's minimum target, predates it), so wired up by hand instead.
+  #initAccordion () {
+    const sections = this.element.querySelectorAll('details')
+    sections.forEach(details => {
+      details.addEventListener('toggle', () => {
+        if (!details.open) return
+        sections.forEach(other => {
+          if (other !== details) other.open = false
+        })
+      })
+    })
+  }
 
   get #phaseColor () {
     return this.element.dataset.phaseColor || '#933a35'

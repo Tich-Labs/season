@@ -123,14 +123,11 @@ Rails.application.routes.draw do
   get "tracking/period", to: "tracking#period", as: :period_tracking_path
   get "daily/:date", to: "daily_view#show", as: :daily_view
   resources :streaks, only: [:index]
-  # Symptoms temporarily disabled — layout bug on /symptoms (Sleep/Temperature/Weight
-  # pickers) is fixed locally but not yet verified/deployed. Also commented out the
-  # "My Symptoms" nav card in tracking/index.html.erb so nothing links to a dead route.
-  # get "symptoms/discharge", to: "symptoms#discharge", as: :symptom_discharge
-  # post "symptoms/log_physical", to: "symptoms#log_physical", as: :log_physical_symptom
-  # post "symptoms/log_mental", to: "symptoms#log_mental", as: :log_mental_symptom
-  # post "symptoms/log_bleeding", to: "symptoms#log_bleeding", as: :log_bleeding_symptom
-  # resources :symptoms, only: [:index, :show, :create, :update]
+  get "symptoms/discharge", to: "symptoms#discharge", as: :symptom_discharge
+  post "symptoms/log_physical", to: "symptoms#log_physical", as: :log_physical_symptom
+  post "symptoms/log_mental", to: "symptoms#log_mental", as: :log_mental_symptom
+  post "symptoms/log_bleeding", to: "symptoms#log_bleeding", as: :log_bleeding_symptom
+  resources :symptoms, only: [:index, :show, :create, :update]
   resources :superpowers, only: [:index, :show, :create, :update]
   resources :feedbacks, only: [:create]
   get "weekly_feedback", to: "weekly_feedbacks#show", as: :weekly_feedback

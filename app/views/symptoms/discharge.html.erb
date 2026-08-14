@@ -5,6 +5,10 @@
 <% content_for(:page_title) { "Discharge" } %>
 <% content_for(:header_color) { phase_colour } %>
 <% content_for(:header_dark) { "true" } %>
+<%# Not under settings/ or calendar#index, so the layout was showing both
+     the "+" quick-actions FAB and the calendar-home FAB stacked together.
+     Keep only the calendar FAB. %>
+<% content_for(:hide_quick_actions) { "true" } %>
 <% content_for(:header_left) do %>
   <%= link_to symptoms_path,
         style: "color:#933a35; font-size:15px; font-weight:500; text-decoration:none; padding:8px 4px; font-family:'Montserrat',sans-serif;" do %>

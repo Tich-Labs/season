@@ -4,6 +4,10 @@
      header_dark too, dark-red text/icons render on top of a phase colour
      that's often dark (e.g. ovulation green), unreadable. %>
 <% content_for(:header_dark) { "true" } %>
+<%# Not under settings/ or calendar#index, so the layout was showing both
+     the "+" quick-actions FAB and the calendar-home FAB stacked together.
+     Keep only the calendar FAB. %>
+<% content_for(:hide_quick_actions) { "true" } %>
 
 <div class="bg-brand-background min-h-full pb-1">
 
