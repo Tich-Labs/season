@@ -14,7 +14,16 @@ export default class extends Controller {
   select (event) {
     const date = event.currentTarget.dataset.date
 
-    if (!this.startDate) {
+    if (date === this.startDate) {
+      // Tapping the start again always clears the whole selection: with no
+      // end yet that's just un-tapping it; with a range already set, a
+      // dangling end without a start makes no sense either way.
+      this.startDate = null
+      this.endDate = null
+    } else if (date === this.endDate) {
+      // Tapping the end again removes just the end — keep the start.
+      this.endDate = null
+    } else if (!this.startDate) {
       this.startDate = date
     } else if (!this.endDate) {
       if (date >= this.startDate) {
@@ -33,8 +42,8 @@ export default class extends Controller {
     this.#renderHighlights()
     this.#renderHeading()
 
-    this.submitTarget.classList.remove('hidden')
-    this.clearTarget.classList.remove('hidden')
+    this.submitTarget.classList.toggle('hidden', !this.startDate)
+    if (this.hasClearTarget) this.clearTarget.classList.toggle('hidden', !this.startDate)
   }
 
   clear (event) {
@@ -48,7 +57,7 @@ export default class extends Controller {
     this.#renderHeading()
 
     this.submitTarget.classList.add('hidden')
-    this.clearTarget.classList.add('hidden')
+    if (this.hasClearTarget) this.clearTarget.classList.add('hidden')
   }
 
   #renderHighlights () {

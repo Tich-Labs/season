@@ -23,4 +23,12 @@ module PinProtection
     @pin_unlock_required = true
     session[:return_to_after_unlock] = request.fullpath if request.get? || request.head?
   end
+
+  # Called from anywhere that just proved the user's identity strongly enough
+  # to also satisfy the PIN check: a fresh login (password, PIN quick-login,
+  # or OAuth), entering the PIN itself, or WebAuthn. Shared so PIN_TIMEOUT
+  # and the timestamp format it's compared against only live in one place.
+  def mark_pin_verified!
+    session[:pin_verified_at] = Time.current.to_i
+  end
 end

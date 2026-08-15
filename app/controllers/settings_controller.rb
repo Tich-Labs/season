@@ -299,7 +299,7 @@ class SettingsController < ApplicationController
       redirect_to pin_settings_path, alert: t("settings.pin.mismatch", default: "Codes do not match")
     else
       @user.set_pin(code)
-      session[:pin_verified_at] = Time.current.to_i
+      mark_pin_verified!
       redirect_to profile_settings_path, notice: t("settings.pin.saved", default: "Access code saved")
     end
   end

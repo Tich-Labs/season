@@ -9,7 +9,12 @@
      three pages, so that auto-scroll was silently dead everywhere. The
      collapsed button is hidden on open (toggleButton target) -- previously
      it stayed visible on top of the expanded list, its own label/chevron
-     overlapping the close button and first row underneath it. %>
+     overlapping the close button and first row underneath it.
+     This is a plain list, not a wheel picker (contrast the sp-highlight
+     scroll-pickers used for sleep/temperature/weight/cycle-length) -- every
+     row stays fully legible and only the selected day is bold, matching
+     Figma. Previously this used sp-highlight's own heavy padding/fade/crop
+     styling, which only kept ~1 row legible at a time. %>
 <div class="flex justify-center pt-6 pb-2" data-controller="date-picker">
   <div class="relative bg-brand-field overflow-hidden transition-all duration-300 ease-out"
        style="width:155px; height:31px; border-radius:133px;"
@@ -29,7 +34,7 @@
 
     <%# Expanded content %>
     <div class="hidden" data-date-picker-target="content">
-      <div class="flex justify-end pt-3 pr-4 pb-0">
+      <div class="flex justify-end pt-3 pr-4 pb-1">
         <button data-action="click->date-picker#close" aria-label="Close date picker"
                 class="text-brand-primary focus:outline-none">
           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none"
@@ -38,20 +43,16 @@
           </svg>
         </button>
       </div>
-      <div class="relative" style="height:173px;">
-        <div class="sp-highlight" style="top:65px; height:42px;"></div>
-        <ul class="overflow-y-auto text-center scrollbar-hide"
-            style="height:173px; padding:65px 0; scroll-snap-type:y mandatory;">
-          <% ((Date.today - 29)..Date.today).each do |d| %>
-            <% selected = d == date %>
-            <li style="scroll-snap-align:center; height:42px; min-height:42px; display:flex; align-items:center; justify-content:center;">
-              <%= link_to d.strftime("%-d %B"), date_path.call(d),
-                    class: "block font-sans no-underline #{selected ? 'font-bold text-base text-brand-primary opacity-100' : 'font-normal text-sm text-brand-primary opacity-45'}",
-                    data: (selected ? {selected: true} : {}) %>
-            </li>
-          <% end %>
-        </ul>
-      </div>
+      <ul class="overflow-y-auto text-center scrollbar-hide" style="height:173px;">
+        <% ((Date.today - 29)..Date.today).each do |d| %>
+          <% selected = d == date %>
+          <li class="py-px leading-tight">
+            <%= link_to d.strftime("%-d %B"), date_path.call(d),
+                  class: "block font-sans no-underline text-brand-primary #{selected ? 'font-bold text-sm' : 'font-normal text-sm'}",
+                  data: (selected ? {selected: true} : {}) %>
+          </li>
+        <% end %>
+      </ul>
     </div>
   </div>
 </div>

@@ -15,10 +15,12 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
     @alice.set_pin("1234")
     sign_in_as(@alice)
 
-    get loader_path
-    assert_response :success
-    assert_match(/data-loader-pin-pending-value="true"/, response.body)
-    assert_match(/data-loader-calendar-url-value="#{Regexp.escape(user_root_path)}"/, response.body)
+    travel_past_pin_grace do
+      get loader_path
+      assert_response :success
+      assert_match(/data-loader-pin-pending-value="true"/, response.body)
+      assert_match(/data-loader-calendar-url-value="#{Regexp.escape(user_root_path)}"/, response.body)
+    end
   end
 
   test "loader goes to calendar with pin pending false when no pin is set" do

@@ -29,6 +29,13 @@ module Authentication
   def login(user)
     reset_session
     session[:user_id] = user.id
+    # A fresh login (password, PIN quick-login, or OAuth) already proves who
+    # this is, so it counts as a fresh PIN unlock too — reset_session above
+    # just wiped pin_verified_at, and without this the PIN modal would demand
+    # a *second* proof of identity seconds after the first. The 5-minute
+    # backgrounding/tab-switch timeout (PinProtection::PIN_TIMEOUT) still
+    # applies from here exactly as before.
+    mark_pin_verified!
     # Survives logout (unlike the user_id cookie below) so the welcome screen can
     # tell a returning device from a genuinely new one and show Login as the
     # primary action instead of Create Account.

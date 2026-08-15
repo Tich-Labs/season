@@ -7,55 +7,48 @@ class PinControllerTest < ActionDispatch::IntegrationTest
     PinController::RATE_LIMIT_STORE.clear
   end
 
-  test "logout clears pin_verified_at" do
+  test "a fresh login does not require the PIN too — logging in already proves who you are" do
     sign_in_as(@alice)
 
     get edit_settings_path
     assert_response :success
-    assert_includes response.body, "pin-unlock-modal"
-
-    post "/unlock", params: {pin: "1234"}
-
-    get edit_settings_path
-    assert_response :success
     assert_not_includes response.body, "pin-unlock-modal"
+  end
 
+  test "logging out then logging back in immediately does not re-lock" do
+    sign_in_as(@alice)
     delete session_path
 
     sign_in_as(@alice)
 
     get edit_settings_path
     assert_response :success
-    assert_includes response.body, "pin-unlock-modal"
+    assert_not_includes response.body, "pin-unlock-modal"
   end
 
   test "resume after under 5 min does not re-lock" do
     sign_in_as(@alice)
 
-    get edit_settings_path
-    assert_response :success
-    assert_includes response.body, "pin-unlock-modal"
-
-    post "/unlock", params: {pin: "1234"}
-
-    get edit_settings_path
-    assert_response :success
-    assert_not_includes response.body, "pin-unlock-modal"
+    travel_to 4.minutes.from_now do
+      get edit_settings_path
+      assert_response :success
+      assert_not_includes response.body, "pin-unlock-modal"
+    end
   end
 
   test "resume after 5+ min idle re-locks" do
     sign_in_as(@alice)
 
-    get edit_settings_path
-    assert_response :success
-    assert_includes response.body, "pin-unlock-modal"
-
-    post "/unlock", params: {pin: "1234"}
-
-    travel_to 6.minutes.from_now do
+    travel_past_pin_grace do
       get edit_settings_path
       assert_response :success
       assert_includes response.body, "pin-unlock-modal"
+
+      post "/unlock", params: {pin: "1234"}
+
+      get edit_settings_path
+      assert_response :success
+      assert_not_includes response.body, "pin-unlock-modal"
     end
   end
 

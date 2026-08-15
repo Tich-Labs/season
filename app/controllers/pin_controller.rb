@@ -17,7 +17,7 @@ class PinController < ApplicationController
 
   def verify
     if authenticated? && current_user.verify_pin(params[:pin])
-      session[:pin_verified_at] = Time.current.to_i
+      mark_pin_verified!
       respond_to do |format|
         format.json { render json: {success: true} }
         format.html { redirect_to session.delete(:return_to_after_unlock) || user_root_path }

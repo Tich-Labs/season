@@ -163,7 +163,7 @@
 
         <%# Weekday headers — matches the main /calendar month view %>
         <div class="grid grid-cols-7 gap-0 mb-1.5">
-          <% %w[Mo Tu We Th Fr Sa Su].each do |d| %>
+          <% weekday_initials.each do |d| %>
             <div class="text-center text-brand-secondary text-xs font-semibold tracking-wider py-1"><%= d %></div>
           <% end %>
         </div>

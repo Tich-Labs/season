@@ -37,7 +37,7 @@
       <%= label_tag :pin, t("settings.pin.code", default: "Code"), class: "text-sm font-medium text-brand-primary mb-1 block" %>
       <%= password_field_tag :pin, nil,
             required: true,
-            autocomplete: "off",
+            autocomplete: "one-time-code",
             inputmode: "numeric",
             pattern: "[0-9]*",
             maxlength: 6,
@@ -48,7 +48,7 @@
       <%= label_tag :pin_confirmation, t("settings.pin.confirm", default: "Confirm code"), class: "text-sm font-medium text-brand-primary mb-1 block" %>
       <%= password_field_tag :pin_confirmation, nil,
             required: true,
-            autocomplete: "off",
+            autocomplete: "one-time-code",
             inputmode: "numeric",
             pattern: "[0-9]*",
             maxlength: 6,
@@ -64,7 +64,7 @@
       <%= form_tag pin_settings_path, method: :delete, class: "space-y-3" do %>
         <%= password_field_tag :pin, nil,
               required: true,
-              autocomplete: "off",
+              autocomplete: "one-time-code",
               inputmode: "numeric",
               pattern: "[0-9]*",
               maxlength: 6,

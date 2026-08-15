@@ -37,7 +37,7 @@
     </div>
 
     <%= password_field_tag :pin, nil,
-          autocomplete: "off",
+          autocomplete: "one-time-code",
           inputmode: "numeric",
           pattern: "[0-9]*",
           maxlength: 6,

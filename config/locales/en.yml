@@ -225,8 +225,6 @@ en:
         set_end: "Set as period end"
         select_start_heading: "When did your period start?"
         select_end_heading: "And when did it end?"
-        label_start: "Start:"
-        label_end: "End:"
   calendar_events:
     create:
       created: "Event created"

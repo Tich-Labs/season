@@ -179,9 +179,11 @@ class SettingsControllerTest < ActionDispatch::IntegrationTest
 
   test "settings edit page shows unlock modal when PIN is set" do
     @alice.set_pin("1234")
-    get edit_settings_path
-    assert_response :success
-    assert_includes response.body, "pin-unlock-modal"
+    travel_past_pin_grace do
+      get edit_settings_path
+      assert_response :success
+      assert_includes response.body, "pin-unlock-modal"
+    end
   end
 
   test "PATCH /settings/update_notifications saves a reminder-backed toggle" do

@@ -207,8 +207,6 @@ de:
         set_end: "Als Periodenende setzen"
         select_start_heading: "Wann hat deine Periode begonnen?"
         select_end_heading: "Und wann hat sie geendet?"
-        label_start: "Start:"
-        label_end: "Ende:"
   calendar_events:
     create:
       created: "Termin erstellt"
