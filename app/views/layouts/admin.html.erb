@@ -37,6 +37,7 @@
           <% weekly_active   = controller_name == "weekly_feedback_responses" %>
           <% board_active    = controller_name == "board" %>
           <% checklist_active = controller_name == "m1_checklist" %>
+          <% data_active     = controller_name == "data_storage" %>
 
           <%= link_to admin_m1_checklist_path,
               class: class_names("flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
@@ -147,6 +148,12 @@
         <%# Footer: current user + help + back + sign out %>
         <div class="px-4 py-4 border-t border-brand-primary-dark space-y-2">
           <p class="text-brand-light text-xs truncate"><%= current_user.email %></p>
+          <%= link_to admin_data_storage_path,
+              class: class_names("flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                                 "bg-brand-primary-dark text-white" => data_active,
+                                 "text-brand-light hover:bg-brand-primary-dark hover:text-white" => !data_active) do %>
+            <span aria-hidden="true">&#128187;</span> Data Storage / GDPR
+          <% end %>
           <%= link_to admin_board_path,
               class: class_names("flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors mb-1",
                                  "bg-brand-primary-dark text-white" => board_active,

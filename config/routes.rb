@@ -217,6 +217,7 @@ Rails.application.routes.draw do
     get "m1_checklist", to: "m1_checklist#show", as: :m1_checklist
     post "m1_checklist/toggle", to: "m1_checklist#toggle", as: :m1_checklist_toggle
     post "m1_checklist/reset", to: "m1_checklist#reset", as: :m1_checklist_reset
+    get "data_storage", to: "data_storage#index", as: :data_storage
     root to: "users#index"
   end
 
