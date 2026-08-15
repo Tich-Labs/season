@@ -67,12 +67,38 @@ export default class extends Controller {
     if (fileInput) fileInput.click()
   }
 
-  submitAvatarForm () {
-    const form = document.getElementById('avatar-upload-form')
-    if (form) form.submit()
+  // Selecting a preset only highlights it — the change is saved when the
+  // "Add Photo" button submits the form (single avatar-upload-form).
+  selectAvatarPreset (event) {
+    this.#setSelectedPreset(event.currentTarget.dataset.avatarPreset)
+    const fileInput = document.getElementById('avatar-file')
+    if (fileInput) fileInput.value = ''
+  }
+
+  fileSelected () {
+    this.#setSelectedPreset('')
+  }
+
+  urlSelected () {
+    this.#setSelectedPreset('')
   }
 
   // ── private ────────────────────────────────────────────────────────────
+
+  // Keeps the hidden avatar_preset input and the grid highlight in sync.
+  // The preset buttons all live inside #avatar-modal.
+  #setSelectedPreset (presetId) {
+    const hidden = document.getElementById('avatar-selected-preset')
+    if (hidden) hidden.value = presetId || ''
+    document.querySelectorAll('#avatar-modal [data-avatar-preset]').forEach(btn => {
+      const selected = btn.dataset.avatarPreset === presetId
+      btn.classList.toggle('border-[3px]', selected)
+      btn.classList.toggle('border-brand-primary', selected)
+      btn.classList.toggle('border', !selected)
+      btn.classList.toggle('border-brand-divider', !selected)
+      btn.setAttribute('aria-pressed', selected.toString())
+    })
+  }
 
   setupKeyboardTraps () {
     // Setup Escape key handling for all modals

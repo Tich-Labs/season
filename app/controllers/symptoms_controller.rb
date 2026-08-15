@@ -8,6 +8,9 @@ class SymptomsController < ApplicationController
       Time.zone.today
     end
     @log = current_user.symptom_logs.find_or_initialize_by(date: @date)
+    # Previous day's log — used to pre-fill sleep / temperature / weight as
+    # a starting point when today's log has no value yet (carry-over).
+    @prev_log = current_user.symptom_logs.find_by(date: @date - 1)
     @phase = current_user.current_phase
     @season = @phase ? CycleCalculatorService::SEASON_NAMES[@phase] : ""
     @cycle_day = current_user.current_cycle_day

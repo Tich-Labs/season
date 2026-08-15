@@ -189,7 +189,10 @@ class SettingsController < ApplicationController
       # URL fallback
       @user.update(avatar_url: params[:avatar_url], avatar_preset: nil)
     end
-    redirect_to profile_settings_path
+    # The avatar modal is opened from /settings/profile and from /tracking;
+    # land the user back where they made the change, not always profile.
+    safe_return = params[:return_to].in?([tracking_index_path, profile_settings_path]) ? params[:return_to] : nil
+    redirect_to safe_return || profile_settings_path
   end
 
   def update_profile

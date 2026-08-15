@@ -74,49 +74,7 @@
      data-phase-color="<%= phase_colour %>">
 
   <%# ── Date picker drum ──────────────────────────────────────────────── %>
-  <div class="flex justify-center pt-6 pb-2" data-controller="date-picker">
-    <div class="relative bg-brand-field overflow-hidden transition-all duration-300 ease-out"
-         style="width:155px; height:31px; border-radius:133px;"
-         data-date-picker-target="drum">
-
-      <%# Collapsed pill header %>
-      <button class="w-full h-[31px] flex items-center justify-center gap-2 text-brand-primary font-medium text-base font-sans focus:outline-none"
-              data-action="click->date-picker#toggle"
-              aria-label="Select date">
-        <%= @date.strftime("%-d %B") %>
-        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none"
-             stroke="currentColor" stroke-width="3" viewBox="0 0 24 24" aria-hidden="true">
-          <polyline points="6 9 12 15 18 9" />
-        </svg>
-      </button>
-
-      <%# Expanded content %>
-      <div class="hidden" data-date-picker-target="content">
-        <div class="flex justify-end pt-3 pr-4 pb-0">
-          <button data-action="click->date-picker#close" aria-label="Close date picker"
-                  class="text-brand-primary focus:outline-none">
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none"
-                 stroke="currentColor" stroke-width="3" viewBox="0 0 24 24" aria-hidden="true">
-              <polyline points="18 15 12 9 6 15" />
-            </svg>
-          </button>
-        </div>
-        <div class="relative" style="height:173px;">
-          <div class="sp-highlight" style="top:65px; height:42px;"></div>
-          <ul class="overflow-y-auto text-center scrollbar-hide"
-              style="height:173px; padding:65px 0; scroll-snap-type:y mandatory;">
-            <% ((Date.today - 29)..Date.today).each do |d| %>
-              <li style="scroll-snap-align:center; height:42px; min-height:42px; display:flex; align-items:center; justify-content:center;"
-                  class="<%= d == @date ? '' : '' %>">
-                <%= link_to d.strftime("%-d %B"), symptoms_path(date: d),
-                      class: "block font-sans no-underline #{d == @date ? 'font-bold text-base text-brand-primary opacity-100' : 'font-normal text-sm text-brand-primary opacity-45'}" %>
-              </li>
-            <% end %>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
+  <%= render "shared/date_picker_drum", date: @date, date_path: ->(d) { symptoms_path(date: d) } %>
 
   <%# ── Phase label ───────────────────────────────────────────────────── %>
   <div class="text-center pt-6 pb-5">
@@ -520,9 +478,10 @@
            data-scroll-picker-min-value="1"
            data-scroll-picker-max-value="12"
            data-scroll-picker-step-value="1"
-           data-scroll-picker-unit-value="h"
+            data-scroll-picker-unit-value="h"
            data-scroll-picker-field-value="sleep"
            data-scroll-picker-placeholder="--"
+           data-scroll-picker-start-value="<%= @prev_log&.sleep %>"
            data-action="scroll-picker:change->symptom#saveFromPicker">
         <div class="relative mx-auto w-[310px] h-[150px]">
           <div class="sp-highlight" style="top:54px; height:42px;"></div>
@@ -556,9 +515,10 @@
            data-scroll-picker-min-value="35.0"
            data-scroll-picker-max-value="42.0"
            data-scroll-picker-step-value="0.1"
-           data-scroll-picker-unit-value="°C"
+            data-scroll-picker-unit-value="°C"
            data-scroll-picker-field-value="temperature"
            data-scroll-picker-placeholder="--"
+           data-scroll-picker-start-value="<%= @prev_log&.temperature %>"
            data-action="scroll-picker:change->symptom#saveFromPicker">
         <div class="relative mx-auto w-[310px] h-[150px]">
           <div class="sp-highlight" style="top:54px; height:42px;"></div>
@@ -592,9 +552,10 @@
            data-scroll-picker-min-value="30.0"
            data-scroll-picker-max-value="200.0"
            data-scroll-picker-step-value="0.5"
-           data-scroll-picker-unit-value=" kg"
+            data-scroll-picker-unit-value=" kg"
            data-scroll-picker-field-value="weight"
            data-scroll-picker-placeholder="--"
+           data-scroll-picker-start-value="<%= @prev_log&.weight || 60.0 %>"
            data-action="scroll-picker:change->symptom#saveFromPicker">
         <div class="relative mx-auto w-[310px] h-[150px]">
           <div class="sp-highlight" style="top:54px; height:42px;"></div>

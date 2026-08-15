@@ -5,6 +5,9 @@ class SettingsControllerTest < ActionDispatch::IntegrationTest
   def setup
     @alice = users(:alice)
     sign_in_as(@alice)
+    # AvatarService is a plain Ruby service, not ActiveRecord — the
+    # RedundantActiveRecordAllMethod cop doesn't apply to its `.all`.
+    @avatar_preset = AvatarService.all.first[:id] # rubocop:disable Rails/RedundantActiveRecordAllMethod
   end
 
   test "GET /settings/edit returns 200" do
@@ -214,5 +217,28 @@ class SettingsControllerTest < ActionDispatch::IntegrationTest
     assert_no_match(/quick-actions#open/, response.body)
     assert_no_match(/Back to calendar/, response.body)
     assert_match(/Go to calendar/, response.body)
+  end
+
+  # The avatar modal is opened from /settings/profile and from /tracking;
+  # update_avatar must land the user back where they made the change.
+  test "PATCH /settings/update_avatar with return_to tracking redirects to tracking" do
+    patch update_avatar_settings_path, params: {avatar_preset: @avatar_preset, return_to: tracking_index_path}
+    assert_redirected_to tracking_index_path
+    assert_equal @avatar_preset, @alice.reload.avatar_preset
+  end
+
+  test "PATCH /settings/update_avatar with return_to profile redirects to profile" do
+    patch update_avatar_settings_path, params: {avatar_preset: @avatar_preset, return_to: profile_settings_path}
+    assert_redirected_to profile_settings_path
+  end
+
+  test "PATCH /settings/update_avatar without return_to falls back to profile" do
+    patch update_avatar_settings_path, params: {avatar_preset: @avatar_preset}
+    assert_redirected_to profile_settings_path
+  end
+
+  test "PATCH /settings/update_avatar ignores a non-whitelisted return_to" do
+    patch update_avatar_settings_path, params: {avatar_preset: @avatar_preset, return_to: "https://evil.example.com"}
+    assert_redirected_to profile_settings_path
   end
 end

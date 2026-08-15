@@ -72,4 +72,45 @@ class SymptomsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "a[href='#{tracking_index_path(tracking_saved: 1)}']", text: "Submit tracking"
   end
+
+  # Regression: date_picker_controller.js's open() looks for [data-selected]
+  # to auto-scroll it into view, but nothing ever set that attribute here
+  # (or on /superpowers, or /tracking) -- the auto-scroll was silently dead
+  # on all three. See shared/_date_picker_drum.html.erb.
+  test "GET /symptoms marks today as the selected day in the date picker" do
+    get symptoms_path
+    assert_response :success
+    assert_select "a[data-selected='true']", text: Time.zone.today.strftime("%-d %B")
+  end
+
+  # Carry-over: when today's log has no sleep / temperature / weight, the
+  # pickers pre-scroll to yesterday's values as a starting point (they are
+  # only saved once the user picks something).
+  test "GET /symptoms pre-fills sleep, temperature and weight from yesterday" do
+    get symptoms_path
+    assert_response :success
+    assert_select "div[data-scroll-picker-field-value='sleep'][data-scroll-picker-start-value='7']"
+    assert_select "div[data-scroll-picker-field-value='temperature'][data-scroll-picker-start-value='36.5']"
+    assert_select "div[data-scroll-picker-field-value='weight'][data-scroll-picker-start-value='62.0']"
+  end
+
+  # Weight starts at 60 kg when there is nothing to carry over.
+  test "GET /symptoms defaults the weight picker to 60 kg with no previous value" do
+    symptom_logs(:alice_yesterday).destroy
+    get symptoms_path
+    assert_response :success
+    assert_select "div[data-scroll-picker-field-value='weight'][data-scroll-picker-start-value='60.0']"
+    assert_select "div[data-scroll-picker-field-value='sleep'][data-scroll-picker-start-value='']"
+    assert_select "div[data-scroll-picker-field-value='temperature'][data-scroll-picker-start-value='']"
+  end
+
+  # A value already logged for the viewed day wins over the carry-over.
+  test "GET /symptoms keeps today's saved values over the carry-over" do
+    @alice.symptom_logs.create!(date: Time.zone.today, sleep: 8, temperature: 36.7, weight: 61.0)
+    get symptoms_path
+    assert_response :success
+    assert_select "div[data-scroll-picker-field-value='sleep'] input[value='8']"
+    assert_select "div[data-scroll-picker-field-value='temperature'] input[value='36.7']"
+    assert_select "div[data-scroll-picker-field-value='weight'] input[value='61.0']"
+  end
 end

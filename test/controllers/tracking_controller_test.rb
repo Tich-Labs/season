@@ -79,4 +79,43 @@ class TrackingControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "#tracking-saved-modal", false
   end
+
+  # Daily Analysis card: only shows when arriving at /tracking itself (no
+  # date param), auto-closes after ~10s, and never pops up when tapping a
+  # day in the strip.
+  test "GET /tracking shows the Daily Analysis card on a natural load" do
+    get tracking_index_path
+    assert_response :success
+    assert_select "[data-controller='dismissible']"
+  end
+
+  test "GET /tracking?date= hides the Daily Analysis card for today" do
+    get tracking_index_path(date: Time.zone.today.to_s)
+    assert_response :success
+    assert_select "[data-controller='dismissible']", false
+  end
+
+  test "GET /tracking?date= hides the Daily Analysis card for a past date" do
+    get tracking_index_path(date: 3.days.ago.to_date.to_s)
+    assert_response :success
+    assert_select "[data-controller='dismissible']", false
+  end
+
+  # Strip days: today and the past open tracking for that date; future days
+  # are preview-only and must not be tappable.
+  test "GET /tracking strip links today and past dates but not future dates" do
+    get tracking_index_path
+    assert_response :success
+    assert_select "a[href='#{tracking_index_path(date: Time.zone.today.to_s)}']"
+    assert_select "a[href='#{tracking_index_path(date: 3.days.ago.to_date.to_s)}']"
+    assert_select "a[href='#{tracking_index_path(date: Time.zone.tomorrow.to_s)}']", false
+  end
+
+  # shared/_date_picker_drum.html.erb, also used by /symptoms and /superpowers.
+  test "GET /tracking renders the date picker drum with today marked selected" do
+    get tracking_index_path
+    assert_response :success
+    assert_select "[data-controller='date-picker']"
+    assert_select "a[data-selected='true']", text: Time.zone.today.strftime("%-d %B")
+  end
 end

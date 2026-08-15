@@ -2,7 +2,7 @@
 import { Controller } from '@hotwired/stimulus'
 
 export default class extends Controller {
-  static targets = ['drum', 'content']
+  static targets = ['drum', 'content', 'toggleButton']
 
   connect () {
     this._closeHandler = (e) => {
@@ -27,6 +27,11 @@ export default class extends Controller {
   open () {
     this.drumTarget.style.height = '215px'
     this.drumTarget.style.borderRadius = '25px'
+    // The collapsed pill's own label/chevron button was never hidden here,
+    // so it stayed rendered on top of the expanded list -- its text
+    // ("15 August ⌄") visually collided with the close chevron and first
+    // row underneath it.
+    this.toggleButtonTarget.classList.add('hidden')
     this.contentTarget.classList.remove('hidden')
     this.#expanded = true
 
@@ -47,6 +52,7 @@ export default class extends Controller {
     this.drumTarget.style.height = '31px'
     this.drumTarget.style.borderRadius = '133px'
     this.contentTarget.classList.add('hidden')
+    this.toggleButtonTarget.classList.remove('hidden')
     this.#expanded = false
   }
 

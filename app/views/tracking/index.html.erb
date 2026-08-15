@@ -31,9 +31,15 @@
 <div class="min-h-screen pb-24 bg-brand-field">
   <div class="max-w-app mx-auto px-4">
 
+    <%# ── Date picker drum ────────────────────────────────────────────── %>
+    <%= render "shared/date_picker_drum", date: @date, date_path: ->(d) { tracking_index_path(date: d) } %>
+
     <%# ── Avatar (tap to change) ──────────────────────────────────────── %>
-    <div class="flex justify-center pt-8 pb-5">
-      <%= link_to profile_settings_path, class: "relative block w-56 h-56 shrink-0", aria: { label: "Change profile picture" } do %>
+    <div class="flex justify-center pt-8 pb-5" data-controller="profile-modal"
+         data-action="click@window->profile-modal#clickOutside">
+      <button type="button" data-action="click->profile-modal#openAvatarModal"
+              class="relative block w-56 h-56 shrink-0 bg-transparent border-0 p-0 cursor-pointer"
+              aria-label="Change profile picture">
         <div class="w-56 h-56 rounded-full flex items-center justify-center overflow-hidden"
              style="background:<%= phase_colour %>;">
           <% if current_user.avatar_preset.present? %>
@@ -66,7 +72,11 @@
              <circle cx="12" cy="13" r="4" />
           </svg>
         </span>
-      <% end %>
+      </button>
+
+      <%# Avatar picker modal — inline here (and in /settings/profile) so the
+           camera/avatar tap works without leaving /tracking. %>
+      <%= render "settings/avatar_modal" %>
     </div>
 
     <%# ── Phase text ──────────────────────────────────────────────────── %>
@@ -83,8 +93,10 @@
       <% end %>
     </div>
 
-    <%# ── Daily Analysis card ──────────────────────────────────────────── %>
-    <% if phase_label %>
+    <%# ── Daily Analysis card ────────────────────────────────────────────
+         Only shows when arriving at /tracking itself (no date param), not
+         when tapping a day in the strip below. Auto-closes after ~10s. %>
+    <% if params[:date].blank? && phase_label %>
       <%
         analysis_messages = {
           "menstrual"  => "This is your time to rest and restore. Listen to your body — it knows what it needs.",
@@ -113,14 +125,23 @@
         <div class="flex gap-3 pt-2 pb-1 w-max px-4">
           <% @strip.each do |day| %>
             <% dot_colour = day[:colour] || "#D18D83" %>
-            <%= link_to tracking_index_path(date: day[:date].to_s),
-                  class: "no-underline",
-                  "aria-label": day[:date].strftime("%A, %d %B") do %>
-              <div class="w-12 h-12 rounded-full flex items-center justify-center text-base font-semibold <%= day[:current] ? 'text-white ring-2 ring-offset-2 ring-white' : 'text-white opacity-75' %>"
-                   style="background:<%= dot_colour %>;"
-                   <%= 'data-center-scroll-target="current"'.html_safe if day[:current] %>>
+            <% if day[:date] > Time.zone.today %>
+              <%# Future days are for preview only — tapping them does nothing. %>
+              <div aria-hidden="true" title="<%= day[:date].strftime("%A, %d %B") %>"
+                   class="w-12 h-12 rounded-full flex items-center justify-center text-base font-semibold text-white opacity-75 cursor-default"
+                   style="background:<%= dot_colour %>;">
                 <%= day[:date].day %>
               </div>
+            <% else %>
+              <%= link_to tracking_index_path(date: day[:date].to_s),
+                    class: "no-underline",
+                    "aria-label": day[:date].strftime("%A, %d %B") do %>
+                <div class="w-12 h-12 rounded-full flex items-center justify-center text-base font-semibold <%= day[:current] ? 'text-white ring-2 ring-offset-2 ring-white' : 'text-white opacity-75' %>"
+                     style="background:<%= dot_colour %>;"
+                     <%= 'data-center-scroll-target="current"'.html_safe if day[:current] %>>
+                  <%= day[:date].day %>
+                </div>
+              <% end %>
             <% end %>
           <% end %>
         </div>

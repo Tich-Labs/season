@@ -56,4 +56,12 @@ class SuperpowersControllerTest < ActionDispatch::IntegrationTest
     # /tracking -- see tracking_controller_test.rb.
     assert_select "a[href='#{tracking_index_path(tracking_saved: 1)}']", text: "Submit tracking"
   end
+
+  # Regression: see the matching test in symptoms_controller_test.rb --
+  # [data-selected] was never set here either, on the shared date picker.
+  test "GET /superpowers marks today as the selected day in the date picker" do
+    get superpowers_path
+    assert_response :success
+    assert_select "a[data-selected='true']", text: Time.zone.today.strftime("%-d %B")
+  end
 end

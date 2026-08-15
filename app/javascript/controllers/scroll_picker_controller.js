@@ -18,12 +18,14 @@ export default class extends Controller {
     step: { type: Number, default: 1 },
     unit: String,
     field: String,
-    placeholder: String
+    placeholder: String,
+    start: Number
   }
 
   #itemHeight = 42
   #rafId = null
   #saveTimer = null
+  #presetActive = false
 
   connect () {
     this.#build()
@@ -32,8 +34,14 @@ export default class extends Controller {
     // the overlay is never shown.
     if (this.hasDisplayTarget) this.displayTarget.style.display = 'none'
 
-    if (this.inputTarget.value) {
-      this.#scrollTo(parseFloat(this.inputTarget.value), false)
+    // Pre-scroll to the saved value, or to a carry-over start value
+    // (yesterday's sleep / temp / weight, or the 60 kg weight default).
+    // The input stays empty until the user actually picks something, so
+    // the preset is a starting point only — it is never saved on its own.
+    const initial = this.inputTarget.value || this.startValue
+    if (initial) {
+      this.#presetActive = true
+      this.#scrollTo(parseFloat(initial), false)
     }
     this.#highlight()
   }
@@ -70,7 +78,10 @@ export default class extends Controller {
     if (this.#rafId) return
     this.#rafId = requestAnimationFrame(() => {
       this.#rafId = null
+      const wasPreset = this.#presetActive
+      this.#presetActive = false
       this.#highlight()
+      if (wasPreset) return // swallow the connect-time programmatic scroll
       clearTimeout(this.#saveTimer)
       this.#saveTimer = setTimeout(() => this.#commit(), 80)
     })

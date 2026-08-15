@@ -18,46 +18,7 @@
   <div class="max-w-app mx-auto px-4">
 
     <%# ── Date picker drum ────────────────────────────────────────────── %>
-    <div class="flex justify-center pt-6 pb-2" data-controller="date-picker">
-      <div class="relative bg-brand-field overflow-hidden transition-all duration-300 ease-out"
-           style="width:155px; height:31px; border-radius:133px;"
-           data-date-picker-target="drum">
-
-        <button class="w-full h-[31px] flex items-center justify-center gap-2 text-brand-primary font-medium text-base font-sans focus:outline-none"
-                data-action="click->date-picker#toggle"
-                aria-label="Select date">
-          <%= @date.strftime("%-d %B") %>
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none"
-               stroke="currentColor" stroke-width="3" viewBox="0 0 24 24" aria-hidden="true">
-            <polyline points="6 9 12 15 18 9" />
-          </svg>
-        </button>
-
-        <div class="hidden" data-date-picker-target="content">
-          <div class="flex justify-end pt-3 pr-4 pb-0">
-            <button data-action="click->date-picker#close" aria-label="Close date picker"
-                    class="text-brand-primary focus:outline-none">
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none"
-                   stroke="currentColor" stroke-width="3" viewBox="0 0 24 24" aria-hidden="true">
-                <polyline points="18 15 12 9 6 15" />
-              </svg>
-            </button>
-          </div>
-          <div class="relative" style="height:173px;">
-            <div class="sp-highlight" style="top:65px; height:42px;"></div>
-            <ul class="overflow-y-auto text-center scrollbar-hide"
-                style="height:173px; padding:65px 0; scroll-snap-type:y mandatory;">
-              <% ((Date.today - 29)..Date.today).each do |d| %>
-                <li style="scroll-snap-align:center; height:42px; min-height:42px; display:flex; align-items:center; justify-content:center;">
-                  <%= link_to d.strftime("%-d %B"), superpowers_path(date: d),
-                        class: "block font-sans no-underline #{d == @date ? 'font-bold text-base text-brand-primary opacity-100' : 'font-normal text-sm text-brand-primary opacity-45'}" %>
-                </li>
-              <% end %>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
+    <%= render "shared/date_picker_drum", date: @date, date_path: ->(d) { superpowers_path(date: d) } %>
 
     <!-- Log today's superpowers -->
     <div class="bg-white rounded-xl p-5 mb-3"

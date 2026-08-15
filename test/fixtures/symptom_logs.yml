@@ -3,6 +3,9 @@ alice_yesterday:
   date: "<%= Date.yesterday %>"
   mood: 3
   energy: 4
+  sleep: 7
+  temperature: 36.5
+  weight: 62.0
 
 bob_yesterday:
   user: bob

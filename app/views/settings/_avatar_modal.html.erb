@@ -1,0 +1,67 @@
+<%# Avatar picker modal — shared by /settings/profile and the /tracking
+     avatar (camera icon). Must stay inside a data-controller="profile-modal"
+     scope; the modal's buttons call profile-modal actions. %>
+<% avatar_return_to = request.path == tracking_index_path ? tracking_index_path : profile_settings_path %>
+<div id="avatar-modal" role="dialog" aria-modal="true" aria-labelledby="avatar-modal-title" class="hidden fixed inset-0 bg-black/50 z-[100] items-center justify-center">
+  <div class="bg-brand-background rounded-2xl p-6 w-[90%] max-w-[340px] mx-4">
+    <div class="flex justify-between items-center mb-5">
+      <h3 id="avatar-modal-title" class="text-brand-primary text-lg font-semibold m-0"><%= t("settings.profile.profile_picture") %></h3>
+      <button data-action="click->profile-modal#closeAvatarModal" class="bg-transparent border-none cursor-pointer">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
+          <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="mb-5">
+      <label class="block text-brand-primary text-13 font-medium mb-3"><%= t("settings.profile.choose_cat_avatar") %></label>
+      <div class="grid grid-cols-4 gap-3">
+        <% AvatarService.all.each do |preset| %>
+          <% selected = current_user.avatar_preset == preset[:id] %>
+          <button type="button" data-action="click->profile-modal#selectAvatarPreset"
+                  data-avatar-preset="<%= preset[:id] %>"
+                  title="<%= preset[:name] %>" aria-label="<%= preset[:name] %>" aria-pressed="<%= selected %>"
+                  class="<%= selected ? 'border-[3px] border-brand-primary' : 'border border-brand-divider' %> flex items-center justify-center w-full aspect-square bg-white rounded-xl p-2 cursor-pointer transition-all">
+            <%= image_tag "avatars/#{preset[:file]}", alt: preset[:name], class: "w-full h-full object-cover rounded-lg" %>
+          </button>
+        <% end %>
+      </div>
+    </div>
+
+    <hr class="border-none border-t border-brand-divider my-5">
+
+    <%# Single form: preset selection, device upload and URL all feed this one
+         "Add Photo" submit. The preset buttons above only highlight the choice
+         (selectAvatarPreset); nothing is saved until Add Photo is tapped. %>
+    <%= form_with url: update_avatar_settings_path, method: :patch, multipart: true, data: { turbo: false }, local: true, id: "avatar-upload-form" do %>
+      <input type="hidden" name="return_to" value="<%= avatar_return_to %>">
+      <input type="hidden" name="avatar_preset" id="avatar-selected-preset" value="<%= current_user.avatar_preset %>">
+
+      <button type="button" data-action="click->profile-modal#clickAvatarUpload"
+              class="flex items-center gap-3 w-full bg-white border border-brand-divider rounded-xl p-4 mb-3 cursor-pointer text-left">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#933a35" stroke-width="1.5" viewBox="0 0 24 24">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+          <circle cx="8.5" cy="8.5" r="1.5" />
+          <polyline points="21 15 16 10 5 21" />
+        </svg>
+        <span class="text-brand-primary text-base font-medium"><%= t("settings.profile.upload_from_device") %></span>
+      </button>
+      <input type="file" id="avatar-file" name="avatar" accept="image/*"
+             data-action="change->profile-modal#fileSelected"
+             class="absolute -left-[9999px] w-px h-px opacity-0">
+
+      <label for="avatar-url-input" class="block text-brand-primary text-13 font-medium mb-1.5"><%= t("settings.profile.or_paste_url") %></label>
+      <input type="text" id="avatar-url-input" name="avatar_url" placeholder="https://..." autocomplete="url"
+             data-action="input->profile-modal#urlSelected"
+             class="w-full bg-white border border-brand-divider rounded-xl p-4 text-base text-brand-primary box-border mb-3">
+      <button type="submit" class="w-full bg-brand-primary text-white border-none rounded-xl py-3.5 text-base font-medium cursor-pointer">
+        <%= t("settings.profile.add_photo") %>
+      </button>
+    <% end %>
+
+    <button data-action="click->profile-modal#closeAvatarModal"
+            class="w-full bg-transparent text-brand-primary border border-brand-divider rounded-xl py-3.5 text-base font-medium cursor-pointer mt-2">
+      <%= t("settings.profile.cancel") %>
+    </button>
+  </div>
+</div>
