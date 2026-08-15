@@ -29,6 +29,8 @@ npx standard app/javascript/controllers/          # JS lint
 
 - `User#current_phase` returns nil for new users → guard with `|| "Unknown"`
 - Use `current_user.onboarding_completed?` not `last_period_start.present?`
+- Layout bottom padding: `<main>` in `application.html.erb` reserves 8rem ONLY when the shared "+" quick-actions FAB renders (pages that set `hide_quick_actions`). Pages with a bottom FAB own their own clearance inside their wrapper: center-FAB pages use `pb-28` (112px ≥ FAB top at 106px), `/calendar` uses `pb-32` (its "+" sits at 3rem). Do NOT add blanket `<main>` bottom padding — it shows as a band of `#FAF7F4` dead space below white content.
+- New `pb-*` utilities added to views need `bin/rails tailwindcss:build` (JIT only emits classes found in source at build time); commit the rebuilt `app/assets/builds/tailwind.css`.
 - `Admin::FeedbacksController` was deleted → use `Admin::InboxController`
 - `config/master.key` is gitignored → get from team password manager
 - ERB lint warnings are false positives (parser vs Ruby version)

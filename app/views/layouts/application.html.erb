@@ -37,6 +37,11 @@
   <%# Logic check: Only show App Bar/Menu if user is logged in and past the splash/auth screens %>
   <% is_authenticated_view = authenticated? && !controller_name.in?(%w[sessions registrations home onboarding]) %>
 
+  <%# Pages that keep the shared "+" quick-actions FAB. Everything else hides it
+       (settings, calendar, tracking, etc.) and owns its own bottom FAB, so only
+       these pages need <main> to reserve 8rem of clearance below the content. %>
+  <% render_quick_actions = is_authenticated_view && !content_for?(:hide_quick_actions) && !controller_name.in?(%w[information]) %>
+
   <% app_lock_enabled = authenticated? && current_user.pin_set? %>
   <body class="bg-brand-background font-sans antialiased h-full overflow-x-hidden"
         data-controller="update-prompt install haptic<%= ' app-lock' if app_lock_enabled %>"
@@ -132,19 +137,21 @@
     </div>
     <% end %>
 
-    <%# Bottom padding must mirror the top padding's native branch: when native_app? is
-         true, the "native-inset" class below already injects an ::after spacer sized to
-         env(safe-area-inset-bottom) (see the ruby_native gem's CSS). Adding env() again
-         here double-counts that inset on native builds, padding the bottom by an extra
-         safe-area-inset-bottom's worth of dead space. %>
-    <main class="w-full flex-1 overscroll-contain <%= 'native-inset' if native_app? %>" data-controller="pull-to-refresh" style="<%= is_authenticated_view ? (native_app? ? "padding-top: 3.5rem;" : "padding-top: calc(3.5rem + env(safe-area-inset-top, 0px));") : '' %><%= is_authenticated_view ? "padding-bottom: #{native_app? ? "8rem" : "calc(8rem + env(safe-area-inset-bottom, 0px))"};" : '' %><%= ";--phase-color:#{yield(:phase_color)}" if content_for?(:phase_color) %>">
+    <%# Bottom padding only for pages that keep the shared "+" quick-actions FAB.
+         Pages that hide it render their own bottom FAB (or none) inside their own
+         wrapper, so a blanket padding here just leaves a band of dead space below
+         the content. When native_app? is true, the "native-inset" class below
+         already injects an ::after spacer sized to env(safe-area-inset-bottom)
+         (see the ruby_native gem's CSS), so adding env() again here would
+         double-count that inset on native builds. %>
+    <main class="w-full flex-1 overscroll-contain <%= 'native-inset' if native_app? %>" data-controller="pull-to-refresh" style="<%= is_authenticated_view ? (native_app? ? "padding-top: 3.5rem;" : "padding-top: calc(3.5rem + env(safe-area-inset-top, 0px));") : '' %><%= render_quick_actions ? "padding-bottom: #{native_app? ? "8rem" : "calc(8rem + env(safe-area-inset-bottom, 0px))"};" : '' %><%= ";--phase-color:#{yield(:phase_color)}" if content_for?(:phase_color) %>">
       <div class="max-w-app mx-auto h-full">
         <%= render "shared/flash" %>
         <%= yield %>
       </div>
     </main>
 
-    <% if is_authenticated_view && !content_for?(:hide_quick_actions) && !controller_name.in?(%w[information]) %>
+    <% if render_quick_actions %>
       <%= render "shared/quick_actions" %>
       <% unless native_app? %>
         <%= render "shared/feedback_modal" %>

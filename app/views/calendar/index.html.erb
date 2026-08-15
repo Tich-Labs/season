@@ -1,5 +1,9 @@
 <% cal_index_title = @date.strftime("%B") %>
 <% content_for(:page_title) { cal_index_title } %>
+<%# This page owns the "+" FAB itself (rendered at the bottom so its clearance
+     sits inside the page's white wrapper instead of <main>'s dead space), so opt
+     out of the layout-rendered quick-actions block + its bottom padding. %>
+<% content_for(:hide_quick_actions) { "true" } %>
 <% content_for(:header_left) do %>
   <button class="p-2" data-action="click->menu#open">
     <svg class="w-6 h-6 text-brand-primary" viewBox="0 0 24 24" fill="currentColor">
@@ -114,8 +118,8 @@
      colouring — see the current_user.last_period_start check further down),
      and per M1 this state shows no FAB at all, not even the usual "+"
      quick-actions one. %>
-    <% if current_user.onboarding_completed? && current_user.last_period_start.nil? && current_user.period_starts.empty? %>
-      <% content_for(:hide_quick_actions) { "true" } %>
+    <% no_cycle_state = current_user.onboarding_completed? && current_user.last_period_start.nil? && current_user.period_starts.empty? %>
+    <% if no_cycle_state %>
       <%= render "shared/no_cycle_data_modal" %>
   <div class="bg-brand-error px-4 py-3 text-center border-b border-brand-primary">
       <p class="text-brand-primary text-sm mb-2">
@@ -132,10 +136,10 @@
      viewport bottom regardless of content height, so forcing this wrapper to
      fill the whole browser window (which can be 1000px+ tall on desktop web)
      just creates a large gap between the last calendar row and the FAB on
-     any month/window combo shorter than that. Content-height sizing plus
-     bg-brand-background showing through below (near-identical warm off-white
-     to this white) reads as intentional instead. %>
-<div class="bg-white pb-4">
+     any month/window combo shorter than that. The pb-32 below is the FAB's
+     footprint: it keeps the page's white background running through the
+     area the "+" floats over, so no body background shows through. %>
+<div class="bg-white pb-32">
   <div class="max-w-app mx-auto px-4 pt-6">
 
     <%# ── Greeting ── %>
@@ -299,3 +303,14 @@
     </button>
   </div>
 </div>
+
+<%# This page opted out of the layout's quick-actions block, so the "+" FAB and
+     the feedback/support/weekly modals are rendered here (inside the white
+     wrapper's pb-32 clearance, and without <main>'s dead-space padding). The
+     no-cycle state shows no FAB at all. %>
+<% unless no_cycle_state %>
+  <%= render "shared/quick_actions" %>
+<% end %>
+<%= render "shared/feedback_modal" %>
+<%= render "shared/support_modal" %>
+<%= render "shared/weekly_feedback_modal" %>
