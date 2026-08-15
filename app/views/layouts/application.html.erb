@@ -9,9 +9,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-
     <%= yield :head %>
-
     <%= tag.link rel: "manifest", href: pwa_manifest_path %>
     <link rel="icon" type="image/png" href="/favicon.png">
     <link rel="apple-touch-icon" href="/icon.png">
@@ -33,7 +31,7 @@
           }).catch(function() {});
         });
       }
-    </script>
+      </script>
   </head>
 
   <%# Logic check: Only show App Bar/Menu if user is logged in and past the splash/auth screens %>

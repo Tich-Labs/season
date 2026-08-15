@@ -650,15 +650,15 @@
         <div class="relative bg-white rounded-[29px] mx-4 mt-8" style="width:351px; max-width:calc(100vw - 32px);">
           <%# Close button %>
           <button data-action="click->submit-modal#close" aria-label="Close"
-                  class="absolute top-3 right-3 w-[37px] h-[37px] flex items-center justify-center rounded-full rotate-45 border-0 bg-transparent cursor-pointer"
+                  class="absolute top-3 right-3 w-11 h-11 flex items-center justify-center rounded-full rotate-45 border-0 bg-transparent cursor-pointer"
                   style="color:#A43600;">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#933a35" stroke-width="3">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#933a35" stroke-width="3">
               <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
             </svg>
           </button>
 
           <%# Title %>
-          <p class="text-brand-primary font-medium text-22 text-center pt-8 pb-2 leading-tight font-sans"><%= t("tracking.index.my_symptoms") %></p>
+          <p class="text-brand-primary font-medium text-22 text-center pt-8 pb-2 leading-tight font-sans"><%= t("symptoms.index.confirm_tracking_title") %></p>
           <div class="mx-[30px] border-t border-brand-field mb-4"></div>
 
           <%# Count %>
@@ -674,7 +674,7 @@
           </div>
 
           <%# Buttons %>
-          <%= link_to t("symptoms.index.submit_tracking"), tracking_index_path,
+          <%= link_to t("symptoms.index.submit_tracking"), tracking_index_path(tracking_saved: 1),
                 class: "block mx-[25px] text-center bg-brand-primary text-white rounded-lg py-[14px] text-base font-medium tracking-003 font-sans no-underline mb-3" %>
           <button data-action="click->submit-modal#close"
                   class="block w-full text-center text-brand-primary text-base font-medium tracking-003 font-sans pb-6 border-0 bg-transparent cursor-pointer">

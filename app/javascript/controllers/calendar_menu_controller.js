@@ -32,8 +32,4 @@ export default class extends Controller {
   closeWithKeyboard (e) {
     if (e.key === 'Escape') this.close()
   }
-
-  stopPropagation (e) {
-    e.stopPropagation()
-  }
 }

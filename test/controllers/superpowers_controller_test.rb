@@ -43,4 +43,17 @@ class SuperpowersControllerTest < ActionDispatch::IntegrationTest
     get superpowers_path(date: "")
     assert_response :success
   end
+
+  # Regression: "Submit" used to be a bare link straight to /tracking with no
+  # review step at all, unlike /symptoms' pre-submit summary modal.
+  test "GET /superpowers renders the pre-submit review modal, not a bare submit link" do
+    get superpowers_path
+    assert_response :success
+    assert_select "[data-controller='superpowers-submit-modal']"
+    assert_select "[data-superpowers-submit-modal-target='modal']"
+    assert_select "button[data-action='click->superpowers-submit-modal#open']", text: "Submit"
+    # tracking_saved=1 is what triggers the post-save prediction modal on
+    # /tracking -- see tracking_controller_test.rb.
+    assert_select "a[href='#{tracking_index_path(tracking_saved: 1)}']", text: "Submit tracking"
+  end
 end

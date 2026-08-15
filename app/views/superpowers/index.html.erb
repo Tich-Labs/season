@@ -111,10 +111,52 @@
         <% end %>
       </div>
 
-      <%# Submit button %>
-      <div class="mt-6">
-        <%= link_to "Submit", tracking_index_path,
-              class: "block w-[253px] mx-auto text-white text-center rounded-lg py-4 text-xl font-medium tracking-wide font-sans no-underline bg-brand-primary" %>
+      <%# Submit button — pre-submit review modal, matching the pattern
+           /symptoms uses (see submit_modal_controller.js / this page's
+           superpowers-submit-modal equivalent). Previously a bare link
+           straight to /tracking with no review step at all. %>
+      <div class="mt-6" data-controller="superpowers-submit-modal">
+        <button type="button" data-action="click->superpowers-submit-modal#open"
+                class="block w-[253px] mx-auto text-white text-center rounded-lg py-4 text-xl font-medium tracking-wide font-sans border-0 cursor-pointer bg-brand-primary">
+          <%= t("superpowers.index.submit") %>
+        </button>
+
+        <%# ── Pre-submit review modal ───────────────────────────────────── %>
+        <div class="hidden fixed inset-0 z-[100] flex items-start justify-center bg-black/40"
+             data-superpowers-submit-modal-target="modal"
+             data-action="click->superpowers-submit-modal#overlayClick">
+          <div class="relative bg-white rounded-[29px] mx-4 mt-8" style="width:351px; max-width:calc(100vw - 32px);">
+            <%# Close button %>
+            <button data-action="click->superpowers-submit-modal#close" aria-label="Close"
+                    class="absolute top-3 right-3 w-11 h-11 flex items-center justify-center rounded-full rotate-45 border-0 bg-transparent cursor-pointer"
+                    style="color:#A43600;">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#933a35" stroke-width="3">
+                <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
+              </svg>
+            </button>
+
+            <%# Title %>
+            <p class="text-brand-primary font-medium text-22 text-center pt-8 pb-2 leading-tight font-sans"><%= t("superpowers.index.confirm_tracking_title") %></p>
+            <div class="mx-[30px] border-t border-brand-field mb-4"></div>
+
+            <%# Count %>
+            <p data-superpowers-submit-modal-target="count"
+               class="text-brand-primary font-medium text-base tracking-003 px-[25px] mb-3 font-sans"></p>
+
+            <%# Scrollable list — populated dynamically by JS %>
+            <div class="mx-[15px] bg-brand-field/50 rounded-[30px] py-3 px-4 mb-5" style="max-height:280px; overflow-y:auto;">
+              <div data-superpowers-submit-modal-target="list"></div>
+            </div>
+
+            <%# Buttons %>
+            <%= link_to t("superpowers.index.submit_tracking"), tracking_index_path(tracking_saved: 1),
+                  class: "block mx-[25px] text-center bg-brand-primary text-white rounded-lg py-[14px] text-base font-medium tracking-003 font-sans no-underline mb-3" %>
+            <button data-action="click->superpowers-submit-modal#close"
+                    class="block w-full text-center text-brand-primary text-base font-medium tracking-003 font-sans pb-6 border-0 bg-transparent cursor-pointer">
+              <%= t("superpowers.index.go_back") %>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
 

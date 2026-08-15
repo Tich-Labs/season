@@ -463,6 +463,7 @@ de:
       creation_failed: "Konto konnte nicht erstellt werden. Bitte versuche es erneut."
   symptoms:
     index:
+      confirm_tracking_title: "Tracking bestätigen"
       mood: "Stimmung"
       physical: "Körperlich"
       mental: "Mental"
@@ -503,7 +504,11 @@ de:
   superpowers:
     index:
       title: "Heutige Superkräfte"
+      confirm_tracking_title: "Tracking bestätigen"
       save: "Superkräfte speichern"
+      submit: "Absenden"
+      submit_tracking: "Tracking absenden"
+      go_back: "Zurück zum Ändern"
       recent_logs: "Letzte Einträge"
       no_logs: "Für diesen Tag wurden keine Superkräfte protokolliert."
     show:

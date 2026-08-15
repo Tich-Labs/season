@@ -52,4 +52,31 @@ class TrackingControllerTest < ActionDispatch::IntegrationTest
     patch period_tracking_index_path, params: {last_period_start: Time.zone.today.to_s}
     assert_response :redirect
   end
+
+  # Regression: the post-tracking-save prediction modal used to be gated on
+  # params[:period_saved], which nothing ever actually set on redirect --
+  # the modal has never fired until now. Covers all three flows that feed
+  # the same cycle prediction and share this one confirmation.
+  test "PATCH /tracking/period redirects with tracking_saved so the prediction modal shows" do
+    patch period_tracking_index_path, params: {last_period_start: Time.zone.today.to_s}
+    assert_redirected_to tracking_index_path(tracking_saved: 1)
+  end
+
+  test "POST /tracking (period_start) redirects with tracking_saved so the prediction modal shows" do
+    post tracking_index_path, params: {period_start: "1"}
+    assert_redirected_to tracking_index_path(tracking_saved: 1)
+  end
+
+  test "GET /tracking?tracking_saved=1 renders the prediction modal" do
+    get tracking_index_path(tracking_saved: 1)
+    assert_response :success
+    assert_select "#tracking-saved-modal"
+    assert_match(/Your prediction will be adjusted based on the information you provide/, response.body)
+  end
+
+  test "GET /tracking without tracking_saved does not render the prediction modal" do
+    get tracking_index_path
+    assert_response :success
+    assert_select "#tracking-saved-modal", false
+  end
 end

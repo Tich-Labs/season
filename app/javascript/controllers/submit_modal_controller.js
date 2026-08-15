@@ -110,7 +110,11 @@ export default class extends Controller {
     sectionEl.querySelectorAll('.symptom-slider').forEach(slider => {
       const v = parseInt(slider.value)
       if (v > 0) {
-        const row = slider.closest('.symptom-row')
+        // The slider rows are rendered with class "sp-row" (see
+        // symptoms/_symptom_slider_row.html.erb), not "symptom-row" -- that
+        // mismatch meant this always found nothing, silently dropping the
+        // label and leaving only "→ Medium" etc. in the review modal.
+        const row = slider.closest('.sp-row')
         const labelEl = row?.querySelector('span:first-child')
         items.push({ label: labelEl?.textContent || '', level: LEVELS[v] })
       }

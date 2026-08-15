@@ -478,6 +478,7 @@ en:
       too_many_attempts: "Too many login attempts. Please try again later."
   symptoms:
     index:
+      confirm_tracking_title: "Confirm tracking"
       mood: "Mood"
       physical: "Physical"
       mental: "Mental"
@@ -518,7 +519,11 @@ en:
   superpowers:
     index:
       title: "Today's superpowers"
+      confirm_tracking_title: "Confirm tracking"
       save: "Save Superpowers"
+      submit: "Submit"
+      submit_tracking: "Submit tracking"
+      go_back: "Go back to change"
       recent_logs: "Recent logs"
       no_logs: "No superpowers logged for this day."
     show:

@@ -64,4 +64,12 @@ class SymptomsControllerTest < ActionDispatch::IntegrationTest
     get symptoms_path(date: "")
     assert_response :success
   end
+
+  # tracking_saved=1 is what triggers the post-save prediction modal on
+  # /tracking -- see tracking_controller_test.rb.
+  test "GET /symptoms Submit tracking link includes tracking_saved" do
+    get symptoms_path
+    assert_response :success
+    assert_select "a[href='#{tracking_index_path(tracking_saved: 1)}']", text: "Submit tracking"
+  end
 end
