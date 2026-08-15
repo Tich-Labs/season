@@ -32,7 +32,7 @@ class SuperpowersController < ApplicationController
     rescue ArgumentError, TypeError
       Time.zone.today
     end
-    @phase = current_user.current_phase || "follicular"
+    @phase = CycleCalculatorService.new(current_user).effective_phase_for_date(@date) || "follicular"
     @phase_colour = CycleCalculatorService::PHASE_META[@phase]&.dig(:colour) || "#933a35"
     @superpowers = SUPERPOWERS
     @superpower_logs = current_user.superpower_logs.order(date: :desc).limit(10)
@@ -43,7 +43,7 @@ class SuperpowersController < ApplicationController
   def show
     @superpower_log = current_user.superpower_logs.find(params[:id])
     authorize @superpower_log
-    @phase = current_user.current_phase
+    @phase = CycleCalculatorService.new(current_user).effective_phase_for_date(@superpower_log.date)
     @phase_colour = CycleCalculatorService::PHASE_META[@phase]&.dig(:colour) || "#933a35"
   end
 

@@ -1,10 +1,10 @@
 <% content_for(:page_title) { "Superpowers" } %>
 <% content_for(:header_color) { @phase_colour } %>
 <% content_for(:header_dark) { "true" } %>
-<%# Not under settings/ or calendar#index, so the layout was showing both
-     the "+" quick-actions FAB and the default calendar FAB stacked
-     together. Keep only the centred calendar FAB (see
-     shared/_calendar_center_fab.html.erb) instead of either. %>
+<%# Not under settings/ or calendar#index, so the layout would otherwise show
+     both the "+" quick-actions FAB and the default calendar FAB. Neither is
+     in Figma for this screen — the header-left "< back" link below is the
+     only navigation this page needs. %>
 <% content_for(:hide_quick_actions) { "true" } %>
 <% content_for(:hide_calendar_fab) { "true" } %>
 <% content_for(:header_left) do %>
@@ -144,5 +144,3 @@
 
   </div>
 </div>
-
-<%= render "shared/calendar_center_fab", bg: "bg-brand-field" %>

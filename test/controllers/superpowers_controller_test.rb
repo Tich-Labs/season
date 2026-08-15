@@ -50,6 +50,33 @@ class SuperpowersControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  # Regression: the header phase used to always be computed for today, so
+  # back-dating via the drum showed the wrong phase (same fix as /symptoms).
+  test "GET /superpowers shows the phase for the viewed date, not today" do
+    start = 14.days.ago.to_date
+    luteal_date = start + 21
+    get superpowers_path(date: luteal_date.to_date.to_s)
+    assert_response :success
+    assert_select "p", text: "Luteal Phase"
+  end
+
+  test "GET /superpowers shows today's phase without a date param" do
+    get superpowers_path
+    assert_response :success
+    assert_select "p", text: "Ovulation Phase"
+  end
+
+  # Full-sequence check: the header must walk menstrual → follicular →
+  # ovulation → luteal as the viewed date advances through the cycle.
+  test "GET /superpowers shows the phase sequence across the cycle" do
+    start = 14.days.ago.to_date
+    {start => "Menstrual", start + 6 => "Follicular", start + 15 => "Ovulation", start + 22 => "Luteal"}.each do |date, phase|
+      get superpowers_path(date: date.to_s)
+      assert_response :success
+      assert_select "p", text: "#{phase} Phase"
+    end
+  end
+
   # Regression: "Submit" used to be a bare link straight to /tracking with no
   # review step at all, unlike /symptoms' pre-submit summary modal.
   test "GET /superpowers renders the pre-submit review modal, not a bare submit link" do

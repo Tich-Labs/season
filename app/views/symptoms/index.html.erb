@@ -58,11 +58,18 @@
 <% content_for(:page_title) { "My Symptoms" } %>
 <% content_for(:header_dark) { "true" } %>
 <% content_for(:header_color) { phase_colour } %>
-<%# This page renders its own centred calendar button below (matching
-     tracking/index.html.erb), so opt out of both shared FABs — the default
-     "+" quick-actions and the default bottom-right calendar one. %>
+<%# No bottom FAB on this screen per Figma — opt out of both shared FABs
+     (the default "+" quick-actions and the default bottom-right calendar
+     one) so nothing renders below the content. %>
 <% content_for(:hide_quick_actions) { "true" } %>
 <% content_for(:hide_calendar_fab) { "true" } %>
+<%# Same header-left "< back" pattern as superpowers/index — this page is
+     also reached from /tracking, not a place with its own nav otherwise. %>
+<% content_for(:header_left) do %>
+  <%= link_to tracking_index_path, class: "text-white text-sm font-medium no-underline p-2 font-montserrat" do %>
+    &lt; back
+  <% end %>
+<% end %>
 
 <div class="bg-white min-h-screen pb-32"
      data-controller="symptom"
@@ -802,6 +809,3 @@
 
   </div>
 </div>
-
-<%# ── Calendar button — fixed bottom-centre, tan to match the "+" FAB it replaces ── %>
-<%= render "shared/calendar_center_fab", bg: "bg-brand-field" %>

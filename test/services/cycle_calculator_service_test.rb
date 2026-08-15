@@ -82,6 +82,28 @@ class CycleCalculatorServiceTest < ActiveSupport::TestCase
     assert_equal "luteal", svc.phase_for_date(PERIOD_START + 27)
   end
 
+  # Full-cycle regression: phases must follow menstrual → follicular →
+  # ovulation → luteal in strict order, then wrap back to menstrual on the
+  # first day of the next cycle (28-day cycle, 5-day period). Guards the
+  # ordering shown on the /symptoms and /superpowers headers.
+  test "phases follow the correct sequence across a full cycle and wrap" do
+    svc = service_for
+    expected = %w[menstrual] * 5 +
+      %w[follicular] * 9 +
+      %w[ovulation] * 7 +
+      %w[luteal] * 7
+    assert_equal 28, expected.length
+
+    (0...28).each do |i|
+      assert_equal expected[i], svc.phase_for_date(PERIOD_START + i),
+        "wrong phase on cycle day #{i + 1}"
+    end
+
+    # Next cycle restarts at menstrual (28-day wrap).
+    assert_equal "menstrual", svc.phase_for_date(PERIOD_START + 28)
+    assert_equal "follicular", svc.phase_for_date(PERIOD_START + 33)
+  end
+
   # --- Short cycle (21 days) with two logged period starts ---
 
   test "handles 21-day cycle: menstrual on day 1" do

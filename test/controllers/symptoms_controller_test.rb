@@ -61,6 +61,33 @@ class SymptomsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  # Regression: the header phase used to always be computed for today, so
+  # navigating back to a past date (or via ?date=) showed the wrong phase.
+  test "GET /symptoms shows the phase for the viewed date, not today" do
+    start = 14.days.ago.to_date
+    luteal_date = start + 21
+    get symptoms_path(date: luteal_date.to_s)
+    assert_response :success
+    assert_select "p", text: "Luteal Phase"
+  end
+
+  test "GET /symptoms shows today's phase without a date param" do
+    get symptoms_path
+    assert_response :success
+    assert_select "p", text: "Ovulation Phase"
+  end
+
+  # Full-sequence check: the header must walk menstrual → follicular →
+  # ovulation → luteal as the viewed date advances through the cycle.
+  test "GET /symptoms shows the phase sequence across the cycle" do
+    start = 14.days.ago.to_date
+    {start => "Menstrual", start + 6 => "Follicular", start + 15 => "Ovulation", start + 22 => "Luteal"}.each do |date, phase|
+      get symptoms_path(date: date.to_s)
+      assert_response :success
+      assert_select "p", text: "#{phase} Phase"
+    end
+  end
+
   test "GET /symptoms with garbage date param returns 200 (falls back to today)" do
     get symptoms_path(date: "not-a-date")
     assert_response :success

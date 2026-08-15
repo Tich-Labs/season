@@ -13,15 +13,18 @@ class SymptomsController < ApplicationController
     # Previous day's log — used to pre-fill sleep / temperature / weight as
     # a starting point when today's log has no value yet (carry-over).
     @prev_log = current_user.symptom_logs.find_by(date: @date - 1)
-    @phase = current_user.current_phase
+    # Phase follows the viewed date, not today — navigating to a past day on
+    # the drum (or via ?date=) must reflect that day's cycle phase.
+    svc = CycleCalculatorService.new(current_user)
+    @phase = svc.effective_phase_for_date(@date)
     @season = @phase ? CycleCalculatorService::SEASON_NAMES[@phase] : ""
-    @cycle_day = current_user.current_cycle_day
+    @cycle_day = current_user.current_cycle_day(@date)
   end
 
   def show
     @symptom_log = current_user.symptom_logs.find(params[:id])
     authorize @symptom_log
-    @phase = current_user.current_phase
+    @phase = CycleCalculatorService.new(current_user).effective_phase_for_date(@symptom_log.date)
     @phase_colour = CycleCalculatorService::PHASE_META[@phase]&.dig(:colour) || "#933a35"
   end
 
