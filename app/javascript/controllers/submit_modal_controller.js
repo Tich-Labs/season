@@ -60,7 +60,8 @@ export default class extends Controller {
     const dischargeBtn = root.querySelector('[data-discharge][aria-pressed="true"]')
     if (dischargeBtn) {
       const key = dischargeBtn.dataset.discharge
-      other.push('Discharge: ' + key.charAt(0).toUpperCase() + key.slice(1).replace(/-/g, ' '))
+      const labels = { dry: 'Dry', 'creamy-light': 'Milky', creamy: 'Creamy', stretchy: 'Stretchy', 'egg-white': 'Egg white', thick: 'Lumpy', sticky: 'Sticky', spotting: 'Spotting', period: 'Period' }
+      other.push('Discharge: ' + (labels[key] || key.charAt(0).toUpperCase() + key.slice(1).replace(/-/g, ' ')))
     }
 
     const intercourse = JSON.parse(root.dataset.activeIntercourse || '[]')

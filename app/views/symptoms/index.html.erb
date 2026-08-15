@@ -267,18 +267,18 @@
             <% end %>
           </div>
         <% else %>
-          <%# Vaginal Discharge icon grid for non-menstrual phases %>
+          <%# Vaginal Discharge photo grid for non-menstrual phases %>
           <%
             discharge_grid = [
-              { key: 'dry',           img: 'dry.png',             label: 'Dry' },
-              { key: 'creamy-light',  img: 'creamy-light.png',    label: 'Creamy' },
-              { key: 'creamy',        img: 'creamy.png',          label: 'Creamy' },
-              { key: 'egg-white',     img: 'egg-white.png',       label: 'Egg White' },
-              { key: 'stretchy',      img: 'stretchy.png',        label: 'Stretchy' },
-              { key: 'thick',         img: 'thick.png',           label: 'Thick' },
-              { key: 'watery',        img: 'watery.png',          label: 'Watery' },
-              { key: 'spotting',      img: 'spotting.png',        label: 'Spotting' },
-              { key: 'period',        img: 'period.png',          label: 'Period' },
+              { key: 'dry',          img: 'dry.jpg',          label: 'Dry' },
+              { key: 'creamy-light', img: 'creamy-light.jpg', label: 'Milky' },
+              { key: 'creamy',       img: 'creamy.jpg',       label: 'Creamy' },
+              { key: 'stretchy',     img: 'stretchy.jpg',     label: 'Stretchy' },
+              { key: 'egg-white',    img: 'egg-white.jpg',    label: 'Egg White' },
+              { key: 'thick',        img: 'thick.jpg',        label: 'Lumpy' },
+              { key: 'sticky',       img: 'sticky.jpg',       label: 'Sticky' },
+              { key: 'spotting',     img: 'spotting.jpg',     label: 'Spotting' },
+              { key: 'period',       img: 'period.jpg',       label: 'Period' },
             ]
           %>
           <div class="grid grid-cols-3 gap-3" role="group" aria-label="Vaginal Discharge type">
@@ -290,7 +290,7 @@
                       aria-label="<%= item[:label] %>" aria-pressed="<%= sel %>"
                       style="cursor:pointer; opacity: <%= sel ? 1 : 0.35 %>; transform: scale(<%= sel ? 1.08 : 1 %>); filter: <%= sel ? '' : 'grayscale(0.6)' %>; border: none; background: none;">
                 <div class="relative w-[75px] h-[75px] flex items-center justify-center">
-                  <%= image_tag "icons/vaginal_discharge/#{item[:img]}", alt: item[:label], class: "w-full h-full object-contain rounded-full" %>
+                  <%= image_tag "vaginal_discharge/#{item[:img]}", alt: item[:label], class: "w-full h-full object-cover rounded-full" %>
                   <span class="discharge-check absolute bottom-0 right-0 w-5 h-5 flex items-center justify-center"
                         style="display:<%= sel ? '' : 'none' %>;">
                     <%= image_tag "icons/vaginal_discharge/check-11.png", alt: "", class: "w-full h-full" %>
@@ -319,12 +319,7 @@
         <span id="section-intercourse-check" style="display:<%= intercourse_done ? '' : 'none' %>"><%= render 'symptoms/bi_check', colour: phase_colour %></span>
       </summary>
       <div class="pb-5">
-        <div class="flex justify-around text-center mb-3">
-          <span class="flex-1 text-brand-primary font-medium text-sm tracking-007">None</span>
-          <span class="flex-1 text-brand-primary font-medium text-sm tracking-007">Unprotected</span>
-          <span class="flex-1 text-brand-primary font-medium text-sm tracking-007">Protected</span>
-        </div>
-        <div class="flex justify-around mb-4">
+        <div class="flex justify-around mb-3">
           <% sel = intercourse_list.include?('keiner') %>
           <button class="craving-btn" data-intercourse="keiner" data-action="click->symptom#toggleIntercourse"
                   aria-pressed="<%= sel %>" aria-label="No intercourse"
@@ -350,12 +345,12 @@
             </div>
           </button>
         </div>
-        <div class="flex justify-around text-center mb-3">
-          <span class="flex-1 text-brand-primary font-medium text-sm tracking-007">Orgasm</span>
-          <span class="flex-1 text-brand-primary font-medium text-sm tracking-007">No Orgasm</span>
-          <span class="flex-1 text-brand-primary font-medium text-sm tracking-007">Masturbation</span>
+        <div class="flex justify-around text-center mb-4">
+          <span class="flex-1 text-brand-primary font-medium text-sm tracking-007">None</span>
+          <span class="flex-1 text-brand-primary font-medium text-sm tracking-007">Unprotected</span>
+          <span class="flex-1 text-brand-primary font-medium text-sm tracking-007">Protected</span>
         </div>
-        <div class="flex justify-around">
+        <div class="flex justify-around mb-3">
           <% sel = intercourse_list.include?('orgasmus') %>
           <button class="craving-btn" data-intercourse="orgasmus" data-action="click->symptom#toggleIntercourse"
                   aria-pressed="<%= sel %>" aria-label="Orgasm"
@@ -380,6 +375,11 @@
               <%= image_tag "sexual_intercourse/masturbation.png", alt: "Vibrator / Masturbation" %>
             </div>
           </button>
+        </div>
+        <div class="flex justify-around text-center">
+          <span class="flex-1 text-brand-primary font-medium text-sm tracking-007">Orgasm</span>
+          <span class="flex-1 text-brand-primary font-medium text-sm tracking-007">No Orgasm</span>
+          <span class="flex-1 text-brand-primary font-medium text-sm tracking-007">Masturbation</span>
         </div>
       </div>
     </details>
