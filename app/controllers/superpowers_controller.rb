@@ -1,6 +1,8 @@
 class SuperpowersController < ApplicationController
   include Streakable
 
+  after_action :verify_authorized, only: [:show]
+
   SUPERPOWERS = [
     "Spatial reasoning",
     "Developing/planning projects",
@@ -40,6 +42,7 @@ class SuperpowersController < ApplicationController
 
   def show
     @superpower_log = current_user.superpower_logs.find(params[:id])
+    authorize @superpower_log
     @phase = current_user.current_phase
     @phase_colour = CycleCalculatorService::PHASE_META[@phase]&.dig(:colour) || "#933a35"
   end

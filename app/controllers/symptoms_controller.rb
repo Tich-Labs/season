@@ -1,6 +1,8 @@
 class SymptomsController < ApplicationController
   include Streakable
 
+  after_action :verify_authorized, only: [:show]
+
   def index
     @date = begin
       params[:date].present? ? Date.iso8601(params[:date]) : Time.zone.today
@@ -18,6 +20,7 @@ class SymptomsController < ApplicationController
 
   def show
     @symptom_log = current_user.symptom_logs.find(params[:id])
+    authorize @symptom_log
     @phase = current_user.current_phase
     @phase_colour = CycleCalculatorService::PHASE_META[@phase]&.dig(:colour) || "#933a35"
   end

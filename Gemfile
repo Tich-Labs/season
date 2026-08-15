@@ -29,6 +29,8 @@ gem "omniauth-facebook"
 gem "omniauth-apple"
 gem "omniauth-rails_csrf_protection"
 gem "rack-attack"  # Rate limiting for auth endpoints
+gem "pundit"
+gem "webauthn"
 
 # UI
 gem "pagy"

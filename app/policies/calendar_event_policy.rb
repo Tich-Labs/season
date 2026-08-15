@@ -1,0 +1,2 @@
+class CalendarEventPolicy < OwnedRecordPolicy
+end

@@ -28,6 +28,12 @@ class SuperpowersControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "cannot view another user's superpower log" do
+    bob_log = users(:bob).superpower_logs.create!(date: Time.zone.today, ratings: {})
+    get superpower_path(bob_log)
+    assert_response :not_found
+  end
+
   # Date guard — index
   test "GET /superpowers with valid date param returns 200" do
     get superpowers_path(date: 7.days.ago.to_date.to_s)

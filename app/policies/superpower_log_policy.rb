@@ -1,0 +1,2 @@
+class SuperpowerLogPolicy < OwnedRecordPolicy
+end

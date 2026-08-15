@@ -1,9 +1,19 @@
 class ApplicationController < ActionController::Base
   include Authentication
   include PinProtection
+  include Pundit::Authorization
 
   before_action :set_locale
   helper_method :safe_back_path
+
+  # Not currently raised by anything a user can reach — every `authorize`
+  # call today only runs against records already scoped to current_user by
+  # the controller's own lookup (see OwnedRecordPolicy). Rescued anyway so a
+  # future authorize call that *does* fail denies the same way a missing
+  # record does, rather than a raw 500.
+  rescue_from Pundit::NotAuthorizedError do
+    raise ActiveRecord::RecordNotFound
+  end
 
   private
 

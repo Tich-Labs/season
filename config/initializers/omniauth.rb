@@ -7,8 +7,11 @@
 #    button_to form POSTs, causing valid_authenticity_token? to return false
 #    (no exception) — which silently blocks the OAuth redirect.
 #
-# Solution: Allow the request on both exception AND false return.
-# The OAuth state parameter provides independent CSRF protection for the callback.
+# Solution: only relax the check for requests actually coming from the native
+# app's WKWebView — the one client where issue #2 is real. A missing/invalid
+# token from an ordinary browser is treated as a real CSRF failure and
+# rejected, same as Rails' default behavior; the OAuth `state` param only
+# protects the callback leg, not this initiation request.
 Rails.application.config.after_initialize do
   OmniAuth::Strategy.class_eval do
     def verified_request?
@@ -18,13 +21,27 @@ Rails.application.config.after_initialize do
       return false if token.blank?
       begin
         valid_authenticity_token?(session, token) || begin
-          Rails.logger.warn "[OmniAuth CSRF] Token mismatch for #{request.path}. Allowing (OAuth state provides CSRF protection)."
-          true
+          if native_request?
+            Rails.logger.warn "[OmniAuth CSRF] Token mismatch for #{request.path} (native app). Allowing — known WKWebView cookie-loss case."
+            true
+          else
+            false
+          end
         end
       rescue => e
-        Rails.logger.error "[OmniAuth CSRF] valid_authenticity_token? raised: #{e.class}: #{e.message}. Allowing request."
-        true
+        Rails.logger.error "[OmniAuth CSRF] valid_authenticity_token? raised: #{e.class}: #{e.message}."
+        native_request?
       end
+    end
+
+    private
+
+    # Mirrors RubyNative::NativeDetection#native_app? (app/helpers), but that
+    # helper is mixed into ActionController::Base — unreachable here, since
+    # OmniAuth::Strategy#request is a plain Rack::Request, not an
+    # ActionDispatch::Request. Read the same header directly instead.
+    def native_request?
+      request.env["HTTP_USER_AGENT"].to_s.include?("Ruby Native")
     end
   end
 end

@@ -1,5 +1,6 @@
 class CalendarEventsController < ApplicationController
   before_action :set_event, only: [:show, :edit, :update, :destroy]
+  after_action :verify_authorized, only: [:show, :edit, :update, :destroy]
 
   def index
     redirect_to forecast_path
@@ -43,6 +44,7 @@ class CalendarEventsController < ApplicationController
 
   def set_event
     @event = current_user.calendar_events.find(params[:id])
+    authorize @event
   end
 
   def event_params

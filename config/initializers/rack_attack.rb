@@ -9,6 +9,24 @@ if defined?(Rack::Attack)
   # the rate limits actually apply in production.
   Rails.application.config.middleware.use(Rack::Attack)
 
+  # Render polls this path continuously for the service's health check —
+  # never let it count toward the IP ban threshold below.
+  Rack::Attack.safelist("allow health check") do |req|
+    req.path == "/up"
+  end
+
+  # Common vulnerability-scanner probe paths that have no route in this app.
+  # Rejecting them here means a scanner's noise never reaches the Rails
+  # router/controller stack and counts fast toward the IP ban below.
+  SCANNER_PATH_PATTERN = %r{
+    \.(?:php|asp|aspx|env|git|svn|htaccess|DS_Store)\z |
+    \A/(?:wp-admin|wp-login|xmlrpc\.php|phpmyadmin|actuator)
+  }xi
+
+  Rack::Attack.blocklist("block scanner paths") do |req|
+    req.path.match?(SCANNER_PATH_PATTERN)
+  end
+
   Rack::Attack.throttle("logins/ip", limit: 10, period: 60) do |req|
     req.ip if req.post? && req.path == "/session"
   end

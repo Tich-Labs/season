@@ -29,6 +29,12 @@ class SymptomsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "cannot view another user's symptom log" do
+    bob_log = users(:bob).symptom_logs.create!(date: Time.zone.today, mood: 3)
+    get symptom_path(bob_log)
+    assert_response :not_found
+  end
+
   test "POST /symptoms creates a symptom log" do
     assert_difference("SymptomLog.count", 1) do
       post symptoms_path, params: {symptom_log: {date: Time.zone.today.to_s, mood: 4, energy: 3}}

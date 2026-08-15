@@ -31,11 +31,18 @@ export default class extends Controller {
         return
       }
 
+      // id/rawId are the same credential id in two encodings — id is
+      // already a base64url string per the WebAuthn spec, rawId is the raw
+      // bytes the server cross-checks it against. attestationObject +
+      // clientDataJSON (not a client-extracted public key) are what the
+      // server actually verifies the registration ceremony against.
       const credential = {
         id: cred.id,
+        rawId: this._ab2str(cred.rawId),
         type: cred.type,
         response: {
-          publicKey: this._ab2str(cred.response.getPublicKey())
+          attestationObject: this._ab2str(cred.response.attestationObject),
+          clientDataJSON: this._ab2str(cred.response.clientDataJSON)
         }
       }
 
@@ -77,6 +84,7 @@ export default class extends Controller {
 
       const credential = {
         id: assertion.id,
+        rawId: this._ab2str(assertion.rawId),
         type: assertion.type,
         response: {
           authenticatorData: this._ab2str(assertion.response.authenticatorData),
