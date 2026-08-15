@@ -20,7 +20,7 @@
 <% content_for(:hide_calendar_fab) { "true" } %>
 
 <div class="bg-white min-h-screen">
-  <div class="max-w-app mx-auto px-4 pb-8">
+  <div class="max-w-app mx-auto px-4 pb-28">
 
     <%# Language title — the app-bar itself just shows the generic gear+"Settings"
          title shared by sibling settings pages, so this gives page-specific context. %>
@@ -49,3 +49,5 @@
     <% end %>
   </div>
 </div>
+
+<%= render "shared/calendar_center_fab", bg: "bg-brand-field" %>

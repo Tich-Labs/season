@@ -15,7 +15,7 @@
 <% end %>
 
 <div class="bg-white min-h-dvh min-h-screen">
-  <div class="max-w-app mx-auto px-4 pb-8">
+  <div class="max-w-app mx-auto px-4 pb-28">
 
     <%# Success notice %>
     <% if flash[:notice].present? %>
@@ -92,5 +92,7 @@
 
   </div>
 </div>
+
+<%= render "shared/calendar_center_fab", bg: "bg-brand-field" %>
 
 <%= render "shared/consent_info_modal" %>
