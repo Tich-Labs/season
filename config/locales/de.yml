@@ -488,6 +488,58 @@ de:
       craving_sugar: "Zuckerhaltige Getränke & Essen"
       submit_tracking: "Tracking absenden"
       go_back: "Zurück zum Ändern"
+      discharge_info_aria: "Mehr über"
+      play_video_aria: "Video abspielen"
+      close_video_aria: "Video schließen"
+      discharge_info_title: "Hier sind weitere Details zu deinem Ausfluss"
+      discharge_info_typically: "Typischerweise"
+      read_more: "…mehr erfahren"
+      choose: "Auswählen"
+      close: "Schließen"
+    # Siehe die englische Version für den Quellenhinweis (CSV-Leitfaden).
+    discharge_info:
+      dry:
+        heading: "Kein Schleim, trockenes Empfinden"
+        phase: "Follikelphase — direkt nach den Tagen"
+        season: "Winter"
+        short: "Dein Körper ist noch in der Ruhephase. Du bemerkst kaum etwas, der Scheideneingang fühlt sich neutral bis trocken an. Das ist völlig normal."
+        long: "Direkt nach deiner Periode befindet sich dein Körper im Beginn eines neuen Zyklus. Der Östrogenspiegel ist auf seinem niedrigsten Stand, weshalb deine Zervix kaum bis gar keinen Schleim produziert. Du nimmst am Scheideneingang nichts Bestimmtes wahr — kein Feuchtigkeitsgefühl, kein Schleim auf dem Slip oder Toilettenpapier. Manche Frauen empfinden diesen Zeitraum sogar als leicht trocken oder rau. Das ist keine Störung, sondern dein Körper in seiner natürlichen Winterruhe, bevor er langsam wieder aufblüht."
+      creamy-light:
+        heading: "Dickflüssig, milchig, leicht feucht"
+        phase: "Follikelphase — milchig, dickflüssig"
+        season: "Frühlingsbeginn"
+        short: "Dein Körper wacht langsam auf. Du bemerkst erste Spuren von weißlichem oder milchigem Schleim auf der Unterwäsche. Der Scheideneingang fühlt sich leicht feucht an."
+        long: "Mit steigendem Östrogenspiegel beginnt deine Zervix, wieder aktiver Schleim zu produzieren. Der Schleim in dieser Phase ist dickflüssig und milchig, ähnlich wie dünne Lotion. Er hinterlässt einen weißlichen oder cremefarbenen Abdruck auf der Unterwäsche. Das Empfinden am Scheideneingang verändert sich von neutral zu leicht feucht. Dein Körper bereitet sich auf die fruchtbare Phase vor und beginnt, eine Schleimbrücke zu bauen, die Spermien später den Weg erleichtert."
+      creamy:
+        heading: "Cremig, reichlicher, feucht"
+        phase: "Follikelphase — cremig"
+        season: "Frühling"
+        short: "Der Schleim wird sichtbar mehr und cremiger. Er fühlt sich an wie weiche Creme zwischen den Fingern und du nimmst ein deutlicheres Feuchtigkeitsgefühl wahr."
+        long: "In dieser Phase steigt dein Östrogenspiegel weiter an und dein Körper produziert spürbar mehr Schleim. Die Konsistenz wird cremiger und dicker, ähnlich wie weiche Creme oder Joghurt. Auf der Unterwäsche hinterlässt er einen weißlichen bis leicht gelblichen Fleck. Am Scheideneingang nimmst du ein merkliches Feuchtigkeitsgefühl wahr. Dein Körper ist aktiv dabei, die Spermien zu empfangen und zu nähren. Je cremiger und reichlicher der Schleim, desto näher ist dein Eisprung."
+      stretchy:
+        heading: "Zäh, elastisch, fadenziehend, feucht bis nass"
+        phase: "Follikelphase — zäh, elastisch"
+        season: "Spätfrühling"
+        short: "Jetzt wird es ernst. Der Schleim zieht Fäden, wenn du ihn zwischen Daumen und Zeigefinger auseinanderziehst, ohne sofort zu reißen. Du bist in deiner fruchtbaren Hochphase."
+        long: "Kurz vor dem Eisprung verändert sich die Schleimqualität deutlich. Er wird zäher, elastischer und fadenziehend, ähnlich wie gekochtes Eiweiß oder weicher Kaugummi. Wenn du ihn zwischen den Fingern auseinanderziehst, bildet er einen Faden, der mehrere Zentimeter lang werden kann, bevor er reißt. Die Farbe ist milchig bis leicht klar. Der Scheideneingang fühlt sich feucht bis nass an. Das ist ein starkes Signal deines Körpers: du bist hochfruchtbar. Spermien können sich in diesem Schleim bis zu 5 Tage am Leben erhalten."
+      egg-white:
+        heading: "Glasig, extrem spinnbar, nass"
+        phase: "Ovulation — glasig, wie rohes Eiweiß"
+        season: "Sommer"
+        short: "Das ist dein Höhepunkt. Der Schleim ist jetzt klar wie rohes Eiweiß, extrem spinnbar und fühlt sich rutschig oder ölig an. Das ist dein fruchtbarster Tag."
+        long: "Zum Zeitpunkt des Eisprungs produziert deine Zervix den qualitativ besten Schleim deines gesamten Zyklus. Er ist glasig, fast transparent, extrem spinnbar und fühlt sich rutschig, ölig oder glatt an. Wenn du ihn zwischen den Fingern auseinanderziehst, bildet er lange, dünne Fäden, die ohne zu reißen mehrere Zentimeter erreichen können. Der Scheideneingang fühlt sich deutlich nass an, manchmal fast wie ein leichtes Herauslaufen. Manche Frauen bemerken auch einen rötlichen oder bräunlichen Einschlag, was als Ovulationsblutung völlig normal ist. Dies ist dein fruchtbarster Tag."
+      thick:
+        heading: "Klumpig, weniger Schleim, trockener werdend"
+        phase: "Lutealphase — klumpig"
+        season: "Frühherbst"
+        short: "Der Eisprung ist vorbei. Der Schleim wird klumpiger und die Menge nimmt spürbar ab. Das Feuchtigkeitsgefühl lässt nach und dein Körper schaltet in den Herbstmodus."
+        long: "Direkt nach dem Eisprung steigt dein Progesteronspiegel an und verändert die Schleimqualität grundlegend. Der Schleim wird klumpiger, weniger zusammenhängend und nimmt deutlich in Menge ab. Er lässt sich kaum noch zu Fäden ziehen und bricht schnell ab. Die Zervix beginnt, sich mit einem Schleimpfropf zu verschließen, der Spermien und Keime fernhält. Am Scheideneingang nimmst du ein zunehmendes Trockenheitsgefühl wahr. Dein Körper befindet sich jetzt in der frühen Lutealphase und bereitet sich vor."
+      sticky:
+        heading: "Dickflüssig, trüb, klebrig, kaum Schleim"
+        phase: "Lutealphase — dickflüssig, trüb, klebrig"
+        season: "Herbst"
+        short: "Dein Körper bereitet sich auf die nächste Periode vor. Der wenige Schleim, den du noch bemerkst, ist dickflüssig, trüb und klebrig. Das Empfinden ist trocken bis kaum feucht."
+        long: "In den Tagen vor der nächsten Periode ist die Schleimproduktion auf ihrem Minimum. Was noch vorhanden ist, wirkt dickflüssig, trüb und klebrig, fast wie Kleister. Es hinterlässt kaum noch Spuren auf der Unterwäsche. Der Scheideneingang fühlt sich trocken bis leicht feucht an, ohne ein ausgeprägtes Nässegefühl. Dein Östrogen- und Progesteronspiegel sinken beide ab. Das ist das Ende eines vollständigen Zyklus und gleichzeitig der Beginn des nächsten Aufblühens."
   streaks:
     index:
       current_streak: "Aktuelle Serie"

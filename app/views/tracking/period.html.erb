@@ -1,12 +1,22 @@
 <% content_for(:page_title) { "Track my period" } %>
-<% content_for(:header_dark) { "true" } %>
-<% content_for(:header_color) { @phase_col } %>
-<%# Not under settings/ or calendar#index, so the layout was showing both
-     the "+" quick-actions FAB and the default calendar FAB stacked
-     together. Keep only the centred calendar FAB (see
-     shared/_calendar_center_fab.html.erb) instead of either. %>
+<%# No header_dark/header_color here — unlike other tracking pages, this
+     screen's header is the plain neutral bg-brand-field bar with maroon
+     icon/title (the layout's default for a page that sets neither), not a
+     phase-tinted one. Figma confirms it: every "Track my period" reference
+     shows a tan header with a maroon hamburger + title regardless of what
+     cycle phase the user is currently in. %>
+<%# Not under settings/ or calendar#index, so the layout would otherwise show
+     both the "+" quick-actions FAB and the default calendar FAB. This is a
+     focused single-task form (back link + Submit already cover navigation),
+     so suppress both defaults and don't render a replacement FAB either. %>
 <% content_for(:hide_quick_actions) { "true" } %>
 <% content_for(:hide_calendar_fab) { "true" } %>
+<%# shared/_back_link colours itself via var(--phase-color), so this still
+     has to be set — just not to the dynamic @phase_col. Same "this page is
+     static brand-primary, not phase-reactive" reasoning as the header
+     above: "< back" should always be brand red, not whatever colour the
+     user's current cycle phase happens to be. %>
+<% phase_color("#933a35") %>
 
 <%
   today       = Time.zone.today
@@ -43,9 +53,12 @@
      data-onboarding-calendar-end-heading-value="<%= end_heading %>">
   <div class="max-w-app mx-auto px-4 pt-3">
 
+    <%# ── Back (below app bar) ── %>
+    <%= render "shared/back_link", fallback: tracking_index_path %>
+
     <%# ── Greeting ── %>
     <div class="mb-3.5">
-      <p class="text-brand-primary text-4xl font-medium m-0 leading-tight">
+      <p class="italic text-brand-primary text-4xl font-medium leading-[44px] font-sans m-0">
         Hello <%= current_user.name&.split&.first || "there" %>
       </p>
       <p class="text-brand-primary text-base font-medium m-0" data-onboarding-calendar-target="heading">
@@ -107,8 +120,14 @@
                     data-date="<%= day.iso8601 %>"
                     data-today="<%= is_today %>"
                     style="display:flex; flex-direction:column; height:100%; overflow:hidden; background:transparent; border:none; padding:0; cursor:pointer;">
+              <%# Matches calendar/_day_cell's band pattern (show_cycle_day_on_band):
+                   the band carries the *cycle* day (1 = whichever date is tapped as
+                   start, regardless of which date-of-month that is), separate from
+                   the actual date-of-month shown in the number span below. Text is
+                   set by #renderHighlights in the JS controller, not here — the
+                   band's own idle text stays empty. %>
               <span data-onboarding-calendar-target="band"
-                    style="height:14px; flex-shrink:0; display:block; background:#EDE1D5;"></span>
+                    style="height:14px; flex-shrink:0; display:flex; align-items:center; justify-content:center; background:#EDE1D5; color:#FFFFFF; font-size:9px; font-weight:700; line-height:1; letter-spacing:0.03em;"></span>
               <div style="flex:1; padding:<%= is_today ? '0' : '1px' %> 4px 3px; display:flex; flex-direction:column;">
                 <div style="display:flex; align-items:center; justify-content:center;">
                   <% if is_today %>
@@ -116,7 +135,11 @@
                       <%= day.day %>
                     </span>
                   <% else %>
-                    <span style="font-size:13px; font-weight:600; color:#1A1A1A; line-height:1;">
+                    <%# #EDE1D5 — the actual date-number colour, per Figma. No
+                         badge/circle even when the day is inside the selected period —
+                         the band above is the only selection indicator now. Static;
+                         nothing here changes with selection, so no JS target needed. %>
+                    <span style="font-size:13px; font-weight:600; color:#EDE1D5; line-height:1;">
                       <%= day.day %>
                     </span>
                   <% end %>
@@ -136,5 +159,3 @@
     </div>
   <% end %>
 </div>
-
-<%= render "shared/calendar_center_fab", bg: "bg-brand-field" %>

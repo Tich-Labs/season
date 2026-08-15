@@ -269,41 +269,181 @@
         <% else %>
           <%# Vaginal Discharge photo grid for non-menstrual phases %>
           <%
+            # ring: exact per-icon colour from the Figma dev-mode export
+            # (node 12068-928) — not derived from PHASE_COLOURS, because Figma
+            # doesn't follow the 4-phase mapping exactly: "dry" (stage 1) gets
+            # the neutral #EDE1D5 rather than follicular green, and "stretchy"
+            # (stage 4, approaching ovulation) is colour-grouped with
+            # ovulation's dark green rather than the earlier follicular green
+            # "creamy"/"milky" use. Two of these happen to equal PHASE_COLOURS
+            # values and two don't — all nine are spelled out explicitly here
+            # so the grid matches Figma exactly rather than approximately.
             discharge_grid = [
-              { key: 'dry',          img: 'dry.jpg',          label: 'Dry' },
-              { key: 'creamy-light', img: 'creamy-light.jpg', label: 'Milky' },
-              { key: 'creamy',       img: 'creamy.jpg',       label: 'Creamy' },
-              { key: 'stretchy',     img: 'stretchy.jpg',     label: 'Stretchy' },
-              { key: 'egg-white',    img: 'egg-white.jpg',    label: 'Egg White' },
-              { key: 'thick',        img: 'thick.jpg',        label: 'Lumpy' },
-              { key: 'sticky',       img: 'sticky.jpg',       label: 'Sticky' },
-              { key: 'spotting',     img: 'spotting.jpg',     label: 'Spotting' },
-              { key: 'period',       img: 'period.jpg',       label: 'Period' },
+              { key: 'dry',          img: 'dry.jpg',          label: 'Dry',       ring: '#EDE1D5' },
+              { key: 'creamy-light', img: 'creamy-light.jpg', label: 'Milky',     ring: '#899884' },
+              { key: 'creamy',       img: 'creamy.jpg',       label: 'Creamy',    ring: '#899884' },
+              { key: 'stretchy',     img: 'stretchy.jpg',     label: 'Stretchy',  ring: '#50715B' },
+              { key: 'egg-white',    img: 'egg-white.jpg',    label: 'Egg White', ring: '#50715B' },
+              { key: 'thick',        img: 'thick.jpg',        label: 'Lumpy',     ring: '#D18D84' },
+              { key: 'sticky',       img: 'sticky.jpg',       label: 'Sticky',    ring: '#D18D84' },
+              { key: 'spotting',     img: 'spotting.jpg',     label: 'Spotting',  ring: '#EDE1D5' },
+              { key: 'period',       img: 'period.jpg',       label: 'Period',    ring: '#933A35' },
             ]
           %>
           <div class="grid grid-cols-3 gap-3" role="group" aria-label="Vaginal Discharge type">
             <% discharge_grid.each do |item| %>
               <% sel = @log.discharge == item[:key] %>
-              <button class="flex flex-col items-center gap-2 transition-all duration-150 focus:outline-none"
-                      data-action="click->symptom#toggleDischarge"
-                      data-discharge="<%= item[:key] %>"
-                      aria-label="<%= item[:label] %>" aria-pressed="<%= sel %>"
-                      style="cursor:pointer; opacity: <%= sel ? 1 : 0.35 %>; transform: scale(<%= sel ? 1.08 : 1 %>); filter: <%= sel ? '' : 'grayscale(0.6)' %>; border: none; background: none;">
-                <div class="relative w-[90px] h-[90px] flex items-center justify-center overflow-hidden rounded-full">
-                  <%= image_tag "vaginal_discharge/#{item[:img]}", alt: item[:label], class: "w-[200%] h-[200%] max-w-none object-cover rounded-full" %>
-                  <span class="discharge-check absolute bottom-0 right-0 w-5 h-5 flex items-center justify-center"
-                        style="display:<%= sel ? '' : 'none' %>;">
-                    <%= image_tag "icons/vaginal_discharge/check-11.png", alt: "", class: "w-full h-full" %>
-                  </span>
-                </div>
-                <span class="text-11 font-medium text-center leading-tight text-brand-primary tracking-007"
-                      style="opacity:<%= sel ? 1 : 0.5 %>;"><%= item[:label] %></span>
-              </button>
+              <% has_info = I18n.exists?("symptoms.discharge_info.#{item[:key]}") %>
+              <% ring_colour = item[:ring] %>
+              <%# The 4.38px phase-colour border is applied to the photo <img>
+                   itself (inline style, following the circle via rounded-full),
+                   so image and border are one element that scales and dims
+                   together with the selection button — no separate ring to sync.
+                   Only the "?" badge must live outside the button: CSS gives a
+                   child no way to opt back out of an ancestor's opacity or
+                   filter, so the badge would fade to near-invisible on every
+                   unselected tile. It sits at this wrapper's top-right corner;
+                   w-[90px] here matches the photo circle's width so it lands
+                   exactly on the circle's edge. %>
+              <div class="relative w-[90px] mx-auto">
+                <button class="flex flex-col items-center gap-2 transition-all duration-150 focus:outline-none"
+                        data-action="click->symptom#toggleDischarge"
+                        data-discharge="<%= item[:key] %>"
+                        aria-label="<%= item[:label] %>" aria-pressed="<%= sel %>"
+                        style="cursor:pointer; opacity: <%= sel ? 1 : 0.35 %>; transform: scale(<%= sel ? 1.08 : 1 %>); filter: <%= sel ? '' : 'grayscale(0.6)' %>; border: none; background: none;">
+                  <div class="w-[90px] h-[90px] flex items-center justify-center overflow-hidden rounded-full">
+                    <%# w-full h-full (not a scaled-up size) — object-cover already
+                         crops the 450x600 source to fill this circle; doubling the
+                         image size on top of that (a past regression) zoomed in an
+                         extra 2x and cropped away the lace trim Figma shows on both
+                         sides of the garment. %>
+                    <%= image_tag "vaginal_discharge/#{item[:img]}", alt: item[:label],
+                          class: "w-full h-full object-cover rounded-full",
+                          style: "border: 4.38px solid #{ring_colour};" %>
+                  </div>
+                  <span class="text-11 font-medium text-center leading-tight text-brand-primary tracking-007"
+                        style="opacity:<%= sel ? 1 : 0.5 %>;"><%= item[:label] %></span>
+                </button>
+                <% if has_info %>
+                  <%# Figma: 35×35, #EDE1D5 (brand-field) fill, #933A35 (brand-primary) glyph. %>
+                  <span class="absolute top-0 right-0 w-[35px] h-[35px] rounded-full bg-brand-field flex items-center justify-center text-[24px] leading-none font-normal text-brand-primary shadow"
+                        role="button" tabindex="0"
+                        data-action="click->symptom#openDischargeInfo keydown->symptom#openDischargeInfo"
+                        data-discharge-info="<%= item[:key] %>"
+                        aria-label="<%= t("symptoms.index.discharge_info_aria") %> <%= item[:label] %>">?</span>
+                <% end %>
+              </div>
             <% end %>
           </div>
         <% end %>
       </div>
     </details>
+
+    <%# Vaginal Discharge "?" info modals — one per grid item that has guide
+         content (see config/locales/en.yml "discharge_info", sourced from
+         docs/Cervical mucus tracking(Tabelle1).csv). Outside the <details>
+         so it isn't affected by the accordion collapsing. %>
+    <% if @phase != "menstrual" %>
+      <% discharge_grid.select { |item| I18n.exists?("symptoms.discharge_info.#{item[:key]}") }.each do |item| %>
+        <div id="discharge-info-<%= item[:key] %>"
+             class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-sm px-4"
+             data-discharge-info-modal="<%= item[:key] %>">
+          <div class="w-full max-w-xs bg-brand-field rounded-[25px] p-6 relative">
+            <button class="absolute top-4 right-4 text-brand-primary"
+                    data-action="click->symptom#closeDischargeInfo" aria-label="<%= t("symptoms.index.close") %>">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M18 6 6 18M6 6l12 12" />
+              </svg>
+            </button>
+
+            <h3 class="text-center text-lg font-semibold text-brand-primary mb-4 pr-6">
+              <%= t("symptoms.index.discharge_info_title") %>
+            </h3>
+
+            <div class="flex justify-center gap-3 mb-4">
+              <div class="w-24 h-24 rounded-full overflow-hidden bg-white shrink-0">
+                <%= image_tag "vaginal_discharge/#{item[:img]}", alt: item[:label], class: "w-full h-full object-cover" %>
+              </div>
+              <%# Finger photo/video — added per category once available.
+                   Propshaft raises a 500 for a path with no source file (not a
+                   client-side 404), so each tag is skipped entirely rather
+                   than rendered and hidden. Where a video exists it plays as a
+                   looping "GIF" (autoplay muted loop playsinline) and tapping
+                   it opens the enlarged viewer below to watch it again;
+                   categories without a video fall back to the static photo. %>
+              <% if discharge_finger_video_exists?(item[:key]) %>
+                <div class="w-24 h-24 rounded-full overflow-hidden bg-white shrink-0">
+                  <button type="button"
+                          class="relative block w-full h-full p-0 border-0 bg-transparent cursor-pointer"
+                          data-action="click->symptom#openDischargeVideo"
+                          data-discharge-video="<%= item[:key] %>"
+                          aria-label="<%= t("symptoms.index.play_video_aria") %> <%= item[:label] %>">
+                    <video class="w-full h-full object-cover" autoplay muted loop playsinline preload="auto"
+                           poster="<%= asset_path("vaginal_discharge/finger/#{item[:key]}.jpg") %>">
+                      <source src="<%= asset_path("vaginal_discharge/finger/#{item[:key]}.mp4") %>" type="video/mp4">
+                    </video>
+                  </button>
+                </div>
+              <% elsif discharge_finger_photo_exists?(item[:key]) %>
+                <div class="w-24 h-24 rounded-full overflow-hidden bg-white shrink-0">
+                  <%= image_tag "vaginal_discharge/finger/#{item[:key]}.jpg", alt: "", class: "w-full h-full object-cover" %>
+                </div>
+              <% end %>
+            </div>
+
+            <p class="font-semibold text-sm text-brand-primary mb-1">
+              <%= t("symptoms.discharge_info.#{item[:key]}.heading") %>
+            </p>
+            <p class="text-sm text-brand-primary leading-relaxed">
+              <span data-role="short"><%= t("symptoms.discharge_info.#{item[:key]}.short") %></span>
+              <button class="font-semibold underline" data-action="click->symptom#toggleDischargeInfoDetail">
+                <%= t("symptoms.index.read_more") %>
+              </button>
+            </p>
+
+            <div class="hidden mt-3" data-role="detail">
+              <p class="font-semibold text-sm text-brand-primary">
+                <%= t("symptoms.index.discharge_info_typically") %>: <%= t("symptoms.discharge_info.#{item[:key]}.season") %>
+              </p>
+              <p class="text-sm text-brand-primary mb-2"><%= t("symptoms.discharge_info.#{item[:key]}.phase") %></p>
+              <p class="text-sm text-brand-primary leading-relaxed"><%= t("symptoms.discharge_info.#{item[:key]}.long") %></p>
+            </div>
+
+            <button class="w-full mt-5 py-3 rounded-xl text-sm font-semibold text-white"
+                    style="background:<%= phase_colour %>;"
+                    data-action="click->symptom#chooseFromDischargeInfo"
+                    data-choose-discharge="<%= item[:key] %>">
+              <%= t("symptoms.index.choose") %>
+            </button>
+          </div>
+        </div>
+
+        <%# Enlarged finger video viewer — opened by tapping the looping video
+             in the info modal above. Fresh <video> element so every open
+             replays from the start; close pauses and hides it. Rendered above
+             the info modal (z-[110] > z-[100]) and only when an MP4 exists. %>
+        <% if discharge_finger_video_exists?(item[:key]) %>
+          <div id="discharge-video-<%= item[:key] %>"
+               class="hidden fixed inset-0 z-[110] flex items-center justify-center bg-black/80 backdrop-blur-sm px-4"
+               data-discharge-video-modal="<%= item[:key] %>">
+            <div class="relative w-full max-w-sm">
+              <button type="button"
+                      class="absolute -top-14 right-0 flex items-center justify-center w-11 h-11 text-white"
+                      data-action="click->symptom#closeDischargeVideo"
+                      aria-label="<%= t("symptoms.index.close_video_aria") %>">
+                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path d="M18 6 6 18M6 6l12 12" />
+                </svg>
+              </button>
+              <video class="w-full rounded-xl bg-black" controls autoplay muted loop playsinline preload="auto"
+                     poster="<%= asset_path("vaginal_discharge/finger/#{item[:key]}.jpg") %>">
+                <source src="<%= asset_path("vaginal_discharge/finger/#{item[:key]}.mp4") %>" type="video/mp4">
+              </video>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+    <% end %>
 
     <%# 5. Sexual intercourse %>
     <details class="group border-b border-brand-field" id="section-intercourse">

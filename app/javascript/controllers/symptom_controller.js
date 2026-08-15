@@ -149,9 +149,6 @@ export default class extends Controller {
       b.style.transform = isSel ? 'scale(1.08)' : 'scale(1)'
       b.style.filter = isSel ? '' : 'grayscale(0.6)'
       b.setAttribute('aria-pressed', isSel.toString())
-      // Toggle checkmark overlay
-      const overlay = b.querySelector('.discharge-check')
-      if (overlay) overlay.style.display = isSel ? '' : 'none'
       // Toggle label opacity
       const label = b.querySelector('span:last-child')
       if (label) label.style.opacity = isSel ? '1' : '0.5'
@@ -215,6 +212,61 @@ export default class extends Controller {
       date: this.#date,
       flow
     })
+  }
+
+  // "?" badge on a discharge grid icon — opens that item's info modal
+  // (#discharge-info-<key>, see symptoms/index.html.erb). The badge sits
+  // inside the tile's own selection <button>, so this must stop the click
+  // from also bubbling up into toggleDischarge above.
+  openDischargeInfo (event) {
+    if (event.type === 'keydown' && event.key !== 'Enter' && event.key !== ' ') return
+    event.preventDefault()
+    event.stopPropagation()
+    const key = event.currentTarget.dataset.dischargeInfo
+    document.getElementById(`discharge-info-${key}`)?.classList.remove('hidden')
+  }
+
+  closeDischargeInfo (event) {
+    const modal = event.currentTarget.closest('[data-discharge-info-modal]')
+    if (!modal) return
+    modal.classList.add('hidden')
+    // Reset to collapsed for next time it's opened.
+    modal.querySelector('[data-role="detail"]')?.classList.add('hidden')
+    const readMore = modal.querySelector('[data-role="short"]')?.nextElementSibling
+    if (readMore) readMore.style.display = ''
+  }
+
+  // "…read more" inside a discharge info modal — one-way expand, no need
+  // to re-collapse within the same open/close cycle.
+  toggleDischargeInfoDetail (event) {
+    const modal = event.currentTarget.closest('[data-discharge-info-modal]')
+    modal?.querySelector('[data-role="detail"]')?.classList.remove('hidden')
+    event.currentTarget.style.display = 'none'
+  }
+
+  // "Choose" inside the modal — re-uses toggleDischarge's own selection +
+  // save logic via a real click, rather than duplicating it here.
+  chooseFromDischargeInfo (event) {
+    const key = event.currentTarget.dataset.chooseDischarge
+    this.element.querySelector(`[data-action="click->symptom#toggleDischarge"][data-discharge="${key}"]`)?.click()
+    event.currentTarget.closest('[data-discharge-info-modal]')?.classList.add('hidden')
+  }
+
+  // Tapping the looping finger video inside a discharge info modal opens the
+  // enlarged viewer (#discharge-video-<key>). A fresh <video> element lives
+  // there, so playback restarts from the beginning each time.
+  openDischargeVideo (event) {
+    event.preventDefault()
+    event.stopPropagation()
+    const key = event.currentTarget.dataset.dischargeVideo
+    document.getElementById(`discharge-video-${key}`)?.classList.remove('hidden')
+  }
+
+  closeDischargeVideo (event) {
+    const modal = event.currentTarget.closest('[data-discharge-video-modal]')
+    if (!modal) return
+    modal.querySelector('video')?.pause()
+    modal.classList.add('hidden')
   }
 
   // ── private ──────────────────────────────────────────────────────────────

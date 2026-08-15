@@ -503,6 +503,61 @@ en:
       craving_sugar: "Sugar drinks & food"
       submit_tracking: "Submit tracking"
       go_back: "Go back to change"
+      discharge_info_aria: "More about"
+      play_video_aria: "Play video"
+      close_video_aria: "Close video"
+      discharge_info_title: "Here are more details about your discharge"
+      discharge_info_typically: "Typically"
+      read_more: "…read more"
+      choose: "Choose"
+      close: "Close"
+    # Content for the "?" info modal on each Vaginal Discharge grid icon.
+    # Source: docs/Cervical mucus tracking(Tabelle1).csv — the 7 keys match
+    # the discharge_grid keys in symptoms/index.html.erb. Spotting/Period
+    # have no guide content in the source sheet, so no modal for those two.
+    discharge_info:
+      dry:
+        heading: "No mucus, dry sensation"
+        phase: "Follicular phase — directly after your period"
+        season: "Winter"
+        short: "Your body is still in its resting phase. You notice almost nothing at all. The vaginal opening feels neutral to dry. This is completely normal."
+        long: "Directly after your period, your body is at the beginning of a new cycle. Estrogen levels are at their lowest, which means your cervix produces little to no mucus. You notice nothing specific at the vaginal opening — no moisture, no discharge on your underwear or toilet paper. Some women even describe a slightly dry or rough sensation. This is not a disruption. It is your body in its natural winter rest, before it slowly begins to bloom again."
+      creamy-light:
+        heading: "Thick, milky, slightly moist"
+        phase: "Follicular phase — milky, thick"
+        season: "Early Spring"
+        short: "Your body is slowly waking up. You notice first traces of whitish or milky discharge on your underwear or when wiping. The vaginal opening feels slightly moist."
+        long: "With rising estrogen levels, your cervix begins producing mucus again. The mucus at this stage is thick and milky, similar to thin lotion. It leaves a whitish or cream-colored mark on underwear. The sensation at the vaginal opening shifts from neutral to slightly moist. Your body is preparing for the fertile phase and beginning to build a mucus bridge that will later help sperm find their way."
+      creamy:
+        heading: "Creamy, more abundant, moist"
+        phase: "Follicular phase — creamy"
+        season: "Spring"
+        short: "The mucus becomes visibly more and creamier. It feels like soft lotion between your fingers and you notice a clearly more moist sensation. Ovulation is approaching."
+        long: "In this phase, your estrogen levels continue to rise and your body produces noticeably more mucus. The consistency becomes creamier and thicker, similar to soft cream or yoghurt. It leaves a whitish to slightly yellowish stain on underwear. You notice a clear feeling of moisture at the vaginal opening. Your body is actively preparing to receive and nourish sperm. The creamier and more abundant the mucus, the closer your ovulation is."
+      stretchy:
+        heading: "Stringy, elastic, stretchy, moist to wet"
+        phase: "Follicular phase — stringy, elastic"
+        season: "Late Spring"
+        short: "Now it gets serious. The mucus forms threads when pulled between thumb and index finger without breaking immediately. You are in your peak fertile window."
+        long: "Shortly before ovulation, the mucus quality changes significantly. It becomes tougher, elastic and thread-forming, similar to cooked egg white or soft chewing gum. When pulled between fingers, it forms a thread that can reach several centimeters before breaking. The color is milky to slightly clear. The vaginal opening feels moist to wet. This is a strong signal from your body: you are highly fertile. Sperm can survive in this mucus for up to 5 days."
+      egg-white:
+        heading: "Clear, extremely stretchy, wet"
+        phase: "Ovulation — clear, raw egg white"
+        season: "Summer"
+        short: "This is your peak. The mucus is now clear like raw egg white, extremely stretchy and feels slippery or oily. The vaginal opening feels noticeably wet. This is your most fertile day."
+        long: "At ovulation, your cervix produces the highest quality mucus of your entire cycle. It is glassy, almost transparent, extremely stretchy and feels slippery, oily or smooth. When pulled between fingers, it forms long, thin threads that can reach several centimeters without breaking. The vaginal opening feels noticeably wet, sometimes almost like something is running out. Some women also notice a reddish or brownish tint, which is a normal ovulation bleed. This is your most fertile day."
+      thick:
+        heading: "Lumpy, less mucus, becoming drier"
+        phase: "Luteal phase — lumpy"
+        season: "Early Autumn"
+        short: "Ovulation is over. The mucus becomes lumpier and noticeably decreases in volume. The moisture feeling fades and your body shifts slowly into autumn mode."
+        long: "Directly after ovulation, your progesterone levels rise and fundamentally change the mucus quality. The mucus becomes lumpier, less cohesive and noticeably decreases in volume. It can barely be pulled into threads and breaks off quickly. The cervix begins to close with a mucus plug that keeps sperm and germs out. You notice an increasing dryness at the vaginal opening. Your body is now in the early luteal phase, preparing for possible implantation, or the next period."
+      sticky:
+        heading: "Thick, cloudy, sticky, barely any mucus"
+        phase: "Luteal phase — thick, cloudy, sticky"
+        season: "Autumn"
+        short: "Your body is preparing for the next period. The little mucus remaining feels thick, cloudy and sticky, almost like paste. The sensation is dry to barely moist."
+        long: "In the days before the next period, mucus production is at its minimum. What remains looks thick, cloudy and sticky, almost like glue paste. It barely leaves traces on underwear. The vaginal opening feels dry to slightly moist, without any notable wetness. Both your estrogen and progesterone levels are dropping. This is the end of a complete cycle and at the same time the beginning of the next bloom."
   streaks:
     index:
       current_streak: "Current Streak"

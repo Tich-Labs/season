@@ -8,7 +8,7 @@ Rails.application.configure do
     policy.style_src :self, :https, :unsafe_inline
     policy.connect_src :self, :https
     policy.frame_src :self, :https
-    policy.media_src :none
+    policy.media_src :self, :https
   end
 
   config.content_security_policy_nonce_generator = ->(request) { request.session.id.to_s }

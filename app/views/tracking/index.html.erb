@@ -4,6 +4,13 @@
 <% content_for(:hide_quick_actions) { "true" } %>
 <%# This page renders its own centred calendar button below, so opt out of the shared bottom-right FAB. %>
 <% content_for(:hide_calendar_fab) { "true" } %>
+<%# The redirect that lands here with tracking_saved=1 also sets flash[:notice]
+     ("Period dates saved."/etc.) — normally rendered as the shared banner right
+     below the app bar. But that flash and the #tracking-saved-modal below both
+     fire from the same redirect, so the banner ends up squeezed into the gap
+     between the app bar and the modal's top edge: two confirmations for one
+     action, layered on each other. The modal alone is the confirmation here. %>
+<% content_for(:hide_flash) { "true" } if params[:tracking_saved] == "1" %>
 
 <%
   def arc_path(cx, cy, r_out, r_in, start_deg, end_deg)
