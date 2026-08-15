@@ -27,14 +27,14 @@ class Settings::LanguageControllerTest < ActionDispatch::IntegrationTest
     assert_match(">Settings<", response.body)
   end
 
-  # Every settings page/sub-page gets the centred calendar FAB (bg-brand-field,
-  # aria-label "Go to calendar") instead of the "+" or the default bottom-right
-  # calendar FAB (aria-label "Back to calendar").
-  test "GET /settings/language shows only the centred calendar FAB" do
+  # Settings sub-pages have no bottom FAB at all — not the "+" quick-actions
+  # FAB, not the bottom-right calendar FAB ("Back to calendar"), and not the
+  # centred calendar FAB ("Go to calendar") either.
+  test "GET /settings/language shows no bottom FAB" do
     get settings_language_path
     assert_no_match(/quick-actions#open/, response.body)
     assert_no_match(/Back to calendar/, response.body)
-    assert_match(/Go to calendar/, response.body)
+    assert_no_match(/Go to calendar/, response.body)
   end
 
   # Two real entry points — the main settings menu, and the "EN" pill on

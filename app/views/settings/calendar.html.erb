@@ -15,7 +15,7 @@
 <% end %>
 
 <div class="bg-white min-h-screen">
-  <div class="max-w-app mx-auto px-4 pb-28">
+  <div class="max-w-app mx-auto px-4 pb-8">
 
     <%# Flash message toast %>
     <% if notice.present? %>
@@ -268,7 +268,5 @@
 
   </div>
 </div>
-
-<%= render "shared/calendar_center_fab", bg: "bg-brand-field" %>
 
 <%= javascript_import_module_tag "controllers/calendar_toggle_controller" %>

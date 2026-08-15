@@ -207,16 +207,16 @@ class SettingsControllerTest < ActionDispatch::IntegrationTest
     assert reminder.active?
   end
 
-  # M1 — Settings screens should show only the centred calendar FAB
-  # (bg-brand-field, aria-label "Go to calendar"), not the "+" quick-actions
-  # FAB or the default bottom-right calendar FAB (aria-label
-  # "Back to calendar") — supersedes the earlier "+"-only requirement.
-  test "GET /settings/profile shows only the centred calendar FAB" do
+  # Settings sub-pages have no bottom FAB at all — not the "+" quick-actions
+  # FAB, not the bottom-right calendar FAB ("Back to calendar"), and not the
+  # centred calendar FAB ("Go to calendar") either. Only the settings home
+  # (/settings/edit) keeps the centred FAB.
+  test "GET /settings/profile shows no bottom FAB" do
     get profile_settings_path
     assert_response :success
     assert_no_match(/quick-actions#open/, response.body)
     assert_no_match(/Back to calendar/, response.body)
-    assert_match(/Go to calendar/, response.body)
+    assert_no_match(/Go to calendar/, response.body)
   end
 
   # The avatar modal is opened from /settings/profile and from /tracking;
