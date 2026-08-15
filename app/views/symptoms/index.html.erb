@@ -372,16 +372,31 @@
                    it opens the enlarged viewer below to watch it again;
                    categories without a video fall back to the static photo. %>
               <% if discharge_finger_video_exists?(item[:key]) %>
-                <div class="w-24 h-24 rounded-full overflow-hidden bg-white shrink-0">
+                <%# Outer wrapper anchors the play badge above-and-right of the
+                     video circle so it never covers the looping video. The
+                     circle's own overflow-hidden clips the video to the round,
+                     so the badge can't live inside it. %>
+                <div class="relative shrink-0">
+                  <div class="w-24 h-24 rounded-full overflow-hidden bg-white">
+                    <button type="button"
+                            class="relative block w-full h-full p-0 border-0 bg-transparent cursor-pointer"
+                            data-action="click->symptom#openDischargeVideo"
+                            data-discharge-video="<%= item[:key] %>"
+                            aria-label="<%= t("symptoms.index.play_video_aria") %> <%= item[:label] %>">
+                      <video class="w-full h-full object-cover" autoplay muted loop playsinline preload="auto"
+                             poster="<%= asset_path("vaginal_discharge/finger/#{item[:key]}.jpg") %>">
+                        <source src="<%= asset_path("vaginal_discharge/finger/#{item[:key]}.mp4") %>" type="video/mp4">
+                      </video>
+                    </button>
+                  </div>
                   <button type="button"
-                          class="relative block w-full h-full p-0 border-0 bg-transparent cursor-pointer"
+                          class="absolute -top-3 -right-3 w-7 h-7 rounded-full flex items-center justify-center bg-brand-primary shadow cursor-pointer p-0 border-0"
                           data-action="click->symptom#openDischargeVideo"
                           data-discharge-video="<%= item[:key] %>"
                           aria-label="<%= t("symptoms.index.play_video_aria") %> <%= item[:label] %>">
-                    <video class="w-full h-full object-cover" autoplay muted loop playsinline preload="auto"
-                           poster="<%= asset_path("vaginal_discharge/finger/#{item[:key]}.jpg") %>">
-                      <source src="<%= asset_path("vaginal_discharge/finger/#{item[:key]}.mp4") %>" type="video/mp4">
-                    </video>
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M4 2.5V9.5L9.5 6L4 2.5Z" fill="white" />
+                    </svg>
                   </button>
                 </div>
               <% elsif discharge_finger_photo_exists?(item[:key]) %>

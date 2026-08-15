@@ -76,6 +76,8 @@ Everything else — accessibility, i18n completeness, schema cleanup — is impr
 > **Completed 28 April 2026 — Admin CMS CRUD:** `Admin::CyclePhaseContentsController` now has full create/edit/delete, giving the team control over `/informations/:phase` content without Rails console access.
 >
 > **Completed 28 April 2026 — Informations show redesign:** Phase detail pages rebuilt to match Figma — flat white layout, phase-coloured text throughout, three sections (phase title + hormone note, emotional world, that will do you good) separated by divider lines.
+>
+> **Completed 15 August 2026 — M3 cervical mucus education:** The vaginal discharge tracker now uses the client's real photo/video assets from the cervical mucus content guide. Nine slip photos (7 stages + spotting + period) replace the illustrated icons, each with a Figma-exact phase ring as the image's own border. A "?" info modal per stage provides EN/DE guide content (short/long text, read-more, choose-to-select), and the seven finger photos now play as looping GIF videos (H.264 MP4) with a tap-to-enlarge viewer for replay. `/tracking/period` gained a `< back` link below the app bar via a shared partial. CSP `media-src` was relaxed from `none` to `self https:` to permit the video playback.
 
 ---
 
