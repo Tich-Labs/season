@@ -243,4 +243,28 @@ class SettingsControllerTest < ActionDispatch::IntegrationTest
     patch update_avatar_settings_path, params: {avatar_preset: @avatar_preset, return_to: "https://evil.example.com"}
     assert_redirected_to profile_settings_path
   end
+
+  test "PATCH /settings/update_avatar rejects a non-image file and does not attach it" do
+    fake_pdf = Rack::Test::UploadedFile.new(StringIO.new("not an image"), "application/pdf", original_filename: "test.pdf")
+    patch update_avatar_settings_path, params: {avatar: fake_pdf}
+    assert_not @alice.reload.avatar.attached?
+  end
+
+  # google_calendar_callback — classic OAuth "connect CSRF": without a state
+  # check, an attacker can capture their own authorization code and get a
+  # logged-in victim to hit this URL, linking the attacker's Google account
+  # to the victim's Season account. Both cases here short-circuit before any
+  # real Google API call (state check fails first), so no HTTP mocking needed.
+  test "GET /settings/google_calendar_callback rejects a code with no state in session" do
+    get google_calendar_callback_settings_path, params: {code: "attacker-code"}
+    assert_redirected_to calendar_settings_path
+    assert_nil @alice.reload.google_access_token
+  end
+
+  test "GET /settings/google_calendar_callback rejects a code with a mismatched state" do
+    get connect_google_calendar_settings_path
+    get google_calendar_callback_settings_path, params: {code: "attacker-code", state: "wrong-state"}
+    assert_redirected_to calendar_settings_path
+    assert_nil @alice.reload.google_access_token
+  end
 end

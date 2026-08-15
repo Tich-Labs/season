@@ -59,18 +59,33 @@ class SettingsController < ApplicationController
   end
 
   def connect_google_calendar
+    # Without this, anyone can start their own OAuth flow, capture the
+    # resulting code, and get a logged-in victim to visit
+    # /settings/google_calendar_callback?code=<attacker's code> — the
+    # callback below would exchange it and link the attacker's Google
+    # Calendar to the victim's Season account. Tying the redirect to a
+    # per-session value the callback must match closes that off (the classic
+    # OAuth "login/connect CSRF" gap).
+    state = SecureRandom.hex(16)
+    session[:google_oauth_state] = state
+
     client = build_google_oauth_client
     auth_url = client.authorization_uri(
       scope: "https://www.googleapis.com/auth/calendar",
       access_type: "offline",
       prompt: "consent",
+      state: state,
       redirect_uri: google_calendar_callback_url
     ).to_s
     redirect_to auth_url, allow_other_host: true
   end
 
   def google_calendar_callback
-    if params[:code].present?
+    expected_state = session.delete(:google_oauth_state)
+    state_ok = expected_state.present? && params[:state].present? &&
+      ActiveSupport::SecurityUtils.secure_compare(params[:state], expected_state)
+
+    if params[:code].present? && state_ok
       client = build_google_oauth_client
       client.code = params[:code]
       client.redirect_uri = google_calendar_callback_url
@@ -183,12 +198,29 @@ class SettingsController < ApplicationController
         @user.update(avatar_url: nil)
       end
     elsif params[:avatar].is_a?(ActionDispatch::Http::UploadedFile)
+      # Also how a cropped photo arrives — avatar_crop_controller.js swaps a
+      # canvas-exported File into this same file input before submitting, so
+      # there's nothing crop-specific to do here; it's just a JPEG upload.
+      #
+      # `attach` on an already-persisted record (true here — current_user is
+      # always persisted) saves the attachment immediately and unconditionally,
+      # bypassing model validations entirely. valid?/save afterward correctly
+      # *reports* an oversized/wrong-type file as invalid, but the bad blob is
+      # already sitting in storage and attached by then regardless — it has to
+      # be purged by hand on failure, or the User#avatar validation added
+      # alongside this is just a report, not an actual gate.
       @user.avatar.attach(params[:avatar])
-      @user.update(avatar_preset: nil)
-    elsif params[:avatar_url].present? && params[:avatar_url].starts_with?("http")
-      # URL fallback
-      @user.update(avatar_url: params[:avatar_url], avatar_preset: nil)
+      if @user.valid?
+        @user.update(avatar_preset: nil)
+      else
+        @user.avatar.purge
+      end
     end
+    # Pasting an image URL used to be a third option here (avatar_url) — the
+    # picker no longer offers it, so this action no longer accepts one, even
+    # if something still POSTs the param directly. Existing users who already
+    # have avatar_url set keep displaying it fine (see User#avatar_url reads
+    # across the views); only *setting a new one* this way is gone.
     # The avatar modal is opened from /settings/profile and from /tracking;
     # land the user back where they made the change, not always profile.
     safe_return = params[:return_to].in?([tracking_index_path, profile_settings_path]) ? params[:return_to] : nil

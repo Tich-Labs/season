@@ -142,9 +142,15 @@ export default class extends Controller {
     const key = btn.dataset.discharge
     const checkEl = document.getElementById('section-discharge-check')
 
-    // Single-select — deselect all, then select tapped item
+    // Single-select, but tapping the already-selected tile clears it back to
+    // blank — some days genuinely have nothing to log, and there was no way
+    // to say that once you'd tapped something by mistake (or changed your
+    // mind) short of picking a different, also-wrong tile.
+    const wasSelected = btn.getAttribute('aria-pressed') === 'true'
+    const newKey = wasSelected ? '' : key
+
     this.element.querySelectorAll('[data-discharge]').forEach(b => {
-      const isSel = b.dataset.discharge === key
+      const isSel = !wasSelected && b.dataset.discharge === key
       b.style.opacity = isSel ? '1' : '0.35'
       b.style.transform = isSel ? 'scale(1.08)' : 'scale(1)'
       b.style.filter = isSel ? '' : 'grayscale(0.6)'
@@ -154,9 +160,9 @@ export default class extends Controller {
       if (label) label.style.opacity = isSel ? '1' : '0.5'
     })
 
-    this.#debouncedSave({ discharge: key })
+    this.#debouncedSave({ discharge: newKey })
 
-    if (checkEl) { checkEl.style.display = key ? '' : 'none' }
+    if (checkEl) { checkEl.style.display = newKey ? '' : 'none' }
   }
 
   // Generic handler for physical + mental symptom sliders.
@@ -187,9 +193,17 @@ export default class extends Controller {
     this.#debouncedSave({ [field]: value })
   }
 
-  // Receive value from scroll picker (temperature / weight)
+  // Receive value from scroll picker (sleep / temperature / weight)
   saveFromPicker (event) {
     const { field, value } = event.detail
+    // Unlike mood/discharge/intercourse/cravings, this checkmark has no
+    // JS-driven visibility elsewhere — it was only ever set once from the
+    // server at page load, so scrolling back to the picker's "-" placeholder
+    // correctly cleared the saved value (confirmed server-side) but left the
+    // checkmark lit as if something was still tracked. `value` is '' for the
+    // placeholder, a number otherwise.
+    const checkEl = document.getElementById(`section-${field}-check`)
+    if (checkEl) checkEl.style.display = value === '' ? 'none' : ''
     this.#debouncedSave({ [field]: value.toString() })
   }
 
@@ -259,7 +273,17 @@ export default class extends Controller {
     event.preventDefault()
     event.stopPropagation()
     const key = event.currentTarget.dataset.dischargeVideo
-    document.getElementById(`discharge-video-${key}`)?.classList.remove('hidden')
+    const modal = document.getElementById(`discharge-video-${key}`)
+    modal?.classList.remove('hidden')
+    // The `autoplay` attribute alone doesn't reliably (re)start playback here
+    // — this <video> sits inside a `.hidden` (display:none) container from
+    // page load, and browsers generally only honour `autoplay` for an
+    // element that's already laid out and visible, not one that's merely
+    // unhidden later. Play explicitly instead of hoping the attribute
+    // catches it. `.play()` returns a promise that rejects if the browser
+    // blocks it — harmless here (muted autoplay is broadly allowed) and not
+    // worth surfacing as an error.
+    modal?.querySelector('video')?.play().catch(() => {})
   }
 
   closeDischargeVideo (event) {
@@ -267,6 +291,33 @@ export default class extends Controller {
     if (!modal) return
     modal.querySelector('video')?.pause()
     modal.classList.add('hidden')
+  }
+
+  // Same enlarge-on-tap pattern as the video above, for categories that only
+  // have a static finger photo (no video yet).
+  openDischargePhoto (event) {
+    event.preventDefault()
+    event.stopPropagation()
+    const key = event.currentTarget.dataset.dischargePhoto
+    document.getElementById(`discharge-photo-${key}`)?.classList.remove('hidden')
+  }
+
+  closeDischargePhoto (event) {
+    event.currentTarget.closest('[data-discharge-photo-modal]')?.classList.add('hidden')
+  }
+
+  // Same enlarge-on-tap pattern again, for the first (slip) photo circle —
+  // the one always present, as opposed to the finger photo/video pair above
+  // which only exists once added per category.
+  openDischargeSlip (event) {
+    event.preventDefault()
+    event.stopPropagation()
+    const key = event.currentTarget.dataset.dischargeSlip
+    document.getElementById(`discharge-slip-${key}`)?.classList.remove('hidden')
+  }
+
+  closeDischargeSlip (event) {
+    event.currentTarget.closest('[data-discharge-slip-modal]')?.classList.add('hidden')
   }
 
   // ── private ──────────────────────────────────────────────────────────────

@@ -367,9 +367,38 @@
               <%= t("symptoms.index.discharge_info_title") %>
             </h3>
 
+            <%# Diagonal two-arrow "expand" glyph — same badge treatment as the
+                 video's play triangle below, but visually distinct so a photo
+                 badge is never mistaken for "this plays". %>
+            <% expand_badge = capture do %>
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M2 5V2H5" stroke="white" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M2 2L5.3 5.3" stroke="white" stroke-width="1.3" stroke-linecap="round" />
+                <path d="M10 7V10H7" stroke="white" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M10 10L6.7 6.7" stroke="white" stroke-width="1.3" stroke-linecap="round" />
+              </svg>
+            <% end %>
             <div class="flex justify-center gap-3 mb-4">
-              <div class="w-24 h-24 rounded-full overflow-hidden bg-white shrink-0">
-                <%= image_tag "vaginal_discharge/#{item[:img]}", alt: item[:label], class: "w-full h-full object-cover" %>
+              <%# Outer wrapper anchors the badge above-and-right of the photo
+                   circle, same reasoning as the video's badge below — it can't
+                   live inside the circle's own overflow-hidden. %>
+              <div class="relative shrink-0">
+                <div class="w-24 h-24 rounded-full overflow-hidden bg-white">
+                  <button type="button"
+                          class="block w-full h-full p-0 border-0 bg-transparent cursor-pointer"
+                          data-action="click->symptom#openDischargeSlip"
+                          data-discharge-slip="<%= item[:key] %>"
+                          aria-label="<%= t("symptoms.index.enlarge_photo_aria") %> <%= item[:label] %>">
+                    <%= image_tag "vaginal_discharge/#{item[:img]}", alt: item[:label], class: "w-full h-full object-cover" %>
+                  </button>
+                </div>
+                <button type="button"
+                        class="absolute -top-3 -right-3 w-7 h-7 rounded-full flex items-center justify-center bg-brand-primary shadow cursor-pointer p-0 border-0"
+                        data-action="click->symptom#openDischargeSlip"
+                        data-discharge-slip="<%= item[:key] %>"
+                        aria-label="<%= t("symptoms.index.enlarge_photo_aria") %> <%= item[:label] %>">
+                  <%= expand_badge %>
+                </button>
               </div>
               <%# Finger photo/video — added per category once available.
                    Propshaft raises a 500 for a path with no source file (not a
@@ -407,8 +436,23 @@
                   </button>
                 </div>
               <% elsif discharge_finger_photo_exists?(item[:key]) %>
-                <div class="w-24 h-24 rounded-full overflow-hidden bg-white shrink-0">
-                  <%= image_tag "vaginal_discharge/finger/#{item[:key]}.jpg", alt: "", class: "w-full h-full object-cover" %>
+                <div class="relative shrink-0">
+                  <div class="w-24 h-24 rounded-full overflow-hidden bg-white">
+                    <button type="button"
+                            class="block w-full h-full p-0 border-0 bg-transparent cursor-pointer"
+                            data-action="click->symptom#openDischargePhoto"
+                            data-discharge-photo="<%= item[:key] %>"
+                            aria-label="<%= t("symptoms.index.enlarge_photo_aria") %> <%= item[:label] %>">
+                      <%= image_tag "vaginal_discharge/finger/#{item[:key]}.jpg", alt: "", class: "w-full h-full object-cover" %>
+                    </button>
+                  </div>
+                  <button type="button"
+                          class="absolute -top-3 -right-3 w-7 h-7 rounded-full flex items-center justify-center bg-brand-primary shadow cursor-pointer p-0 border-0"
+                          data-action="click->symptom#openDischargePhoto"
+                          data-discharge-photo="<%= item[:key] %>"
+                          aria-label="<%= t("symptoms.index.enlarge_photo_aria") %> <%= item[:label] %>">
+                    <%= expand_badge %>
+                  </button>
                 </div>
               <% end %>
             </div>
@@ -463,7 +507,45 @@
               </video>
             </div>
           </div>
+        <% elsif discharge_finger_photo_exists?(item[:key]) %>
+          <%# Same enlarge-on-tap pattern as the video viewer above, for
+               categories with only a static finger photo. %>
+          <div id="discharge-photo-<%= item[:key] %>"
+               class="hidden fixed inset-0 z-[110] flex items-center justify-center bg-black/80 backdrop-blur-sm px-4"
+               data-discharge-photo-modal="<%= item[:key] %>">
+            <div class="relative w-full max-w-sm">
+              <button type="button"
+                      class="absolute -top-14 right-0 flex items-center justify-center w-11 h-11 text-white"
+                      data-action="click->symptom#closeDischargePhoto"
+                      aria-label="<%= t("symptoms.index.close_photo_aria") %>">
+                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path d="M18 6 6 18M6 6l12 12" />
+                </svg>
+              </button>
+              <%= image_tag "vaginal_discharge/finger/#{item[:key]}.jpg", alt: item[:label], class: "w-full rounded-xl" %>
+            </div>
+          </div>
         <% end %>
+
+        <%# Enlarged slip-photo viewer — opened by tapping the first (slip)
+             photo circle at the top of the info modal above. Unlike the
+             finger photo/video pair, this one always exists for every item
+             in discharge_grid, so it's rendered unconditionally. %>
+        <div id="discharge-slip-<%= item[:key] %>"
+             class="hidden fixed inset-0 z-[110] flex items-center justify-center bg-black/80 backdrop-blur-sm px-4"
+             data-discharge-slip-modal="<%= item[:key] %>">
+          <div class="relative w-full max-w-sm">
+            <button type="button"
+                    class="absolute -top-14 right-0 flex items-center justify-center w-11 h-11 text-white"
+                    data-action="click->symptom#closeDischargeSlip"
+                    aria-label="<%= t("symptoms.index.close_photo_aria") %>">
+              <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M18 6 6 18M6 6l12 12" />
+              </svg>
+            </button>
+            <%= image_tag "vaginal_discharge/#{item[:img]}", alt: item[:label], class: "w-full rounded-xl" %>
+          </div>
+        </div>
       <% end %>
     <% end %>
 
@@ -634,7 +716,7 @@
           </svg>
           <span class="font-medium text-xl tracking-p66" style="color:<%= phase_colour %>;">Sleep</span>
         </div>
-        <% if sleep_done %><%= render 'symptoms/bi_check', colour: phase_colour %><% end %>
+        <span id="section-sleep-check" style="display:<%= sleep_done ? '' : 'none' %>"><%= render 'symptoms/bi_check', colour: phase_colour %></span>
       </summary>
       <div class="pb-5" data-controller="scroll-picker"
            data-scroll-picker-min-value="1"
@@ -671,7 +753,7 @@
           </svg>
           <span class="font-medium text-xl tracking-p66" style="color:<%= phase_colour %>;">Temperature</span>
         </div>
-        <% if temperature_done %><%= render 'symptoms/bi_check', colour: phase_colour %><% end %>
+        <span id="section-temperature-check" style="display:<%= temperature_done ? '' : 'none' %>"><%= render 'symptoms/bi_check', colour: phase_colour %></span>
       </summary>
       <div class="pb-5" data-controller="scroll-picker"
            data-scroll-picker-min-value="35.0"
@@ -708,7 +790,7 @@
           </svg>
           <span class="font-medium text-xl tracking-p66" style="color:<%= phase_colour %>;">Weight</span>
         </div>
-        <% if weight_done %><%= render 'symptoms/bi_check', colour: phase_colour %><% end %>
+        <span id="section-weight-check" style="display:<%= weight_done ? '' : 'none' %>"><%= render 'symptoms/bi_check', colour: phase_colour %></span>
       </summary>
       <div class="pb-5" data-controller="scroll-picker"
            data-scroll-picker-min-value="30.0"

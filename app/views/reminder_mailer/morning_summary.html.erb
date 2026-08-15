@@ -5,7 +5,7 @@
       <%# Header %>
       <tr><td style="background:<%= @phase_meta[:colour] %>; border-radius:16px 16px 0 0; padding:28px 28px 24px; text-align:center;">
         <p style="color:rgba(255,255,255,0.8); font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.1em; margin:0 0 6px;">
-          <%= Date.today.strftime("%A, %B %-d") %>
+          <%= Date.current.strftime("%A, %B %-d") %>
         </p>
         <h1 style="color:#FFFFFF; font-size:24px; font-weight:700; margin:0 0 4px; line-height:1.2;">
           Good morning, <%= @user.name.split.first %> 🌸

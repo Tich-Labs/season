@@ -44,7 +44,15 @@
         </button>
       </div>
       <ul class="overflow-y-auto text-center scrollbar-hide" style="height:173px;">
-        <% ((Date.today - 29)..Date.today).each do |d| %>
+        <%# Date.current, not Date.today -- the latter reads the system/OS
+             timezone, not this app's configured Time.zone (UTC). They agree
+             most of the day, but disagree for a few hours around each UTC
+             midnight on any server whose local clock runs ahead of UTC --
+             during that window Date.today already reads "tomorrow" while
+             the rest of the app (Time.zone.today) still says "today",
+             making one extra, actually-future day render here as if it
+             were valid history to tap into. %>
+        <% ((Date.current - 29)..Date.current).each do |d| %>
           <% selected = d == date %>
           <li class="py-px leading-tight">
             <%= link_to d.strftime("%-d %B"), date_path.call(d),

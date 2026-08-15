@@ -7,6 +7,16 @@ class User < ApplicationRecord
   validates :name, presence: true, if: :onboarding_completed?
 
   has_one_attached :avatar
+  # accept="image/*" on the file input is a client-side hint only — nothing
+  # stops a request posting straight to PATCH /settings/update_avatar with an
+  # arbitrarily large or arbitrarily typed file. This is the actual gate.
+  # Plain custom validation, not `validates :avatar, content_type: ..., size:
+  # ...` — that syntax needs the active_storage_validations gem, which isn't
+  # in the Gemfile.
+  validate :avatar_content_type_and_size
+
+  AVATAR_CONTENT_TYPES = ["image/png", "image/jpeg", "image/webp"].freeze
+  AVATAR_MAX_SIZE = 5.megabytes
   has_many :cycle_entries, dependent: :destroy
   has_many :calendar_events, dependent: :destroy
   has_many :symptom_logs, dependent: :destroy
@@ -227,5 +237,18 @@ class User < ApplicationRecord
   rescue Signet::AuthorizationError => e
     Rails.logger.error "[Google Calendar] Token refresh failed: #{e.message}"
     false
+  end
+
+  private
+
+  def avatar_content_type_and_size
+    return unless avatar.attached?
+
+    unless avatar.content_type.in?(AVATAR_CONTENT_TYPES)
+      errors.add(:avatar, "must be a PNG, JPEG, or WebP image")
+    end
+    if avatar.byte_size > AVATAR_MAX_SIZE
+      errors.add(:avatar, "must be smaller than #{AVATAR_MAX_SIZE / 1.megabyte}MB")
+    end
   end
 end

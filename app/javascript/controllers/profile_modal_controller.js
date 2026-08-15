@@ -79,10 +79,6 @@ export default class extends Controller {
     this.#setSelectedPreset('')
   }
 
-  urlSelected () {
-    this.#setSelectedPreset('')
-  }
-
   // ── private ────────────────────────────────────────────────────────────
 
   // Keeps the hidden avatar_preset input and the grid highlight in sync.
