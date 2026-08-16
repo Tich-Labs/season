@@ -419,7 +419,7 @@
                             data-action="click->symptom#openDischargeVideo"
                             data-discharge-video="<%= item[:key] %>"
                             aria-label="<%= t("symptoms.index.play_video_aria") %> <%= item[:label] %>">
-                      <video class="w-full h-full object-cover" autoplay muted loop playsinline preload="auto"
+                      <video class="w-full h-full object-cover discharge-loop-video" autoplay muted loop playsinline preload="metadata"
                              poster="<%= asset_path("vaginal_discharge/finger/#{item[:key]}.jpg") %>">
                         <source src="<%= asset_path("vaginal_discharge/finger/#{item[:key]}.mp4") %>" type="video/mp4">
                       </video>

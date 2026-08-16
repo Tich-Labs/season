@@ -102,6 +102,20 @@
   display: none;              /* Chrome, Safari, Opera */
 }
 
+/* ── Looping "GIF" finger-mucus videos ──────────────────────────────────── */
+/* iOS Safari/WKWebView paints a big native ▶ button in the centre of muted
+   autoplay videos while they buffer (Low Power Mode, preload delay, etc.).
+   This clips it away so the clips behave like animated GIFs. Scoped to the
+   circular loops only — the enlarged viewer (which has `controls`) is
+   unaffected. */
+.discharge-loop-video::-webkit-media-controls-start-playback-button {
+  -webkit-appearance: none;
+  display: none !important;
+}
+.discharge-loop-video::-webkit-media-controls {
+  -webkit-appearance: none;
+}
+
 /* ── Physical symptom sliders ───────────────────────────────────────────── */
 .symptom-slider {
   -webkit-appearance: none;
