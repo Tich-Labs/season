@@ -48,9 +48,24 @@ class CycleCalculatorService
   end
 
   def current_cycle_day
+    cycle_day_for(Time.zone.today)
+  end
+
+  def cycle_day_for(date)
     return nil if @period_starts.empty?
-    latest = @period_starts.last
-    ((Time.zone.today - latest).to_i % @predicted_gap) + 1
+    # cycle_bounds_for, not @period_starts.last/@predicted_gap directly —
+    # every other date-aware method here (phase_for_date, month_data,
+    # week_data, strip_data) brackets `date` against whichever period start
+    # actually precedes it and that specific cycle's real length, not always
+    # the most recent period. Anchoring on "latest" unconditionally gave a
+    # plausible-looking but wrong cycle day for any past date that falls in
+    # an earlier cycle with a different length than the current rolling
+    # average — the modulo always produces some in-range number, so it never
+    # errors, just silently disagrees with the phase/colour shown for the
+    # same date everywhere else in the app.
+    prev_start, gap = cycle_bounds_for(date)
+    return nil unless prev_start && gap
+    ((date.to_date - prev_start).to_i % gap) + 1
   end
 
   def next_period_start

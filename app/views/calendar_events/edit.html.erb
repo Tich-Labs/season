@@ -1,16 +1,11 @@
 <% content_for(:page_title) { "Appointment" } %>
-<% content_for(:header_left) do %>
-  <a href="<%= user_root_path %>"
-     onclick="if (window.history.length > 1) { window.history.back(); return false; }"
-     class="inline-flex items-center justify-center w-10 h-10 rounded-xl text-brand-primary"
-     aria-label="Back">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-      <path d="M15 6l-6 6 6 6" stroke="#933A35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-    </svg>
-  </a>
-<% end %>
+<%# No header_left here — Figma's app bar for this screen is the plain
+     default (hamburger + title), not a custom back arrow. "< Back" is a
+     separate line in the page's own content below the bar, confirmed
+     directly off the Figma node: the app-bar frame is 0-81px tall, "< Back"
+     sits at y=95, clearly below it, not inside that bar alongside the
+     title. %>
 <% content_for(:hide_quick_actions) { "true" } %>
-<%# Already has a back-to-calendar arrow in the header above, matching new.html.erb. %>
 <% content_for(:hide_calendar_fab) { "true" } %>
 
 <%
@@ -26,9 +21,15 @@
      data-appointment-date-picker-selected-date-value="<%= evt_date %>">
   <div class="max-w-app mx-auto px-4 pt-5">
 
+    <a href="<%= user_root_path %>"
+       onclick="if (window.history.length > 1) { window.history.back(); return false; }"
+       class="inline-flex items-center py-2 mb-2 text-brand-primary text-sm font-medium no-underline">
+      &lt; Back
+    </a>
+
     <% category_icons = {
       'Friends' => 'family.svg', 'Dinner' => 'dinner.svg', 'Date' => 'date.svg',
-      'Sports' => 'sport.svg', 'Medical' => 'medical.svg', 'Birthday' => 'birthday.svg',
+      'Sport' => 'sport.svg', 'Medical' => 'medical.svg', 'Birthday' => 'birthday.svg',
       'Work' => 'work.svg', 'Coffee' => 'coffee.svg', 'Shopping' => 'shopping.svg'
     } %>
 
@@ -150,7 +151,13 @@
 
       </div>
 
-      <hr class="border-brand-primary/50 my-5 mx-5">
+      <%# my-9, not the my-5 the other dividers on this page use — this gap
+           (date/time card to reminder row) measured ~96px in the Figma node,
+           noticeably more than the ~53px row-to-row spacing elsewhere on
+           this screen; my-5 landed at 61px measured live, my-9 lands at 93,
+           close enough given inherent slop in mapping Figma's icon-box
+           coordinates back to CSS gaps. %>
+      <hr class="border-brand-primary/50 my-9 mx-5">
 
       <%# Reminder row %>
       <% rem = @event.reminder_minutes || 15 %>
@@ -164,6 +171,14 @@
           </svg>
         </div>
         <span data-season-modal-target="reminderLabel" class="text-base font-medium tracking-007 flex-1 font-sans <%= rem == 0 ? 'text-brand-graytext' : 'text-brand-primary' %>"><%= rem_label %></span>
+        <%# Quick-clear — Figma shows this only when a reminder is actually
+             set; opening the picker modal just to pick "No reminder" is the
+             only way to clear one otherwise. Stops propagation so it doesn't
+             also fire the row's own openReminder click. %>
+        <button type="button" data-season-modal-target="reminderClearBtn" data-action="click->season-modal#clearReminder"
+                aria-label="Remove reminder" class="shrink-0 bg-transparent border-none cursor-pointer p-1 text-brand-primary <%= 'hidden' if rem == 0 %>">
+          <svg width="14" height="14" viewBox="0 0 12 12" fill="none"><path d="M9 3L3 9M3 3l6 6" stroke="#933A35" stroke-width="1.5" stroke-linecap="round" /></svg>
+        </button>
       </div>
 
       <hr class="border-brand-primary/50 my-5 mx-5">
@@ -180,20 +195,7 @@
         <span data-season-modal-target="locationLabel" class="text-base font-medium tracking-007 flex-1 font-sans <%= loc ? 'text-brand-primary' : 'text-brand-graytext' %>"><%= loc ? @event.location : 'Add location' %></span>
       </div>
 
-      <%# Notes row %>
-      <% has_notes = @event.notes.present? %>
-      <div class="flex items-center gap-3 py-3.5 px-5 cursor-pointer"
-           data-action="click->season-modal#openNotes">
-        <div data-season-modal-target="notesIconBg" class="w-[39px] h-[38px] rounded-full flex items-center justify-center shrink-0 <%= has_notes ? 'bg-brand-field' : 'bg-brand-field/50' %>">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" <%= has_notes ? '' : 'stroke-opacity="0.5"' %>>
-            <path d="M16 4H18C18.5304 4 19.0391 4.21071 19.4142 4.58579C19.7893 4.96086 20 5.46957 20 6V20C20 20.5304 19.7893 21.0391 19.4142 21.4142C19.0391 21.7893 18.5304 22 18 22H6C5.46957 22 4.96086 21.7893 4.58579 21.4142C4.21071 21.0391 4 20.5304 4 20V6C4 5.46957 4.21071 4.96086 4.58579 4.58579C4.96086 4.21071 5.46957 4 6 4H8" stroke="#933A35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-            <path d="M15 2H9C8.44772 2 8 2.44772 8 3V5C8 5.55228 8.44772 6 9 6H15C15.5523 6 16 5.55228 16 5V3C16 2.44772 15.5523 2 15 2Z" stroke="#933A35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-          </svg>
-        </div>
-        <span data-season-modal-target="notesLabel" class="text-base font-medium tracking-007 flex-1 font-sans <%= has_notes ? 'text-brand-primary' : 'text-brand-graytext' %>"><%= has_notes ? @event.notes.truncate(30) : 'Notes...' %></span>
-      </div>
-
-      <%# Guests row %>
+      <%# Guests row — before Notes, per Figma %>
       <% guest_list = @event.guests.to_s.split(',').map(&:strip).reject(&:empty?) %>
       <div class="flex items-center gap-3 py-3.5 px-5 cursor-pointer"
            data-action="click->season-modal#openGuests">
@@ -220,6 +222,19 @@
         </div>
       </div>
 
+      <%# Notes row %>
+      <% has_notes = @event.notes.present? %>
+      <div class="flex items-center gap-3 py-3.5 px-5 cursor-pointer"
+           data-action="click->season-modal#openNotes">
+        <div data-season-modal-target="notesIconBg" class="w-[39px] h-[38px] rounded-full flex items-center justify-center shrink-0 <%= has_notes ? 'bg-brand-field' : 'bg-brand-field/50' %>">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" <%= has_notes ? '' : 'stroke-opacity="0.5"' %>>
+            <path d="M16 4H18C18.5304 4 19.0391 4.21071 19.4142 4.58579C19.7893 4.96086 20 5.46957 20 6V20C20 20.5304 19.7893 21.0391 19.4142 21.4142C19.0391 21.7893 18.5304 22 18 22H6C5.46957 22 4.96086 21.7893 4.58579 21.4142C4.21071 21.0391 4 20.5304 4 20V6C4 5.46957 4.21071 4.96086 4.58579 4.58579C4.96086 4.21071 5.46957 4 6 4H8" stroke="#933A35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M15 2H9C8.44772 2 8 2.44772 8 3V5C8 5.55228 8.44772 6 9 6H15C15.5523 6 16 5.55228 16 5V3C16 2.44772 15.5523 2 15 2Z" stroke="#933A35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </div>
+        <span data-season-modal-target="notesLabel" class="text-base font-medium tracking-007 flex-1 font-sans <%= has_notes ? 'text-brand-primary' : 'text-brand-graytext' %>"><%= has_notes ? @event.notes.truncate(30) : 'Notes...' %></span>
+      </div>
+
       <%# Repeat row %>
       <% repeat_val = @event.repeat_frequency %>
       <% repeat_label = case repeat_val when 'daily' then 'Daily' when 'weekly' then 'Weekly' when 'monthly' then 'Monthly' when 'yearly' then 'Every Year' when 'custom' then 'Custom' else nil end %>
@@ -236,7 +251,7 @@
 
       <%# Buttons %>
       <div class="flex flex-col gap-3 pt-7">
-        <%= f.submit "Change appointment",
+        <%= f.submit "Set appointment",
               class: "w-full text-white py-3.5 rounded-lg border-none text-22 font-medium font-sans cursor-pointer tracking-003 bg-brand-primary" %>
         <button type="button" data-action="click->season-modal#openNotifyGuests"
                 class="w-full bg-transparent text-brand-primary rounded-lg text-22 font-medium font-sans cursor-pointer tracking-003 py-3.5 border-0">
@@ -366,10 +381,14 @@
     <div data-season-modal-target="modal" role="dialog" aria-modal="true" aria-labelledby="edit-choose-icon-title"
          class="hidden fixed inset-0 z-50 flex items-center justify-center">
       <div class="w-[310px] max-h-[92vh] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] p-6 relative flex flex-col">
-        <div class="flex justify-center items-center relative mb-4">
+        <%# Close button sits high in the card's own top-right corner, not
+             centered against the title row — measured off the Figma node
+             directly (close glyph center y=19.5, title top y=41; the two
+             aren't aligned there either). %>
+        <button type="button" data-season-modal-target="closeBtn" data-action="click->season-modal#close"
+                class="absolute top-4 right-4 bg-transparent border-none text-brand-primary text-[34px] w-11 h-11 flex items-center justify-center cursor-pointer font-sans">×</button>
+        <div class="flex justify-center items-center relative mb-8">
           <h2 id="edit-choose-icon-title" class="text-22 font-medium text-brand-primary text-center font-sans leading-[45px]">Choose an icon</h2>
-          <button type="button" data-season-modal-target="closeBtn" data-action="click->season-modal#close"
-                  class="absolute right-0 top-1/2 -translate-y-1/2 bg-transparent border-none text-brand-primary text-[34px] w-11 h-11 flex items-center justify-center cursor-pointer font-sans">×</button>
         </div>
         <hr class="border-brand-field mb-4">
         <div class="flex-1 min-h-0 overflow-y-auto [scrollbar-width:none] py-2 flex flex-col gap-2.5">
@@ -377,7 +396,7 @@
             { label: 'Friends', icon: 'family.svg' },
             { label: 'Dinner', icon: 'dinner.svg' },
             { label: 'Date', icon: 'date.svg' },
-            { label: 'Sports', icon: 'sport.svg' },
+            { label: 'Sport', icon: 'sport.svg' },
             { label: 'Medical', icon: 'medical.svg' },
             { label: 'Birthday', icon: 'birthday.svg' },
             { label: 'Work', icon: 'work.svg' },
@@ -392,19 +411,32 @@
                     data-action="click->season-modal#selectCategory"
                     data-category-name-value="<%= item[:label] %>"
                     data-season-modal-target="categoryOption"
-                    class="w-full h-[52px] flex items-center gap-3 pl-6 pr-3 border-none bg-transparent text-left font-medium text-lg font-sans leading-[52px] cursor-pointer"
+                    class="w-full h-[52px] flex items-center gap-4 pl-6 pr-3 border-none bg-transparent text-left font-medium text-lg font-sans leading-[52px] cursor-pointer"
                     style="color:<%= selected ? '#933A35' : '#EDE1D5' %>;">
-              <%= image_tag(selected ? selected_src : pale_src, alt: item[:label], class: "w-[30px] h-[30px] shrink-0",
-                            data: { icon_pale_src: image_path(pale_src), icon_selected_src: image_path(selected_src) }) %>
+              <%# Fixed-width slot, icon centered inside it — not left-aligned
+                   with a flat gap to the label. Checked directly against the
+                   Figma node: every one of the nine icons has a different
+                   natural width (26.5 to 63), but their horizontal centers
+                   all land on the exact same x — a fixed icon column with
+                   each icon centered in it, while the label always starts at
+                   one fixed x regardless of icon width. A plain flex gap
+                   left-aligns the icon instead, so narrower icons (Dinner,
+                   Work) would sit visibly left of where wider ones (Friends)
+                   do, instead of lining up together. w-10 fits the widest
+                   icon post-crop (Friends renders ~40px wide at max-h-9). %>
+              <span class="w-10 h-9 flex items-center justify-center shrink-0">
+                <%= image_tag(selected ? selected_src : pale_src, alt: item[:label], class: "max-h-9 w-auto",
+                              data: { icon_pale_src: image_path(pale_src), icon_selected_src: image_path(selected_src) }) %>
+              </span>
               <span><%= item[:label] %></span>
             </button>
           <% end %>
         </div>
         <div class="flex flex-col gap-2.5 mt-auto">
           <button type="button" data-action="click->season-modal#close"
-                  class="w-full h-[52px] bg-brand-primary text-white rounded-lg border-none font-medium text-lg font-sans text-center cursor-pointer">Add Icon</button>
+                  class="w-full h-[52px] bg-brand-primary text-white rounded-lg border-none font-medium text-lg font-sans text-center cursor-pointer">Add icon</button>
           <button type="button" data-action="click->season-modal#deleteCategory click->season-modal#close"
-                  class="w-full bg-transparent text-brand-primary border-none font-medium text-lg font-sans cursor-pointer leading-[45px]">Delete Icon</button>
+                  class="w-full bg-transparent text-brand-primary border-none font-medium text-lg font-sans cursor-pointer leading-[45px]">Delete icon</button>
         </div>
       </div>
     </div>

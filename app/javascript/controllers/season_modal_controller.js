@@ -3,7 +3,7 @@ import { Controller } from '@hotwired/stimulus'
 const BRAND_RED_FILTER = 'brightness(0) saturate(100%) invert(28%) sepia(84%) saturate(1607%) hue-rotate(342deg) brightness(63%) contrast(94%)'
 
 export default class extends Controller {
-  static targets = ['modal', 'backdrop', 'closeBtn', 'categoryInput', 'categoryOption', 'triggerButton', 'locationModal', 'locationBackdrop', 'locationInput', 'locationField', 'locationCard', 'locationResults', 'locationSubmitBg', 'locationSubmitBtn', 'locationLabel', 'locationIconBg', 'notesModal', 'notesBackdrop', 'notesInput', 'notesField', 'notesLabel', 'notesIconBg', 'guestsModal', 'guestsBackdrop', 'guestsInput', 'guestsField', 'guestsLabel', 'guestsIconBg', 'guestsList', 'guestsCard', 'guestsSubmitBg', 'guestsSubmitBtn', 'guestsInlineList', 'reminderModal', 'reminderBackdrop', 'reminderField', 'reminderLabel', 'reminderIconBg', 'reminderOption', 'repeatModal', 'repeatBackdrop', 'repeatLabel', 'repeatIconBg', 'repeatOption', 'repeatSubOptions', 'repeatField', 'customRepeatModal', 'customRepeatBackdrop', 'repeatUntilModal', 'repeatUntilBackdrop', 'customReminderModal', 'customReminderBackdrop', 'customReminderNum', 'customReminderUnit', 'attentionModal', 'attentionBackdrop', 'attentionTitle', 'attentionBody', 'attentionConfirm', 'attentionCancel', 'recurringModal', 'recurringBackdrop', 'notifyModal', 'notifyBackdrop']
+  static targets = ['modal', 'backdrop', 'closeBtn', 'categoryInput', 'categoryOption', 'triggerButton', 'locationModal', 'locationBackdrop', 'locationInput', 'locationField', 'locationCard', 'locationResults', 'locationSubmitBg', 'locationSubmitBtn', 'locationLabel', 'locationIconBg', 'notesModal', 'notesBackdrop', 'notesInput', 'notesField', 'notesLabel', 'notesIconBg', 'guestsModal', 'guestsBackdrop', 'guestsInput', 'guestsField', 'guestsLabel', 'guestsIconBg', 'guestsList', 'guestsCard', 'guestsSubmitBg', 'guestsSubmitBtn', 'guestsInlineList', 'reminderModal', 'reminderBackdrop', 'reminderField', 'reminderLabel', 'reminderIconBg', 'reminderOption', 'reminderClearBtn', 'repeatModal', 'repeatBackdrop', 'repeatLabel', 'repeatIconBg', 'repeatOption', 'repeatSubOptions', 'repeatField', 'customRepeatModal', 'customRepeatBackdrop', 'repeatUntilModal', 'repeatUntilBackdrop', 'customReminderModal', 'customReminderBackdrop', 'customReminderNum', 'customReminderUnit', 'attentionModal', 'attentionBackdrop', 'attentionTitle', 'attentionBody', 'attentionConfirm', 'attentionCancel', 'recurringModal', 'recurringBackdrop', 'notifyModal', 'notifyBackdrop']
   static values = {
     selectedCategory: String,
     lastLat: Number,
@@ -432,23 +432,39 @@ export default class extends Controller {
     }
   }
 
+  // Guest emails only pass a "looks like an email" regex (#isValidEmail) —
+  // that blocks whitespace and extra @s but not `<`, `>`, or `"`, so a value
+  // like `<script>...</script>@a.com` gets through validation and used to
+  // reach the DOM as raw markup below. Building each row via createElement +
+  // textContent instead of string-concatenated innerHTML means the email is
+  // always treated as text, never parsed as markup, regardless of content.
+  #buildGuestRemoveButton (email) {
+    const btn = document.createElement('button')
+    btn.type = 'button'
+    btn.dataset.action = 'click->season-modal#removeGuest'
+    btn.dataset.guestEmail = email
+    btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M9 3L3 9M3 3l6 6" stroke="#933A35" stroke-width="1.5" stroke-linecap="round"/></svg>'
+    return btn
+  }
+
   #renderGuestsInline () {
     if (!this.hasGuestsInlineListTarget) return
     const guests = this.#parseGuests()
-    if (guests.length === 0) {
-      this.guestsInlineListTarget.innerHTML = ''
-      return
-    }
-    let html = ''
+    this.guestsInlineListTarget.innerHTML = ''
     guests.forEach((email) => {
-      html += '<div class="flex items-center justify-between gap-2">' +
-        '<span class="text-brand-primary text-base font-medium tracking-007 font-sans truncate">' + email + '</span>' +
-        '<button type="button" data-action="click->season-modal#removeGuest" data-guest-email="' + email + '" class="shrink-0 bg-transparent border-none cursor-pointer p-0 w-6 h-6 flex items-center justify-center">' +
-        '<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M9 3L3 9M3 3l6 6" stroke="#933A35" stroke-width="1.5" stroke-linecap="round"/></svg>' +
-        '</button>' +
-        '</div>'
+      const row = document.createElement('div')
+      row.className = 'flex items-center justify-between gap-2'
+
+      const span = document.createElement('span')
+      span.className = 'text-brand-primary text-base font-medium tracking-007 font-sans truncate'
+      span.textContent = email
+
+      const btn = this.#buildGuestRemoveButton(email)
+      btn.className = 'shrink-0 bg-transparent border-none cursor-pointer p-0 w-6 h-6 flex items-center justify-center'
+
+      row.append(span, btn)
+      this.guestsInlineListTarget.appendChild(row)
     })
-    this.guestsInlineListTarget.innerHTML = html
   }
 
   _renderGuestsList () {
@@ -460,12 +476,14 @@ export default class extends Controller {
       const row = document.createElement('div')
       row.style.cssText = 'width:284px;height:24px;display:flex;align-items:center;justify-content:space-between;padding:0;'
 
-      row.innerHTML =
-        '<span style="font-family:Montserrat;font-weight:500;font-size:16px;line-height:20px;letter-spacing:0.07em;color:#933A35;">' + email + '</span>' +
-        '<button type="button" data-action="click->season-modal#removeGuest" data-guest-email="' + email + '" style="background:transparent;border:none;cursor:pointer;padding:0;width:24px;height:24px;display:flex;align-items:center;justify-content:center;">' +
-        '<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M9 3L3 9M3 3l6 6" stroke="#933A35" stroke-width="1.5" stroke-linecap="round"/></svg>' +
-        '</button>'
+      const span = document.createElement('span')
+      span.style.cssText = 'font-family:Montserrat;font-weight:500;font-size:16px;line-height:20px;letter-spacing:0.07em;color:#933A35;'
+      span.textContent = email
 
+      const btn = this.#buildGuestRemoveButton(email)
+      btn.style.cssText = 'background:transparent;border:none;cursor:pointer;padding:0;width:24px;height:24px;display:flex;align-items:center;justify-content:center;'
+
+      row.append(span, btn)
       this.guestsListTarget.appendChild(row)
     })
   }
@@ -611,6 +629,18 @@ export default class extends Controller {
     this.closeReminder()
   }
 
+  // Inline "X" on the reminder row itself — clears straight to "No
+  // reminder" without opening the picker modal at all.
+  clearReminder (event) {
+    event.stopPropagation()
+    this._selectedReminderMinutes = 0
+    if (this.hasReminderFieldTarget) {
+      this.reminderFieldTarget.value = 0
+      this.#notifyPersistence(this.reminderFieldTarget)
+    }
+    this.#updateReminderLabel(0)
+  }
+
   #highlightReminderOptions () {
     this.reminderOptionTargets.forEach(opt => {
       const val = parseInt(opt.dataset.reminderMinutesValue)
@@ -624,6 +654,10 @@ export default class extends Controller {
     const labels = { 0: 'No reminder', 10080: '1 week before', 1440: '1 day before', 360: '6 hours before', 60: '1 hour before', '-1': 'Custom timer' }
     const label = labels[minutes] || `${minutes} minutes before`
     this.reminderLabelTarget.textContent = label
+    // The inline "X" quick-clear only makes sense once a reminder is set.
+    if (this.hasReminderClearBtnTarget) {
+      this.reminderClearBtnTarget.classList.toggle('hidden', minutes === 0)
+    }
     if (minutes === 0) {
       this.reminderLabelTarget.classList.add('text-brand-graytext')
       this.reminderLabelTarget.classList.remove('text-brand-primary')
@@ -893,11 +927,21 @@ export default class extends Controller {
       row.dataset.locationLon = place.lon
       row.style.cssText = 'width:283px;height:43px;display:flex;align-items:center;gap:0;padding:0 40px;background:transparent;border:none;border-bottom:1px solid rgba(237,225,213,0.5);cursor:pointer;text-align:left;box-sizing:border-box;'
 
-      row.innerHTML = pinSVG +
-        '<div style="display:flex;flex-direction:column;margin-left:2px;overflow:hidden;">' +
-        '<span style="font-family:Montserrat;font-weight:500;font-size:13px;line-height:16px;letter-spacing:0.07em;color:#933A35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + short + '</span>' +
-        '<span style="font-family:Montserrat;font-weight:500;font-size:13px;line-height:16px;letter-spacing:0.07em;color:rgba(147,58,53,0.5);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + address + '</span>' +
-        '</div>'
+      // pinSVG is a fixed literal (safe as innerHTML); `short`/`address` come
+      // from a third-party API response (Nominatim) reflected into every
+      // searching user's DOM, so they go in via textContent, not string-
+      // concatenated into markup, same reasoning as the guest-email rows above.
+      row.innerHTML = pinSVG
+      const textCol = document.createElement('div')
+      textCol.style.cssText = 'display:flex;flex-direction:column;margin-left:2px;overflow:hidden;'
+      const nameSpan = document.createElement('span')
+      nameSpan.style.cssText = 'font-family:Montserrat;font-weight:500;font-size:13px;line-height:16px;letter-spacing:0.07em;color:#933A35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;'
+      nameSpan.textContent = short
+      const addressSpan = document.createElement('span')
+      addressSpan.style.cssText = 'font-family:Montserrat;font-weight:500;font-size:13px;line-height:16px;letter-spacing:0.07em;color:rgba(147,58,53,0.5);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;'
+      addressSpan.textContent = address
+      textCol.append(nameSpan, addressSpan)
+      row.appendChild(textCol)
 
       this.locationResultsTarget.appendChild(row)
     })

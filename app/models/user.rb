@@ -133,7 +133,7 @@ class User < ApplicationRecord
 
   def current_cycle_day(date = Time.zone.today)
     return nil unless last_period_start || period_starts.any?
-    (date.to_date - (period_starts.ordered.last&.started_on || last_period_start).to_date).to_i + 1
+    CycleCalculatorService.new(self).cycle_day_for(date)
   end
 
   def first_name
