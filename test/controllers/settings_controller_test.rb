@@ -267,4 +267,22 @@ class SettingsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to calendar_settings_path
     assert_nil @alice.reload.google_access_token
   end
+
+  # AUTH-04 follow-up: update_password re-issues login() so the device that
+  # just proved its identity (via current_password below) doesn't end up
+  # signed out by its own action once its session cookie eventually expires
+  # and it falls back to the now-fingerprint-checked persistent cookie.
+  test "PATCH /settings/update_password keeps the current device signed in past the old session boundary" do
+    patch update_password_settings_path, params: {
+      current_password: "password123",
+      password: "NewPassword456!",
+      password_confirmation: "NewPassword456!"
+    }
+    assert_redirected_to profile_settings_path
+
+    travel_to 10.days.from_now do
+      get tracking_index_path
+      assert_response :success
+    end
+  end
 end

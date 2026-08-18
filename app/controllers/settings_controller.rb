@@ -259,6 +259,13 @@ class SettingsController < ApplicationController
     end
 
     if @user.update(password: params[:password], password_confirmation: params[:password_confirmation])
+      # Re-issues the session + persistent cookie with a fingerprint of the
+      # *new* password hash — without this, this device's own remember-me
+      # cookie would go stale from the fingerprint check in
+      # Authentication#user_from_remember_cookie the next time its session
+      # expires, forcing an unnecessary re-login on the device that just
+      # proved its identity by supplying the current password above.
+      login(@user)
       redirect_to profile_settings_path, notice: t(".saved", default: "Password updated.")
     else
       message = if @user.errors[:password_confirmation].present?

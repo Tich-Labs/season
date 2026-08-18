@@ -40,8 +40,11 @@ module Authentication
     # tell a returning device from a genuinely new one and show Login as the
     # primary action instead of Create Account.
     cookies.permanent[:known_device] = "1"
+    # pf (password fingerprint) ties this cookie to the password hash at
+    # issue time, so a password change invalidates it wherever it's stored —
+    # see User#password_fingerprint and current_user's cookie branch below.
     cookies.encrypted.permanent[:user_id] = {
-      value: user.id,
+      value: {id: user.id, pf: user.password_fingerprint},
       httponly: true,
       secure: Rails.env.production?,
       same_site: :lax
@@ -56,7 +59,26 @@ module Authentication
   end
 
   def current_user
-    Current.user ||= User.find_by(id: session[:user_id] || cookies.encrypted[:user_id])
+    Current.user ||= session[:user_id] ? User.find_by(id: session[:user_id]) : user_from_remember_cookie
+  end
+
+  # Falls back to the persistent cookie once the session cookie is gone
+  # (expired, or never set — e.g. a native app relaunch). Requires the
+  # embedded password fingerprint to still match the user's current
+  # encrypted_password: a device that's lost/stolen with no live session
+  # left, only this cookie, gets signed out the moment the password is
+  # changed anywhere, instead of staying persistently authenticated forever
+  # with no way to revoke it. A cookie from before this fingerprint existed
+  # decodes to something other than a Hash and is simply treated as absent —
+  # that device just needs to log in again once, same as an invalid cookie.
+  def user_from_remember_cookie
+    data = cookies.encrypted[:user_id]
+    return nil unless data.is_a?(Hash)
+
+    user = User.find_by(id: data["id"])
+    return nil unless user
+
+    user if ActiveSupport::SecurityUtils.secure_compare(user.password_fingerprint, data["pf"].to_s)
   end
 
   def authenticated?

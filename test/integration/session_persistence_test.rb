@@ -42,4 +42,22 @@ class SessionPersistenceTest < ActionDispatch::IntegrationTest
     get user_root_path
     assert_redirected_to new_session_path
   end
+
+  # AUTH-04: the persistent user_id cookie has no time-based expiry (see the
+  # "no expiry" test above — that's intentional), so a password change is
+  # the only thing that can ever invalidate it. This confirms it actually
+  # does: a device with nothing left but this cookie (session already gone)
+  # must be signed out the moment the password changes anywhere, not stay
+  # persistently authenticated forever with no way to revoke it.
+  test "a password change invalidates the persistent cookie once the session is gone" do
+    user = onboarded_user(email: "pwchangetest@example.com")
+    post session_path, params: {email: user.email, password: "CorrectHorse123!"}
+
+    user.update!(password: "NewCorrectHorse456!", password_confirmation: "NewCorrectHorse456!")
+
+    travel_to 10.days.from_now do
+      get user_root_path
+      assert_redirected_to new_session_path
+    end
+  end
 end

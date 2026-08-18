@@ -239,6 +239,17 @@ class User < ApplicationRecord
     false
   end
 
+  # A short, deterministic fingerprint of the current password hash — embedded
+  # in the persistent "remember me" cookie (Authentication#login) so that
+  # changing your password invalidates that cookie wherever it's stored
+  # (e.g. a lost/stolen device with no live session left, only this cookie)
+  # without needing a separate revocable-token column or having to remember
+  # to touch every password-changing controller individually: any update to
+  # encrypted_password changes this automatically.
+  def password_fingerprint
+    Digest::SHA256.hexdigest(encrypted_password.to_s)[0, 16]
+  end
+
   private
 
   def avatar_content_type_and_size
