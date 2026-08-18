@@ -94,7 +94,12 @@
       <div class="relative w-full aspect-square rounded-2xl overflow-hidden bg-brand-divider mb-4 touch-none select-none"
            data-avatar-crop-target="frame"
            data-action="pointerdown->avatar-crop#dragStart pointermove->avatar-crop#dragMove pointerup->avatar-crop#dragEnd pointercancel->avatar-crop#dragEnd">
-        <img data-avatar-crop-target="image" alt="" class="absolute top-0 left-0 origin-top-left pointer-events-none opacity-0 transition-opacity duration-150">
+        <%# max-w-none overrides Tailwind Preflight's global `img { max-width:
+             100%; height: auto }` reset — without it, the browser caps this
+             image's rendered width at the frame's width no matter what JS
+             sets style.width to, while style.height grows unconstrained with
+             zoom. Net effect: zooming stretched the photo vertically only. %>
+        <img data-avatar-crop-target="image" alt="" class="absolute top-0 left-0 max-w-none origin-top-left pointer-events-none opacity-0 transition-opacity duration-150">
         <div class="absolute inset-0 pointer-events-none rounded-full" style="box-shadow: 0 0 0 9999px rgba(0,0,0,0.45);"></div>
       </div>
 

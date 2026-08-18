@@ -26,6 +26,8 @@ export default class extends Controller {
   #rafId = null
   #saveTimer = null
   #presetActive = false
+  #initialValue = null
+  #detailsToggleHandler = null
 
   connect () {
     this.#build()
@@ -40,15 +42,37 @@ export default class extends Controller {
     // the preset is a starting point only — it is never saved on its own.
     const initial = this.inputTarget.value || this.startValue
     if (initial) {
-      this.#presetActive = true
-      this.#scrollTo(parseFloat(initial), false)
+      this.#initialValue = parseFloat(initial)
+      this.#applyInitialScroll()
     }
     this.#highlight()
+
+    // When the picker lives inside a <details> accordion that starts
+    // collapsed, scrollTo at connect time is a no-op because the
+    // scroll container has zero height. Re-scroll when the details opens.
+    const details = this.element.closest('details')
+    if (details) {
+      this.#detailsToggleHandler = () => {
+        if (details.open && this.#initialValue != null) {
+          // Use rAF so the browser has laid out the expanded content
+          // before we attempt to scroll.
+          requestAnimationFrame(() => {
+            this.#applyInitialScroll()
+            this.#highlight()
+          })
+        }
+      }
+      details.addEventListener('toggle', this.#detailsToggleHandler)
+    }
   }
 
   disconnect () {
     cancelAnimationFrame(this.#rafId)
     clearTimeout(this.#saveTimer)
+    const details = this.element.closest('details')
+    if (details && this.#detailsToggleHandler) {
+      details.removeEventListener('toggle', this.#detailsToggleHandler)
+    }
   }
 
   #build () {
@@ -111,6 +135,11 @@ export default class extends Controller {
       next = Math.max(current - this.stepValue, this.minValue)
     } else return
     this.#scrollTo(next, true)
+  }
+
+  #applyInitialScroll () {
+    this.#presetActive = true
+    this.#scrollTo(this.#initialValue, false)
   }
 
   #scrollToIndex (idx, smooth) {
