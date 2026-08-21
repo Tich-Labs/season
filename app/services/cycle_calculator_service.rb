@@ -109,6 +109,26 @@ class CycleCalculatorService
     PHASE_COLOURS[effective_phase_for_date(date)]
   end
 
+  # Menstrual-phase date ranges within from..to, collapsed into [start, end]
+  # pairs — used to warn when scheduling an appointment during a predicted
+  # period. phase_for_date already brackets/predicts indefinitely forward in
+  # O(1) per call, so a plain day-by-day scan is cheap even a year out.
+  def period_ranges(from:, to:)
+    ranges = []
+    range_start = nil
+    (from..to).each do |date|
+      on_period = phase_for_date(date) == "menstrual"
+      if on_period
+        range_start ||= date
+      elsif range_start
+        ranges << [range_start, date - 1]
+        range_start = nil
+      end
+    end
+    ranges << [range_start, to] if range_start
+    ranges
+  end
+
   def month_data(year, month)
     return [] if @period_starts.empty?
     start_date = Date.new(year, month, 1)

@@ -2,10 +2,10 @@ import { Controller } from '@hotwired/stimulus'
 
 export default class extends Controller {
   static targets = ['appointments', 'forecast', 'label', 'leftBar', 'rightBar']
-  static values = { colour: String }
+  static values = { colour: String, default: { type: String, default: 'appointments' } }
 
   connect () {
-    this.showAppointments()
+    this.defaultValue === 'forecast' ? this.showForecast() : this.showAppointments()
     this._startX = 0
     this._registerSwipeHandlers()
   }

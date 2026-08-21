@@ -13,9 +13,11 @@ class CalendarEventsController < ApplicationController
     @event = current_user.calendar_events.build(
       date: params[:date] || Time.zone.today
     )
+    @period_ranges = period_ranges_json
   end
 
   def edit
+    @period_ranges = period_ranges_json
   end
 
   def create
@@ -51,5 +53,14 @@ class CalendarEventsController < ApplicationController
     params.expect(
       calendar_event: [:title, :date, :end_date, :start_time, :end_time, :category, :notes, :location, :guests, :reminder_minutes, :repeat_frequency]
     )
+  end
+
+  # [[start_date, end_date], ...] for the user's predicted period days, a
+  # year out — used client-side to warn before scheduling on a period day.
+  def period_ranges_json
+    CycleCalculatorService.new(current_user)
+      .period_ranges(from: Time.zone.today - 3.months, to: Time.zone.today + 1.year)
+      .map { |start_date, end_date| [start_date.iso8601, end_date.iso8601] }
+      .to_json
   end
 end

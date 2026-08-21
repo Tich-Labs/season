@@ -209,7 +209,7 @@ de:
         select_end_heading: "Und wann hat sie geendet?"
   calendar_events:
     create:
-      created: "Termin erstellt"
+      created: "Dein Termin wurde geplant"
     update:
       updated: "Termin aktualisiert"
     destroy:

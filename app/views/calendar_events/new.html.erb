@@ -16,7 +16,8 @@
 %>
 
 <div class="bg-white min-h-screen pb-32 font-sans" data-controller="season-modal appointment-date-picker"
-     data-appointment-date-picker-selected-date-value="<%= evt_date %>">
+     data-appointment-date-picker-selected-date-value="<%= evt_date %>"
+     data-appointment-date-picker-period-ranges-value="<%= @period_ranges %>">
   <div class="max-w-app mx-auto px-4 pt-5">
 
     <a href="<%= user_root_path %>"
@@ -86,58 +87,17 @@
             et_m = (default_end.min / 5).round * 5
             et_ampm = default_end.hour >= 12 ? 'PM' : 'AM'
           %>
+          <%# Time is display-only here — editing happens exclusively through
+               the "Set date" modal above (its own From/To time scroller),
+               not via a second pop-up on this pill. %>
           <div class="flex items-center justify-center gap-1">
-            <div data-controller="time-picker"
-                 data-time-picker-hour-value="<%= st_h %>"
-                 data-time-picker-minute-value="<%= st_m %>"
-                 data-time-picker-ampm-value="<%= st_ampm %>"
-                 data-time-picker-field-name-value="calendar_event[start_time]"
-                 class="inline-flex items-center gap-0">
-              <button type="button" data-action="click->time-picker#open"
-                      data-time-picker-target="display"
-                      class="text-white text-22 font-medium tracking-wide font-sans bg-transparent border-none cursor-pointer p-0 min-w-[44px] min-h-[44px] select-none"><%= st_h %>:<%= format('%02d', st_m) %> <%= st_ampm %></button>
-              <div data-time-picker-target="edit" class="hidden items-center gap-0">
-                <select data-time-picker-target="hourSelect" data-action="change->time-picker#update" class="tp-select">
-                  <% (1..12).each do |h| %><option value="<%= h %>" <%= 'selected' if h == st_h %>><%= h %></option><% end %>
-                </select>
-                <span class="text-white text-22 font-light font-sans w-[8px] text-center">:</span>
-                <select data-time-picker-target="minuteSelect" data-action="change->time-picker#update" class="tp-select">
-                  <% [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55].each do |m| %><option value="<%= m %>" <%= 'selected' if m == st_m %>><%= format('%02d', m) %></option><% end %>
-                </select>
-                <select data-time-picker-target="ampmSelect" data-action="change->time-picker#updateAmPm" class="tp-select">
-                  <option value="AM" <%= 'selected' if st_ampm == 'AM' %>>AM</option>
-                  <option value="PM" <%= 'selected' if st_ampm == 'PM' %>>PM</option>
-                </select>
-                <button type="button" data-action="click->time-picker#close" class="tp-done">&check;</button>
-              </div>
-              <input type="hidden" name="calendar_event[start_time]" data-time-picker-target="field" data-appointment-date-picker-target="startField" value="<%= default_start.strftime('%H:%M') %>">
-            </div>
+            <span data-appointment-date-picker-target="startTimeDisplay"
+                  class="text-white text-22 font-medium tracking-wide font-sans select-none"><%= st_h %>:<%= format('%02d', st_m) %> <%= st_ampm %></span>
             <span class="text-white text-22 font-light font-sans">-</span>
-            <div data-controller="time-picker"
-                 data-time-picker-hour-value="<%= et_h %>"
-                 data-time-picker-minute-value="<%= et_m %>"
-                 data-time-picker-ampm-value="<%= et_ampm %>"
-                 data-time-picker-field-name-value="calendar_event[end_time]"
-                 class="inline-flex items-center gap-0">
-              <button type="button" data-action="click->time-picker#open"
-                      data-time-picker-target="display"
-                      class="text-white text-22 font-medium tracking-wide font-sans bg-transparent border-none cursor-pointer p-0 min-w-[44px] min-h-[44px] select-none"><%= et_h %>:<%= format('%02d', et_m) %> <%= et_ampm %></button>
-              <div data-time-picker-target="edit" class="hidden items-center gap-0">
-                <select data-time-picker-target="hourSelect" data-action="change->time-picker#update" class="tp-select">
-                  <% (1..12).each do |h| %><option value="<%= h %>" <%= 'selected' if h == et_h %>><%= h %></option><% end %>
-                </select>
-                <span class="text-white text-22 font-light font-sans w-[8px] text-center">:</span>
-                <select data-time-picker-target="minuteSelect" data-action="change->time-picker#update" class="tp-select">
-                  <% [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55].each do |m| %><option value="<%= m %>" <%= 'selected' if m == et_m %>><%= format('%02d', m) %></option><% end %>
-                </select>
-                <select data-time-picker-target="ampmSelect" data-action="change->time-picker#updateAmPm" class="tp-select">
-                  <option value="AM" <%= 'selected' if et_ampm == 'AM' %>>AM</option>
-                  <option value="PM" <%= 'selected' if et_ampm == 'PM' %>>PM</option>
-                </select>
-                <button type="button" data-action="click->time-picker#close" class="tp-done">&check;</button>
-              </div>
-              <input type="hidden" name="calendar_event[end_time]" data-time-picker-target="field" data-appointment-date-picker-target="endField" value="<%= default_end.strftime('%H:%M') %>">
-            </div>
+            <span data-appointment-date-picker-target="endTimeDisplay"
+                  class="text-white text-22 font-medium tracking-wide font-sans select-none"><%= et_h %>:<%= format('%02d', et_m) %> <%= et_ampm %></span>
+            <input type="hidden" name="calendar_event[start_time]" data-appointment-date-picker-target="startField" value="<%= default_start.strftime('%H:%M') %>">
+            <input type="hidden" name="calendar_event[end_time]" data-appointment-date-picker-target="endField" value="<%= default_end.strftime('%H:%M') %>">
           </div>
           <%= f.hidden_field :date, value: evt_date, data: { appointment_date_picker_target: 'dateField' } %>
           <%= f.hidden_field :end_date, value: nil, data: { appointment_date_picker_target: 'endDateField' } %>

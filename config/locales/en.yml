@@ -227,7 +227,7 @@ en:
         select_end_heading: "And when did it end?"
   calendar_events:
     create:
-      created: "Event created"
+      created: "Your appointment has been scheduled"
     update:
       updated: "Event updated"
     destroy:

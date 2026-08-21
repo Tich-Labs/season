@@ -25,7 +25,8 @@
 %>
 
 <div class="bg-white min-h-screen pb-32" data-controller="forecast-tabs forecast-modal"
-     data-forecast-tabs-colour-value="<%= pc %>">
+     data-forecast-tabs-colour-value="<%= pc %>"
+     data-forecast-tabs-default-value="<%= params[:tab] == "forecast" ? "forecast" : "appointments" %>">
   <div class="max-w-app mx-auto px-4">
 
     <%# ── Back ────────────────────────────────────────────────────────── %>

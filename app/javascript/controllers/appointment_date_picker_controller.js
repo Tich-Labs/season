@@ -12,8 +12,14 @@ export default class extends Controller {
     'slot2Btn', 'slot2Label', 'slot2Time',
     'allDayToggle',
     'dayScroll', 'monthScroll', 'yearScroll', 'hourScroll', 'minuteScroll', 'stage2Title',
-    'dateDisplay', 'dateField', 'endDateField', 'startField', 'endField'
+    'dateDisplay', 'dateField', 'endDateField', 'startField', 'endField',
+    'startTimeDisplay', 'endTimeDisplay'
   ]
+
+  static values = {
+    // [[startISODate, endISODate], ...] — the user's predicted period days.
+    periodRanges: { type: Array, default: [] }
+  }
 
   _allDay = false
   _mode = 'date'
@@ -175,6 +181,11 @@ export default class extends Controller {
       return
     }
 
+    // Non-blocking — the date/time is still set below, this just flags it.
+    if (this.#isOnPeriod(dateStr)) {
+      this.dispatch('sensitive-period')
+    }
+
     // Write start date
     this.dateFieldTarget.value = dateStr
 
@@ -201,19 +212,14 @@ export default class extends Controller {
       this.endFieldTarget.value = `${String(eh).padStart(2, '0')}:${String(em).padStart(2, '0')}`
     }
 
-    // Sync time-picker display buttons on the main page
-    const startDisplay = this.element.querySelector('[data-appointment-date-picker-target="startField"]')
-      ?.closest('[data-controller="time-picker"]')?.querySelector('[data-time-picker-target="display"]')
-    const endDisplay = this.element.querySelector('[data-appointment-date-picker-target="endField"]')
-      ?.closest('[data-controller="time-picker"]')?.querySelector('[data-time-picker-target="display"]')
-
-    if (startDisplay) {
+    // Sync the (now display-only) time pill on the main page
+    if (this.hasStartTimeDisplayTarget) {
       const [sh, sm] = (this.startFieldTarget.value || '00:00').split(':').map(Number)
-      startDisplay.textContent = this._allDay ? 'All day' : this.#fmt12h(sh, sm)
+      this.startTimeDisplayTarget.textContent = this._allDay ? 'All day' : this.#fmt12h(sh, sm)
     }
-    if (endDisplay) {
+    if (this.hasEndTimeDisplayTarget) {
       const [eh, em] = (this.endFieldTarget.value || '23:59').split(':').map(Number)
-      endDisplay.textContent = this._allDay ? 'All day' : this.#fmt12h(eh, em)
+      this.endTimeDisplayTarget.textContent = this._allDay ? 'All day' : this.#fmt12h(eh, em)
     }
 
     this.close()
@@ -560,19 +566,20 @@ export default class extends Controller {
   }
 
   #updateTimeDisplays () {
-    const startDisplay = this.element.querySelector('[data-appointment-date-picker-target="startField"]')
-      ?.closest('[data-controller="time-picker"]')?.querySelector('[data-time-picker-target="display"]')
-    const endDisplay = this.element.querySelector('[data-appointment-date-picker-target="endField"]')
-      ?.closest('[data-controller="time-picker"]')?.querySelector('[data-time-picker-target="display"]')
-
-    if (startDisplay) {
+    if (this.hasStartTimeDisplayTarget) {
       const [sh, sm] = (this.startFieldTarget.value || '19:00').split(':').map(Number)
-      startDisplay.textContent = this.#fmt12h(sh, Math.round(sm / 5) * 5)
+      this.startTimeDisplayTarget.textContent = this.#fmt12h(sh, Math.round(sm / 5) * 5)
     }
-    if (endDisplay) {
+    if (this.hasEndTimeDisplayTarget) {
       const [eh, em] = (this.endFieldTarget.value || '20:00').split(':').map(Number)
-      endDisplay.textContent = this.#fmt12h(eh, Math.round(em / 5) * 5)
+      this.endTimeDisplayTarget.textContent = this.#fmt12h(eh, Math.round(em / 5) * 5)
     }
+  }
+
+  // dateStr is 'YYYY-MM-DD', same lexicographic order as the ISO strings in
+  // periodRangesValue, so plain string comparison is enough — no Date math.
+  #isOnPeriod (dateStr) {
+    return this.periodRangesValue.some(([start, end]) => dateStr >= start && dateStr <= end)
   }
 
   #fmt12h (h24, m) {
