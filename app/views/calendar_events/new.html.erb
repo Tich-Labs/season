@@ -40,9 +40,13 @@
         <button type="button" data-action="click->season-modal#open"
                 data-season-modal-target="triggerButton"
                 aria-label="Choose event type"
-                class="absolute top-0 right-0 w-11 h-11 rounded-full bg-brand-field flex items-center justify-center border-2 border-brand-primary p-0 cursor-pointer">
+                class="absolute top-0 right-0 w-11 h-11 rounded-full bg-brand-field flex items-center justify-center p-0 cursor-pointer">
           <% if has_category %>
-            <%= image_tag "icons/appointment/#{category_icons[@event.category]}", alt: @event.category, class: "w-[30px] h-[30px]" %>
+            <%# Height-constrained, width auto — not a fixed square box. The
+                 nine category assets range from 27x38 to 63x57 (see the
+                 icon-picker modal below for the full breakdown); forcing a
+                 fixed w+h here would squish/stretch every non-square one. %>
+            <%= image_tag "icons/appointment/#{category_icons[@event.category]}", alt: @event.category, class: "max-h-[22px] w-auto" %>
           <% else %>
             <svg width="24" height="24" fill="none" viewBox="0 0 24 24">
               <path d="M12 5v14M5 12h14" stroke="#A43600" stroke-width="2.5" stroke-linecap="round"></path>
@@ -51,14 +55,14 @@
         </button>
 
         <%# Title input %>
-        <div class="bg-white rounded-3xl px-4 pt-4 pb-3 pr-12">
+        <div class="bg-white rounded-3xl px-4 pt-4 pb-1 pr-12">
           <%= f.text_field :title,
                 placeholder: "Enter title",
                 required: true,
-                class: "w-full bg-transparent border-none text-22 font-medium text-brand-primary p-0 outline-none font-sans" %>
+                class: "w-full bg-transparent border-none text-22 font-medium text-brand-primary placeholder:text-brand-field p-0 outline-none font-sans" %>
         </div>
 
-        <div class="mx-5 my-5 w-[304px] h-px bg-brand-primary"></div>
+        <div class="mx-5 mt-1 mb-5 w-[304px] h-px bg-brand-primary"></div>
 
         <%# Date + time — SVG block %>
         <div class="py-5">
@@ -72,8 +76,12 @@
             <button type="button" data-action="click->appointment-date-picker#open"
                     data-appointment-date-picker-target="dateDisplay"
                     class="text-white text-22 font-medium tracking-wide font-sans bg-transparent border-none cursor-pointer p-0 text-center leading-snug">
+              <%# Figma's multi-day card (node 12090:3531) is three lines —
+                   date, a "-" on its own line, date — not two dates
+                   stacked directly on each other. %>
               <% if multi_day %>
                 <%= evt_date.strftime("%a. %B ") %><%= evt_date.day.ordinalize %><%= evt_date.strftime(" %Y") %><br>
+                <span class="font-light">-</span><br>
                 <%= evt_end_date.strftime("%a. %B ") %><%= evt_end_date.day.ordinalize %><%= evt_end_date.strftime(" %Y") %>
               <% else %>
                 <%= evt_date.strftime("%a. %B ") %><%= evt_date.day.ordinalize %><%= evt_date.strftime(" %Y") %>
@@ -89,16 +97,21 @@
           %>
           <%# Time is display-only here — editing happens exclusively through
                the "Set date" modal above (its own From/To time scroller),
-               not via a second pop-up on this pill. %>
-          <div class="flex items-center justify-center gap-1">
+               not via a second pop-up on this pill. Hidden entirely for a
+               multi-day span — Figma shows just the two dates then, no
+               time row at all. Always rendered (never omitted) so toggling
+               between single- and multi-day live in the picker can show/
+               hide it via the timeRow target instead of needing a reload;
+               #applyDateDisplay keeps this in sync going forward. %>
+          <div data-appointment-date-picker-target="timeRow" class="flex items-center justify-center gap-1 <%= 'hidden' if multi_day %>">
             <span data-appointment-date-picker-target="startTimeDisplay"
                   class="text-white text-22 font-medium tracking-wide font-sans select-none"><%= st_h %>:<%= format('%02d', st_m) %> <%= st_ampm %></span>
             <span class="text-white text-22 font-light font-sans">-</span>
             <span data-appointment-date-picker-target="endTimeDisplay"
                   class="text-white text-22 font-medium tracking-wide font-sans select-none"><%= et_h %>:<%= format('%02d', et_m) %> <%= et_ampm %></span>
-            <input type="hidden" name="calendar_event[start_time]" data-appointment-date-picker-target="startField" value="<%= default_start.strftime('%H:%M') %>">
-            <input type="hidden" name="calendar_event[end_time]" data-appointment-date-picker-target="endField" value="<%= default_end.strftime('%H:%M') %>">
           </div>
+          <input type="hidden" name="calendar_event[start_time]" data-appointment-date-picker-target="startField" value="<%= default_start.strftime('%H:%M') %>">
+          <input type="hidden" name="calendar_event[end_time]" data-appointment-date-picker-target="endField" value="<%= default_end.strftime('%H:%M') %>">
           <%= f.hidden_field :date, value: evt_date, data: { appointment_date_picker_target: 'dateField' } %>
           <%= f.hidden_field :end_date, value: nil, data: { appointment_date_picker_target: 'endDateField' } %>
           </div>
@@ -143,11 +156,13 @@
       <div class="flex items-center gap-3 py-3.5 px-5 cursor-pointer"
            data-action="click->season-modal#openLocation">
         <div data-season-modal-target="locationIconBg" class="w-[39px] h-[38px] rounded-full flex items-center justify-center shrink-0 <%= loc ? 'bg-brand-field' : 'bg-brand-field/50' %>">
-          <svg width="20" height="20" fill="none" stroke="#933A35" stroke-width="2" viewBox="0 0 24 24" <%= loc ? '' : 'opacity="0.5"' %>>
+          <svg width="20" height="20" fill="none" stroke="#933A35" stroke-width="2" viewBox="0 0 24 24" opacity="0.5">
             <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
           </svg>
         </div>
-        <span data-season-modal-target="locationLabel" class="text-base font-medium tracking-007 flex-1 font-sans <%= loc ? 'text-brand-primary' : 'text-brand-graytext' %>"><%= loc ? @event.location : 'Add location' %></span>
+        <%# Figma's label colour for this row is solid #933a35 whether it's
+             set or empty — only the icon/circle behind it dims. %>
+        <span data-season-modal-target="locationLabel" class="text-base font-medium tracking-007 flex-1 font-sans text-brand-primary"><%= loc ? @event.location : 'Add location' %></span>
       </div>
 
       <%# Guests row — before Notes, per Figma %>
@@ -155,13 +170,13 @@
       <div class="flex items-center gap-3 py-3.5 px-5 cursor-pointer"
            data-action="click->season-modal#openGuests">
         <div data-season-modal-target="guestsIconBg" class="w-[39px] h-[38px] rounded-full flex items-center justify-center shrink-0 <%= guest_list.any? ? 'bg-brand-field' : 'bg-brand-field/50' %>">
-          <svg width="20" height="20" fill="none" stroke="#933A35" stroke-width="2" viewBox="0 0 24 24" <%= guest_list.any? ? '' : 'opacity="0.5"' %>>
+          <svg width="20" height="20" fill="none" stroke="#933A35" stroke-width="2" viewBox="0 0 24 24" opacity="0.5">
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
             <circle cx="12" cy="7" r="4" />
           </svg>
         </div>
         <div class="flex-1 min-w-0">
-          <span data-season-modal-target="guestsLabel" class="text-brand-graytext text-base font-medium tracking-007 font-sans <%= guest_list.any? ? 'hidden' : '' %>">Invite guests</span>
+          <span data-season-modal-target="guestsLabel" class="text-brand-primary text-base font-medium tracking-007 font-sans <%= guest_list.any? ? 'hidden' : '' %>">Invite guests</span>
           <div data-season-modal-target="guestsInlineList" class="<%= guest_list.any? ? '' : 'hidden' %> flex flex-col gap-1">
             <% guest_list.each do |email| %>
               <div class="flex items-center justify-between gap-2">
@@ -182,12 +197,12 @@
       <div class="flex items-center gap-3 py-3.5 px-5 cursor-pointer"
            data-action="click->season-modal#openNotes">
         <div data-season-modal-target="notesIconBg" class="w-[39px] h-[38px] rounded-full flex items-center justify-center shrink-0 <%= has_notes ? 'bg-brand-field' : 'bg-brand-field/50' %>">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" <%= has_notes ? '' : 'stroke-opacity="0.5"' %>>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-opacity="0.5">
             <path d="M16 4H18C18.5304 4 19.0391 4.21071 19.4142 4.58579C19.7893 4.96086 20 5.46957 20 6V20C20 20.5304 19.7893 21.0391 19.4142 21.4142C19.0391 21.7893 18.5304 22 18 22H6C5.46957 22 4.96086 21.7893 4.58579 21.4142C4.21071 21.0391 4 20.5304 4 20V6C4 5.46957 4.21071 4.96086 4.58579 4.58579C4.96086 4.21071 5.46957 4 6 4H8" stroke="#933A35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
             <path d="M15 2H9C8.44772 2 8 2.44772 8 3V5C8 5.55228 8.44772 6 9 6H15C15.5523 6 16 5.55228 16 5V3C16 2.44772 15.5523 2 15 2Z" stroke="#933A35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
           </svg>
         </div>
-        <span data-season-modal-target="notesLabel" class="text-base font-medium tracking-007 flex-1 font-sans <%= has_notes ? 'text-brand-primary' : 'text-brand-graytext' %>"><%= has_notes ? @event.notes.truncate(30) : 'Notes...' %></span>
+        <span data-season-modal-target="notesLabel" class="text-base font-medium tracking-007 flex-1 font-sans text-brand-primary"><%= has_notes ? @event.notes.truncate(30) : 'Notes...' %></span>
       </div>
 
       <%# Repeat row %>
@@ -199,12 +214,18 @@
             <path d="M18.486 12.998C17.836 14.838 16.606 16.417 14.98 17.497C13.355 18.576 11.422 19.099 9.474 18.985C7.526 18.871 5.668 18.127 4.18 16.865C2.691 15.603 1.653 13.891 1.222 11.988C0.791 10.085 0.99 8.093 1.79 6.313C2.589 4.533 3.946 3.061 5.654 2.119C7.363 1.176 9.332 0.815 11.264 1.089C13.196 1.363 14.987 2.258 16.366 3.638L20.996 7.998" />
           </svg>
         </div>
-        <span data-season-modal-target="repeatLabel" class="text-brand-graytext text-base font-medium tracking-007 flex-1 font-sans">Repeat</span>
+        <span data-season-modal-target="repeatLabel" class="text-brand-primary text-base font-medium tracking-007 flex-1 font-sans">Repeat</span>
       </div>
 
       <%# ── Submit button ── %>
       <div class="flex justify-center pt-7">
+        <%# This form is local: true (Turbo opted out) and the app doesn't
+             load rails-ujs, so nothing built-in stops a second tap from
+             firing a second POST while the first is still in flight —
+             season_modal_controller.js's existing submit listener disables
+             this button synchronously to prevent that double-save. %>
         <%= f.submit "Set appointment",
+              data: { season_modal_target: "submitBtn" },
               class: "w-full text-white py-3.5 rounded-lg border-none text-22 font-medium font-sans cursor-pointer tracking-003 bg-brand-primary" %>
       </div>
 
@@ -274,8 +295,11 @@
           </button>
           <hr class="absolute left-[110px] top-[107px] w-[132px] border-none h-px bg-black opacity-20">
           <div class="absolute left-[38px] right-[38px] top-[122px] h-[30px] flex items-center justify-between">
-            <button type="button" data-action="click->appointment-date-picker#editDate1" data-appointment-date-picker-target="slot1Btn" class="bg-transparent border-none cursor-pointer p-0 flex items-center gap-[5px]">
-              <span class="text-11 font-semibold tracking-[0.08em] text-brand-primary opacity-50 uppercase">From</span>
+            <button type="button" data-action="click->appointment-date-picker#editDate1" data-appointment-date-picker-target="slot1Btn" class="bg-transparent border-none cursor-pointer p-0 flex items-center gap-2 text-left">
+              <%# Fixed-width label column — "From" and "To" render at
+                   different natural widths, so without this the date text
+                   right after them starts at a different x on each row. %>
+              <span class="text-11 font-semibold tracking-[0.08em] text-brand-primary opacity-50 uppercase w-9 shrink-0">From</span>
               <span data-appointment-date-picker-target="slot1Label" class="font-medium text-base tracking-007 text-brand-primary"></span>
             </button>
             <button type="button" data-action="click->appointment-date-picker#editTime1" class="bg-transparent border-none cursor-pointer p-0">
@@ -283,8 +307,8 @@
             </button>
           </div>
           <div class="absolute left-[38px] right-[38px] top-[168px] h-[30px] flex items-center justify-between">
-            <button type="button" data-action="click->appointment-date-picker#editDate2" data-appointment-date-picker-target="slot2Btn" class="bg-transparent border-none cursor-pointer p-0 flex items-center gap-[5px]">
-              <span class="text-11 font-semibold tracking-[0.08em] text-brand-primary opacity-50 uppercase">To</span>
+            <button type="button" data-action="click->appointment-date-picker#editDate2" data-appointment-date-picker-target="slot2Btn" class="bg-transparent border-none cursor-pointer p-0 flex items-center gap-2 text-left">
+              <span class="text-11 font-semibold tracking-[0.08em] text-brand-primary opacity-50 uppercase w-9 shrink-0">To</span>
               <span data-appointment-date-picker-target="slot2Label" class="font-medium text-base tracking-007 text-brand-primary"></span>
             </button>
             <button type="button" data-action="click->appointment-date-picker#editTime2" class="bg-transparent border-none cursor-pointer p-0">
@@ -308,14 +332,21 @@
           </button>
           <hr class="absolute left-[110px] top-[107px] w-[132px] border-none h-px bg-black opacity-20">
           <div class="absolute left-[38px] right-[38px] top-[122px] h-[30px] flex items-center justify-between">
-            <span class="flex items-center gap-[5px]">
-              <span class="text-11 font-semibold tracking-[0.08em] text-brand-primary opacity-50 uppercase">From</span>
+            <span class="flex items-center gap-2">
+              <%# Fixed-width label column — "From" and "To" render at
+                   different natural widths, so without this the date text
+                   right after them starts at a different x on each row. %>
+              <span class="text-11 font-semibold tracking-[0.08em] text-brand-primary opacity-50 uppercase w-9 shrink-0">From</span>
               <span data-appointment-date-picker-target="slot1Label" class="font-medium text-base tracking-007 text-brand-primary"></span>
             </span>
             <span data-appointment-date-picker-target="slot1Time" class="font-medium text-base tracking-007 text-brand-primary"></span>
           </div>
-          <hr class="absolute left-[110px] top-[170px] w-[132px] border-none h-px bg-black opacity-20">
-          <div data-picker="date" class="absolute left-[38px] top-[195px] w-[256px] h-[60px] flex items-center justify-center gap-1.5">
+          <%# Only shown when editing slot 1 (From) — Figma has no divider
+               between the From and To rows at all when editing slot 2 (To),
+               since the scroller then inserts after To instead, with
+               nothing separating From/To above it. %>
+          <hr data-stage2-divider-before class="absolute left-[110px] top-[170px] w-[132px] border-none h-px bg-black opacity-20">
+          <div data-picker="date" class="absolute left-[38px] top-[205px] w-[256px] h-[60px] flex items-center justify-center gap-1.5">
             <div class="absolute inset-0 my-3 bg-brand-field rounded-lg"></div>
             <div data-appointment-date-picker-target="monthScroll" data-action="scroll->appointment-date-picker#onMonthScroll" class="overflow-y-auto snap-y snap-mandatory h-full w-12 [scrollbar-width:none] relative z-[1]">
               <% (1..12).each do |m| %><div data-value="<%= m %>" class="h-5 flex items-center justify-center text-base tracking-007 text-brand-primary"><%= format('%02d', m) %></div><% end %>
@@ -329,7 +360,7 @@
               <% ((Time.zone.today.year - 5)..(Time.zone.today.year + 5)).each do |y| %><div data-value="<%= y %>" class="h-5 flex items-center justify-center text-base tracking-007 text-brand-primary"><%= y %></div><% end %>
             </div>
           </div>
-          <div data-picker="time" class="hidden items-center justify-center gap-1 absolute left-[38px] top-[195px] w-[256px] h-[60px]">
+          <div data-picker="time" class="hidden items-center justify-center gap-1 absolute left-[38px] top-[205px] w-[256px] h-[60px]">
             <div class="absolute inset-0 my-3 bg-brand-field rounded-lg"></div>
             <div data-appointment-date-picker-target="hourScroll" data-action="scroll->appointment-date-picker#onHourScroll" class="overflow-y-auto snap-y snap-mandatory h-full w-[50px] [scrollbar-width:none] relative z-[1]">
               <% (0..23).each do |h| %><div data-value="<%= h %>" class="h-5 flex items-center justify-center text-base tracking-007 text-brand-primary"><%= format('%02d', h) %></div><% end %>
@@ -341,8 +372,8 @@
           </div>
           <hr data-stage2-divider class="absolute left-[110px] top-[306px] w-[132px] border-none h-px bg-black opacity-20">
           <div data-stage2-slot2 class="absolute left-[38px] right-[38px] top-[320px] h-[30px] flex items-center justify-between">
-            <span class="flex items-center gap-[5px]">
-              <span class="text-11 font-semibold tracking-[0.08em] text-brand-primary opacity-50 uppercase">To</span>
+            <span class="flex items-center gap-2">
+              <span class="text-11 font-semibold tracking-[0.08em] text-brand-primary opacity-50 uppercase w-9 shrink-0">To</span>
               <span data-appointment-date-picker-target="slot2Label" class="font-medium text-base tracking-007 text-brand-primary"></span>
             </span>
             <span data-appointment-date-picker-target="slot2Time" class="font-medium text-base tracking-007 text-brand-primary"></span>
@@ -353,7 +384,9 @@
               <span class="absolute left-[3px] top-[2px] w-[30px] h-[30px] bg-white rounded-full shadow-[0_1px_4px_rgba(0,0,0,0.2)] transition-transform duration-200"></span>
             </button>
           </div>
-          <button type="button" data-action="click->appointment-date-picker#confirmTime" data-stage2-button class="absolute left-[38px] top-[440px] w-[257px] h-12 bg-brand-primary rounded-lg border-none cursor-pointer font-medium text-22 leading-[27px] tracking-003 text-white text-center">Done</button>
+          <%# Figma's button always reads "Set date" — the "Done" wording
+               here was invented, not in the design. %>
+          <button type="button" data-action="click->appointment-date-picker#confirmTime" data-stage2-button class="absolute left-[38px] top-[440px] w-[257px] h-12 bg-brand-primary rounded-lg border-none cursor-pointer font-medium text-22 leading-[27px] tracking-003 text-white text-center">Set date</button>
         </div>
       </div>
     </div>
@@ -367,9 +400,12 @@
         <%# Close button sits high in the card's own top-right corner, not
              centered against the title row — measured off the Figma node
              directly (close glyph center y=19.5, title top y=41; the two
-             aren't aligned there either). %>
+             aren't aligned there either). z-[2] lifts it above the
+             position:relative header row below, which otherwise paints over
+             it (same fix the location/notes/reminder modals use) and makes
+             the whole button unclickable. %>
         <button type="button" data-season-modal-target="closeBtn" data-action="click->season-modal#close"
-                class="absolute top-4 right-4 bg-transparent border-none text-brand-primary text-[34px] w-11 h-11 flex items-center justify-center cursor-pointer font-sans">×</button>
+                class="absolute top-4 right-4 z-[2] bg-transparent border-none text-brand-primary text-[34px] w-11 h-11 flex items-center justify-center cursor-pointer font-sans">×</button>
 
         <%# Modal header %>
         <div class="flex justify-center items-center relative mb-8">
@@ -510,7 +546,7 @@
     <div data-season-modal-target="reminderBackdrop" class="hidden fixed inset-0 bg-black/40 z-50"></div>
     <div data-season-modal-target="reminderModal" role="dialog" aria-modal="true" aria-label="Set reminder"
          class="hidden fixed inset-0 z-50 flex items-center justify-center">
-      <div class="w-[355px] h-[600px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] relative">
+      <div class="w-[355px] h-[524px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] relative">
 
         <button type="button" data-action="click->season-modal#closeReminder"
                 class="absolute left-[289px] top-[13px] w-[37px] h-[37px] bg-transparent border-none cursor-pointer p-0 z-[2]">
@@ -526,12 +562,20 @@
 
         <div class="absolute left-[18px] top-[101px] w-[320px] h-0 border border-brand-field"></div>
 
-        <% reminder_options = [[15, '15 minutes before'], [60, '1 hour before'], [360, '6 hours before'], [1440, '1 day before'], [10080, '1 week before'], [-1, 'Set my own timer']] %>
+        <%# Figma's fixed preset list is only these four — no "6 hours"
+             preset exists. A custom value (set via "Setting my own timer")
+             gets its own inserted pill with a clear "X", further down;
+             that's a distinct, bigger behaviour change tracked separately
+             in docs/M4.md rather than guessed at here. %>
+        <% reminder_options = [[15, '15 minutes earlier'], [60, '1 h earlier'], [1440, '1 day earlier'], [10080, '1 week earlier'], [-1, 'Setting my own timer']] %>
         <% sel_min = @event.reminder_minutes || 15 %>
-        <% positions = [140, 185, 230, 276, 322, 400] %>
-        <% heights = [39, 38, 38, 38, 38, 39] %>
+        <% positions = [140, 185, 230, 276, 354] %>
+        <% heights = [39, 38, 38, 38, 39] %>
         <% reminder_options.each_with_index do |(min_val, label), idx| %>
-          <% active = sel_min == min_val %>
+          <%# "Setting my own timer" (min_val -1, a sentinel that opens the
+               custom picker rather than ever being a stored value) is always
+               rendered solid in Figma, not conditionally on selection. %>
+          <% active = min_val == -1 || sel_min == min_val %>
           <% top = positions[idx] %>
           <% h = heights[idx] %>
           <div data-season-modal-target="reminderOption"
@@ -539,13 +583,13 @@
                data-action="click->season-modal#selectReminder"
                class="absolute left-[37px] w-[281px] rounded-[10px] cursor-pointer flex items-center justify-center transition-colors duration-[150ms]"
                style="top:<%= top %>px;height:<%= h %>px;background:<%= active ? '#EDE1D5' : 'rgba(237,225,213,0.5)' %>">
-            <span class="font-medium text-base leading-[45px] text-center text-brand-primary"><%= label %></span>
+            <span class="font-medium text-base leading-[45px] text-center <%= active ? 'text-brand-primary' : 'text-brand-primary/50' %>"><%= label %></span>
           </div>
         <% end %>
 
-        <div class="absolute left-[37px] top-[505px] w-[281px] h-[52px] bg-brand-primary rounded-lg"></div>
+        <div class="absolute left-[37px] top-[430px] w-[281px] h-[52px] bg-brand-primary rounded-lg"></div>
         <button type="button" data-action="click->season-modal#confirmReminder"
-                class="absolute left-[37px] top-[505px] w-[281px] h-[52px] bg-transparent border-none cursor-pointer p-0 flex items-center justify-center font-medium text-base leading-5 tracking-007 text-white">Set reminder</button>
+                class="absolute left-[37px] top-[430px] w-[281px] h-[52px] bg-transparent border-none cursor-pointer p-0 flex items-center justify-center font-medium text-base leading-5 tracking-007 text-white">Set reminder</button>
       </div>
     </div>
 
@@ -758,7 +802,7 @@
 
         <% until_date = evt_date + 30 %>
         <% days_count = (until_date - evt_date).to_i %>
-        <% day_names = %w[Su Mo Tu We Th Fr Sa] %>
+        <% day_names = %w[S M T W T F S] %>
         <% d = until_date.day; m = until_date.month; y = until_date.year %>
         <% date_label = "#{day_names[until_date.wday]} #{format('%02d', d)}.#{format('%02d', m)}.#{y}" %>
         <p class="absolute left-1/2 -translate-x-1/2 top-[34px] font-medium text-22 leading-[27px] tracking-003 text-brand-primary whitespace-nowrap">Repeat until day <%= days_count %></p>

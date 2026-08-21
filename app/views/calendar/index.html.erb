@@ -4,6 +4,11 @@
      sits inside the page's white wrapper instead of <main>'s dead space), so opt
      out of the layout-rendered quick-actions block + its bottom padding. %>
 <% content_for(:hide_quick_actions) { "true" } %>
+<%# The redirect after scheduling a new appointment lands here with
+     appointment_scheduled=1 and also sets flash[:notice] — same pattern as
+     tracking_saved on /tracking. Suppress the small shared banner so the
+     modal below is the only confirmation shown, not both. %>
+<% content_for(:hide_flash) { "true" } if params[:appointment_scheduled] == "1" %>
 <% content_for(:header_left) do %>
   <button class="p-2" data-action="click->menu#open">
     <svg class="w-6 h-6 text-brand-primary" viewBox="0 0 24 24" fill="currentColor">
@@ -190,8 +195,7 @@
       <% if @show_week_numbers %>
         <div class="text-center py-1" style="min-width:18px;"></div>
       <% end %>
-      <%# Single-letter day initials, matching Figma (was two-letter Mo/Tu/We/...). %>
-      <% %w[M T W T F S S].each do |d| %>
+      <% weekday_initials.each do |d| %>
         <div class="text-center text-brand-secondary text-xs font-semibold tracking-wider py-1">
           <%= d %>
         </div>
@@ -311,6 +315,31 @@
 <% unless no_cycle_state %>
   <%= render "shared/quick_actions" %>
 <% end %>
+
+<%# ── Post-schedule confirmation modal ──
+     Shown after creating a new appointment (CalendarEventsController#create
+     redirects here with ?appointment_scheduled=1). Reuses the same close/
+     overlay-click behavior as the tracking-saved modal on /tracking, just
+     under its own controller name since the content differs. %>
+<% if params[:appointment_scheduled] == "1" %>
+  <div id="appointment-scheduled-modal" data-controller="appointment-scheduled-modal"
+       class="fixed inset-0 z-[200] flex items-center justify-center bg-brand-overlay/90"
+       role="dialog" aria-modal="true" aria-label="Appointment scheduled"
+       data-action="click->appointment-scheduled-modal#overlayClick">
+    <div class="relative w-[337px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] px-7 py-10 flex flex-col items-center">
+      <button type="button" aria-label="Close" data-action="click->appointment-scheduled-modal#close"
+              class="absolute top-3 right-3 w-11 h-11 flex items-center justify-center rounded-full rotate-45 border-0 bg-transparent cursor-pointer">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#A43600" stroke-width="3">
+          <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
+        </svg>
+      </button>
+      <p class="text-brand-primary font-medium text-[28px] leading-[34px] text-center font-sans m-0">
+        Your appointment has been scheduled!
+      </p>
+    </div>
+  </div>
+<% end %>
+
 <%= render "shared/feedback_modal" %>
 <%= render "shared/support_modal" %>
 <%= render "shared/weekly_feedback_modal" %>

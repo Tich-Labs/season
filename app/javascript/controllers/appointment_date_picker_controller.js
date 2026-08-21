@@ -1,7 +1,7 @@
 /* global requestAnimationFrame */
 import { Controller } from '@hotwired/stimulus'
 
-const SHORT = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']
+const SHORT = ['S', 'M', 'T', 'W', 'T', 'F', 'S']
 
 export default class extends Controller {
   static targets = [
@@ -13,7 +13,7 @@ export default class extends Controller {
     'allDayToggle',
     'dayScroll', 'monthScroll', 'yearScroll', 'hourScroll', 'minuteScroll', 'stage2Title',
     'dateDisplay', 'dateField', 'endDateField', 'startField', 'endField',
-    'startTimeDisplay', 'endTimeDisplay'
+    'startTimeDisplay', 'endTimeDisplay', 'timeRow'
   ]
 
   static values = {
@@ -115,9 +115,10 @@ export default class extends Controller {
 
   #openStage2 () {
     const time24 = this.#getSlotTime24(this._editingSlot)
-    const [h24, m] = time24.split(':').map(Number)
+    const [h24raw, mRaw] = time24.split(':').map(Number)
+    const [h24, m] = this.#round5(h24raw, mRaw)
     this.#setPickHour(h24)
-    this.#setPickMin(Math.round(m / 5) * 5)
+    this.#setPickMin(m)
 
     let d
     if (this._editingSlot === 2 && this._mode === 'date') {
@@ -133,13 +134,11 @@ export default class extends Controller {
       this._pickDay = d.getDate()
     }
 
-    const dayName = d.toLocaleDateString('en-US', { weekday: 'short' })
-    const month = String(d.getMonth() + 1).padStart(2, '0')
-    const dateNum = String(d.getDate()).padStart(2, '0')
-    const year = d.getFullYear()
-    const slotLabel = this._editingSlot === 1 ? 'Start' : 'End'
-    const modeLabel = this._mode === 'date' ? 'date' : 'time'
-    this.stage2TitleTarget.textContent = `${slotLabel} ${modeLabel}: ${dayName} ${dateNum}.${month}.${year}`
+    // Figma's title never changes between the compact and expanded views —
+    // it's always just the overall date, not "Start date: …"/"End time: …".
+    // Mirroring dateTitleTarget's own text (rather than recomputing it here)
+    // guarantees the two stay byte-for-byte identical.
+    this.stage2TitleTarget.textContent = this.dateTitleTarget.textContent
 
     this.#updateAllSlotLabels()
     this.#setBoldForEditingSlot()
@@ -281,7 +280,11 @@ export default class extends Controller {
   #getPickHour () { return this._editingSlot === 1 ? this._pickHour1 : this._pickHour2 }
   #getPickMin () { return this._editingSlot === 1 ? this._pickMin1 : this._pickMin2 }
   #setPickHour (v) { if (this._editingSlot === 1) this._pickHour1 = v; else this._pickHour2 = v }
-  #setPickMin (v) { if (this._editingSlot === 1) this._pickMin1 = Math.round(v / 5) * 5; else this._pickMin2 = Math.round(v / 5) * 5 }
+  // Callers are expected to pass an already-valid multiple of 5 (via
+  // #round5, or straight off a scroller's own discrete [0,5,...,55]
+  // values) — this just stores it, it doesn't re-round, so it can't
+  // reintroduce the min:60 bug #round5 exists to avoid.
+  #setPickMin (v) { if (this._editingSlot === 1) this._pickMin1 = v; else this._pickMin2 = v }
 
   #getSlotTime24 (slot) {
     return slot === 1
@@ -367,13 +370,9 @@ export default class extends Controller {
     const d1 = new Date(this._pickYear, this._pickMonth - 1, this._pickDay)
     const d2 = this.#getSlot2Date()
 
-    // Stage 2 title reflects whichever slot is being edited
-    const dTitle = this._editingSlot === 2 ? d2 : d1
-    const tMonth = String(dTitle.getMonth() + 1).padStart(2, '0')
-    const tDate = String(dTitle.getDate()).padStart(2, '0')
-    const slotLabel = this._editingSlot === 1 ? 'Start' : 'End'
-    const modeLabel = this._mode === 'date' ? 'date' : 'time'
-    this.stage2TitleTarget.textContent = `${slotLabel} ${modeLabel}: ${SHORT[dTitle.getDay()]} ${tDate}.${tMonth}.${dTitle.getFullYear()}`
+    // Title stays constant (always the overall From date) — matches
+    // dateTitleTarget, which #updateDateTitle keeps in sync as d1 changes.
+    this.stage2TitleTarget.textContent = this.dateTitleTarget.textContent
 
     const fmt = (d) => `${SHORT[d.getDay()]} ${String(d.getDate()).padStart(2, '0')}.${String(d.getMonth() + 1).padStart(2, '0')}.${d.getFullYear()}`
     this.slot1LabelTargets.forEach(el => { el.textContent = fmt(d1) })
@@ -414,26 +413,35 @@ export default class extends Controller {
     other.style.display = 'none'
 
     const slot2 = this.stage2Target.querySelector('[data-stage2-slot2]')
+    const dividerBefore = this.stage2Target.querySelector('[data-stage2-divider-before]')
     const divider = this.stage2Target.querySelector('[data-stage2-divider]')
     const allday = this.stage2Target.querySelector('[data-stage2-allday]')
     const button = this.stage2Target.querySelector('[data-stage2-button]')
     const card = this.modalTarget.querySelector('div')
 
+    // Positions measured directly off Figma's four expanded "Europa" frames
+    // (12090:3325/3241 for slot 1, 12090:3491/3409 for slot 2) — the
+    // scroller always inserts right after whichever row was tapped, not
+    // always after From. Card height (539px) and the allday/button
+    // positions are identical either way; only where the scroller and the
+    // *other* row land differs.
     if (this._editingSlot === 1) {
-      picker.style.top = '170px'
-      divider.style.top = '268px'
-      slot2.style.top = '282px'
-      allday.style.top = '410px'
-      button.style.top = '475px'
-      card.style.height = '575px'
+      dividerBefore.style.display = ''
+      picker.style.top = '205px'
+      slot2.style.top = '325px'
+      divider.style.top = '306px'
     } else {
-      picker.style.top = '240px'
-      divider.style.top = '338px'
-      slot2.style.top = '185px'
-      allday.style.top = '355px'
-      button.style.top = '420px'
-      card.style.height = '520px'
+      // No divider between the From and To rows when To is the one being
+      // edited — the scroller inserts after To instead, with nothing
+      // separating From/To above it.
+      dividerBefore.style.display = 'none'
+      picker.style.top = '255px'
+      slot2.style.top = '176px'
+      divider.style.top = '356px'
     }
+    allday.style.top = '375px'
+    button.style.top = '440px'
+    card.style.height = '539px'
   }
 
   #highlightScrollers () {
@@ -461,12 +469,14 @@ export default class extends Controller {
   }
 
   #syncTimesFromField () {
-    const [sh, sm] = (this.startFieldTarget.value || '19:00').split(':').map(Number)
-    const [eh, em] = (this.endFieldTarget.value || '20:00').split(':').map(Number)
-    this._pickHour1 = sh
-    this._pickMin1 = Math.round(sm / 5) * 5
-    this._pickHour2 = eh
-    this._pickMin2 = Math.round(em / 5) * 5
+    const [shRaw, smRaw] = (this.startFieldTarget.value || '19:00').split(':').map(Number)
+    const [ehRaw, emRaw] = (this.endFieldTarget.value || '20:00').split(':').map(Number)
+    const start = this.#round5(shRaw, smRaw)
+    const end = this.#round5(ehRaw, emRaw)
+    this._pickHour1 = start[0]
+    this._pickMin1 = start[1]
+    this._pickHour2 = end[0]
+    this._pickMin2 = end[1]
   }
 
   #highlightTrack (track, activeVal) {
@@ -509,11 +519,20 @@ export default class extends Controller {
       const year2 = d2.getFullYear()
       const line1 = `${dayName1}. ${monthName1} ${dateNum1}${nth1} ${year1}`
       const line2 = `${dayName2}. ${monthName2} ${dateNum2}${nth2} ${year2}`
-      this.dateDisplayTarget.innerHTML = `${line1}<br>${line2}`
+      // Three lines — date, a "-" on its own line, date — matching
+      // Figma's multi-day card (node 12090:3531), not two dates stacked
+      // directly on each other.
+      this.dateDisplayTarget.innerHTML = `${line1}<br><span class="font-light">-</span><br>${line2}`
     } else {
       this.dateDisplayTarget.textContent = `${dayName1}. ${monthName1} ${dateNum1}${nth1} ${year1}`
     }
     this.dateDisplayTarget.style.fontSize = ''
+
+    // Figma shows no time row at all for a multi-day span — keep this in
+    // sync live as the picker's date changes, not just on initial render.
+    if (this.hasTimeRowTarget) {
+      this.timeRowTarget.classList.toggle('hidden', multiDay)
+    }
   }
 
   #setDateFromField () {
@@ -558,7 +577,7 @@ export default class extends Controller {
 
   #updateDateTitle () {
     const d = new Date(this._pickYear, this._pickMonth - 1, this._pickDay)
-    const dayName = d.toLocaleDateString('en-US', { weekday: 'short' })
+    const dayName = SHORT[d.getDay()]
     const month = String(d.getMonth() + 1).padStart(2, '0')
     const dateNum = String(d.getDate()).padStart(2, '0')
     const year = d.getFullYear()
@@ -575,11 +594,11 @@ export default class extends Controller {
   #updateTimeDisplays () {
     if (this.hasStartTimeDisplayTarget) {
       const [sh, sm] = (this.startFieldTarget.value || '19:00').split(':').map(Number)
-      this.startTimeDisplayTarget.textContent = this.#fmt12h(sh, Math.round(sm / 5) * 5)
+      this.startTimeDisplayTarget.textContent = this.#fmt12h(...this.#round5(sh, sm))
     }
     if (this.hasEndTimeDisplayTarget) {
       const [eh, em] = (this.endFieldTarget.value || '20:00').split(':').map(Number)
-      this.endTimeDisplayTarget.textContent = this.#fmt12h(eh, Math.round(em / 5) * 5)
+      this.endTimeDisplayTarget.textContent = this.#fmt12h(...this.#round5(eh, em))
     }
   }
 
@@ -587,6 +606,20 @@ export default class extends Controller {
   // periodRangesValue, so plain string comparison is enough — no Date math.
   #isOnPeriod (dateStr) {
     return this.periodRangesValue.some(([start, end]) => dateStr >= start && dateStr <= end)
+  }
+
+  // Math.round(m / 5) * 5 alone can produce 60 (e.g. :58 or :59 round up
+  // to 60, not a carry into the next hour) — an invalid minute value that
+  // then renders as e.g. "11:60 PM". Carries into the hour (wrapping
+  // 23 -> 0) instead of ever returning min: 60.
+  #round5 (h24, m) {
+    let min = Math.round(m / 5) * 5
+    let hour = h24
+    if (min === 60) {
+      min = 0
+      hour = (hour + 1) % 24
+    }
+    return [hour, min]
   }
 
   #fmt12h (h24, m) {

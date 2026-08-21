@@ -62,7 +62,7 @@
     <%# ── Week strip ── %>
     <div class="px-2 pt-2.5 bg-white">
       <div class="grid grid-cols-7">
-        <% %w[M T W T F S S].each_with_index do |letter, i| %>
+        <% weekday_initials.each_with_index do |letter, i| %>
           <div class="text-center text-xs font-medium py-0.5" style="color: <%= i >= 5 ? '#D18D84' : '#933a35' %>;">
             <%= letter %>
           </div>

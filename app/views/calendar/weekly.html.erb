@@ -40,8 +40,7 @@
 
     <%# ── Week header ── %>
     <div class="grid grid-cols-7 gap-0 px-2 py-3 pb-2 border-b border-brand-field bg-white">
-      <%# Single-letter day initials, matching Figma / the main calendar (see calendar/index.html.erb). %>
-      <% week_days = %w[M T W T F S S] %>
+      <% week_days = weekday_initials %>
       <% @week_dates.each_with_index do |day, i| %>
         <% is_today = day == Time.zone.today %>
         <% phase = @cycle_by_date[day]&.dig(:phase) %>

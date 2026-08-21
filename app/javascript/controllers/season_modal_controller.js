@@ -1,9 +1,7 @@
 import { Controller } from '@hotwired/stimulus'
 
-const BRAND_RED_FILTER = 'brightness(0) saturate(100%) invert(28%) sepia(84%) saturate(1607%) hue-rotate(342deg) brightness(63%) contrast(94%)'
-
 export default class extends Controller {
-  static targets = ['modal', 'backdrop', 'closeBtn', 'categoryInput', 'categoryOption', 'triggerButton', 'locationModal', 'locationBackdrop', 'locationInput', 'locationField', 'locationCard', 'locationResults', 'locationSubmitBg', 'locationSubmitBtn', 'locationLabel', 'locationIconBg', 'notesModal', 'notesBackdrop', 'notesInput', 'notesField', 'notesLabel', 'notesIconBg', 'guestsModal', 'guestsBackdrop', 'guestsInput', 'guestsField', 'guestsLabel', 'guestsIconBg', 'guestsList', 'guestsCard', 'guestsSubmitBg', 'guestsSubmitBtn', 'guestsInlineList', 'reminderModal', 'reminderBackdrop', 'reminderField', 'reminderLabel', 'reminderIconBg', 'reminderOption', 'reminderClearBtn', 'repeatModal', 'repeatBackdrop', 'repeatLabel', 'repeatIconBg', 'repeatOption', 'repeatSubOptions', 'repeatField', 'customRepeatModal', 'customRepeatBackdrop', 'repeatUntilModal', 'repeatUntilBackdrop', 'customReminderModal', 'customReminderBackdrop', 'customReminderNum', 'customReminderUnit', 'attentionModal', 'attentionBackdrop', 'attentionTitle', 'attentionBody', 'attentionConfirm', 'attentionCancel', 'recurringModal', 'recurringBackdrop', 'notifyModal', 'notifyBackdrop']
+  static targets = ['modal', 'backdrop', 'closeBtn', 'categoryInput', 'categoryOption', 'triggerButton', 'submitBtn', 'locationModal', 'locationBackdrop', 'locationInput', 'locationField', 'locationCard', 'locationResults', 'locationSubmitBg', 'locationSubmitBtn', 'locationLabel', 'locationIconBg', 'notesModal', 'notesBackdrop', 'notesInput', 'notesField', 'notesLabel', 'notesIconBg', 'guestsModal', 'guestsBackdrop', 'guestsInput', 'guestsField', 'guestsLabel', 'guestsIconBg', 'guestsList', 'guestsCard', 'guestsSubmitBg', 'guestsSubmitBtn', 'guestsInlineList', 'reminderModal', 'reminderBackdrop', 'reminderField', 'reminderLabel', 'reminderIconBg', 'reminderOption', 'reminderClearBtn', 'repeatModal', 'repeatBackdrop', 'repeatLabel', 'repeatIconBg', 'repeatOption', 'repeatSubOptions', 'repeatField', 'customRepeatModal', 'customRepeatBackdrop', 'repeatUntilModal', 'repeatUntilBackdrop', 'customReminderModal', 'customReminderBackdrop', 'customReminderNum', 'customReminderUnit', 'attentionModal', 'attentionBackdrop', 'attentionTitle', 'attentionBody', 'attentionConfirm', 'attentionCancel', 'recurringModal', 'recurringBackdrop', 'notifyModal', 'notifyBackdrop']
   static values = {
     selectedCategory: String,
     lastLat: Number,
@@ -48,7 +46,20 @@ export default class extends Controller {
     if (_watchForm) {
       _watchForm.addEventListener('input', () => { this._formDirty = true })
       _watchForm.addEventListener('change', () => { this._formDirty = true })
-      _watchForm.addEventListener('submit', () => { this._submitting = true })
+      _watchForm.addEventListener('submit', () => {
+        this._submitting = true
+        // This form is local: true (Turbo opted out) and the app doesn't
+        // load rails-ujs, so nothing built-in stops a second tap from
+        // firing a second POST — creating a duplicate appointment — while
+        // the first submission is still in flight. Disabling here, inside
+        // the form's own submit handler, is safe: the browser has already
+        // committed to this submission by this point, so it only blocks
+        // further clicks, not the one already happening.
+        if (this.hasSubmitBtnTarget) {
+          this.submitBtnTarget.disabled = true
+          this.submitBtnTarget.value = 'Saving…'
+        }
+      })
     }
 
     this._turboBeforeVisit = (event) => {
@@ -73,27 +84,49 @@ export default class extends Controller {
     this.element.addEventListener('appointment-date-picker:past-date', (e) => this.showPastDateAlert(e.detail?.onConfirm))
     this.element.addEventListener('appointment-date-picker:sensitive-period', (e) => this.showSensitivePeriodAlert(e.detail?.message))
 
-    if (this.hasBackdropTarget) {
-      this.backdropTarget.addEventListener('click', () => this.close())
+    // Click-outside-closes, for every modal that isn't an alert/confirm
+    // dialog. This listens on the modal's own `fixed inset-0` wrapper
+    // (only firing when the click lands on the wrapper itself — the empty
+    // flex space around the card — not on the card or its contents), not
+    // on the separate `*Backdrop` div: the backdrop sits behind the modal
+    // wrapper at the same stacking rect, so a listener on it can never
+    // actually receive a click and was silently dead.
+    if (this.hasModalTarget) {
+      this.modalTarget.addEventListener('click', (e) => { if (e.target === this.modalTarget) this.close() })
     }
-    if (this.hasLocationBackdropTarget) {
-      this.locationBackdropTarget.addEventListener('click', () => this.closeLocation())
+    if (this.hasLocationModalTarget) {
+      this.locationModalTarget.addEventListener('click', (e) => { if (e.target === this.locationModalTarget) this.closeLocation() })
     }
-    if (this.hasNotesBackdropTarget) {
-      this.notesBackdropTarget.addEventListener('click', () => this.closeNotes())
+    if (this.hasNotesModalTarget) {
+      this.notesModalTarget.addEventListener('click', (e) => { if (e.target === this.notesModalTarget) this.closeNotes() })
     }
-    if (this.hasGuestsBackdropTarget) {
-      this.guestsBackdropTarget.addEventListener('click', () => this.closeGuests())
+    if (this.hasGuestsModalTarget) {
+      this.guestsModalTarget.addEventListener('click', (e) => { if (e.target === this.guestsModalTarget) this.closeGuests() })
     }
-    if (this.hasReminderBackdropTarget) {
-      this.reminderBackdropTarget.addEventListener('click', () => this.closeReminder())
+    if (this.hasReminderModalTarget) {
+      this.reminderModalTarget.addEventListener('click', (e) => { if (e.target === this.reminderModalTarget) this.closeReminder() })
     }
-    if (this.hasRepeatBackdropTarget) {
-      this.repeatBackdropTarget.addEventListener('click', () => this.closeRepeat())
+    if (this.hasRepeatModalTarget) {
+      this.repeatModalTarget.addEventListener('click', (e) => { if (e.target === this.repeatModalTarget) this.closeRepeat() })
     }
-    if (this.hasCustomRepeatBackdropTarget) {
-      this.customRepeatBackdropTarget.addEventListener('click', () => this.closeCustomRepeat())
+    if (this.hasCustomRepeatModalTarget) {
+      this.customRepeatModalTarget.addEventListener('click', (e) => { if (e.target === this.customRepeatModalTarget) this.closeCustomRepeat() })
     }
+    if (this.hasCustomReminderModalTarget) {
+      this.customReminderModalTarget.addEventListener('click', (e) => { if (e.target === this.customReminderModalTarget) this.closeCustomReminder() })
+    }
+    if (this.hasRepeatUntilModalTarget) {
+      this.repeatUntilModalTarget.addEventListener('click', (e) => { if (e.target === this.repeatUntilModalTarget) this.closeRepeatUntil() })
+    }
+    if (this.hasRecurringModalTarget) {
+      this.recurringModalTarget.addEventListener('click', (e) => { if (e.target === this.recurringModalTarget) this.closeRecurring() })
+    }
+    if (this.hasNotifyModalTarget) {
+      this.notifyModalTarget.addEventListener('click', (e) => { if (e.target === this.notifyModalTarget) this.closeNotify() })
+    }
+    // attentionModal is deliberately excluded: role="alertdialog" — a
+    // confirm/cancel prompt shouldn't be dismissible by an outside click,
+    // it requires an explicit choice.
 
     if (this.hasCategoryInputTarget) {
       this.selectedCategoryValue = this.categoryInputTarget.value
@@ -186,9 +219,15 @@ export default class extends Controller {
     if (!this.hasTriggerButtonTarget || !iconImg) return
     this.triggerButtonTarget.innerHTML = ''
     const clone = iconImg.cloneNode(true)
-    clone.style.width = '36px'
-    clone.style.height = '36px'
-    clone.style.filter = BRAND_RED_FILTER
+    // Height-constrained, width auto — the nine category assets range from
+    // 27x38 to 63x57, so a forced square box squishes/stretch every
+    // non-square one. Matches the server-rendered trigger's max-h-[22px]
+    // w-auto pattern. The cloned img already points at the red *-selected
+    // asset, so no colour filter is needed.
+    clone.style.width = 'auto'
+    clone.style.height = '22px'
+    clone.style.maxWidth = '36px'
+    clone.style.filter = ''
     this.triggerButtonTarget.appendChild(clone)
     this.triggerButtonTarget.style.background = ''
   }
