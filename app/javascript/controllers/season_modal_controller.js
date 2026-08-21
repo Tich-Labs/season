@@ -70,7 +70,7 @@ export default class extends Controller {
     }
     document.addEventListener('turbo:before-visit', this._turboBeforeVisit)
 
-    this.element.addEventListener('appointment-date-picker:past-date', () => this.showPastDateAlert())
+    this.element.addEventListener('appointment-date-picker:past-date', (e) => this.showPastDateAlert(e.detail?.onConfirm))
     this.element.addEventListener('appointment-date-picker:sensitive-period', (e) => this.showSensitivePeriodAlert(e.detail?.message))
 
     if (this.hasBackdropTarget) {
@@ -1035,12 +1035,12 @@ export default class extends Controller {
     })
   }
 
-  showPastDateAlert () {
+  showPastDateAlert (onConfirm) {
     this.openAttention({
-      body: 'This appointment is in the past. No reminder notification can be set for past dates.',
-      cancelLabel: 'Set date',
-      confirmLabel: 'Choose another date',
-      onConfirm: () => { if (this.hasReminderModalTarget) this.openReminder() }
+      body: "This appointment is in the past. Are you sure you want to set it? Reminder notifications won't be sent for past dates.",
+      cancelLabel: 'Choose another date',
+      confirmLabel: 'Yes, set it',
+      onConfirm: onConfirm || (() => {})
     })
   }
 

@@ -23,6 +23,9 @@ export default class extends Controller {
 
   _allDay = false
   _mode = 'date'
+  // Set true only for the single re-entrant confirm() call right after the
+  // user dismisses the past-date warning by choosing to proceed anyway.
+  _pastDateConfirmed = false
   // Slot 1 date state
   _pickDay = 1
   _pickMonth = 1
@@ -176,10 +179,14 @@ export default class extends Controller {
     const today = new Date()
     today.setHours(0, 0, 0, 0)
     const picked = new Date(dateStr + 'T00:00:00')
-    if (picked < today) {
-      this.dispatch('past-date')
+    if (picked < today && !this._pastDateConfirmed) {
+      // Warn, don't dead-end: pass a callback that re-runs confirm() with
+      // the bypass flag set, so choosing to proceed actually sets the date
+      // instead of silently discarding the pick.
+      this.dispatch('past-date', { detail: { onConfirm: () => { this._pastDateConfirmed = true; this.confirm() } } })
       return
     }
+    this._pastDateConfirmed = false
 
     // Non-blocking — the date/time is still set below, this just flags it.
     if (this.#isOnPeriod(dateStr)) {
