@@ -14,23 +14,18 @@ class CalendarEventsController < ApplicationController
       date: params[:date] || Time.zone.today
     )
     @period_ranges = period_ranges_json
+    session[:appointment_return_to] = request.referer if request.referer.present?
   end
 
   def edit
     @period_ranges = period_ranges_json
+    session[:appointment_return_to] = request.referer if request.referer.present?
   end
 
   def create
     @event = current_user.calendar_events.build(event_params)
     if @event.save
-      # Back to the calendar (not forecast) — the confirmation modal shown
-      # via appointment_scheduled=1 needs the calendar as its background,
-      # scoped to the month the new appointment actually falls in so it's
-      # visible once the modal closes. flash[:notice] is still set for
-      # consistency with other redirects, but calendar/index.html.erb hides
-      # the shared banner while this param is present — the modal alone is
-      # the confirmation here (same pattern as tracking_saved on /tracking).
-      redirect_to calendar_path(date: @event.date, appointment_scheduled: "1"), notice: t(".created")
+      redirect_to session.delete(:appointment_return_to) || calendar_path(date: @event.date, appointment_scheduled: "1"), notice: t(".created")
     else
       render :new, status: :unprocessable_content
     end
@@ -38,7 +33,7 @@ class CalendarEventsController < ApplicationController
 
   def update
     if @event.update(event_params)
-      redirect_to forecast_path, notice: t(".updated")
+      redirect_to session.delete(:appointment_return_to) || forecast_path, notice: t(".updated")
     else
       render :edit, status: :unprocessable_content
     end
@@ -46,7 +41,7 @@ class CalendarEventsController < ApplicationController
 
   def destroy
     @event.destroy
-    redirect_to forecast_path, notice: t(".deleted")
+    redirect_to session.delete(:appointment_return_to) || forecast_path, notice: t(".deleted")
   end
 
   private
