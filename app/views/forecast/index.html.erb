@@ -86,11 +86,9 @@
                   <% if event.category.present? %>
                     <% icon_map = { 'Friends'=>'family.svg','Dinner'=>'dinner.svg','Date'=>'date.svg','Sport'=>'sport.svg','Medical'=>'medical.svg','Birthday'=>'birthday.svg','Work'=>'work.svg','Coffee'=>'coffee.svg','Shopping'=>'shopping.svg' } %>
                     <% if icon_map[event.category].present? %>
-                      <div class="flex flex-col items-center gap-2 shrink-0">
-                        <div class="flex h-11 w-11 items-center justify-center rounded-full" style="background:color-mix(in srgb, var(--phase-color) 10%, transparent)">
-                          <%= image_tag "icons/appointment/#{icon_map[event.category]}", alt: event.category, class: "w-8 h-8", style: "filter:brightness(0) saturate(100%) invert(28%) sepia(84%) saturate(1607%) hue-rotate(342deg) brightness(63%) contrast(94%);" %>
-                        </div>
-                        <div class="flex h-11 w-11 items-center justify-center" style="color:var(--phase-color)">
+                        <div class="flex flex-col items-center gap-2 shrink-0">
+                          <%= image_tag "icons/appointment/#{icon_map[event.category]}", alt: event.category, class: "w-11 h-11" %>
+                          <div class="flex h-11 w-11 items-center justify-center" style="color:var(--phase-color)">
                           <svg width="20" height="20" viewBox="0 0 23 23" fill="none">
                             <path d="M10.538 1.917H8.621C3.83 1.917 1.913 3.834 1.913 8.625v5.75c0 4.792 1.917 6.709 6.708 6.709h5.75c4.792 0 6.709-1.917 6.709-6.709v-1.916" stroke="currentColor" stroke-width="2.02" stroke-linecap="round" stroke-linejoin="round" />
                             <path d="M15.37 2.894L7.818 10.446c-.287.287-.575.853-.632 1.265l-.412 2.884c-.154 1.045.584 1.773 1.629 1.63l2.884-.413c.403-.057.968-.345 1.265-.632l7.552-7.552c1.303-1.303 1.917-2.817 0-4.734-1.917-1.917-3.431-1.303-4.734 0z" stroke="currentColor" stroke-width="2.02" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
