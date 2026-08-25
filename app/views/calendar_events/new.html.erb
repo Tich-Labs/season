@@ -20,7 +20,7 @@
      data-appointment-date-picker-period-ranges-value="<%= @period_ranges %>">
   <div class="max-w-app mx-auto px-4 pt-5">
 
-    <a href="<%= user_root_path %>"
+    <a href="<%= safe_back_path(calendar_path) %>"
        onclick="if (window.history.length > 1) { window.history.back(); return false; }"
        class="inline-flex items-center py-2 mb-2 text-brand-primary text-sm font-medium no-underline">
       &lt; Back
@@ -251,7 +251,7 @@
                 method: :delete,
                 class: "w-full bg-transparent text-brand-primary rounded-lg text-22 font-medium font-sans cursor-pointer tracking-003 py-3.5 border-0" %>
         <% else %>
-          <%= link_to "Delete appointment", user_root_path,
+          <%= link_to "Delete appointment", safe_back_path(calendar_path),
                 onclick: "if (window.history.length > 1) { window.history.back(); return false; }",
                 class: "block w-full text-center bg-transparent text-brand-primary rounded-lg text-22 font-medium font-sans cursor-pointer tracking-003 py-3.5 border-0 no-underline" %>
         <% end %>

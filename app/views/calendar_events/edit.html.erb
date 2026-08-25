@@ -22,7 +22,7 @@
      data-appointment-date-picker-period-ranges-value="<%= @period_ranges %>">
   <div class="max-w-app mx-auto px-4 pt-5">
 
-    <a href="<%= user_root_path %>"
+    <a href="<%= safe_back_path(calendar_path(date: @event.date)) %>"
        onclick="if (window.history.length > 1) { window.history.back(); return false; }"
        class="inline-flex items-center py-2 mb-2 text-brand-primary text-sm font-medium no-underline">
       &lt; Back
