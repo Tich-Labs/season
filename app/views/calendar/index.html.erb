@@ -1,5 +1,6 @@
 <% cal_index_title = @date.strftime("%B") %>
 <% content_for(:page_title) { cal_index_title } %>
+<% phase_color(CycleCalculatorService::PHASE_META[@current_phase]&.dig(:colour) || "#933a35") %>
 <%# This page owns the "+" FAB itself (rendered at the bottom so its clearance
      sits inside the page's white wrapper instead of <main>'s dead space), so opt
      out of the layout-rendered quick-actions block + its bottom padding. %>
@@ -109,8 +110,8 @@
       </div>
     </div>
 
-    <%= link_to information_path, class: "w-6 h-6 flex items-center justify-center rounded-full border border-brand-primary shrink-0" do %>
-      <svg class="w-3.5 h-3.5 text-brand-primary" viewBox="0 0 25 25" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <%= link_to information_path, class: "w-6 h-6 flex items-center justify-center rounded-full border shrink-0", style: "border-color:var(--phase-color);color:var(--phase-color)" do %>
+      <svg class="w-3.5 h-3.5" viewBox="0 0 25 25" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
         <path d="M12.4998 8.33344V13.5418" stroke-width="1.7" />
         <path d="M12.4957 16.6667H12.5051" stroke-width="2" />
       </svg>

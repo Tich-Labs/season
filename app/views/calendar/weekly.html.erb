@@ -2,6 +2,7 @@
 <% content_for(:page_title) { "Week" } %>
 <% content_for(:header_color) { weekly_phase_colour } %>
 <% content_for(:header_dark) { "true" } %>
+<% phase_color(weekly_phase_colour) %>
 <%# A calendar view itself, same as the monthly view — no need for a FAB back to calendar. %>
 <% content_for(:hide_calendar_fab) { "true" } %>
 <% content_for(:header_right) do %>
@@ -87,9 +88,8 @@
       </div>
     </div>
 
-    <%= link_to safe_back_path(user_root_path), class: "w-9 h-9 flex items-center justify-center shrink-0" do %>
-      <svg class="w-4 h-4 text-white" viewBox="0 0 25 25" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M12.4998 22.9168C18.2289 22.9168 22.9164 18.2293 22.9164 12.5001C22.9164 6.77094 18.2289 2.08344 12.4998 2.08344C6.7706 2.08344 2.0831 6.77094 2.0831 12.5001C2.0831 18.2293 6.7706 22.9168 12.4998 22.9168Z" />
+    <%= link_to information_path, class: "w-6 h-6 flex items-center justify-center rounded-full border shrink-0", style: "border-color:var(--phase-color);color:var(--phase-color)" do %>
+      <svg class="w-3.5 h-3.5" viewBox="0 0 25 25" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
         <path d="M12.4998 8.33344V13.5418" stroke-width="1.7" />
         <path d="M12.4957 16.6667H12.5051" stroke-width="2" />
       </svg>
