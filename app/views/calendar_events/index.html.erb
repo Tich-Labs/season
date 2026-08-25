@@ -36,7 +36,8 @@
                       <% icon_map = { 'Friends'=>'family.svg','Dinner'=>'dinner.svg','Date'=>'date.svg','Sport'=>'sport.svg','Medical'=>'medical.svg','Birthday'=>'birthday.svg','Work'=>'work.svg','Coffee'=>'coffee.svg','Shopping'=>'shopping.svg' } %>
                       <% if icon_map[event.category].present? %>
                         <div class="flex flex-col items-center gap-2 shrink-0">
-                          <%= image_tag "icons/appointment/#{icon_map[event.category]}", alt: event.category, class: "w-11 h-11" %>
+                          <% icon_path = asset_path("icons/appointment/#{icon_map[event.category]}") %>
+                          <div class="w-11 h-11 shrink-0" style="-webkit-mask:url(<%= icon_path %>) no-repeat center/contain;mask:url(<%= icon_path %>) no-repeat center/contain;background:var(--phase-color)"></div>
                           <div class="flex h-11 w-11 items-center justify-center text-brand-primary">
                             <svg width="20" height="20" viewBox="0 0 23 23" fill="none">
                               <path d="M10.538 1.917H8.621C3.83 1.917 1.913 3.834 1.913 8.625v5.75c0 4.792 1.917 6.709 6.708 6.709h5.75c4.792 0 6.709-1.917 6.709-6.709v-1.916" stroke="currentColor" stroke-width="2.02" stroke-linecap="round" stroke-linejoin="round" />
