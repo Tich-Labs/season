@@ -24,6 +24,7 @@
 
     <a href="<%= safe_back_path(calendar_path(date: @event.date)) %>"
        onclick="if (window.history.length > 1) { window.history.back(); return false; }"
+       data-turbo="false"
        class="inline-flex items-center py-2 mb-2 text-brand-primary text-sm font-medium no-underline">
       &lt; Back
     </a>

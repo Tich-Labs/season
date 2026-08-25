@@ -22,6 +22,7 @@
 
     <a href="<%= safe_back_path(calendar_path) %>"
        onclick="if (window.history.length > 1) { window.history.back(); return false; }"
+       data-turbo="false"
        class="inline-flex items-center py-2 mb-2 text-brand-primary text-sm font-medium no-underline">
       &lt; Back
     </a>
@@ -253,6 +254,7 @@
         <% else %>
           <%= link_to "Delete appointment", safe_back_path(calendar_path),
                 onclick: "if (window.history.length > 1) { window.history.back(); return false; }",
+                data: { turbo: false },
                 class: "block w-full text-center bg-transparent text-brand-primary rounded-lg text-22 font-medium font-sans cursor-pointer tracking-003 py-3.5 border-0 no-underline" %>
         <% end %>
       </div>
