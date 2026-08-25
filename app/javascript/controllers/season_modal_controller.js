@@ -1085,7 +1085,7 @@ export default class extends Controller {
 
   showSensitivePeriodAlert (message) {
     this.openAttention({
-      body: message || 'During your period, your body is often more sensitive. Procedures such as tattoos, piercings, or laser treatments may be more painful. Consider rescheduling if possible.',
+      body: message || 'During your period, your body is often more sensitive. Procedures such as tattoos, piercings, laser treatments, waxing, sugaring, microneedling, chemical peels, Botox, fillers, dental work, or minor surgeries may be more painful or cause more skin irritation.',
       cancelLabel: 'Set date',
       confirmLabel: 'Choose another date'
     })

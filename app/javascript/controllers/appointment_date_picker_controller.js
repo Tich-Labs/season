@@ -608,18 +608,18 @@ export default class extends Controller {
     return this.periodRangesValue.some(([start, end]) => dateStr >= start && dateStr <= end)
   }
 
-  // Math.round(m / 5) * 5 alone can produce 60 (e.g. :58 or :59 round up
-  // to 60, not a carry into the next hour) — an invalid minute value that
-  // then renders as e.g. "11:60 PM". Carries into the hour (wrapping
-  // 23 -> 0) instead of ever returning min: 60.
+  // Floors (not rounds) to the nearest 5-minute mark. The scroller only
+  // ever produces exact multiples of 5 in the first place, so the choice
+  // between floor/round never affects a value that actually came from it —
+  // this only matters for values that didn't, like the "All day" end-time
+  // sentinel (23:59). Math.round(59/5)*5 = 60, an invalid minute that
+  // rendered as "11:60 PM"; carrying that into the next hour instead
+  // "fixed" it into 00:00 — identical to a typical 00:00 start time, which
+  // reads as a zero-length appointment (worse than the display bug it
+  // replaced). Flooring keeps 23:59 at 23:55, still visibly a full day
+  // later than 00:00, and never needs an hour carry at all.
   #round5 (h24, m) {
-    let min = Math.round(m / 5) * 5
-    let hour = h24
-    if (min === 60) {
-      min = 0
-      hour = (hour + 1) % 24
-    }
-    return [hour, min]
+    return [h24, Math.floor(m / 5) * 5]
   }
 
   #fmt12h (h24, m) {
