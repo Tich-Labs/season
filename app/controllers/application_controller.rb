@@ -40,7 +40,7 @@ class ApplicationController < ActionController::Base
     return fallback if path.blank?
     return fallback if allowed&.none?(path)
 
-    path
+    uri.query.present? ? "#{path}?#{uri.query}" : path
   rescue URI::InvalidURIError
     fallback
   end
