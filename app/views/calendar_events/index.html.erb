@@ -36,7 +36,7 @@
                       <% icon_map = { 'Friends'=>'family.svg','Dinner'=>'dinner.svg','Date'=>'date.svg','Sport'=>'sport.svg','Medical'=>'medical.svg','Birthday'=>'birthday.svg','Work'=>'work.svg','Coffee'=>'coffee.svg','Shopping'=>'shopping.svg' } %>
                       <% if icon_map[event.category].present? %>
                         <div class="flex flex-col items-center gap-2 shrink-0">
-                          <div class="flex h-11 w-11 items-center justify-center rounded-full bg-brand-primary/10">
+                          <div class="flex h-11 w-11 items-center justify-center rounded-full" style="background:rgba(147,58,53,0.1)">
                             <%= image_tag "icons/appointment/#{icon_map[event.category]}", alt: event.category, class: "w-8 h-8", style: "filter:brightness(0) saturate(100%) invert(28%) sepia(84%) saturate(1607%) hue-rotate(342deg) brightness(63%) contrast(94%);" %>
                           </div>
                           <div class="flex h-11 w-11 items-center justify-center">
