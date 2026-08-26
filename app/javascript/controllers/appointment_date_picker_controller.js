@@ -623,9 +623,7 @@ export default class extends Controller {
   }
 
   #fmt12h (h24, m) {
-    const ampm = h24 >= 12 ? 'PM' : 'AM'
-    const h12 = h24 % 12 || 12
-    return `${h12}:${String(m).padStart(2, '0')} ${ampm}`
+    return `${String(h24).padStart(2, '0')}:${String(m).padStart(2, '0')}`
   }
 
   #dateStr () {
