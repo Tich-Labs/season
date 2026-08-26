@@ -428,8 +428,8 @@ export default class extends Controller {
     if (this._editingSlot === 1) {
       dividerBefore.style.display = ''
       picker.style.top = '205px'
-      slot2.style.top = '325px'
-      divider.style.top = '306px'
+      slot2.style.top = '345px'
+      divider.style.top = '326px'
     } else {
       // No divider between the From and To rows when To is the one being
       // edited — the scroller inserts after To instead, with nothing
@@ -437,11 +437,11 @@ export default class extends Controller {
       dividerBefore.style.display = 'none'
       picker.style.top = '255px'
       slot2.style.top = '176px'
-      divider.style.top = '356px'
+      divider.style.top = '376px'
     }
-    allday.style.top = '375px'
-    button.style.top = '440px'
-    card.style.height = '539px'
+    allday.style.top = '395px'
+    button.style.top = '460px'
+    card.style.height = '559px'
   }
 
   #highlightScrollers () {

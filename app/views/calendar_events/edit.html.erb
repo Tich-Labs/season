@@ -326,39 +326,39 @@
                since the scroller then inserts after To instead, with
                nothing separating From/To above it. %>
           <hr data-stage2-divider-before class="absolute left-[110px] top-[170px] w-[132px] border-none h-px bg-black opacity-20">
-          <div data-picker="date" class="absolute left-[38px] top-[205px] w-[256px] h-[60px] flex items-center justify-center gap-1.5">
-            <div class="absolute inset-0 my-3 bg-brand-field rounded-lg"></div>
+          <div data-picker="date" class="absolute left-[38px] top-[205px] w-[256px] h-[80px] flex items-center justify-center gap-1.5">
+            <div class="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-7 bg-brand-field rounded-lg pointer-events-none"></div>
             <div data-appointment-date-picker-target="monthScroll" data-action="scroll->appointment-date-picker#onMonthScroll" class="overflow-y-auto snap-y snap-mandatory h-full w-12 [scrollbar-width:none] relative z-[1]">
-              <% (1..12).each do |m| %><div data-value="<%= m %>" class="h-5 flex items-center justify-center text-base tracking-007 text-brand-primary"><%= format('%02d', m) %></div><% end %>
+              <% (1..12).each do |m| %><div data-value="<%= m %>" class="h-7 flex items-center justify-center text-base tracking-007 text-brand-primary"><%= format('%02d', m) %></div><% end %>
             </div>
             <span class="text-base text-brand-primary relative z-[1]">/</span>
             <div data-appointment-date-picker-target="dayScroll" data-action="scroll->appointment-date-picker#onDayScroll" class="overflow-y-auto snap-y snap-mandatory h-full w-12 [scrollbar-width:none] relative z-[1]">
-              <% (1..31).each do |d| %><div data-value="<%= d %>" class="h-5 flex items-center justify-center text-base tracking-007 text-brand-primary"><%= format('%02d', d) %></div><% end %>
+              <% (1..31).each do |d| %><div data-value="<%= d %>" class="h-7 flex items-center justify-center text-base tracking-007 text-brand-primary"><%= format('%02d', d) %></div><% end %>
             </div>
             <span class="text-base text-brand-primary relative z-[1]">/</span>
             <div data-appointment-date-picker-target="yearScroll" data-action="scroll->appointment-date-picker#onYearScroll" class="overflow-y-auto snap-y snap-mandatory h-full w-16 [scrollbar-width:none] relative z-[1]">
-              <% ((Time.zone.today.year - 5)..(Time.zone.today.year + 5)).each do |y| %><div data-value="<%= y %>" class="h-5 flex items-center justify-center text-base tracking-007 text-brand-primary"><%= y %></div><% end %>
+              <% ((Time.zone.today.year - 5)..(Time.zone.today.year + 5)).each do |y| %><div data-value="<%= y %>" class="h-7 flex items-center justify-center text-base tracking-007 text-brand-primary"><%= y %></div><% end %>
             </div>
           </div>
-          <div data-picker="time" class="hidden items-center justify-center gap-1 absolute left-[38px] top-[205px] w-[256px] h-[60px]">
-            <div class="absolute inset-0 my-3 bg-brand-field rounded-lg"></div>
+          <div data-picker="time" class="hidden items-center justify-center gap-1 absolute left-[38px] top-[205px] w-[256px] h-[80px]">
+            <div class="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-7 bg-brand-field rounded-lg pointer-events-none"></div>
             <div data-appointment-date-picker-target="hourScroll" data-action="scroll->appointment-date-picker#onHourScroll" class="overflow-y-auto snap-y snap-mandatory h-full w-[50px] [scrollbar-width:none] relative z-[1]">
-              <% (0..23).each do |h| %><div data-value="<%= h %>" class="h-5 flex items-center justify-center text-base tracking-007 text-brand-primary"><%= format('%02d', h) %></div><% end %>
+              <% (0..23).each do |h| %><div data-value="<%= h %>" class="h-7 flex items-center justify-center text-base tracking-007 text-brand-primary"><%= format('%02d', h) %></div><% end %>
             </div>
             <span class="font-bold text-base text-brand-primary relative z-[1]">:</span>
             <div data-appointment-date-picker-target="minuteScroll" data-action="scroll->appointment-date-picker#onMinuteScroll" class="overflow-y-auto snap-y snap-mandatory h-full w-14 [scrollbar-width:none] relative z-[1]">
-              <% [0,5,10,15,20,25,30,35,40,45,50,55].each do |m| %><div data-value="<%= m %>" class="h-5 flex items-center justify-center text-base tracking-007 text-brand-primary"><%= format('%02d', m) %></div><% end %>
+              <% [0,5,10,15,20,25,30,35,40,45,50,55].each do |m| %><div data-value="<%= m %>" class="h-7 flex items-center justify-center text-base tracking-007 text-brand-primary"><%= format('%02d', m) %></div><% end %>
             </div>
           </div>
-          <hr data-stage2-divider class="absolute left-[110px] top-[306px] w-[132px] border-none h-px bg-black opacity-20">
-          <div data-stage2-slot2 class="absolute left-[38px] right-[38px] top-[320px] h-[30px] flex items-center justify-between">
+          <hr data-stage2-divider class="absolute left-[110px] top-[326px] w-[132px] border-none h-px bg-black opacity-20">
+          <div data-stage2-slot2 class="absolute left-[38px] right-[38px] top-[340px] h-[30px] flex items-center justify-between">
             <span class="flex items-center gap-2">
               <span class="text-11 font-semibold tracking-[0.08em] text-brand-primary opacity-50 uppercase w-9 shrink-0">To</span>
               <span data-appointment-date-picker-target="slot2Label" class="font-medium text-base tracking-007 text-brand-primary"></span>
             </span>
             <span data-appointment-date-picker-target="slot2Time" class="font-medium text-base tracking-007 text-brand-primary"></span>
           </div>
-          <div data-stage2-allday class="absolute left-[38px] right-[38px] top-[375px] flex items-center justify-between">
+          <div data-stage2-allday class="absolute left-[38px] right-[38px] top-[395px] flex items-center justify-between">
             <span class="font-medium text-base tracking-007 text-brand-primary">All day</span>
             <button type="button" data-action="click->appointment-date-picker#toggleAllDay" data-appointment-date-picker-target="allDayToggle" class="w-[63px] h-[34px] rounded-[17px] bg-brand-lightgray border-none cursor-pointer relative p-0">
               <span class="absolute left-[3px] top-[2px] w-[30px] h-[30px] bg-white rounded-full shadow-[0_1px_4px_rgba(0,0,0,0.2)] transition-transform duration-200"></span>
@@ -366,7 +366,7 @@
           </div>
           <%# Figma's button always reads "Set date" — the "Done" wording
                here was invented, not in the design. %>
-          <button type="button" data-action="click->appointment-date-picker#confirmTime" data-stage2-button class="absolute left-[38px] top-[440px] w-[257px] h-12 bg-brand-primary rounded-lg border-none cursor-pointer font-medium text-22 leading-[27px] tracking-003 text-white text-center">Set date</button>
+          <button type="button" data-action="click->appointment-date-picker#confirmTime" data-stage2-button class="absolute left-[38px] top-[460px] w-[257px] h-12 bg-brand-primary rounded-lg border-none cursor-pointer font-medium text-22 leading-[27px] tracking-003 text-white text-center">Set date</button>
         </div>
       </div>
     </div>
