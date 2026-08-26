@@ -1,6 +1,7 @@
 import { Controller } from '@hotwired/stimulus'
 
 export default class extends Controller {
+  static targets = ['element']
   static values = {
     delay: { type: Number, default: 50 }
   }
@@ -14,7 +15,10 @@ export default class extends Controller {
   }
 
   dismiss () {
-    this.element.style.display = 'none'
+    const el = this.hasElementTarget ? this.elementTarget : this.element
+    el.style.transition = 'opacity 500ms ease-out'
+    el.style.opacity = '0'
+    setTimeout(() => { el.style.display = 'none' }, 500)
     if (this.timer) clearTimeout(this.timer)
   }
 }

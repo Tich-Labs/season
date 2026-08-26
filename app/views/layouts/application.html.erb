@@ -43,9 +43,11 @@
   <% render_quick_actions = is_authenticated_view && !content_for?(:hide_quick_actions) && !controller_name.in?(%w[information]) %>
 
   <% app_lock_enabled = authenticated? && current_user.pin_set? %>
+  <% phase_hex = @current_phase ? (CycleCalculatorService::PHASE_META.dig(@current_phase, :colour) || "#933a35") : "#933a35" %>
   <body class="bg-brand-background font-sans antialiased h-full overflow-x-hidden"
         data-controller="update-prompt install haptic<%= ' app-lock' if app_lock_enabled %>"
-        <%= "data-app-lock-timeout-value=\"#{PinProtection::PIN_TIMEOUT.to_i * 1000}\"".html_safe if app_lock_enabled %>>
+        <%= "data-app-lock-timeout-value=\"#{PinProtection::PIN_TIMEOUT.to_i * 1000}\"".html_safe if app_lock_enabled %>
+        style="--phase-color:<%= phase_hex %>">
 
     <% if is_authenticated_view %>
     <div data-controller="menu">

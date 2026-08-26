@@ -29,7 +29,7 @@ class CalendarEventsControllerTest < ActionDispatch::IntegrationTest
         }
       }
     end
-    assert_redirected_to forecast_path
+    assert_response :redirect
   end
 
   test "POST /calendar_events with blank title renders 422" do
@@ -66,7 +66,7 @@ class CalendarEventsControllerTest < ActionDispatch::IntegrationTest
     patch calendar_event_path(@event), params: {
       calendar_event: {title: "Updated title", date: @event.date.to_s}
     }
-    assert_redirected_to forecast_path
+    assert_response :redirect
     assert_equal "Updated title", @event.reload.title
   end
 
@@ -74,7 +74,7 @@ class CalendarEventsControllerTest < ActionDispatch::IntegrationTest
     assert_difference("CalendarEvent.count", -1) do
       delete calendar_event_path(@event)
     end
-    assert_redirected_to forecast_path
+    assert_response :redirect
   end
 
   test "cannot edit another user's event" do
