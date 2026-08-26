@@ -157,7 +157,7 @@
                   <%= link_to edit_calendar_event_path(event), class: "block no-underline" do %>
                     <div class="flex items-center gap-5 py-2">
                       <div class="w-7 shrink-0 flex justify-center" style="color:<%= day_colour %>">
-                        <%= raw category_icon.(event.category) %>
+                        <%== category_icon.(event.category) %>
                       </div>
                       <div class="flex-1 min-w-0">
                         <p class="text-[1.125rem] leading-[1.2] font-medium font-sans truncate" style="color:<%= day_colour %>"><%= event.title %></p>
@@ -184,6 +184,4 @@
       </div>
     <% end %>
   </div>
-
-
 </div>

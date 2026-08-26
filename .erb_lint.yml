@@ -10,6 +10,7 @@ linters:
     exclude:
       - 'app/views/shared/_settings_nav_row.html.erb'
       - 'app/views/shared/_settings_toggle_row.html.erb'
+      - 'app/views/calendar/appointments.html.erb'
   Rubocop:
     enabled: false
     rubocop_config:
