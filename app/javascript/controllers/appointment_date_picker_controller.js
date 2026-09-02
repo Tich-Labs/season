@@ -75,7 +75,7 @@ export default class extends Controller {
     this.modalTarget.style.justifyContent = 'center'
     this.modalTarget.style.position = 'fixed'
     this.modalTarget.style.inset = '0'
-    this.modalTarget.style.zIndex = '50'
+    this.modalTarget.style.zIndex = '70'
   }
 
   close () {
@@ -106,7 +106,6 @@ export default class extends Controller {
   }
 
   #activateProtoPicker () {
-    this.#updateAllSlotLabels()
     this.#setBoldForEditingSlot()
     this.#hideAllInline()
     const isDate = this._mode === 'date'
@@ -273,12 +272,22 @@ export default class extends Controller {
   #setSlotTime24 (slot, time24) { this.slot1BtnTargets.forEach(el => { el.dataset.time24 = this.#getSlotTime24(1) }); this.slot2BtnTargets.forEach(el => { el.dataset.time24 = this.#getSlotTime24(2) }) }
   #updateSlotTimeDisplay (slot, label) { if (slot === 1) this.slot1TimeTargets.forEach(el => { el.textContent = label }); else this.slot2TimeTargets.forEach(el => { el.textContent = label }) }
   #getSlot2Date () { if (this._pickDay2 !== null) return new Date(this._pickYear2, this._pickMonth2 - 1, this._pickDay2); const d = new Date(this._pickYear, this._pickMonth - 1, this._pickDay); d.setDate(d.getDate() + 1); return d }
-  onDayScroll () { if (this._dRaf) return; this._dRaf = requestAnimationFrame(() => { this._dRaf = null; const it = this.#closestItem(this.dayScrollTarget); if (it) { if (this._editingSlot === 2 && this._mode === 'date') this._pickDay2 = parseInt(it.dataset.value); else this._pickDay = parseInt(it.dataset.value) } this.#highlightScrollers(); this.#updateAllSlotLabels() }) }
-  onMonthScroll () { if (this._moRaf) return; this._moRaf = requestAnimationFrame(() => { this._moRaf = null; const it = this.#closestItem(this.monthScrollTarget); if (it) { if (this._editingSlot === 2 && this._mode === 'date') this._pickMonth2 = parseInt(it.dataset.value); else this._pickMonth = parseInt(it.dataset.value) } this.#highlightScrollers(); this.#updateAllSlotLabels() }) }
-  onYearScroll () { if (this._yRaf) return; this._yRaf = requestAnimationFrame(() => { this._yRaf = null; const it = this.#closestItem(this.yearScrollTarget); if (it) { if (this._editingSlot === 2 && this._mode === 'date') this._pickYear2 = parseInt(it.dataset.value); else this._pickYear = parseInt(it.dataset.value) } this.#highlightScrollers(); this.#updateAllSlotLabels() }) }
+  onDayScroll () { if (this._dRaf) return; this._dRaf = requestAnimationFrame(() => { this._dRaf = null; const it = this.#closestItem(this.dayScrollTarget); if (it) { if (this._editingSlot === 2 && this._mode === 'date') this._pickDay2 = parseInt(it.dataset.value); else this._pickDay = parseInt(it.dataset.value) } this.#highlightScrollers(); this.#updateActiveSlotLabel() }) }
+  onMonthScroll () { if (this._moRaf) return; this._moRaf = requestAnimationFrame(() => { this._moRaf = null; const it = this.#closestItem(this.monthScrollTarget); if (it) { if (this._editingSlot === 2 && this._mode === 'date') this._pickMonth2 = parseInt(it.dataset.value); else this._pickMonth = parseInt(it.dataset.value) } this.#highlightScrollers(); this.#updateActiveSlotLabel() }) }
+  onYearScroll () { if (this._yRaf) return; this._yRaf = requestAnimationFrame(() => { this._yRaf = null; const it = this.#closestItem(this.yearScrollTarget); if (it) { if (this._editingSlot === 2 && this._mode === 'date') this._pickYear2 = parseInt(it.dataset.value); else this._pickYear = parseInt(it.dataset.value) } this.#highlightScrollers(); this.#updateActiveSlotLabel() }) }
+  #updateActiveSlotLabel () {
+    const fmt = (d) => `${SHORT[d.getDay()]} ${String(d.getDate()).padStart(2, '0')}.${String(d.getMonth() + 1).padStart(2, '0')}.${d.getFullYear()}`
+    if (this._editingSlot === 1) {
+      const d1 = new Date(this._pickYear, this._pickMonth - 1, this._pickDay)
+      this.slot1LabelTargets.forEach(el => { el.textContent = fmt(d1) })
+    } else {
+      const d2 = this.#getSlot2Date()
+      this.slot2LabelTargets.forEach(el => { el.textContent = fmt(d2) })
+    }
+  }
+
   #updateAllSlotLabels () {
     const d1 = new Date(this._pickYear, this._pickMonth - 1, this._pickDay); const d2 = this.#getSlot2Date()
-    if (this.hasStage2TitleTarget) this.stage2TitleTarget.textContent = this.dateTitleTarget.textContent
     const fmt = (d) => `${SHORT[d.getDay()]} ${String(d.getDate()).padStart(2, '0')}.${String(d.getMonth() + 1).padStart(2, '0')}.${d.getFullYear()}`
     this.slot1LabelTargets.forEach(el => { el.textContent = fmt(d1) }); this.slot2LabelTargets.forEach(el => { el.textContent = fmt(d2) })
   }

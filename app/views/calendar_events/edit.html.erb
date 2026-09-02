@@ -127,13 +127,7 @@
 
       </div>
 
-      <%# my-9, not the my-5 the other dividers on this page use — this gap
-           (date/time card to reminder row) measured ~96px in the Figma node,
-           noticeably more than the ~53px row-to-row spacing elsewhere on
-           this screen; my-5 landed at 61px measured live, my-9 lands at 93,
-           close enough given inherent slop in mapping Figma's icon-box
-           coordinates back to CSS gaps. %>
-      <hr class="border-brand-primary/50 my-9 mx-5">
+      <hr class="border-brand-primary/50 my-5 mx-5">
 
       <%# Reminder row %>
       <% rem = @event.reminder_minutes || 15 %>
@@ -264,7 +258,7 @@
     <% end %>
 
     <%# ── Set Date modal — PROTOTYPE inline morph (tap text → drum) ── %>
-    <div data-appointment-date-picker-target="backdrop" class="hidden fixed inset-0 bg-black/40 z-50" data-action="click->appointment-date-picker#close"></div>
+    <div data-appointment-date-picker-target="backdrop" class="hidden fixed inset-0 bg-black/40 z-[65]" data-action="click->appointment-date-picker#close"></div>
     <div data-appointment-date-picker-target="modal" role="dialog" aria-modal="true" class="hidden">
       <div data-appointment-date-picker-target="protoCard" class="w-[380px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] relative flex flex-col px-[38px] pt-[22px] pb-[22px] gap-0">
         <button type="button" data-action="click->appointment-date-picker#close" class="absolute right-[13px] top-[13px] w-[37px] h-[37px] bg-transparent border-none cursor-pointer p-0">
@@ -300,12 +294,12 @@
         <div class="hidden">
           <div data-appointment-date-picker-target="protoDatePicker" data-picker="date" class="w-full h-[80px] flex items-center justify-center gap-1.5 relative">
             <div class="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-7 bg-brand-field rounded-lg pointer-events-none"></div>
-            <div data-appointment-date-picker-target="monthScroll" data-action="scroll->appointment-date-picker#onMonthScroll" class="overflow-y-auto snap-y snap-mandatory h-full w-12 [scrollbar-width:none] relative z-[1]">
-              <% (1..12).each do |m| %><div data-value="<%= m %>" class="h-7 flex items-center justify-center text-base tracking-007 text-brand-primary"><%= format('%02d', m) %></div><% end %>
-            </div>
-            <span class="text-base text-brand-primary relative z-[1]">/</span>
             <div data-appointment-date-picker-target="dayScroll" data-action="scroll->appointment-date-picker#onDayScroll" class="overflow-y-auto snap-y snap-mandatory h-full w-12 [scrollbar-width:none] relative z-[1]">
               <% (1..31).each do |d| %><div data-value="<%= d %>" class="h-7 flex items-center justify-center text-base tracking-007 text-brand-primary"><%= format('%02d', d) %></div><% end %>
+            </div>
+            <span class="text-base text-brand-primary relative z-[1]">/</span>
+            <div data-appointment-date-picker-target="monthScroll" data-action="scroll->appointment-date-picker#onMonthScroll" class="overflow-y-auto snap-y snap-mandatory h-full w-12 [scrollbar-width:none] relative z-[1]">
+              <% (1..12).each do |m| %><div data-value="<%= m %>" class="h-7 flex items-center justify-center text-base tracking-007 text-brand-primary"><%= format('%02d', m) %></div><% end %>
             </div>
             <span class="text-base text-brand-primary relative z-[1]">/</span>
             <div data-appointment-date-picker-target="yearScroll" data-action="scroll->appointment-date-picker#onYearScroll" class="overflow-y-auto snap-y snap-mandatory h-full w-16 [scrollbar-width:none] relative z-[1]">
@@ -335,10 +329,10 @@
     </div>
 
     <%# ── Category icon picker modal ── %>
-    <div data-season-modal-target="backdrop" class="hidden fixed inset-0 bg-black/40 z-50"></div>
+    <div data-season-modal-target="backdrop" class="hidden fixed inset-0 bg-black/40 z-[65]"></div>
     <div data-season-modal-target="modal" role="dialog" aria-modal="true" aria-labelledby="edit-choose-icon-title"
-         class="hidden fixed inset-0 z-50 flex items-center justify-center">
-      <div class="w-[310px] max-h-[92vh] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] p-6 relative flex flex-col">
+         class="hidden fixed inset-0 z-[70] flex items-center justify-center">
+      <div class="w-[310px] max-h-[92vh] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] px-6 py-8 relative flex flex-col">
         <%# Close button sits high in the card's own top-right corner, not
              centered against the title row — measured off the Figma node
              directly (close glyph center y=19.5, title top y=41; the two
@@ -352,7 +346,7 @@
           <h2 id="edit-choose-icon-title" class="text-22 font-medium text-brand-primary text-center font-sans leading-[45px]">Choose an icon</h2>
         </div>
         <hr class="border-brand-field mb-4">
-        <div class="flex-1 min-h-0 overflow-y-auto [scrollbar-width:none] py-2 flex flex-col gap-2.5">
+        <div class="flex-1 min-h-0 overflow-y-auto [scrollbar-width:none] py-4 flex flex-col gap-2.5">
           <% items = [
             { label: 'Friends', icon: 'family.svg' },
             { label: 'Dinner', icon: 'dinner.svg' },
@@ -403,9 +397,9 @@
     </div>
 
     <%# ── Location picker modal ── %>
-    <div data-season-modal-target="locationBackdrop" class="hidden fixed inset-0 bg-black/40 z-50"></div>
+    <div data-season-modal-target="locationBackdrop" class="hidden fixed inset-0 bg-black/40 z-[65]"></div>
     <div data-season-modal-target="locationModal" role="dialog" aria-modal="true" aria-label="Add location"
-         class="hidden fixed inset-0 z-50 flex items-center justify-center">
+         class="hidden fixed inset-0 z-[70] flex items-center justify-center">
       <div data-season-modal-target="locationCard"
            class="w-[347px] h-[301px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] relative transition-[height] duration-[250ms] ease-in-out overflow-hidden">
         <button type="button" data-action="click->season-modal#closeLocation"
@@ -433,9 +427,9 @@
     </div>
 
     <%# ── Notes modal ── %>
-    <div data-season-modal-target="notesBackdrop" class="hidden fixed inset-0 bg-black/40 z-50"></div>
+    <div data-season-modal-target="notesBackdrop" class="hidden fixed inset-0 bg-black/40 z-[65]"></div>
     <div data-season-modal-target="notesModal" role="dialog" aria-modal="true" aria-label="Add notes"
-         class="hidden fixed inset-0 z-50 flex items-center justify-center">
+         class="hidden fixed inset-0 z-[70] flex items-center justify-center">
       <div class="w-[385px] h-[477px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] relative">
         <button type="button" data-action="click->season-modal#closeNotes"
                 class="absolute left-[321px] top-[3px] w-[37px] h-[37px] bg-transparent border-none cursor-pointer p-0 z-[2]">
@@ -455,9 +449,9 @@
     </div>
 
     <%# ── Reminder picker modal ── %>
-    <div data-season-modal-target="reminderBackdrop" class="hidden fixed inset-0 bg-black/40 z-50"></div>
+    <div data-season-modal-target="reminderBackdrop" class="hidden fixed inset-0 bg-black/40 z-[65]"></div>
     <div data-season-modal-target="reminderModal" role="dialog" aria-modal="true" aria-label="Set reminder"
-         class="hidden fixed inset-0 z-50 flex items-center justify-center">
+         class="hidden fixed inset-0 z-[70] flex items-center justify-center">
       <div class="w-[355px] h-[524px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] relative">
         <button type="button" data-action="click->season-modal#closeReminder"
                 class="absolute left-[289px] top-[13px] w-[37px] h-[37px] bg-transparent border-none cursor-pointer p-0 z-[2]">
@@ -499,9 +493,9 @@
     </div>
 
     <%# ── Custom reminder picker modal ── %>
-    <div data-season-modal-target="customReminderBackdrop" class="hidden fixed inset-0 bg-black/40 z-50" data-action="click->season-modal#closeCustomReminder"></div>
+    <div data-season-modal-target="customReminderBackdrop" class="hidden fixed inset-0 bg-black/40 z-[65]" data-action="click->season-modal#closeCustomReminder"></div>
     <div data-season-modal-target="customReminderModal" role="dialog" aria-modal="true" aria-label="Set reminder"
-         class="hidden fixed inset-0 z-50 flex items-center justify-center">
+         class="hidden fixed inset-0 z-[70] flex items-center justify-center">
       <div class="w-[355px] h-[380px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] relative">
         <button type="button" data-action="click->season-modal#closeCustomReminder"
                 class="absolute left-[289px] top-[13px] w-[37px] h-[37px] bg-transparent border-none cursor-pointer p-0 z-[2]">
@@ -536,9 +530,9 @@
     </div>
 
     <%# ── Guests modal ── %>
-    <div data-season-modal-target="guestsBackdrop" class="hidden fixed inset-0 bg-black/40 z-50"></div>
+    <div data-season-modal-target="guestsBackdrop" class="hidden fixed inset-0 bg-black/40 z-[65]"></div>
     <div data-season-modal-target="guestsModal" role="dialog" aria-modal="true" aria-label="Invite guests"
-         class="hidden fixed inset-0 z-50 flex items-center justify-center">
+         class="hidden fixed inset-0 z-[70] flex items-center justify-center">
       <div data-season-modal-target="guestsCard"
            class="w-[348px] h-[331px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] relative transition-[height] duration-[250ms] ease-in-out overflow-hidden">
         <button type="button" data-action="click->season-modal#closeGuests"
@@ -567,9 +561,9 @@
     </div>
 
     <%# ── Repeat modal ── %>
-    <div data-season-modal-target="repeatBackdrop" class="hidden fixed inset-0 bg-black/40 z-50"></div>
+    <div data-season-modal-target="repeatBackdrop" class="hidden fixed inset-0 bg-black/40 z-[65]"></div>
     <div data-season-modal-target="repeatModal" role="dialog" aria-modal="true" aria-label="Repeat"
-         class="hidden fixed inset-0 z-50 flex items-center justify-center">
+         class="hidden fixed inset-0 z-[70] flex items-center justify-center">
       <div class="w-[361px] h-[776px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] relative overflow-y-auto [scrollbar-width:none]">
         <button type="button" data-action="click->season-modal#closeRepeat"
                 class="absolute left-[304px] top-[13px] w-[37px] h-[37px] bg-transparent border-none cursor-pointer p-0 z-[2]">
@@ -612,9 +606,9 @@
     </div>
 
     <%# ── Custom repeat modal ── %>
-    <div data-season-modal-target="customRepeatBackdrop" class="hidden fixed inset-0 bg-black/40 z-50"></div>
+    <div data-season-modal-target="customRepeatBackdrop" class="hidden fixed inset-0 bg-black/40 z-[65]"></div>
     <div data-season-modal-target="customRepeatModal" role="dialog" aria-modal="true" aria-label="Custom repeat"
-         class="hidden fixed inset-0 z-50 flex items-center justify-center">
+         class="hidden fixed inset-0 z-[70] flex items-center justify-center">
       <div class="w-[361px] h-[451px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] relative overflow-y-auto [scrollbar-width:none]">
         <button type="button" data-action="click->season-modal#closeCustomRepeat"
                 class="absolute left-[304px] top-[13px] w-[37px] h-[37px] bg-transparent border-none cursor-pointer p-0 z-[2]">
@@ -637,9 +631,9 @@
     </div>
 
     <%# ── Repeat until date modal ── %>
-    <div data-season-modal-target="repeatUntilBackdrop" class="hidden fixed inset-0 bg-black/40 z-50" data-action="click->season-modal#closeRepeatUntil"></div>
+    <div data-season-modal-target="repeatUntilBackdrop" class="hidden fixed inset-0 bg-black/40 z-[65]" data-action="click->season-modal#closeRepeatUntil"></div>
     <div data-season-modal-target="repeatUntilModal" role="dialog" aria-modal="true" aria-label="Repeat until"
-         class="hidden fixed inset-0 z-50 flex items-center justify-center">
+         class="hidden fixed inset-0 z-[70] flex items-center justify-center">
       <div class="w-[361px] h-[438px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] relative">
         <button type="button" data-action="click->season-modal#closeRepeatUntil"
                 class="absolute left-[304px] top-[13px] w-[37px] h-[37px] bg-transparent border-none cursor-pointer p-0 z-[2]">
