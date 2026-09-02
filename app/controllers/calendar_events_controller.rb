@@ -1,6 +1,6 @@
 class CalendarEventsController < ApplicationController
   before_action :set_event, only: [:show, :edit, :update, :destroy]
-  after_action :verify_authorized, only: [:show, :edit, :update, :destroy]
+  after_action :verify_authorized, only: [:show, :edit, :update, :destroy, :create]
 
   def index
     redirect_to forecast_path
@@ -13,6 +13,7 @@ class CalendarEventsController < ApplicationController
     @event = current_user.calendar_events.build(
       date: params[:date] || Time.zone.today
     )
+    authorize @event
     @period_ranges = period_ranges_json
     session[:appointment_return_to] = request.referer if request.referer.present?
   end
@@ -24,6 +25,7 @@ class CalendarEventsController < ApplicationController
 
   def create
     @event = current_user.calendar_events.build(event_params)
+    authorize @event
     if @event.save
       redirect_to session.delete(:appointment_return_to) || calendar_path(date: @event.date, appointment_scheduled: "1"), notice: t(".created")
     else

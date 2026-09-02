@@ -110,7 +110,7 @@ Rails.application.routes.draw do
   resources :onboarding, only: [:show, :update]
 
   get "calendar", to: "calendar#index", as: :user_root
-  get "calendar", to: "calendar#index", as: :calendar
+  get "calendar", to: "calendar#index", as: :calendar unless Rails.application.routes.routes.any? { |r| r.name == "calendar" }
   get "calendar/weekly", to: "calendar#weekly", as: :calendar_weekly
   get "calendar/appointments", to: "calendar#appointments", as: :calendar_appointments
   resources :calendar_events
@@ -120,7 +120,6 @@ Rails.application.routes.draw do
       patch :period, action: :period_update
     end
   end
-  get "tracking/period", to: "tracking#period", as: :period_tracking_path
   get "daily/:date", to: "daily_view#show", as: :daily_view
   resources :streaks, only: [:index]
   get "symptoms/discharge", to: "symptoms#discharge", as: :symptom_discharge

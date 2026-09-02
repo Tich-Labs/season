@@ -45,9 +45,13 @@ class OnboardingController < ApplicationController
     case @step
     when 1
       # Name
-      name = params.dig(:user, :name)
+      name = begin
+        params.expect(user: [:name])[:name]
+      rescue ActionController::ParameterMissing
+        params.dig(:user, :name)
+      end
       if name.blank?
-        @error = "Please enter your name"
+        @error = t(".name_required", default: "Please enter your name")
         render :show, status: :unprocessable_content
         return
       end
@@ -64,7 +68,7 @@ class OnboardingController < ApplicationController
         raise ArgumentError if birthday > Time.zone.today || year < 1946
         current_user.update!(birthday: birthday)
       rescue ArgumentError, TypeError
-        @error = "Please enter a valid date of birth"
+        @error = t(".invalid_birthday", default: "Please enter a valid date of birth")
         render :show, status: :unprocessable_content
         return
       end

@@ -49,6 +49,8 @@ class RegistrationsController < ApplicationController
   private
 
   def user_params
+    params.expect(user: [:email, :password, :password_confirmation, :name])
+  rescue ActionController::ParameterMissing
     params.permit(:email, :password, :password_confirmation, :name)
   end
 end

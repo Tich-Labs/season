@@ -38,9 +38,6 @@ export default class extends Controller {
   _pickMin2 = 0
   _editingSlot = 1
   // legacy stage targets (kept for fallback if prototype false)
-  _legacyStage1 = null
-  _legacyStage2 = null
-
   connect () {
     this.#updateDateDisplay()
     this.#updateTimeDisplays()
@@ -48,9 +45,6 @@ export default class extends Controller {
       this.#updateDateDisplay()
       this.#updateTimeDisplays()
     })
-    // if legacy DOM still present, keep refs
-    this._legacyStage1 = this.element.querySelector('[data-appointment-date-picker-target="stage1"]')
-    this._legacyStage2 = this.element.querySelector('[data-appointment-date-picker-target="stage2"]')
   }
 
   open () {
@@ -63,11 +57,7 @@ export default class extends Controller {
     this.#setDateFromField()
     this.#syncTimesFromField()
     this.#buildSlots()
-    if (this.prototypeValue) {
-      this.#showProto()
-    } else {
-      this.#showStage1()
-    }
+    this.#showProto()
     this.backdropTarget.classList.remove('hidden')
     this.backdropTarget.style.display = 'block'
     this.modalTarget.classList.remove('hidden')
@@ -173,30 +163,14 @@ export default class extends Controller {
   }
 
   // called from proto row taps
-  editDate1 () {
-    this._editingSlot = 1; this._mode = 'date'
-    if (this.prototypeValue) { this.#activateProtoPicker(); return }
-    this.#openStage2()
-  }
-
+  editDate1 () { this._editingSlot = 1; this._mode = 'date'; this.#activateProtoPicker() }
   editDate2 () {
     this._editingSlot = 2; this._mode = 'date'
     if (this._pickDay2 === null) { const d2 = this.#getSlot2Date(); this._pickDay2 = d2.getDate(); this._pickMonth2 = d2.getMonth() + 1; this._pickYear2 = d2.getFullYear() }
-    if (this.prototypeValue) { this.#activateProtoPicker(); return }
-    this.#openStage2()
+    this.#activateProtoPicker()
   }
-
-  editTime1 () {
-    this._editingSlot = 1; this._mode = 'time'
-    if (this.prototypeValue) { this.#activateProtoPicker(); return }
-    this.#openStage2()
-  }
-
-  editTime2 () {
-    this._editingSlot = 2; this._mode = 'time'
-    if (this.prototypeValue) { this.#activateProtoPicker(); return }
-    this.#openStage2()
-  }
+  editTime1 () { this._editingSlot = 1; this._mode = 'time'; this.#activateProtoPicker() }
+  editTime2 () { this._editingSlot = 2; this._mode = 'time'; this.#activateProtoPicker() }
 
   #openStage2 () {
     const time24 = this.#getSlotTime24(this._editingSlot)
@@ -211,7 +185,6 @@ export default class extends Controller {
       d = dateStr ? new Date(dateStr + 'T00:00:00') : new Date(this._pickYear, this._pickMonth - 1, this._pickDay)
       this._pickYear = d.getFullYear(); this._pickMonth = d.getMonth() + 1; this._pickDay = d.getDate()
     }
-    if (this.hasStage2TitleTarget) this.stage2TitleTarget.textContent = this.dateTitleTarget.textContent
     this.#updateAllSlotLabels(); this.#setBoldForEditingSlot()
     requestAnimationFrame(() => {
       if (this._mode === 'date') {
@@ -222,16 +195,15 @@ export default class extends Controller {
       } else { this.#scrollTo(this.hourScrollTarget, this.#getPickHour()); this.#scrollTo(this.minuteScrollTarget, this.#getPickMin()) }
       this.#highlightScrollers()
     })
-    this.#showStage2()
+    this.#activateProtoPicker()
   }
 
   confirmTime () {
-    const time12 = this._allDay ? 'All day' : this.#fmt12h(this.#getPickHour(), this.#getPickMin())
-    const time24 = `${String(this.#getPickHour()).padStart(2, '0')}:${String(this.#getPickMin()).padStart(2, '0')}`
+    const time12 = this._allDay ? 'All day' : this.#fmtTime24(this.#getPickHour(), this.#getPickMin())
+    const time24 = this.#fmtTime24(this.#getPickHour(), this.#getPickMin())
     this.#setSlotTime24(this._editingSlot, time24)
     this.#updateSlotTimeDisplay(this._editingSlot, time12)
-    if (this.prototypeValue) { this.#activateProtoPicker(); return }
-    this.#showStage1()
+    this.#activateProtoPicker()
   }
 
   confirm () {
@@ -276,8 +248,12 @@ export default class extends Controller {
   #getPickMin () { return this._editingSlot === 1 ? this._pickMin1 : this._pickMin2 }
   #setPickHour (v) { if (this._editingSlot === 1) this._pickHour1 = v; else this._pickHour2 = v }
   #setPickMin (v) { if (this._editingSlot === 1) this._pickMin1 = v; else this._pickMin2 = v }
-  #getSlotTime24 (s) { return s === 1 ? `${String(this._pickHour1).padStart(2, '0')}:${String(this._pickMin1).padStart(2, '0')}` : `${String(this._pickHour2).padStart(2, '0')}:${String(this._pickMin2).padStart(2, '0')}` }
-  #setSlotTime24 (slot, time24) { this.slot1BtnTargets.forEach(el => { el.dataset.time24 = this.#getSlotTime24(1) }); this.slot2BtnTargets.forEach(el => { el.dataset.time24 = this.#getSlotTime24(2) }) }
+  #getSlotTime24 (s) { return s === 1 ? this.#fmtTime24(this._pickHour1, this._pickMin1) : this.#fmtTime24(this._pickHour2, this._pickMin2) }
+  #setSlotTime24 (slot, time24) {
+    const v = time24 || this.#getSlotTime24(slot)
+    if (slot === 1) this.slot1BtnTargets.forEach(el => { el.dataset.time24 = v })
+    else this.slot2BtnTargets.forEach(el => { el.dataset.time24 = v })
+  }
   #updateSlotTimeDisplay (slot, label) { if (slot === 1) this.slot1TimeTargets.forEach(el => { el.textContent = label }); else this.slot2TimeTargets.forEach(el => { el.textContent = label }) }
   #getSlot2Date () { if (this._pickDay2 !== null) return new Date(this._pickYear2, this._pickMonth2 - 1, this._pickDay2); const d = new Date(this._pickYear, this._pickMonth - 1, this._pickDay); d.setDate(d.getDate() + 1); return d }
   onDayScroll () { if (this._dRaf) return; this._dRaf = requestAnimationFrame(() => { this._dRaf = null; const it = this.#closestItem(this.dayScrollTarget); if (it) { if (this._editingSlot === 2 && this._mode === 'date') this._pickDay2 = parseInt(it.dataset.value); else this._pickDay = parseInt(it.dataset.value) } this.#highlightScrollers(); this.#updateActiveSlotLabel() }) }
@@ -307,17 +283,7 @@ export default class extends Controller {
     this.slot2TimeTargets.forEach(el => { el.style.fontWeight = (this._editingSlot === 2 && this._mode === 'time') ? '700' : '500' })
   }
 
-  #showStage1 () { if (!this._legacyStage1 || !this._legacyStage2) return; this._legacyStage1.classList.remove('hidden'); this._legacyStage2.classList.add('hidden'); this.modalTarget.querySelector('div').style.height = '406px'; this.#resetBold(); this.#buildSlots() }
   #resetBold () { this.slot1LabelTargets.forEach(el => { el.style.fontWeight = '500' }); this.slot2LabelTargets.forEach(el => { el.style.fontWeight = '500' }); this.slot1TimeTargets.forEach(el => { el.style.fontWeight = '500' }); this.slot2TimeTargets.forEach(el => { el.style.fontWeight = '500' }) }
-  #showStage2 () {
-    if (!this._legacyStage1 || !this._legacyStage2) return
-    this._legacyStage1.classList.add('hidden'); this._legacyStage2.classList.remove('hidden')
-    const datePicker = this._legacyStage2.querySelector('[data-picker="date"]'); const timePicker = this._legacyStage2.querySelector('[data-picker="time"]')
-    const picker = this._mode === 'date' ? datePicker : timePicker; const other = this._mode === 'date' ? timePicker : datePicker; picker.style.display = 'flex'; other.style.display = 'none'
-    const slot2 = this._legacyStage2.querySelector('[data-stage2-slot2]'); const dividerBefore = this._legacyStage2.querySelector('[data-stage2-divider-before]'); const divider = this._legacyStage2.querySelector('[data-stage2-divider]'); const allday = this._legacyStage2.querySelector('[data-stage2-allday]'); const button = this._legacyStage2.querySelector('[data-stage2-button]'); const card = this.modalTarget.querySelector('div')
-    if (this._editingSlot === 1) { dividerBefore.style.display = ''; picker.style.top = '205px'; slot2.style.top = '345px'; divider.style.top = '326px' } else { dividerBefore.style.display = 'none'; picker.style.top = '255px'; slot2.style.top = '176px'; divider.style.top = '376px' }
-    allday.style.top = '395px'; button.style.top = '460px'; card.style.height = '559px'
-  }
 
   #highlightScrollers () { if (this._mode === 'date') { const pd = this._editingSlot === 2 ? this._pickDay2 : this._pickDay; const pm = this._editingSlot === 2 ? this._pickMonth2 : this._pickMonth; const py = this._editingSlot === 2 ? this._pickYear2 : this._pickYear; this.#highlightTrack(this.dayScrollTarget, pd); this.#highlightTrack(this.monthScrollTarget, pm); this.#highlightTrack(this.yearScrollTarget, py) } else { this.#highlightTrack(this.hourScrollTarget, this.#getPickHour()); this.#highlightTrack(this.minuteScrollTarget, this.#getPickMin()) } }
   #scrollTo (track, val) { const items = track.querySelectorAll('[data-value]'); for (const it of items) { if (parseInt(it.dataset.value) === val) { track.scrollTop = it.offsetTop - track.clientHeight / 2 + it.clientHeight / 2; break } } }
@@ -338,7 +304,8 @@ export default class extends Controller {
   #updateTimeDisplays () { if (this.hasStartTimeDisplayTarget) { const [sh, sm] = (this.startFieldTarget.value || '19:00').split(':').map(Number); this.startTimeDisplayTarget.textContent = this.#fmt12h(...this.#round5(sh, sm)) } if (this.hasEndTimeDisplayTarget) { const [eh, em] = (this.endFieldTarget.value || '20:00').split(':').map(Number); this.endTimeDisplayTarget.textContent = this.#fmt12h(...this.#round5(eh, em)) } }
   #isOnPeriod (ds) { return this.periodRangesValue.some(([s, e]) => ds >= s && ds <= e) }
   #round5 (h, m) { return [h, Math.floor(m / 5) * 5] }
-  #fmt12h (h, m) { return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}` }
+  #fmtTime24 (h, m) { return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}` }
+  #fmt12h (h, m) { return this.#fmtTime24(h, m) }
   #dateStr () { return `${this._pickYear}-${String(this._pickMonth).padStart(2, '0')}-${String(this._pickDay).padStart(2, '0')}` }
   #todayStr () { const n = new Date(); return `${n.getFullYear()}-${String(n.getMonth() + 1).padStart(2, '0')}-${String(n.getDate()).padStart(2, '0')}` }
   #ordinal (n) { if (n > 3 && n < 21) return 'th'; switch (n % 10) { case 1:return 'st'; case 2:return 'nd'; case 3:return 'rd'; default:return 'th' } }

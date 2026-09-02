@@ -279,76 +279,7 @@
       </svg>
     <% end %>
 
-    <%# ── Set Date modal — PROTOTYPE inline morph (tap text → drum) ── %>
-    <div data-appointment-date-picker-target="backdrop" class="hidden fixed inset-0 bg-black/40 z-[65]" data-action="click->appointment-date-picker#close"></div>
-    <div data-appointment-date-picker-target="modal" role="dialog" aria-modal="true" class="hidden">
-      <div data-appointment-date-picker-target="protoCard" data-action="click->appointment-date-picker#exitInline" class="w-[380px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] relative flex flex-col px-[38px] pt-[22px] pb-[22px] gap-0">
-        <button type="button" data-action="click->appointment-date-picker#close" class="absolute right-[13px] top-[13px] w-[37px] h-[37px] bg-transparent border-none cursor-pointer p-0">
-          <svg width="37" height="37" viewBox="0 0 53 53" fill="none"><path d="M35.8 16.2L36 16.4C36.2 16.6 36.4 17 36.4 17.4C36.4 17.7 36.3 18.1 36.1 18.4L36 18.5L28.3 26.2L36 33.8C36.2 34.1 36.4 34.4 36.4 34.8C36.4 35.2 36.3 35.5 36.1 35.8L36 36C35.7 36.2 35.4 36.4 35 36.4C34.6 36.4 34.2 36.3 33.9 36.1L33.8 36L26.2 28.3L18.5 36C18.3 36.2 17.9 36.4 17.5 36.4C17.2 36.4 16.8 36.3 16.5 36.1L16.4 36C16.1 35.7 16 35.4 15.9 35C15.9 34.6 16 34.2 16.2 33.9L16.4 33.8L24 26.2L16.4 18.5C16.1 18.3 16 17.9 15.9 17.5C15.9 17.2 16 16.8 16.2 16.5L16.4 16.4C16.6 16.1 17 16 17.4 15.9C17.7 15.9 18.1 16 18.4 16.2L18.5 16.4L26.2 24L33.8 16.4C34.1 16.1 34.4 16 34.8 15.9C35.2 15.9 35.5 16 35.8 16.2L36 16.4L35.8 16.2Z" fill="#A43600" /></svg>
-        </button>
-        <span data-appointment-date-picker-target="dateTitle" class="font-medium text-22 leading-[27px] tracking-003 text-brand-primary text-center pt-2"></span>
-        <hr class="border-none h-px bg-black opacity-20 w-[132px] self-center mt-3 mb-5">
-        <%# From row — inline morph: label itself becomes drum %>
-        <div data-appointment-date-picker-target="slot1Row" class="flex items-center justify-between py-2 min-h-[30px]">
-          <button type="button" data-action="click->appointment-date-picker#editDate1" data-appointment-date-picker-target="slot1Btn" class="bg-transparent border-none cursor-pointer p-0 flex items-center gap-2 text-left flex-1 min-w-0">
-            <span class="text-11 font-semibold tracking-[0.08em] text-brand-primary opacity-50 uppercase w-9 shrink-0">From</span>
-            <span data-appointment-date-picker-target="slot1Label" class="font-medium text-base tracking-007 text-brand-primary truncate"></span>
-            <span data-appointment-date-picker-target="slot1InlineDate" class="hidden flex items-center gap-1"></span>
-          </button>
-          <button type="button" data-action="click->appointment-date-picker#editTime1" class="bg-transparent border-none cursor-pointer p-0 flex items-center gap-1 shrink-0 ml-3">
-            <span data-appointment-date-picker-target="slot1Time" class="font-medium text-base tracking-007 text-brand-primary"></span>
-            <span data-appointment-date-picker-target="slot1InlineTime" class="hidden flex items-center gap-1"></span>
-          </button>
-        </div>
-        <%# To row — inline morph %>
-        <div data-appointment-date-picker-target="slot2Row" class="flex items-center justify-between py-2 min-h-[30px]">
-          <button type="button" data-action="click->appointment-date-picker#editDate2" data-appointment-date-picker-target="slot2Btn" class="bg-transparent border-none cursor-pointer p-0 flex items-center gap-2 text-left flex-1 min-w-0">
-            <span class="text-11 font-semibold tracking-[0.08em] text-brand-primary opacity-50 uppercase w-9 shrink-0">To</span>
-            <span data-appointment-date-picker-target="slot2Label" class="font-medium text-base tracking-007 text-brand-primary truncate"></span>
-            <span data-appointment-date-picker-target="slot2InlineDate" class="hidden flex items-center gap-1"></span>
-          </button>
-          <button type="button" data-action="click->appointment-date-picker#editTime2" class="bg-transparent border-none cursor-pointer p-0 flex items-center gap-1 shrink-0 ml-3">
-            <span data-appointment-date-picker-target="slot2Time" class="font-medium text-base tracking-007 text-brand-primary"></span>
-            <span data-appointment-date-picker-target="slot2InlineTime" class="hidden flex items-center gap-1"></span>
-          </button>
-        </div>
-        <%# Shared drums — single instance, moved into active row picker via JS %>
-        <div class="hidden">
-          <div data-appointment-date-picker-target="protoDatePicker" data-picker="date" class="w-full h-[80px] flex items-center justify-center gap-1.5 relative">
-            <div class="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-7 bg-brand-field rounded-lg pointer-events-none"></div>
-            <div data-appointment-date-picker-target="dayScroll" data-action="scroll->appointment-date-picker#onDayScroll" class="overflow-y-auto snap-y snap-mandatory h-full w-12 [scrollbar-width:none] relative z-[1]">
-              <% (1..31).each do |d| %><div data-value="<%= d %>" class="h-7 flex items-center justify-center text-base tracking-007 text-brand-primary"><%= format('%02d', d) %></div><% end %>
-            </div>
-            <span class="text-base text-brand-primary relative z-[1]">/</span>
-            <div data-appointment-date-picker-target="monthScroll" data-action="scroll->appointment-date-picker#onMonthScroll" class="overflow-y-auto snap-y snap-mandatory h-full w-12 [scrollbar-width:none] relative z-[1]">
-              <% (1..12).each do |m| %><div data-value="<%= m %>" class="h-7 flex items-center justify-center text-base tracking-007 text-brand-primary"><%= format('%02d', m) %></div><% end %>
-            </div>
-            <span class="text-base text-brand-primary relative z-[1]">/</span>
-            <div data-appointment-date-picker-target="yearScroll" data-action="scroll->appointment-date-picker#onYearScroll" class="overflow-y-auto snap-y snap-mandatory h-full w-16 [scrollbar-width:none] relative z-[1]">
-              <% ((Time.zone.today.year - 5)..(Time.zone.today.year + 5)).each do |y| %><div data-value="<%= y %>" class="h-7 flex items-center justify-center text-base tracking-007 text-brand-primary"><%= y %></div><% end %>
-            </div>
-          </div>
-          <div data-appointment-date-picker-target="protoTimePicker" data-picker="time" class="w-full h-[80px] hidden items-center justify-center gap-1 relative">
-            <div class="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-7 bg-brand-field rounded-lg pointer-events-none"></div>
-            <div data-appointment-date-picker-target="hourScroll" data-action="scroll->appointment-date-picker#onHourScroll" class="overflow-y-auto snap-y snap-mandatory h-full w-[50px] [scrollbar-width:none] relative z-[1]">
-              <% (0..23).each do |h| %><div data-value="<%= h %>" class="h-7 flex items-center justify-center text-base tracking-007 text-brand-primary"><%= format('%02d', h) %></div><% end %>
-            </div>
-            <span class="font-bold text-base text-brand-primary relative z-[1]">:</span>
-            <div data-appointment-date-picker-target="minuteScroll" data-action="scroll->appointment-date-picker#onMinuteScroll" class="overflow-y-auto snap-y snap-mandatory h-full w-14 [scrollbar-width:none] relative z-[1]">
-              <% [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55].each do |m| %><div data-value="<%= m %>" class="h-7 flex items-center justify-center text-base tracking-007 text-brand-primary"><%= format('%02d', m) %></div><% end %>
-            </div>
-          </div>
-        </div>
-        <hr class="border-none h-px bg-black opacity-10 mt-3">
-        <div class="flex items-center justify-between py-3">
-          <span class="font-medium text-base tracking-007 text-brand-primary">All day</span>
-          <button type="button" data-action="click->appointment-date-picker#toggleAllDay" data-appointment-date-picker-target="allDayToggle" class="w-[63px] h-[34px] rounded-[17px] bg-brand-lightgray border-none cursor-pointer relative p-0">
-            <span class="absolute left-[3px] top-[2px] w-[30px] h-[30px] bg-white rounded-full shadow-[0_1px_4px_rgba(0,0,0,0.2)] transition-transform duration-200"></span>
-          </button>
-        </div>
-        <button type="button" data-action="click->appointment-date-picker#confirm" class="w-full h-12 bg-brand-primary rounded-lg border-none cursor-pointer font-medium text-22 leading-[27px] tracking-003 text-white text-center mt-1">Set date</button>
-      </div>
-    </div>
+    <%= render "calendar_events/date_picker_modal" %>
 
     <%# ── Icon picker modal ── %>
     <div data-season-modal-target="backdrop" class="hidden fixed inset-0 bg-black/40 z-[65]"></div>

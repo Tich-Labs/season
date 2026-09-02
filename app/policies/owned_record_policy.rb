@@ -10,6 +10,10 @@
 class OwnedRecordPolicy < ApplicationPolicy
   def show? = owner?
 
+  def create? = owner?
+
+  def new? = create?
+
   def update? = owner?
 
   def destroy? = owner?
