@@ -82,11 +82,11 @@
                    date, a "-" on its own line, date — not two dates
                    stacked directly on each other. %>
               <% if multi_day %>
-                <%= evt_date.strftime("%a. %B ") %><%= evt_date.day.ordinalize %><%= evt_date.strftime(" %Y") %><br>
+                <%= evt_date.strftime("%a. %b ") %><%= evt_date.day.ordinalize %><%= evt_date.strftime(" %Y") %><br>
                 <span class="font-light">-</span><br>
-                <%= evt_end_date.strftime("%a. %B ") %><%= evt_end_date.day.ordinalize %><%= evt_end_date.strftime(" %Y") %>
+                <%= evt_end_date.strftime("%a. %b ") %><%= evt_end_date.day.ordinalize %><%= evt_end_date.strftime(" %Y") %>
               <% else %>
-                <%= evt_date.strftime("%a. %B ") %><%= evt_date.day.ordinalize %><%= evt_date.strftime(" %Y") %>
+                <%= evt_date.strftime("%a. %b ") %><%= evt_date.day.ordinalize %><%= evt_date.strftime(" %Y") %>
               <% end %>
             </button>
           <%
