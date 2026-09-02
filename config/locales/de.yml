@@ -632,7 +632,7 @@ de:
           body: "Über das Plus im Kalender kannst du deine Termine hinzufügen, mit Icons versehen und alle Details eintragen. Über die Einstellungen kannst du außerdem deinen üblichen Kalender synchronisieren."
         forecast:
           title: "Vorausschau"
-          body: "Klickst du auf einen Tag im Kalender und streichst auf deinem Bildschirm nach links, bekommst du einen genaueren Einblick in deine Vorausschau. Mit einem Klick auf eine der Kacheln erhältst du mehr Informationen."
+          body: "Öffne einen Tag im Kalender und wechsle zum Tab „Vorausschau“ für deine Tipps des Tages — Superpower, Stimmung, Sport, Ernährung und mehr. Tippe auf eine Kachel für mehr Details."
   weekly_feedbacks:
     index:
       title: "Feedback %{week}"

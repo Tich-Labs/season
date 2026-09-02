@@ -647,7 +647,7 @@ en:
           body: "Use the plus button in the calendar to add appointments, tag them with icons, and fill in every detail. You can also sync your usual calendar from Settings."
         forecast:
           title: "Forecast"
-          body: "Tap a day in the calendar and swipe left on your screen to get a closer look at your forecast. Tap any tile for more details."
+          body: "Open a day from the calendar, then switch to the Forecast tab for your tips of the day — Super Power, mood, sport, nutrition, and more. Tap any card for more detail."
   weekly_feedbacks:
     index:
       title: "Feedback %{week}"
