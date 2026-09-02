@@ -109,6 +109,9 @@ Rails.application.routes.draw do
   get "onboarding/finish", to: "onboarding#finish", as: :onboarding_finish
   resources :onboarding, only: [:show, :update]
 
+  get "welcome_tour", to: "tester_tour#show", as: :tester_tour
+  post "welcome_tour/complete", to: "tester_tour#complete", as: :complete_tester_tour
+
   get "calendar", to: "calendar#index", as: :user_root
   get "calendar", to: "calendar#index", as: :calendar unless Rails.application.routes.routes.any? { |r| r.name == "calendar" }
   get "calendar/weekly", to: "calendar#weekly", as: :calendar_weekly

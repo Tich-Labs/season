@@ -19,7 +19,7 @@
   // fires on every Turbo-driven visit (and on a true fresh load too).
   document.addEventListener('turbo:load', function() {
     setTimeout(function() {
-      window.location.href = <%= raw calendar_path.to_json %>;
+      window.location.href = <%= raw (current_user.tester_tour_seen_at.nil? ? tester_tour_path : calendar_path).to_json %>;
     }, 1500);
   }, { once: true });
 </script>

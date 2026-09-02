@@ -627,6 +627,27 @@ en:
       add_attachment: "Add screenshot or audio"
       send: "Send"
       close: "Close"
+  tester_tour:
+    show:
+      header: "Onboarding"
+      next: "Next"
+      get_started: "Get started"
+      slides:
+        introduction:
+          title: "Hello dear tester"
+          body: "You're one of the first people outside our team to test Season. The app isn't perfect yet — and that's exactly why we need you. Over the next 4 weeks, you'll help us find bugs, improve features, and get Season ready for the App Store.\n\nYou'll get a quick walkthrough next. After that: test, try things out, be honest. Thanks for being here."
+        calendar:
+          title: "The Calendar"
+          body: "This is your home base. See your appointments and forecast, tap a day or create new appointments, track your day, or head into settings."
+        track_day:
+          title: "Track Your Day"
+          body: "Here you can log everything from feelings to your superpower, feeding the app the information it needs for the best possible forecast. It's also your home for weekly feedback."
+        create_appointment:
+          title: "Create an Appointment"
+          body: "Use the plus button in the calendar to add appointments, tag them with icons, and fill in every detail. You can also sync your usual calendar from Settings."
+        forecast:
+          title: "Forecast"
+          body: "Tap a day in the calendar and swipe left on your screen to get a closer look at your forecast. Tap any tile for more details."
   weekly_feedbacks:
     index:
       title: "Feedback %{week}"

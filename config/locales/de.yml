@@ -612,6 +612,27 @@ de:
       add_attachment: "Screenshot oder Audio hinzufügen"
       send: "Senden"
       close: "Schließen"
+  tester_tour:
+    show:
+      header: "Onboarding"
+      next: "Weiter"
+      get_started: "Los geht's"
+      slides:
+        introduction:
+          title: "Hallo liebe Testerin"
+          body: "Du bist eine der ersten Personen außerhalb unseres Teams, die Season testen. Die App ist noch nicht perfekt – und genau deshalb brauchen wir dich. In den nächsten 4 Wochen hilfst du uns, Fehler zu finden, Funktionen zu verbessern und Season fit für den App Store zu machen.\n\nGleich bekommst du eine kurze Einführung. Danach: testen, ausprobieren, ehrlich sein. Danke, dass du dabei bist."
+        calendar:
+          title: "Der Kalender"
+          body: "Von hier aus steuerst du alles. Du siehst deine Termine und die Vorausschau, klickst auf einen Tag oder erstellst neue Termine, trackst deinen Tag oder gehst in die Einstellungen."
+        track_day:
+          title: "Track deinen Tag"
+          body: "Hier kannst du von Gefühlen bis Superpower alles festhalten und die App mit Informationen füttern, um die bestmögliche Vorausschau zu erhalten. Außerdem ist das deine Anlaufstelle für das wöchentliche Feedback."
+        create_appointment:
+          title: "Termin erstellen"
+          body: "Über das Plus im Kalender kannst du deine Termine hinzufügen, mit Icons versehen und alle Details eintragen. Über die Einstellungen kannst du außerdem deinen üblichen Kalender synchronisieren."
+        forecast:
+          title: "Vorausschau"
+          body: "Klickst du auf einen Tag im Kalender und streichst auf deinem Bildschirm nach links, bekommst du einen genaueren Einblick in deine Vorausschau. Mit einem Klick auf eine der Kacheln erhältst du mehr Informationen."
   weekly_feedbacks:
     index:
       title: "Feedback %{week}"

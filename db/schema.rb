@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_15_204334) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_02_215022) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -312,6 +312,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_15_204334) do
     t.boolean "show_superpowers"
     t.boolean "show_tracked_days", default: true, null: false
     t.boolean "show_week_numbers", default: false
+    t.datetime "tester_tour_seen_at"
     t.string "unconfirmed_email"
     t.datetime "updated_at", null: false
     t.boolean "uses_hormonal_birth_control"
