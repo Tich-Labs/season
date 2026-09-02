@@ -72,11 +72,11 @@
 
         <%# Date + time block %>
         <div class="py-5">
-          <div class="mx-auto relative w-[360px] h-[125px]">
-            <svg width="360" height="125" viewBox="0 0 360 125" fill="none" xmlns="http://www.w3.org/2000/svg" class="absolute inset-0 pointer-events-none">
+          <div class="mx-auto relative w-[340px] max-w-[90vw] h-[125px]">
+            <svg width="340" height="125" viewBox="0 0 360 125" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg" class="absolute inset-0 w-full h-full pointer-events-none">
               <path d="M0 19C0 8.50659 8.50659 0 19 0H341C351.493 0 360 8.50659 360 19V106C360 116.493 351.493 125 341 125H19C8.50659 125 0 116.493 0 106V19Z" fill="#933A35" />
             </svg>
-            <div class="relative z-10 flex flex-col justify-center items-center gap-2 h-full text-center">
+            <div class="relative z-10 flex flex-col justify-center items-center gap-1 h-full text-center px-4">
               <% end_date = @event.end_date %>
               <% multi_day = end_date.present? && end_date != evt_date %>
               <button type="button" data-action="click->appointment-date-picker#open"
@@ -616,13 +616,13 @@
                onscroll="..." attributes silently — see
                tracking_saved_modal_controller.js for the same gotcha with
                onclick). %>
-          <div data-season-modal-target="repeatUntilDay" data-action="scroll->season-modal#onRepeatUntilScroll" class="overflow-y-auto snap-y snap-mandatory h-full w-11 [scrollbar-width:none] text-center relative z-[1]">
+          <div data-season-modal-target="repeatUntilDay" data-action="scroll->season-modal#onRepeatUntilScroll" style="touch-action: pan-y; overscroll-behavior: contain;" class="overflow-y-auto snap-y snap-mandatory h-full w-11 [scrollbar-width:none] text-center relative z-[1]">
             <% (1..31).each do |day| %>
               <div data-value="<%= day %>" class="h-7 flex items-center justify-center text-base text-brand-primary snap-center" style="font-weight:<%= day == d ? '700' : '400' %>;opacity:<%= day == d ? '1' : '0.35' %>"><%= format('%02d', day) %></div>
             <% end %>
           </div>
           <% months = %w[Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec] %>
-          <div data-season-modal-target="repeatUntilMonth" data-action="scroll->season-modal#onRepeatUntilScroll" class="overflow-y-auto snap-y snap-mandatory h-full w-[52px] [scrollbar-width:none] text-center relative z-[1]">
+          <div data-season-modal-target="repeatUntilMonth" data-action="scroll->season-modal#onRepeatUntilScroll" style="touch-action: pan-y; overscroll-behavior: contain;" class="overflow-y-auto snap-y snap-mandatory h-full w-[52px] [scrollbar-width:none] text-center relative z-[1]">
             <% months.each_with_index do |mon, mi| %>
               <% mo = mi + 1 %>
               <div data-value="<%= mon %>" class="h-7 flex items-center justify-center text-base text-brand-primary snap-center" style="font-weight:<%= mo == m ? '700' : '400' %>;opacity:<%= mo == m ? '1' : '0.35' %>"><%= mon %></div>
@@ -632,7 +632,7 @@
                until" a past date makes no sense, and confirm already
                rejects one, but the wheel shouldn't offer it as an option
                in the first place. %>
-          <div data-season-modal-target="repeatUntilYear" data-action="scroll->season-modal#onRepeatUntilScroll" class="overflow-y-auto snap-y snap-mandatory h-full w-[60px] [scrollbar-width:none] text-center relative z-[1]">
+          <div data-season-modal-target="repeatUntilYear" data-action="scroll->season-modal#onRepeatUntilScroll" style="touch-action: pan-y; overscroll-behavior: contain;" class="overflow-y-auto snap-y snap-mandatory h-full w-[60px] [scrollbar-width:none] text-center relative z-[1]">
             <% (Time.zone.today.year..Time.zone.today.year + 10).each do |yr| %>
               <div data-value="<%= yr %>" class="h-7 flex items-center justify-center text-base text-brand-primary snap-center" style="font-weight:<%= yr == y ? '700' : '400' %>;opacity:<%= yr == y ? '1' : '0.35' %>"><%= yr %></div>
             <% end %>
