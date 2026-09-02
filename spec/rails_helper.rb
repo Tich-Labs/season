@@ -23,5 +23,17 @@ RSpec.configure do |config|
 
   config.include FactoryBot::Syntax::Methods
   config.include Devise::Test::IntegrationHelpers
+  # This is set, but records created via `create(:user)` were still found
+  # persisting in the test DB across separate `bundle exec rspec`
+  # invocations (confirmed: run the suite, then check
+  # `User.where("email LIKE 'user%@example.com'")` in a fresh `rails
+  # runner` — rows are still there). Worth root-causing properly
+  # (suspect a connection-handling interaction with request/feature specs
+  # specifically, since a model-only run showed no leak across repeats) —
+  # not done here since restructuring transaction/connection handling
+  # isn't a safe change to make blind right before launch. Factory emails
+  # are now collision-proof regardless (see spec_helper.rb), so this
+  # doesn't fail tests, but the DB is still quietly accumulating orphaned
+  # test rows every run.
   config.use_transactional_fixtures = true
 end

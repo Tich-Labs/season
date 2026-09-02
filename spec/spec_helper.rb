@@ -16,12 +16,24 @@ end
 require "factory_bot"
 FactoryBot.define do
   factory :user do
-    sequence(:email) { |n| "user#{n}@example.com" }
+    # A plain incrementing sequence collides across separate test runs
+    # (real users leaked into the test DB before this, unrolled-back — see
+    # the comment on `use_transactional_fixtures` in rails_helper.rb):
+    # "user1@example.com" from a previous run still existing means this
+    # run's very first `create(:user)` fails with "Email has already been
+    # taken". Appending a random suffix makes collisions structurally
+    # impossible regardless of whatever's already sitting in the DB, no
+    # matter which spec type or run order leaked it.
+    sequence(:email) { |n| "user#{n}-#{SecureRandom.hex(4)}@example.com" }
     password { "password123" }
+    # Devise :confirmable makes active_for_authentication?/confirmed? false
+    # without this — a plain create(:user) couldn't actually authenticate,
+    # which is what most specs reaching for this factory expect (they're
+    # testing something else, not confirmation itself).
+    confirmed_at { Time.current }
     name { "Test User" }
     birthday { Date.new(1995, 1, 15) }
     cycle_length { 28 }
-    onboarding_step { 1 }
     last_period_start { Time.zone.today - 14 }
 
     after(:create) do |user|
@@ -38,7 +50,17 @@ FactoryBot.define do
           cycle_length: 28,
           last_period_start: Time.zone.today - 14,
           onboarding_completed: true,
-          onboarding_step: 11
+          # require_onboarding_completed checks each of
+          # User::REQUIRED_ONBOARDING_STEPS individually — it doesn't
+          # short-circuit on onboarding_completed? — so a trait meant to
+          # produce a fully-onboarded, non-redirected user has to satisfy
+          # all of them, not just flip that one flag. Missing these three
+          # sent every request in a spec using this trait to
+          # /onboarding/4 instead of wherever the spec actually meant to
+          # go.
+          has_regular_cycle: true,
+          uses_hormonal_birth_control: false,
+          food_preference: "no_preference"
         )
         user.period_starts.find_or_create_by!(started_on: user.last_period_start)
       end

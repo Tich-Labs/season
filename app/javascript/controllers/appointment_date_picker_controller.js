@@ -97,6 +97,13 @@ export default class extends Controller {
       const t = this[`has${n[0].toUpperCase() + n.slice(1)}Target`] ? this[`${n}Target`] : null
       if (t) t.classList.remove('hidden')
     })
+    this.#resetBold()
+  }
+
+  // click on empty card area → exit drum, show chosen dates
+  exitInline (e) {
+    if (e.target.closest('button')) return
+    this.#hideAllInline()
   }
 
   // ---- prototype inline morph ----
@@ -315,7 +322,7 @@ export default class extends Controller {
   #highlightScrollers () { if (this._mode === 'date') { const pd = this._editingSlot === 2 ? this._pickDay2 : this._pickDay; const pm = this._editingSlot === 2 ? this._pickMonth2 : this._pickMonth; const py = this._editingSlot === 2 ? this._pickYear2 : this._pickYear; this.#highlightTrack(this.dayScrollTarget, pd); this.#highlightTrack(this.monthScrollTarget, pm); this.#highlightTrack(this.yearScrollTarget, py) } else { this.#highlightTrack(this.hourScrollTarget, this.#getPickHour()); this.#highlightTrack(this.minuteScrollTarget, this.#getPickMin()) } }
   #scrollTo (track, val) { const items = track.querySelectorAll('[data-value]'); for (const it of items) { if (parseInt(it.dataset.value) === val) { track.scrollTop = it.offsetTop - track.clientHeight / 2 + it.clientHeight / 2; break } } }
   #syncTimesFromField () { const [shRaw, smRaw] = (this.startFieldTarget.value || '19:00').split(':').map(Number); const [ehRaw, emRaw] = (this.endFieldTarget.value || '20:00').split(':').map(Number); const s = this.#round5(shRaw, smRaw); const e = this.#round5(ehRaw, emRaw); this._pickHour1 = s[0]; this._pickMin1 = s[1]; this._pickHour2 = e[0]; this._pickMin2 = e[1] }
-  #highlightTrack (track, activeVal) { const items = track.querySelectorAll('[data-value]'); items.forEach(el => { const a = parseInt(el.dataset.value) === activeVal; el.style.opacity = a ? '1' : '0.35'; el.style.fontWeight = a ? '700' : '400' }) }
+  #highlightTrack (track, activeVal) { const items = track.querySelectorAll('[data-value]'); items.forEach(el => { const a = parseInt(el.dataset.value) === activeVal; el.style.opacity = a ? '1' : '0.35'; el.style.fontWeight = a ? '700' : '400'; el.style.color = a ? '#933A35' : 'rgba(147,58,53,0.35)'; el.style.fontSize = a ? '17px' : '16px'; el.style.transform = a ? 'scale(1.05)' : 'scale(1)' }) }
   #closestItem (track) { const cy = track.scrollTop + track.clientHeight / 2; let c = null; let md = Infinity; for (const el of track.querySelectorAll('[data-value]')) { const ec = el.offsetTop + el.clientHeight / 2; const d = Math.abs(ec - cy); if (d < md) { md = d; c = el } } return c }
   #applyDateDisplay (startDateStr, endDateStr) {
     const d1 = new Date(startDateStr + 'T00:00:00'); const d2 = endDateStr ? new Date(endDateStr + 'T00:00:00') : null; const multi = d2 && d2.toDateString() !== d1.toDateString()

@@ -13,6 +13,9 @@ RSpec.describe "User Registration", type: :feature do
 
     click_button "Create account"
 
-    expect(page).to have_current_path("/onboarding/1")
+    # Not /onboarding/1 — signup redirects to the "check your inbox" page
+    # first (Devise :confirmable); /onboarding/1 is only reached after
+    # confirming via the emailed link (see ConfirmationsController#show).
+    expect(page).to have_current_path("/registration/check_email")
   end
 end

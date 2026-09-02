@@ -282,7 +282,7 @@
     <%# ── Set Date modal — PROTOTYPE inline morph (tap text → drum) ── %>
     <div data-appointment-date-picker-target="backdrop" class="hidden fixed inset-0 bg-black/40 z-[65]" data-action="click->appointment-date-picker#close"></div>
     <div data-appointment-date-picker-target="modal" role="dialog" aria-modal="true" class="hidden">
-      <div data-appointment-date-picker-target="protoCard" class="w-[380px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] relative flex flex-col px-[38px] pt-[22px] pb-[22px] gap-0">
+      <div data-appointment-date-picker-target="protoCard" data-action="click->appointment-date-picker#exitInline" class="w-[380px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] relative flex flex-col px-[38px] pt-[22px] pb-[22px] gap-0">
         <button type="button" data-action="click->appointment-date-picker#close" class="absolute right-[13px] top-[13px] w-[37px] h-[37px] bg-transparent border-none cursor-pointer p-0">
           <svg width="37" height="37" viewBox="0 0 53 53" fill="none"><path d="M35.8 16.2L36 16.4C36.2 16.6 36.4 17 36.4 17.4C36.4 17.7 36.3 18.1 36.1 18.4L36 18.5L28.3 26.2L36 33.8C36.2 34.1 36.4 34.4 36.4 34.8C36.4 35.2 36.3 35.5 36.1 35.8L36 36C35.7 36.2 35.4 36.4 35 36.4C34.6 36.4 34.2 36.3 33.9 36.1L33.8 36L26.2 28.3L18.5 36C18.3 36.2 17.9 36.4 17.5 36.4C17.2 36.4 16.8 36.3 16.5 36.1L16.4 36C16.1 35.7 16 35.4 15.9 35C15.9 34.6 16 34.2 16.2 33.9L16.4 33.8L24 26.2L16.4 18.5C16.1 18.3 16 17.9 15.9 17.5C15.9 17.2 16 16.8 16.2 16.5L16.4 16.4C16.6 16.1 17 16 17.4 15.9C17.7 15.9 18.1 16 18.4 16.2L18.5 16.4L26.2 24L33.8 16.4C34.1 16.1 34.4 16 34.8 15.9C35.2 15.9 35.5 16 35.8 16.2L36 16.4L35.8 16.2Z" fill="#A43600" /></svg>
         </button>
@@ -573,17 +573,17 @@
         <div class="absolute left-[18px] top-[101px] w-[320px] h-0 border border-brand-field"></div>
 
         <div class="absolute left-[36px] top-[130px] w-[283px] h-[100px] flex items-center justify-center gap-3 overflow-hidden">
-          <div class="absolute inset-x-0 top-1/2 -translate-y-1/2 h-11 bg-brand-field rounded-lg pointer-events-none"></div>
+          <div class="absolute inset-x-0 top-1/2 -translate-y-1/2 h-7 bg-brand-field rounded-lg pointer-events-none"></div>
           <div data-season-modal-target="customReminderNum"
                class="overflow-y-auto snap-y snap-mandatory h-full w-14 [scrollbar-width:none] text-center relative z-[1]">
             <% (1..60).each do |n| %>
-              <div data-value="<%= n %>" class="h-11 flex items-center justify-center text-22 tracking-003 text-brand-primary snap-center" style="font-weight:<%= n == 5 ? '700' : '400' %>;opacity:<%= n == 5 ? '1' : '0.4' %>"><%= format('%02d', n) %></div>
+              <div data-value="<%= n %>" class="h-7 flex items-center justify-center text-22 tracking-003 text-brand-primary snap-center" style="font-weight:<%= n == 5 ? '700' : '400' %>;opacity:<%= n == 5 ? '1' : '0.4' %>"><%= format('%02d', n) %></div>
             <% end %>
           </div>
           <div data-season-modal-target="customReminderUnit"
                class="overflow-y-auto snap-y snap-mandatory h-full w-[90px] [scrollbar-width:none] text-center relative z-[1]">
             <% [['minutes', 'Minutes'], ['hours', 'Hours'], ['days', 'Days']].each_with_index do |(val, label), i| %>
-              <div data-value="<%= val %>" class="h-11 flex items-center justify-center text-base tracking-007 text-brand-primary snap-center" style="font-weight:<%= i == 0 ? '700' : '400' %>;opacity:<%= i == 0 ? '1' : '0.4' %>"><%= label %></div>
+              <div data-value="<%= val %>" class="h-7 flex items-center justify-center text-base tracking-007 text-brand-primary snap-center" style="font-weight:<%= i == 0 ? '700' : '400' %>;opacity:<%= i == 0 ? '1' : '0.4' %>"><%= label %></div>
             <% end %>
           </div>
         </div>
@@ -675,7 +675,25 @@
           ] %>
           <% sub_opts.each do |opt| %>
             <div class="absolute left-0 right-0 h-[34px] flex items-center justify-between" style="top:<%= opt[:top] %>px">
-              <span class="font-medium text-base tracking-007 text-brand-primary"><%= opt[:label] %></span>
+              <% if opt[:val] == 'count' %>
+                <%# Inline number field, shown only once this row is toggled
+                     on — matches Figma's "Repeat X times" (a real value on
+                     the row itself, not a static label), same pattern as
+                     the "Custom repeat" modal's number inputs rather than
+                     opening a separate modal like "Repeat until" does. %>
+                <div class="flex items-center gap-2">
+                  <span data-season-modal-target="repeatCountRowLabel" class="font-medium text-base tracking-007 text-brand-primary"><%= opt[:label] %></span>
+                  <input type="number" inputmode="numeric" min="1" max="365" value="5" autocomplete="off"
+                         data-season-modal-target="repeatCountInput"
+                         data-action="input->season-modal#updateRepeatCount"
+                         class="hidden w-12 h-7 bg-brand-field/50 rounded-md border-none text-center font-bold text-brand-primary outline-none">
+                  <span data-season-modal-target="repeatCountUnit" class="hidden font-medium text-base tracking-007 text-brand-primary">times</span>
+                </div>
+              <% elsif opt[:val] == 'until' %>
+                <span data-season-modal-target="repeatUntilRowLabel" class="font-medium text-base tracking-007 text-brand-primary"><%= opt[:label] %></span>
+              <% else %>
+                <span class="font-medium text-base tracking-007 text-brand-primary"><%= opt[:label] %></span>
+              <% end %>
               <div class="w-[63px] h-[34px] rounded-[17px] cursor-pointer relative shrink-0"
                    data-action="click->season-modal#toggleRepeatSub"
                    data-sub-value="<%= opt[:val] %>"
@@ -704,7 +722,7 @@
         <div class="flex gap-3">
           <button type="button" data-action="click->season-modal#closeAttention"
                   data-season-modal-target="attentionCancel"
-                  class="flex-1 h-11 bg-brand-field border-none rounded-[10px] font-medium text-15 text-brand-primary cursor-pointer">
+                  class="flex-1 h-7 bg-brand-field border-none rounded-[10px] font-medium text-15 text-brand-primary cursor-pointer">
             Keep editing
           </button>
           <button type="button" data-season-modal-target="attentionConfirm"
@@ -729,18 +747,25 @@
         <p class="absolute left-1/2 -translate-x-1/2 top-[34px] font-medium text-22 leading-[27px] tracking-003 text-brand-primary whitespace-nowrap">Custom repeat</p>
         <div class="absolute left-[36px] top-[100px] w-[287px] h-0 border border-brand-field"></div>
 
-        <% custom_rows = [
-          {label:'Every', unit:'days', max:365, top:140, default:1},
-          {label:'Every', unit:'weeks', max:52, top:205, default:1},
-          {label:'Every', unit:'months', max:24, top:270, default:1}
-        ] %>
-        <% custom_rows.each do |row| %>
-          <div class="absolute left-[36px] w-[287px] h-[38px] bg-brand-field/50 rounded-[10px] flex items-center px-4 gap-1" style="top:<%= row[:top] %>px">
-            <span class="font-medium text-base tracking-007 text-brand-primary"><%= row[:label] %></span>
-            <input type="number" inputmode="numeric" min="1" max="<%= row[:max] %>" value="<%= row[:default] %>" autocomplete="off" class="w-14 h-full bg-transparent border-none font-bold text-base text-brand-primary text-center outline-none">
-            <span class="font-medium text-base tracking-007 text-brand-primary"><%= row[:unit] %></span>
-          </div>
-        <% end %>
+        <%# One interval — "Every [N] [days/weeks/months]" — not three rows
+             held simultaneously. A recurring event has exactly one
+             frequency; "every 2 days AND every 3 weeks AND every 1 month"
+             isn't a coherent single rule, and there was no way to tell
+             which of the three was actually meant (confirmCustomRepeat
+             never even read any of them — this whole modal was decorative
+             until now). %>
+        <div class="absolute left-[36px] top-[140px] w-[287px] h-[38px] bg-brand-field/50 rounded-[10px] flex items-center px-4 gap-2">
+          <span class="font-medium text-base tracking-007 text-brand-primary">Every</span>
+          <input type="number" inputmode="numeric" min="1" max="365" value="1" autocomplete="off"
+                 data-season-modal-target="customRepeatN"
+                 class="w-14 h-full bg-transparent border-none font-bold text-base text-brand-primary text-center outline-none">
+          <select data-season-modal-target="customRepeatUnit"
+                  class="flex-1 h-full bg-transparent border-none font-medium text-base text-brand-primary outline-none">
+            <option value="days">days</option>
+            <option value="weeks" selected>weeks</option>
+            <option value="months">months</option>
+          </select>
+        </div>
 
         <div class="absolute left-[36px] top-[352px] w-[287px] h-[52px] bg-brand-primary rounded-lg"></div>
         <button type="button" data-action="click->season-modal#confirmCustomRepeat"
@@ -752,50 +777,52 @@
     <div data-season-modal-target="repeatUntilBackdrop" class="hidden fixed inset-0 bg-black/40 z-[65]" data-action="click->season-modal#closeRepeatUntil"></div>
     <div data-season-modal-target="repeatUntilModal" role="dialog" aria-modal="true" aria-label="Repeat until"
          class="hidden fixed inset-0 z-[70] flex items-center justify-center">
-      <div class="w-[361px] h-[438px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] relative">
-
+      <div class="w-[380px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] relative flex flex-col px-[36px] pt-[22px] pb-[22px]">
         <button type="button" data-action="click->season-modal#closeRepeatUntil"
-                class="absolute left-[304px] top-[13px] w-[37px] h-[37px] bg-transparent border-none cursor-pointer p-0 z-[2]">
+                class="absolute right-[13px] top-[13px] w-[37px] h-[37px] bg-transparent border-none cursor-pointer p-0 z-[2]">
           <svg width="37" height="37" viewBox="0 0 53 53" fill="none"><path d="M35.8 16.2L36 16.4C36.2 16.6 36.4 17 36.4 17.4C36.4 17.7 36.3 18.1 36.1 18.4L36 18.5L28.3 26.2L36 33.8C36.2 34.1 36.4 34.4 36.4 34.8C36.4 35.2 36.3 35.5 36.1 35.8L36 36C35.7 36.2 35.4 36.4 35 36.4C34.6 36.4 34.2 36.3 33.9 36.1L33.8 36L26.2 28.3L18.5 36C18.3 36.2 17.9 36.4 17.5 36.4C17.2 36.4 16.8 36.3 16.5 36.1L16.4 36C16.1 35.7 16 35.4 15.9 35C15.9 34.6 16 34.2 16.2 33.9L16.4 33.8L24 26.2L16.4 18.5C16.1 18.3 16 17.9 15.9 17.5C15.9 17.2 16 16.8 16.2 16.5L16.4 16.4C16.6 16.1 17 16 17.4 15.9C17.7 15.9 18.1 16 18.4 16.2L18.5 16.4L26.2 24L33.8 16.4C34.1 16.1 34.4 16 34.8 15.9C35.2 15.9 35.5 16 35.8 16.2L36 16.4L35.8 16.2Z" fill="#A43600" /></svg>
         </button>
-
         <% until_date = evt_date + 30 %>
         <% days_count = (until_date - evt_date).to_i %>
-        <% day_names = %w[S M T W T F S] %>
         <% d = until_date.day; m = until_date.month; y = until_date.year %>
-        <% date_label = "#{day_names[until_date.wday]} #{format('%02d', d)}.#{format('%02d', m)}.#{y}" %>
-        <p class="absolute left-1/2 -translate-x-1/2 top-[34px] font-medium text-22 leading-[27px] tracking-003 text-brand-primary whitespace-nowrap">Repeat until day <%= days_count %></p>
-        <div class="absolute left-[36px] top-[100px] w-[287px] h-0 border border-brand-field"></div>
-
-        <p class="absolute left-1/2 -translate-x-1/2 top-[136px] font-bold text-base tracking-007 text-brand-primary whitespace-nowrap"><%= date_label %></p>
-
-        <div class="relative left-[36px] top-[176px] w-[287px] h-[100px] bg-white rounded-lg flex items-center justify-center gap-3 overflow-hidden">
-          <div class="absolute inset-x-0 top-1/2 -translate-y-1/2 h-11 bg-brand-field rounded-lg pointer-events-none"></div>
-          <div class="overflow-y-auto snap-y snap-mandatory h-full w-11 [scrollbar-width:none] text-center relative z-[1]"
-               onscroll="const t=this;t.querySelectorAll('div').forEach(el=>{const r=el.getBoundingClientRect(),p=t.getBoundingClientRect(),c=r.top-p.top+r.height/2-t.clientHeight/2;el.style.opacity=Math.abs(c)<22?'1':'0.35';el.style.fontWeight=Math.abs(c)<22?'700':'400';el.style.color=Math.abs(c)<22?'#933A35':'#933A35'})">
+        <% date_label = "#{until_date.strftime('%a')} #{format('%02d', d)} #{Date::ABBR_MONTHNAMES[m]} #{y}" %>
+        <p class="font-medium text-22 leading-[27px] tracking-003 text-brand-primary text-center pt-2">Repeat until</p>
+        <hr class="border-none h-px bg-black opacity-20 w-[132px] self-center mt-3 mb-2">
+        <p data-season-modal-target="repeatUntilLabel" class="font-bold text-base tracking-007 text-brand-primary text-center py-2"><%= date_label %></p>
+        <div class="w-full h-[80px] bg-white rounded-lg flex items-center justify-center gap-3 overflow-hidden relative">
+          <div class="absolute inset-x-0 top-1/2 -translate-y-1/2 h-7 bg-brand-field rounded-lg pointer-events-none"></div>
+          <%# Bold/opacity was a one-time server-rendered snapshot with no
+               live update as the wheel scrolls — the highlighted item
+               should always be whichever one actually sits under the
+               centered highlight bar, not whatever the default was on
+               page load. data-action wires that up (CSP blocks inline
+               onscroll="..." attributes silently — see
+               tracking_saved_modal_controller.js for the same gotcha with
+               onclick). %>
+          <div data-season-modal-target="repeatUntilDay" data-action="scroll->season-modal#onRepeatUntilScroll" class="overflow-y-auto snap-y snap-mandatory h-full w-11 [scrollbar-width:none] text-center relative z-[1]">
             <% (1..31).each do |day| %>
-              <div class="h-11 flex items-center justify-center text-base text-brand-primary snap-center" style="font-weight:<%= day == d ? '700' : '400' %>;opacity:<%= day == d ? '1' : '0.35' %>"><%= format('%02d', day) %></div>
+              <div data-value="<%= day %>" class="h-7 flex items-center justify-center text-base text-brand-primary snap-center" style="font-weight:<%= day == d ? '700' : '400' %>;opacity:<%= day == d ? '1' : '0.35' %>"><%= format('%02d', day) %></div>
             <% end %>
           </div>
           <% months = %w[Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec] %>
-          <div class="overflow-y-auto snap-y snap-mandatory h-full w-[52px] [scrollbar-width:none] text-center relative z-[1]"
-               onscroll="const t=this;t.querySelectorAll('div').forEach(el=>{const r=el.getBoundingClientRect(),p=t.getBoundingClientRect(),c=r.top-p.top+r.height/2-t.clientHeight/2;el.style.opacity=Math.abs(c)<22?'1':'0.35';el.style.fontWeight=Math.abs(c)<22?'700':'400'})">
+          <div data-season-modal-target="repeatUntilMonth" data-action="scroll->season-modal#onRepeatUntilScroll" class="overflow-y-auto snap-y snap-mandatory h-full w-[52px] [scrollbar-width:none] text-center relative z-[1]">
             <% months.each_with_index do |mon, mi| %>
               <% mo = mi + 1 %>
-              <div class="h-11 flex items-center justify-center text-base text-brand-primary snap-center" style="font-weight:<%= mo == m ? '700' : '400' %>;opacity:<%= mo == m ? '1' : '0.35' %>"><%= mon %></div>
+              <div data-value="<%= mon %>" class="h-7 flex items-center justify-center text-base text-brand-primary snap-center" style="font-weight:<%= mo == m ? '700' : '400' %>;opacity:<%= mo == m ? '1' : '0.35' %>"><%= mon %></div>
             <% end %>
           </div>
-          <div class="overflow-y-auto snap-y snap-mandatory h-full w-[60px] [scrollbar-width:none] text-center relative z-[1]"
-               onscroll="const t=this;t.querySelectorAll('div').forEach(el=>{const r=el.getBoundingClientRect(),p=t.getBoundingClientRect(),c=r.top-p.top+r.height/2-t.clientHeight/2;el.style.opacity=Math.abs(c)<22?'1':'0.35';el.style.fontWeight=Math.abs(c)<22?'700':'400'})">
-            <% (2025..2035).each do |yr| %>
-              <div class="h-11 flex items-center justify-center text-base text-brand-primary snap-center" style="font-weight:<%= yr == y ? '700' : '400' %>;opacity:<%= yr == y ? '1' : '0.35' %>"><%= yr %></div>
+          <%# Starts at the current year, not a hardcoded 2025 — "Repeat
+               until" a past date makes no sense, and confirm already
+               rejects one, but the wheel shouldn't offer it as an option
+               in the first place. %>
+          <div data-season-modal-target="repeatUntilYear" data-action="scroll->season-modal#onRepeatUntilScroll" class="overflow-y-auto snap-y snap-mandatory h-full w-[60px] [scrollbar-width:none] text-center relative z-[1]">
+            <% (Time.zone.today.year..Time.zone.today.year + 10).each do |yr| %>
+              <div data-value="<%= yr %>" class="h-7 flex items-center justify-center text-base text-brand-primary snap-center" style="font-weight:<%= yr == y ? '700' : '400' %>;opacity:<%= yr == y ? '1' : '0.35' %>"><%= yr %></div>
             <% end %>
           </div>
         </div>
-
-        <div class="absolute left-[36px] top-[341px] w-[287px] h-[52px] bg-brand-primary rounded-lg"></div>
         <button type="button" data-action="click->season-modal#confirmRepeatUntil"
-                class="absolute left-[36px] top-[341px] w-[287px] h-[52px] bg-transparent border-none cursor-pointer p-0 flex items-center justify-center font-medium text-base leading-5 tracking-007 text-white">Save</button>
+                class="w-full h-[52px] bg-brand-primary rounded-lg border-none cursor-pointer flex items-center justify-center font-medium text-base leading-5 tracking-007 text-white mt-4">Save</button>
       </div>
     </div>
 
