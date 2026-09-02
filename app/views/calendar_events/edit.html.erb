@@ -19,7 +19,8 @@
 <div class="bg-white min-h-screen pb-32 font-sans"
      data-controller="season-modal appointment-date-picker"
      data-appointment-date-picker-selected-date-value="<%= evt_date %>"
-     data-appointment-date-picker-period-ranges-value="<%= @period_ranges %>">
+     data-appointment-date-picker-period-ranges-value="<%= @period_ranges %>"
+     data-appointment-date-picker-prototype-value="true">
   <div class="max-w-app mx-auto px-4 pt-5">
 
     <a href="<%= safe_back_path(calendar_path(date: @event.date)) %>"
@@ -85,11 +86,11 @@
                      — date, a "-" on its own line, date — not two dates
                      stacked directly on each other. %>
                 <% if multi_day %>
-                  <%= evt_date.strftime("%a. %B ") %><%= evt_date.day.ordinalize %><%= evt_date.strftime(" %Y") %><br>
+                  <%= evt_date.strftime("%a. %b ") %><%= evt_date.day.ordinalize %><%= evt_date.strftime(" %Y") %><br>
                   <span class="font-light">-</span><br>
-                  <%= end_date.strftime("%a. %B ") %><%= end_date.day.ordinalize %><%= end_date.strftime(" %Y") %>
+                  <%= end_date.strftime("%a. %b ") %><%= end_date.day.ordinalize %><%= end_date.strftime(" %Y") %>
                 <% else %>
-                  <%= evt_date.strftime("%a. %B ") %><%= evt_date.day.ordinalize %><%= evt_date.strftime(" %Y") %>
+                  <%= evt_date.strftime("%a. %b ") %><%= evt_date.day.ordinalize %><%= evt_date.strftime(" %Y") %>
                 <% end %>
               </button>
               <%
@@ -109,13 +110,13 @@
                    in the picker can show/hide it via the timeRow target
                    instead of needing a reload; #applyDateDisplay keeps
                    this in sync going forward. %>
-              <div data-appointment-date-picker-target="timeRow" class="flex items-center justify-center gap-1 <%= 'hidden' if multi_day %>">
+              <button type="button" data-action="click->appointment-date-picker#open" data-appointment-date-picker-target="timeRow" class="flex items-center justify-center gap-1 bg-transparent border-none p-0 cursor-pointer <%= 'hidden' if multi_day %>" aria-label="Edit date and time">
                 <span data-appointment-date-picker-target="startTimeDisplay"
-                      class="text-white text-22 font-medium tracking-wide font-sans select-none"><%= st_h %>:<%= format('%02d', st_m) %> <%= st_ampm %></span>
+                      class="text-white text-22 font-medium tracking-wide font-sans"><%= st_h %>:<%= format('%02d', st_m) %> <%= st_ampm %></span>
                 <span class="text-white text-22 font-light font-sans">-</span>
                 <span data-appointment-date-picker-target="endTimeDisplay"
-                      class="text-white text-22 font-medium tracking-wide font-sans select-none"><%= et_h %>:<%= format('%02d', et_m) %> <%= et_ampm %></span>
-              </div>
+                      class="text-white text-22 font-medium tracking-wide font-sans"><%= et_h %>:<%= format('%02d', et_m) %> <%= et_ampm %></span>
+              </button>
               <input type="hidden" name="calendar_event[start_time]" data-appointment-date-picker-target="startField" value="<%= default_start.strftime('%H:%M') %>">
               <input type="hidden" name="calendar_event[end_time]" data-appointment-date-picker-target="endField" value="<%= default_end.strftime('%H:%M') %>">
               <%= f.hidden_field :date, value: evt_date, data: { appointment_date_picker_target: 'dateField' } %>
@@ -126,13 +127,7 @@
 
       </div>
 
-      <%# my-9, not the my-5 the other dividers on this page use — this gap
-           (date/time card to reminder row) measured ~96px in the Figma node,
-           noticeably more than the ~53px row-to-row spacing elsewhere on
-           this screen; my-5 landed at 61px measured live, my-9 lands at 93,
-           close enough given inherent slop in mapping Figma's icon-box
-           coordinates back to CSS gaps. %>
-      <hr class="border-brand-primary/50 my-9 mx-5">
+      <hr class="border-brand-primary/50 my-5 mx-5">
 
       <%# Reminder row %>
       <% rem = @event.reminder_minutes || 15 %>
@@ -262,120 +257,13 @@
       <%= image_tag "icons/vuesax/linear/calendar-add.svg", class: "w-[33px] h-[33px]", alt: "" %>
     <% end %>
 
-    <%# ── Set Date modal ── %>
-    <div data-appointment-date-picker-target="backdrop" class="hidden fixed inset-0 bg-black/40 z-50" data-action="click->appointment-date-picker#close"></div>
-    <div data-appointment-date-picker-target="modal" role="dialog" aria-modal="true" class="hidden">
-      <div class="w-[333px] h-[406px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] relative">
-
-        <%# Stage 1 %>
-        <div data-appointment-date-picker-target="stage1">
-          <span data-appointment-date-picker-target="dateTitle" class="absolute left-[54px] top-[65px] w-[228px] font-medium text-22 leading-[27px] tracking-003 text-brand-primary text-center"></span>
-          <button type="button" data-action="click->appointment-date-picker#close" class="absolute left-[278px] top-[13px] w-[37px] h-[37px] bg-transparent border-none cursor-pointer p-0">
-            <svg width="37" height="37" viewBox="0 0 53 53" fill="none"><path d="M35.8 16.2L36 16.4C36.2 16.6 36.4 17 36.4 17.4C36.4 17.7 36.3 18.1 36.1 18.4L36 18.5L28.3 26.2L36 33.8C36.2 34.1 36.4 34.4 36.4 34.8C36.4 35.2 36.3 35.5 36.1 35.8L36 36C35.7 36.2 35.4 36.4 35 36.4C34.6 36.4 34.2 36.3 33.9 36.1L33.8 36L26.2 28.3L18.5 36C18.3 36.2 17.9 36.4 17.5 36.4C17.2 36.4 16.8 36.3 16.5 36.1L16.4 36C16.1 35.7 16 35.4 15.9 35C15.9 34.6 16 34.2 16.2 33.9L16.4 33.8L24 26.2L16.4 18.5C16.1 18.3 16 17.9 15.9 17.5C15.9 17.2 16 16.8 16.2 16.5L16.4 16.4C16.6 16.1 17 16 17.4 15.9C17.7 15.9 18.1 16 18.4 16.2L18.5 16.4L26.2 24L33.8 16.4C34.1 16.1 34.4 16 34.8 15.9C35.2 15.9 35.5 16 35.8 16.2L36 16.4L35.8 16.2Z" fill="#A43600" /></svg>
-          </button>
-          <hr class="absolute left-[110px] top-[107px] w-[132px] border-none h-px bg-black opacity-20">
-          <div class="absolute left-[38px] right-[38px] top-[122px] h-[30px] flex items-center justify-between">
-            <button type="button" data-action="click->appointment-date-picker#editDate1" data-appointment-date-picker-target="slot1Btn" class="bg-transparent border-none cursor-pointer p-0 flex items-center gap-2 text-left">
-              <%# Fixed-width label column — "From" and "To" render at
-                   different natural widths, so without this the date text
-                   right after them starts at a different x on each row. %>
-              <span class="text-11 font-semibold tracking-[0.08em] text-brand-primary opacity-50 uppercase w-9 shrink-0">From</span>
-              <span data-appointment-date-picker-target="slot1Label" class="font-medium text-base tracking-007 text-brand-primary"></span>
-            </button>
-            <button type="button" data-action="click->appointment-date-picker#editTime1" class="bg-transparent border-none cursor-pointer p-0">
-              <span data-appointment-date-picker-target="slot1Time" class="font-medium text-base tracking-007 text-brand-primary"></span>
-            </button>
-          </div>
-          <div class="absolute left-[38px] right-[38px] top-[168px] h-[30px] flex items-center justify-between">
-            <button type="button" data-action="click->appointment-date-picker#editDate2" data-appointment-date-picker-target="slot2Btn" class="bg-transparent border-none cursor-pointer p-0 flex items-center gap-2 text-left">
-              <span class="text-11 font-semibold tracking-[0.08em] text-brand-primary opacity-50 uppercase w-9 shrink-0">To</span>
-              <span data-appointment-date-picker-target="slot2Label" class="font-medium text-base tracking-007 text-brand-primary"></span>
-            </button>
-            <button type="button" data-action="click->appointment-date-picker#editTime2" class="bg-transparent border-none cursor-pointer p-0">
-              <span data-appointment-date-picker-target="slot2Time" class="font-medium text-base tracking-007 text-brand-primary"></span>
-            </button>
-          </div>
-          <div class="absolute left-[38px] right-[38px] top-[228px] flex items-center justify-between">
-            <span class="font-medium text-base tracking-007 text-brand-primary">All day</span>
-            <button type="button" data-action="click->appointment-date-picker#toggleAllDay" data-appointment-date-picker-target="allDayToggle" class="w-[63px] h-[34px] rounded-[17px] bg-brand-lightgray border-none cursor-pointer relative p-0">
-              <span class="absolute left-[3px] top-[2px] w-[30px] h-[30px] bg-white rounded-full shadow-[0_1px_4px_rgba(0,0,0,0.2)] transition-transform duration-200"></span>
-            </button>
-          </div>
-          <button type="button" data-action="click->appointment-date-picker#confirm" class="absolute left-[38px] top-[313px] w-[257px] h-12 bg-brand-primary rounded-lg border-none cursor-pointer font-medium text-22 leading-[27px] tracking-003 text-white text-center">Set date</button>
-        </div>
-
-        <%# Stage 2 %>
-        <div data-appointment-date-picker-target="stage2" class="hidden">
-          <span data-appointment-date-picker-target="stage2Title" class="absolute left-[54px] top-[65px] w-[228px] font-medium text-22 leading-[27px] tracking-003 text-brand-primary text-center"></span>
-          <button type="button" data-action="click->appointment-date-picker#close" class="absolute left-[278px] top-[13px] w-[37px] h-[37px] bg-transparent border-none cursor-pointer p-0">
-            <svg width="37" height="37" viewBox="0 0 53 53" fill="none"><path d="M35.8 16.2L36 16.4C36.2 16.6 36.4 17 36.4 17.4C36.4 17.7 36.3 18.1 36.1 18.4L36 18.5L28.3 26.2L36 33.8C36.2 34.1 36.4 34.4 36.4 34.8C36.4 35.2 36.3 35.5 36.1 35.8L36 36C35.7 36.2 35.4 36.4 35 36.4C34.6 36.4 34.2 36.3 33.9 36.1L33.8 36L26.2 28.3L18.5 36C18.3 36.2 17.9 36.4 17.5 36.4C17.2 36.4 16.8 36.3 16.5 36.1L16.4 36C16.1 35.7 16 35.4 15.9 35C15.9 34.6 16 34.2 16.2 33.9L16.4 33.8L24 26.2L16.4 18.5C16.1 18.3 16 17.9 15.9 17.5C15.9 17.2 16 16.8 16.2 16.5L16.4 16.4C16.6 16.1 17 16 17.4 15.9C17.7 15.9 18.1 16 18.4 16.2L18.5 16.4L26.2 24L33.8 16.4C34.1 16.1 34.4 16 34.8 15.9C35.2 15.9 35.5 16 35.8 16.2L36 16.4L35.8 16.2Z" fill="#A43600" /></svg>
-          </button>
-          <hr class="absolute left-[110px] top-[107px] w-[132px] border-none h-px bg-black opacity-20">
-          <div class="absolute left-[38px] right-[38px] top-[122px] h-[30px] flex items-center justify-between">
-            <span class="flex items-center gap-2">
-              <%# Fixed-width label column — "From" and "To" render at
-                   different natural widths, so without this the date text
-                   right after them starts at a different x on each row. %>
-              <span class="text-11 font-semibold tracking-[0.08em] text-brand-primary opacity-50 uppercase w-9 shrink-0">From</span>
-              <span data-appointment-date-picker-target="slot1Label" class="font-medium text-base tracking-007 text-brand-primary"></span>
-            </span>
-            <span data-appointment-date-picker-target="slot1Time" class="font-medium text-base tracking-007 text-brand-primary"></span>
-          </div>
-          <%# Only shown when editing slot 1 (From) — Figma has no divider
-               between the From and To rows at all when editing slot 2 (To),
-               since the scroller then inserts after To instead, with
-               nothing separating From/To above it. %>
-          <hr data-stage2-divider-before class="absolute left-[110px] top-[170px] w-[132px] border-none h-px bg-black opacity-20">
-          <div data-picker="date" class="absolute left-[38px] top-[205px] w-[256px] h-[80px] flex items-center justify-center gap-1.5">
-            <div class="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-7 bg-brand-field rounded-lg pointer-events-none"></div>
-            <div data-appointment-date-picker-target="monthScroll" data-action="scroll->appointment-date-picker#onMonthScroll" class="overflow-y-auto snap-y snap-mandatory h-full w-12 [scrollbar-width:none] relative z-[1]">
-              <% (1..12).each do |m| %><div data-value="<%= m %>" class="h-7 flex items-center justify-center text-base tracking-007 text-brand-primary"><%= format('%02d', m) %></div><% end %>
-            </div>
-            <span class="text-base text-brand-primary relative z-[1]">/</span>
-            <div data-appointment-date-picker-target="dayScroll" data-action="scroll->appointment-date-picker#onDayScroll" class="overflow-y-auto snap-y snap-mandatory h-full w-12 [scrollbar-width:none] relative z-[1]">
-              <% (1..31).each do |d| %><div data-value="<%= d %>" class="h-7 flex items-center justify-center text-base tracking-007 text-brand-primary"><%= format('%02d', d) %></div><% end %>
-            </div>
-            <span class="text-base text-brand-primary relative z-[1]">/</span>
-            <div data-appointment-date-picker-target="yearScroll" data-action="scroll->appointment-date-picker#onYearScroll" class="overflow-y-auto snap-y snap-mandatory h-full w-16 [scrollbar-width:none] relative z-[1]">
-              <% ((Time.zone.today.year - 5)..(Time.zone.today.year + 5)).each do |y| %><div data-value="<%= y %>" class="h-7 flex items-center justify-center text-base tracking-007 text-brand-primary"><%= y %></div><% end %>
-            </div>
-          </div>
-          <div data-picker="time" class="hidden items-center justify-center gap-1 absolute left-[38px] top-[205px] w-[256px] h-[80px]">
-            <div class="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-7 bg-brand-field rounded-lg pointer-events-none"></div>
-            <div data-appointment-date-picker-target="hourScroll" data-action="scroll->appointment-date-picker#onHourScroll" class="overflow-y-auto snap-y snap-mandatory h-full w-[50px] [scrollbar-width:none] relative z-[1]">
-              <% (0..23).each do |h| %><div data-value="<%= h %>" class="h-7 flex items-center justify-center text-base tracking-007 text-brand-primary"><%= format('%02d', h) %></div><% end %>
-            </div>
-            <span class="font-bold text-base text-brand-primary relative z-[1]">:</span>
-            <div data-appointment-date-picker-target="minuteScroll" data-action="scroll->appointment-date-picker#onMinuteScroll" class="overflow-y-auto snap-y snap-mandatory h-full w-14 [scrollbar-width:none] relative z-[1]">
-              <% [0,5,10,15,20,25,30,35,40,45,50,55].each do |m| %><div data-value="<%= m %>" class="h-7 flex items-center justify-center text-base tracking-007 text-brand-primary"><%= format('%02d', m) %></div><% end %>
-            </div>
-          </div>
-          <hr data-stage2-divider class="absolute left-[110px] top-[326px] w-[132px] border-none h-px bg-black opacity-20">
-          <div data-stage2-slot2 class="absolute left-[38px] right-[38px] top-[340px] h-[30px] flex items-center justify-between">
-            <span class="flex items-center gap-2">
-              <span class="text-11 font-semibold tracking-[0.08em] text-brand-primary opacity-50 uppercase w-9 shrink-0">To</span>
-              <span data-appointment-date-picker-target="slot2Label" class="font-medium text-base tracking-007 text-brand-primary"></span>
-            </span>
-            <span data-appointment-date-picker-target="slot2Time" class="font-medium text-base tracking-007 text-brand-primary"></span>
-          </div>
-          <div data-stage2-allday class="absolute left-[38px] right-[38px] top-[395px] flex items-center justify-between">
-            <span class="font-medium text-base tracking-007 text-brand-primary">All day</span>
-            <button type="button" data-action="click->appointment-date-picker#toggleAllDay" data-appointment-date-picker-target="allDayToggle" class="w-[63px] h-[34px] rounded-[17px] bg-brand-lightgray border-none cursor-pointer relative p-0">
-              <span class="absolute left-[3px] top-[2px] w-[30px] h-[30px] bg-white rounded-full shadow-[0_1px_4px_rgba(0,0,0,0.2)] transition-transform duration-200"></span>
-            </button>
-          </div>
-          <%# Figma's button always reads "Set date" — the "Done" wording
-               here was invented, not in the design. %>
-          <button type="button" data-action="click->appointment-date-picker#confirmTime" data-stage2-button class="absolute left-[38px] top-[460px] w-[257px] h-12 bg-brand-primary rounded-lg border-none cursor-pointer font-medium text-22 leading-[27px] tracking-003 text-white text-center">Set date</button>
-        </div>
-      </div>
-    </div>
+    <%= render "calendar_events/date_picker_modal" %>
 
     <%# ── Category icon picker modal ── %>
-    <div data-season-modal-target="backdrop" class="hidden fixed inset-0 bg-black/40 z-50"></div>
+    <div data-season-modal-target="backdrop" class="hidden fixed inset-0 bg-black/40 z-[65]"></div>
     <div data-season-modal-target="modal" role="dialog" aria-modal="true" aria-labelledby="edit-choose-icon-title"
-         class="hidden fixed inset-0 z-50 flex items-center justify-center">
-      <div class="w-[310px] max-h-[92vh] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] p-6 relative flex flex-col">
+         class="hidden fixed inset-0 z-[70] flex items-center justify-center">
+      <div class="w-[310px] max-h-[92vh] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] px-6 py-8 relative flex flex-col">
         <%# Close button sits high in the card's own top-right corner, not
              centered against the title row — measured off the Figma node
              directly (close glyph center y=19.5, title top y=41; the two
@@ -389,7 +277,7 @@
           <h2 id="edit-choose-icon-title" class="text-22 font-medium text-brand-primary text-center font-sans leading-[45px]">Choose an icon</h2>
         </div>
         <hr class="border-brand-field mb-4">
-        <div class="flex-1 min-h-0 overflow-y-auto [scrollbar-width:none] py-2 flex flex-col gap-2.5">
+        <div class="flex-1 min-h-0 overflow-y-auto [scrollbar-width:none] py-4 flex flex-col gap-2.5">
           <% items = [
             { label: 'Friends', icon: 'family.svg' },
             { label: 'Dinner', icon: 'dinner.svg' },
@@ -440,9 +328,9 @@
     </div>
 
     <%# ── Location picker modal ── %>
-    <div data-season-modal-target="locationBackdrop" class="hidden fixed inset-0 bg-black/40 z-50"></div>
+    <div data-season-modal-target="locationBackdrop" class="hidden fixed inset-0 bg-black/40 z-[65]"></div>
     <div data-season-modal-target="locationModal" role="dialog" aria-modal="true" aria-label="Add location"
-         class="hidden fixed inset-0 z-50 flex items-center justify-center">
+         class="hidden fixed inset-0 z-[70] flex items-center justify-center">
       <div data-season-modal-target="locationCard"
            class="w-[347px] h-[301px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] relative transition-[height] duration-[250ms] ease-in-out overflow-hidden">
         <button type="button" data-action="click->season-modal#closeLocation"
@@ -470,9 +358,9 @@
     </div>
 
     <%# ── Notes modal ── %>
-    <div data-season-modal-target="notesBackdrop" class="hidden fixed inset-0 bg-black/40 z-50"></div>
+    <div data-season-modal-target="notesBackdrop" class="hidden fixed inset-0 bg-black/40 z-[65]"></div>
     <div data-season-modal-target="notesModal" role="dialog" aria-modal="true" aria-label="Add notes"
-         class="hidden fixed inset-0 z-50 flex items-center justify-center">
+         class="hidden fixed inset-0 z-[70] flex items-center justify-center">
       <div class="w-[385px] h-[477px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] relative">
         <button type="button" data-action="click->season-modal#closeNotes"
                 class="absolute left-[321px] top-[3px] w-[37px] h-[37px] bg-transparent border-none cursor-pointer p-0 z-[2]">
@@ -492,9 +380,9 @@
     </div>
 
     <%# ── Reminder picker modal ── %>
-    <div data-season-modal-target="reminderBackdrop" class="hidden fixed inset-0 bg-black/40 z-50"></div>
+    <div data-season-modal-target="reminderBackdrop" class="hidden fixed inset-0 bg-black/40 z-[65]"></div>
     <div data-season-modal-target="reminderModal" role="dialog" aria-modal="true" aria-label="Set reminder"
-         class="hidden fixed inset-0 z-50 flex items-center justify-center">
+         class="hidden fixed inset-0 z-[70] flex items-center justify-center">
       <div class="w-[355px] h-[524px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] relative">
         <button type="button" data-action="click->season-modal#closeReminder"
                 class="absolute left-[289px] top-[13px] w-[37px] h-[37px] bg-transparent border-none cursor-pointer p-0 z-[2]">
@@ -536,9 +424,9 @@
     </div>
 
     <%# ── Custom reminder picker modal ── %>
-    <div data-season-modal-target="customReminderBackdrop" class="hidden fixed inset-0 bg-black/40 z-50" data-action="click->season-modal#closeCustomReminder"></div>
+    <div data-season-modal-target="customReminderBackdrop" class="hidden fixed inset-0 bg-black/40 z-[65]" data-action="click->season-modal#closeCustomReminder"></div>
     <div data-season-modal-target="customReminderModal" role="dialog" aria-modal="true" aria-label="Set reminder"
-         class="hidden fixed inset-0 z-50 flex items-center justify-center">
+         class="hidden fixed inset-0 z-[70] flex items-center justify-center">
       <div class="w-[355px] h-[380px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] relative">
         <button type="button" data-action="click->season-modal#closeCustomReminder"
                 class="absolute left-[289px] top-[13px] w-[37px] h-[37px] bg-transparent border-none cursor-pointer p-0 z-[2]">
@@ -552,17 +440,17 @@
         </div>
         <div class="absolute left-[18px] top-[101px] w-[320px] h-0 border border-brand-field"></div>
         <div class="absolute left-[36px] top-[130px] w-[283px] h-[100px] flex items-center justify-center gap-3 overflow-hidden">
-          <div class="absolute inset-x-0 top-1/2 -translate-y-1/2 h-11 bg-brand-field rounded-lg pointer-events-none"></div>
+          <div class="absolute inset-x-0 top-1/2 -translate-y-1/2 h-7 bg-brand-field rounded-lg pointer-events-none"></div>
           <div data-season-modal-target="customReminderNum"
                class="overflow-y-auto snap-y snap-mandatory h-full w-14 [scrollbar-width:none] text-center relative z-[1]">
             <% (1..60).each do |n| %>
-              <div data-value="<%= n %>" class="h-11 flex items-center justify-center text-22 tracking-003 text-brand-primary snap-center" style="font-weight:<%= n == 5 ? '700' : '400' %>;opacity:<%= n == 5 ? '1' : '0.4' %>"><%= format('%02d', n) %></div>
+              <div data-value="<%= n %>" class="h-7 flex items-center justify-center text-22 tracking-003 text-brand-primary snap-center" style="font-weight:<%= n == 5 ? '700' : '400' %>;opacity:<%= n == 5 ? '1' : '0.4' %>"><%= format('%02d', n) %></div>
             <% end %>
           </div>
           <div data-season-modal-target="customReminderUnit"
                class="overflow-y-auto snap-y snap-mandatory h-full w-[90px] [scrollbar-width:none] text-center relative z-[1]">
             <% [['minutes','Minutes'],['hours','Hours'],['days','Days']].each_with_index do |(val,label),i| %>
-              <div data-value="<%= val %>" class="h-11 flex items-center justify-center text-base tracking-007 text-brand-primary snap-center" style="font-weight:<%= i == 0 ? '700' : '400' %>;opacity:<%= i == 0 ? '1' : '0.4' %>"><%= label %></div>
+              <div data-value="<%= val %>" class="h-7 flex items-center justify-center text-base tracking-007 text-brand-primary snap-center" style="font-weight:<%= i == 0 ? '700' : '400' %>;opacity:<%= i == 0 ? '1' : '0.4' %>"><%= label %></div>
             <% end %>
           </div>
         </div>
@@ -573,9 +461,9 @@
     </div>
 
     <%# ── Guests modal ── %>
-    <div data-season-modal-target="guestsBackdrop" class="hidden fixed inset-0 bg-black/40 z-50"></div>
+    <div data-season-modal-target="guestsBackdrop" class="hidden fixed inset-0 bg-black/40 z-[65]"></div>
     <div data-season-modal-target="guestsModal" role="dialog" aria-modal="true" aria-label="Invite guests"
-         class="hidden fixed inset-0 z-50 flex items-center justify-center">
+         class="hidden fixed inset-0 z-[70] flex items-center justify-center">
       <div data-season-modal-target="guestsCard"
            class="w-[348px] h-[331px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] relative transition-[height] duration-[250ms] ease-in-out overflow-hidden">
         <button type="button" data-action="click->season-modal#closeGuests"
@@ -604,9 +492,9 @@
     </div>
 
     <%# ── Repeat modal ── %>
-    <div data-season-modal-target="repeatBackdrop" class="hidden fixed inset-0 bg-black/40 z-50"></div>
+    <div data-season-modal-target="repeatBackdrop" class="hidden fixed inset-0 bg-black/40 z-[65]"></div>
     <div data-season-modal-target="repeatModal" role="dialog" aria-modal="true" aria-label="Repeat"
-         class="hidden fixed inset-0 z-50 flex items-center justify-center">
+         class="hidden fixed inset-0 z-[70] flex items-center justify-center">
       <div class="w-[361px] h-[776px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] relative overflow-y-auto [scrollbar-width:none]">
         <button type="button" data-action="click->season-modal#closeRepeat"
                 class="absolute left-[304px] top-[13px] w-[37px] h-[37px] bg-transparent border-none cursor-pointer p-0 z-[2]">
@@ -632,7 +520,25 @@
           <% sub_opts = [{val:'endless',label:'Repeat endlessly',active:true,top:0},{val:'until',label:'Repeat until',active:false,top:49},{val:'count',label:'Repeat',active:false,top:98}] %>
           <% sub_opts.each do |opt| %>
             <div class="absolute left-0 right-0 h-[34px] flex items-center justify-between" style="top:<%= opt[:top] %>px">
-              <span class="font-medium text-base tracking-007 text-brand-primary"><%= opt[:label] %></span>
+              <% if opt[:val] == 'count' %>
+                <%# Inline number field, shown only once this row is toggled
+                     on — matches Figma's "Repeat X times" (a real value on
+                     the row itself, not a static label), same pattern as
+                     the "Custom repeat" modal's number inputs rather than
+                     opening a separate modal like "Repeat until" does. %>
+                <div class="flex items-center gap-2">
+                  <span data-season-modal-target="repeatCountRowLabel" class="font-medium text-base tracking-007 text-brand-primary"><%= opt[:label] %></span>
+                  <input type="number" inputmode="numeric" min="1" max="365" value="5" autocomplete="off"
+                         data-season-modal-target="repeatCountInput"
+                         data-action="input->season-modal#updateRepeatCount"
+                         class="hidden w-12 h-7 bg-brand-field/50 rounded-md border-none text-center font-bold text-brand-primary outline-none">
+                  <span data-season-modal-target="repeatCountUnit" class="hidden font-medium text-base tracking-007 text-brand-primary">times</span>
+                </div>
+              <% elsif opt[:val] == 'until' %>
+                <span data-season-modal-target="repeatUntilRowLabel" class="font-medium text-base tracking-007 text-brand-primary"><%= opt[:label] %></span>
+              <% else %>
+                <span class="font-medium text-base tracking-007 text-brand-primary"><%= opt[:label] %></span>
+              <% end %>
               <div class="w-[63px] h-[34px] rounded-[17px] cursor-pointer relative shrink-0"
                    data-action="click->season-modal#toggleRepeatSub"
                    data-sub-value="<%= opt[:val] %>"
@@ -649,9 +555,9 @@
     </div>
 
     <%# ── Custom repeat modal ── %>
-    <div data-season-modal-target="customRepeatBackdrop" class="hidden fixed inset-0 bg-black/40 z-50"></div>
+    <div data-season-modal-target="customRepeatBackdrop" class="hidden fixed inset-0 bg-black/40 z-[65]"></div>
     <div data-season-modal-target="customRepeatModal" role="dialog" aria-modal="true" aria-label="Custom repeat"
-         class="hidden fixed inset-0 z-50 flex items-center justify-center">
+         class="hidden fixed inset-0 z-[70] flex items-center justify-center">
       <div class="w-[361px] h-[451px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] relative overflow-y-auto [scrollbar-width:none]">
         <button type="button" data-action="click->season-modal#closeCustomRepeat"
                 class="absolute left-[304px] top-[13px] w-[37px] h-[37px] bg-transparent border-none cursor-pointer p-0 z-[2]">
@@ -659,14 +565,25 @@
         </button>
         <p class="absolute left-1/2 -translate-x-1/2 top-[34px] font-medium text-22 leading-[27px] tracking-003 text-brand-primary whitespace-nowrap">Custom repeat</p>
         <div class="absolute left-[36px] top-[100px] w-[287px] h-0 border border-brand-field"></div>
-        <% edit_custom_rows = [{label:'Every',unit:'days',max:365,top:140,default:1},{label:'Every',unit:'weeks',max:52,top:205,default:1},{label:'Every',unit:'months',max:24,top:270,default:1}] %>
-        <% edit_custom_rows.each do |row| %>
-          <div class="absolute left-[36px] w-[287px] h-[38px] bg-brand-field/50 rounded-[10px] flex items-center px-4 gap-1" style="top:<%= row[:top] %>px">
-            <span class="font-medium text-base tracking-007 text-brand-primary"><%= row[:label] %></span>
-            <input type="number" inputmode="numeric" min="1" max="<%= row[:max] %>" value="<%= row[:default] %>" autocomplete="off" class="w-14 h-full bg-transparent border-none font-bold text-base text-brand-primary text-center outline-none">
-            <span class="font-medium text-base tracking-007 text-brand-primary"><%= row[:unit] %></span>
-          </div>
-        <% end %>
+        <%# One interval — "Every [N] [days/weeks/months]" — not three rows
+             held simultaneously. A recurring event has exactly one
+             frequency; "every 2 days AND every 3 weeks AND every 1 month"
+             isn't a coherent single rule, and there was no way to tell
+             which of the three was actually meant (confirmCustomRepeat
+             never even read any of them — this whole modal was decorative
+             until now). %>
+        <div class="absolute left-[36px] top-[140px] w-[287px] h-[38px] bg-brand-field/50 rounded-[10px] flex items-center px-4 gap-2">
+          <span class="font-medium text-base tracking-007 text-brand-primary">Every</span>
+          <input type="number" inputmode="numeric" min="1" max="365" value="1" autocomplete="off"
+                 data-season-modal-target="customRepeatN"
+                 class="w-14 h-full bg-transparent border-none font-bold text-base text-brand-primary text-center outline-none">
+          <select data-season-modal-target="customRepeatUnit"
+                  class="flex-1 h-full bg-transparent border-none font-medium text-base text-brand-primary outline-none">
+            <option value="days">days</option>
+            <option value="weeks" selected>weeks</option>
+            <option value="months">months</option>
+          </select>
+        </div>
         <div class="absolute left-[36px] top-[352px] w-[287px] h-[52px] bg-brand-primary rounded-lg"></div>
         <button type="button" data-action="click->season-modal#confirmCustomRepeat"
                 class="absolute left-[36px] top-[352px] w-[287px] h-[52px] bg-transparent border-none cursor-pointer p-0 flex items-center justify-center font-medium text-base leading-5 tracking-007 text-white">Save</button>
@@ -674,48 +591,55 @@
     </div>
 
     <%# ── Repeat until date modal ── %>
-    <div data-season-modal-target="repeatUntilBackdrop" class="hidden fixed inset-0 bg-black/40 z-50" data-action="click->season-modal#closeRepeatUntil"></div>
+    <div data-season-modal-target="repeatUntilBackdrop" class="hidden fixed inset-0 bg-black/40 z-[65]" data-action="click->season-modal#closeRepeatUntil"></div>
     <div data-season-modal-target="repeatUntilModal" role="dialog" aria-modal="true" aria-label="Repeat until"
-         class="hidden fixed inset-0 z-50 flex items-center justify-center">
-      <div class="w-[361px] h-[438px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] relative">
+         class="hidden fixed inset-0 z-[70] flex items-center justify-center">
+      <div class="w-[380px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] relative flex flex-col px-[36px] pt-[22px] pb-[22px]">
         <button type="button" data-action="click->season-modal#closeRepeatUntil"
-                class="absolute left-[304px] top-[13px] w-[37px] h-[37px] bg-transparent border-none cursor-pointer p-0 z-[2]">
+                class="absolute right-[13px] top-[13px] w-[37px] h-[37px] bg-transparent border-none cursor-pointer p-0 z-[2]">
           <svg width="37" height="37" viewBox="0 0 53 53" fill="none"><path d="M35.8 16.2L36 16.4C36.2 16.6 36.4 17 36.4 17.4C36.4 17.7 36.3 18.1 36.1 18.4L36 18.5L28.3 26.2L36 33.8C36.2 34.1 36.4 34.4 36.4 34.8C36.4 35.2 36.3 35.5 36.1 35.8L36 36C35.7 36.2 35.4 36.4 35 36.4C34.6 36.4 34.2 36.3 33.9 36.1L33.8 36L26.2 28.3L18.5 36C18.3 36.2 17.9 36.4 17.5 36.4C17.2 36.4 16.8 36.3 16.5 36.1L16.4 36C16.1 35.7 16 35.4 15.9 35C15.9 34.6 16 34.2 16.2 33.9L16.4 33.8L24 26.2L16.4 18.5C16.1 18.3 16 17.9 15.9 17.5C15.9 17.2 16 16.8 16.2 16.5L16.4 16.4C16.6 16.1 17 16 17.4 15.9C17.7 15.9 18.1 16 18.4 16.2L18.5 16.4L26.2 24L33.8 16.4C34.1 16.1 34.4 16 34.8 15.9C35.2 15.9 35.5 16 35.8 16.2L36 16.4L35.8 16.2Z" fill="#A43600" /></svg>
         </button>
-        <% edit_until_date = evt_date + 30 %>
-        <% edit_until_days = (edit_until_date - evt_date).to_i %>
-        <% edit_day_names = %w[S M T W T F S] %>
-        <% ud = edit_until_date.day; um = edit_until_date.month; uy = edit_until_date.year %>
-        <% edit_date_label = "#{edit_day_names[edit_until_date.wday]} #{format('%02d', ud)}.#{format('%02d', um)}.#{uy}" %>
-        <p class="absolute left-1/2 -translate-x-1/2 top-[34px] font-medium text-22 leading-[27px] tracking-003 text-brand-primary whitespace-nowrap">Repeat until day <%= edit_until_days %></p>
-        <div class="absolute left-[36px] top-[100px] w-[287px] h-0 border border-brand-field"></div>
-        <p class="absolute left-1/2 -translate-x-1/2 top-[136px] font-bold text-base tracking-007 text-brand-primary whitespace-nowrap"><%= edit_date_label %></p>
-        <div class="relative left-[36px] top-[176px] w-[287px] h-[100px] bg-white rounded-lg flex items-center justify-center gap-3 overflow-hidden">
-          <div class="absolute inset-x-0 top-1/2 -translate-y-1/2 h-11 bg-brand-field rounded-lg pointer-events-none"></div>
-          <div class="overflow-y-auto snap-y snap-mandatory h-full w-11 [scrollbar-width:none] text-center relative z-[1]"
-               onscroll="const t=this;t.querySelectorAll('div').forEach(el=>{const r=el.getBoundingClientRect(),p=t.getBoundingClientRect(),c=r.top-p.top+r.height/2-t.clientHeight/2;el.style.opacity=Math.abs(c)<22?'1':'0.35';el.style.fontWeight=Math.abs(c)<22?'700':'400'})">
+        <% until_date = evt_date + 30 %>
+        <% days_count = (until_date - evt_date).to_i %>
+        <% d = until_date.day; m = until_date.month; y = until_date.year %>
+        <% date_label = "#{until_date.strftime('%a')} #{format('%02d', d)} #{Date::ABBR_MONTHNAMES[m]} #{y}" %>
+        <p class="font-medium text-22 leading-[27px] tracking-003 text-brand-primary text-center pt-2">Repeat until</p>
+        <hr class="border-none h-px bg-black opacity-20 w-[132px] self-center mt-3 mb-2">
+        <p data-season-modal-target="repeatUntilLabel" class="font-bold text-base tracking-007 text-brand-primary text-center py-2"><%= date_label %></p>
+        <div class="w-full h-[80px] bg-white rounded-lg flex items-center justify-center gap-3 overflow-hidden relative">
+          <div class="absolute inset-x-0 top-1/2 -translate-y-1/2 h-7 bg-brand-field rounded-lg pointer-events-none"></div>
+          <%# Bold/opacity was a one-time server-rendered snapshot with no
+               live update as the wheel scrolls — the highlighted item
+               should always be whichever one actually sits under the
+               centered highlight bar, not whatever the default was on
+               page load. data-action wires that up (CSP blocks inline
+               onscroll="..." attributes silently — see
+               tracking_saved_modal_controller.js for the same gotcha with
+               onclick). %>
+          <div data-season-modal-target="repeatUntilDay" data-action="scroll->season-modal#onRepeatUntilScroll" class="overflow-y-auto snap-y snap-mandatory h-full w-11 [scrollbar-width:none] text-center relative z-[1]">
             <% (1..31).each do |day| %>
-              <div class="h-11 flex items-center justify-center text-base text-brand-primary snap-center" style="font-weight:<%= day == ud ? '700' : '400' %>;opacity:<%= day == ud ? '1' : '0.35' %>"><%= format('%02d', day) %></div>
+              <div data-value="<%= day %>" class="h-7 flex items-center justify-center text-base text-brand-primary snap-center" style="font-weight:<%= day == d ? '700' : '400' %>;opacity:<%= day == d ? '1' : '0.35' %>"><%= format('%02d', day) %></div>
             <% end %>
           </div>
-          <% edit_months = %w[Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec] %>
-          <div class="overflow-y-auto snap-y snap-mandatory h-full w-[52px] [scrollbar-width:none] text-center relative z-[1]"
-               onscroll="const t=this;t.querySelectorAll('div').forEach(el=>{const r=el.getBoundingClientRect(),p=t.getBoundingClientRect(),c=r.top-p.top+r.height/2-t.clientHeight/2;el.style.opacity=Math.abs(c)<22?'1':'0.35';el.style.fontWeight=Math.abs(c)<22?'700':'400'})">
-            <% edit_months.each_with_index do |mon, mi| %>
+          <% months = %w[Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec] %>
+          <div data-season-modal-target="repeatUntilMonth" data-action="scroll->season-modal#onRepeatUntilScroll" class="overflow-y-auto snap-y snap-mandatory h-full w-[52px] [scrollbar-width:none] text-center relative z-[1]">
+            <% months.each_with_index do |mon, mi| %>
               <% mo = mi + 1 %>
-              <div class="h-11 flex items-center justify-center text-base text-brand-primary snap-center" style="font-weight:<%= mo == um ? '700' : '400' %>;opacity:<%= mo == um ? '1' : '0.35' %>"><%= mon %></div>
+              <div data-value="<%= mon %>" class="h-7 flex items-center justify-center text-base text-brand-primary snap-center" style="font-weight:<%= mo == m ? '700' : '400' %>;opacity:<%= mo == m ? '1' : '0.35' %>"><%= mon %></div>
             <% end %>
           </div>
-          <div class="overflow-y-auto snap-y snap-mandatory h-full w-[60px] [scrollbar-width:none] text-center relative z-[1]"
-               onscroll="const t=this;t.querySelectorAll('div').forEach(el=>{const r=el.getBoundingClientRect(),p=t.getBoundingClientRect(),c=r.top-p.top+r.height/2-t.clientHeight/2;el.style.opacity=Math.abs(c)<22?'1':'0.35';el.style.fontWeight=Math.abs(c)<22?'700':'400'})">
-            <% (2025..2035).each do |yr| %>
-              <div class="h-11 flex items-center justify-center text-base text-brand-primary snap-center" style="font-weight:<%= yr == uy ? '700' : '400' %>;opacity:<%= yr == uy ? '1' : '0.35' %>"><%= yr %></div>
+          <%# Starts at the current year, not a hardcoded 2025 — "Repeat
+               until" a past date makes no sense, and confirm already
+               rejects one, but the wheel shouldn't offer it as an option
+               in the first place. %>
+          <div data-season-modal-target="repeatUntilYear" data-action="scroll->season-modal#onRepeatUntilScroll" class="overflow-y-auto snap-y snap-mandatory h-full w-[60px] [scrollbar-width:none] text-center relative z-[1]">
+            <% (Time.zone.today.year..Time.zone.today.year + 10).each do |yr| %>
+              <div data-value="<%= yr %>" class="h-7 flex items-center justify-center text-base text-brand-primary snap-center" style="font-weight:<%= yr == y ? '700' : '400' %>;opacity:<%= yr == y ? '1' : '0.35' %>"><%= yr %></div>
             <% end %>
           </div>
         </div>
-        <div class="absolute left-[36px] top-[341px] w-[287px] h-[52px] bg-brand-primary rounded-lg"></div>
         <button type="button" data-action="click->season-modal#confirmRepeatUntil"
-                class="absolute left-[36px] top-[341px] w-[287px] h-[52px] bg-transparent border-none cursor-pointer p-0 flex items-center justify-center font-medium text-base leading-5 tracking-007 text-white">Save</button>
+                class="w-full h-[52px] bg-brand-primary rounded-lg border-none cursor-pointer flex items-center justify-center font-medium text-base leading-5 tracking-007 text-white mt-4">Save</button>
       </div>
     </div>
 
@@ -730,7 +654,7 @@
           <% [['Edit only this event', :single], ['Edit this and subsequent events', :forward], ['Edit all events', :all]].each do |(label, scope)| %>
             <button type="button"
                     data-action="click->season-modal#closeRecurring"
-                    class="w-full h-11 bg-brand-field border-none rounded-[10px] font-medium text-15 text-brand-primary cursor-pointer">
+                    class="w-full h-7 bg-brand-field border-none rounded-[10px] font-medium text-15 text-brand-primary cursor-pointer">
               <%= label %>
             </button>
           <% end %>
@@ -757,7 +681,7 @@
           <%= button_to "Notify nobody",
                 calendar_event_path(@event),
                 method: :delete,
-                class: "w-full h-11 bg-brand-field border-none rounded-[10px] font-medium text-15 text-brand-primary cursor-pointer" %>
+                class: "w-full h-7 bg-brand-field border-none rounded-[10px] font-medium text-15 text-brand-primary cursor-pointer" %>
           <button type="button" data-action="click->season-modal#closeNotify"
                   class="w-full h-11 bg-transparent border-none font-medium text-15 text-brand-primary cursor-pointer opacity-60">
             Cancel
@@ -776,7 +700,7 @@
         <div class="flex gap-3">
           <button type="button" data-action="click->season-modal#closeAttention"
                   data-season-modal-target="attentionCancel"
-                  class="flex-1 h-11 bg-brand-field border-none rounded-[10px] font-medium text-15 text-brand-primary cursor-pointer">
+                  class="flex-1 h-7 bg-brand-field border-none rounded-[10px] font-medium text-15 text-brand-primary cursor-pointer">
             Keep editing
           </button>
           <button type="button" data-season-modal-target="attentionConfirm"

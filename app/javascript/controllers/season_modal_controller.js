@@ -1,7 +1,8 @@
+/* global requestAnimationFrame */
 import { Controller } from '@hotwired/stimulus'
 
 export default class extends Controller {
-  static targets = ['modal', 'backdrop', 'closeBtn', 'categoryInput', 'categoryOption', 'triggerButton', 'submitBtn', 'locationModal', 'locationBackdrop', 'locationInput', 'locationField', 'locationCard', 'locationResults', 'locationSubmitBg', 'locationSubmitBtn', 'locationLabel', 'locationIconBg', 'notesModal', 'notesBackdrop', 'notesInput', 'notesField', 'notesLabel', 'notesIconBg', 'guestsModal', 'guestsBackdrop', 'guestsInput', 'guestsField', 'guestsLabel', 'guestsIconBg', 'guestsList', 'guestsCard', 'guestsSubmitBg', 'guestsSubmitBtn', 'guestsInlineList', 'reminderModal', 'reminderBackdrop', 'reminderField', 'reminderLabel', 'reminderIconBg', 'reminderOption', 'reminderClearBtn', 'repeatModal', 'repeatBackdrop', 'repeatLabel', 'repeatIconBg', 'repeatOption', 'repeatSubOptions', 'repeatField', 'customRepeatModal', 'customRepeatBackdrop', 'repeatUntilModal', 'repeatUntilBackdrop', 'customReminderModal', 'customReminderBackdrop', 'customReminderNum', 'customReminderUnit', 'attentionModal', 'attentionBackdrop', 'attentionTitle', 'attentionBody', 'attentionConfirm', 'attentionCancel', 'recurringModal', 'recurringBackdrop', 'notifyModal', 'notifyBackdrop']
+  static targets = ['modal', 'backdrop', 'closeBtn', 'categoryInput', 'categoryOption', 'triggerButton', 'submitBtn', 'locationModal', 'locationBackdrop', 'locationInput', 'locationField', 'locationCard', 'locationResults', 'locationSubmitBg', 'locationSubmitBtn', 'locationLabel', 'locationIconBg', 'notesModal', 'notesBackdrop', 'notesInput', 'notesField', 'notesLabel', 'notesIconBg', 'guestsModal', 'guestsBackdrop', 'guestsInput', 'guestsField', 'guestsLabel', 'guestsIconBg', 'guestsList', 'guestsCard', 'guestsSubmitBg', 'guestsSubmitBtn', 'guestsInlineList', 'reminderModal', 'reminderBackdrop', 'reminderField', 'reminderLabel', 'reminderIconBg', 'reminderOption', 'reminderClearBtn', 'repeatModal', 'repeatBackdrop', 'repeatLabel', 'repeatIconBg', 'repeatOption', 'repeatSubOptions', 'repeatField', 'customRepeatModal', 'customRepeatBackdrop', 'customRepeatN', 'customRepeatUnit', 'repeatUntilModal', 'repeatUntilBackdrop', 'repeatUntilDay', 'repeatUntilMonth', 'repeatUntilYear', 'repeatUntilLabel', 'repeatUntilRowLabel', 'repeatCountInput', 'repeatCountUnit', 'repeatCountRowLabel', 'customReminderModal', 'customReminderBackdrop', 'customReminderNum', 'customReminderUnit', 'attentionModal', 'attentionBackdrop', 'attentionTitle', 'attentionBody', 'attentionConfirm', 'attentionCancel', 'recurringModal', 'recurringBackdrop', 'notifyModal', 'notifyBackdrop']
   static values = {
     selectedCategory: String,
     lastLat: Number,
@@ -720,6 +721,17 @@ export default class extends Controller {
 
   _selectedRepeat = 'monthly'
   _selectedRepeatSub = 'day15'
+  // Pattern (daily/weekly/monthly/yearly/custom) and duration
+  // (endless/until/count) are two independent facets of one recurrence
+  // rule — every real calendar app lets them combine ("weekly, until Oct
+  // 16" is one rule, not two that fight over the same field). All four
+  // confirm paths below (#syncRepeatField) write both into repeatField
+  // together instead of each overwriting the other's piece.
+  _customN = 1
+  _customUnit = 'weeks'
+  _durationMode = 'endless'
+  _durationUntil = null
+  _durationCount = 5
 
   openRepeat () {
     this.repeatBackdropTarget.classList.remove('hidden')
@@ -758,25 +770,83 @@ export default class extends Controller {
       return
     }
 
+    // Radio: only one of endless/until/count can be on at a time.
     const isActive = container.style.background === 'rgb(147, 58, 53)' || container.style.background === '#933A35'
-    const dot = container.querySelector('div')
-
-    if (isActive) {
-      container.style.background = '#D9D9D9'
-      dot.style.left = '2px'
-      dot.style.right = 'auto'
-    } else {
-      container.style.background = '#933A35'
-      dot.style.right = '2px'
-      dot.style.left = 'auto'
-    }
+    this.#setActiveRepeatSub(isActive ? null : val)
   }
 
-  confirmRepeat () {
-    const labels = { daily: 'Daily', weekly: 'Weekly', monthly: 'Monthly', yearly: 'Every Year', custom: 'Custom' }
-    const label = labels[this._selectedRepeat] || 'Repeat'
+  updateRepeatCount (event) {
+    this._durationCount = Math.max(1, parseInt(event.currentTarget.value) || 1)
+    this.#syncRepeatField()
+  }
+
+  // Sets exactly one of endless/until/count "on" (or none, if activeVal is
+  // null — reverts to endless) across all three toggle switches in the
+  // sub-options list. Shared by toggleRepeatSub (endless/count clicks) and
+  // confirmRepeatUntil — confirming a "Repeat until" date used to update
+  // its label but leave "Repeat endlessly" visually switched on, since
+  // nothing there touched the toggles at all.
+  #setActiveRepeatSub (activeVal) {
+    const allSubs = this.hasRepeatSubOptionsTarget ? this.repeatSubOptionsTarget.querySelectorAll('[data-sub-value]') : []
+    let countTurnedOn = false
+    allSubs.forEach(el => {
+      const dot = el.querySelector('div')
+      const shouldOn = el.dataset.subValue === activeVal
+      el.style.background = shouldOn ? '#933A35' : '#D9D9D9'
+      if (dot) {
+        dot.style.left = shouldOn ? 'auto' : '2px'
+        dot.style.right = shouldOn ? '2px' : 'auto'
+      }
+      if (el.dataset.subValue === 'count') countTurnedOn = shouldOn
+    })
+
+    this._durationMode = activeVal || 'endless'
+
+    // "Repeat X times" gets an inline number field (rather than its own
+    // modal, unlike "Repeat until") — only visible while this row is on.
+    if (this.hasRepeatCountInputTarget) {
+      this.repeatCountInputTarget.classList.toggle('hidden', !countTurnedOn)
+      if (this.hasRepeatCountUnitTarget) this.repeatCountUnitTarget.classList.toggle('hidden', !countTurnedOn)
+      if (countTurnedOn) {
+        this.repeatCountInputTarget.focus()
+        this._durationCount = Math.max(1, parseInt(this.repeatCountInputTarget.value) || 1)
+      }
+    }
+    this.#syncRepeatField()
+  }
+
+  // Combines pattern (daily/weekly/monthly/yearly/custom:N:unit) with
+  // duration (endless/until:date/count:N) into one repeat_frequency value,
+  // and updates the outer summary label to match — the single place all
+  // four confirm actions (pattern picked, custom interval saved, until-
+  // date confirmed, count typed) funnel through, so none of them can wipe
+  // out what another one set.
+  #syncRepeatField () {
+    const patternLabels = { daily: 'Daily', weekly: 'Weekly', monthly: 'Monthly', yearly: 'Every Year' }
+    const patternLabel = this._selectedRepeat === 'custom'
+      ? `Every ${this._customN} ${this._customUnit}`
+      : (patternLabels[this._selectedRepeat] || 'Repeat')
+    const patternValue = this._selectedRepeat === 'custom'
+      ? `custom:${this._customN}:${this._customUnit}`
+      : this._selectedRepeat
+
+    let durationLabel = ''
+    let durationValue = ''
+    if (this._durationMode === 'until' && this._durationUntil) {
+      const { y, m, d } = this._durationUntil
+      durationLabel = ` until ${m} ${d}, ${y}`
+      durationValue = `|until:${y}-${m}-${d}`
+    } else if (this._durationMode === 'count') {
+      durationLabel = `, ${this._durationCount} times`
+      durationValue = `|count:${this._durationCount}`
+    }
+
+    if (this.hasRepeatFieldTarget) {
+      this.repeatFieldTarget.value = patternValue + durationValue
+      this.#notifyPersistence(this.repeatFieldTarget)
+    }
     if (this.hasRepeatLabelTarget) {
-      this.repeatLabelTarget.textContent = label
+      this.repeatLabelTarget.textContent = patternLabel + durationLabel
       this.repeatLabelTarget.classList.remove('text-brand-graytext')
       this.repeatLabelTarget.classList.add('text-brand-primary')
     }
@@ -786,10 +856,10 @@ export default class extends Controller {
       const svg = this.repeatIconBgTarget.querySelector('svg')
       if (svg) svg.removeAttribute('stroke-opacity')
     }
-    if (this.hasRepeatFieldTarget) {
-      this.repeatFieldTarget.value = this._selectedRepeat
-      this.#notifyPersistence(this.repeatFieldTarget)
-    }
+  }
+
+  confirmRepeat () {
+    this.#syncRepeatField()
     this.closeRepeat()
   }
 
@@ -808,23 +878,10 @@ export default class extends Controller {
   }
 
   confirmCustomRepeat () {
+    this._customN = this.hasCustomRepeatNTarget ? Math.max(1, parseInt(this.customRepeatNTarget.value) || 1) : 1
+    this._customUnit = this.hasCustomRepeatUnitTarget ? this.customRepeatUnitTarget.value : 'weeks'
     this._selectedRepeat = 'custom'
-    const label = 'Custom'
-    if (this.hasRepeatLabelTarget) {
-      this.repeatLabelTarget.textContent = label
-      this.repeatLabelTarget.classList.remove('text-brand-graytext')
-      this.repeatLabelTarget.classList.add('text-brand-primary')
-    }
-    if (this.hasRepeatIconBgTarget) {
-      this.repeatIconBgTarget.classList.remove('bg-brand-field/50')
-      this.repeatIconBgTarget.classList.add('bg-brand-field')
-      const svg = this.repeatIconBgTarget.querySelector('svg')
-      if (svg) svg.removeAttribute('stroke-opacity')
-    }
-    if (this.hasRepeatFieldTarget) {
-      this.repeatFieldTarget.value = 'custom'
-      this.#notifyPersistence(this.repeatFieldTarget)
-    }
+    this.#syncRepeatField()
     this.closeCustomRepeat()
   }
 
@@ -833,6 +890,28 @@ export default class extends Controller {
     this.repeatUntilBackdropTarget.style.display = 'block'
     this.repeatUntilModalTarget.classList.remove('hidden')
     this.repeatUntilModalTarget.style.display = 'flex'
+
+    // The title above ("Fri 16 Oct 2026") is server-rendered from the real
+    // default date, and so is the matching wheel item's bold styling — but
+    // nothing scrolls the wheel to bring that item into view. Without this,
+    // the wheel just shows whatever sits at scroll position 0 (day "02",
+    // "Feb", the top of the year list), and #confirmRepeatUntil picks
+    // whichever item is closest to center by live geometry, not by the
+    // bold flag — so it'd silently save that default-scroll position
+    // instead of the date the title claims. Scroll each column to its own
+    // server-flagged item (font-weight:700) so what's visible, what's
+    // centered, and what Save actually picks all agree.
+    requestAnimationFrame(() => {
+      const centerOn = (col) => {
+        if (!col) return
+        const target = col.querySelector('div[style*="font-weight:700"]') || col.querySelector('[data-value]')
+        if (!target) return
+        col.scrollTop = target.offsetTop - col.clientHeight / 2 + target.clientHeight / 2
+      }
+      centerOn(this.hasRepeatUntilDayTarget ? this.repeatUntilDayTarget : null)
+      centerOn(this.hasRepeatUntilMonthTarget ? this.repeatUntilMonthTarget : null)
+      centerOn(this.hasRepeatUntilYearTarget ? this.repeatUntilYearTarget : null)
+    })
   }
 
   closeRepeatUntil () {
@@ -842,57 +921,68 @@ export default class extends Controller {
     this.repeatUntilBackdropTarget.style.display = 'none'
   }
 
+  // Bolds/opaques whichever item is actually sitting under the centered
+  // highlight bar right now, fading everything else — live, on every
+  // scroll, not just once on open. rAF-throttled so a fast fling doesn't
+  // stack up redundant recalculations.
+  onRepeatUntilScroll (event) {
+    if (this._repeatUntilScrollRaf) return
+    const col = event.currentTarget
+    this._repeatUntilScrollRaf = requestAnimationFrame(() => {
+      this._repeatUntilScrollRaf = null
+      const rect = col.getBoundingClientRect()
+      const center = rect.top + rect.height / 2
+      col.querySelectorAll('[data-value]').forEach(el => {
+        const er = el.getBoundingClientRect()
+        const onCenter = Math.abs(er.top + er.height / 2 - center) < er.height / 2
+        el.style.fontWeight = onCenter ? '700' : '400'
+        el.style.opacity = onCenter ? '1' : '0.35'
+      })
+    })
+  }
+
   confirmRepeatUntil () {
-    const modal = this.hasRepeatUntilModalTarget ? this.repeatUntilModalTarget : null
-    if (modal) {
-      const dayCol = modal.querySelector('[style*="width:44px"]')
-      const monCol = modal.querySelector('[style*="width:52px"]')
-      const yrCol = modal.querySelector('[style*="width:60px"]')
-      const picked = (col) => {
-        if (!col) return null
-        const items = col.querySelectorAll('div[style*="height:44px"]')
-        const rect = col.getBoundingClientRect()
-        const center = rect.top + rect.height / 2
-        let best = null; let min = Infinity
-        items.forEach(el => {
-          const er = el.getBoundingClientRect()
-          const d = Math.abs(er.top + er.height / 2 - center)
-          if (d < min) { min = d; best = el }
+    const dayCol = this.hasRepeatUntilDayTarget ? this.repeatUntilDayTarget : null
+    const monCol = this.hasRepeatUntilMonthTarget ? this.repeatUntilMonthTarget : null
+    const yrCol = this.hasRepeatUntilYearTarget ? this.repeatUntilYearTarget : null
+    const picked = (col) => {
+      if (!col) return null
+      const items = col.querySelectorAll('[data-value]')
+      const rect = col.getBoundingClientRect()
+      const center = rect.top + rect.height / 2
+      let best = null; let min = Infinity
+      items.forEach(el => {
+        const er = el.getBoundingClientRect()
+        const d = Math.abs(er.top + er.height / 2 - center)
+        if (d < min) { min = d; best = el }
+      })
+      return best ? (best.dataset.value || best.textContent.trim()) : null
+    }
+    const d = picked(dayCol); const m = picked(monCol); const y = picked(yrCol)
+    if (d && m && y) {
+      const monthMap = { Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5, Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11 }
+      const pickedDate = new Date(parseInt(y), monthMap[m] ?? 0, parseInt(d))
+      const today = new Date(); today.setHours(0, 0, 0, 0)
+      if (pickedDate < today) {
+        this.closeRepeatUntil()
+        this.openAttention({
+          body: 'The "Repeat until" date must be in the future.',
+          cancelLabel: 'Go back',
+          confirmLabel: 'OK',
+          onConfirm: () => { if (this.hasRepeatUntilModalTarget) { this.repeatUntilModalTarget.classList.remove('hidden'); this.repeatUntilModalTarget.style.display = 'flex'; this.repeatUntilBackdropTarget.classList.remove('hidden'); this.repeatUntilBackdropTarget.style.display = 'block' } }
         })
-        return best ? best.textContent.trim() : null
+        return
       }
-      const d = picked(dayCol); const m = picked(monCol); const y = picked(yrCol)
-      if (d && m && y) {
-        const monthMap = { Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5, Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11 }
-        const pickedDate = new Date(parseInt(y), monthMap[m] ?? 0, parseInt(d))
-        const today = new Date(); today.setHours(0, 0, 0, 0)
-        if (pickedDate < today) {
-          this.closeRepeatUntil()
-          this.openAttention({
-            body: 'The "Repeat until" date must be in the future.',
-            cancelLabel: 'Go back',
-            confirmLabel: 'OK',
-            onConfirm: () => { if (this.hasRepeatUntilModalTarget) { this.repeatUntilModalTarget.classList.remove('hidden'); this.repeatUntilModalTarget.style.display = 'flex'; this.repeatUntilBackdropTarget.classList.remove('hidden'); this.repeatUntilBackdropTarget.style.display = 'block' } }
-          })
-          return
-        }
-        const label = `Repeat until ${m} ${d}, ${y}`
-        if (this.hasRepeatLabelTarget) {
-          this.repeatLabelTarget.textContent = label
-          this.repeatLabelTarget.classList.remove('text-brand-graytext')
-          this.repeatLabelTarget.classList.add('text-brand-primary')
-        }
-        if (this.hasRepeatIconBgTarget) {
-          this.repeatIconBgTarget.classList.remove('bg-brand-field/50')
-          this.repeatIconBgTarget.classList.add('bg-brand-field')
-          const svg = this.repeatIconBgTarget.querySelector('svg')
-          if (svg) svg.removeAttribute('stroke-opacity')
-        }
-        if (this.hasRepeatFieldTarget) {
-          this.repeatFieldTarget.value = `until:${y}-${m}-${d}`
-          this.#notifyPersistence(this.repeatFieldTarget)
-        }
-      }
+      // The row itself, back in the "Repeat this event" modal's sub-options
+      // list — was left static ("Repeat until") after this target was
+      // added; never actually wired to update.
+      if (this.hasRepeatUntilRowLabelTarget) this.repeatUntilRowLabelTarget.textContent = `Repeat until ${m} ${d}, ${y}`
+      // Confirming a date here means "until" is now the active duration —
+      // store it and route through the same combine-with-pattern path
+      // every other confirm action uses, instead of overwriting
+      // repeatField with just this piece.
+      this._durationUntil = { y, m, d }
+      this.#setActiveRepeatSub('until')
     }
     this.closeRepeatUntil()
   }
