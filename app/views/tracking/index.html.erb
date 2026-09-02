@@ -35,7 +35,20 @@
 <% phase_label  = @phase ? @phase.capitalize : nil %>
 <% phase_season = @meta&.dig(:season) %>
 
-<div class="min-h-screen pb-28 bg-brand-field">
+<%# The centred calendar FAB below (shared/_calendar_center_fab, 66px
+     circle floating 2.5rem/40px off the viewport bottom) was clipping the
+     "Track My Period" nav card's label on load, on a real device
+     viewport (iPhone-height, ~926px) — this page's content is short
+     enough to render in one screenful with no scroll, so trailing
+     page padding (pb-*) can't rescue it: a position:fixed element sits
+     over whatever's on screen at that moment regardless of what's
+     further down the (unscrolled) document. Fixed by trimming a few
+     mb-6→mb-4 gaps above (phase text / daily-analysis card / cycle-day
+     label) so the last card's natural position clears the FAB's
+     40–106px danger zone with room to spare; pb-36 (up from pb-28) kept
+     as a safety margin if a longer "Watch out for" message ever pushes
+     things taller than usual. %>
+<div class="min-h-screen pb-36 bg-brand-field">
   <div class="max-w-app mx-auto px-4">
 
     <%# ── Date picker drum ────────────────────────────────────────────── %>
@@ -87,7 +100,7 @@
     </div>
 
     <%# ── Phase text ──────────────────────────────────────────────────── %>
-    <div class="text-center mb-6">
+    <div class="text-center mb-4">
       <% if phase_label %>
         <p class="text-2xl font-medium text-brand-primary font-sans"><%= t('tracking.index.current_phase') %></p>
         <h1 class="text-3xl font-extrabold leading-tight" style="color:<%= phase_colour %>;">
@@ -113,7 +126,7 @@
         }
         analysis_text = analysis_messages[@phase] || "Track your symptoms daily to unlock personalized insights."
       %>
-      <div class="flex justify-center mb-6" data-controller="dismissible">
+      <div class="flex justify-center mb-4" data-controller="dismissible">
         <div class="relative bg-white rounded-[29px] pl-5 pr-3 py-5 w-full max-w-[400px] flex items-center gap-1" data-dismissible-target="card">
           <p class="flex-1 min-w-0 text-brand-primary font-medium text-sm leading-snug font-sans line-clamp-3">
             <%= analysis_text %>
@@ -154,7 +167,7 @@
         </div>
       </div>
       <% if @cycle_day %>
-        <p class="text-center text-xs text-brand-primary font-sans mb-6">Cycle Day <%= @cycle_day %></p>
+        <p class="text-center text-xs text-brand-primary font-sans mb-4">Cycle Day <%= @cycle_day %></p>
       <% end %>
     <% end %>
 
