@@ -169,6 +169,7 @@ export default class extends Controller {
     if (this._pickDay2 === null) { const d2 = this.#getSlot2Date(); this._pickDay2 = d2.getDate(); this._pickMonth2 = d2.getMonth() + 1; this._pickYear2 = d2.getFullYear() }
     this.#activateProtoPicker()
   }
+
   editTime1 () { this._editingSlot = 1; this._mode = 'time'; this.#activateProtoPicker() }
   editTime2 () { this._editingSlot = 2; this._mode = 'time'; this.#activateProtoPicker() }
 
@@ -254,6 +255,7 @@ export default class extends Controller {
     if (slot === 1) this.slot1BtnTargets.forEach(el => { el.dataset.time24 = v })
     else this.slot2BtnTargets.forEach(el => { el.dataset.time24 = v })
   }
+
   #updateSlotTimeDisplay (slot, label) { if (slot === 1) this.slot1TimeTargets.forEach(el => { el.textContent = label }); else this.slot2TimeTargets.forEach(el => { el.textContent = label }) }
   #getSlot2Date () { if (this._pickDay2 !== null) return new Date(this._pickYear2, this._pickMonth2 - 1, this._pickDay2); const d = new Date(this._pickYear, this._pickMonth - 1, this._pickDay); d.setDate(d.getDate() + 1); return d }
   onDayScroll () { if (this._dRaf) return; this._dRaf = requestAnimationFrame(() => { this._dRaf = null; const it = this.#closestItem(this.dayScrollTarget); if (it) { if (this._editingSlot === 2 && this._mode === 'date') this._pickDay2 = parseInt(it.dataset.value); else this._pickDay = parseInt(it.dataset.value) } this.#highlightScrollers(); this.#updateActiveSlotLabel() }) }

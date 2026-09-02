@@ -1,3 +1,4 @@
+/* global DataTransfer */
 import { Controller } from '@hotwired/stimulus'
 
 // Circular avatar crop: pick a file -> drag to reposition + zoom slider ->
