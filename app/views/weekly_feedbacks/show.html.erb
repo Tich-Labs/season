@@ -1,0 +1,99 @@
+<%# Feedback wizard — Figma nodes 12178:6399 (Multiple Choice), 12178:7300
+     (Yes/No + text), 12178:7283 (Text only). One question per screen,
+     swipeable, with a dot progress indicator and Next/Submit button. %>
+<% content_for(:page_title) { (@week == WeeklyFeedbacksController::TOTAL_WEEKS) ? t(".final_feedback") : t(".week_label", number: @week) } %>
+
+<div class="bg-white min-h-full pb-24">
+  <% if @already_completed %>
+    <div class="max-w-app mx-auto px-4 pt-24 text-center">
+      <div class="w-14 h-14 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-4">
+        <svg width="28" height="28" fill="none" stroke="#2E6B3E" stroke-width="2.5" viewBox="0 0 24 24">
+          <polyline points="20 6 9 17 4 12" />
+        </svg>
+      </div>
+      <p class="text-brand-primary text-lg font-semibold mb-2"><%= t(".already_completed") %></p>
+      <p class="text-brand-secondary text-sm mb-6"><%= t(".already_completed_text") %></p>
+      <%= link_to t(".back_to_overview"), weekly_feedback_path,
+            class: "inline-block bg-brand-primary text-white rounded-lg py-3 px-8 text-15 font-semibold font-sans",
+            "data-turbo-action": "replace" %>
+    </div>
+  <% elsif @questions.empty? %>
+    <div class="max-w-app mx-auto px-4 pt-24 text-center">
+      <p class="text-brand-secondary text-sm"><%= t(".no_questions") %></p>
+    </div>
+  <% else %>
+    <div class="max-w-app mx-auto px-4"
+         data-controller="feedback-wizard"
+         data-feedback-wizard-submit-url-value="<%= submit_weekly_feedback_path %>"
+         data-feedback-wizard-redirect-url-value="<%= weekly_feedback_path %>">
+
+      <%# Success state, hidden until the last question is submitted %>
+      <div data-feedback-wizard-target="success" hidden class="pt-24 text-center">
+        <div class="w-14 h-14 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg width="28" height="28" fill="none" stroke="#2E6B3E" stroke-width="2.5" viewBox="0 0 24 24">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </div>
+        <p class="text-brand-primary text-lg font-semibold mb-2"><%= t(".thank_you") %></p>
+        <p class="text-brand-secondary text-sm mb-6"><%= t(".success_text") %></p>
+        <%= link_to t(".back_to_overview"), weekly_feedback_path,
+              class: "inline-block bg-brand-primary text-white rounded-lg py-3 px-8 text-15 font-semibold font-sans",
+              "data-turbo-action": "replace" %>
+      </div>
+
+      <div data-feedback-wizard-target="wizard" class="pt-16">
+        <% @questions.each_with_index do |question, i| %>
+          <div data-feedback-wizard-target="question"
+               data-question-id="<%= question.id %>"
+               data-question-type="<%= question.question_type %>"
+               <%= "hidden" if i > 0 %>>
+            <p class="text-brand-primary text-xl font-medium tracking-007 mb-8"><%= question.question_text %></p>
+
+            <% if question.question_type_multiple_choice? %>
+              <div class="flex flex-col gap-3.5">
+                <% question.options.each do |option| %>
+                  <button type="button"
+                          data-action="click->feedback-wizard#selectOption"
+                          data-value="<%= option %>"
+                          class="fw-option-btn bg-brand-field opacity-50 rounded-[10px] py-3.5 px-4 text-brand-primary font-medium tracking-007 text-center"
+                          aria-pressed="false"><%= option %></button>
+                <% end %>
+              </div>
+            <% elsif question.question_type_yes_no_with_input? %>
+              <div class="flex gap-3 mb-3.5">
+                <button type="button" data-action="click->feedback-wizard#toggleYesNo" data-value="yes"
+                        class="fw-yesno-btn flex-1 bg-brand-field opacity-50 rounded-[10px] py-3.5 px-4 text-brand-primary font-medium tracking-007"
+                        aria-pressed="false"><%= t(".yes") %></button>
+                <button type="button" data-action="click->feedback-wizard#toggleYesNo" data-value="no"
+                        class="fw-yesno-btn flex-1 bg-brand-field opacity-50 rounded-[10px] py-3.5 px-4 text-brand-primary font-medium tracking-007"
+                        aria-pressed="false"><%= t(".no") %></button>
+              </div>
+              <textarea data-feedback-wizard-target="whyInput" hidden
+                        class="fw-why-textarea w-full min-h-32 bg-brand-field rounded-xl px-4 py-3 text-brand-dark placeholder:text-brand-primary/50"
+                        placeholder="<%= t(".why_placeholder") %>"></textarea>
+            <% else %>
+              <textarea data-action="input->feedback-wizard#textChanged"
+                        class="fw-text-textarea w-full min-h-64 bg-brand-field rounded-xl px-4 py-3 text-brand-dark placeholder:text-brand-primary/50"
+                        placeholder="<%= t(".answer_placeholder") %>"></textarea>
+            <% end %>
+          </div>
+        <% end %>
+
+        <p class="text-center text-brand-primary text-sm font-medium tracking-widest mt-10 mb-3">&lt; <%= t(".swipe") %> &gt;</p>
+
+        <div class="flex items-center justify-center gap-1.5 mb-8">
+          <% @questions.each_with_index do |_, i| %>
+            <span data-feedback-wizard-target="dot"
+                  class="w-2.5 h-2.5 rounded-full <%= (i == 0) ? "bg-brand-primary" : "bg-brand-primary/20" %>"></span>
+          <% end %>
+        </div>
+
+        <button type="button" data-action="click->feedback-wizard#advance" data-feedback-wizard-target="nextBtn"
+                data-next-label="<%= t(".next") %>" data-submit-label="<%= t(".submit") %>"
+                class="w-full bg-brand-primary text-white rounded-lg py-3.5 text-lg font-medium tracking-007">
+          <%= (@questions.size > 1) ? t(".next") : t(".submit") %>
+        </button>
+      </div>
+    </div>
+  <% end %>
+</div>

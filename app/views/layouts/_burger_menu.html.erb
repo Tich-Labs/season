@@ -121,14 +121,12 @@
           <span class="ml-[21px] text-brand-primary text-base font-medium tracking-wide"><%= t("nav.menu.settings") %></span>
         <% end %>
 
-        <%# Feedback %>
-        <button type="button"
-                data-type="feedback"
-                data-action="click->menu#openFeedback"
-                class="absolute left-0 top-[613px] w-full h-[49px] flex items-center hover:bg-stone-50 cursor-pointer">
+        <%# Feedback — links to the weekly feedback hub (Figma "Feedback geben",
+             node 12178:6273) rather than the generic open-ended feedback modal. %>
+        <%= link_to weekly_feedback_path, class: "absolute left-0 top-[613px] w-full h-[49px] flex items-center hover:bg-stone-50", "data-turbo-action": "replace" do %>
           <%= image_tag "icons/feedback.svg", alt: "Feedback", class: "ml-[31px] w-5 h-5 shrink-0 object-contain" %>
           <span class="ml-[20px] text-brand-primary text-base font-medium tracking-wide"><%= t("nav.menu.feedback") %></span>
-        </button>
+        <% end %>
 
         <%# Bugreport %>
         <button type="button"

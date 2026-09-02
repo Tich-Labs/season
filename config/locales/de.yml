@@ -612,17 +612,32 @@ de:
       add_attachment: "Screenshot oder Audio hinzufügen"
       send: "Senden"
       close: "Schließen"
-    weekly_feedback_modal:
+  weekly_feedbacks:
+    index:
+      title: "Feedback %{week}"
+      greeting: "Hallo %{name}"
+      greeting_fallback_name: "du"
+      subtitle: "Wie schön, dass du uns Feedback gibst"
+      week_label: "Feedback Woche %{number}"
+      final_feedback: "Abschließendes Feedback"
+      bug_report: "Fehler melden"
+    show:
+      week_label: "Feedback Woche %{number}"
+      final_feedback: "Abschließendes Feedback"
       already_completed: "Bereits abgeschlossen"
       already_completed_text: "Du hast bereits Feedback für diese Woche eingereicht. Vielen Dank!"
-      close: "Schließen"
-      submit: "Absenden"
+      back_to_overview: "Zurück zur Übersicht"
+      no_questions: "Für diese Woche gibt es noch keine Feedback-Fragen — schau bald wieder vorbei."
       thank_you: "Vielen Dank!"
       success_text: "Dein Feedback hilft uns, Season zu verbessern."
       yes: "Ja"
       no: "Nein"
       why_placeholder: "Warum? (optional)"
-      answer_placeholder: "Deine Antwort..."
+      answer_placeholder: "Antwort..."
+      next: "Weiter"
+      submit: "Absenden"
+      swipe: "Wischen"
+      locked: "Diese Woche ist noch nicht verfügbar."
   accounts:
     show:
       title: "Konto löschen"

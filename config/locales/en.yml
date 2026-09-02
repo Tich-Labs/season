@@ -627,17 +627,32 @@ en:
       add_attachment: "Add screenshot or audio"
       send: "Send"
       close: "Close"
-    weekly_feedback_modal:
+  weekly_feedbacks:
+    index:
+      title: "Feedback %{week}"
+      greeting: "Hello %{name}"
+      greeting_fallback_name: "there"
+      subtitle: "It's so nice of you to give us feedback"
+      week_label: "Feedback week %{number}"
+      final_feedback: "Final feedback"
+      bug_report: "Bug report"
+    show:
+      week_label: "Feedback week %{number}"
+      final_feedback: "Final feedback"
       already_completed: "Already completed"
       already_completed_text: "You've already submitted feedback for this week. Thank you!"
-      close: "Close"
-      submit: "Submit"
+      back_to_overview: "Back to overview"
+      no_questions: "No feedback questions for this week yet — check back soon."
       thank_you: "Thank you!"
       success_text: "Your feedback helps us improve Season."
       yes: "Yes"
       no: "No"
       why_placeholder: "Why? (optional)"
-      answer_placeholder: "Your answer..."
+      answer_placeholder: "Answer..."
+      next: "Next"
+      submit: "Submit"
+      swipe: "Swipe"
+      locked: "That week isn't available yet."
   accounts:
     show:
       title: "Delete Account"

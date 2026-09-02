@@ -129,7 +129,8 @@ Rails.application.routes.draw do
   resources :symptoms, only: [:index, :show, :create, :update]
   resources :superpowers, only: [:index, :show, :create, :update]
   resources :feedbacks, only: [:create]
-  get "weekly_feedback", to: "weekly_feedbacks#show", as: :weekly_feedback
+  get "weekly_feedback", to: "weekly_feedbacks#index", as: :weekly_feedback
+  get "weekly_feedback/:week", to: "weekly_feedbacks#show", as: :weekly_feedback_week, constraints: {week: /\d+/}
   post "weekly_feedback/submit", to: "weekly_feedbacks#submit", as: :submit_weekly_feedback
   resource :settings, only: [:edit, :update] do
     get :profile, on: :collection

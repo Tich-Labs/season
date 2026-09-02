@@ -1,29 +1,45 @@
 class WeeklyFeedbacksController < ApplicationController
   before_action :authenticate_user
 
+  TOTAL_WEEKS = 8
+
+  # Feedback hub — lists all 8 weeks, colour-coded by status (completed /
+  # current / locked), per Figma node 12178:6273 ("Feedback geben").
+  def index
+    @current_week = current_user.current_feedback_week
+    completed_weeks = current_user.weekly_feedback_responses
+      .where(week_number: 1..TOTAL_WEEKS).distinct.pluck(:week_number).to_set
+
+    @weeks = (1..TOTAL_WEEKS).map do |week|
+      status =
+        if completed_weeks.include?(week)
+          :completed
+        elsif week == @current_week
+          :current
+        else
+          :locked
+        end
+      {number: week, status: status}
+    end
+  end
+
+  # Per-week wizard — one question at a time, swipeable, per Figma nodes
+  # 12178:6399 (Multiple Choice) / 12178:7300 (Yes/No) / 12178:7283 (Text only).
   def show
-    week = current_user.current_feedback_week
-    unless week
-      render json: {questions: [], week: nil, message: "No active feedback week"}
+    @week = params[:week].to_i
+    current_week = current_user.current_feedback_week
+
+    # Only the current week or an already-completed past week can be
+    # opened — future weeks are locked in the Figma hub and have no
+    # questions assigned to them yet anyway.
+    already_completed = current_user.weekly_feedback_responses.exists?(week_number: @week)
+    unless @week == current_week || already_completed
+      redirect_to weekly_feedback_path, alert: t(".locked", default: "That week isn't available yet.")
       return
     end
 
-    questions = WeeklyFeedbackQuestion.for_week(week)
-    already_completed = current_user.weekly_feedback_responses
-      .exists?(week_number: week)
-
-    render json: {
-      week: week,
-      already_completed: already_completed,
-      questions: questions.map { |q|
-        {
-          id: q.id,
-          question_text: q.question_text,
-          question_type: q.question_type,
-          options: q.options
-        }
-      }
-    }
+    @already_completed = already_completed
+    @questions = WeeklyFeedbackQuestion.for_week(@week)
   end
 
   def submit

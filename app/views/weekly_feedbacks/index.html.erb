@@ -1,0 +1,43 @@
+<%# Feedback hub — Figma node 12178:6273 ("Feedback geben").
+     8 week buttons colour-coded by status, plus a Bug report entry and the
+     shared calendar-home FAB (Figma's bottom calendar icon). %>
+<% content_for(:page_title) { t(".title", week: @current_week || WeeklyFeedbacksController::TOTAL_WEEKS) } %>
+
+<div class="bg-white min-h-full pb-24">
+  <div class="max-w-app mx-auto px-4 pt-9">
+    <p class="font-serif italic font-medium text-4xl text-brand-primary mb-2">
+      <%= t(".greeting", name: current_user.name.presence || t(".greeting_fallback_name")) %>
+    </p>
+    <p class="font-light text-2xl text-brand-primary mb-8"><%= t(".subtitle") %></p>
+
+    <div class="flex flex-col gap-4">
+      <% @weeks.each do |week| %>
+        <% label = (week[:number] == WeeklyFeedbacksController::TOTAL_WEEKS) ? t(".final_feedback") : t(".week_label", number: week[:number]) %>
+        <% classes = case week[:status]
+           when :completed then "bg-phase-ovulation text-white"
+           when :current then "bg-brand-primary text-white"
+           else "bg-brand-primary/30 text-white pointer-events-none"
+           end %>
+        <% if week[:status] == :locked %>
+          <div class="<%= classes %> rounded-lg h-13 flex items-center justify-center font-medium text-lg tracking-007">
+            <%= label %>
+          </div>
+        <% else %>
+          <%= link_to weekly_feedback_week_path(week[:number]),
+                class: "#{classes} rounded-lg h-13 flex items-center justify-center font-medium text-lg tracking-007",
+                "data-turbo-action": "replace" do %>
+            <%= label %>
+          <% end %>
+        <% end %>
+      <% end %>
+
+      <button type="button"
+              data-controller="open-feedback"
+              data-open-feedback-type-value="bug_report"
+              data-action="click->open-feedback#open"
+              class="bg-brand-field text-brand-primary rounded-lg h-13 flex items-center justify-center font-medium text-lg tracking-007 mt-1">
+        <%= t(".bug_report") %>
+      </button>
+    </div>
+  </div>
+</div>
