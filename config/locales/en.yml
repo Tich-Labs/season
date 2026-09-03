@@ -601,6 +601,7 @@ en:
       no_appointments: "No appointments"
       no_appointments_text: "You haven't entered any appointments yet"
       create_appointment: "Create appointment"
+      add_appointment: "Add appointment"
       no_content: "No content yet for this day."
       tips: "Tips for this phase"
       you_are_in: "You're in %{phase} phase"

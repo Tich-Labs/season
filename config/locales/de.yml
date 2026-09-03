@@ -583,6 +583,7 @@ de:
       no_appointments: "Keine Termine"
       no_appointments_text: "Du hast noch keine Termine eingetragen"
       create_appointment: "Termin erstellen"
+      add_appointment: "Termin hinzufügen"
       no_content: "Noch keine Inhalte für diesen Tag."
       tips: "Tipps für diese Phase"
       you_are_in: "Du bist in der %{phase}-Phase"

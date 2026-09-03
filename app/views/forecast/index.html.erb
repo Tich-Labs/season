@@ -70,6 +70,20 @@
     <%# ── Appointments view ────────────────────────────────────────────── %>
     <div data-forecast-tabs-target="appointments">
       <% if @events&.any? %>
+        <%# "+" to add another appointment on this same date, so the user
+             doesn't have to leave this page to log a second/third one —
+             phase-coloured, sits right before the existing-appointment
+             list rather than replacing it. %>
+        <div class="flex justify-end mb-3">
+          <%= link_to new_calendar_event_path(date: @selected_date),
+                class: "inline-flex items-center justify-center w-11 h-11 rounded-full no-underline",
+                style: "background:var(--phase-color)",
+                aria: { label: t("forecast.index.add_appointment", default: "Add appointment") } do %>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M12 5v14M5 12h14" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" />
+            </svg>
+          <% end %>
+        </div>
         <div class="flex flex-col gap-3">
           <% @events.each do |event| %>
             <%= link_to edit_calendar_event_path(event), class: "block no-underline", data: { turbo_action: "replace" } do %>
