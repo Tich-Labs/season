@@ -27,10 +27,10 @@ class CalendarController < ApplicationController
     month_range = Date.new(@year, @month, 1)..Date.new(@year, @month, -1)
 
     @events_by_date = if @show_appointments
-      current_user.calendar_events
-        .where(date: month_range)
+      events = current_user.calendar_events
+        .where("date <= ? AND COALESCE(end_date, date) >= ?", month_range.end, month_range.begin)
         .order(:date, :start_time)
-        .group_by(&:date)
+      build_events_by_date(events, month_range)
     else
       {}
     end
@@ -64,10 +64,10 @@ class CalendarController < ApplicationController
     # Get events for this week
     @events_by_date = if @show_appointments
       week_range = @week_start..@week_end
-      current_user.calendar_events
-        .where(date: week_range)
+      events = current_user.calendar_events
+        .where("date <= ? AND COALESCE(end_date, date) >= ?", week_range.end, week_range.begin)
         .order(:date, :start_time)
-        .group_by(&:date)
+      build_events_by_date(events, week_range)
     else
       {}
     end
@@ -121,12 +121,12 @@ class CalendarController < ApplicationController
       @current_phase = nil
     end
 
-    # Events — keyed by date, covers adjacent months
+    # Events — keyed by date, covers adjacent months, expanded for multi-day
     @events_by_date = if @show_appointments
-      current_user.calendar_events
-        .where(date: full_start..full_end)
+      events = current_user.calendar_events
+        .where("date <= ? AND COALESCE(end_date, date) >= ?", full_end, full_start)
         .order(:date, :start_time)
-        .group_by(&:date)
+      build_events_by_date(events, full_start..full_end)
     else
       {}
     end
@@ -148,5 +148,19 @@ class CalendarController < ApplicationController
 
     @current_season = CycleCalculatorService::SEASON_NAMES[@current_phase]
     @streak = current_user.streak&.current_streak || 0
+  end
+
+  private
+
+  def build_events_by_date(events, range)
+    by_date = Hash.new { |h, k| h[k] = [] }
+    range_set = range.to_a.to_set
+    events.each do |event|
+      event_end = event.end_date || event.date
+      (event.date..event_end).each do |d|
+        by_date[d] << event if range_set.include?(d)
+      end
+    end
+    by_date
   end
 end
