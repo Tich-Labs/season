@@ -32,4 +32,9 @@ RSpec.describe "Date scroller UX", type: :request do
     get new_calendar_event_path
     expect(response.body).to include("touch-action: pan-y; overscroll-behavior: contain;")
   end
+
+  it "uses 3-letter weekday abbreviations in the picker JS, not ambiguous single letters" do
+    js = Rails.root.join("app/javascript/controllers/appointment_date_picker_controller.js").read
+    expect(js).to include("['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']")
+  end
 end

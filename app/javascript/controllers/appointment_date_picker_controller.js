@@ -1,7 +1,14 @@
 /* global requestAnimationFrame */
 import { Controller } from '@hotwired/stimulus'
 
-const SHORT = ['S', 'M', 'T', 'W', 'T', 'F', 'S']
+// 3-letter weekday abbreviations, not single letters — 'S' alone can't
+// tell Sunday from Saturday apart (same for 'T': Tuesday vs Thursday),
+// which showed up as e.g. "S 23 Oct 2027" in the picker's own title and
+// the From/To row labels with no way to tell which day that actually
+// was. Matches the format the main date button and the multi-day card
+// (both driven by Rails' own %a / toLocaleDateString) already use
+// correctly elsewhere in this same picker.
+const SHORT = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 const MON_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
 export default class extends Controller {
