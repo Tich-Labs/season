@@ -257,7 +257,15 @@ export default class extends Controller {
   }
 
   #updateSlotTimeDisplay (slot, label) { if (slot === 1) this.slot1TimeTargets.forEach(el => { el.textContent = label }); else this.slot2TimeTargets.forEach(el => { el.textContent = label }) }
-  #getSlot2Date () { if (this._pickDay2 !== null) return new Date(this._pickYear2, this._pickMonth2 - 1, this._pickDay2); const d = new Date(this._pickYear, this._pickMonth - 1, this._pickDay); d.setDate(d.getDate() + 1); return d }
+  // Falls back to the *same* day as slot1 when slot2 has no explicit
+  // state yet (a brand-new appointment with no end_date field value) —
+  // this used to add a day unconditionally, so opening the picker on a
+  // fresh single-day appointment showed "To" defaulting to tomorrow even
+  // though the server's own default_end (see new.html.erb) is start + 1
+  // hour, same calendar day. Only an explicit end_date (a real multi-day
+  // event, or the user actively picking a different end date) should
+  // ever make slot2 land on a different day.
+  #getSlot2Date () { if (this._pickDay2 !== null) return new Date(this._pickYear2, this._pickMonth2 - 1, this._pickDay2); return new Date(this._pickYear, this._pickMonth - 1, this._pickDay) }
   onDayScroll () { if (this._dRaf) return; this._dRaf = requestAnimationFrame(() => { this._dRaf = null; const it = this.#closestItem(this.dayScrollTarget); if (it) { if (this._editingSlot === 2 && this._mode === 'date') this._pickDay2 = parseInt(it.dataset.value); else this._pickDay = parseInt(it.dataset.value) } this.#highlightScrollers(); this.#updateActiveSlotLabel() }) }
   onMonthScroll () { if (this._moRaf) return; this._moRaf = requestAnimationFrame(() => { this._moRaf = null; const it = this.#closestItem(this.monthScrollTarget); if (it) { if (this._editingSlot === 2 && this._mode === 'date') this._pickMonth2 = parseInt(it.dataset.value); else this._pickMonth = parseInt(it.dataset.value) } this.#highlightScrollers(); this.#updateActiveSlotLabel() }) }
   onYearScroll () { if (this._yRaf) return; this._yRaf = requestAnimationFrame(() => { this._yRaf = null; const it = this.#closestItem(this.yearScrollTarget); if (it) { if (this._editingSlot === 2 && this._mode === 'date') this._pickYear2 = parseInt(it.dataset.value); else this._pickYear = parseInt(it.dataset.value) } this.#highlightScrollers(); this.#updateActiveSlotLabel() }) }
