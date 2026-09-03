@@ -11,7 +11,12 @@
 <%
   evt_date       = @event.date
   now            = Time.zone.now
-  default_start  = @event.start_time || now.change(min: 0) + 1.hour
+  # Same "now, rounded to the picker's 5-minute granularity" fallback as
+  # new.html.erb, for the edge case of an existing event with no
+  # start_time set at all — see that file for the full reasoning.
+  rounded_minute = (now.min / 5.0).ceil * 5
+  now_rounded    = (rounded_minute == 60) ? now.change(min: 0) + 1.hour : now.change(min: rounded_minute)
+  default_start  = @event.start_time || now_rounded
   default_end    = @event.end_time   || default_start + 1.hour
   repeat_val     = @event.repeat_frequency
 %>

@@ -9,9 +9,18 @@
 <% content_for(:hide_calendar_fab) { "true" } %>
 
 <%
-  evt_date  = params[:date] ? Date.parse(params[:date]) : Time.zone.tomorrow.to_date
+  # Defaults to *today*, now — not tomorrow. Backdating an appointment is
+  # the rare case; the common one is logging something happening today, so
+  # that should be the starting point rather than costing it an extra
+  # scroll back every time. From rounds up to the picker's own 5-minute
+  # granularity (never shows a "now" the picker itself can't represent);
+  # To defaults to From + 1 hour so the form doesn't open on a
+  # zero-length appointment before the user's picked anything.
+  evt_date  = params[:date] ? Date.parse(params[:date]) : Time.zone.today
   now = Time.zone.now
-  default_start = @event.start_time || now.change(min: 0) + 1.hour
+  rounded_minute = (now.min / 5.0).ceil * 5
+  now_rounded = (rounded_minute == 60) ? now.change(min: 0) + 1.hour : now.change(min: rounded_minute)
+  default_start = @event.start_time || now_rounded
   default_end   = @event.end_time   || default_start + 1.hour
 %>
 
