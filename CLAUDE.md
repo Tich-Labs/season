@@ -122,7 +122,8 @@ All references must use this colour exactly.
 Note: 64 Figma nodes include ~30 state variants of the Analyse/symptom screen, ~6 profile/tracking overview variants, flow arrows, and connector labels — not 64 distinct screens.
 
 ### Public / Launch
-- Launch / countdown (`/launch`) ✅ DONE
+- Launch splash (`/launch`) ✅ DONE — 2-second branded logo splash, auto-redirects to `/welcome`. Not a countdown despite the route name.
+- Countdown / waitlist (`/countdown`) ✅ DONE — the actual countdown timer + email-capture signup page, `HomeController#countdown`. Separate route from `/launch`; previously conflated as one item here.
 - Terms (`/terms`) ✅ DONE
 - Privacy (`/privacy`) ✅ DONE
 

@@ -428,7 +428,7 @@
 
     <div class="ov-block">
       <div class="ov-label">Sections covered</div>
-       <div class="ov-title">9 sections · 61 test cases (by Figma milestone)</div>
+       <div class="ov-title">10 sections · 65 test cases (by Figma milestone)</div>
       <div class="sections-list">
         <div class="section-chip"><span class="chip-num">M1</span> Sign In &amp; Onboarding — Welcome, sign up, sign in, OAuth, 11-step onboarding flow</div>
         <div class="section-chip"><span class="chip-num">M2</span> Calendar &amp; Cycle — Monthly/weekly/daily views, phase colours, cycle day data</div>
@@ -437,6 +437,7 @@
         <div class="section-chip"><span class="chip-num">M5</span> Reminders &amp; Consent — Informations, profile, notifications, birth control, GDPR consent</div>
         <div class="section-chip"><span class="chip-num">M6</span> Gamification &amp; Scoring Flames — badges, milestones, scoring 🚧 NOT BUILT (the streak counter itself is under M3 — that's built)</div>
         <div class="section-chip"><span class="chip-num">M7</span> Feedback &amp; Onboarding — general feedback, support/bug, weekly feedback hub + wizard (8 weeks), beta-tester welcome tour</div>
+        <div class="section-chip"><span class="chip-num">PB</span> Public / Marketing — Launch splash, countdown waitlist, terms, privacy (no auth required)</div>
         <div class="section-chip"><span class="chip-num">A</span> Admin — Users, content CMS, inbox, CSV exports, production config checks</div>
         <div class="section-chip"><span class="chip-num">P</span> PWA / iOS Native — Service worker, offline, install, push, touch targets</div>
       </div>
@@ -484,6 +485,7 @@
     { id: "m5", label: "M5: Reminders & Consent" },
     { id: "m6", label: "M6: Gamification" },
     { id: "m7", label: "M7: Feedback & Onboarding" },
+    { id: "public", label: "Public / Marketing" },
     { id: "admin", label: "Admin" },
     { id: "pwa", label: "PWA / iOS Native" },
   ];
@@ -578,6 +580,15 @@
       howTo:"1. From the hub, open the current week (/weekly_feedback/:week).\n2. Questions should render one at a time, per question type:\n   - Multiple choice: tappable option pills\n   - Yes/No: toggle, with a 'why' textarea appearing only after Yes\n   - Text only: textarea\n3. A dot-progress indicator should track position; Next/Submit should be disabled until the current question is answered.\n4. After the last question, a thank-you screen shows and links back to the hub.\n5. Re-opening that same week should now show an 'already completed' state, not the questions again.\n6. Opening a locked future week directly (typing the URL) should redirect back to the hub, not render.\n7. Admin should see the responses at /admin/weekly_feedback_responses.", status:"pending", notes:"" },
     { section:"m7", scenario:"Beta-tester welcome tour shows once after onboarding", priority:"nice",
       howTo:"1. Complete signup + all 11 onboarding steps as a brand-new user.\n2. Right after the finish animation, the app should land on /welcome_tour (not straight to /calendar) the very first time only.\n3. Swipe/tap through the 5 slides (Introduction, Calendar, Track Your Day, Create Appointment, Forecast) — each should show a real screenshot of that part of the app plus a short explanation.\n4. Tapping through to the end (or navigating away and back to /calendar) should mean it's not shown again on subsequent logins.", status:"pending", notes:"New — added 3 Sep 2026. Only 5 of 7 planned slides are built; the report-a-bug and closing slides are still pending Figma content." },
+
+    { section:"public", scenario:"/launch splash shows and auto-redirects", priority:"nice",
+      howTo:"1. Visit /launch directly, logged out.\n2. Should show just the Season wordmark on a blank white screen, no buttons.\n3. After ~2 seconds, should auto-redirect to /welcome (the real sign-up/sign-in landing page).", status:"pending", notes:"Verified 3 Sep 2026. Confusingly named — this is a plain branded loading splash, not a countdown. The actual countdown/waitlist page is a separate route, /countdown — see next case." },
+    { section:"public", scenario:"/countdown waitlist page loads with signup form", priority:"nice",
+      howTo:"1. Visit /countdown directly, logged out.\n2. Should show the marketing hero ('Find Your Superpower with SEASON') and a countdown timer to the launch date.\n3. Enter an email in the waitlist signup form, submit.\n4. Should show a success state; check /admin/launch_signups afterward to confirm the email landed there.", status:"pending", notes:"Verified live 3 Sep 2026 — page loads and renders correctly; the actual signup submission wasn't exercised in this pass." },
+    { section:"public", scenario:"/terms loads with real content", priority:"nice",
+      howTo:"1. Visit /terms directly, logged out (no auth required).\n2. Should show Terms of Use — age requirement, health disclaimer, data ownership, link to Privacy Policy, contact email.\n3. '< back' link should work.", status:"pending", notes:"Verified 3 Sep 2026." },
+    { section:"public", scenario:"/privacy loads with real content", priority:"nice",
+      howTo:"1. Visit /privacy directly, logged out (no auth required).\n2. Should show the Privacy Policy — data controller (Tich Labs GmbH), what's collected (incl. health data as GDPR Article 9 special category), contact emails.\n3. '< back' link should work.", status:"pending", notes:"Verified 3 Sep 2026. Says 'Last Updated: May 2, 2026' — worth a quick sanity check that nothing about actual data practices has changed since, but page itself works." },
 
     { section:"pwa", scenario:"PWA — service worker registers and caches assets", priority:"important",
       howTo:"1. Open DevTools > Application > Service Workers.\n2. SW should be registered and active.\n3. Cache Storage should contain app assets (CSS, JS, images).\n4. Reload the page — SW should intercept requests from cache.", status:"pending", notes:"" },
