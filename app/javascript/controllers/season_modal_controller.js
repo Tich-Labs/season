@@ -890,6 +890,8 @@ export default class extends Controller {
     this.repeatUntilBackdropTarget.style.display = 'block'
     this.repeatUntilModalTarget.classList.remove('hidden')
     this.repeatUntilModalTarget.style.display = 'flex'
+    document.body.style.overflow = 'hidden'
+    document.body.style.touchAction = 'none'
 
     // The title above ("Fri 16 Oct 2026") is server-rendered from the real
     // default date, and so is the matching wheel item's bold styling — but
@@ -919,6 +921,8 @@ export default class extends Controller {
     this.repeatUntilModalTarget.style.display = 'none'
     this.repeatUntilBackdropTarget.classList.add('hidden')
     this.repeatUntilBackdropTarget.style.display = 'none'
+    document.body.style.overflow = ''
+    document.body.style.touchAction = ''
   }
 
   // Bolds/opaques whichever item is actually sitting under the centered
