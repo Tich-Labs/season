@@ -173,6 +173,13 @@
   user-select: none;
   -webkit-user-select: none;
   outline: none;
+  /* Without this, a touch drag that isn't perfectly vertical (almost all
+     of them) can shift the wheel sideways too — the same "wobbly"
+     left-right movement fixed on the appointment date/time picker.
+     Constrains every drag on this track to vertical-only regardless of
+     the finger's actual angle. */
+  touch-action: pan-y;
+  overscroll-behavior: contain;
 }
 .sp-track:active {
   cursor: grabbing;

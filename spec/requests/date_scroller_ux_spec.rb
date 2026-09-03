@@ -1,12 +1,15 @@
 require "rails_helper"
 
-# Two UX fixes to the wheel/scroller date pickers, confirmed with the user:
+# UX fixes to the wheel/scroller date pickers, confirmed with the user:
 # (1) month wheels showed raw "01".."12" right next to labels elsewhere in
 #     the same component using named months ("11 Sep 2026") -- reintroduced
 #     DD/MM-vs-MM/DD ambiguity and made the value visibly reformat on tap.
 # (2) the appointment date/time picker's scroller items had no
 #     scroll-snap-align at all, so touch flicks free-scrolled with no snap
 #     points -- reported as "rolling too fast".
+# (3) those same scrollers had no touch-action set, so a touch drag that
+#     wasn't perfectly vertical could shift the wheel sideways too --
+#     reported as the numbers looking "wobbly" left-right on touch.
 RSpec.describe "Date scroller UX", type: :request do
   let(:user) { create(:user, :onboarded) }
 
@@ -23,5 +26,10 @@ RSpec.describe "Date scroller UX", type: :request do
     # 5 scrollers x their item counts all carry snap-center snap-always;
     # spot-check the class combination is present at all, not just snap-center.
     expect(response.body).to include("snap-center snap-always")
+  end
+
+  it "constrains the appointment date/time picker's scrollers to vertical-only touch" do
+    get new_calendar_event_path
+    expect(response.body).to include("touch-action: pan-y; overscroll-behavior: contain;")
   end
 end

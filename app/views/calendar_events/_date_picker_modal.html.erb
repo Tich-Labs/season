@@ -42,7 +42,16 @@
              sailing past many values at once. snap-always additionally
              forces one snap point at a time during a fast flick, instead
              of the default (letting a hard swipe glide past several). %>
-        <div data-appointment-date-picker-target="dayScroll" data-action="scroll->appointment-date-picker#onDayScroll" class="overflow-y-auto snap-y snap-mandatory h-full w-12 [scrollbar-width:none] relative z-[1]">
+        <%# touch-action: pan-y — this scroller had no touch-action set at
+             all, so the browser was free to interpret a touch drag as
+             2D panning; any real finger drag that isn't perfectly
+             vertical (i.e. almost all of them) could shift the scroller
+             sideways too, reading as "wobbly" left-right movement on a
+             column that should only ever move up/down. Constraining to
+             pan-y makes the browser treat every drag as vertical-only,
+             regardless of the finger's actual angle. overscroll-behavior
+             stops a fast scroll from bleeding into the page behind it. %>
+        <div data-appointment-date-picker-target="dayScroll" data-action="scroll->appointment-date-picker#onDayScroll" style="touch-action: pan-y; overscroll-behavior: contain;" class="overflow-y-auto snap-y snap-mandatory h-full w-12 [scrollbar-width:none] relative z-[1]">
           <% (1..31).each do |d| %><div data-value="<%= d %>" class="h-7 flex items-center justify-center text-base tracking-007 text-brand-primary snap-center snap-always"><%= format('%02d', d) %></div><% end %>
         </div>
         <span class="text-base text-brand-primary relative z-[1]">/</span>
@@ -53,21 +62,21 @@
              made the value visibly change format the instant a user taps
              into edit mode. Matches the "Repeat until" picker's month
              wheel (season_modal_controller.js), which already did this. %>
-        <div data-appointment-date-picker-target="monthScroll" data-action="scroll->appointment-date-picker#onMonthScroll" class="overflow-y-auto snap-y snap-mandatory h-full w-14 [scrollbar-width:none] relative z-[1]">
+        <div data-appointment-date-picker-target="monthScroll" data-action="scroll->appointment-date-picker#onMonthScroll" style="touch-action: pan-y; overscroll-behavior: contain;" class="overflow-y-auto snap-y snap-mandatory h-full w-14 [scrollbar-width:none] relative z-[1]">
           <% %w[Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec].each_with_index do |mon, mi| %><div data-value="<%= mi + 1 %>" class="h-7 flex items-center justify-center text-base tracking-007 text-brand-primary snap-center snap-always"><%= mon %></div><% end %>
         </div>
         <span class="text-base text-brand-primary relative z-[1]">/</span>
-        <div data-appointment-date-picker-target="yearScroll" data-action="scroll->appointment-date-picker#onYearScroll" class="overflow-y-auto snap-y snap-mandatory h-full w-16 [scrollbar-width:none] relative z-[1]">
+        <div data-appointment-date-picker-target="yearScroll" data-action="scroll->appointment-date-picker#onYearScroll" style="touch-action: pan-y; overscroll-behavior: contain;" class="overflow-y-auto snap-y snap-mandatory h-full w-16 [scrollbar-width:none] relative z-[1]">
           <% ((Time.zone.today.year - 5)..(Time.zone.today.year + 5)).each do |y| %><div data-value="<%= y %>" class="h-7 flex items-center justify-center text-base tracking-007 text-brand-primary snap-center snap-always"><%= y %></div><% end %>
         </div>
       </div>
       <div data-appointment-date-picker-target="protoTimePicker" data-picker="time" class="w-full h-[80px] hidden items-center justify-center gap-1 relative">
         <div class="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-7 bg-brand-field rounded-lg pointer-events-none"></div>
-        <div data-appointment-date-picker-target="hourScroll" data-action="scroll->appointment-date-picker#onHourScroll" class="overflow-y-auto snap-y snap-mandatory h-full w-[50px] [scrollbar-width:none] relative z-[1]">
+        <div data-appointment-date-picker-target="hourScroll" data-action="scroll->appointment-date-picker#onHourScroll" style="touch-action: pan-y; overscroll-behavior: contain;" class="overflow-y-auto snap-y snap-mandatory h-full w-[50px] [scrollbar-width:none] relative z-[1]">
           <% (0..23).each do |h| %><div data-value="<%= h %>" class="h-7 flex items-center justify-center text-base tracking-007 text-brand-primary snap-center snap-always"><%= format('%02d', h) %></div><% end %>
         </div>
         <span class="font-bold text-base text-brand-primary relative z-[1]">:</span>
-        <div data-appointment-date-picker-target="minuteScroll" data-action="scroll->appointment-date-picker#onMinuteScroll" class="overflow-y-auto snap-y snap-mandatory h-full w-14 [scrollbar-width:none] relative z-[1]">
+        <div data-appointment-date-picker-target="minuteScroll" data-action="scroll->appointment-date-picker#onMinuteScroll" style="touch-action: pan-y; overscroll-behavior: contain;" class="overflow-y-auto snap-y snap-mandatory h-full w-14 [scrollbar-width:none] relative z-[1]">
           <% [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55].each do |m| %><div data-value="<%= m %>" class="h-7 flex items-center justify-center text-base tracking-007 text-brand-primary snap-center snap-always"><%= format('%02d', m) %></div><% end %>
         </div>
       </div>
