@@ -1,4 +1,18 @@
 en:
+  date:
+    # Sunday-first, matching JS Date#getDay() — used to build the
+    # appointment date/time picker's weekday abbreviations locale-aware
+    # instead of a hardcoded English array. 3 letters, not 1: a single
+    # letter can't tell Sunday from Saturday apart (or Tuesday from
+    # Thursday) — see appointment_date_picker_controller.js.
+    abbr_day_names:
+      - "Sun"
+      - "Mon"
+      - "Tue"
+      - "Wed"
+      - "Thu"
+      - "Fri"
+      - "Sat"
   oauth:
     errors:
       authentication_failed: "Authentication failed. Please try again."

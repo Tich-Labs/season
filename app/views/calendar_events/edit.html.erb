@@ -25,7 +25,8 @@
      data-controller="season-modal appointment-date-picker"
      data-appointment-date-picker-selected-date-value="<%= evt_date %>"
      data-appointment-date-picker-period-ranges-value="<%= @period_ranges %>"
-     data-appointment-date-picker-prototype-value="true">
+     data-appointment-date-picker-prototype-value="true"
+     data-appointment-date-picker-weekday-names-value="<%= t("date.abbr_day_names").to_json %>">
   <div class="max-w-app mx-auto px-4 pt-5">
 
     <a href="<%= safe_back_path(calendar_path(date: @event.date)) %>"

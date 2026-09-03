@@ -10,6 +10,11 @@ require "rails_helper"
 # (3) those same scrollers had no touch-action set, so a touch drag that
 #     wasn't perfectly vertical could shift the wheel sideways too --
 #     reported as the numbers looking "wobbly" left-right on touch.
+# (4) the picker's weekday abbreviations were a single hardcoded English
+#     letter each ('S' for both Sunday and Saturday, 'T' for both Tuesday
+#     and Thursday) -- ambiguous, and not locale-aware. Now driven by
+#     config/locales/*.yml's date.abbr_day_names, passed to the JS via a
+#     Stimulus value, so a German user sees Mo/Di/Mi/... not Mon/Tue/Wed.
 RSpec.describe "Date scroller UX", type: :request do
   let(:user) { create(:user, :onboarded) }
 
@@ -36,5 +41,20 @@ RSpec.describe "Date scroller UX", type: :request do
   it "uses 3-letter weekday abbreviations in the picker JS, not ambiguous single letters" do
     js = Rails.root.join("app/javascript/controllers/appointment_date_picker_controller.js").read
     expect(js).to include("['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']")
+  end
+
+  it "passes the current user's locale weekday names to the picker (English)" do
+    get new_calendar_event_path
+    expect(response.body).to include("data-appointment-date-picker-weekday-names-value")
+    expect(response.body).to include("Sun")
+    expect(response.body).to include("Sat")
+  end
+
+  it "passes German weekday abbreviations for a German-locale user" do
+    user.update!(language: "de")
+    get new_calendar_event_path
+    expect(response.body).to include("Mo")
+    expect(response.body).to include("Di")
+    expect(response.body).to include("So")
   end
 end

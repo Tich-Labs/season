@@ -1,4 +1,17 @@
 de:
+  date:
+    # Sunday-first, matching JS Date#getDay(). German's standard 2-letter
+    # abbreviations (So/Mo/Di/Mi/Do/Fr/Sa) are already unambiguous — unlike
+    # English, a single letter each would still collide there too (Mo/Mi
+    # both "M", Di/Do both "D") — see appointment_date_picker_controller.js.
+    abbr_day_names:
+      - "So"
+      - "Mo"
+      - "Di"
+      - "Mi"
+      - "Do"
+      - "Fr"
+      - "Sa"
   nav:
     calendar: "Kalender"
     today: "Heute"

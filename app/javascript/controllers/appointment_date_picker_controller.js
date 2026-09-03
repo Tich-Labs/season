@@ -1,14 +1,16 @@
 /* global requestAnimationFrame */
 import { Controller } from '@hotwired/stimulus'
 
-// 3-letter weekday abbreviations, not single letters — 'S' alone can't
-// tell Sunday from Saturday apart (same for 'T': Tuesday vs Thursday),
-// which showed up as e.g. "S 23 Oct 2027" in the picker's own title and
-// the From/To row labels with no way to tell which day that actually
-// was. Matches the format the main date button and the multi-day card
-// (both driven by Rails' own %a / toLocaleDateString) already use
-// correctly elsewhere in this same picker.
-const SHORT = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+// Fallback only — the real, locale-aware list comes from the
+// weekdayNamesValue Stimulus value (see static values below), rendered
+// server-side from config/locales/*.yml's date.abbr_day_names so a
+// German user sees "Mo/Di/Mi..." instead of English names. This English
+// array only covers the case of the value never being set at all.
+// 3 letters, not 1: a single letter can't tell Sunday from Saturday
+// apart (same for 'T': Tuesday vs Thursday) — showed up as e.g.
+// "S 23 Oct 2027" in the picker's own title and From/To row labels with
+// no way to tell which day that actually was.
+const SHORT_FALLBACK = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 const MON_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
 export default class extends Controller {
@@ -27,7 +29,18 @@ export default class extends Controller {
   static values = {
     periodRanges: { type: Array, default: [] },
     // prototype: single-stage mode (new UX) vs legacy two-stage
-    prototype: { type: Boolean, default: true }
+    prototype: { type: Boolean, default: true },
+    // Locale-aware weekday abbreviations, Sunday-first (matches
+    // Date#getDay()) — see config/locales/*.yml's date.abbr_day_names.
+    weekdayNames: { type: Array, default: SHORT_FALLBACK }
+  }
+
+  // this.weekdayNamesValue directly would also work, but a private getter
+  // keeps every SHORT[...] call site below unchanged and guards against a
+  // malformed/short value (fewer than 7 entries) falling back safely
+  // instead of throwing on an out-of-range index.
+  get #SHORT () {
+    return (this.weekdayNamesValue.length === 7) ? this.weekdayNamesValue : SHORT_FALLBACK
   }
 
   _allDay = false
@@ -277,7 +290,7 @@ export default class extends Controller {
   onMonthScroll () { if (this._moRaf) return; this._moRaf = requestAnimationFrame(() => { this._moRaf = null; const it = this.#closestItem(this.monthScrollTarget); if (it) { if (this._editingSlot === 2 && this._mode === 'date') this._pickMonth2 = parseInt(it.dataset.value); else this._pickMonth = parseInt(it.dataset.value) } this.#highlightScrollers(); this.#updateActiveSlotLabel() }) }
   onYearScroll () { if (this._yRaf) return; this._yRaf = requestAnimationFrame(() => { this._yRaf = null; const it = this.#closestItem(this.yearScrollTarget); if (it) { if (this._editingSlot === 2 && this._mode === 'date') this._pickYear2 = parseInt(it.dataset.value); else this._pickYear = parseInt(it.dataset.value) } this.#highlightScrollers(); this.#updateActiveSlotLabel() }) }
   #updateActiveSlotLabel () {
-    const fmt = (d) => `${SHORT[d.getDay()]} ${String(d.getDate()).padStart(2, '0')} ${MON_SHORT[d.getMonth()]} ${d.getFullYear()}`
+    const fmt = (d) => `${this.#SHORT[d.getDay()]} ${String(d.getDate()).padStart(2, '0')} ${MON_SHORT[d.getMonth()]} ${d.getFullYear()}`
     if (this._editingSlot === 1) {
       const d1 = new Date(this._pickYear, this._pickMonth - 1, this._pickDay)
       this.slot1LabelTargets.forEach(el => { el.textContent = fmt(d1) })
@@ -289,7 +302,7 @@ export default class extends Controller {
 
   #updateAllSlotLabels () {
     const d1 = new Date(this._pickYear, this._pickMonth - 1, this._pickDay); const d2 = this.#getSlot2Date()
-    const fmt = (d) => `${SHORT[d.getDay()]} ${String(d.getDate()).padStart(2, '0')} ${MON_SHORT[d.getMonth()]} ${d.getFullYear()}`
+    const fmt = (d) => `${this.#SHORT[d.getDay()]} ${String(d.getDate()).padStart(2, '0')} ${MON_SHORT[d.getMonth()]} ${d.getFullYear()}`
     this.slot1LabelTargets.forEach(el => { el.textContent = fmt(d1) }); this.slot2LabelTargets.forEach(el => { el.textContent = fmt(d2) })
   }
 
@@ -315,8 +328,8 @@ export default class extends Controller {
   }
 
   #setDateFromField () { const ds = this.dateFieldTarget.value || this.#todayStr(); const [y, m, d] = ds.split('-').map(Number); this._pickYear = y; this._pickMonth = m; this._pickDay = d; const eds = this.hasEndDateFieldTarget ? this.endDateFieldTarget.value : ''; if (eds) { const [ey, em, ed] = eds.split('-').map(Number); this._pickYear2 = ey; this._pickMonth2 = em; this._pickDay2 = ed } else { this._pickDay2 = null; this._pickMonth2 = null; this._pickYear2 = null } this.#updateDateTitle() }
-  #buildSlots () { const d1 = new Date(this._pickYear, this._pickMonth - 1, this._pickDay); const d2 = this.#getSlot2Date(); const fmt = (d) => `${SHORT[d.getDay()]} ${String(d.getDate()).padStart(2, '0')} ${MON_SHORT[d.getMonth()]} ${d.getFullYear()}`; this.slot1LabelTargets.forEach(el => { el.textContent = fmt(d1) }); this.slot2LabelTargets.forEach(el => { el.textContent = fmt(d2) }); const a = this.#fmt12h(this._pickHour1, this._pickMin1); const b = this.#fmt12h(this._pickHour2, this._pickMin2); this.slot1TimeTargets.forEach(el => { el.textContent = a }); this.slot2TimeTargets.forEach(el => { el.textContent = b }); this.slot1BtnTargets.forEach(el => { el.dataset.time24 = this.#getSlotTime24(1) }); this.slot2BtnTargets.forEach(el => { el.dataset.time24 = this.#getSlotTime24(2) }) }
-  #updateDateTitle () { const d = new Date(this._pickYear, this._pickMonth - 1, this._pickDay); const dn = SHORT[d.getDay()]; const mon = MON_SHORT[d.getMonth()]; const dd = String(d.getDate()).padStart(2, '0'); const yy = d.getFullYear(); this.dateTitleTarget.textContent = `${dn} ${dd} ${mon} ${yy}` }
+  #buildSlots () { const d1 = new Date(this._pickYear, this._pickMonth - 1, this._pickDay); const d2 = this.#getSlot2Date(); const fmt = (d) => `${this.#SHORT[d.getDay()]} ${String(d.getDate()).padStart(2, '0')} ${MON_SHORT[d.getMonth()]} ${d.getFullYear()}`; this.slot1LabelTargets.forEach(el => { el.textContent = fmt(d1) }); this.slot2LabelTargets.forEach(el => { el.textContent = fmt(d2) }); const a = this.#fmt12h(this._pickHour1, this._pickMin1); const b = this.#fmt12h(this._pickHour2, this._pickMin2); this.slot1TimeTargets.forEach(el => { el.textContent = a }); this.slot2TimeTargets.forEach(el => { el.textContent = b }); this.slot1BtnTargets.forEach(el => { el.dataset.time24 = this.#getSlotTime24(1) }); this.slot2BtnTargets.forEach(el => { el.dataset.time24 = this.#getSlotTime24(2) }) }
+  #updateDateTitle () { const d = new Date(this._pickYear, this._pickMonth - 1, this._pickDay); const dn = this.#SHORT[d.getDay()]; const mon = MON_SHORT[d.getMonth()]; const dd = String(d.getDate()).padStart(2, '0'); const yy = d.getFullYear(); this.dateTitleTarget.textContent = `${dn} ${dd} ${mon} ${yy}` }
   #updateDateDisplay () { const s = this.dateFieldTarget.value; if (!s) return; const e = this.hasEndDateFieldTarget ? this.endDateFieldTarget.value : ''; this.#applyDateDisplay(s, e || null) }
   #updateTimeDisplays () { if (this.hasStartTimeDisplayTarget) { const [sh, sm] = (this.startFieldTarget.value || '19:00').split(':').map(Number); this.startTimeDisplayTarget.textContent = this.#fmt12h(...this.#round5(sh, sm)) } if (this.hasEndTimeDisplayTarget) { const [eh, em] = (this.endFieldTarget.value || '20:00').split(':').map(Number); this.endTimeDisplayTarget.textContent = this.#fmt12h(...this.#round5(eh, em)) } }
   #isOnPeriod (ds) { return this.periodRangesValue.some(([s, e]) => ds >= s && ds <= e) }
