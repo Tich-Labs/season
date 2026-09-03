@@ -417,8 +417,8 @@
         <div class="section-chip"><span class="chip-num">M3</span> Tracking — Symptoms (moods/sliders/pickers), superpowers, review modal</div>
         <div class="section-chip"><span class="chip-num">M4</span> Appointments — Modal paths, category picker, create/edit events</div>
         <div class="section-chip"><span class="chip-num">M5</span> Reminders &amp; Consent — Settings, notifications, consent, profile</div>
-        <div class="section-chip"><span class="chip-num">M6</span> Streaks — Streak counter, milestones 🚧 NOT BUILT</div>
-        <div class="section-chip"><span class="chip-num">M7</span> Feedback — General, support/bug, weekly survey modals</div>
+        <div class="section-chip"><span class="chip-num">M6</span> Gamification — badges, milestones, scoring 🚧 NOT BUILT (streak counter itself is under M3, built)</div>
+        <div class="section-chip"><span class="chip-num">M7</span> Feedback &amp; Onboarding — General, support/bug, weekly feedback hub+wizard, welcome tour</div>
         <div class="section-chip"><span class="chip-num">N</span> iOS Native — Tab bar, nav dropdown, session, touch targets, input zoom</div>
         <div class="section-chip"><span class="chip-num">P</span> Push &amp; Background — Notifications, biometrics, state restoration</div>
       </div>
@@ -464,8 +464,8 @@
     { id: "m3", label: "M3: Tracking" },
     { id: "m4", label: "M4: Appointments" },
     { id: "m5", label: "M5: Reminders & Consent" },
-    { id: "m6", label: "M6: Streaks" },
-    { id: "m7", label: "M7: Feedback" },
+    { id: "m6", label: "M6: Gamification" },
+    { id: "m7", label: "M7: Feedback & Onboarding" },
     { id: "native", label: "iOS Native" },
     { id: "push", label: "Push & Background" },
   ];
@@ -511,7 +511,7 @@
     { section:"m2", scenario:"Daily view renders with phase content", priority:"important",
       howTo:"1. From calendar, tap any day to go to /daily/:date.\n2. Should show: phase info, symptom summary, superpower text, nutrition/sport tips.\n3. Calendar events for that day should be listed.\n4. Pull-to-refresh should work on this page.", status:"pending", notes:"" },
     { section:"m3", scenario:"Self Analysis (tracking) dashboard loads", priority:"important",
-      howTo:"1. Tap Tracking tab.\n2. Should show: avatar, current phase, cycle strip.\n3. Daily analysis card + navigation cards should be visible.\n4. Weekly feedback banner should show if user is in an active week.", status:"pending", notes:"" },
+      howTo:"1. Tap Tracking tab.\n2. Should show: avatar, current phase, cycle strip.\n3. Daily analysis card + navigation cards should be visible.", status:"pending", notes:"" },
     { section:"m5", scenario:"Settings pages work correctly", priority:"important",
       howTo:"1. Tap Settings tab.\n2. Navigate to: Profile, Calendar, Notifications, Subscriptions, Consent.\n3. Each sub-page should load and save changes correctly.\n4. Logout button at bottom of Settings works.\n5. Toggle switches should respond to touch.", status:"pending", notes:"" },
     { section:"m2", scenario:"Weekly appointment view loads", priority:"nice",
@@ -523,10 +523,10 @@
       howTo:"1. On /symptoms, fill in some symptoms, tap Submit.\n2. Review modal should summarize all entries.\n3. Tap 'Submit tracking' — navigates to /tracking.\n4. Tap 'Go back to change' — returns to symptoms form.\n5. Modal should have working backdrop tap to dismiss.", status:"pending", notes:"" },
     { section:"m4", scenario:"Calendar event — category picker modal works", priority:"important",
       howTo:"1. Go to /calendar_events/new.\n2. Tap the + button to open the icon picker modal.\n3. 9 category icons should appear (Friends, Dinner, Date, Sports, Medical, Birthday, Work, Coffee, Shopping).\n4. Tap a category — selected icon highlights in brand colour.\n5. Tap 'Add Icon' to confirm — modal closes.\n6. Set appointment button submits the form.", status:"pending", notes:"" },
-    { section:"m6", scenario:"Superpowers — sliders respond to touch", priority:"important", not_built: true,
+    { section:"m3", scenario:"Superpowers — sliders respond to touch", priority:"important",
       howTo:"1. Go to /superpowers.\n2. 20 sliders (low/med/high) should be present.\n3. Drag each slider — should set value smoothly.\n4. No jump or lag on touch drag.", status:"pending", notes:"" },
-    { section:"m7", scenario:"Feedback modals open and submit correctly", priority:"important",
-      howTo:"1. From the app, open the feedback modal.\n2. Type a message, submit.\n3. Open support/bug modal — select type, submit.\n4. Open weekly feedback modal (if active week).\n5. All modals should have correct iOS-safe-area bottom padding.\n6. All modals should dismiss correctly.", status:"pending", notes:"" },
+    { section:"m7", scenario:"Feedback modals + weekly feedback hub/wizard open and work correctly", priority:"important",
+      howTo:"1. From the app, open the feedback modal (general feedback).\n2. Type a message, submit.\n3. Open support/bug modal — select type, submit.\n4. Open burger menu → Feedback — should land on /weekly_feedback (full-page hub, not a modal).\n5. Tap the current week — wizard should page through questions one at a time with correct iOS-safe-area padding throughout.\n6. All modals/pages should dismiss/navigate correctly with no layout jump.", status:"pending", notes:"Weekly feedback moved from a modal to a full-page hub+wizard (3 Sep 2026) — update any test notes/screenshots that still reference the old modal." },
     { section:"native", scenario:"No 16px zoom on input focus", priority:"important",
       howTo:"1. Tap any text input or textarea.\n2. The page must NOT zoom in.\n3. Input font-size must be at least 16px to prevent iOS zoom.", status:"pending", notes:"" },
 
@@ -777,7 +777,7 @@
       const escaped = r.notes.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
       let rows = `<tr class="data-row" onclick="toggleExpand(${i}, event)" style="${r.not_built ? 'opacity:0.45;filter:grayscale(0.8);' : ''}">
         <td style="white-space:nowrap;">${priorityDot(r.priority)}<span class="priority-label">${r.priority}</span></td>
-        <td class="scenario-cell"><span class="scenario-text" style="${r.not_built ? 'color:#9ca3af;font-style:italic;' : r.suspended ? 'color:#991b1b;font-style:italic;' : ''}">${r.scenario}</span>${r.not_built ? '<span style="display:block;color:#9ca3af;font-size:1.2rem;font-weight:700;margin-top:4px;">🚧 NOT BUILT — M6 not yet implemented</span>' : r.suspended ? '<span style="display:block;color:#991b1b;font-size:1.2rem;font-weight:700;margin-top:4px;">⚠️ SUSPENDED ON iOS — test on PWA</span>' : '<span class="expand-hint">click row for how-to steps</span>'}</td>
+        <td class="scenario-cell"><span class="scenario-text" style="${r.not_built ? 'color:#9ca3af;font-style:italic;' : r.suspended ? 'color:#991b1b;font-style:italic;' : ''}">${r.scenario}</span>${r.not_built ? '<span style="display:block;color:#9ca3af;font-size:1.2rem;font-weight:700;margin-top:4px;">🚧 NOT BUILT / KNOWN GAP</span>' : r.suspended ? '<span style="display:block;color:#991b1b;font-size:1.2rem;font-weight:700;margin-top:4px;">⚠️ SUSPENDED ON iOS — test on PWA</span>' : '<span class="expand-hint">click row for how-to steps</span>'}</td>
         <td>${r.not_built ? '<span style="display:inline-block;padding:6px 10px;border-radius:7px;font-size:1.3rem;font-weight:700;background:#f1f5f9;color:#64748b;border:1px solid #d1d5db;">NOT BUILT</span>' : r.suspended ? `<span style="display:inline-block;padding:6px 10px;border-radius:7px;font-size:1.3rem;font-weight:700;background:#fee2e2;color:#991b1b;border:1px solid #fca5a5;">SUSPENDED</span>` : `<select class="status-select status-${r.status}" onchange="setStatus(${i}, this.value)">
           <option value="pending" ${r.status==="pending"?"selected":""}>Pending</option>
           <option value="pass"    ${r.status==="pass"   ?"selected":""}>Pass</option>

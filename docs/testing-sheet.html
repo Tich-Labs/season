@@ -428,15 +428,15 @@
 
     <div class="ov-block">
       <div class="ov-label">Sections covered</div>
-       <div class="ov-title">9 sections · 58 test cases (by Figma milestone)</div>
+       <div class="ov-title">9 sections · 61 test cases (by Figma milestone)</div>
       <div class="sections-list">
         <div class="section-chip"><span class="chip-num">M1</span> Sign In &amp; Onboarding — Welcome, sign up, sign in, OAuth, 11-step onboarding flow</div>
         <div class="section-chip"><span class="chip-num">M2</span> Calendar &amp; Cycle — Monthly/weekly/daily views, phase colours, cycle day data</div>
-        <div class="section-chip"><span class="chip-num">M3</span> Tracking — Period entry, symptoms (moods/physical/mental), superpowers</div>
-        <div class="section-chip"><span class="chip-num">M4</span> Appointments — Calendar events, category picker modal, create/edit/delete</div>
+        <div class="section-chip"><span class="chip-num">M3</span> Tracking — Period entry, symptoms (moods/physical/mental), superpowers, streak display</div>
+        <div class="section-chip"><span class="chip-num">M4</span> Appointments — Calendar events, category picker modal, create/edit/delete, repeat (not yet actually recurring — saved but never expanded)</div>
         <div class="section-chip"><span class="chip-num">M5</span> Reminders &amp; Consent — Informations, profile, notifications, birth control, GDPR consent</div>
-        <div class="section-chip"><span class="chip-num">M6</span> Streaks — Streak counter, milestones, gamification 🚧 NOT BUILT</div>
-        <div class="section-chip"><span class="chip-num">M7</span> Feedback — General feedback, support/bug, weekly 8-week survey, nudges</div>
+        <div class="section-chip"><span class="chip-num">M6</span> Gamification &amp; Scoring Flames — badges, milestones, scoring 🚧 NOT BUILT (the streak counter itself is under M3 — that's built)</div>
+        <div class="section-chip"><span class="chip-num">M7</span> Feedback &amp; Onboarding — general feedback, support/bug, weekly feedback hub + wizard (8 weeks), beta-tester welcome tour</div>
         <div class="section-chip"><span class="chip-num">A</span> Admin — Users, content CMS, inbox, CSV exports, production config checks</div>
         <div class="section-chip"><span class="chip-num">P</span> PWA / iOS Native — Service worker, offline, install, push, touch targets</div>
       </div>
@@ -482,8 +482,8 @@
     { id: "m3", label: "M3: Tracking" },
     { id: "m4", label: "M4: Appointments" },
     { id: "m5", label: "M5: Reminders & Consent" },
-    { id: "m6", label: "M6: Streaks" },
-    { id: "m7", label: "M7: Feedback" },
+    { id: "m6", label: "M6: Gamification" },
+    { id: "m7", label: "M7: Feedback & Onboarding" },
     { id: "admin", label: "Admin" },
     { id: "pwa", label: "PWA / iOS Native" },
   ];
@@ -535,6 +535,10 @@
       howTo:"1. Go to /calendar_events/new.\n2. Enter title, date, start/end time.\n3. Click the + button to open the category picker modal.\n4. Select a category (Friends, Dinner, Date, Sports, Medical, Birthday, Work, Coffee, Shopping).\n5. The modal should show 9 icon options with brand colour when selected.\n6. Submit — event should appear in appointments list.", status:"pending", notes:"" },
     { section:"m4", scenario:"Edit calendar event", priority:"important",
       howTo:"1. From appointments list, tap an event to edit.\n2. Change title, time, or category.\n3. Save — changes should reflect in the list.\n4. Delete button should remove the event (with confirmation).", status:"pending", notes:"" },
+    { section:"m4", scenario:"Add another appointment on a date that already has one", priority:"nice",
+      howTo:"1. Go to a date's Forecast page (/forecast?date=...) or the Schedule overview (/calendar/appointments) where at least one appointment already exists.\n2. A small phase/day-coloured '+' should sit just below the existing card(s).\n3. Tap it — should open /calendar_events/new with that same date pre-filled, not today's date.", status:"pending", notes:"Added 3 Sep 2026." },
+    { section:"m4", scenario:"Repeat setting is saved but does NOT actually recur", priority:"critical", not_built: true,
+      howTo:"1. Create an appointment, set Repeat to Weekly (or any pattern), save.\n2. Go look at next week's date on the calendar.\n3. Confirm: nothing shows up there. Only the single original appointment exists.", status:"pending", notes:"Known gap, not a new regression — repeat_frequency saves correctly (pattern+duration combine into one value, e.g. 'weekly|until:2028-10-16') but nothing anywhere reads it back and creates the actual repeat occurrences. This test exists so the gap stays visibly tracked rather than silently assumed fixed." },
 
     { section:"m3", scenario:"Period entry date picker works", priority:"critical",
       howTo:"1. Go to /tracking/period.\n2. Tap a date to record period start.\n3. The date should highlight.\n4. Existing dates should show in 'edit' mode.\n5. Submit — cycle should recalculate.", status:"pending", notes:"" },
@@ -544,12 +548,12 @@
       howTo:"1. Go to /symptoms.\n2. Date drum picker should be expandable.\n3. Tap mood icons — they should toggle with opacity/grayscale change.\n4. Physical symptoms: tap a symptom, adjust level slider.\n5. Auto-save should trigger on each change (no submit button needed).", status:"pending", notes:"" },
     { section:"m3", scenario:"Symptom logging — all fields present", priority:"important",
       howTo:"1. On /symptoms, verify all sections:\n   - Mood grid\n   - Physical symptoms with level sliders\n   - Mental symptoms with level sliders\n   - Bleeding dropdown\n   - Intercourse grid\n   - Cravings grid\n   - Discharge grid\n   - Sleep vertical picker (1-12h)\n   - Temperature vertical picker (35.0-42.0C)\n   - Weight vertical picker (30.0-200.0 kg)\n   - Notes textarea\n2. Submit opens review modal.", status:"pending", notes:"" },
-    { section:"m6", scenario:"Submit review modal works", priority:"important", not_built: true,
+    { section:"m3", scenario:"Submit review modal works", priority:"important",
       howTo:"1. On /symptoms, click Submit.\n2. Review modal shows: mood count/names, physical/mental symptoms with levels, other counts.\n3. 'Submit tracking' navigates to /tracking.\n4. 'Go back to change' closes modal and returns to form.", status:"pending", notes:"" },
     { section:"m3", scenario:"Superpowers page works", priority:"important",
       howTo:"1. Go to /superpowers.\n2. Date drum should be present.\n3. Phase label should show current phase.\n4. 20 sliders (low/med/high) should be present.\n5. Submit button should save and confirm.", status:"pending", notes:"" },
-    { section:"m6", scenario:"Streaks counter shows correctly", priority:"nice", not_built: true,
-      howTo:"1. Go to /streaks.\n2. Current streak, best streak, and milestones should show.\n3. Log something daily then check streak increments next day.", status:"pending", notes:"" },
+    { section:"m3", scenario:"Streaks counter shows correctly", priority:"nice",
+      howTo:"1. Go to /streaks.\n2. Current streak and best streak should show, with a flame icon.\n3. Log something daily then check streak increments next day.", status:"pending", notes:"Note: this is the streak *display*, which is built (part of M3). Full gamification/scoring (badges, milestones) is the separate M6 milestone, still not built — see the M6 section." },
 
     { section:"m5", scenario:"Informations main page loads", priority:"important",
       howTo:"1. Go to /informations.\n2. Four phase cards should appear (menstrual, follicular, ovulation, luteal).\n3. Each card should link to phase detail.", status:"pending", notes:"" },
@@ -568,10 +572,12 @@
       howTo:"1. From main app, find and tap the feedback button.\n2. Type a message, submit.\n3. Should show confirmation.\n4. Go to /admin/inbox/feedback — submission should appear.", status:"pending", notes:"" },
     { section:"m7", scenario:"Support modal opens and submits", priority:"important",
       howTo:"1. Open support/bug report modal.\n2. Select type (Bug / Support).\n3. Type message, submit.\n4. Verify it appears in admin inbox under correct category.", status:"pending", notes:"" },
-    { section:"m7", scenario:"Weekly feedback survey modal works", priority:"important",
-      howTo:"1. If user has a current feedback week, open the weekly feedback modal.\n2. Questions should render per question type:\n   - Multiple choice: tappable option buttons\n   - Yes/No + Why: toggle + textarea\n   - Text only: textarea\n3. Submit answers.\n4. Admin should see responses at /admin/weekly_feedback_responses.", status:"pending", notes:"" },
-    { section:"m7", scenario:"Weekly feedback nudge banner appears on tracking", priority:"nice",
-      howTo:"1. Go to /tracking.\n2. If user is in an active feedback week, green banner should appear.\n3. Banner should show week label and link to open the weekly feedback modal.\n4. After submitting, banner should not appear for that week.", status:"pending", notes:"" },
+    { section:"m7", scenario:"Weekly feedback hub shows week status", priority:"important",
+      howTo:"1. Open the burger menu, tap 'Feedback' — should land on /weekly_feedback.\n2. All 8 weeks should list, colour-coded: green = already submitted, maroon = current week (tappable), dim/locked = future weeks (not tappable yet).\n3. A 'Bug report' entry should also be on this screen.\n4. Tap the current (maroon) week — should open the wizard for that week.", status:"pending", notes:"Rebuilt from a bottom-sheet modal into this full-page hub (3 Sep 2026) — the old modal had no reachable trigger anywhere in the app." },
+    { section:"m7", scenario:"Weekly feedback wizard — answer and submit a week", priority:"important",
+      howTo:"1. From the hub, open the current week (/weekly_feedback/:week).\n2. Questions should render one at a time, per question type:\n   - Multiple choice: tappable option pills\n   - Yes/No: toggle, with a 'why' textarea appearing only after Yes\n   - Text only: textarea\n3. A dot-progress indicator should track position; Next/Submit should be disabled until the current question is answered.\n4. After the last question, a thank-you screen shows and links back to the hub.\n5. Re-opening that same week should now show an 'already completed' state, not the questions again.\n6. Opening a locked future week directly (typing the URL) should redirect back to the hub, not render.\n7. Admin should see the responses at /admin/weekly_feedback_responses.", status:"pending", notes:"" },
+    { section:"m7", scenario:"Beta-tester welcome tour shows once after onboarding", priority:"nice",
+      howTo:"1. Complete signup + all 11 onboarding steps as a brand-new user.\n2. Right after the finish animation, the app should land on /welcome_tour (not straight to /calendar) the very first time only.\n3. Swipe/tap through the 5 slides (Introduction, Calendar, Track Your Day, Create Appointment, Forecast) — each should show a real screenshot of that part of the app plus a short explanation.\n4. Tapping through to the end (or navigating away and back to /calendar) should mean it's not shown again on subsequent logins.", status:"pending", notes:"New — added 3 Sep 2026. Only 5 of 7 planned slides are built; the report-a-bug and closing slides are still pending Figma content." },
 
     { section:"pwa", scenario:"PWA — service worker registers and caches assets", priority:"important",
       howTo:"1. Open DevTools > Application > Service Workers.\n2. SW should be registered and active.\n3. Cache Storage should contain app assets (CSS, JS, images).\n4. Reload the page — SW should intercept requests from cache.", status:"pending", notes:"" },
@@ -864,7 +870,7 @@
           <td style="white-space:nowrap;">${priorityDot(r.priority)}<span class="priority-label">${r.priority}</span></td>
           <td class="scenario-cell">
             <span class="scenario-text" style="${r.not_built ? 'color:#9ca3af;font-style:italic;' : ''}">${r.scenario}</span>
-            ${r.not_built ? '<span style="display:block;color:#9ca3af;font-size:1.2rem;font-weight:700;margin-top:4px;">🚧 NOT BUILT — M6 not yet implemented</span>' : '<span class="expand-hint">click row for how-to steps</span>'}
+            ${r.not_built ? '<span style="display:block;color:#9ca3af;font-size:1.2rem;font-weight:700;margin-top:4px;">🚧 NOT BUILT / KNOWN GAP</span>' : '<span class="expand-hint">click row for how-to steps</span>'}
           </td>
           <td>
             ${r.not_built ? '<span style="display:inline-block;padding:6px 10px;border-radius:7px;font-size:1.3rem;font-weight:700;background:#f1f5f9;color:#64748b;border:1px solid #d1d5db;">NOT BUILT</span>' : `<select class="status-select status-${r.status}" onchange="setStatus(${i}, this.value)">
