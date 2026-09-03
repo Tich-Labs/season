@@ -3,7 +3,7 @@
      role="dialog"
      aria-modal="true"
      aria-labelledby="pin-unlock-title"
-     class="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-sm"
+     style="top: env(safe-area-inset-top, 0px);" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-sm"
      data-controller="pin-entry"
      data-pin-entry-modal-value="true"
      data-pin-entry-show-label-value="<%= t('pin.show_pin', default: 'Show PIN') %>"

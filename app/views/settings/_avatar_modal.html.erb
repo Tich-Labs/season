@@ -5,7 +5,7 @@
      #avatar-modal) so both call sites get it with no changes on their end. %>
 <% avatar_return_to = request.path == tracking_index_path ? tracking_index_path : profile_settings_path %>
 <div id="avatar-modal" role="dialog" aria-modal="true" aria-labelledby="avatar-modal-title"
-     class="hidden fixed inset-0 bg-black/50 z-[100] items-center justify-center"
+     style="top: env(safe-area-inset-top, 0px);" class="hidden fixed inset-0 bg-black/50 z-[100] items-center justify-center"
      data-controller="avatar-crop">
   <div class="bg-brand-background rounded-2xl p-6 w-[90%] max-w-[340px] mx-4">
 

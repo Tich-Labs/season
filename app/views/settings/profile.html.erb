@@ -145,7 +145,7 @@
       which was inside the controller's scope. %>
 
   <%# ── Email Modal ── %>
-<div id="email-modal" role="dialog" aria-modal="true" aria-labelledby="email-modal-title" class="hidden fixed inset-0 bg-black/50 z-[100] items-center justify-center">
+<div id="email-modal" role="dialog" aria-modal="true" aria-labelledby="email-modal-title" style="top: env(safe-area-inset-top, 0px);" class="hidden fixed inset-0 bg-black/50 z-[100] items-center justify-center">
   <div class="bg-brand-background rounded-2xl p-6 w-[90%] max-w-[340px] mx-4">
     <div class="flex justify-between items-center mb-5">
       <h3 id="email-modal-title" class="text-brand-primary text-lg font-semibold m-0"><%= t("settings.profile.change_email") %></h3>
@@ -182,7 +182,7 @@
      SettingsController#update_password) since the form is a plain full-page
      submit — the modal would otherwise just vanish on reload with no visible
      error. %>
-<div id="password-modal" role="dialog" aria-modal="true" aria-labelledby="password-modal-title" class="<%= flash[:password_modal_error].present? ? "flex" : "hidden" %> fixed inset-0 bg-black/50 z-[100] items-center justify-center">
+<div id="password-modal" role="dialog" aria-modal="true" aria-labelledby="password-modal-title" style="top: env(safe-area-inset-top, 0px);" class="<%= flash[:password_modal_error].present? ? "flex" : "hidden" %> fixed inset-0 bg-black/50 z-[100] items-center justify-center">
   <div class="bg-brand-background rounded-2xl p-6 w-[90%] max-w-[340px] mx-4">
     <div class="flex justify-between items-center mb-5">
       <h3 id="password-modal-title" class="text-brand-primary text-lg font-semibold m-0"><%= t("settings.profile.change_password") %></h3>
@@ -238,7 +238,7 @@
 </div>
 
 <%# ── Personal Information Edit Modal ── %>
-<div id="personal-info-modal" role="dialog" aria-modal="true" aria-labelledby="personal-info-modal-title" class="hidden fixed inset-0 bg-black/50 z-[100] items-center justify-center">
+<div id="personal-info-modal" role="dialog" aria-modal="true" aria-labelledby="personal-info-modal-title" style="top: env(safe-area-inset-top, 0px);" class="hidden fixed inset-0 bg-black/50 z-[100] items-center justify-center">
   <div class="bg-brand-background rounded-2xl p-6 w-[90%] max-w-[340px] mx-4">
     <div class="flex justify-between items-center mb-5">
       <h3 id="personal-info-modal-title" class="text-brand-primary text-lg font-semibold m-0"><%= t("settings.profile.personal_information") %></h3>

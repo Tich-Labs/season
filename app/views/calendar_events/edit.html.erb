@@ -260,7 +260,7 @@
     <%= render "calendar_events/date_picker_modal" %>
 
     <%# ── Category icon picker modal ── %>
-    <div data-season-modal-target="backdrop" class="hidden fixed inset-0 bg-black/40 z-[65]"></div>
+    <div data-season-modal-target="backdrop" style="top: env(safe-area-inset-top, 0px);" class="hidden fixed inset-0 bg-black/40 z-[65]"></div>
     <div data-season-modal-target="modal" role="dialog" aria-modal="true" aria-labelledby="edit-choose-icon-title"
          class="hidden fixed inset-0 z-[70] flex items-center justify-center">
       <div class="w-[310px] max-h-[92vh] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] px-6 py-8 relative flex flex-col">
@@ -328,7 +328,7 @@
     </div>
 
     <%# ── Location picker modal ── %>
-    <div data-season-modal-target="locationBackdrop" class="hidden fixed inset-0 bg-black/40 z-[65]"></div>
+    <div data-season-modal-target="locationBackdrop" style="top: env(safe-area-inset-top, 0px);" class="hidden fixed inset-0 bg-black/40 z-[65]"></div>
     <div data-season-modal-target="locationModal" role="dialog" aria-modal="true" aria-label="Add location"
          class="hidden fixed inset-0 z-[70] flex items-center justify-center">
       <div data-season-modal-target="locationCard"
@@ -358,7 +358,7 @@
     </div>
 
     <%# ── Notes modal ── %>
-    <div data-season-modal-target="notesBackdrop" class="hidden fixed inset-0 bg-black/40 z-[65]"></div>
+    <div data-season-modal-target="notesBackdrop" style="top: env(safe-area-inset-top, 0px);" class="hidden fixed inset-0 bg-black/40 z-[65]"></div>
     <div data-season-modal-target="notesModal" role="dialog" aria-modal="true" aria-label="Add notes"
          class="hidden fixed inset-0 z-[70] flex items-center justify-center">
       <div class="w-[385px] h-[477px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] relative">
@@ -380,7 +380,7 @@
     </div>
 
     <%# ── Reminder picker modal ── %>
-    <div data-season-modal-target="reminderBackdrop" class="hidden fixed inset-0 bg-black/40 z-[65]"></div>
+    <div data-season-modal-target="reminderBackdrop" style="top: env(safe-area-inset-top, 0px);" class="hidden fixed inset-0 bg-black/40 z-[65]"></div>
     <div data-season-modal-target="reminderModal" role="dialog" aria-modal="true" aria-label="Set reminder"
          class="hidden fixed inset-0 z-[70] flex items-center justify-center">
       <div class="w-[355px] h-[524px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] relative">
@@ -424,7 +424,7 @@
     </div>
 
     <%# ── Custom reminder picker modal ── %>
-    <div data-season-modal-target="customReminderBackdrop" class="hidden fixed inset-0 bg-black/40 z-[65]" data-action="click->season-modal#closeCustomReminder"></div>
+    <div data-season-modal-target="customReminderBackdrop" style="top: env(safe-area-inset-top, 0px);" class="hidden fixed inset-0 bg-black/40 z-[65]" data-action="click->season-modal#closeCustomReminder"></div>
     <div data-season-modal-target="customReminderModal" role="dialog" aria-modal="true" aria-label="Set reminder"
          class="hidden fixed inset-0 z-[70] flex items-center justify-center">
       <div class="w-[355px] h-[380px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] relative">
@@ -461,7 +461,7 @@
     </div>
 
     <%# ── Guests modal ── %>
-    <div data-season-modal-target="guestsBackdrop" class="hidden fixed inset-0 bg-black/40 z-[65]"></div>
+    <div data-season-modal-target="guestsBackdrop" style="top: env(safe-area-inset-top, 0px);" class="hidden fixed inset-0 bg-black/40 z-[65]"></div>
     <div data-season-modal-target="guestsModal" role="dialog" aria-modal="true" aria-label="Invite guests"
          class="hidden fixed inset-0 z-[70] flex items-center justify-center">
       <div data-season-modal-target="guestsCard"
@@ -492,7 +492,7 @@
     </div>
 
     <%# ── Repeat modal ── %>
-    <div data-season-modal-target="repeatBackdrop" class="hidden fixed inset-0 bg-black/40 z-[65]"></div>
+    <div data-season-modal-target="repeatBackdrop" style="top: env(safe-area-inset-top, 0px);" class="hidden fixed inset-0 bg-black/40 z-[65]"></div>
     <div data-season-modal-target="repeatModal" role="dialog" aria-modal="true" aria-label="Repeat"
          class="hidden fixed inset-0 z-[70] flex items-center justify-center">
       <div class="w-[361px] h-[776px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] relative overflow-y-auto [scrollbar-width:none]">
@@ -555,7 +555,7 @@
     </div>
 
     <%# ── Custom repeat modal ── %>
-    <div data-season-modal-target="customRepeatBackdrop" class="hidden fixed inset-0 bg-black/40 z-[65]"></div>
+    <div data-season-modal-target="customRepeatBackdrop" style="top: env(safe-area-inset-top, 0px);" class="hidden fixed inset-0 bg-black/40 z-[65]"></div>
     <div data-season-modal-target="customRepeatModal" role="dialog" aria-modal="true" aria-label="Custom repeat"
          class="hidden fixed inset-0 z-[70] flex items-center justify-center">
       <div class="w-[361px] h-[451px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] relative overflow-y-auto [scrollbar-width:none]">
@@ -591,7 +591,7 @@
     </div>
 
     <%# ── Repeat until date modal ── %>
-    <div data-season-modal-target="repeatUntilBackdrop" class="hidden fixed inset-0 bg-black/40 z-[65]" data-action="click->season-modal#closeRepeatUntil"></div>
+    <div data-season-modal-target="repeatUntilBackdrop" style="top: env(safe-area-inset-top, 0px);" class="hidden fixed inset-0 bg-black/40 z-[65]" data-action="click->season-modal#closeRepeatUntil"></div>
     <div data-season-modal-target="repeatUntilModal" role="dialog" aria-modal="true" aria-label="Repeat until"
          class="hidden fixed inset-0 z-[70] flex items-center justify-center">
       <div class="w-[380px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] relative flex flex-col px-[36px] pt-[22px] pb-[22px]">
@@ -644,7 +644,7 @@
     </div>
 
     <%# ── Recurring event edit modal ── %>
-    <div data-season-modal-target="recurringBackdrop" class="hidden fixed inset-0 bg-black/40 z-[150]" data-action="click->season-modal#closeRecurring"></div>
+    <div data-season-modal-target="recurringBackdrop" style="top: env(safe-area-inset-top, 0px);" class="hidden fixed inset-0 bg-black/40 z-[150]" data-action="click->season-modal#closeRecurring"></div>
     <div data-season-modal-target="recurringModal" role="dialog" aria-modal="true"
          class="hidden fixed inset-0 z-[150] flex items-center justify-center">
       <div class="w-[337px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] px-7 pt-8 pb-6">
@@ -667,7 +667,7 @@
     </div>
 
     <%# ── Notify guests on delete modal ── %>
-    <div data-season-modal-target="notifyBackdrop" class="hidden fixed inset-0 bg-black/40 z-[150]" data-action="click->season-modal#closeNotify"></div>
+    <div data-season-modal-target="notifyBackdrop" style="top: env(safe-area-inset-top, 0px);" class="hidden fixed inset-0 bg-black/40 z-[150]" data-action="click->season-modal#closeNotify"></div>
     <div data-season-modal-target="notifyModal" role="dialog" aria-modal="true"
          class="hidden fixed inset-0 z-[150] flex items-center justify-center">
       <div class="w-[337px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] px-7 pt-8 pb-6">
@@ -691,7 +691,7 @@
     </div>
 
     <%# ── Attention dialogs ── %>
-    <div data-season-modal-target="attentionBackdrop" class="hidden fixed inset-0 bg-black/40 z-[200]"></div>
+    <div data-season-modal-target="attentionBackdrop" style="top: env(safe-area-inset-top, 0px);" class="hidden fixed inset-0 bg-black/40 z-[200]"></div>
     <div data-season-modal-target="attentionModal" role="alertdialog" aria-modal="true"
          class="hidden fixed inset-0 z-[200] flex items-center justify-center">
       <div class="w-[337px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] px-7 pt-8 pb-6">

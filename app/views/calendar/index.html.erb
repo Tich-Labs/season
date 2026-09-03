@@ -275,7 +275,7 @@
      class="fixed inset-0 z-50 flex items-center justify-center hidden"
      data-controller="season-modal">
   <div data-season-modal-target="backdrop"
-       class="fixed inset-0 bg-black/30 z-0"
+       style="top: env(safe-area-inset-top, 0px);" class="fixed inset-0 bg-black/30 z-0"
        data-action="click->season-modal#close"></div>
   <div data-season-modal-target="modal" class="relative z-10 bg-brand-background rounded-2xl p-6 w-11/12 max-w-sm">
     <div class="text-center mb-4">

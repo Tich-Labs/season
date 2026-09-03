@@ -1,6 +1,6 @@
 <%# Shared date picker modal — used by new.html.erb + edit.html.erb %>
 <%# Locals: evt_date (Date) %>
-<div data-appointment-date-picker-target="backdrop" class="hidden fixed inset-0 bg-black/40 z-[65]" data-action="click->appointment-date-picker#close"></div>
+<div data-appointment-date-picker-target="backdrop" style="top: env(safe-area-inset-top, 0px);" class="hidden fixed inset-0 bg-black/40 z-[65]" data-action="click->appointment-date-picker#close"></div>
 <div data-appointment-date-picker-target="modal" role="dialog" aria-modal="true" class="hidden">
   <div data-appointment-date-picker-target="protoCard" data-action="click->appointment-date-picker#exitInline" class="w-[380px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] relative flex flex-col px-[38px] pt-[22px] pb-[22px] gap-0">
     <button type="button" data-action="click->appointment-date-picker#close" class="absolute right-[13px] top-[13px] w-[37px] h-[37px] bg-transparent border-none cursor-pointer p-0">

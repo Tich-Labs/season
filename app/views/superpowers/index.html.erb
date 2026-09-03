@@ -83,7 +83,7 @@
         </button>
 
         <%# ── Pre-submit review modal ───────────────────────────────────── %>
-        <div class="hidden fixed inset-0 z-[100] flex items-start justify-center bg-black/40"
+        <div style="top: env(safe-area-inset-top, 0px);" class="hidden fixed inset-0 z-[100] flex items-start justify-center bg-black/40"
              data-superpowers-submit-modal-target="modal"
              data-action="click->superpowers-submit-modal#overlayClick">
           <div class="relative bg-white rounded-[29px] mx-4 mt-8" style="width:351px; max-width:calc(100vw - 32px);">

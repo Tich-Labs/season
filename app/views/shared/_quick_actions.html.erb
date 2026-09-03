@@ -22,7 +22,7 @@
     <%# Backdrop — always flex when wrapper is visible %>
     <div data-quick-actions-target="backdrop"
          data-action="click->quick-actions#clickBackdrop"
-         class="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
+         style="top: env(safe-area-inset-top, 0px);" class="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
 
       <div class="w-[380px] bg-white rounded-[29px] overflow-hidden flex flex-col relative">
 

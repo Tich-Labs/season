@@ -353,7 +353,7 @@
     <% if @phase != "menstrual" %>
       <% discharge_grid.select { |item| I18n.exists?("symptoms.discharge_info.#{item[:key]}") }.each do |item| %>
         <div id="discharge-info-<%= item[:key] %>"
-             class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-sm px-4"
+             style="top: env(safe-area-inset-top, 0px);" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-sm px-4"
              data-discharge-info-modal="<%= item[:key] %>">
           <div class="w-full max-w-xs bg-brand-field rounded-[25px] p-6 relative">
             <button class="absolute top-4 right-4 text-brand-primary"
@@ -490,7 +490,7 @@
              the info modal (z-[110] > z-[100]) and only when an MP4 exists. %>
         <% if discharge_finger_video_exists?(item[:key]) %>
           <div id="discharge-video-<%= item[:key] %>"
-               class="hidden fixed inset-0 z-[110] flex items-center justify-center bg-black/80 backdrop-blur-sm px-4"
+               style="top: env(safe-area-inset-top, 0px);" class="hidden fixed inset-0 z-[110] flex items-center justify-center bg-black/80 backdrop-blur-sm px-4"
                data-discharge-video-modal="<%= item[:key] %>">
             <div class="relative w-full max-w-sm">
               <button type="button"
@@ -511,7 +511,7 @@
           <%# Same enlarge-on-tap pattern as the video viewer above, for
                categories with only a static finger photo. %>
           <div id="discharge-photo-<%= item[:key] %>"
-               class="hidden fixed inset-0 z-[110] flex items-center justify-center bg-black/80 backdrop-blur-sm px-4"
+               style="top: env(safe-area-inset-top, 0px);" class="hidden fixed inset-0 z-[110] flex items-center justify-center bg-black/80 backdrop-blur-sm px-4"
                data-discharge-photo-modal="<%= item[:key] %>">
             <div class="relative w-full max-w-sm">
               <button type="button"
@@ -532,7 +532,7 @@
              finger photo/video pair, this one always exists for every item
              in discharge_grid, so it's rendered unconditionally. %>
         <div id="discharge-slip-<%= item[:key] %>"
-             class="hidden fixed inset-0 z-[110] flex items-center justify-center bg-black/80 backdrop-blur-sm px-4"
+             style="top: env(safe-area-inset-top, 0px);" class="hidden fixed inset-0 z-[110] flex items-center justify-center bg-black/80 backdrop-blur-sm px-4"
              data-discharge-slip-modal="<%= item[:key] %>">
           <div class="relative w-full max-w-sm">
             <button type="button"
@@ -849,7 +849,7 @@
       </button>
 
       <%# ── Pre-submit review modal ─────────────────────────────────────── %>
-      <div class="hidden fixed inset-0 z-[100] flex items-start justify-center bg-black/40"
+      <div style="top: env(safe-area-inset-top, 0px);" class="hidden fixed inset-0 z-[100] flex items-start justify-center bg-black/40"
            data-submit-modal-target="modal"
            data-action="click->submit-modal#overlayClick">
         <div class="relative bg-white rounded-[29px] mx-4 mt-8" style="width:351px; max-width:calc(100vw - 32px);">
