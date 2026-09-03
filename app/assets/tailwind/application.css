@@ -187,6 +187,11 @@
   align-items: center;
   justify-content: center;
   scroll-snap-align: center;
+  /* Forces one snap point at a time during a fast touch flick instead of
+     letting momentum sail past several — the "drum rolls too fast on
+     touch" report. Without this a hard swipe on a narrow wheel picker can
+     skip many values in one motion. */
+  scroll-snap-stop: always;
   font-family: 'Montserrat', sans-serif;
   font-weight: 400;
   font-size: 16px;

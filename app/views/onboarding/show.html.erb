@@ -79,10 +79,14 @@
           </div>
           <div class="flex flex-col items-center gap-2">
             <span class="text-brand-primary text-xs font-normal tracking-wide"><%= t('onboarding.step2.label_month') %></span>
+            <%# Named months, not "1".."12" — avoids the DD/MM-vs-MM/DD
+                 ambiguity a raw number invites, same reasoning as the
+                 appointment date picker's month wheel. %>
             <div data-controller="scroll-picker"
                  data-scroll-picker-min-value="1"
                  data-scroll-picker-max-value="12"
                  data-scroll-picker-step-value="1"
+                 data-scroll-picker-labels-value='["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]'
                  data-scroll-picker-placeholder="<%= t('onboarding.step2.placeholder_month') %>">
               <div class="relative" style="width:56px; height:180px;">
                 <div class="sp-highlight" style="top:69px; height:42px;"></div>

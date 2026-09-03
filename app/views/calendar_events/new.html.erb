@@ -517,13 +517,13 @@
           <div data-season-modal-target="customReminderNum"
                class="overflow-y-auto snap-y snap-mandatory h-full w-14 [scrollbar-width:none] text-center relative z-[1]">
             <% (1..60).each do |n| %>
-              <div data-value="<%= n %>" class="h-7 flex items-center justify-center text-22 tracking-003 text-brand-primary snap-center" style="font-weight:<%= n == 5 ? '700' : '400' %>;opacity:<%= n == 5 ? '1' : '0.4' %>"><%= format('%02d', n) %></div>
+              <div data-value="<%= n %>" class="h-7 flex items-center justify-center text-22 tracking-003 text-brand-primary snap-center snap-always" style="font-weight:<%= n == 5 ? '700' : '400' %>;opacity:<%= n == 5 ? '1' : '0.4' %>"><%= format('%02d', n) %></div>
             <% end %>
           </div>
           <div data-season-modal-target="customReminderUnit"
                class="overflow-y-auto snap-y snap-mandatory h-full w-[90px] [scrollbar-width:none] text-center relative z-[1]">
             <% [['minutes', 'Minutes'], ['hours', 'Hours'], ['days', 'Days']].each_with_index do |(val, label), i| %>
-              <div data-value="<%= val %>" class="h-7 flex items-center justify-center text-base tracking-007 text-brand-primary snap-center" style="font-weight:<%= i == 0 ? '700' : '400' %>;opacity:<%= i == 0 ? '1' : '0.4' %>"><%= label %></div>
+              <div data-value="<%= val %>" class="h-7 flex items-center justify-center text-base tracking-007 text-brand-primary snap-center snap-always" style="font-weight:<%= i == 0 ? '700' : '400' %>;opacity:<%= i == 0 ? '1' : '0.4' %>"><%= label %></div>
             <% end %>
           </div>
         </div>
@@ -739,14 +739,14 @@
                onclick). %>
           <div data-season-modal-target="repeatUntilDay" data-action="scroll->season-modal#onRepeatUntilScroll" style="touch-action: pan-y; overscroll-behavior: contain;" class="overflow-y-auto snap-y snap-mandatory h-full w-11 [scrollbar-width:none] text-center relative z-[1]">
             <% (1..31).each do |day| %>
-              <div data-value="<%= day %>" class="h-7 flex items-center justify-center text-base text-brand-primary snap-center" style="font-weight:<%= day == d ? '700' : '400' %>;opacity:<%= day == d ? '1' : '0.35' %>"><%= format('%02d', day) %></div>
+              <div data-value="<%= day %>" class="h-7 flex items-center justify-center text-base text-brand-primary snap-center snap-always" style="font-weight:<%= day == d ? '700' : '400' %>;opacity:<%= day == d ? '1' : '0.35' %>"><%= format('%02d', day) %></div>
             <% end %>
           </div>
           <% months = %w[Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec] %>
           <div data-season-modal-target="repeatUntilMonth" data-action="scroll->season-modal#onRepeatUntilScroll" style="touch-action: pan-y; overscroll-behavior: contain;" class="overflow-y-auto snap-y snap-mandatory h-full w-[52px] [scrollbar-width:none] text-center relative z-[1]">
             <% months.each_with_index do |mon, mi| %>
               <% mo = mi + 1 %>
-              <div data-value="<%= mon %>" class="h-7 flex items-center justify-center text-base text-brand-primary snap-center" style="font-weight:<%= mo == m ? '700' : '400' %>;opacity:<%= mo == m ? '1' : '0.35' %>"><%= mon %></div>
+              <div data-value="<%= mon %>" class="h-7 flex items-center justify-center text-base text-brand-primary snap-center snap-always" style="font-weight:<%= mo == m ? '700' : '400' %>;opacity:<%= mo == m ? '1' : '0.35' %>"><%= mon %></div>
             <% end %>
           </div>
           <%# Starts at the current year, not a hardcoded 2025 — "Repeat
@@ -755,7 +755,7 @@
                in the first place. %>
           <div data-season-modal-target="repeatUntilYear" data-action="scroll->season-modal#onRepeatUntilScroll" style="touch-action: pan-y; overscroll-behavior: contain;" class="overflow-y-auto snap-y snap-mandatory h-full w-[60px] [scrollbar-width:none] text-center relative z-[1]">
             <% (Time.zone.today.year..Time.zone.today.year + 10).each do |yr| %>
-              <div data-value="<%= yr %>" class="h-7 flex items-center justify-center text-base text-brand-primary snap-center" style="font-weight:<%= yr == y ? '700' : '400' %>;opacity:<%= yr == y ? '1' : '0.35' %>"><%= yr %></div>
+              <div data-value="<%= yr %>" class="h-7 flex items-center justify-center text-base text-brand-primary snap-center snap-always" style="font-weight:<%= yr == y ? '700' : '400' %>;opacity:<%= yr == y ? '1' : '0.35' %>"><%= yr %></div>
             <% end %>
           </div>
         </div>

@@ -33,26 +33,42 @@
     <div class="hidden">
       <div data-appointment-date-picker-target="protoDatePicker" data-picker="date" class="w-full h-[80px] flex items-center justify-center gap-1.5 relative">
         <div class="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-7 bg-brand-field rounded-lg pointer-events-none"></div>
+        <%# snap-center + snap-always on each item: this scroller had NO
+             scroll-snap-align on its items at all before — scroll-snap-type
+             on the container alone does nothing without that, so it was
+             pure unconstrained touch-momentum free-scroll, never actually
+             settling on an item boundary. That's the real cause of the
+             "rolls too fast on touch" report: nothing stopped a fling from
+             sailing past many values at once. snap-always additionally
+             forces one snap point at a time during a fast flick, instead
+             of the default (letting a hard swipe glide past several). %>
         <div data-appointment-date-picker-target="dayScroll" data-action="scroll->appointment-date-picker#onDayScroll" class="overflow-y-auto snap-y snap-mandatory h-full w-12 [scrollbar-width:none] relative z-[1]">
-          <% (1..31).each do |d| %><div data-value="<%= d %>" class="h-7 flex items-center justify-center text-base tracking-007 text-brand-primary"><%= format('%02d', d) %></div><% end %>
+          <% (1..31).each do |d| %><div data-value="<%= d %>" class="h-7 flex items-center justify-center text-base tracking-007 text-brand-primary snap-center snap-always"><%= format('%02d', d) %></div><% end %>
         </div>
         <span class="text-base text-brand-primary relative z-[1]">/</span>
-        <div data-appointment-date-picker-target="monthScroll" data-action="scroll->appointment-date-picker#onMonthScroll" class="overflow-y-auto snap-y snap-mandatory h-full w-12 [scrollbar-width:none] relative z-[1]">
-          <% (1..12).each do |m| %><div data-value="<%= m %>" class="h-7 flex items-center justify-center text-base tracking-007 text-brand-primary"><%= format('%02d', m) %></div><% end %>
+        <%# Named months, not "01".."12" — this scroller sits right next to
+             labels elsewhere in the same card ("11 Sep 2026") that already
+             use the month name. Raw numeric months reintroduce the
+             DD/MM-vs-MM/DD ambiguity that named months exist to avoid, and
+             made the value visibly change format the instant a user taps
+             into edit mode. Matches the "Repeat until" picker's month
+             wheel (season_modal_controller.js), which already did this. %>
+        <div data-appointment-date-picker-target="monthScroll" data-action="scroll->appointment-date-picker#onMonthScroll" class="overflow-y-auto snap-y snap-mandatory h-full w-14 [scrollbar-width:none] relative z-[1]">
+          <% %w[Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec].each_with_index do |mon, mi| %><div data-value="<%= mi + 1 %>" class="h-7 flex items-center justify-center text-base tracking-007 text-brand-primary snap-center snap-always"><%= mon %></div><% end %>
         </div>
         <span class="text-base text-brand-primary relative z-[1]">/</span>
         <div data-appointment-date-picker-target="yearScroll" data-action="scroll->appointment-date-picker#onYearScroll" class="overflow-y-auto snap-y snap-mandatory h-full w-16 [scrollbar-width:none] relative z-[1]">
-          <% ((Time.zone.today.year - 5)..(Time.zone.today.year + 5)).each do |y| %><div data-value="<%= y %>" class="h-7 flex items-center justify-center text-base tracking-007 text-brand-primary"><%= y %></div><% end %>
+          <% ((Time.zone.today.year - 5)..(Time.zone.today.year + 5)).each do |y| %><div data-value="<%= y %>" class="h-7 flex items-center justify-center text-base tracking-007 text-brand-primary snap-center snap-always"><%= y %></div><% end %>
         </div>
       </div>
       <div data-appointment-date-picker-target="protoTimePicker" data-picker="time" class="w-full h-[80px] hidden items-center justify-center gap-1 relative">
         <div class="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-7 bg-brand-field rounded-lg pointer-events-none"></div>
         <div data-appointment-date-picker-target="hourScroll" data-action="scroll->appointment-date-picker#onHourScroll" class="overflow-y-auto snap-y snap-mandatory h-full w-[50px] [scrollbar-width:none] relative z-[1]">
-          <% (0..23).each do |h| %><div data-value="<%= h %>" class="h-7 flex items-center justify-center text-base tracking-007 text-brand-primary"><%= format('%02d', h) %></div><% end %>
+          <% (0..23).each do |h| %><div data-value="<%= h %>" class="h-7 flex items-center justify-center text-base tracking-007 text-brand-primary snap-center snap-always"><%= format('%02d', h) %></div><% end %>
         </div>
         <span class="font-bold text-base text-brand-primary relative z-[1]">:</span>
         <div data-appointment-date-picker-target="minuteScroll" data-action="scroll->appointment-date-picker#onMinuteScroll" class="overflow-y-auto snap-y snap-mandatory h-full w-14 [scrollbar-width:none] relative z-[1]">
-          <% [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55].each do |m| %><div data-value="<%= m %>" class="h-7 flex items-center justify-center text-base tracking-007 text-brand-primary"><%= format('%02d', m) %></div><% end %>
+          <% [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55].each do |m| %><div data-value="<%= m %>" class="h-7 flex items-center justify-center text-base tracking-007 text-brand-primary snap-center snap-always"><%= format('%02d', m) %></div><% end %>
         </div>
       </div>
     </div>

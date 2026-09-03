@@ -19,7 +19,12 @@ export default class extends Controller {
     unit: String,
     field: String,
     placeholder: String,
-    start: Number
+    start: Number,
+    // Optional display labels, one per value from min to max in order
+    // (e.g. ["Jan", "Feb", ...] for a month picker) — the underlying
+    // value/step math is unaffected, only what's printed in the wheel.
+    // Falls back to the raw number when omitted, unchanged from before.
+    labels: Array
   }
 
   #itemHeight = 42
@@ -91,7 +96,7 @@ export default class extends Controller {
       const el = document.createElement('div')
       el.className = 'sp-item'
       el.dataset.value = val
-      el.textContent = Number.isInteger(val) ? val.toString() : val.toFixed(1)
+      el.textContent = this.labelsValue[i] || (Number.isInteger(val) ? val.toString() : val.toFixed(1))
       el.setAttribute('role', 'option')
       frag.appendChild(el)
     }
