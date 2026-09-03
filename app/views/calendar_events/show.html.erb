@@ -25,10 +25,13 @@
       <h1 class="text-22 font-medium text-brand-primary font-sans m-0"><%= @event.title %></h1>
     </div>
 
-    <hr class="border-brand-primary mx-0 my-8" style="width:304px;">
+    <%# mt-1/mb-5 (not my-8) and py-5 (not py-8) below — matches the
+         tighter title→divider→date-card spacing calendar_events/new.html.erb
+         uses for the same three elements. %>
+    <hr class="border-brand-primary mx-0 mt-1 mb-5" style="width:304px;">
 
     <%# Date + time SVG block (read-only) %>
-    <div class="py-8">
+    <div class="py-5">
       <div class="mx-auto relative" style="width:360px;height:125px;">
         <svg width="360" height="125" viewBox="0 0 360 125" fill="none" xmlns="http://www.w3.org/2000/svg" class="absolute inset-0 pointer-events-none">
           <path d="M0 19C0 8.50659 8.50659 0 19 0H341C351.493 0 360 8.50659 360 19V106C360 116.493 351.493 125 341 125H19C8.50659 125 0 116.493 0 106V19Z" fill="#933A35" />
