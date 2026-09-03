@@ -89,13 +89,31 @@
     <div data-holiday-date="<%= date.iso8601 %>"
          style="display:flex; align-items:center; justify-content:center; gap:2px; min-height:5px; flex-shrink:0;"></div>
 
-    <%# Event labels — up to 2, rest collapsed to +N %>
+    <%# Event labels — up to 2, rest collapsed to +N.
+         A multi-day event (end_date present and after date) used to render
+         as a separate, fully-rounded pill repeated on every day it covers —
+         reading as disconnected labels rather than one appointment. Now it
+         renders as one continuous bar: the seam between two days that both
+         carry the event is squared off (no rounding) and bleeds into the
+         cell's own 4px horizontal padding via a negative margin, so it
+         visually merges with the same bar in the adjacent cell — the same
+         "zero column-gap, full-bleed" trick the phase band above already
+         relies on. The label itself is shown only on the event's actual
+         start day; continuation segments are just the coloured bar, same
+         as how Google/Apple Calendar avoid repeating a multi-day title on
+         every day it spans. %>
     <% if show_events && has_event %>
       <% evt_colour = phase_colour || "#933a35" %>
       <div style="display:flex; flex-direction:column; gap:2px; margin-top:1px;">
         <% events_today.first(2).each do |evt| %>
-          <div style="background:<%= evt_colour %>; border-radius:2px; padding:1px 3px; overflow:hidden;">
-            <span style="color:#FFF; font-size:7px; font-weight:500; white-space:nowrap; display:block; overflow:hidden; text-overflow:ellipsis; line-height:9px;"><%= evt.title %></span>
+          <% continues_from_prev = evt.end_date.present? && evt.end_date > evt.date && evt.date < date %>
+          <% continues_to_next   = evt.end_date.present? && evt.end_date > evt.date && evt.end_date > date %>
+          <% radius = "#{continues_from_prev ? 0 : 2}px #{continues_to_next ? 0 : 2}px #{continues_to_next ? 0 : 2}px #{continues_from_prev ? 0 : 2}px" %>
+          <% margin = "0 #{continues_to_next ? "-4px" : "0"} 0 #{continues_from_prev ? "-4px" : "0"}" %>
+          <div style="background:<%= evt_colour %>; border-radius:<%= radius %>; margin:<%= margin %>; padding:1px 3px; overflow:hidden;">
+            <%# Empty (not omitted) on a continuation segment, so the bar
+                 keeps the same line-height/row height as a labelled one. %>
+            <span style="color:#FFF; font-size:7px; font-weight:500; white-space:nowrap; display:block; overflow:hidden; text-overflow:ellipsis; line-height:9px;"><%= continues_from_prev ? " " : evt.title %></span>
           </div>
         <% end %>
         <% if events_today.size > 2 %>
