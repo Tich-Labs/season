@@ -65,6 +65,48 @@ export default class extends Controller {
       this.#updateDateDisplay()
       this.#updateTimeDisplays()
     })
+    this.#setupSensitivePeriodSubmitGuard()
+  }
+
+  // The sensitive-period check in confirm() below only fires when a user
+  // actively picks a date *through the "Set date" picker*. Every real
+  // entry point to this form — tapping a calendar day, the "+" FAB, the
+  // per-date "+" buttons — pre-fills the date field without the user ever
+  // touching that picker, so confirm() never runs for them and the
+  // warning was silently unreachable. This is the last-resort gate that
+  // can't be bypassed by any entry point: it checks whatever date is
+  // actually in the field right before the appointment gets created,
+  // regardless of how it got there.
+  #setupSensitivePeriodSubmitGuard () {
+    const form = this.element.querySelector('form')
+    if (!form) return
+    this._periodConfirmed = false
+    const submitEls = () => form.querySelectorAll('button[type="submit"], input[type="submit"]')
+    const originalLabels = new Map()
+    submitEls().forEach(el => originalLabels.set(el, el.tagName === 'INPUT' ? el.value : el.textContent))
+
+    form.addEventListener('submit', (event) => {
+      if (this._periodConfirmed) return
+      const dateStr = this.hasDateFieldTarget ? this.dateFieldTarget.value : ''
+      if (!dateStr || !this.#isOnPeriod(dateStr)) return
+      event.preventDefault()
+      event.stopImmediatePropagation()
+      // A sibling listener (season-modal's double-submit guard) may have
+      // already disabled the submit button before this one ran, since
+      // both listen for the same submit event on the same form — restore
+      // it, since we're blocking this submission, not completing it.
+      submitEls().forEach(el => {
+        el.disabled = false
+        const label = originalLabels.get(el)
+        if (label != null) { if (el.tagName === 'INPUT') el.value = label; else el.textContent = label }
+      })
+      this.dispatch('sensitive-period', {
+        detail: {
+          onSetDate: () => { this._periodConfirmed = true; form.requestSubmit() },
+          onChooseAnother: () => {}
+        }
+      })
+    })
   }
 
   open () {

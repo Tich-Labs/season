@@ -83,7 +83,7 @@ export default class extends Controller {
     document.addEventListener('turbo:before-visit', this._turboBeforeVisit)
 
     this.element.addEventListener('appointment-date-picker:past-date', (e) => this.showPastDateAlert(e.detail?.onConfirm))
-    this.element.addEventListener('appointment-date-picker:sensitive-period', (e) => this.showSensitivePeriodAlert(e.detail?.message))
+    this.element.addEventListener('appointment-date-picker:sensitive-period', (e) => this.showSensitivePeriodAlert(e.detail?.message, e.detail?.onSetDate, e.detail?.onChooseAnother))
 
     // Click-outside-closes, for every modal that isn't an alert/confirm
     // dialog. This listens on the modal's own `fixed inset-0` wrapper
@@ -1131,7 +1131,7 @@ export default class extends Controller {
 
   // ── Attention dialogs ────────────────────────────────────────────────────
 
-  openAttention ({ body, confirmLabel = 'OK', cancelLabel = 'Keep editing', onConfirm = null } = {}) {
+  openAttention ({ body, confirmLabel = 'OK', cancelLabel = 'Keep editing', onConfirm = null, onCancel = null } = {}) {
     if (!this.hasAttentionModalTarget) return
     if (body) this.attentionBodyTarget.textContent = body
     if (confirmLabel) this.attentionConfirmTarget.textContent = confirmLabel
@@ -1143,6 +1143,16 @@ export default class extends Controller {
     this.attentionConfirmTarget.onclick = () => {
       this.closeAttention()
       if (typeof this._attentionOnConfirm === 'function') this._attentionOnConfirm()
+    }
+    // Cancel already closes via its own data-action in the markup; this
+    // only adds an optional extra callback on top (e.g. resuming a
+    // submission that was paused to show this alert) — existing callers
+    // that don't pass onCancel see no change in behaviour.
+    if (this.hasAttentionCancelTarget) {
+      this.attentionCancelTarget.onclick = () => {
+        this.closeAttention()
+        if (typeof onCancel === 'function') onCancel()
+      }
     }
   }
 
@@ -1177,11 +1187,20 @@ export default class extends Controller {
     })
   }
 
-  showSensitivePeriodAlert (message) {
+  // onSetDate/onChooseAnother are only present when this fires from the
+  // submit-time guard (appointment_date_picker_controller.js) blocking an
+  // actual submission — "Set date" then resumes it, "Choose another date"
+  // leaves it blocked so the user can go change the date. When it fires
+  // from the picker's own confirm() (the date's already committed by
+  // then, purely informational), both are undefined and either button
+  // just closes the alert, unchanged from before.
+  showSensitivePeriodAlert (message, onSetDate, onChooseAnother) {
     this.openAttention({
       body: message || 'During your period, your body is often more sensitive. Procedures such as tattoos, piercings, laser treatments, waxing, sugaring, microneedling, chemical peels, Botox, fillers, dental work, or minor surgeries may be more painful or cause more skin irritation.',
       cancelLabel: 'Set date',
-      confirmLabel: 'Choose another date'
+      confirmLabel: 'Choose another date',
+      onCancel: onSetDate,
+      onConfirm: onChooseAnother
     })
   }
 
