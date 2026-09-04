@@ -64,6 +64,19 @@
     to { transform: rotate(360deg); }
   }
 
+  /* Flash notice/alert entrance — a small overshoot-then-settle "bounce"
+     so it visibly announces itself on screen instead of just appearing
+     static, matching the exit fade auto_hide_controller.js already does. */
+  @keyframes flash-bounce-in {
+    0%   { opacity: 0; transform: translateY(-18px) scale(0.94); }
+    55%  { opacity: 1; transform: translateY(6px) scale(1.02); }
+    75%  { transform: translateY(-3px) scale(0.99); }
+    100% { transform: translateY(0) scale(1); }
+  }
+  .flash-bounce-in {
+    animation: flash-bounce-in 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+
   /* iOS Safari UX best practices */
   button, a, input, select, textarea, [role="button"], .cursor-pointer, summary {
     touch-action: manipulation;
