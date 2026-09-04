@@ -108,21 +108,27 @@
   </div>
 <% end %>
 
-<% category_icon = ->(cat) {
-  case cat&.downcase
-  when /gym|exercise|sport|run|fitness|train|workout|yoga/
-    '<svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M13.49 5.48a2 2 0 100-4 2 2 0 000 4zm-3.6 13.9 1-4.4 2.1 2v6h2v-7.5l-2.1-2 .6-3c1.3 1.5 3.3 2.5 5.5 2.5v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.6-1-1-1.7-1-.3 0-.5.1-.8.1l-5.2 2.2v4.7h2v-3.4l1.8-.7-1.6 8.1-4.9-1-.4 2 7 1.4z"/></svg>'
-  when /date|love|romantic|partner|couple|night|sex|intimate/
-    '<svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09A5.99 5.99 0 0 1 16.5 3C19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>'
-  when /food|lunch|dinner|eat|restaurant|cafe|brunch|meal/
-    '<svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M11 9H9V2H7v7H5V2H3v7c0 2.12 1.66 3.84 3.75 3.97V22h2.5v-9.03C11.34 12.84 13 11.12 13 9V2h-2v7zm5-3v8h2.5v8H21V2c-2.76 0-5 2.24-5 4z"/></svg>'
-  when /call|phone|meeting|video/
-    '<svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57A1 1 0 0121 16.5v3.49A1 1 0 0120 21 17 17 0 013 4a1 1 0 011-.99h3.5A1 1 0 018.5 4c0 1.25.2 2.45.57 3.57.11.35.03.74-.24 1.02l-2.21 2.2z"/></svg>'
-  when /affirm|meditat|reflect|journal|mind/
-    '<svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>'
-  else
-    '<svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 12a5 5 0 100-10 5 5 0 000 10zm0 2c-5.33 0-8 2.67-8 4v2h16v-2c0-1.33-2.67-4-8-4z"/></svg>'
-  end
+<%# The regex-keyword-guessing version this replaced (commit 7fdedfc)
+     matched only 3 of the app's real 9 categories by coincidence
+     (Sport/Date/Dinner) — Friends/Medical/Birthday/Work/Coffee/Shopping
+     all silently fell through to the same generic default icon, which
+     is exactly the "Medical"/"Birthday" bug reported live. That commit
+     replaced an earlier File.read-based icon_map because raw source SVGs
+     aren't present in the production filesystem at runtime (Render's
+     build doesn't ship app/assets/images source files, only the
+     Propshaft-compiled/fingerprinted output) — so the fix couldn't just
+     be reverting that. Using the same safe pattern forecast/index.html.erb
+     already uses correctly in production: asset_path (resolves through
+     Propshaft's manifest, not a raw filesystem read) + a CSS mask, so
+     the actual category SVGs render with the exact real category names,
+     not a keyword guess. %>
+<% category_icon_map = { 'Friends' => 'family.svg', 'Dinner' => 'dinner.svg', 'Date' => 'date.svg',
+     'Sport' => 'sport.svg', 'Medical' => 'medical.svg', 'Birthday' => 'birthday.svg',
+     'Work' => 'work.svg', 'Coffee' => 'coffee.svg', 'Shopping' => 'shopping.svg' } %>
+<% category_icon = ->(cat, colour) {
+  icon = category_icon_map[cat] || 'sport.svg'
+  icon_path = asset_path("icons/appointment/#{icon}")
+  %(<div style="width:28px;height:28px;-webkit-mask:url(#{icon_path}) no-repeat center/contain;mask:url(#{icon_path}) no-repeat center/contain;background:#{colour}"></div>)
 } %>
 
 <div class="bg-white pb-32">
@@ -157,7 +163,7 @@
                   <%= link_to edit_calendar_event_path(event), class: "block no-underline" do %>
                     <div class="flex items-center gap-5 py-2">
                       <div class="w-10 h-9 shrink-0 flex items-center justify-center" style="color:<%= day_colour %>">
-                        <%== category_icon.(event.category) %>
+                        <%== category_icon.(event.category, day_colour) %>
                       </div>
                       <div class="flex-1 min-w-0">
                         <p class="text-[1.125rem] leading-[1.2] font-medium font-sans truncate" style="color:<%= day_colour %>"><%= event.title %></p>
