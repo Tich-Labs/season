@@ -145,7 +145,7 @@
         <% end %>
       </div>
     <% else %>
-      <div class="space-y-12 px-5">
+      <div class="space-y-12 px-0">
         <% @events_by_date.each_with_index do |(date, events), day_idx| %>
           <% cycle_data   = @cycle_by_date[date] %>
           <% day_colour   = cycle_data&.dig(:colour) || "#933a35" %>
