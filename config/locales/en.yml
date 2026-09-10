@@ -658,11 +658,14 @@ en:
           title: "Track Your Day"
           body: "Here you can log everything from feelings to your superpower, feeding the app the information it needs for the best possible forecast. It's also your home for weekly feedback."
         create_appointment:
-          title: "Create an Appointment"
+          title: "Schedule an Appointment"
           body: "Use the plus button in the calendar to add appointments, tag them with icons, and fill in every detail. You can also sync your usual calendar from Settings."
         forecast:
           title: "Forecast"
           body: "Open a day from the calendar, then switch to the Forecast tab for your tips of the day — Super Power, mood, sport, nutrition, and more. Tap any card for more detail."
+        cycle_colors:
+          title: "An Explanation of Menstrual Cycle Colors"
+          body: "Here you'll find explanations of the colours and what phases they represent.\n\nMenstruation\nOvulation\nFollicular phase\nLuteal phase"
   weekly_feedbacks:
     index:
       title: "Feedback %{week}"

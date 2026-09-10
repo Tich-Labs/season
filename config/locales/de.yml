@@ -647,6 +647,9 @@ de:
         forecast:
           title: "Vorausschau"
           body: "Öffne einen Tag im Kalender und wechsle zum Tab „Vorausschau“ für deine Tipps des Tages — Superpower, Stimmung, Sport, Ernährung und mehr. Tippe auf eine Kachel für mehr Details."
+        cycle_colors:
+          title: "Erklärung der Zyklusfarben"
+          body: "Hier findest du Erklärungen zu den Farben und den Phasen, die sie darstellen.\n\nMenstruation\nEisprung\nFollikelphase\nLutealphase"
   weekly_feedbacks:
     index:
       title: "Feedback %{week}"

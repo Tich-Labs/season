@@ -1,5 +1,7 @@
 <%# First-run beta-tester welcome tour — Figma "Onboarding" row on the M7
-     canvas. 5 of 7 slides built (see TesterTourController for why). %>
+     canvas. 6 slides, matching Figma: Introduction, The Calendar, Track
+     Your Day, Schedule an Appointment, Forecast, and an explanation of the
+     menstrual-cycle colours. %>
 <div class="min-h-screen bg-white flex flex-col" data-controller="tester-tour"
      data-tester-tour-complete-url-value="<%= complete_tester_tour_path %>">
 
@@ -10,10 +12,11 @@
   <div class="flex-1 px-8 pt-8 pb-6 flex flex-col">
     <% slides = [
          [:introduction, nil],
-         [:calendar, image_path("tester_tour/phone-calendar.png")],
-         [:track_day, image_path("tester_tour/phone-track-day.png")],
-         [:create_appointment, image_path("tester_tour/phone-create-appointment.png")],
-         [:forecast, image_path("tester_tour/phone-forecast.png")]
+         [:calendar, image_path("tester_tour/calendar.png")],
+         [:track_day, image_path("tester_tour/track-day.png")],
+         [:create_appointment, image_path("tester_tour/create-appointment.png")],
+         [:forecast, image_path("tester_tour/forecast.png")],
+         [:cycle_colors, image_path("tester_tour/calendar.png")]
        ] %>
 
     <% slides.each_with_index do |(key, image), i| %>
@@ -27,7 +30,7 @@
             <%= image_tag image, alt: "", class: "w-full h-auto rounded-[24px] shadow-[0px_4px_16px_rgba(0,0,0,0.15)]" %>
           </div>
           <h2 class="font-bold text-brand-primary text-2xl mb-3"><%= t(".slides.#{key}.title") %></h2>
-          <p class="text-brand-primary text-base leading-relaxed"><%= t(".slides.#{key}.body") %></p>
+          <p class="text-brand-primary text-base leading-relaxed whitespace-pre-line"><%= t(".slides.#{key}.body") %></p>
         <% end %>
       </div>
     <% end %>
