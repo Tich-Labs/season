@@ -35,7 +35,7 @@
   </head>
 
   <%# Logic check: Only show App Bar/Menu if user is logged in and past the splash/auth screens %>
-  <% is_authenticated_view = authenticated? && !controller_name.in?(%w[sessions registrations home onboarding]) %>
+  <% is_authenticated_view = authenticated? && !controller_name.in?(%w[sessions registrations confirmations passwords home onboarding]) %>
 
   <%# Pages that keep the shared "+" quick-actions FAB. Everything else hides it
        (settings, calendar, tracking, etc.) and owns its own bottom FAB, so only
