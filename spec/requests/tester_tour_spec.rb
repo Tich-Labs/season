@@ -44,5 +44,16 @@ RSpec.describe "Tester tour", type: :request do
       get onboarding_finish_path
       expect(response.body).to include(calendar_path.to_json)
     end
+
+    it "points the Refresh header at the tour for a first-time user" do
+      get onboarding_finish_path
+      expect(response.headers["Refresh"]).to eq("1.5;url=#{tester_tour_path}")
+    end
+
+    it "points the Refresh header at the calendar once the tour is seen" do
+      user.update!(tester_tour_seen_at: Time.current)
+      get onboarding_finish_path
+      expect(response.headers["Refresh"]).to eq("1.5;url=#{calendar_path}")
+    end
   end
 end

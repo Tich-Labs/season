@@ -197,8 +197,11 @@ class OnboardingController < ApplicationController
   end
 
   def finish
-    # Also set a Refresh header as a fallback to ensure redirect works
-    response.headers["Refresh"] = "1.5;url=#{calendar_path}"
+    # Refresh header must agree with the view's JS redirect, otherwise the
+    # header (timed from response receipt) always wins the race and first-time
+    # users get sent to the calendar instead of the welcome tour.
+    target = current_user.tester_tour_seen_at.nil? ? tester_tour_path : calendar_path
+    response.headers["Refresh"] = "1.5;url=#{target}"
   end
 
   private
