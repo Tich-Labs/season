@@ -9,12 +9,12 @@ RSpec.describe "Tester tour", type: :request do
     it "renders the tour" do
       get tester_tour_path
       expect(response).to have_http_status(:success)
-      expect(response.body).to include("Hello dear tester")
+      expect(response.body).to include("Hello, dear tester")
     end
 
     it "renders all 6 slides" do
       get tester_tour_path
-      expect(response.body).to include("Hello dear tester")
+      expect(response.body).to include("Hello, dear tester")
       expect(response.body).to include("The Calendar")
       expect(response.body).to include("Track Your Day")
       expect(response.body).to include("Schedule an Appointment")

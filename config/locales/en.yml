@@ -649,8 +649,8 @@ en:
       get_started: "Go to app"
       slides:
         introduction:
-          title: "Hello dear tester"
-          body: "You're one of the first people outside our team to test Season. The app isn't perfect yet — and that's exactly why we need you. Over the next 4 weeks, you'll help us find bugs, improve features, and get Season ready for the App Store.\n\nYou'll get a quick walkthrough next. After that: test, try things out, be honest. Thanks for being here."
+          title: "Hello, dear tester"
+          body: "You're one of the first people outside our team to test Season. The app isn't perfect yet—and that's exactly why we need you. Over the next 4 weeks, you'll help us find bugs, improve features, and get Season ready for the App Store.\n\nYou'll get a quick introduction in a moment. After that: test, try things out, and be honest.\nThanks for joining us."
         calendar:
           title: "The Calendar"
           body: "This is your home base. See your appointments and forecast, tap a day or create new appointments, track your day, or head into settings."

@@ -1,8 +1,11 @@
 <%# First-run beta-tester welcome tour — Figma "Onboarding" row on the M7
      canvas. 6 slides, matching Figma: Introduction, The Calendar, Track
      Your Day, Schedule an Appointment, Forecast, and an explanation of the
-     menstrual-cycle colours. %>
-<div class="min-h-screen bg-white flex flex-col" data-controller="tester-tour"
+     menstrual-cycle colours. The intro slide fills the screen with the
+     brand-field colour; the walkthrough slides sit on white under the
+     beige header (see tester_tour_controller.js#_updateBackground). %>
+<div class="min-h-screen min-h-dvh bg-brand-field flex flex-col max-w-app mx-auto"
+     data-controller="tester-tour" data-tester-tour-target="root"
      data-tester-tour-complete-url-value="<%= complete_tester_tour_path %>">
 
   <div class="bg-brand-field text-center py-5">
@@ -20,12 +23,14 @@
        ] %>
 
     <% slides.each_with_index do |(key, image), i| %>
-      <div data-tester-tour-target="slide" class="flex-1 flex flex-col items-center text-center" <%= "hidden" unless i.zero? %>>
-        <% if key == :introduction %>
-          <h2 class="font-serif italic font-bold text-brand-primary text-3xl mb-4"><%= t(".slides.introduction.title") %></h2>
-          <p class="text-brand-primary font-light text-lg leading-relaxed whitespace-pre-line mb-8"><%= t(".slides.introduction.body") %></p>
-          <%= image_tag "slides/intro-mascot.png", alt: "", class: "w-32 h-32 object-contain mt-auto" %>
-        <% else %>
+      <% if key == :introduction %>
+        <div data-tester-tour-target="slide" class="flex-1 flex flex-col" <%= "hidden" unless i.zero? %>>
+          <h2 class="font-bold text-brand-primary text-3xl mb-6"><%= t(".slides.introduction.title") %></h2>
+          <p class="text-brand-primary text-lg leading-relaxed whitespace-pre-line"><%= t(".slides.introduction.body") %></p>
+          <%= image_tag "slides/intro-mascot.png", alt: "", class: "w-40 h-40 object-contain self-end mt-auto" %>
+        </div>
+      <% else %>
+        <div data-tester-tour-target="slide" class="flex-1 flex flex-col items-center text-center" <%= "hidden" unless i.zero? %>>
           <div class="w-52 mb-8">
             <%= image_tag image, alt: "", class: "w-full h-auto rounded-[24px] shadow-[0px_4px_16px_rgba(0,0,0,0.15)]" %>
           </div>
@@ -41,8 +46,8 @@
               <% end %>
             </div>
           <% end %>
-        <% end %>
-      </div>
+        </div>
+      <% end %>
     <% end %>
 
     <button type="button" data-action="click->tester-tour#advance" data-tester-tour-target="nextBtn"
@@ -53,7 +58,7 @@
 
     <div class="flex items-center justify-center gap-1.5 mt-4">
       <% slides.each_with_index do |_, i| %>
-        <span data-tester-tour-target="dot" class="w-3 h-1.5 rounded-full <%= i.zero? ? "bg-phase-follicular" : "bg-brand-field" %>"></span>
+        <span data-tester-tour-target="dot" class="h-1.5 rounded-full transition-all <%= i.zero? ? "w-6 bg-phase-follicular" : "w-1.5 bg-brand-primary/25" %>"></span>
       <% end %>
     </div>
   </div>

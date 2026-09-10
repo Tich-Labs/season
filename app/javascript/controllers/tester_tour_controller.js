@@ -5,11 +5,12 @@ import { Controller } from '@hotwired/stimulus'
 // static slides, no per-slide validation. The last slide's button posts
 // to /welcome_tour/complete (marks tester_tour_seen_at) and redirects.
 export default class extends Controller {
-  static targets = ['slide', 'dot', 'nextBtn']
+  static targets = ['slide', 'dot', 'nextBtn', 'root']
   static values = { completeUrl: String }
 
   connect () {
     this.index = 0
+    this._updateBackground()
   }
 
   advance () {
@@ -24,12 +25,24 @@ export default class extends Controller {
     this.slideTargets[this.index].hidden = false
     this._updateDots()
     this._updateButtonLabel()
+    this._updateBackground()
+  }
+
+  // The intro slide fills the screen with the brand-field colour; every
+  // walkthrough slide sits on white beneath the (always beige) header.
+  _updateBackground () {
+    const root = this.hasRootTarget ? this.rootTarget : this.element
+    root.classList.toggle('bg-brand-field', this.index === 0)
+    root.classList.toggle('bg-white', this.index !== 0)
   }
 
   _updateDots () {
     this.dotTargets.forEach((dot, i) => {
-      dot.classList.toggle('bg-phase-follicular', i === this.index)
-      dot.classList.toggle('bg-brand-field', i !== this.index)
+      const active = i === this.index
+      dot.classList.toggle('w-6', active)
+      dot.classList.toggle('bg-phase-follicular', active)
+      dot.classList.toggle('w-1.5', !active)
+      dot.classList.toggle('bg-brand-primary/25', !active)
     })
   }
 
