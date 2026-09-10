@@ -1,18 +1,20 @@
 <%# First-run beta-tester welcome tour — Figma "Onboarding" row on the M7
-     canvas. 6 slides, matching Figma: Introduction, The Calendar, Track
+     canvas (frame 428×926). 6 slides: Introduction, The Calendar, Track
      Your Day, Schedule an Appointment, Forecast, and an explanation of the
-     menstrual-cycle colours. The intro slide fills the screen with the
-     brand-field colour; the walkthrough slides sit on white under the
-     beige header (see tester_tour_controller.js#_updateBackground). %>
+     menstrual-cycle colours. Dimensions below track the Figma spec: 24px
+     Montserrat-medium headings, 267×52 / radius-8 pill button, 12px-tall
+     progress dots in phase-ovulation green. The intro slide fills the
+     screen with brand-field; the walkthrough slides toggle to white under
+     the beige header (see tester_tour_controller.js#_updateBackground). %>
 <div class="min-h-screen min-h-dvh bg-brand-field flex flex-col max-w-app mx-auto"
      data-controller="tester-tour" data-tester-tour-target="root"
      data-tester-tour-complete-url-value="<%= complete_tester_tour_path %>">
 
-  <div class="bg-brand-field text-center py-5">
-    <span class="text-brand-primary text-xl font-medium tracking-007"><%= t(".header") %></span>
+  <div class="bg-brand-field text-center py-6">
+    <span class="text-brand-primary text-[22px] font-medium tracking-[0.03em]"><%= t(".header") %></span>
   </div>
 
-  <div class="flex-1 px-8 pt-8 pb-6 flex flex-col">
+  <div class="flex-1 px-8 pb-8 pt-6 flex flex-col">
     <% slides = [
          [:introduction, nil],
          [:calendar, image_path("tester_tour/calendar.png")],
@@ -25,23 +27,23 @@
     <% slides.each_with_index do |(key, image), i| %>
       <% if key == :introduction %>
         <div data-tester-tour-target="slide" class="flex-1 flex flex-col" <%= "hidden" unless i.zero? %>>
-          <h2 class="font-bold text-brand-primary text-3xl mb-6"><%= t(".slides.introduction.title") %></h2>
-          <p class="text-brand-primary text-lg leading-relaxed whitespace-pre-line"><%= t(".slides.introduction.body") %></p>
-          <%= image_tag "slides/intro-mascot.png", alt: "", class: "w-40 h-40 object-contain self-end mt-auto" %>
+          <h2 class="font-medium text-brand-primary text-2xl mb-6"><%= t(".slides.introduction.title") %></h2>
+          <p class="text-brand-primary text-lg leading-8 whitespace-pre-line"><%= t(".slides.introduction.body") %></p>
+          <%= image_tag "slides/intro-mascot.png", alt: "", class: "w-[154px] h-[154px] object-contain self-end mt-auto" %>
         </div>
       <% else %>
         <div data-tester-tour-target="slide" class="flex-1 flex flex-col items-center text-center" <%= "hidden" unless i.zero? %>>
-          <div class="w-52 mb-8">
+          <div class="w-[206px] mb-10">
             <%= image_tag image, alt: "", class: "w-full h-auto rounded-[24px] shadow-[0px_4px_16px_rgba(0,0,0,0.15)]" %>
           </div>
-          <h2 class="font-bold text-brand-primary text-2xl mb-3"><%= t(".slides.#{key}.title") %></h2>
-          <p class="text-brand-primary text-base leading-relaxed"><%= t(".slides.#{key}.body") %></p>
+          <h2 class="font-medium text-brand-primary text-2xl mb-2"><%= t(".slides.#{key}.title") %></h2>
+          <p class="text-brand-primary text-base leading-5"><%= t(".slides.#{key}.body") %></p>
           <% if key == :cycle_colors %>
-            <div class="grid grid-cols-2 gap-x-3 gap-y-3 mt-6 w-full max-w-[340px] mx-auto">
+            <div class="grid grid-cols-2 gap-x-3 gap-y-3.5 mt-6 w-full max-w-[360px] mx-auto">
               <% [[:menstruation, "bg-phase-menstrual"], [:ovulation, "bg-phase-ovulation"], [:follicular, "bg-phase-follicular"], [:luteal, "bg-phase-luteal"]].each do |name, swatch| %>
                 <div class="flex items-center gap-2">
-                  <span class="w-9 h-4 rounded-full shrink-0 <%= swatch %>"></span>
-                  <span class="text-brand-primary text-sm"><%= t(".slides.cycle_colors.#{name}") %></span>
+                  <span class="w-[53px] h-3.5 rounded-[4px] shrink-0 <%= swatch %>"></span>
+                  <span class="text-brand-primary text-sm whitespace-nowrap"><%= t(".slides.cycle_colors.#{name}") %></span>
                 </div>
               <% end %>
             </div>
@@ -52,13 +54,13 @@
 
     <button type="button" data-action="click->tester-tour#advance" data-tester-tour-target="nextBtn"
             data-next-label="<%= t(".next") %>" data-finish-label="<%= t(".get_started") %>"
-            class="w-full bg-brand-primary text-white rounded-xl py-3.5 text-lg font-medium tracking-007 mt-8">
+            class="w-[267px] h-[52px] mx-auto mt-8 flex items-center justify-center bg-brand-primary text-white rounded-lg text-2xl font-medium tracking-[0.03em]">
       <%= slides.size > 1 ? t(".next") : t(".get_started") %>
     </button>
 
-    <div class="flex items-center justify-center gap-1.5 mt-4">
+    <div class="flex items-center justify-center gap-2.5 mt-6">
       <% slides.each_with_index do |_, i| %>
-        <span data-tester-tour-target="dot" class="h-1.5 rounded-full transition-all <%= i.zero? ? "w-6 bg-phase-follicular" : "w-1.5 bg-brand-primary/25" %>"></span>
+        <span data-tester-tour-target="dot" class="h-3 rounded-full bg-phase-ovulation transition-all <%= i.zero? ? "w-[52px]" : "w-3 opacity-30" %>"></span>
       <% end %>
     </div>
   </div>

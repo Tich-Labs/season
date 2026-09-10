@@ -36,13 +36,14 @@ export default class extends Controller {
     root.classList.toggle('bg-white', this.index !== 0)
   }
 
+  // Figma: 12px-tall dots in phase-ovulation green; the active one is a
+  // 52px pill, the rest are 12px and dimmed to 30%.
   _updateDots () {
     this.dotTargets.forEach((dot, i) => {
       const active = i === this.index
-      dot.classList.toggle('w-6', active)
-      dot.classList.toggle('bg-phase-follicular', active)
-      dot.classList.toggle('w-1.5', !active)
-      dot.classList.toggle('bg-brand-primary/25', !active)
+      dot.classList.toggle('w-[52px]', active)
+      dot.classList.toggle('w-3', !active)
+      dot.classList.toggle('opacity-30', !active)
     })
   }
 
