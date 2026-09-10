@@ -26,13 +26,13 @@
 
     <% slides.each_with_index do |(key, image), i| %>
       <% if key == :introduction %>
-        <div data-tester-tour-target="slide" class="flex-1 flex flex-col" <%= "hidden" unless i.zero? %>>
+        <div data-tester-tour-target="slide" class="flex flex-col" <%= "hidden" unless i.zero? %>>
           <h2 class="font-medium text-brand-primary text-2xl mb-6"><%= t(".slides.introduction.title") %></h2>
           <p class="text-brand-primary text-lg leading-8 whitespace-pre-line"><%= t(".slides.introduction.body") %></p>
-          <%= image_tag "slides/intro-mascot.png", alt: "", class: "w-[154px] h-[154px] object-contain self-end mt-auto" %>
+          <%= image_tag "slides/intro-mascot.png", alt: "", class: "w-[154px] h-[154px] object-contain self-end mt-12" %>
         </div>
       <% else %>
-        <div data-tester-tour-target="slide" class="flex-1 flex flex-col items-center text-center" <%= "hidden" unless i.zero? %>>
+        <div data-tester-tour-target="slide" class="flex flex-col items-center text-center" <%= "hidden" unless i.zero? %>>
           <div class="w-[206px] mb-10">
             <%= image_tag image, alt: "", class: "w-full h-auto rounded-[24px] shadow-[0px_4px_16px_rgba(0,0,0,0.15)]" %>
           </div>
