@@ -30,7 +30,17 @@
             <%= image_tag image, alt: "", class: "w-full h-auto rounded-[24px] shadow-[0px_4px_16px_rgba(0,0,0,0.15)]" %>
           </div>
           <h2 class="font-bold text-brand-primary text-2xl mb-3"><%= t(".slides.#{key}.title") %></h2>
-          <p class="text-brand-primary text-base leading-relaxed whitespace-pre-line"><%= t(".slides.#{key}.body") %></p>
+          <p class="text-brand-primary text-base leading-relaxed"><%= t(".slides.#{key}.body") %></p>
+          <% if key == :cycle_colors %>
+            <div class="grid grid-cols-2 gap-x-3 gap-y-3 mt-6 w-full max-w-[340px] mx-auto">
+              <% [[:menstruation, "bg-phase-menstrual"], [:ovulation, "bg-phase-ovulation"], [:follicular, "bg-phase-follicular"], [:luteal, "bg-phase-luteal"]].each do |name, swatch| %>
+                <div class="flex items-center gap-2">
+                  <span class="w-9 h-4 rounded-full shrink-0 <%= swatch %>"></span>
+                  <span class="text-brand-primary text-sm"><%= t(".slides.cycle_colors.#{name}") %></span>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
         <% end %>
       </div>
     <% end %>

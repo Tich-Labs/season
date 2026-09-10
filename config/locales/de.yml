@@ -630,7 +630,7 @@ de:
     show:
       header: "Onboarding"
       next: "Weiter"
-      get_started: "Los geht's"
+      get_started: "Zur App"
       slides:
         introduction:
           title: "Hallo liebe Testerin"
@@ -649,7 +649,11 @@ de:
           body: "Öffne einen Tag im Kalender und wechsle zum Tab „Vorausschau“ für deine Tipps des Tages — Superpower, Stimmung, Sport, Ernährung und mehr. Tippe auf eine Kachel für mehr Details."
         cycle_colors:
           title: "Erklärung der Zyklusfarben"
-          body: "Hier findest du Erklärungen zu den Farben und den Phasen, die sie darstellen.\n\nMenstruation\nEisprung\nFollikelphase\nLutealphase"
+          body: "Hier findest du Erklärungen zu den Farben und den Phasen, die sie darstellen"
+          menstruation: "Menstruation"
+          ovulation: "Eisprung"
+          follicular: "Follikelphase"
+          luteal: "Lutealphase"
   weekly_feedbacks:
     index:
       title: "Feedback %{week}"

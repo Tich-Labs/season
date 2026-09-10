@@ -646,7 +646,7 @@ en:
     show:
       header: "Onboarding"
       next: "Next"
-      get_started: "Get started"
+      get_started: "Go to app"
       slides:
         introduction:
           title: "Hello dear tester"
@@ -665,7 +665,11 @@ en:
           body: "Open a day from the calendar, then switch to the Forecast tab for your tips of the day — Super Power, mood, sport, nutrition, and more. Tap any card for more detail."
         cycle_colors:
           title: "An Explanation of Menstrual Cycle Colors"
-          body: "Here you'll find explanations of the colours and what phases they represent.\n\nMenstruation\nOvulation\nFollicular phase\nLuteal phase"
+          body: "Here you'll find explanations of the colors and what phases they represent"
+          menstruation: "Menstruation"
+          ovulation: "Ovulation"
+          follicular: "Follicular phase"
+          luteal: "Luteal phase"
   weekly_feedbacks:
     index:
       title: "Feedback %{week}"
