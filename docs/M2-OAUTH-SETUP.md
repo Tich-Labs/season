@@ -4,9 +4,9 @@ layout: default
 
 # M2 OAuth Credentials Setup — Render Deployment
 
-**Version:** 5.0 (2026-09-19)  
-**Updated:** 2026-09-19  
-**Changes:** Split the Calendar scope back out of the login flow. Google treats `.../auth/calendar` as a restricted scope — bundling it into sign-in meant *every* Google login was capped to a manually-maintained test-user allowlist (~100 accounts) until the app passes Google's verification, which is unworkable for public launch. Login now requests only `email,profile` (unrestricted, works for any user immediately). The Calendar scope is requested exclusively by the separate Settings > Calendar > Connect flow, which stays gated to test users (or hidden entirely, per its current `if false` in `settings/calendar.html.erb`) until verification is done.
+**Version:** 4.0 (2026-07-19)  
+**Updated:** 2026-07-19  
+**Changes:** Google Calendar API scope added, offline access, token persistence, Google OAuth consent screen now requests calendar scopes
 
 ---
 
@@ -208,7 +208,9 @@ Expected output:
 
 ```ruby
 config.omniauth :google_oauth2, ENV["GOOGLE_CLIENT_ID"], ENV["GOOGLE_CLIENT_SECRET"],
-  scope: "email,profile"
+  scope: "email,profile,https://www.googleapis.com/auth/calendar",
+  access_type: "offline",
+  prompt: "consent"
 config.omniauth :facebook, ENV["FACEBOOK_APP_ID"], ENV["FACEBOOK_APP_SECRET"],
   scope: "email", prompt: "select_account"
 config.omniauth :apple, ENV["APPLE_CLIENT_ID"], "",
@@ -244,19 +246,17 @@ If any ENV var is missing, OmniAuth will skip that provider silently.
 
 ## Status
 
-> **Updated 19 Sep 2026** — All three providers live on Render, login working for any user. Google Calendar sync is built but held back (UI hidden, `if false`) until the app passes Google verification for the restricted Calendar scope.
+> **Updated 19 Jul 2026** — All three providers live on Render. Google Calendar API integration added.
 
 | Area | Status |
 |------|--------|
-| Rails config (`devise.rb`) | ✅ Complete — login scope is `email,profile` only (unrestricted) |
+| Rails config (`devise.rb`) | ✅ Complete |
 | Callbacks controller | ✅ Complete |
 | Custom OAuth conflicts | ✅ Removed — Devise only |
-| Google login on Render | ✅ Live for any user (basic scopes, no test-user cap) |
-| Google Calendar API scope | ✅ Added, but only on the separate Settings > Calendar > Connect flow — **not** part of login |
+| Google on Render | ✅ Live |
+| Google Calendar API scope | ✅ Added (`calendar`, offline access) |
 | Google Calendar token storage | ✅ Complete (access + refresh token persisted) |
 | GoogleCalendarService | ✅ Complete (list/create/delete events) |
-| Google verification for Calendar scope | ⬜ Not submitted — required before Calendar Sync can be exposed past a manual test-user allowlist |
-| Calendar Sync UI (`settings/calendar.html.erb`) | 🔒 Hidden behind `if false` pending the above |
 | Facebook on Render | ✅ Live |
 | Apple on Render | ✅ Live |
 
