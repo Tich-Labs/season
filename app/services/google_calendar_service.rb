@@ -45,6 +45,34 @@ class GoogleCalendarService
     nil
   end
 
+  def update_event(event_id, summary:, start_time:, end_time:, description: nil, location: nil)
+    return nil unless @user.google_calendar_connected?
+
+    service = build_service
+    event = Google::Apis::CalendarV3::Event.new(
+      summary: summary,
+      description: description,
+      location: location,
+      start: Google::Apis::CalendarV3::EventDateTime.new(
+        date_time: start_time,
+        time_zone: Time.zone.name
+      ),
+      end: Google::Apis::CalendarV3::EventDateTime.new(
+        date_time: end_time,
+        time_zone: Time.zone.name
+      )
+    )
+    service.update_event("primary", event_id, event)
+  rescue Google::Apis::AuthorizationError
+    nil
+  rescue Google::Apis::ClientError => e
+    # 404/410 -- the event was already deleted (or never existed) on the
+    # Google side. Not our error to raise; the caller treats a nil return
+    # the same as "nothing to update".
+    Rails.logger.warn("[GoogleCalendarService] update_event(#{event_id}) failed: #{e.class}: #{e.message}")
+    nil
+  end
+
   def delete_event(event_id)
     return false unless @user.google_calendar_connected?
 
@@ -53,6 +81,11 @@ class GoogleCalendarService
     true
   rescue Google::Apis::AuthorizationError
     false
+  rescue Google::Apis::ClientError => e
+    # 404/410 -- already gone on the Google side. Treat as success: the
+    # end state (event not on the calendar) is what the caller wants.
+    Rails.logger.warn("[GoogleCalendarService] delete_event(#{event_id}) failed: #{e.class}: #{e.message}")
+    true
   end
 
   private

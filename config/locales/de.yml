@@ -341,10 +341,10 @@ de:
       saturday: "Samstag"
       timezone: "Zeitzone"
       saving: "Wird gespeichert..."
-      gmail: "Gmail"
+      google_calendar: "Google Kalender"
       microsoft: "Microsoft"
       icloud: "icloud"
-      gmail_sync: "Gmail-Kalender-Sync"
+      google_calendar_sync: "Google-Kalender-Sync"
       microsoft_sync: "Microsoft-Outlook-Sync"
       icloud_sync: "Apple-iCloud-Sync"
     notifications:

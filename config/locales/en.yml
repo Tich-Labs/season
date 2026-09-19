@@ -357,10 +357,10 @@ en:
       saturday: "Saturday"
       timezone: "Timezone"
       saving: "Saving..."
-      gmail: "Gmail"
+      google_calendar: "Google Calendar"
       microsoft: "Microsoft"
       icloud: "icloud"
-      gmail_sync: "Gmail Calendar Sync"
+      google_calendar_sync: "Google Calendar Sync"
       microsoft_sync: "Microsoft Outlook Sync"
       icloud_sync: "Apple iCloud Sync"
     notifications:

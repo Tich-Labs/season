@@ -27,6 +27,7 @@ class CalendarEventsController < ApplicationController
     @event = current_user.calendar_events.build(event_params)
     authorize @event
     if @event.save
+      push_to_google(:create, @event.id)
       redirect_to session.delete(:appointment_return_to) || calendar_path(date: @event.date, appointment_scheduled: "1"), notice: t(".created")
     else
       render :new, status: :unprocessable_content
@@ -35,6 +36,7 @@ class CalendarEventsController < ApplicationController
 
   def update
     if @event.update(event_params)
+      push_to_google(:update, @event.id)
       redirect_to session.delete(:appointment_return_to) || forecast_path, notice: t(".updated")
     else
       render :edit, status: :unprocessable_content
@@ -42,11 +44,23 @@ class CalendarEventsController < ApplicationController
   end
 
   def destroy
+    google_event_id = @event.google_event_id
     @event.destroy
+    push_to_google(:delete, nil, google_event_id: google_event_id) if google_event_id.present?
     redirect_to session.delete(:appointment_return_to) || forecast_path, notice: t(".deleted")
   end
 
   private
+
+  # The other half of "Sync now" (Google -> Season): push a Season-side
+  # create/edit/delete back to the user's connected Google Calendar. A
+  # no-op for anyone who hasn't connected Google Calendar. See
+  # GoogleCalendarPushJob for why this runs in the background.
+  def push_to_google(action, calendar_event_id, google_event_id: nil)
+    return unless current_user.google_calendar_connected?
+
+    GoogleCalendarPushJob.perform_later(action, user_id: current_user.id, calendar_event_id: calendar_event_id, google_event_id: google_event_id)
+  end
 
   def set_event
     @event = current_user.calendar_events.find(params[:id])
