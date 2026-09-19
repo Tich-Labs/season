@@ -32,11 +32,11 @@ class GoogleCalendarService
       description: description,
       location: location,
       start: Google::Apis::CalendarV3::EventDateTime.new(
-        date_time: start_time,
+        date_time: to_google_datetime(start_time),
         time_zone: Time.zone.name
       ),
       end: Google::Apis::CalendarV3::EventDateTime.new(
-        date_time: end_time,
+        date_time: to_google_datetime(end_time),
         time_zone: Time.zone.name
       )
     )
@@ -54,11 +54,11 @@ class GoogleCalendarService
       description: description,
       location: location,
       start: Google::Apis::CalendarV3::EventDateTime.new(
-        date_time: start_time,
+        date_time: to_google_datetime(start_time),
         time_zone: Time.zone.name
       ),
       end: Google::Apis::CalendarV3::EventDateTime.new(
-        date_time: end_time,
+        date_time: to_google_datetime(end_time),
         time_zone: Time.zone.name
       )
     )
@@ -89,6 +89,16 @@ class GoogleCalendarService
   end
 
   private
+
+  # google-apis-calendar_v3's representer only formats a real DateTime as
+  # RFC3339 -- handed an ActiveSupport::TimeWithZone or plain Time (what
+  # CalendarEvent#starts_at/#ends_at and Time.zone.now return), it falls
+  # back to a bare #to_s ("2026-09-19 14:00:15 UTC"), which Google Calendar
+  # rejects outright with an opaque "400 Bad Request" and no field-level
+  # detail. Normalize to DateTime before it ever reaches the representer.
+  def to_google_datetime(time)
+    time.respond_to?(:to_datetime) ? time.to_datetime : time
+  end
 
   def build_service
     @user.refresh_google_token_if_needed!
