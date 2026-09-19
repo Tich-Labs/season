@@ -274,10 +274,17 @@ Devise.setup do |config|
   # ==> OmniAuth
   # Add a new OmniAuth provider. Check the wiki for more information on setting
   # up on your models and hooks.
+  # Deliberately basic scopes only ("email,profile") — those are unrestricted,
+  # so login works for every user on an unverified app. The Calendar scope
+  # used to be bundled in here to capture calendar tokens at login, but that
+  # makes Google treat *sign-in itself* as a restricted-scope request, which
+  # caps it to a manually-maintained test-user allowlist (~100 accounts) —
+  # unworkable for public launch. Calendar access is requested separately,
+  # only when a user opts in via Settings > Calendar > Connect (see
+  # SettingsController#connect_google_calendar), so that flow stays gated
+  # until the app passes Google's verification for the calendar scope.
   config.omniauth :google_oauth2, ENV["GOOGLE_CLIENT_ID"], ENV["GOOGLE_CLIENT_SECRET"],
-    scope: "email,profile,https://www.googleapis.com/auth/calendar",
-    access_type: "offline",
-    prompt: "consent"
+    scope: "email,profile"
   config.omniauth :facebook, ENV["FACEBOOK_APP_ID"], ENV["FACEBOOK_APP_SECRET"], scope: "public_profile,email", info_fields: "email,name"
   config.omniauth :apple, ENV["APPLE_CLIENT_ID"], "",
     scope: "email name",
