@@ -4,15 +4,15 @@ layout: default
 
 # M2 OAuth Credentials Setup — Render Deployment
 
-**Version:** 4.0 (2026-07-19)  
-**Updated:** 2026-07-19  
-**Changes:** Google Calendar API scope added, offline access, token persistence, Google OAuth consent screen now requests calendar scopes
+**Version:** 6.0 (2026-09-19)  
+**Updated:** 2026-09-19  
+**Changes:** iCloud Calendar sync added (pull-only, CalDAV — no OAuth, no credentials for this doc's env-var table). Login's OAuth scope was narrowed back to `email,profile` — see the note under Google Calendar Sync for why. Microsoft Calendar is still planned, not built.
 
 ---
 
 ## Overview
 
-OAuth social login (Google, Facebook, Apple) is fully configured in the Rails app via **Devise OmniAuth**. This document covers the **Render dashboard configuration** required to complete M2.
+OAuth social login (Google, Facebook, Apple) is fully configured in the Rails app via **Devise OmniAuth**. This document covers the **Render dashboard configuration** required to complete M2, plus setup for every connected calendar under Settings → Calendar — **Google** (OAuth), **iCloud** (no OAuth — see below), and **Microsoft** (planned, not yet built).
 
 **Important:** Season uses **Devise OmniAuth only** (custom `OmniauthController` was removed). All callback URLs follow the Devise pattern:
 ```
@@ -96,6 +96,43 @@ GOOGLE_CLIENT_SECRET=your_client_secret_here
 The same `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` are used for both login and calendar sync — Google differentiates them by callback URL.
 
 **Error: `Missing required parameter: client_id`** — means `GOOGLE_CLIENT_ID` is not set or empty. Add it to `.env` and restart `bin/dev`.
+
+> **Login no longer requests the Calendar scope (2026-09-19).** It used to (`scope: "email,profile,https://www.googleapis.com/auth/calendar"`), so that the login flow could also capture calendar tokens. The problem: Google treats the Calendar scope as *restricted*, so bundling it into sign-in meant **plain login itself** was capped to a manually-maintained test-user allowlist (~100 accounts) until the app passes Google's verification for that scope — unworkable for a public launch. Login now requests only `email,profile` (unrestricted, no verification needed, works for any user immediately). Calendar access is requested exclusively by the separate Connect flow below, which stays test-user-gated until verification is done — moot for now since the UI decision on *how* Calendar Sync should behave (pull/push/both, user-selectable) is still pending, see the team discussion linked from PROGRESS.md.
+
+---
+
+### 1c. iCloud Calendar Sync (Settings → Calendar) — no OAuth
+
+Apple has no OAuth for calendar data — "Sign in with Apple" only ever covers identity/login, never calendar access. iCloud Calendar is reached over **CalDAV** (HTTP + XML, not a JSON REST API), authenticated with **HTTP Basic Auth** using the user's Apple ID email and an **app-specific password** they generate themselves.
+
+**Nothing to configure on our end** — no client ID/secret, no redirect URI to register, no console setup at all. This is the opposite of Google/Facebook/Apple login: simpler infrastructure, but the user carries more of the setup burden themselves.
+
+**What the user does:**
+
+1. Go to [appleid.apple.com](https://appleid.apple.com) → **Sign-In and Security** → **App-Specific Passwords**
+2. Generate one (any label, e.g. "Season")
+3. On Season's Settings → Calendar screen, enter their Apple ID email + that generated password
+4. Season verifies the credentials immediately (a real CalDAV request) before saving — a wrong password fails right there, not silently on the first sync
+
+**Routes:**
+
+| Action | Route | Method | Description |
+|--------|-------|--------|-------------|
+| Connect | `/settings/connect_icloud_calendar` | POST | Verifies the Apple ID + app-specific password, then saves them |
+| Disconnect | `/settings/disconnect_icloud_calendar` | POST | Clears stored credentials |
+| Sync | `/settings/sync_icloud_calendar` | POST | Imports iCloud Calendar events as `CalendarEvent` records |
+
+**Scope:** pull-only for now (iCloud → Season). No push (Season → iCloud) has been built — matches the "bring events in, don't push anything out" default being proposed for every provider, pending the team's sync-direction decision.
+
+**Implementation note:** there's no maintained Ruby gem for CalDAV, so `IcloudCalendarService` speaks the protocol directly (a PROPFIND discovery chain, then a REPORT calendar-query, both hand-built HTTP+XML — see the class comment for the full request/response shape).
+
+**Env vars:** none. `icloud_email`/`icloud_app_password` are stored per-user on the `users` table (plaintext for now, matching `google_access_token`/`google_refresh_token` — see the Security Notes section).
+
+---
+
+### 1d. Microsoft Calendar (Outlook) — planned, not yet built
+
+Listed as "Coming soon" on the Settings → Calendar screen. Microsoft Graph API uses OAuth (similar shape to Google's), so once built this section will need its own Azure App Registration + `MICROSOFT_CLIENT_ID`/`MICROSOFT_CLIENT_SECRET` env vars and redirect URIs — none of that exists yet. Nothing to configure until it's implemented.
 
 ---
 
@@ -208,9 +245,7 @@ Expected output:
 
 ```ruby
 config.omniauth :google_oauth2, ENV["GOOGLE_CLIENT_ID"], ENV["GOOGLE_CLIENT_SECRET"],
-  scope: "email,profile,https://www.googleapis.com/auth/calendar",
-  access_type: "offline",
-  prompt: "consent"
+  scope: "email,profile"
 config.omniauth :facebook, ENV["FACEBOOK_APP_ID"], ENV["FACEBOOK_APP_SECRET"],
   scope: "email", prompt: "select_account"
 config.omniauth :apple, ENV["APPLE_CLIENT_ID"], "",
@@ -246,17 +281,18 @@ If any ENV var is missing, OmniAuth will skip that provider silently.
 
 ## Status
 
-> **Updated 19 Jul 2026** — All three providers live on Render. Google Calendar API integration added.
+> **Updated 19 Sep 2026** — All three login providers live on Render, working for any user (not just test-listed accounts). Google Calendar sync (pull + push) and iCloud Calendar sync (pull-only) are both built. Microsoft Calendar is still planned.
 
 | Area | Status |
 |------|--------|
-| Rails config (`devise.rb`) | ✅ Complete |
+| Rails config (`devise.rb`) | ✅ Complete — login scope is `email,profile` only (unrestricted, no test-user cap) |
 | Callbacks controller | ✅ Complete |
 | Custom OAuth conflicts | ✅ Removed — Devise only |
-| Google on Render | ✅ Live |
-| Google Calendar API scope | ✅ Added (`calendar`, offline access) |
-| Google Calendar token storage | ✅ Complete (access + refresh token persisted) |
-| GoogleCalendarService | ✅ Complete (list/create/delete events) |
+| Google login on Render | ✅ Live for any user |
+| Google Calendar sync | ✅ Built — pull ("Sync now") and push (Season → Google), both verified against a real account |
+| iCloud Calendar sync | ✅ Built — pull only (CalDAV, no OAuth) |
+| Microsoft Calendar sync | ⬜ Planned, not built |
+| Google verification for the Calendar scope | ⬜ Not submitted — Calendar Sync stays capped to a manual test-user allowlist until this is done |
 | Facebook on Render | ✅ Live |
 | Apple on Render | ✅ Live |
 
