@@ -218,15 +218,18 @@ A missing ENV var makes OmniAuth skip that provider silently.
 
 ## Status
 
+**As of 2026-09-19 13:51 UTC**
+
 | Area | Status |
 |------|--------|
 | Google login | ✅ Live on Render, any user |
+| Facebook login | ✅ Live on Render |
+| Apple login | ✅ Live on Render |
 | Google Calendar sync | ✅ Pull + push, verified against a real account |
 | iCloud Calendar sync | ✅ Pull only |
 | Microsoft Calendar sync | ⬜ Not built |
 | Google verification (Calendar scope) | ⬜ Not submitted — Calendar Sync capped to a manual test-user allowlist until done |
-| Facebook login | ✅ Live on Render |
-| Apple login | ✅ Live on Render |
+| Per-provider sync-direction setting (pull/push/both, user-selectable) | ⬜ Not built — currently fixed per provider (Google: both, iCloud: pull only), pending team decision |
 
 | Provider | Credentials | On Render | Callback URL |
 |----------|-------------|-----------|--------------|
