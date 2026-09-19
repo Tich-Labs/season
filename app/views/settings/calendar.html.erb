@@ -17,7 +17,11 @@
 <div class="bg-white min-h-screen">
   <div class="max-w-app mx-auto px-4 pb-28">
 
-    <%# Flash message toast %>
+    <%# Flash message toast — this page opts out of the shared flash
+         partial (content_for(:hide_flash)) and renders its own, but it
+         only ever checked `notice` — an `alert` (e.g. a rejected iCloud/
+         Google connect attempt) silently vanished with no feedback at
+         all. Handles both now. %>
     <% if notice.present? %>
       <div class="fixed top-4 left-4 right-4 bg-green-50 border border-green-200 rounded-lg px-4 py-3 text-sm text-green-700 z-50" role="status" data-notification="success">
         <%= notice %>
@@ -31,6 +35,20 @@
             setTimeout(() => toast.remove(), 300);
           }
         }, 3000);
+      </script>
+    <% elsif alert.present? %>
+      <div class="fixed top-4 left-4 right-4 bg-brand-error border border-brand-muted rounded-lg px-4 py-3 text-sm text-brand-primary z-50" role="alert" data-notification="error">
+        <%= alert %>
+      </div>
+      <script nonce="<%= content_security_policy_nonce %>">
+        setTimeout(() => {
+          const toast = document.querySelector('[data-notification="error"]');
+          if (toast) {
+            toast.style.opacity = '0';
+            toast.style.transition = 'opacity 0.3s ease-out';
+            setTimeout(() => toast.remove(), 300);
+          }
+        }, 4000);
       </script>
     <% end %>
 
@@ -108,19 +126,51 @@
         </div>
       </div>
 
-      <%# iCloud — grayed out, coming soon %>
-      <div class="opacity-40 pointer-events-none">
-        <div class="py-3 flex items-center gap-2">
-          <span class="text-brand-muted text-sm font-medium">user@icloud.com</span>
-          <span class="bg-brand-field rounded-full px-2 py-0.5 text-brand-primary text-xs"><%= t("settings.edit.coming_soon") %></span>
-        </div>
+      <%# iCloud — pull-only (no OAuth exists for CalDAV; the user supplies
+           an Apple ID + app-specific password instead of an OAuth redirect) %>
+      <div class="py-3">
+        <% if @user.icloud_connected? %>
+          <span class="text-brand-muted text-sm font-medium"><%= @user.icloud_email %></span>
+        <% else %>
+          <span class="text-brand-muted text-sm font-medium"><%= t("settings.calendar.not_connected", default: "Not connected") %></span>
+        <% end %>
+        <span class="block text-brand-primary/60 text-xs"><%= t("settings.calendar.icloud_sync") %></span>
+      </div>
+      <% if @user.icloud_connected? %>
         <div class="flex items-center justify-between py-2">
-          <span class="text-brand-primary/60 text-xs"><%= t("settings.calendar.icloud_sync") %></span>
-          <div class="toggle-btn">
-            <div class="toggle-track"><div class="toggle-thumb"></div></div>
+          <div class="flex items-center gap-2">
+            <svg width="16" height="16" fill="none" stroke="#2E6B3E" stroke-width="2.5" viewBox="0 0 24 24">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+            <span class="text-brand-primary/60 text-xs"><%= t("settings.calendar.connected", default: "Connected") %></span>
+          </div>
+          <div class="flex items-center gap-3">
+            <%= button_to sync_icloud_calendar_settings_path, method: :post,
+                  class: "px-4 py-2 bg-brand-primary text-white text-xs font-semibold rounded-lg" do %>
+              <%= t("settings.calendar.sync_now", default: "Sync now") %>
+            <% end %>
+            <%= button_to disconnect_icloud_calendar_settings_path, method: :post,
+                  class: "text-brand-muted text-xs underline" do %>
+              <%= t("settings.calendar.disconnect", default: "Disconnect") %>
+            <% end %>
           </div>
         </div>
-      </div>
+      <% else %>
+        <%= form_with url: connect_icloud_calendar_settings_path, method: :post, class: "py-2 space-y-2" do %>
+          <input type="email" name="icloud_email" placeholder="<%= t("settings.calendar.icloud_email_placeholder", default: "Apple ID email") %>"
+                 required autocomplete="username" class="w-full bg-brand-field rounded-lg px-3 py-2 text-sm text-brand-dark placeholder:text-brand-primary/50">
+          <input type="password" name="icloud_app_password" placeholder="<%= t("settings.calendar.icloud_password_placeholder", default: "App-specific password") %>"
+                 required autocomplete="off" class="w-full bg-brand-field rounded-lg px-3 py-2 text-sm text-brand-dark placeholder:text-brand-primary/50">
+          <div class="flex items-center justify-between gap-2">
+            <a href="https://appleid.apple.com" target="_blank" rel="noopener" class="text-brand-primary/60 text-xs underline">
+              <%= t("settings.calendar.icloud_get_password", default: "Generate one at appleid.apple.com") %>
+            </a>
+            <button type="submit" class="px-4 py-2 bg-brand-primary text-white text-xs font-semibold rounded-lg shrink-0">
+              <%= t("settings.calendar.connect", default: "Connect") %>
+            </button>
+          </div>
+        <% end %>
+      <% end %>
     </div>
 
     <div class="border-b border-brand-divider my-2"></div>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_02_215022) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_19_125709) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -51,6 +51,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_02_215022) do
     t.time "end_time"
     t.string "google_event_id"
     t.text "guests"
+    t.string "icloud_event_id"
     t.string "location"
     t.text "notes"
     t.integer "reminder_minutes"
@@ -60,6 +61,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_02_215022) do
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.index ["google_event_id"], name: "index_calendar_events_on_google_event_id"
+    t.index ["icloud_event_id"], name: "index_calendar_events_on_icloud_event_id"
     t.index ["user_id", "date"], name: "index_calendar_events_on_user_id_and_date"
     t.index ["user_id"], name: "index_calendar_events_on_user_id"
   end
@@ -285,6 +287,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_02_215022) do
     t.string "google_uid"
     t.boolean "has_regular_cycle"
     t.boolean "hide_past_events"
+    t.string "icloud_app_password"
+    t.string "icloud_email"
     t.datetime "invite_accepted_at"
     t.string "invite_token"
     t.datetime "invite_token_expires_at"

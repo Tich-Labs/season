@@ -150,6 +150,52 @@ class SettingsController < ApplicationController
     redirect_to calendar_settings_path, notice: t("settings.calendar.google_synced", count: imported, default: "Synced #{imported} events from Google Calendar")
   end
 
+  # No OAuth exists for iCloud Calendar -- this is a plain form submit
+  # (Apple ID email + an app-specific password the user generates
+  # themselves at appleid.apple.com), not a redirect dance like Google's.
+  # Verify the credentials actually work before saving them, so a typo'd
+  # password fails loudly here instead of silently on the first sync.
+  def connect_icloud_calendar
+    IcloudCalendarService.verify_credentials!(params[:icloud_email], params[:icloud_app_password])
+    current_user.update!(icloud_email: params[:icloud_email], icloud_app_password: params[:icloud_app_password])
+    redirect_to calendar_settings_path, notice: t("settings.calendar.icloud_connected", default: "iCloud Calendar connected")
+  rescue IcloudCalendarService::AuthenticationError
+    redirect_to calendar_settings_path, alert: t("settings.calendar.icloud_failed", default: "Connection failed — check your Apple ID and app-specific password")
+  end
+
+  def disconnect_icloud_calendar
+    current_user.update!(icloud_email: nil, icloud_app_password: nil)
+    redirect_to calendar_settings_path, notice: t("settings.calendar.icloud_disconnected", default: "iCloud Calendar disconnected")
+  end
+
+  # Pull-only, matching the "bring events in, don't push anything out"
+  # default we want for every provider -- there's no push half to build
+  # here (see team discussion on sync direction).
+  def sync_icloud_calendar
+    service = IcloudCalendarService.new(current_user)
+    events = service.list_events(time_min: 3.months.ago, time_max: 3.months.from_now)
+
+    imported = 0
+    (events || []).each do |event|
+      next if event.starts_at.nil?
+      next if CalendarEvent.exists?(icloud_event_id: event.uid)
+
+      CalendarEvent.create!(
+        user: current_user,
+        icloud_event_id: event.uid,
+        title: event.summary.presence || "Untitled",
+        date: event.starts_at.to_date,
+        start_time: event.starts_at.strftime("%H:%M"),
+        end_time: event.ends_at&.strftime("%H:%M"),
+        notes: event.description,
+        location: event.location
+      )
+      imported += 1
+    end
+
+    redirect_to calendar_settings_path, notice: t("settings.calendar.icloud_synced", count: imported, default: "Synced #{imported} events from iCloud Calendar")
+  end
+
   KEY_TO_REMINDER = {
     "cycle_reminder" => ["morning", "09:00"],
     "period_prediction" => ["period_start", "00:00"],

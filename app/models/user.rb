@@ -199,6 +199,17 @@ class User < ApplicationRecord
     google_access_token.present? && google_refresh_token.present?
   end
 
+  # No OAuth exists for iCloud Calendar (Sign in with Apple only covers
+  # identity, never calendar data) -- the only way in is CalDAV over HTTP
+  # Basic Auth with a user-generated app-specific password. Stored in
+  # plaintext for now, matching google_access_token/google_refresh_token
+  # above -- both are covered by the same deferred encryption follow-up
+  # (needs Active Record Encryption keys added to credentials, see
+  # docs/AUDIT-2026-08-15-SECURITY.md), not solved ad hoc for just one field.
+  def icloud_connected?
+    icloud_email.present? && icloud_app_password.present?
+  end
+
   def set_pin(raw)
     self.pin_digest = BCrypt::Password.create(raw)
     save!

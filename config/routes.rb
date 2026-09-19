@@ -158,6 +158,9 @@ Rails.application.routes.draw do
     get :google_calendar_callback, on: :collection
     post :disconnect_google_calendar, on: :collection
     post :sync_google_calendar, on: :collection
+    post :connect_icloud_calendar, on: :collection
+    post :disconnect_icloud_calendar, on: :collection
+    post :sync_icloud_calendar, on: :collection
   end
 
   # Language selection - explicit routes after settings resource

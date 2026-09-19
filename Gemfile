@@ -27,6 +27,12 @@ gem "omniauth-google-oauth2"
 gem "google-apis-calendar_v3"
 gem "omniauth-facebook"
 gem "omniauth-apple"
+
+# iCloud Calendar sync -- no OAuth exists for CalDAV, so this hand-rolls
+# the PROPFIND/REPORT protocol calls (see IcloudCalendarService) using an
+# Apple ID + user-generated app-specific password over HTTP Basic Auth.
+gem "icalendar"
+gem "nokogiri"
 gem "omniauth-rails_csrf_protection"
 gem "rack-attack"  # Rate limiting for auth endpoints
 gem "pundit"
