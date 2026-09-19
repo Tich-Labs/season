@@ -2,28 +2,23 @@
 layout: default
 ---
 
-# M2 OAuth Credentials Setup — Render Deployment
+# OAuth & Calendar Setup — Render Deployment
 
-**Version:** 6.0 (2026-09-19)  
-**Updated:** 2026-09-19  
-**Changes:** iCloud Calendar sync added (pull-only, CalDAV — no OAuth, no credentials for this doc's env-var table). Login's OAuth scope was narrowed back to `email,profile` — see the note under Google Calendar Sync for why. Microsoft Calendar is still planned, not built.
+**Last updated:** 2026-09-19
 
 ---
 
 ## Overview
 
-OAuth social login (Google, Facebook, Apple) is fully configured in the Rails app via **Devise OmniAuth**. This document covers the **Render dashboard configuration** required to complete M2, plus setup for every connected calendar under Settings → Calendar — **Google** (OAuth), **iCloud** (no OAuth — see below), and **Microsoft** (planned, not yet built).
+Season uses **Devise OmniAuth** for social login (Google, Facebook, Apple). Callback URLs follow the Devise pattern: `/users/auth/:provider/callback`.
 
-**Important:** Season uses **Devise OmniAuth only** (custom `OmniauthController` was removed). All callback URLs follow the Devise pattern:
-```
-/users/auth/:provider/callback
-```
+Season also connects to three calendar providers under Settings → Calendar: **Google** (OAuth), **iCloud** (no OAuth), **Microsoft** (planned, not built).
 
-All OAuth environment variables are configured in `config/initializers/devise.rb` and already reference the correct ENV vars. They just need values set on Render.
+All OAuth environment variables are already referenced in `config/initializers/devise.rb`. They need values set on Render.
 
 ---
 
-## Environment Variables Required
+## Environment Variables
 
 | Variable | Provider | Source |
 |----------|----------|--------|
@@ -36,153 +31,118 @@ All OAuth environment variables are configured in `config/initializers/devise.rb
 | `APPLE_KEY_ID` | Apple Developer | Key ID from Apple Developer Keys page |
 | `APPLE_PRIVATE_KEY` | Apple Developer | Private key `.p8` file contents (with `\n` escaped) |
 
+iCloud and Microsoft calendar sync need no environment variables (see their sections below).
+
 ---
 
-## Setup Instructions
-
-### 1. Google OAuth (Google Cloud Console)
+## 1. Google OAuth (Google Cloud Console)
 
 1. Go to [Google Cloud Console](https://console.cloud.google.com/)
 2. Create a new project or use an existing one
-3. Navigate to **APIs & Services > Library** and enable **Google Calendar API**
-4. Navigate to **APIs & Services > OAuth consent screen**
-   - Add scope: `https://www.googleapis.com/auth/calendar` (View and manage calendars)
-5. Navigate to **APIs & Services > Credentials**
-6. Click **Create Credentials > OAuth 2.0 Client ID**
-7. Choose **Web Application**
-8. Under **Authorized redirect URIs**, add:
+3. **APIs & Services > Library** → enable **Google Calendar API**
+4. **APIs & Services > OAuth consent screen** → add scope `https://www.googleapis.com/auth/calendar`
+5. **APIs & Services > Credentials** → **Create Credentials > OAuth 2.0 Client ID** → **Web Application**
+6. Under **Authorized redirect URIs**, add all four:
+   - `https://seasonv2.onrender.com/users/auth/google_oauth2/callback` (login, prod)
+   - `http://localhost:3000/users/auth/google_oauth2/callback` (login, dev)
+   - `https://seasonv2.onrender.com/settings/google_calendar_callback` (calendar sync, prod)
+   - `http://127.0.0.1:3000/settings/google_calendar_callback` (calendar sync, dev)
+7. Copy **Client ID** → `GOOGLE_CLIENT_ID`
+8. Copy **Client Secret** → `GOOGLE_CLIENT_SECRET`
 
-   **For Login (via Devise OmniAuth):**
-   - `https://seasonv2.onrender.com/users/auth/google_oauth2/callback`
-   - `http://localhost:3000/users/auth/google_oauth2/callback` (local dev)
+**Login scope:** `email,profile` only — unrestricted, no Google verification required, works for any user.
 
-   **For Calendar Sync (via Settings page — `/settings/calendar`):**
-   - `https://seasonv2.onrender.com/settings/google_calendar_callback`
-   - `http://127.0.0.1:3000/settings/google_calendar_callback` (local dev)
+**Calendar Sync scope:** `https://www.googleapis.com/auth/calendar`, requested only by the Settings → Calendar connect flow, separate from login.
 
-   > The Calendar Sync flow uses a separate OAuth dance initiated from the Settings page, NOT the Devise login flow. Both callback URLs must be registered.
-
-9. Copy **Client ID** → `GOOGLE_CLIENT_ID`
-10. Copy **Client Secret** → `GOOGLE_CLIENT_SECRET`
-
-### 1b. Google Calendar Sync (Settings → Calendar)
-
-In addition to login OAuth, the app supports **Google Calendar sync** from the user's Settings page (`/settings/calendar`). This uses a separate OAuth flow (not Devise OmniAuth) built with `Signet::OAuth2::Client` directly:
+### Google Calendar Sync routes
 
 | Action | Route | Method | Description |
 |--------|-------|--------|-------------|
-| Connect | `/settings/connect_google_calendar` | GET | Builds OAuth URL and redirects to Google consent |
+| Connect | `/settings/connect_google_calendar` | GET | Builds OAuth URL, redirects to Google consent |
 | Callback | `/settings/google_calendar_callback` | GET | Exchanges auth code for access/refresh tokens |
 | Disconnect | `/settings/disconnect_google_calendar` | POST | Clears stored tokens |
 | Sync | `/settings/sync_google_calendar` | POST | Imports Google Calendar events as `CalendarEvent` records |
 
-**Flow:**
-1. User clicks **Connect** on `/settings/calendar`
-2. Redirected to Google consent screen (scope: `https://www.googleapis.com/auth/calendar`, offline access)
-3. After authorization, Google redirects to `/settings/google_calendar_callback?code=...`
-4. Server exchanges code for tokens and stores them on the User record
-5. User can then click **Sync now** to import events
+Push (Season → Google) runs automatically in the background (`GoogleCalendarPushJob`) when a connected user creates, edits, or deletes an appointment.
 
-**Required Google Cloud Console setup:**
-- Add redirect URI: `http://127.0.0.1:3000/settings/google_calendar_callback` (dev) and `https://seasonv2.onrender.com/settings/google_calendar_callback` (prod)
-- OAuth consent scope: `https://www.googleapis.com/auth/calendar` (already required for login)
+**Env vars:**
 
-**Env vars for `.env` file:**
 ```bash
 GOOGLE_CLIENT_ID=your_client_id_here
 GOOGLE_CLIENT_SECRET=your_client_secret_here
 ```
 
-The same `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` are used for both login and calendar sync — Google differentiates them by callback URL.
+Same credentials serve both login and calendar sync — Google differentiates by callback URL.
 
-**Error: `Missing required parameter: client_id`** — means `GOOGLE_CLIENT_ID` is not set or empty. Add it to `.env` and restart `bin/dev`.
-
-> **Login no longer requests the Calendar scope (2026-09-19).** It used to (`scope: "email,profile,https://www.googleapis.com/auth/calendar"`), so that the login flow could also capture calendar tokens. The problem: Google treats the Calendar scope as *restricted*, so bundling it into sign-in meant **plain login itself** was capped to a manually-maintained test-user allowlist (~100 accounts) until the app passes Google's verification for that scope — unworkable for a public launch. Login now requests only `email,profile` (unrestricted, no verification needed, works for any user immediately). Calendar access is requested exclusively by the separate Connect flow below, which stays test-user-gated until verification is done — moot for now since the UI decision on *how* Calendar Sync should behave (pull/push/both, user-selectable) is still pending, see the team discussion linked from PROGRESS.md.
+**Error: `Missing required parameter: client_id`** → `GOOGLE_CLIENT_ID` is unset. Add it to `.env` and restart `bin/dev`.
 
 ---
 
-### 1c. iCloud Calendar Sync (Settings → Calendar) — no OAuth
+## 2. iCloud Calendar Sync — no OAuth
 
-Apple has no OAuth for calendar data — "Sign in with Apple" only ever covers identity/login, never calendar access. iCloud Calendar is reached over **CalDAV** (HTTP + XML, not a JSON REST API), authenticated with **HTTP Basic Auth** using the user's Apple ID email and an **app-specific password** they generate themselves.
+Apple has no OAuth for calendar data. iCloud Calendar is accessed over **CalDAV**, authenticated with **HTTP Basic Auth** using an Apple ID email + an app-specific password.
 
-**Nothing to configure on our end** — no client ID/secret, no redirect URI to register, no console setup at all. This is the opposite of Google/Facebook/Apple login: simpler infrastructure, but the user carries more of the setup burden themselves.
+**No console setup, no env vars.**
 
-**What the user does:**
+**User steps:**
 
-1. Go to [appleid.apple.com](https://appleid.apple.com) → **Sign-In and Security** → **App-Specific Passwords**
-2. Generate one (any label, e.g. "Season")
-3. On Season's Settings → Calendar screen, enter their Apple ID email + that generated password
-4. Season verifies the credentials immediately (a real CalDAV request) before saving — a wrong password fails right there, not silently on the first sync
+1. [appleid.apple.com](https://appleid.apple.com) → **Sign-In and Security** → **App-Specific Passwords** → generate one
+2. On Settings → Calendar, enter Apple ID email + the generated password
+3. Season verifies the credentials immediately; a wrong password fails at this step, not on the first sync
 
-**Routes:**
+### iCloud Calendar routes
 
 | Action | Route | Method | Description |
 |--------|-------|--------|-------------|
-| Connect | `/settings/connect_icloud_calendar` | POST | Verifies the Apple ID + app-specific password, then saves them |
+| Connect | `/settings/connect_icloud_calendar` | POST | Verifies credentials, then saves them |
 | Disconnect | `/settings/disconnect_icloud_calendar` | POST | Clears stored credentials |
 | Sync | `/settings/sync_icloud_calendar` | POST | Imports iCloud Calendar events as `CalendarEvent` records |
 
-**Scope:** pull-only for now (iCloud → Season). No push (Season → iCloud) has been built — matches the "bring events in, don't push anything out" default being proposed for every provider, pending the team's sync-direction decision.
+**Scope:** pull-only (iCloud → Season). No push.
 
-**Implementation note:** there's no maintained Ruby gem for CalDAV, so `IcloudCalendarService` speaks the protocol directly (a PROPFIND discovery chain, then a REPORT calendar-query, both hand-built HTTP+XML — see the class comment for the full request/response shape).
-
-**Env vars:** none. `icloud_email`/`icloud_app_password` are stored per-user on the `users` table (plaintext for now, matching `google_access_token`/`google_refresh_token` — see the Security Notes section).
+`icloud_email` / `icloud_app_password` are stored per-user on the `users` table.
 
 ---
 
-### 1d. Microsoft Calendar (Outlook) — planned, not yet built
+## 3. Microsoft Calendar (Outlook) — not built
 
-Listed as "Coming soon" on the Settings → Calendar screen. Microsoft Graph API uses OAuth (similar shape to Google's), so once built this section will need its own Azure App Registration + `MICROSOFT_CLIENT_ID`/`MICROSOFT_CLIENT_SECRET` env vars and redirect URIs — none of that exists yet. Nothing to configure until it's implemented.
+Listed as "Coming soon" on Settings → Calendar. No setup exists yet.
 
 ---
 
-### 2. Facebook OAuth (Meta / Facebook App)
+## 4. Facebook OAuth (Meta / Facebook App)
 
-1. Go to [Meta Developers](https://developers.facebook.com/)
-2. Create a new app or use existing one
-3. Navigate to **App Settings > Basic**
-4. Copy **App ID** → `FACEBOOK_APP_ID`
-5. Copy **App Secret** → `FACEBOOK_APP_SECRET`
-6. Under **Facebook Login > Settings**, add redirect URIs:
+1. [Meta Developers](https://developers.facebook.com/) → create or select an app
+2. **App Settings > Basic** → copy **App ID** → `FACEBOOK_APP_ID`, **App Secret** → `FACEBOOK_APP_SECRET`
+3. **Facebook Login > Settings** → add redirect URIs:
    - `https://seasonv2.onrender.com/users/auth/facebook/callback`
    - `http://localhost:3000/users/auth/facebook/callback`
-7. Ensure "Email" permission is enabled in Login Scopes
+4. Enable "Email" permission under Login Scopes
 
 ---
 
-### 3. Apple Sign In (Apple Developer)
+## 5. Apple Sign In (Apple Developer)
 
-1. Go to [Apple Developer Account](https://developer.apple.com/)
-2. Navigate to **Certificates, Identifiers & Profiles > Identifiers**
-3. Create or use an existing Service ID (e.g., `com.seasonapp.web`)
-4. Configure **Sign in with Apple**:
-   - Add **Return URLs**:
-     - `https://seasonv2.onrender.com/users/auth/apple/callback`
-     - `http://localhost:3000/users/auth/apple/callback`
-5. Create a **Private Key** for the Service ID (`.p8` file)
-6. Configure the Rails app with these env vars (the `omniauth-apple` gem generates the JWT client-side):
+1. [Apple Developer Account](https://developer.apple.com/) → **Certificates, Identifiers & Profiles > Identifiers**
+2. Create or use a Service ID (e.g. `com.seasonapp.web`)
+3. Configure **Sign in with Apple** → add Return URLs:
+   - `https://seasonv2.onrender.com/users/auth/apple/callback`
+   - `http://localhost:3000/users/auth/apple/callback`
+4. Create a Private Key for the Service ID (`.p8` file)
+5. Env vars:
    - Service ID → `APPLE_CLIENT_ID`
-   - Team ID (from Membership) → `APPLE_TEAM_ID`
-   - Key ID (from the created key) → `APPLE_KEY_ID`
-   - Private key `.p8` file contents → `APPLE_PRIVATE_KEY` (with `\n` line breaks as literal `\n`)
-7. The actual `config/initializers/devise.rb` line:
-   ```ruby
-   config.omniauth :apple, ENV["APPLE_CLIENT_ID"], "",
-     scope: "email name",
-     team_id: ENV["APPLE_TEAM_ID"],
-     key_id: ENV["APPLE_KEY_ID"],
-     pem: ENV["APPLE_PRIVATE_KEY"]&.gsub("\\n", "\n")
-   ```
-   **Note:** The password field is empty string `""` (the gem handles key-based signing, not client secret). The `.p8` key content must have `\n` as literal two-character escape sequences (Render env var format), then `gsub` converts them to actual newlines at runtime.
+   - Team ID (Membership page) → `APPLE_TEAM_ID`
+   - Key ID → `APPLE_KEY_ID`
+   - `.p8` file contents → `APPLE_PRIVATE_KEY` (line breaks as literal `\n`)
+
+No `APPLE_CLIENT_SECRET` — the `omniauth-apple` gem generates the JWT client-side from the key.
 
 ---
 
 ## Render Dashboard Configuration
 
-1. Go to [Render Dashboard](https://dashboard.render.com/)
-2. Select your Season app service
-3. Navigate to **Environment**
-4. Add the following variables:
+1. [Render Dashboard](https://dashboard.render.com/) → select the Season service → **Environment**
+2. Add:
 
 ```
 GOOGLE_CLIENT_ID=<value from Google Cloud>
@@ -195,53 +155,29 @@ APPLE_KEY_ID=<value from Apple Developer Keys>
 APPLE_PRIVATE_KEY=<.p8 file content with literal \n for line breaks>
 ```
 
-5. Click **Save Changes**
-6. Render will automatically redeploy with new environment variables
+3. **Save Changes** — Render redeploys automatically
 
 ---
 
 ## Testing
 
-### Local Development
+**Local:** set the same variables in `.env`, run `bin/dev`, test login buttons at `/session/new`.
 
-Set env vars in `.env` or `.env.local`:
+**Production:** after setting Render env vars —
 
-```bash
-GOOGLE_CLIENT_ID=<dev_client_id>
-GOOGLE_CLIENT_SECRET=<dev_client_secret>
-FACEBOOK_APP_ID=<dev_app_id>
-FACEBOOK_APP_SECRET=<dev_app_secret>
-APPLE_CLIENT_ID=<dev_service_id>
-APPLE_TEAM_ID=<dev_team_id>
-APPLE_KEY_ID=<dev_key_id>
-APPLE_PRIVATE_KEY=<dev_p8_content_with_literal_\n>
-```
-
-Run `bin/dev` and test login buttons at `/session/new`.
-
-### Production
-
-After setting env vars on Render:
-
-1. Check **Logs** for any Devise/OmniAuth initialization errors
-2. Test sign-in flow at `https://seasonv2.onrender.com/session/new`
-3. Click each provider button and verify:
-   - Redirect to provider login
-   - Callback returns user to `/calendar` or `/onboarding`
-   - User record created with correct `{provider}_uid` field
+1. Check **Logs** for Devise/OmniAuth errors
+2. Test sign-in at `https://seasonv2.onrender.com/session/new`
+3. Confirm each provider redirects, returns to `/calendar` or `/onboarding`, and creates a user record with the correct `{provider}_uid`
 
 ---
 
 ## Configuration Verification
 
-To verify OAuth is correctly wired in Rails:
-
 ```bash
-cd /path/to/season
 grep -A 3 "config.omniauth" config/initializers/devise.rb
 ```
 
-Expected output:
+Expected:
 
 ```ruby
 config.omniauth :google_oauth2, ENV["GOOGLE_CLIENT_ID"], ENV["GOOGLE_CLIENT_SECRET"],
@@ -255,7 +191,7 @@ config.omniauth :apple, ENV["APPLE_CLIENT_ID"], "",
   pem: ENV["APPLE_PRIVATE_KEY"]&.gsub("\\n", "\n")
 ```
 
-If any ENV var is missing, OmniAuth will skip that provider silently.
+A missing ENV var makes OmniAuth skip that provider silently.
 
 ---
 
@@ -263,49 +199,37 @@ If any ENV var is missing, OmniAuth will skip that provider silently.
 
 | Issue | Solution |
 |-------|----------|
-| "Invalid OAuth credentials" | Verify Client IDs/Secrets on provider dashboard match Render env vars exactly |
-| "Redirect URI mismatch" | Add full callback URL to authorized URIs list on each provider |
-| Provider button not showing | Check `render.yaml` or Render dashboard env vars are set |
+| "Invalid OAuth credentials" | Client ID/Secret on provider dashboard must match Render env vars exactly |
+| "Redirect URI mismatch" | Add the exact callback URL to the provider's authorized list |
+| Provider button not showing | Check env vars are set on Render |
 | Silent OmniAuth failure | Check Rails logs for `devise.omniauth` warnings |
+| iCloud "Connection failed" | Regenerate the app-specific password; confirm the Apple ID email is correct |
 
 ---
 
 ## Security Notes
 
-- All `*_SECRET` values are **never committed** to Git
-- Render marks `RESEND_API_KEY` as `sync: false` in `render.yaml` — OAuth vars should follow the same pattern (manual entry only)
+- `*_SECRET` and `*_PASSWORD` values are never committed to Git
+- Render env vars: manual entry only (`sync: false`), same as `RESEND_API_KEY`
 - Use different credentials for local dev vs production
-- Rotate secrets periodically via provider dashboards
+- Rotate secrets periodically
 
 ---
 
 ## Status
 
-> **Updated 19 Sep 2026** — All three login providers live on Render, working for any user (not just test-listed accounts). Google Calendar sync (pull + push) and iCloud Calendar sync (pull-only) are both built. Microsoft Calendar is still planned.
-
 | Area | Status |
 |------|--------|
-| Rails config (`devise.rb`) | ✅ Complete — login scope is `email,profile` only (unrestricted, no test-user cap) |
-| Callbacks controller | ✅ Complete |
-| Custom OAuth conflicts | ✅ Removed — Devise only |
-| Google login on Render | ✅ Live for any user |
-| Google Calendar sync | ✅ Built — pull ("Sync now") and push (Season → Google), both verified against a real account |
-| iCloud Calendar sync | ✅ Built — pull only (CalDAV, no OAuth) |
-| Microsoft Calendar sync | ⬜ Planned, not built |
-| Google verification for the Calendar scope | ⬜ Not submitted — Calendar Sync stays capped to a manual test-user allowlist until this is done |
-| Facebook on Render | ✅ Live |
-| Apple on Render | ✅ Live |
-
----
-
-### Provider Detail
+| Google login | ✅ Live on Render, any user |
+| Google Calendar sync | ✅ Pull + push, verified against a real account |
+| iCloud Calendar sync | ✅ Pull only |
+| Microsoft Calendar sync | ⬜ Not built |
+| Google verification (Calendar scope) | ⬜ Not submitted — Calendar Sync capped to a manual test-user allowlist until done |
+| Facebook login | ✅ Live on Render |
+| Apple login | ✅ Live on Render |
 
 | Provider | Credentials | On Render | Callback URL |
 |----------|-------------|-----------|--------------|
-| **Google** | ✅ Obtained | ✅ Set | `https://seasonv2.onrender.com/users/auth/google_oauth2/callback` |
-| **Facebook** | ✅ Obtained | ✅ Set | `https://seasonv2.onrender.com/users/auth/facebook/callback` |
-| **Apple** | ✅ Obtained (Service ID + `.p8` key) | ✅ Set | `https://seasonv2.onrender.com/users/auth/apple/callback` |
-
-**Callback pattern:** `/users/auth/:provider/callback` (Devise default)
-
-**Apple Note:** Uses `APPLE_TEAM_ID`, `APPLE_KEY_ID`, `APPLE_PRIVATE_KEY` (`.p8` file). The `omniauth-apple` gem generates the JWT client-side — no `APPLE_CLIENT_SECRET` env var needed.
+| Google | ✅ | ✅ | `https://seasonv2.onrender.com/users/auth/google_oauth2/callback` |
+| Facebook | ✅ | ✅ | `https://seasonv2.onrender.com/users/auth/facebook/callback` |
+| Apple | ✅ | ✅ | `https://seasonv2.onrender.com/users/auth/apple/callback` |
