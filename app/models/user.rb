@@ -72,7 +72,7 @@ class User < ApplicationRecord
   end
 
   def self.ransackable_attributes(auth_object = nil)
-    %w[email name created_at onboarding_completed language public_id]
+    %w[email name created_at onboarding_completed language public_id secret_tester]
   end
 
   def self.ransackable_associations(auth_object = nil)

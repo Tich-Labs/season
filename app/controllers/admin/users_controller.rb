@@ -5,14 +5,16 @@ class Admin::UsersController < Admin::BaseController
 
   def index
     @q = User.ransack(params[:q])
-    @users = @q.result.order(created_at: :desc)
+    @signed_up_from = parse_date(params[:signed_up_from])
+    @signed_up_to = parse_date(params[:signed_up_to])
+    @users = filter_by_signup_date(@q.result).order(created_at: :desc)
     @page = (params[:page] || 1).to_i
     @total_count = @users.count
     @users = @users.offset((@page - 1) * ITEMS_PER_PAGE).limit(ITEMS_PER_PAGE)
 
     respond_to do |format|
       format.html
-      format.csv { send_data generate_csv(@q.result), filename: "season-users-#{Time.zone.today}.csv" }
+      format.csv { send_data generate_csv(filter_by_signup_date(@q.result)), filename: "season-users-#{Time.zone.today}.csv" }
     end
   end
 
@@ -42,6 +44,19 @@ class Admin::UsersController < Admin::BaseController
 
   private
 
+  def parse_date(value)
+    Date.iso8601(value) if value.present?
+  rescue Date::Error
+    nil
+  end
+
+  # Inclusive on both ends: "to 2026-09-25" includes sign-ups on the 25th.
+  def filter_by_signup_date(scope)
+    scope = scope.where(created_at: @signed_up_from.beginning_of_day..) if @signed_up_from
+    scope = scope.where(created_at: ..@signed_up_to.end_of_day) if @signed_up_to
+    scope
+  end
+
   def calculate_avg_cycle_length
     starts = @user.period_starts.ordered.pluck(:started_on)
     return nil if starts.size < 2
@@ -52,7 +67,7 @@ class Admin::UsersController < Admin::BaseController
 
   def generate_csv(users)
     CSV.generate(headers: true) do |csv|
-      csv << ["Name", "Email", "Language", "Onboarding", "Signed Up", "Streak"]
+      csv << ["Name", "Email", "Language", "Onboarding", "Signed Up", "Streak", "Secret Tester"]
       users.each do |u|
         csv << [
           u.name || "",
@@ -60,13 +75,14 @@ class Admin::UsersController < Admin::BaseController
           u.language || "en",
           u.onboarding_completed? ? "Complete" : "Pending",
           u.created_at.strftime("%Y-%m-%d"),
-          u.streak&.current_streak || 0
+          u.streak&.current_streak || 0,
+          u.secret_tester? ? "Yes" : "No"
         ]
       end
     end
   end
 
   def user_params
-    params.expect(user: [:admin])
+    params.expect(user: [:admin, :secret_tester])
   end
 end

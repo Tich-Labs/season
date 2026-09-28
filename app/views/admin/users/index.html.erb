@@ -1,4 +1,5 @@
 <% content_for :page_title, "Users" %>
+<% filter_params = request.query_parameters.except("page") %>
 
 <div class="space-y-4">
 
@@ -9,6 +10,16 @@
         <%= f.search_field :name_or_public_id_cont,
             placeholder: "Search name or User ID…",
             class: "flex-1 bg-gray-100 rounded-lg px-3 py-2 text-sm border-0 focus:ring-2 focus:ring-brand-primary focus:outline-none" %>
+        <label class="flex items-center gap-1 text-xs text-gray-500">
+          Signed up from
+          <%= date_field_tag :signed_up_from, @signed_up_from, autocomplete: "off",
+              class: "bg-gray-100 rounded-lg px-2 py-2 text-sm border-0 focus:ring-2 focus:ring-brand-primary focus:outline-none" %>
+        </label>
+        <label class="flex items-center gap-1 text-xs text-gray-500">
+          to
+          <%= date_field_tag :signed_up_to, @signed_up_to, autocomplete: "off",
+              class: "bg-gray-100 rounded-lg px-2 py-2 text-sm border-0 focus:ring-2 focus:ring-brand-primary focus:outline-none" %>
+        </label>
         <%= f.submit "Search",
             class: "bg-brand-primary text-white px-4 py-2 rounded-lg text-sm font-medium cursor-pointer hover:bg-brand-primary-dark transition-colors" %>
       <% end %>
@@ -20,7 +31,9 @@
             class: "px-3 py-1.5 rounded-full text-xs font-medium bg-brand-field text-brand-primary hover:bg-brand-field transition-colors" %>
         <%= link_to "German", admin_users_path(q: { language_eq: "de" }),
             class: "px-3 py-1.5 rounded-full text-xs font-medium bg-brand-field text-brand-primary hover:bg-brand-field transition-colors" %>
-        <%= link_to "↓ CSV", admin_users_path(format: :csv),
+        <%= link_to "Secret testers", admin_users_path(q: { secret_tester_eq: true }),
+            class: "px-3 py-1.5 rounded-full text-xs font-medium bg-brand-field text-brand-primary hover:bg-brand-field transition-colors" %>
+        <%= link_to "↓ CSV", admin_users_path(filter_params.merge(format: :csv)),
             class: "px-3 py-1.5 rounded-full text-xs font-medium bg-green-700 text-white hover:bg-green-800 transition-colors" %>
       </div>
     </div>
@@ -57,6 +70,7 @@
           <th class="px-4 py-3 text-xs font-semibold text-brand-primary uppercase tracking-wide">Onboarding</th>
           <th class="px-4 py-3 text-xs font-semibold text-brand-primary uppercase tracking-wide">Signed Up</th>
           <th class="px-4 py-3 text-xs font-semibold text-brand-primary uppercase tracking-wide">Streak</th>
+          <th class="px-4 py-3 text-xs font-semibold text-brand-primary uppercase tracking-wide">Secret Tester</th>
           <th class="px-4 py-3 text-xs font-semibold text-brand-primary uppercase tracking-wide">Admin</th>
           <th class="px-4 py-3 text-xs font-semibold text-brand-primary uppercase tracking-wide"></th>
         </tr>
@@ -78,6 +92,22 @@
             </td>
             <td class="px-4 py-3 text-gray-600"><%= user.created_at.strftime("%Y-%m-%d %H:%M") %></td>
             <td class="px-4 py-3 text-brand-primary font-medium"><%= user.streak&.current_streak || 0 %> 🔥</td>
+            <td class="px-4 py-3">
+              <% if user.secret_tester? %>
+                <span class="inline-flex items-center gap-1">
+                  <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-brand-muted text-white">Secret Tester</span>
+                  <%= button_to "Untag",
+                        admin_user_path(user, user: { secret_tester: false }),
+                        method: :patch,
+                        class: "text-xs text-gray-400 hover:text-brand-primary underline" %>
+                </span>
+              <% else %>
+                <%= button_to "Tag",
+                      admin_user_path(user, user: { secret_tester: true }),
+                      method: :patch,
+                      class: "px-2 py-0.5 rounded text-xs font-medium bg-brand-field text-brand-primary hover:bg-brand-warm transition-colors" %>
+              <% end %>
+            </td>
             <td class="px-4 py-3">
               <% if user.admin? %>
                 <span class="inline-flex items-center gap-1">
@@ -113,12 +143,12 @@
       <span>Showing <%= @users.length %> of <%= @total_count %> users</span>
       <div class="flex gap-2">
         <% if @page > 1 %>
-          <%= link_to "← Prev", admin_users_path(page: @page - 1),
+          <%= link_to "← Prev", admin_users_path(filter_params.merge(page: @page - 1)),
               class: "px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-brand-primary hover:bg-gray-50 transition-colors" %>
         <% end %>
         <span class="px-3 py-1.5">Page <%= @page %></span>
         <% if @users.length == 20 %>
-          <%= link_to "Next →", admin_users_path(page: @page + 1),
+          <%= link_to "Next →", admin_users_path(filter_params.merge(page: @page + 1)),
               class: "px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-brand-primary hover:bg-gray-50 transition-colors" %>
         <% end %>
       </div>
