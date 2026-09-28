@@ -34,6 +34,7 @@
           <% feedback_active = controller_name == "inbox" && action_name == "feedback" %>
           <% bug_active      = controller_name == "inbox" && action_name == "bugs" %>
           <% support_active  = controller_name == "inbox" && action_name == "support" %>
+          <% archived_active = controller_name == "inbox" && action_name == "archived" %>
           <% weekly_active   = controller_name == "weekly_feedback_responses" %>
           <% board_active    = controller_name == "board" %>
           <% checklist_active = controller_name == "m1_checklist" %>
@@ -132,6 +133,14 @@
                                      "text-brand-light hover:bg-brand-primary-dark hover:text-white" => !support_active) do %>
                 <span>Support</span>
                 <span class="text-xs opacity-60"><%= @stats[:support] %></span>
+              <% end %>
+
+              <%= link_to admin_inbox_archived_path,
+                  class: class_names("flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                                     "bg-brand-primary-dark text-white" => archived_active,
+                                     "text-brand-light hover:bg-brand-primary-dark hover:text-white" => !archived_active) do %>
+                <span>Archived</span>
+                <span class="text-xs opacity-60"><%= @stats[:archived] %></span>
               <% end %>
 
               <%= link_to admin_weekly_feedback_responses_path,

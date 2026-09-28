@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_28_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_28_130000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -110,6 +110,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_28_120000) do
 
   create_table "feedbacks", force: :cascade do |t|
     t.boolean "active", default: true, null: false
+    t.datetime "archived_at"
+    t.bigint "archived_by_id"
     t.string "attachment"
     t.datetime "created_at", null: false
     t.text "message", null: false
@@ -117,6 +119,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_28_120000) do
     t.string "type", default: "feedback", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
+    t.index ["archived_by_id"], name: "index_feedbacks_on_archived_by_id"
     t.index ["user_id"], name: "index_feedbacks_on_user_id"
   end
 
@@ -373,6 +376,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_28_120000) do
   add_foreign_key "calendar_events", "users"
   add_foreign_key "cycle_entries", "users"
   add_foreign_key "feedbacks", "users"
+  add_foreign_key "feedbacks", "users", column: "archived_by_id", on_delete: :nullify
   add_foreign_key "m1_checklist_checks", "users"
   add_foreign_key "native_devices", "users"
   add_foreign_key "notifications", "users"

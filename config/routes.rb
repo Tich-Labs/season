@@ -207,6 +207,10 @@ Rails.application.routes.draw do
     get "inbox/bugs", to: "inbox#bugs"
     get "inbox/support", to: "inbox#support"
     get "inbox/export_csv", to: "inbox#export_csv"
+    get "inbox/archived", to: "inbox#archived", as: :inbox_archived
+    post "inbox/archive_before", to: "inbox#archive_before", as: :inbox_archive_before
+    patch "inbox/:id/archive", to: "inbox#archive", as: :inbox_archive
+    patch "inbox/:id/unarchive", to: "inbox#unarchive", as: :inbox_unarchive
     get "launch_signups", to: "launch_signups#index", as: :launch_signups
     get "launch_signups/export_csv", to: "launch_signups#export_csv", as: :launch_signups_export_csv
     resources :cycle_phase_contents, except: [:show]

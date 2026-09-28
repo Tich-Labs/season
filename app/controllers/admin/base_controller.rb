@@ -20,7 +20,8 @@ class Admin::BaseController < ApplicationController
       total: inbox.count,
       feedback: inbox.feedback_type_feedback.count,
       bugs: inbox.feedback_type_bug_report.count,
-      support: inbox.feedback_type_support.count
+      support: inbox.feedback_type_support.count,
+      archived: Feedback.archived.count
     }
   end
 end
