@@ -128,7 +128,7 @@
 <% category_icon = ->(cat, colour) {
   icon = category_icon_map[cat] || 'sport.svg'
   icon_path = asset_path("icons/appointment/#{icon}")
-  %(<div style="width:28px;height:28px;-webkit-mask:url(#{icon_path}) no-repeat center/contain;mask:url(#{icon_path}) no-repeat center/contain;background:#{colour}"></div>)
+  tag.div(style: "width:28px;height:28px;-webkit-mask:url(#{icon_path}) no-repeat center/contain;mask:url(#{icon_path}) no-repeat center/contain;background:#{colour}")
 } %>
 
 <div class="bg-white pb-32">
@@ -163,7 +163,7 @@
                   <%= link_to edit_calendar_event_path(event), class: "block no-underline" do %>
                     <div class="flex items-center gap-5 py-2">
                       <div class="w-10 h-9 shrink-0 flex items-center justify-center" style="color:<%= day_colour %>">
-                        <%== category_icon.(event.category, day_colour) %>
+                        <%= category_icon.(event.category, day_colour) %>
                       </div>
                       <div class="flex-1 min-w-0">
                         <p class="text-[1.125rem] leading-[1.2] font-medium font-sans truncate" style="color:<%= day_colour %>"><%= event.title %></p>

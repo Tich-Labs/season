@@ -79,14 +79,15 @@ class CalendarControllerTest < ActionDispatch::IntegrationTest
 
   test "GET /calendar renders tracked-day tick when show_tracked_days enabled" do
     sign_in_as(@alice)
-    get user_root_path(date: "2026-08-01")
+    # alice's symptom_logs fixture is dated yesterday — view that month.
+    get user_root_path(date: Date.yesterday.iso8601)
     assert_includes response.body, "1.35512"
   end
 
   test "GET /calendar hides tracked-day tick when show_tracked_days disabled" do
     @alice.update!(show_tracked_days: false)
     sign_in_as(@alice)
-    get user_root_path(date: "2026-08-01")
+    get user_root_path(date: Date.yesterday.iso8601)
     assert_not_includes response.body, "1.35512"
   end
 
