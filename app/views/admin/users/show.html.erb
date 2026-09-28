@@ -10,10 +10,8 @@
   <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
     <div class="flex items-start justify-between">
       <div>
-        <h2 class="text-xl font-bold text-gray-900"><%= @user.name.presence || "Unnamed User" %></h2>
-        <div class="flex items-center gap-2 mt-1">
-          <span class="text-xs font-mono text-gray-400">ID: <%= @user.public_id %></span>
-        </div>
+        <p class="text-xs text-gray-500 uppercase tracking-wide">User ID</p>
+        <h2 class="text-xl font-bold font-mono text-gray-900 mt-0.5"><%= @user.public_id %></h2>
       </div>
       <% if @user.admin? %>
         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-brand-primary text-white">Admin</span>
@@ -59,14 +57,14 @@
           <%= button_to "Revoke Admin",
                 admin_user_path(@user, user: { admin: false }),
                 method: :patch,
-                data: { turbo_confirm: "Remove admin access from #{@user.name || @user.email}?" },
+                data: { turbo_confirm: "Remove admin access from user #{@user.public_id}?" },
                 class: "px-4 py-2 rounded-lg text-sm font-medium bg-red-50 text-red-700 border border-red-200 hover:bg-red-100 transition-colors" %>
         </div>
       <% else %>
         <%= button_to "Grant Admin",
               admin_user_path(@user, user: { admin: true }),
               method: :patch,
-              data: { turbo_confirm: "Grant admin access to #{@user.name || @user.email}?" },
+              data: { turbo_confirm: "Grant admin access to user #{@user.public_id}?" },
               class: "px-4 py-2 rounded-lg text-sm font-medium bg-brand-primary text-white hover:bg-brand-primary-dark transition-colors" %>
       <% end %>
     </div>

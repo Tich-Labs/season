@@ -10,12 +10,12 @@ class Admin::WeeklyFeedbackResponsesController < Admin::BaseController
       .order(created_at: :desc)
 
     csv_data = CSV.generate(headers: true) do |csv|
-      csv << ["Date", "User", "Week", "Question", "Type", "Answer", "Details"]
+      csv << ["Date", "User ID", "Week", "Question", "Type", "Answer", "Details"]
 
       responses.find_each do |r|
         csv << [
           r.created_at.strftime("%Y-%m-%d %H:%M"),
-          r.user.email,
+          r.user.public_id,
           "Week #{r.week_number}",
           r.weekly_feedback_question.question_text,
           r.weekly_feedback_question.question_type,

@@ -48,9 +48,9 @@ class Admin::InboxController < Admin::BaseController
     messages = inbox_scope(params[:filter])
 
     csv_data = CSV.generate(headers: true) do |csv|
-      csv << ["Date", "User", "Type", "Message"]
-      messages.order(created_at: :desc).each do |f|
-        csv << [f.created_at.strftime("%Y-%m-%d"), f.user.email, f.type, f.message.to_s.truncate(100)]
+      csv << ["Date", "User ID", "Type", "Message"]
+      messages.includes(:user).order(created_at: :desc).each do |f|
+        csv << [f.created_at.strftime("%Y-%m-%d"), f.user.public_id, f.type, f.message.to_s.truncate(100)]
       end
     end
 

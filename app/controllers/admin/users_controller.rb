@@ -67,11 +67,10 @@ class Admin::UsersController < Admin::BaseController
 
   def generate_csv(users)
     CSV.generate(headers: true) do |csv|
-      csv << ["Name", "Email", "Language", "Onboarding", "Signed Up", "Streak", "Secret Tester"]
+      csv << ["User ID", "Language", "Onboarding", "Signed Up", "Streak", "Secret Tester"]
       users.each do |u|
         csv << [
-          u.name || "",
-          u.email,
+          u.public_id,
           u.language || "en",
           u.onboarding_completed? ? "Complete" : "Pending",
           u.created_at.strftime("%Y-%m-%d"),

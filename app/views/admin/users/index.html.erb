@@ -7,8 +7,8 @@
   <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
     <div class="flex items-center gap-3 flex-wrap">
       <%= search_form_for @q, url: admin_users_path, html: { class: "flex gap-2 flex-1 min-w-[260px]" } do |f| %>
-        <%= f.search_field :name_or_public_id_cont,
-            placeholder: "Search name or User ID…",
+        <%= f.search_field :public_id_cont,
+            placeholder: "Search User ID…",
             class: "flex-1 bg-gray-100 rounded-lg px-3 py-2 text-sm border-0 focus:ring-2 focus:ring-brand-primary focus:outline-none" %>
         <label class="flex items-center gap-1 text-xs text-gray-500">
           Signed up from
@@ -65,7 +65,6 @@
       <thead>
         <tr class="bg-brand-field text-left">
           <th class="px-4 py-3 text-xs font-semibold text-brand-primary uppercase tracking-wide">User ID</th>
-          <th class="px-4 py-3 text-xs font-semibold text-brand-primary uppercase tracking-wide">Name</th>
           <th class="px-4 py-3 text-xs font-semibold text-brand-primary uppercase tracking-wide">Language</th>
           <th class="px-4 py-3 text-xs font-semibold text-brand-primary uppercase tracking-wide">Onboarding</th>
           <th class="px-4 py-3 text-xs font-semibold text-brand-primary uppercase tracking-wide">Signed Up</th>
@@ -79,9 +78,8 @@
         <% @users.each do |user| %>
           <tr class="hover:bg-gray-50 transition-colors">
             <td class="px-4 py-3 font-medium text-brand-primary">
-              <%= link_to user.public_id.to_s[0..7], admin_user_path(user), class: "hover:underline font-mono text-xs" %>
+              <%= admin_user_id_link(user) %>
             </td>
-            <td class="px-4 py-3 text-gray-600 text-xs"><%= user.name || "—" %></td>
             <td class="px-4 py-3 text-gray-600 uppercase text-xs"><%= user.language || "en" %></td>
             <td class="px-4 py-3">
               <% if user.onboarding_completed? %>
@@ -115,21 +113,21 @@
                   <%= button_to "Demote",
                         admin_user_path(user, user: { admin: false }),
                         method: :patch,
-                        data: { turbo_confirm: "Remove admin from #{user.name || user.email}?" },
+                        data: { turbo_confirm: "Remove admin from user #{user.public_id}?" },
                         class: "text-xs text-gray-400 hover:text-brand-primary underline" %>
                 </span>
               <% else %>
                 <%= button_to "Promote",
                       admin_user_path(user, user: { admin: true }),
                       method: :patch,
-                      data: { turbo_confirm: "Make #{user.name || user.email} an admin?" },
+                      data: { turbo_confirm: "Make user #{user.public_id} an admin?" },
                       class: "px-2 py-0.5 rounded text-xs font-medium bg-brand-field text-brand-primary hover:bg-brand-warm transition-colors" %>
               <% end %>
             </td>
             <td class="px-4 py-3">
               <% unless user.admin? %>
                 <%= link_to "Delete", admin_user_path(user),
-                      data: { turbo_method: :delete, turbo_confirm: "Delete #{user.name || user.email}? This cannot be undone." },
+                      data: { turbo_method: :delete, turbo_confirm: "Delete user #{user.public_id}? This cannot be undone." },
                       class: "text-red-600 text-xs hover:underline" %>
               <% end %>
             </td>

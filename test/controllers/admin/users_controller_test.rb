@@ -14,26 +14,40 @@ class Admin::UsersControllerTest < ActionDispatch::IntegrationTest
   test "filters by signed-up date range, inclusive of the end day" do
     get admin_users_path(signed_up_from: "2026-09-20", signed_up_to: "2026-09-25")
     assert_response :success
-    assert_match(/Late Comer/, response.body)
-    assert_no_match(/Early Bird/, response.body)
+    assert_includes response.body, @late.public_id
+    assert_not_includes response.body, @early.public_id
   end
 
   test "ignores an invalid date" do
     get admin_users_path(signed_up_from: "not-a-date")
     assert_response :success
-    assert_match(/Early Bird/, response.body)
+    assert_includes response.body, @early.public_id
   end
 
   test "filters to secret testers" do
     get admin_users_path(q: {secret_tester_eq: true})
-    assert_match(/Late Comer/, response.body)
-    assert_no_match(/Early Bird/, response.body)
+    assert_includes response.body, @late.public_id
+    assert_not_includes response.body, @early.public_id
   end
 
   test "CSV export respects the date filter" do
     get admin_users_path(format: :csv, signed_up_to: "2026-09-19")
-    assert_match(/early@example.com/, response.body)
-    assert_no_match(/late@example.com/, response.body)
+    assert_includes response.body, @early.public_id
+    assert_not_includes response.body, @late.public_id
+  end
+
+  test "users list and detail identify people by User ID only, never name or email" do
+    get admin_users_path
+    assert_includes response.body, @early.public_id
+    assert_no_match(/Early Bird|early@example\.com/, response.body)
+
+    get admin_user_path(@early)
+    assert_response :success
+    assert_includes response.body, @early.public_id
+    assert_no_match(/Early Bird|early@example\.com/, response.body)
+
+    get admin_users_path(format: :csv)
+    assert_no_match(/Early Bird|early@example\.com/, response.body)
   end
 
   test "tags and untags a secret tester" do

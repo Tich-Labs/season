@@ -19,6 +19,13 @@ class Admin::InboxControllerTest < ActionDispatch::IntegrationTest
     assert_no_match(/Old archived bug/, response.body)
   end
 
+  test "inbox shows the reporter's User ID, not their email" do
+    sign_in_as(@admin)
+    get admin_inbox_bugs_path
+    assert_includes response.body, @admin.public_id
+    assert_no_match(/inboxadmin@example\.com/, response.body.sub(/<aside.*?<\/aside>/m, ""))
+  end
+
   test "CSV export excludes archived reports" do
     sign_in_as(@admin)
     get admin_inbox_export_csv_path(filter: "bugs", format: :csv)
