@@ -15,11 +15,12 @@ class Admin::BaseController < ApplicationController
   end
 
   def set_inbox_stats
+    inbox = Feedback.active
     @stats = {
-      total: Feedback.count,
-      feedback: Feedback.feedback_type_feedback.count,
-      bugs: Feedback.feedback_type_bug_report.count,
-      support: Feedback.feedback_type_support.count
+      total: inbox.count,
+      feedback: inbox.feedback_type_feedback.count,
+      bugs: inbox.feedback_type_bug_report.count,
+      support: inbox.feedback_type_support.count
     }
   end
 end

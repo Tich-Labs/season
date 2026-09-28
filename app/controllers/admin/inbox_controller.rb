@@ -1,30 +1,30 @@
 class Admin::InboxController < Admin::BaseController
   def overview
-    @messages = Feedback.order(created_at: :desc).limit(50)
+    @messages = Feedback.active.order(created_at: :desc).limit(50)
     render "admin/inbox/index"
   end
 
   def feedback
-    @messages = Feedback.feedback_type_feedback.order(created_at: :desc).limit(50)
+    @messages = Feedback.active.feedback_type_feedback.order(created_at: :desc).limit(50)
     render "admin/inbox/index"
   end
 
   def bugs
-    @messages = Feedback.feedback_type_bug_report.order(created_at: :desc).limit(50)
+    @messages = Feedback.active.feedback_type_bug_report.order(created_at: :desc).limit(50)
     render "admin/inbox/index"
   end
 
   def support
-    @messages = Feedback.feedback_type_support.order(created_at: :desc).limit(50)
+    @messages = Feedback.active.feedback_type_support.order(created_at: :desc).limit(50)
     render "admin/inbox/index"
   end
 
   def export_csv
     messages = case params[:filter]
-    when "feedback" then Feedback.feedback_type_feedback
-    when "bugs" then Feedback.feedback_type_bug_report
-    when "support" then Feedback.feedback_type_support
-    else Feedback
+    when "feedback" then Feedback.active.feedback_type_feedback
+    when "bugs" then Feedback.active.feedback_type_bug_report
+    when "support" then Feedback.active.feedback_type_support
+    else Feedback.active
     end
 
     csv_data = CSV.generate(headers: true) do |csv|

@@ -9,6 +9,9 @@ class Feedback < ApplicationRecord
   validates :message, presence: true
   validates :type, presence: true
 
+  scope :active, -> { where(active: true) }
+  scope :archived, -> { where(active: false) }
+
   def support_or_bug?
     feedback_type_support? || feedback_type_bug_report?
   end
