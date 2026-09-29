@@ -180,42 +180,45 @@ On Symptoms page, Submit button opens a review modal (`submit_modal_controller.j
   - Controller: `weekly_feedback_nudge_controller.js`
 - **Forwarding**: Each response fires `WeeklyFeedbackMailer#summary` → Trello email
 
-## iOS (Turbo Native)
+## iOS (Hotwire Native)
 
-- **Project file**: `ios/SeasonApp/project.yml` — XcodeGen spec
-- **Regenerate `.xcodeproj`**: `xcodegen generate` (run from `ios/SeasonApp/`)
+- **Project file**: `ios/SeasonApp/SeasonApp.xcodeproj` is committed directly — there is NO XcodeGen spec in the repo
+- **Regenerate `.xcodeproj`** if corrupted: run `python3 gen.py` from `ios/SeasonApp/` (generates fresh UUIDs)
 - **Base URL**: hardcoded in `Tabs.swift:4` (not Info.plist)
 - **SPM**: `https://github.com/hotwired/hotwire-native-ios` (HotwireNative package, >= 1.0.0)
 - **AppDelegate**: loads `path-configuration.json` + remote `/configurations/ios_v1.json` via `Hotwire.loadPathConfiguration(from:)`
 - **SceneDelegate**: creates `Navigator` with `startLocation: baseURL`, calls `navigator.start()`, sets `window?.rootViewController = navigator.rootViewController`
 - **CRITICAL**: `navigator.start()` MUST be called — without it, the Navigator never creates its WebView or begins the visit lifecycle
-- **Tab bar**: `HotwireTabBarController` (from HotwireNative library) loaded via `switchToTabs()` when user reaches authenticated paths
-- **Path rules endpoint**: `GET /configurations/ios_v1.json` (`ConfigurationsController#ios_v1`)
+- **Path rules endpoint**: `GET /configurations/ios_v1.json` (`ConfigurationsController#ios_v1`, `config/routes.rb:276`)
 - **Bundled path config**: `ios/SeasonApp/SeasonApp/path-configuration.json`
-- **Architecture**: Pure Hotwire Native — all views are server-rendered ERB. Navigator manages its own WebView internally. No direct WKWebView creation.
-- **No KeychainHelper / WKUserScript auth bridge** — not yet implemented
-- **No XcodeGen** — `.xcodeproj` is committed directly (macOS 12 host cannot compile XcodeGen)
-- **PBXFileSystemSynchronizedRootGroup** — Xcode 16+ auto-discovers source files in `SeasonApp/` directory
-- **Auth bridge**: `NativeAuthTokenComponent` stores `native_auth_token` in Keychain via `KeychainHelper`
-- **Push notifications**: `NotificationTokenComponent`, `NotificationRouter`, `NotificationTokenViewModel`
-- **Regenerate `.xcodeproj`** if corrupted: run `python3 gen.py` from `ios/SeasonApp/` (generates fresh UUIDs)
+- **Architecture**: Pure Hotwire Native — all views are server-rendered ERB. `Navigator` manages its own WebView internally. No direct WKWebView creation.
+- **PBXFileSystemSynchronizedRootGroup** — Xcode 16+ auto-discovers source files in the `SeasonApp/` directory
+- **Source files** (8 total, all under `ios/SeasonApp/SeasonApp/`): `AppDelegate`, `SceneDelegate`, `Tabs`, `ButtonComponent`, `NotificationTokenComponent`, `NotificationToken`, `NotificationRouter`, `NotificationTokenViewModel`
+- **Push notifications**: `NotificationTokenComponent` → `NotificationRouter` → `NotificationTokenViewModel`
+- **No KeychainHelper / WKUserScript auth bridge** — not implemented. There is no `NativeAuthTokenComponent.swift` and no `KeychainHelper.swift`; native auth currently rides on the Rails session cookie.
 
-### iOS Native Navigation
+### Rails-side native layer (`ruby_native` gem)
 
-- **Native top bar**: `_native_top_bar.html.erb` rendered in `turbo_native.html.erb` layout for authenticated pages. Provides a 3-dot (more_vert) icon on the right that opens a right-aligned dropdown menu.
-- **Dropdown contents** (22px Montserrat, brand-primary, with dividers):
-  1. Schedule Overview → `/calendar/appointments`
-  2. Day View → `/daily/:today`
-  3. Weekly View → `/calendar/weekly`
-  4. Monthly View → `/calendar`
-  5. Settings → `/settings/edit`
-  6. Log out → `DELETE /session` (`button_to`)
-- **Dropdown styling**: 268px wide, `#EDE1D5` background, `border-radius: 0 0 0 40px` (bottom-left rounded), shadow. Slides in from right with `transform: translateX` animation, 250ms. Semi-transparent backdrop.
-- **Controller**: `native_top_bar_controller.js` — toggle open/close, backdrop click to dismiss
-- **Known issue**: `native_navbar_tag` in `+turbo_native.erb` variants triggers the iOS system UINavigationBar to appear (default white bg, black text), clashing with the custom `_native_top_bar.html.erb`. Currently only `header_color`/`header_dark`/`page_title` content_for blocks are set (no `native_navbar_tag`). To fix: either configure the iOS app to hide the system nav bar (`navigationBar.isHidden = true` in the Navigator), or pass color data through the Ruby Native bridge. See `calendar/index.html+turbo_native.erb` for the pattern.
-- **Touch targets**: 44×44px on both the trigger icon and the close button
-- **No hamburger menu on iOS** — hamburger menus are a deprecated anti-pattern on iOS/Android. The native tab bar (Calendar, Tracking, Settings) + this overflow dropdown provides equivalent navigation.
-- **Logout is also available**: at the bottom of the Settings page (always visible, no dropdown needed)
+The Rails side is **not** Hotwire Native — it uses the `ruby_native` gem (`~> 0.10.0`). Only the iOS binary is Hotwire Native. The old Hotwire Native view layer was deleted in `e84f20d` and `cec8cb9`.
+
+- **`native_app?`** — provided by `RubyNative::NativeDetection`; `request.user_agent.to_s.include?("Ruby Native")`. Consumed via `TurboNativeHelper#web_only?`
+- **Layout hooks** in `app/views/layouts/application.html.erb`: `data-ruby-native` on `<html>` (line 2), `native` + `:ruby_native` stylesheets (line 22), `native-inset` class on `<main>` (line 149)
+- **Gated on `unless native_app?`**: PWA update banner (line 108), feedback + support modals (line 158)
+- **`native_controller.js`** — adds the `ruby-native` class to `<html>` and strips PWA controllers (`install`, `update-prompt`) when running natively
+- **KNOWN BUG — `native_app?` never returns true in the app.** The gem matches on a `"Ruby Native"` user-agent substring, but the iOS binary is hand-rolled Hotwire Native and **sets no custom user agent** (no `applicationNameForUserAgent` / `customUserAgent` in any Swift file), so the WKWebView sends a default Safari UA. Every `native_app?` branch above therefore takes the *web* path inside the native shell.
+- **The gem is only half-wired — decide whether to finish it or drop it.** `config/ruby_native.yml` exists (name, tint, 3 tabs, `app_id: app_cu4qa08l`), and generator setup step 2 (`stylesheet_link_tag :ruby_native`) was done, but **step 3 (`native_tabs_tag`) was never added** to any layout. The gem also ships **zero Swift/ObjC** — no `Navigator`, no bridge components — because it is designed to pair with its *own* prebuilt `ruby-native-ios` binary, not with hand-rolled Hotwire Native. It also has its own OAuth routes (`RubyNative::Auth::SessionsController`) that the app does not use; auth rides on the Devise session cookie instead. The `ruby_native` iOS binary has therefore never been built or run for this app. See "Ruby Native adoption decision" below.
+- **No custom HTML top bar or overflow dropdown exists** on the Rails side. Native chrome comes from the iOS side; `SceneDelegate.swift:39` already hides the system nav bar via `navigator.rootViewController.navigationBar.isHidden = true`, which resolves the old `native_navbar_tag` clashing issue. `native_navbar_tag` is no longer called anywhere in the app.
+- **No native tab bar** — `HotwireTabBarController` / `switchToTabs()` are not referenced by the current sources. Navigation is web-side only.
+
+### Ruby Native adoption decision (open)
+
+Two conflicting native stacks are half-present. Pick one and delete the other.
+
+**A. Finish Ruby Native** — means writing/using a `ruby-native-ios` binary (the gem ships no Swift, so this is a new app target or a prebuilt binary), adding `native_tabs_tag` to the layout, and moving auth onto the gem's `RubyNative::Auth::SessionsController`. Then set the `Ruby Native` user agent so `native_app?` works.
+
+**B. Drop the gem** — `bundle remove ruby_native`, delete `config/ruby_native.yml`, drop the `data-ruby-native` / `native` / `:ruby_native` stylesheet / `native-inset` / `unless native_app?` hooks from `application.html.erb` and `native_controller.js`, and keep the hand-rolled Hotwire Native app as the single native stack. Native-detection then belongs in `TurboNative::NativeApp?` (turbo-rails), which already ships and matches `Turbo Native` / the Hotwire Native UA.
+
+Until one is chosen, `native_app?` is dead code on every request and the two stacks' assumptions are silently mixed.
 
 ## Docs
 - Figma: `docs/figma_nodes.md`
