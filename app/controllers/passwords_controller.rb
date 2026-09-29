@@ -68,6 +68,10 @@ class PasswordsController < ApplicationController
 
   def load_user_from_token
     @user = User.with_reset_password_token(params[:reset_password_token])
-    redirect_to password_error_link_expired_path if @user.nil?
+    # with_reset_password_token is a bare lookup — it never checks
+    # reset_password_within, so an unused link would stay valid forever.
+    return if @user&.reset_password_period_valid?
+
+    redirect_to password_error_link_expired_path
   end
 end

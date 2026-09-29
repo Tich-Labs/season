@@ -25,14 +25,6 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "GET edit with an expired token redirects to link-expired" do
-    # KNOWN BUG, not yet fixed: load_user_from_token uses Devise's
-    # with_reset_password_token, which only looks up the user by token and
-    # never checks reset_password_period_valid? — so an "expired" reset link
-    # (config.reset_password_within = 2.hours) still works. Fix would be to
-    # switch to reset_password_by_token (or check the period explicitly)
-    # in PasswordsController. Skipped until that's decided/fixed.
-    skip "reset tokens don't actually expire — see comment above"
-
     token = @alice.send_reset_password_instructions
 
     travel_to 3.hours.from_now do
@@ -72,9 +64,6 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "PATCH update with an expired token redirects to link-expired without changing the password" do
-    # KNOWN BUG, not yet fixed — see the matching GET-edit test above.
-    skip "reset tokens don't actually expire — see comment on the GET edit expired-token test"
-
     token = @alice.send_reset_password_instructions
 
     travel_to 3.hours.from_now do
