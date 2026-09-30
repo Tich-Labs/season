@@ -254,6 +254,12 @@ en:
         updated: "Information content updated."
       destroy:
         destroyed: "Information content deleted."
+    beta_testers:
+      update:
+        updated: "Beta tester updated."
+    beta_tester_setting:
+      update:
+        updated: "Beta tester page copy updated."
   invites:
     show:
       already_used: "This invite has already been used."

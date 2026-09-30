@@ -1,0 +1,78 @@
+<% content_for :page_title, "Beta Signup Copy" %>
+
+<div class="max-w-2xl space-y-6">
+
+  <div>
+    <%= link_to "← All beta testers", admin_beta_testers_path, class: "text-sm text-gray-500 hover:text-brand-primary" %>
+    <h1 class="mt-2 text-xl font-semibold text-brand-primary">Beta signup copy</h1>
+    <p class="mt-1 text-sm text-gray-500">
+      This is the wording testers see on the public <code class="rounded bg-gray-100 px-1 py-0.5 text-xs">/beta</code> page. It applies to new registrations only.
+    </p>
+  </div>
+
+  <div class="rounded-xl border border-blue-200 bg-blue-50 p-4">
+    <p class="text-sm text-blue-900">
+      <strong>Beta Test Information has not been written yet.</strong>
+      The link below currently points at <code class="rounded bg-white px-1 py-0.5 text-xs">#</code>, which goes nowhere on purpose — there is no 404.
+      Replace the label, link text and URL once the Terms and Privacy drafts are approved.
+    </p>
+  </div>
+
+  <%= form_with model: @setting, url: admin_beta_tester_setting_path, method: :patch,
+        data: { turbo: false }, class: "space-y-5 rounded-xl border border-gray-200 bg-white p-6" do |f| %>
+
+    <% if @setting.errors.any? %>
+      <div class="rounded-xl bg-brand-error px-4 py-3">
+        <p class="text-sm text-brand-primary"><%= @setting.errors.full_messages.to_sentence %></p>
+      </div>
+    <% end %>
+
+    <div>
+      <%= f.label :consent_label, "Consent sentence", class: "mb-2 block text-sm font-semibold text-gray-700" %>
+      <%= f.text_area :consent_label, rows: 3, required: true,
+            class: "w-full rounded-lg border border-gray-300 px-3 py-2 text-base focus:border-brand-primary focus:outline-none focus:ring-1 focus:ring-brand-primary/30" %>
+      <p class="mt-1 text-xs text-gray-500">
+        Put the literal token <code class="rounded bg-gray-100 px-1 py-0.5">{LINK}</code> wherever the link
+        should appear — the link text below is substituted in at that point. Reposition it freely to change the sentence.
+      </p>
+    </div>
+
+    <div>
+      <%= f.label :consent_link_text, "Link text", class: "mb-2 block text-sm font-semibold text-gray-700" %>
+      <%= f.text_field :consent_link_text, required: true,
+            class: "w-full rounded-lg border border-gray-300 px-3 py-2 text-base focus:border-brand-primary focus:outline-none focus:ring-1 focus:ring-brand-primary/30" %>
+    </div>
+
+    <div>
+      <%= f.label :consent_url, "Link URL", class: "mb-2 block text-sm font-semibold text-gray-700" %>
+      <%= f.text_field :consent_url, required: true, placeholder: "#",
+            class: "w-full rounded-lg border border-gray-300 px-3 py-2 text-base focus:border-brand-primary focus:outline-none focus:ring-1 focus:ring-brand-primary/30" %>
+      <p class="mt-1 text-xs text-gray-500">
+        Currently <code class="rounded bg-gray-100 px-1 py-0.5">#</code> — a deliberate placeholder until the Beta information page exists.
+      </p>
+    </div>
+
+    <%# Live preview so the admin sees the rendered sentence before saving %>
+    <div class="rounded-xl border border-gray-200 bg-gray-50 p-4">
+      <p class="mb-3 text-xs font-semibold uppercase tracking-wide text-gray-500">Preview</p>
+      <div class="flex items-start gap-3">
+        <input type="checkbox" disabled class="mt-1 h-5 w-5 shrink-0 rounded border-gray-300">
+        <p class="text-sm leading-relaxed text-gray-700">
+          <% if @setting.consent_label.to_s.include?("{LINK}") %>
+            <% before, after = @setting.consent_label_parts %>
+            <%= before %><a href="<%= @setting.consent_url %>" class="font-medium text-brand-primary underline"><%= @setting.consent_link_text %></a><%= after %>
+          <% else %>
+            <%= @setting.consent_label %>
+          <% end %>
+        </p>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <%= f.submit "Save copy",
+            class: "cursor-pointer rounded-lg bg-brand-primary px-4 py-2 text-sm font-medium text-white hover:bg-brand-primary-dark" %>
+      <%= link_to "Cancel", admin_beta_testers_path, class: "text-sm text-gray-500 hover:text-brand-primary" %>
+    </div>
+
+  <% end %>
+</div>

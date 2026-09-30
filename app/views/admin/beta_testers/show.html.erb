@@ -1,0 +1,50 @@
+<% content_for :page_title, "Beta Tester" %>
+
+<div class="space-y-4">
+
+  <%# Header %>
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-xl font-semibold text-brand-primary"><%= @beta_tester.name %></h1>
+      <p class="text-sm text-gray-500"><%= @beta_tester.email %></p>
+    </div>
+    <%= link_to "← All beta testers", admin_beta_testers_path, class: "text-sm text-gray-500 hover:text-brand-primary" %>
+  </div>
+
+  <%# Details %>
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+    <dl class="grid grid-cols-2 gap-6">
+      <div>
+        <dt class="text-xs text-gray-500 uppercase tracking-wide">Platform</dt>
+        <dd class="mt-1 text-sm font-medium text-brand-dark capitalize"><%= @beta_tester.platform %></dd>
+      </div>
+      <div>
+        <dt class="text-xs text-gray-500 uppercase tracking-wide">Status</dt>
+        <dd class="mt-1 text-sm font-medium text-brand-dark capitalize"><%= @beta_tester.status %></dd>
+      </div>
+      <div>
+        <dt class="text-xs text-gray-500 uppercase tracking-wide">Beta consent</dt>
+        <dd class="mt-1 text-sm font-medium text-brand-dark"><%= @beta_tester.beta_consent? ? "Yes" : "No" %></dd>
+      </div>
+      <div>
+        <dt class="text-xs text-gray-500 uppercase tracking-wide">Registered</dt>
+        <dd class="mt-1 text-sm font-medium text-brand-dark"><%= @beta_tester.created_at.strftime("%Y-%m-%d %H:%M") %></dd>
+      </div>
+    </dl>
+  </div>
+
+  <%# Change status %>
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+    <h2 class="text-sm font-semibold text-brand-primary mb-4">Change status</h2>
+    <%= form_with model: @beta_tester, url: admin_beta_tester_path(@beta_tester), method: :patch, local: true, class: "flex flex-wrap items-end gap-3" do |f| %>
+      <div>
+        <%= f.label :status, class: "block text-xs font-medium text-gray-600 mb-1" %>
+        <%= f.select :status,
+              options_for_select(BetaTester::STATUSES.map { |s| [s.capitalize, s] }, @beta_tester.status),
+              class: "rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-primary focus:outline-none focus:ring-1 focus:ring-brand-primary/30" %>
+      </div>
+      <%= f.submit "Update", class: "px-4 py-2 rounded-lg bg-brand-primary text-white text-sm font-medium hover:bg-brand-primary-dark cursor-pointer" %>
+    <% end %>
+  </div>
+
+</div>

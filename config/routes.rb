@@ -213,6 +213,11 @@ Rails.application.routes.draw do
     patch "inbox/:id/unarchive", to: "inbox#unarchive", as: :inbox_unarchive
     get "launch_signups", to: "launch_signups#index", as: :launch_signups
     get "launch_signups/export_csv", to: "launch_signups#export_csv", as: :launch_signups_export_csv
+    # Must precede the resources line: `resources` declares show as
+    # /beta_testers/:id, which otherwise swallows "export_csv" as an id.
+    get "beta_testers/export_csv", to: "beta_testers#export_csv", as: :beta_testers_export_csv
+    resources :beta_testers, only: [:index, :show, :update]
+    resource :beta_tester_setting, only: [:edit, :update]
     resources :cycle_phase_contents, except: [:show]
     resources :cycle_day_contents, except: [:show] do
       collection do
@@ -267,6 +272,11 @@ Rails.application.routes.draw do
 
   get "/launch", to: "launch#index", as: :launch
   get "/countdown", to: "home#countdown", as: :countdown_page
+
+  # Beta tester recruitment — deliberately unlinked from the app navigation
+  # and noindex, shared by direct link only.
+  get "/beta", to: "beta_testers#new", as: :beta
+  post "/beta", to: "beta_testers#create"
 
   # Legal pages (to be built)
   get "/terms", to: "legal#terms", as: :terms

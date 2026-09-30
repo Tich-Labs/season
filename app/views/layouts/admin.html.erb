@@ -28,8 +28,9 @@
         <%# Nav links %>
         <nav class="flex-1 px-3 py-4 space-y-1">
           <% users_active    = controller_name == "users" %>
+          <% beta_active     = controller_name == "beta_testers" %>
           <% content_active  = controller_name.in?(["cycle_phase_contents", "cycle_day_contents", "weekly_feedback_questions"]) %>
-          <% signups_active  = controller_name == "launch_signups" %>
+          <% signups_active  = controller_name == "launch_signups" # still referenced by hidden Launch Signups block below %>
           <% inbox_active    = controller_name == "inbox" && action_name == "overview" %>
           <% feedback_active = controller_name == "inbox" && action_name == "feedback" %>
           <% bug_active      = controller_name == "inbox" && action_name == "bugs" %>
@@ -37,15 +38,18 @@
           <% archived_active = controller_name == "inbox" && action_name == "archived" %>
           <% weekly_active   = controller_name == "weekly_feedback_responses" %>
           <% board_active    = controller_name == "board" %>
-          <% checklist_active = controller_name == "m1_checklist" %>
+          <% checklist_active = controller_name == "m1_checklist" # still referenced by hidden M1 Checklist block below %>
           <% data_active     = controller_name == "data_storage" %>
 
-          <%= link_to admin_m1_checklist_path,
-              class: class_names("flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
-                                 "bg-brand-primary-dark text-white" => checklist_active,
-                                 "text-brand-light hover:bg-brand-primary-dark hover:text-white" => !checklist_active) do %>
-            <span aria-hidden="true">&#9989;</span>
-            M1 Checklist
+          <%# M1 Checklist — hidden from the admin nav. Routes + controller intact. %>
+          <% if false %>
+            <%= link_to admin_m1_checklist_path,
+                class: class_names("flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                                   "bg-brand-primary-dark text-white" => checklist_active,
+                                   "text-brand-light hover:bg-brand-primary-dark hover:text-white" => !checklist_active) do %>
+              <span aria-hidden="true">&#9989;</span>
+              M1 Checklist
+            <% end %>
           <% end %>
 
           <%= link_to admin_users_path,
@@ -54,6 +58,17 @@
                                  "text-brand-light hover:bg-brand-primary-dark hover:text-white" => !users_active) do %>
             <span aria-hidden="true">&#128100;</span>
             Users
+          <% end %>
+
+          <%= link_to admin_beta_testers_path,
+              class: class_names("flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                                 "bg-brand-primary-dark text-white" => beta_active,
+                                 "text-brand-light hover:bg-brand-primary-dark hover:text-white" => !beta_active) do %>
+            <span class="flex items-center gap-3">
+              <span aria-hidden="true">&#129497;</span>
+              Beta Testers
+            </span>
+            <span class="inline-flex items-center justify-center min-w-[20px] h-5 px-2 rounded-full text-[10px] font-bold leading-none bg-brand-field text-brand-primary"><%= BetaTester.count %></span>
           <% end %>
 
           <details class="group rounded-lg" <%= 'open' if content_active %>>
@@ -86,15 +101,18 @@
             </div>
           </details>
 
-          <%= link_to admin_launch_signups_path,
-              class: class_names("flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors",
-                                 "bg-brand-primary-dark text-white" => signups_active,
-                                 "text-brand-light hover:bg-brand-primary-dark hover:text-white" => !signups_active) do %>
-            <span class="flex items-center gap-3">
-              <span aria-hidden="true">&#128140;</span>
-              Launch Signups
-            </span>
-            <span class="inline-flex items-center justify-center min-w-[20px] h-5 px-2 rounded-full text-[10px] font-bold leading-none bg-brand-field text-brand-primary"><%= LaunchSignup.count %></span>
+          <%# Launch Signups — hidden from the admin nav. Routes + controller intact. %>
+          <% if false %>
+            <%= link_to admin_launch_signups_path,
+                class: class_names("flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                                   "bg-brand-primary-dark text-white" => signups_active,
+                                   "text-brand-light hover:bg-brand-primary-dark hover:text-white" => !signups_active) do %>
+              <span class="flex items-center gap-3">
+                <span aria-hidden="true">&#128140;</span>
+                Launch Signups
+              </span>
+              <span class="inline-flex items-center justify-center min-w-[20px] h-5 px-2 rounded-full text-[10px] font-bold leading-none bg-brand-field text-brand-primary"><%= LaunchSignup.count %></span>
+            <% end %>
           <% end %>
 
           <%# Inbox — clicking goes to all messages; sub-items always visible below %>
