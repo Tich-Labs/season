@@ -74,8 +74,8 @@
     .main {
       flex: 1;
       padding: 2rem 2.5rem 3rem;
-      max-width: 820px;
       min-width: 0;
+      width: 100%;
     }
 
     /* ── Markdown / content styles ── */
@@ -133,9 +133,11 @@
 
       <div class="sidenav-section">
         <span class="sidenav-label">Audit &amp; Reports</span>
-        <a href="{{ site.baseurl }}/AUDIT-2026-04-10.html" {% if page.url contains 'AUDIT-2026' %}class="active"{% endif %}>Audit Report</a>
+        <a href="{{ site.baseurl }}/AUDIT-2026-04-10.html" {% if page.url contains 'AUDIT-2026-04-10' %}class="active"{% endif %}>Audit Report</a>
+        <a href="{{ site.baseurl }}/AUDIT-2026-10-01-SECURITY.html" {% if page.url contains 'AUDIT-2026-10-01' %}class="active"{% endif %}>Security Audit — Beta Readiness</a>
         <a href="{{ site.baseurl }}/STYLING-AUDIT.html" {% if page.url contains 'STYLING' %}class="active"{% endif %}>Styling Audit</a>
         <a href="{{ site.baseurl }}/STAKEHOLDER-REPORT-2026-04-15.html" {% if page.url contains 'STAKEHOLDER' %}class="active"{% endif %}>Stakeholder Report</a>
+        <a href="{{ site.baseurl }}/beta-legal-questions.html" {% if page.url contains 'beta-legal' %}class="active"{% endif %}>Beta Legal Q&amp;A</a>
       </div>
 
       <div class="sidenav-section">

@@ -1,46 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Beta Legal Q&amp;A — Tech &amp; Data Protection</title>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.65; color: #333; max-width: 880px; margin: 0 auto; padding: 2rem; background: #FAF7F4; }
-    h1 { color: #933a35; margin-bottom: 0.35rem; font-size: 1.9rem; line-height: 1.25; }
-    h2 { color: #933a35; margin: 2rem 0 0.75rem; font-size: 1.25rem; }
-    .subtitle { color: #6B6B6B; margin-bottom: 0.5rem; font-size: 1.05rem; }
-    .meta { color: #999; font-size: 0.85rem; margin-bottom: 1.5rem; }
-    .back { display: inline-block; margin-bottom: 1.25rem; color: #933a35; font-size: 0.9rem; text-decoration: none; }
-    .back:hover { text-decoration: underline; }
+---
+layout: default
+title: Beta Legal Q&A — Tech & Data Protection
+---
 
-    .card { background: white; border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-    .card h3 { color: #933a35; font-size: 1.02rem; margin-bottom: 0.5rem; }
-    .card p { margin-bottom: 0.5rem; font-size: 0.95rem; }
-    .card ul, .card ol { margin: 0.25rem 0 0.5rem 1.25rem; font-size: 0.95rem; }
-    .card li { margin-bottom: 0.3rem; }
-    .card code { background: #EDE1D5; color: #933a35; padding: 0.1rem 0.4rem; border-radius: 4px; font-size: 0.85rem; }
+<style>
+  .subtitle { color: #6B6B6B; margin-bottom: 0.5rem; font-size: 1.05rem; }
+  .meta { color: #999; font-size: 0.85rem; margin-bottom: 1.5rem; }
 
-    .tag { display: inline-block; padding: 0.15rem 0.55rem; border-radius: 999px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.02em; vertical-align: middle; }
-    .tag-confirmed { background: #e7f4e7; color: #2e7d32; }
-    .tag-confirm { background: #fff3cd; color: #8a6d00; }
-    .tag-flag { background: #FDF0EE; color: #933a35; }
+  .card { background: white; border-radius: 12px; padding: 1.25rem 1.5rem; margin: 1rem 0; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .card p { margin-bottom: 0.6rem; }
+  .card ul, .card ol { margin: 0.25rem 0 0.5rem 1.25rem; }
+  .card li { margin-bottom: 0.3rem; }
 
-    .callout { background: #fff8e6; border-left: 4px solid #e0a800; border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1rem; font-size: 0.95rem; }
-    .callout strong { color: #8a6d00; }
+  .tag { display: inline-block; padding: 0.15rem 0.55rem; border-radius: 999px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.02em; vertical-align: middle; }
+  .tag-confirmed { background: #e7f4e7; color: #2e7d32; }
+  .tag-confirm { background: #fff3cd; color: #8a6d00; }
+  .tag-flag { background: #FDF0EE; color: #933a35; }
 
-    table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 1rem; }
-    th, td { text-align: left; padding: 0.75rem 1rem; font-size: 0.9rem; vertical-align: top; border-bottom: 1px solid #f0e8df; }
-    th { background: #EDE1D5; color: #933a35; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; }
-    tr:last-child td { border-bottom: none; }
-    td code { background: #EDE1D5; color: #933a35; padding: 0.1rem 0.35rem; border-radius: 4px; font-size: 0.8rem; }
+  .callout { background: #fff8e6; border-left: 4px solid #e0a800; border-radius: 8px; padding: 1rem 1.25rem; margin: 1rem 0; font-size: 0.95rem; }
+  .callout strong { color: #8a6d00; }
+</style>
 
-    footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid #EDE1D5; text-align: center; color: #6B6B6B; font-size: 0.85rem; }
-  </style>
-</head>
-<body>
-  <a class="back" href="index.html">&larr; Back to docs</a>
-  <h1>Season Big Beta — Tech &amp; Data Protection Q&amp;A</h1>
+<h1>Season Big Beta — Tech &amp; Data Protection Q&amp;A</h1>
   <p class="subtitle">Responses drafted for Shanel's "Questions for Naijeria" — input for the Beta Terms of Participation and Beta Privacy Notice</p>
   <p class="meta">Drafted from the codebase and internal docs · 1 October 2026</p>
 
@@ -64,7 +45,7 @@
         <td>
           <strong>Hosting:</strong> Render (render.com) — platform-as-a-service. App runs at <code>seasonv2.onrender.com</code>.
           <br><br>
-          <strong>Database:</strong> PostgreSQL (Render-managed), database <code>season</code>, user <code>season</code>, free plan. Rails is configured for PostgreSQL only (<code>config/database.yml</code>, adapter <code>postgresql</code>).
+          <strong>Database:</strong> PostgreSQL (Render-managed), database <code>season</code>, user <code>season</code>, Pro plan. Rails is configured for PostgreSQL only (<code>config/database.yml</code>, adapter <code>postgresql</code>).
           <br><br>
           <strong>Region:</strong> <strong>Frankfurt (EU Central)</strong> for both the web service and the database — data is stored <strong>inside the EU</strong>, so no additional transfer safeguards (Standard Contractual Clauses) are needed for the hosting location itself.
           <br><br>
@@ -77,62 +58,278 @@
         <td>
           The codebase defines an <em>application</em> admin role (<code>User#admin?</code>, routes under <code>/admin/*</code>, separate <code>/admin/login</code>), but <strong>production database access is not enumerable from the repo</strong> — it is granted via the Render Postgres connection string (<code>DATABASE_URL</code> env var) and the Render dashboard.
           <br><br>
-          <strong>Known so far:</strong> the Render account is under <strong>Season UG</strong>; admin access via <code>naijeria@season.vision</code> (role: Admin).
+          <strong>Access:</strong> the Render account is under <strong>Season UG</strong>; a single admin account, <code>naijeria@season.vision</code> (role: Admin). <strong>One person, one account.</strong>
           <br><br>
-          <span class="tag tag-flag">needs your input</span> — confirm whether that is the only account, and the full list of roles/names + count of people with DB access.
+          <span class="tag tag-confirmed">confirmed</span> — only account currently.
         </td>
       </tr>
       <tr>
         <td><strong>3</strong></td>
-        <td>From which countries is the database accessed, and through which company (Seung UG directly or Mama Tech Limited)?</td>
+        <td>From which countries is the database accessed, and through which company (Season UG directly or Mama Tech Limited)?</td>
         <td>
-          The contracting party named throughout the legal texts is <strong>Season UG (haftungsbeschränkt)</strong> — a German entity (the question's "Seung UG" appears to be a typo for this). Consent copy also references Season UG as the data controller.
+          The contracting party named throughout the legal texts is <strong>Season UG (haftungsbeschränkt)</strong> — a German entity. Consent copy also references Season UG as the data controller.
           <br><br>
-          <strong>Confirmed:</strong> the Render account is under <strong>Season UG</strong> — not Mama Tech Limited — so the hosting and database sit with the German entity.
-          <br><br>
-          <strong>"Mama Tech Limited" does not appear anywhere in the codebase or docs.</strong> If Mama Tech Limited (Kenya) operates or accesses the production environment, access from Kenya is a transfer <strong>outside the EU</strong> and requires EU Standard Contractual Clauses between Season UG and Mama Tech Limited.
+          <strong>Access:</strong> the database is accessed <strong>only via the Season UG account</strong> (<code>@season.vision</code>). <strong>No access through Mama Tech Limited</strong>, so no third-country transfer and no SCCs are needed on that front.
           <br><br>
           <span class="tag tag-confirmed">confirmed</span> source: <code>docs/legal/terms.en.html</code>, <code>app/services/consents/recorder.rb</code> + account info
-          <br>
-          <span class="tag tag-flag">needs your input</span> — confirm whether Mama Tech Limited staff access the environment from Kenya, and whether a DPA/SCC is in place.
         </td>
       </tr>
       <tr>
         <td><strong>4</strong></td>
         <td>Is two-factor authentication active for all admin accounts (hosting, database, code repository, App Store Connect, Google Play Console)?</td>
         <td>
-          Not determinable from the repo — there is no 2FA/MFA configuration in the codebase. This is a console-level setting for Render, GitHub, App Store Connect and Google Play Console.
+          <strong>Yes — 2FA is active on all four</strong>: Render, GitHub, App Store Connect and Google Play Console.
           <br><br>
-          For context, the <em>app's end-user</em> auth does include WebAuthn passkeys with a PIN fallback (<code>webauthn_controller.rb</code>, <code>PinProtection</code> concern), but that is separate from infra admin accounts.
+          For context, the <em>app's end-user</em> auth also includes WebAuthn passkeys with a PIN fallback (<code>webauthn_controller.rb</code>, <code>PinProtection</code> concern) — separate from infra admin accounts.
           <br><br>
-          <span class="tag tag-flag">needs your input</span> — confirm and enforce 2FA on each of the four platforms, then state it as a security measure.
+          <span class="tag tag-confirmed">confirmed</span>
         </td>
       </tr>
     </tbody>
   </table>
 
-  <h2>Extra facts the drafts can rely on (already confirmable)</h2>
+  <h2>B. Security</h2>
+  <table>
+    <thead>
+      <tr><th>No.</th><th>Question</th><th>Drafted answer</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>5</strong></td>
+        <td>Is the database encrypted at rest (by the hosting provider or by us)?</td>
+        <td>
+          <strong>At rest: yes, by the hosting provider.</strong> Render encrypts Postgres data at rest with <strong>AES-256</strong>, and database connections use Render-managed TLS certificates. The Notice can truthfully say "encrypted at rest by the hosting provider (AES-256)".
+          <br><br>
+          <strong>Field-level / application encryption: not yet enabled by us.</strong> The backlog lists pgcrypto as a <strong>post-launch</strong> item and OAuth/iCloud credentials are still stored unencrypted — so do not claim <em>field-level</em> encryption yet.
+          <br><br>
+          <span class="tag tag-confirmed">confirmed</span> — Render docs: AES-256 at rest + TLS for connections.
+        </td>
+      </tr>
+      <tr>
+        <td><strong>6</strong></td>
+        <td>Backups: where stored, how often, how long kept?</td>
+        <td>
+          We are on the <strong>Render Pro plan</strong>. Backups: <strong>point-in-time recovery covers the past 7 days</strong>; logical backups are retained <strong>7 days after creation</strong> (Render docs).
+          <br><br>
+          So deleted data can survive in backups for up to <strong>7 days</strong> — "deleted within 30 days" is comfortably covered; the precise wording is "removed from backups within 7 days".
+          <br><br>
+          <span class="tag tag-confirmed">confirmed</span> — Render docs: PITR 7 days, logical backups 7 days.
+        </td>
+      </tr>
+      <tr>
+        <td><strong>7</strong></td>
+        <td>Server/app logs: what do they contain and how long are they kept? Can we limit to 30 days?</td>
+        <td>
+          Rails logs to STDOUT at <code>warn</code> level with <code>request_id</code> tags (<code>production.rb</code>) — at that level no health data is deliberately logged. Sentry captures errors (<code>SENTRY_DSN</code>).
+          <br><br>
+          No log-retention setting exists in the repo.
+          <br><br>
+          <span class="tag tag-confirmed">decided</span> — set log retention to <strong>30 days</strong> in Render and Sentry; the Notice can state "technical logs kept 30 days".
+        </td>
+      </tr>
+      <tr>
+        <td><strong>8</strong></td>
+        <td>After account deletion, how long until data is removed from the live database?</td>
+        <td>
+          <strong>Immediately from the live DB</strong>: <code>DELETE /account</code> → <code>@user.destroy!</code> hard-deletes the account row and all associated records (<code>dependent: :destroy</code>).
+          <br><br>
+          Backups are retained for 7 days (Q6), so the precise statement is <strong>"permanently erased within 7 days"</strong>; "within 30 days" is a safe upper bound.
+          <br><br>
+          <span class="tag tag-confirmed">confirmed</span> source: <code>account_controller.rb</code>
+        </td>
+      </tr>
+      <tr>
+        <td><strong>9</strong></td>
+        <td>Planned improvements (end-to-end / field-level encryption, separating account &amp; health data) + timeline?</td>
+        <td>
+          Planned but <strong>not committed yet</strong> — the approach is to gather <strong>user feedback after the Beta</strong> on these options <em>before</em> building them out. The target model (per the data-storage plan) is <strong>local-first</strong>: data stays on the device by default and the person chooses what, if anything, leaves — with three levels:
+          <ul>
+            <li><strong>1 · Local only</strong> — everything stays on the phone, nothing is sent.</li>
+            <li><strong>2 · Pick and choose</strong> — share only selected entries to improve that person's own predictions.</li>
+            <li><strong>3 · All in, anonymised</strong> — share safely for predictions / future AI, never carrying email or name.</li>
+          </ul>
+          Plus field-level / DB encryption (pgcrypto) and Active Record Encryption for OAuth tokens + iCloud credentials — flagged in <code>docs/AUDIT-2026-08-15-SECURITY.md</code> and the backlog as <strong>post-launch</strong>.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>C. Tools and service providers</h2>
+  <table>
+    <thead>
+      <tr><th>No.</th><th>Question</th><th>Drafted answer</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>10</strong></td>
+        <td>Which third-party services run in the app / web app (name, purpose, server location)?</td>
+        <td>
+          From the Gemfile + env (<code>render.yaml</code>):
+          <ul>
+            <li><strong>Resend</strong> — transactional email (confirmation, password reset, reminders, support, feedback forwarding). <em>Sees:</em> recipient email addresses + full email body — reminder summaries include phase/cycle content.</li>
+            <li><strong>Sentry</strong> — crash/error reporting (<code>sentry-ruby</code>/<code>sentry-rails</code>). <em>Sees:</em> error events with <strong>PII enabled</strong> (<code>config.enable_pii = true</code>) — can include IP, email and request params.</li>
+            <li><strong>Google</strong> — Sign in + Google Calendar sync (<code>google-apis-calendar_v3</code>).</li>
+            <li><strong>Facebook</strong> — Sign in (<code>omniauth-facebook</code>).</li>
+            <li><strong>Apple</strong> — Sign in with Apple; iCloud Calendar via CalDAV (<code>icalendar</code> + HTTP Basic).</li>
+            <li><strong>APNs</strong> — iOS push (<code>apnotic</code>); <strong>Web Push</strong> via VAPID keys.</li>
+            <li><strong>Trello</strong> — feedback forwarding by email (<code>TRELLO_EMAIL</code>). <em>Sees:</em> user email + feedback/bug/support text + optional screenshots (which may contain health data).</li>
+            <li><strong>Stripe</strong> — gem present but the subscriptions UI is disabled (not an active processor yet).</li>
+          </ul>
+          <span class="tag tag-confirmed">confirmed</span> — all three (Resend, Sentry, Trello) are in active use; accounts are held under <strong>Season UG</strong>.
+          <br>
+          <span class="tag tag-flag">Shanel to confirm</span> — the server location for each provider (Resend, Sentry, Trello).
+        </td>
+      </tr>
+      <tr>
+        <td><strong>11</strong></td>
+        <td>Do we have data processing agreements (Art. 28 GDPR) with these providers?</td>
+        <td>
+          No DPAs are evidenced in the repo. The GDPR audit lists DPAs with <strong>Render, Resend and Sentry</strong> as outstanding.
+          <br><br>
+          <strong>What this means:</strong> a DPA (data processing agreement, GDPR Art. 28) is the contract that makes a third party legally allowed to process user data on Season's behalf. Most providers (Render, Resend, Sentry, Google, Apple, Meta) already offer a standard DPA you accept or sign in their dashboard — usually free.
+          <br><br>
+          <span class="tag tag-flag">action</span> — sign/accept each provider's DPA before real user data is processed; keep a record of the dates.
+        </td>
+      </tr>
+      <tr>
+        <td><strong>12</strong></td>
+        <td>Any analytics, tracking or advertising SDKs?</td>
+        <td>
+          <strong>None.</strong> No analytics/tracking/advertising SDKs in the Gemfile or JavaScript (verified against the codebase).
+          <br><br>
+          The outdated in-app privacy page (<code>app/views/legal/privacy.html.erb</code>) has been <strong>retired</strong> — it claimed "Usage Data … for analytics", which contradicted "no analytics".
+          <br><br>
+          <span class="tag tag-confirmed">confirmed</span> "none" + <span class="tag tag-confirmed">done</span> privacy page retired.
+        </td>
+      </tr>
+      <tr>
+        <td><strong>13</strong></td>
+        <td>What tester data do we see in App Store Connect / TestFlight and Google Play Console?</td>
+        <td>
+          Console-level and platform-defined: typically <strong>names, emails, device model, crash logs, and any in-TestFlight feedback</strong>.
+          <br><br>
+          <span class="tag tag-confirmed">confirmed</span> — for the "Apple and Google" section.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>D. App features</h2>
+  <table>
+    <thead>
+      <tr><th>No.</th><th>Question</th><th>Drafted answer</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>14</strong></td>
+        <td>Which login methods does the Beta offer?</td>
+        <td>
+          Email + password (Devise), plus <strong>Sign in with Apple, Google and Facebook</strong> (omniauth gems).
+          <br><br>
+          <span class="tag tag-confirmed">confirmed</span> source: <code>config/initializers/devise.rb</code>, Gemfile
+        </td>
+      </tr>
+      <tr>
+        <td><strong>15</strong></td>
+        <td>Can users delete single entries, delete their account, and export data? Where?</td>
+        <td>
+          <ul>
+            <li><strong>Export:</strong> Settings → Account → Download Data (<code>GET /account/export</code>, JSON).</li>
+            <li><strong>Delete account:</strong> Settings → Account → Delete Account (<code>DELETE /account</code>).</li>
+            <li><strong>Single entries:</strong> calendar events can be deleted (full CRUD); daily symptom/cycle logs are <em>edited per date</em> (re-submitted), not individually deleted.</li>
+          </ul>
+          <span class="tag tag-confirmed">confirmed</span> source: <code>account_controller.rb</code>, routes
+        </td>
+      </tr>
+      <tr>
+        <td><strong>16</strong></td>
+        <td>In-app option to withdraw consent to health-data processing?</td>
+        <td>
+          <strong>Yes.</strong> Settings → Data &amp; Privacy (<code>/settings/consent</code>) has per-type checkboxes + Save, backed by <code>ConsentController#destroy</code>.
+          <br><br>
+          The texts can therefore say withdrawal is available <strong>in-app</strong> (and by email) — no need to describe it as email-only.
+          <br><br>
+          <span class="tag tag-confirmed">confirmed</span> source: <code>app/views/settings/consent.html.erb</code>, <code>consent_controller.rb</code>
+        </td>
+      </tr>
+      <tr>
+        <td><strong>17</strong></td>
+        <td>Are consents stored per account with timestamp and text version?</td>
+        <td>
+          <strong>Yes.</strong> Beta funnel: <code>consent_records</code> stores <code>consent_type</code>, <code>granted</code>, <code>doc_version</code>, <code>text_sha256</code>, <code>language</code>, IP, user agent and <code>created_at</code>. Registered users: <code>user_consents</code> with <code>granted_at</code>/<code>revoked_at</code>.
+          <br><br>
+          <span class="tag tag-confirmed">confirmed</span> source: <code>db/schema.rb</code>, <code>consents/recorder.rb</code>
+        </td>
+      </tr>
+      <tr>
+        <td><strong>18</strong></td>
+        <td>Does the web app store anything in the browser (cookies, local storage)? Only for login/settings?</td>
+        <td>
+          Functional only: Rails session cookie, an encrypted 7-day "remember me" cookie, <code>localStorage</code> for UI prefs (holiday country, last login email) and <code>sessionStorage</code> for one-off dismissals (PWA install prompt, no-cycle-data modal).
+          <br><br>
+          No third-party/tracking cookies → <strong>no cookie banner needed</strong>.
+          <br><br>
+          <span class="tag tag-confirmed">confirmed</span> source: <code>app/javascript/controllers/*</code>, <code>authentication.rb</code>
+        </td>
+      </tr>
+      <tr>
+        <td><strong>19</strong></td>
+        <td>Does the app show fertile days, ovulation or a basal temperature curve?</td>
+        <td>
+          Shows cycle phases incl. <strong>ovulation</strong>, cycle predictions, logs <strong>basal body temperature</strong>, has an "ovulation alert" notification and discharge guidance referencing the <em>fertile window</em>. A dedicated "fertility" score card in Forecast is currently <strong>commented out</strong> (not shown).
+          <br><br>
+          ⚠️ Relevant to the medical-device risk — keep the "not for contraception" wording in the texts.
+          <br><br>
+          <span class="tag tag-confirmed">confirmed</span> source: <code>forecast/index.html.erb</code>, <code>settings/notifications.html.erb</code>, <code>symptoms/discharge.html.erb</code>
+        </td>
+      </tr>
+      <tr>
+        <td><strong>20</strong></td>
+        <td>Free-text notes field? Can calendar entries contain names of other people?</td>
+        <td>
+          <strong>Yes to both.</strong> Symptom logs and superpower logs have a free-text <code>notes</code> field; calendar events have <code>title</code>, <code>notes</code> and a <code>guests</code> field (other people's names can be stored).
+          <br><br>
+          <span class="tag tag-confirmed">confirmed</span> source: <code>db/schema.rb</code> (symptom_logs, calendar_events)
+        </td>
+      </tr>
+      <tr>
+        <td><strong>21</strong></td>
+        <td>Under which URL will the web app run, and where are the legal texts linked?</td>
+        <td>
+          Web app: <code>seasonv2.onrender.com</code> (welcome + countdown).
+          <br><br>
+          Beta legal texts: <code>/legal/terms</code> and <code>/legal/privacy</code> (<code>LegalController</code>), linked from the beta funnel; also <code>/terms</code> and <code>/privacy</code> in Settings.
+          <br><br>
+          <span class="tag tag-confirmed">confirmed</span> source: <code>config/routes.rb</code>, <code>render.yaml</code>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Data storage model — today vs planned</h2>
+  <div class="card">
+    <p><strong>Today:</strong> every mood, symptom and cycle day is stored on our server, linked to the account by a user number (not email). It is encrypted at rest by the host (AES-256) but <em>not</em> field-level encrypted — readable by anyone with database access. Consent is a single on/off gate.</p>
+    <p><strong>Planned:</strong> local-first storage where you decide what, if anything, leaves the device — local-only, pick-and-choose, or fully anonymised. A rebuild, not a quick change.</p>
+  </div>
+
+  <h2>Anything else — risks to flag in the drafts</h2>
   <div class="card">
     <ul>
-      <li><strong>Passwords</strong> are stored only as a bcrypt hash (<code>encrypted_password</code> column, Devise). <span class="tag tag-confirmed">confirmed</span></li>
-      <li><strong>Encryption in transit</strong>: TLS is enforced app-wide with HSTS (<code>config.force_ssl = true</code>, <code>config.assume_ssl = true</code>). <span class="tag tag-confirmed">confirmed</span></li>
-      <li><strong>At rest</strong>: the beta disclosure already states entries are <em>"not yet end-to-end encrypted on our server"</em>. The GDPR audit additionally flags <em>database-level encryption not enabled</em> and <em>OAuth tokens stored unencrypted</em> — both affect the "How your data is stored and protected" section. <span class="tag tag-confirm">needs confirmation</span></li>
-      <li><strong>Retention</strong>: <code>DataRetentionJob</code> (runs daily at 2am) deletes cycle/symptom data after 3 years, calendar/superpower entries after 1 year, and consent records after 3 years; account data is deleted within 30 days of account deletion. Combined with the already-decided "technical logs 30 days / feedback up to 12 months after the Beta". <span class="tag tag-confirmed">confirmed</span></li>
-      <li><strong>Additional processors</strong>: email via <strong>Resend</strong>, error tracking via <strong>Sentry</strong> (both in <code>render.yaml</code> env). The GDPR audit notes DPAs with these are <strong>outstanding</strong>. <span class="tag tag-confirm">needs confirmation</span></li>
+      <li><strong>OAuth tokens + iCloud credentials stored unencrypted (field-level)</strong> — plain string columns, no Active Record encryption; a live credential risk. Distinct from at-rest AES-256 (which <em>is</em> active): the values sit in plaintext <em>inside</em> the encrypted-at-rest database. Don't claim field-level encryption.</li>
+      <li><strong>Sentry captures PII</strong> — <code>config.enable_pii = true</code>, so error events can include IP, email and request params (possibly health data). Consider scrubbing before the Beta.</li>
+      <li><strong>Trello receives user data</strong> — feedback forwards the user's email, message text and optional screenshots (screenshots may contain health data). <code>docs/userdata.md</code> already requires never appending health fields.</li>
+      <li><strong>No IP anonymization</strong> (GDPR audit) and <strong>no DPO / DPIA</strong> yet.</li>
+      <li><strong>Stripe</strong> is wired in the Gemfile but not active — do not list it as a live processor.</li>
     </ul>
   </div>
 
   <h2>Needs your input (could not be determined from the code)</h2>
   <div class="callout">
     <ol>
-      <li><strong>Production DB access list</strong> — roles/names and headcount (Q2).</li>
-      <li><strong>Mama Tech Limited's role</strong>, access countries, and whether a DPA/SCC exists (Q3).</li>
-      <li><strong>2FA status</strong> on Render, GitHub, App Store Connect and Google Play Console (Q4).</li>
-      <li><strong>Open GDPR items</strong> that the Privacy Notice must not overclaim: DPAs with Resend/Sentry, DPIA, DPO, and database-at-rest encryption status.</li>
-      <li><strong>Sections B onwards</strong> of the questionnaire were not provided — send them over and I'll draft those answers the same way.</li>
+      <li><strong>Q9</strong> — after the Beta, gather user feedback on the three storage options before committing to a build.</li>
+      <li><strong>Q10</strong> — Shanel to confirm the server locations for Resend, Sentry and Trello.</li>
+      <li><strong>Q11</strong> — sign / accept each provider's DPA (Render, Resend, Sentry, Google, Apple, Meta) and record the dates.</li>
     </ol>
   </div>
 
   <footer><p>Season &mdash; Beta legal Q&amp;A &middot; drafted from codebase · 1 Oct 2026</p></footer>
-</body>
-</html>
