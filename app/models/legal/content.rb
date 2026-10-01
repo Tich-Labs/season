@@ -1,11 +1,18 @@
 # frozen_string_literal: true
 
 # Static legal content loaded from authored HTML files under docs/legal/.
-# We serve authored HTML directly, strip any OPEN markers if present, and expose
-# a stable SHA-256 of the served body. Redcarpet is not used.
+# We serve the <body> of that file, run it through an allowlist sanitizer, and
+# expose a stable SHA-256 of the served body. Redcarpet is not used.
 class Legal::Content
   LANGUAGES = %w[de en].freeze
   TYPES = %w[terms privacy].freeze
+
+  # The authored documents only ever use <p> and <h4> and carry no attributes,
+  # so the allowlist is deliberately minimal. Anything else -- <script>,
+  # <iframe>, event handlers, javascript: URLs -- is dropped rather than
+  # trusted, which means a mistake in an authored file cannot inject code.
+  ALLOWED_TAGS = %w[p h4 ul ol li strong em b i br].freeze
+  ALLOWED_ATTRIBUTES = [].freeze
 
   def self.find(type:, locale:)
     new(type:, locale:)
@@ -37,11 +44,26 @@ class Legal::Content
   # nest an invalid document inside the page layout. The document's own <h1>
   # is dropped too, because the layout already renders `title` as the page
   # heading — keeping both showed the heading twice.
+  # Returns an already-sanitized SafeBuffer, so the view can interpolate it
+  # directly instead of calling raw on it. body_sha256 digests exactly what is
+  # served, so the recorded consent hash still matches the visible copy.
   def body
     doc = Nokogiri::HTML.parse(file_content)
     node = doc.at_css("body")
     fragment = node ? node.inner_html : file_content
-    strip_open_markers(drop_document_title(fragment)).strip
+    cleaned = strip_open_markers(drop_document_title(fragment)).strip
+
+    # The allowlist sanitizer drops a disallowed tag but leaves its inner text,
+    # so a <script> body would end up rendered as visible prose. Remove those
+    # elements outright first, contents included.
+    cleaned = cleaned.gsub(%r{<(script|style|iframe|noscript)\b.*?</\1>}mi, "")
+      .gsub(/<!--.*?-->/m, "")
+
+    ActiveSupport::SafeBuffer.new(
+      Rails::Html::SafeListSanitizer.new.sanitize(
+        cleaned, tags: ALLOWED_TAGS, attributes: ALLOWED_ATTRIBUTES
+      )
+    )
   end
 
   def body_sha256

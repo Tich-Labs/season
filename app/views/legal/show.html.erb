@@ -4,7 +4,8 @@
   <h1 class="beta-h1"><%= @content.title %></h1>
 
   <div class="beta-legal__wrapper">
-    <%= raw @content.body %>
+    <%# body returns an allowlist-sanitized SafeBuffer, so no raw here. %>
+    <%= @content.body %>
   </div>
 
   <div class="beta-legal__full">
