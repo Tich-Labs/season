@@ -1,0 +1,27 @@
+<%= render "beta_onboarding/shared/shell", step: 3 do %>
+  <%= render "beta_onboarding/shared/wordmark" %>
+
+  <h1 class="beta-h1 beta-h1--inline">
+    <span class="beta-check-mark" aria-hidden="true">✓</span>
+    <%= t("beta_onboarding.confirmed.title") %>
+  </h1>
+  <p class="beta-sub"><%= t("beta_onboarding.confirmed.subtitle") %></p>
+
+  <div class="beta-next">
+    <h3 class="beta-next__title"><%= t("beta_onboarding.confirmed.platform.#{@platform.downcase}.title") %></h3>
+    <ol class="beta-next__steps">
+      <% t("beta_onboarding.confirmed.platform.#{@platform.downcase}.steps").each do |step| %>
+        <li><%= step %></li>
+      <% end %>
+    </ol>
+    <% if @platform.casecmp("Web").zero? %>
+      <a class="beta-cta beta-next__cta" href="https://seasonv2.onrender.com/welcome" target="_blank" rel="noopener">
+        <%= t("beta_onboarding.confirmed.open_web") %>
+      </a>
+    <% end %>
+  </div>
+
+  <p class="beta-hint">
+    <%= t("beta_onboarding.confirmed.help") %> shanel@season.vision
+  </p>
+<% end %>

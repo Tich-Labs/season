@@ -1,0 +1,4 @@
+<div class="beta-lang" role="group" aria-label="<%= t("beta_onboarding.language.label") %>">
+  <%= link_to "DE", beta_switch_locale_path("de"), class: "beta-lang__btn", "aria-pressed": (I18n.locale.to_s == "de").to_s %>
+  <%= link_to "EN", beta_switch_locale_path("en"), class: "beta-lang__btn", "aria-pressed": (I18n.locale.to_s == "en").to_s %>
+</div>

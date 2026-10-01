@@ -1,0 +1,25 @@
+<%= form_with url: form_action, method: :post, local: true, scope: :consent, class: "beta-form", data: { controller: "consent-gate" } do |f| %>
+  <label class="beta-check">
+    <%= f.check_box :health_consent, { checked: health_consent, class: "beta-check__input", data: { consent_gate_target: "required" } }, "1", "0" %>
+    <span class="beta-check__body">
+      <b class="beta-check__label"><%= t("beta_onboarding.consent.required") %></b>
+      <span class="beta-check__text">
+        <%= t("beta_onboarding.consent.health") %>
+        <%= link_to t("beta_onboarding.consent.privacy_notice"), legal_path(type: "privacy", locale: params[:locale], from: "consent"), class: "beta-link" %>.
+      </span>
+    </span>
+  </label>
+
+  <label class="beta-check">
+    <%= f.check_box :survey_opt_in, { checked: survey_opt_in, class: "beta-check__input" }, "1", "0" %>
+    <span class="beta-check__body">
+      <b class="beta-check__label"><%= t("beta_onboarding.consent.optional") %></b>
+      <span class="beta-check__text"><%= t("beta_onboarding.consent.survey") %></span>
+    </span>
+  </label>
+
+  <%= f.submit t("beta_onboarding.consent.accept"),
+      class: "beta-cta",
+      data: { consent_gate_target: "submit" },
+      disabled: !health_consent %>
+<% end %>

@@ -4,6 +4,11 @@ class BetaTester < ApplicationRecord
 
   enum :status, {registered: "registered", invited: "invited", active: "active", completed: "completed"}
 
+  # The consent ledger is append-only while the tester exists, but a tester can
+  # still be erased entirely, which is what the beta disclosure promises. The
+  # foreign key on consent_records.beta_tester_id otherwise blocks deletion.
+  has_many :consent_records, dependent: :destroy
+
   before_validation :normalize_email
 
   validates :name, presence: true

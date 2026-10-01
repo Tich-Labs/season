@@ -72,4 +72,11 @@ class ApplicationController < ActionController::Base
     end
     nil
   end
+
+  # Keeps the beta funnel and the legal pages out of search indexes. Set as a
+  # response header rather than only a meta tag so crawlers that never render
+  # the page still see it.
+  def set_noindex
+    response.headers["X-Robots-Tag"] = "noindex, nofollow"
+  end
 end

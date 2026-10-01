@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_30_090100) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_30_230000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -85,6 +85,25 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_30_090100) do
     t.index ["icloud_event_id"], name: "index_calendar_events_on_icloud_event_id"
     t.index ["user_id", "date"], name: "index_calendar_events_on_user_id_and_date"
     t.index ["user_id"], name: "index_calendar_events_on_user_id"
+  end
+
+  create_table "consent_records", force: :cascade do |t|
+    t.bigint "beta_tester_id", null: false
+    t.string "consent_type", null: false
+    t.datetime "created_at", null: false
+    t.string "doc_version", null: false
+    t.boolean "granted", null: false
+    t.string "ip_address"
+    t.string "language", null: false
+    t.string "text_sha256", limit: 64, null: false
+    t.string "user_agent"
+    t.bigint "user_id"
+    t.index ["beta_tester_id", "consent_type", "created_at"], name: "index_consent_records_on_subject_and_type"
+    t.index ["beta_tester_id"], name: "index_consent_records_on_beta_tester_id"
+    t.index ["user_id"], name: "index_consent_records_on_user_id"
+    t.check_constraint "char_length(text_sha256::text) = 64", name: "consent_records_sha_length_check"
+    t.check_constraint "consent_type::text = ANY (ARRAY['terms'::character varying, 'age_18'::character varying, 'health_data'::character varying, 'survey_contact'::character varying]::text[])", name: "consent_records_consent_type_check"
+    t.check_constraint "language::text = ANY (ARRAY['de'::character varying, 'en'::character varying]::text[])", name: "consent_records_language_check"
   end
 
   create_table "cycle_day_contents", force: :cascade do |t|
@@ -395,6 +414,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_30_090100) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "calendar_events", "users"
+  add_foreign_key "consent_records", "beta_testers"
+  add_foreign_key "consent_records", "users"
   add_foreign_key "cycle_entries", "users"
   add_foreign_key "feedbacks", "users"
   add_foreign_key "feedbacks", "users", column: "archived_by_id", on_delete: :nullify

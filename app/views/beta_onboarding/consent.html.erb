@@ -1,0 +1,22 @@
+<%= render "beta_onboarding/shared/shell", step: 1 do %>
+  <%= render "beta_onboarding/shared/wordmark" %>
+
+  <p class="beta-eyebrow"><%= t("beta_onboarding.eyebrow_beta") %></p>
+  <h1 class="beta-h1"><%= t("beta_onboarding.before_you_start.title") %></h1>
+  <p class="beta-sub"><%= t("beta_onboarding.before_you_start.subtitle") %></p>
+
+  <ul class="beta-points">
+    <% t("beta_onboarding.before_you_start.points").each do |point| %>
+      <li class="beta-points__item">
+        <%= image_tag "#{point[:icon]}.svg", alt: "", class: "beta-points__icon",
+            width: 20, height: 20 %>
+        <span class="beta-points__text"><%= point[:text] %></span>
+      </li>
+    <% end %>
+  </ul>
+
+  <%= render "beta_onboarding/consent/health_consent_form",
+      form_action: beta_consent_path(locale: params[:locale]),
+      health_consent: @health_consent,
+      survey_opt_in: @survey_opt_in %>
+<% end %>

@@ -1,0 +1,15 @@
+<div class="beta-shell">
+  <%= render "beta_onboarding/shared/language_toggle" %>
+
+  <% if step.present? %>
+    <div class="beta-steps" aria-hidden="true">
+      <i class="<%= "on" if step >= 1 %>"></i>
+      <i class="<%= "on" if step >= 2 %>"></i>
+      <i class="<%= "on" if step >= 3 %>"></i>
+    </div>
+  <% end %>
+
+  <div class="beta-solo">
+    <%= yield %>
+  </div>
+</div>

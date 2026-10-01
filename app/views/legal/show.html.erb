@@ -1,0 +1,23 @@
+<%= render "beta_onboarding/shared/shell", step: nil do %>
+  <%= render "beta_onboarding/shared/wordmark" %>
+
+  <h1 class="beta-h1"><%= @content.title %></h1>
+
+  <div class="beta-legal__wrapper">
+    <%= raw @content.body %>
+  </div>
+
+  <div class="beta-legal__full">
+    <%# Placeholder for the canonical document URL, which is not supplied yet.
+        Rendered as a non-navigable slot rather than a link to nowhere. %>
+    <span class="beta-link beta-link--pending" data-legal-full-slot="<%= @content.type %>">
+      <%= t("legal.full_text.read_full") %>
+    </span>
+  </div>
+
+  <div class="beta-legal__back">
+    <%# Returns to the step this document was opened from, so the person does
+        not lose what they already typed on the registration screen. %>
+    <%= link_to t("legal.full_text.back_to_flow"), @return_url, class: "beta-link" %>
+  </div>
+<% end %>

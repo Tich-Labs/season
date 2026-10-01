@@ -481,3 +481,205 @@
 .toggle-btn:disabled.active .toggle-track {
   background: #999;
 }
+
+/* ── Beta onboarding funnel (scoped: /beta + legal pages only) ───────────── */
+.beta-root {
+  --beta-bg: #FAF6F3;
+  --beta-left: #F4ECE6;
+  --beta-right: #EBDFD4;
+  --beta-card: #ffffff;
+  --beta-brand: #933A33;
+  --beta-brand-d: #7a2e28;
+  --beta-text: #5e5048;
+  --beta-muted: #8d7f77;
+  --beta-line: #dccfc5;
+  --beta-soft: #F7F1EC;
+
+  margin: 0;
+  background: var(--beta-bg);
+  font-family: Montserrat, system-ui, sans-serif;
+  color: var(--beta-text);
+  font-size: 14px;
+  line-height: 1.55;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 14px;
+  padding: 56px 20px 20px;
+  padding-top: calc(56px + env(safe-area-inset-top, 0px));
+  padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+}
+
+@media (prefers-color-scheme: dark) {
+  .beta-root:not([data-theme="light"]) {
+    --beta-bg: #1d1716;
+    --beta-left: #2a2120;
+    --beta-right: #332826;
+    --beta-card: #3a2f2d;
+    --beta-brand: #d98a80;
+    --beta-brand-d: #e8a59c;
+    --beta-text: #e3d6cf;
+    --beta-muted: #b3a39a;
+    --beta-line: #55463f;
+    --beta-soft: #2f2523;
+  }
+
+  /* The Season icon set ships strokes hardcoded to #292D32, which disappears
+     on the dark card. Invert so the same brand icons stay legible. */
+  .beta-root:not([data-theme="light"]) .beta-points__icon {
+    filter: invert(1);
+  }
+
+  /* Both brand marks ship as dark red (#933A33 / #884039) on a transparent
+     background, which is 2.4:1 on the dark card — effectively invisible. Logos
+     are exempt from the 3:1 non-text floor, but not from being findable, so
+     invert the whole lockup the same way the icon set is handled. */
+  .beta-root:not([data-theme="light"]) .beta-logo-stack {
+    filter: invert(1);
+  }
+}
+
+.beta-shell { display: contents; }
+
+.beta-lang {
+  position: fixed;
+  top: calc(14px + env(safe-area-inset-top, 0px));
+  right: 16px;
+  z-index: 10;
+  display: flex;
+  background: var(--beta-card);
+  border: 1px solid var(--beta-line);
+  border-radius: 99px;
+  padding: 2px;
+}
+.beta-lang__btn {
+  border: 0; background: none; padding: 4px 11px; border-radius: 99px;
+  font-size: 11px; font-weight: 600; color: var(--beta-muted); cursor: pointer;
+  text-decoration: none; user-select: none;
+}
+.beta-lang__btn[aria-pressed="true"] { background: var(--beta-brand); color: #fff; }
+
+.beta-steps { display: flex; gap: 6px; width: 100%; max-width: 560px; }
+.beta-steps i { height: 4px; flex: 1; border-radius: 4px; background: var(--beta-line); }
+.beta-steps i.on { background: var(--beta-brand); }
+
+.beta-solo {
+  max-width: 560px; width: 100%;
+  background: var(--beta-left);
+  border-radius: 28px;
+  padding: 32px 36px 30px;
+  box-shadow: 0 2px 0 var(--beta-line);
+}
+
+/* Stacked brand lockup. `flex-1` lets the wrapper take the leftover height and
+   centre the two marks, so no bottom margin is needed here — the 14px gap on
+   .beta-root already separates it from the content below. */
+.beta-logo-stack { gap: 0; }
+
+.beta-eyebrow {
+  font-size: 10px; letter-spacing: .14em; text-transform: uppercase;
+  color: #b9736b; font-weight: 500;
+}
+.beta-h1 {
+  color: var(--beta-brand); font-size: 26px; line-height: 1.25;
+  margin: 2px 0 6px; font-weight: 700;
+}
+.beta-sub { font-size: 12.5px; color: var(--beta-muted); margin: 0 0 18px; }
+
+.beta-points { list-style: none; padding: 0; margin: 12px 0 4px; display: grid; gap: 9px; }
+.beta-points__item {
+  display: flex; gap: 11px;
+  background: var(--beta-card); border-radius: 12px;
+  padding: 11px 13px; font-size: 12.5px;
+}
+.beta-points__icon {
+  flex: none;
+  width: 20px; height: 20px;
+  margin-top: 1px;
+}
+.beta-points__text { flex: 1; }
+
+.beta-check {
+  display: flex; gap: 11px; align-items: flex-start;
+  background: var(--beta-soft); border-radius: 12px;
+  padding: 12px 14px; margin-top: 12px; font-size: 12px; cursor: pointer;
+}
+.beta-check__input {
+  appearance: none; -webkit-appearance: none;
+  flex: none; width: 20px; height: 20px;
+  border: 1.5px solid var(--beta-muted); border-radius: 5px;
+  background: var(--beta-card); margin: 1px 0 0; cursor: pointer;
+  display: grid; place-content: center;
+}
+.beta-check__input:checked { background: var(--beta-brand); border-color: var(--beta-brand); }
+.beta-check__input:checked::after { content: "✓"; color: #fff; font-size: 13px; font-weight: 700; }
+.beta-check__label {
+  display: block; color: var(--beta-brand);
+  font-size: 10px; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 2px;
+}
+.beta-check__body { flex: 1; }
+
+.beta-link { color: var(--beta-brand); text-decoration: underline; }
+
+.beta-field-label {
+  display: block; font-size: 11px; font-weight: 600;
+  color: var(--beta-brand); margin: 14px 0 6px;
+}
+.beta-input {
+  width: 100%; padding: 12px 14px;
+  border: 1px solid var(--beta-line); border-radius: 12px;
+  background: var(--beta-card);
+  font-family: Montserrat, system-ui, sans-serif;
+  font-size: 16px; color: var(--beta-text);
+}
+.beta-input:focus-visible, .beta-cta:focus-visible { outline: 2px solid var(--beta-brand); outline-offset: 2px; }
+
+.beta-seg { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.beta-seg__btn {
+  padding: 14px 6px; border: 1px solid var(--beta-line); border-radius: 12px;
+  background: var(--beta-card);
+  font-family: Montserrat, system-ui, sans-serif; font-size: 12px; font-weight: 500;
+  color: var(--beta-text); cursor: pointer; user-select: none;
+}
+.beta-seg__btn[aria-pressed="true"] { border: 2px solid var(--beta-brand); color: var(--beta-brand); font-weight: 700; }
+
+.beta-cta {
+  width: 100%; margin-top: 18px; padding: 14px;
+  border: 0; border-radius: 12px;
+  background: var(--beta-brand); color: #fff;
+  font-family: Montserrat, system-ui, sans-serif; font-size: 16px; font-weight: 700;
+  cursor: pointer; text-align: center; text-decoration: none;
+}
+.beta-cta:hover:not(:disabled) { background: var(--beta-brand-d); }
+.beta-cta:disabled { opacity: .4; cursor: not-allowed; }
+
+.beta-hint { font-size: 11px; color: var(--beta-muted); text-align: center; margin-top: 8px; min-height: 16px; }
+.beta-alert { background: var(--beta-card); border-radius: 12px; padding: 12px 14px; font-size: 12px; color: var(--beta-brand); }
+
+.beta-next { background: var(--beta-card); border-radius: 16px; padding: 16px 18px; }
+.beta-next__title { margin: 0 0 10px; color: var(--beta-brand); font-size: 14px; }
+.beta-next__steps { margin: 0; padding-left: 20px; display: grid; gap: 8px; font-size: 12.5px; }
+.beta-next__cta { display: block; margin-top: 14px; width: auto; }
+.beta-check-mark { font-size: 38px; margin-bottom: 4px; }
+/* Confirmation: the tick and the message read as one line, so the tick drops
+   into the heading and inherits its size, weight and brand colour rather than
+   floating above it at 38px. */
+.beta-h1--inline { font-size: 17px; display: flex; align-items: center; gap: 7px; }
+.beta-h1--inline .beta-check-mark { font-size: 1em; margin-bottom: 0; }
+
+.beta-legal__wrapper { font-size: 12.5px; }
+.beta-legal__wrapper h1 { font-size: 20px; color: var(--beta-brand); margin: 0 0 12px; }
+.beta-legal__wrapper h4 { margin: 14px 0 2px; color: var(--beta-brand); font-size: 12.5px; }
+.beta-legal__wrapper p { margin: 0; }
+/* Placeholder for the full-document link. Dashed and muted so it reads as an
+   unbuilt slot, not a working link. */
+.beta-link--pending {
+  color: var(--beta-muted);
+  text-decoration: underline dashed;
+  text-underline-offset: 3px;
+  cursor: default;
+}
+.beta-legal__full { margin-top: 16px; }
+.beta-legal__back { margin-top: 18px; }

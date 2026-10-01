@@ -275,12 +275,25 @@ Rails.application.routes.draw do
 
   # Beta tester recruitment — deliberately unlinked from the app navigation
   # and noindex, shared by direct link only.
-  get "/beta", to: "beta_testers#new", as: :beta
-  post "/beta", to: "beta_testers#create"
+  #
+  # Three-screen funnel: consent -> registration -> confirmation. The legacy
+  # POST /beta path is intentionally gone: every registration now has to pass
+  # through the consent ledger.
+  get "/beta", to: "beta_onboarding#consent", as: :beta
+  get "/beta/register", to: "beta_onboarding#register", as: :beta_register
+  # The consent form posts back to /beta, so the POST target doubles as the
+  # consent submission endpoint.
+  post "/beta", to: "beta_onboarding#create_consent", as: :beta_consent
+  post "/beta/register", to: "beta_onboarding#create_register"
+  get "/beta/confirmed", to: "beta_onboarding#confirmed", as: :beta_confirmed
 
-  # Legal pages (to be built)
-  get "/terms", to: "legal#terms", as: :terms
-  get "/privacy", to: "legal#privacy", as: :privacy
+  # Legal pages
+  get "/legal/:type", to: "legal#show", as: :legal, constraints: {type: /terms|privacy/}
+
+  # Keep the pre-existing helper names working for in-app consent links
+  # (settings/consent, registrations/new, legal/terms).
+  get "/terms", to: "legal#show", defaults: {type: "terms"}, as: :terms
+  get "/privacy", to: "legal#show", defaults: {type: "privacy"}, as: :privacy
 
   # Ruby Native iOS configuration endpoint
   get "/configurations/ios_v1", to: "configurations#ios_v1", defaults: {format: :json}

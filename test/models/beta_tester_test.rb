@@ -93,4 +93,18 @@ class BetaTesterTest < ActiveSupport::TestCase
     assert_equal 2, BetaTester.with_status("").count
     assert_equal 2, BetaTester.search(nil).count
   end
+
+  # The beta disclosure promises testers can delete their data, but the
+  # consent_records foreign key would otherwise raise and block deletion.
+  test "a tester with consent records can still be destroyed" do
+    tester = BetaTester.create!(name: "D", email: "gone@example.com", platform: "web", beta_consent: true)
+    ConsentRecord.create!(
+      beta_tester: tester, consent_type: "terms", granted: true,
+      doc_version: "1.0", language: "en", text_sha256: "a" * 64
+    )
+
+    assert_difference -> { ConsentRecord.count }, -1 do
+      tester.destroy!
+    end
+  end
 end

@@ -1,0 +1,79 @@
+<%= render "beta_onboarding/shared/shell", step: 2 do %>
+  <%= render "beta_onboarding/shared/wordmark" %>
+
+  <h1 class="beta-h1"><%= t("beta_onboarding.register.title") %></h1>
+  <p class="beta-sub"><%= t("beta_onboarding.register.subtitle") %></p>
+
+  <% if flash[:alert].present? %>
+    <div class="beta-alert"><%= flash[:alert] %></div>
+  <% end %>
+
+  <% if @form&.errors&.any? %>
+    <div class="beta-alert">
+      <ul class="beta-alert__list">
+        <% @form.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= form_with model: @form, scope: :beta_tester, url: beta_register_path(locale: params[:locale]), method: :post, local: true,
+      class: "beta-form",
+      data: { controller: "registration-gate" } do |f| %>
+
+    <label class="beta-field-label" for="beta_tester_name"><%= t("beta_onboarding.register.name") %></label>
+    <%= f.text_field :name, id: "beta_tester_name", class: "beta-input",
+        placeholder: t("beta_onboarding.register.name_placeholder"),
+        autocomplete: "name",
+        data: { registration_gate_target: "name" } %>
+
+    <label class="beta-field-label" for="beta_tester_email"><%= t("beta_onboarding.register.email") %></label>
+    <%= f.email_field :email, id: "beta_tester_email", class: "beta-input",
+        autocomplete: "email",
+        placeholder: "you@example.com",
+        data: { registration_gate_target: "email" } %>
+
+    <label class="beta-field-label"><%= t("beta_onboarding.register.device") %></label>
+    <div class="beta-seg" data-registration-gate-target="devices">
+      <% beta_platform_options.each do |opt| %>
+        <button type="button"
+                class="beta-seg__btn"
+                data-registration-gate-target="device"
+                data-action="click->registration-gate#selectDevice"
+                data-value="<%= opt[:value] %>"
+                aria-pressed="<%= @form&.platform.to_s.casecmp(opt[:value]).zero? %>">
+          <%= opt[:label] %>
+        </button>
+      <% end %>
+    </div>
+    <%= f.hidden_field :platform, value: @form&.platform,
+        data: { registration_gate_target: "platform" } %>
+
+    <label class="beta-check">
+      <input type="checkbox" name="beta_tester[terms_accepted]" value="1"
+             id="beta_tester_terms_accepted"
+             class="beta-check__input"
+             <%= "checked" if @form&.terms_accepted? %>
+             data-registration-gate-target="terms">
+      <span class="beta-check__body">
+        <span class="beta-check__text">
+          <%= t("beta_onboarding.register.terms.accept_age_prefix") %>
+          <%= link_to t("beta_onboarding.register.terms.terms_link"),
+              legal_path(type: "terms", locale: params[:locale], from: "register"), class: "beta-link" %>
+          <%= t("beta_onboarding.register.terms.accept_age_suffix") %>
+          <%= link_to t("beta_onboarding.register.terms.privacy_link"),
+              legal_path(type: "privacy", locale: params[:locale], from: "register"), class: "beta-link" %>.
+        </span>
+      </span>
+    </label>
+
+    <%= f.submit t("beta_onboarding.register.submit"),
+        class: "beta-cta",
+        data: { registration_gate_target: "submit" },
+        disabled: true %>
+
+    <p class="beta-hint" data-registration-gate-target="hint"
+        data-hint="<%= t("beta_onboarding.register.hint") %>"><%= t("beta_onboarding.register.hint") %></p>
+  <% end %>
+<% end %>

@@ -1,4 +1,74 @@
 de:
+
+  beta_onboarding:
+    eyebrow_beta: "BETA"
+    language:
+      label: "Sprache"
+    before_you_start:
+      title: "Bevor du startest"
+      subtitle: "Season ist eine Beta. Bitte lies kurz, worauf du dich einlässt:"
+      points:
+        - icon: "icons/vuesax/linear/info-circle"
+          text: "Season ist kein Medizinprodukt und nicht zur Verhütung geeignet."
+        - icon: "icons/vuesax/linear/shield-tick"
+          text: "Deine Einträge nutzen wir nur, damit die App für dich funktioniert. Kein Verkauf, keine Werbung, kein KI-Training."
+        - icon: "icons/vuesax/linear/lock"
+          text: "In der Beta sind deine Einträge auf unserem Server noch nicht Ende-zu-Ende-verschlüsselt."
+        - icon: "icons/vuesax/linear/trash"
+          text: "Du kannst jederzeit aussteigen und dein Konto löschen."
+    consent:
+      required: "Erforderlich"
+      optional: "Optional"
+      health: "Ich willige ausdrücklich ein, dass die Season UG (haftungsbeschränkt) meine Zyklus- und Gesundheitsdaten (z.B. Periode, Ausfluss, Stimmung, Symptome, Schlaf, Temperatur) verarbeitet, um mir die Funktionen der App bereitzustellen (Art. 9 Abs. 2 lit. a DSGVO). Ich kann diese Einwilligung jederzeit per E-Mail an shanel@season.vision widerrufen. Mehr in den"
+      privacy_notice: "Datenschutzhinweisen"
+      survey: "Ihr dürft mich per E-Mail zu Umfragen und Interviews rund um die Beta einladen. Das kann ich jederzeit abbestellen."
+      accept: "Zustimmen und loslegen"
+    register:
+      title: "Beta-Tester:in werden"
+      subtitle: "Registriere dich für den Beta-Zugang zur Season App und gestalte die nächste Version mit."
+      name: "Name"
+      name_placeholder: "Dein vollständiger Name"
+      email: "E-Mail"
+      device: "Welches Gerät nutzt du für Season?"
+      terms:
+        accept_age_prefix: "Ich bin mindestens 18 Jahre alt und akzeptiere die"
+        terms_link: "Teilnahmebedingungen"
+        accept_age_suffix: "der Season Beta. Ich habe die"
+        privacy_link: "Datenschutzhinweise"
+      submit: "Los geht's"
+      hint: "Bitte alle Felder ausfüllen und zustimmen."
+      errors:
+        invalid: "Bitte alle Felder ausfüllen und zustimmen."
+    confirmed:
+      title: "Danke, deine Angaben sind angekommen"
+      subtitle: "Wir prüfen deine Anmeldung und schicken dir den Zugang zur Beta per E-Mail. Hier siehst du schon, wie es für dein Gerät weitergeht."
+      open_web: "Web-App öffnen"
+      help: "Fragen?"
+      platform:
+        ios:
+          title: "So startest du auf Apple iOS"
+          steps:
+            - "Wir schicken dir eine Einladung per E-Mail."
+            - "Installiere die kostenlose App TestFlight aus dem App Store."
+            - "Öffne den Link in der E-Mail, tippe auf „Annehmen“ und dann auf „Installieren“."
+        android:
+          title: "So startest du auf Android"
+          steps:
+            - "Wir schicken dir per E-Mail einen Link zum Google-Play-Testprogramm."
+            - "Öffne den Link mit dem Google-Konto, das du auf deinem Handy nutzt."
+            - "Tippe auf „Tester:in werden“ und installiere Season aus dem Play Store."
+        web:
+          title: "So startest du im Browser"
+          steps:
+            - "Wir schicken dir den Link auch per E-Mail."
+            - "Öffne die Web-App und erstelle dein Konto."
+            - "Mit demselben Konto kannst du später aufs Handy wechseln."
+
+  legal:
+    full_text:
+      read_full: "Vollständige Version lesen"
+      back_to_flow: "← Zurück"
+
   date:
     # Sunday-first, matching JS Date#getDay(). German's standard 2-letter
     # abbreviations (So/Mo/Di/Mi/Do/Fr/Sa) are already unambiguous — unlike

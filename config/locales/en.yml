@@ -1,4 +1,74 @@
 en:
+
+  beta_onboarding:
+    eyebrow_beta: "BETA"
+    language:
+      label: "Language"
+    before_you_start:
+      title: "Before you start"
+      subtitle: "Season is in beta. Please take a moment to read what you are signing up for:"
+      points:
+        - icon: "icons/vuesax/linear/info-circle"
+          text: "Season is not a medical device and is not suitable for contraception."
+        - icon: "icons/vuesax/linear/shield-tick"
+          text: "We only use your entries to make the app work for you. No selling, no advertising, no AI training."
+        - icon: "icons/vuesax/linear/lock"
+          text: "During the Beta, your entries are not yet end-to-end encrypted on our server."
+        - icon: "icons/vuesax/linear/trash"
+          text: "You can leave and delete your account at any time."
+    consent:
+      required: "Required"
+      optional: "Optional"
+      health: "I explicitly consent to Season UG (haftungsbeschränkt) processing my cycle and health data (e.g. period, discharge, mood, symptoms, sleep, temperature) to provide me with the app's features (Art. 9(2)(a) GDPR). I can withdraw this consent at any time by email to shanel@season.vision. More in the"
+      privacy_notice: "Privacy Notice"
+      survey: "You may invite me by email to surveys and interviews about the Beta. I can unsubscribe at any time."
+      accept: "Accept and get started"
+    register:
+      title: "Become a beta tester"
+      subtitle: "Register for beta access to the Season app and help us shape the next version of Season."
+      name: "Name"
+      name_placeholder: "Your full name"
+      email: "Email"
+      device: "Which device will you use to test Season?"
+      terms:
+        accept_age_prefix: "I am at least 18 years old and accept the Season Beta"
+        terms_link: "Terms of Participation"
+        accept_age_suffix: ". I have read the"
+        privacy_link: "Privacy Notice"
+      submit: "Let's go"
+      hint: "Please fill in all fields and accept."
+      errors:
+        invalid: "Please fill in all fields and accept."
+    confirmed:
+      title: "Thanks, your details have been submitted"
+      subtitle: "We will review your registration and email you your beta access. Here is what happens next for your device."
+      open_web: "Open the web app"
+      help: "Questions?"
+      platform:
+        ios:
+          title: "Getting started on Apple iOS"
+          steps:
+            - "We will email you an invitation."
+            - "Install the free TestFlight app from the App Store."
+            - "Open the link in the email, tap Accept, then Install."
+        android:
+          title: "Getting started on Android"
+          steps:
+            - "We will email you a link to the Google Play testing program."
+            - "Open the link with the Google account you use on your phone."
+            - "Tap Become a tester, then install Season from the Play Store."
+        web:
+          title: "Getting started in your browser"
+          steps:
+            - "We will also email you the link."
+            - "Open the web app and create your account."
+            - "You can switch to your phone later with the same account."
+
+  legal:
+    full_text:
+      read_full: "Read full version"
+      back_to_flow: "← Back"
+
   date:
     # Sunday-first, matching JS Date#getDay() — used to build the
     # appointment date/time picker's weekday abbreviations locale-aware

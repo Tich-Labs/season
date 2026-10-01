@@ -11,6 +11,8 @@ linters:
       - 'app/views/shared/_settings_nav_row.html.erb'
       - 'app/views/shared/_settings_toggle_row.html.erb'
       - 'app/views/calendar/appointments.html.erb'
+      # Authored legal HTML read from docs/legal/*.html, not user input.
+      - 'app/views/legal/show.html.erb'
   Rubocop:
     enabled: false
     rubocop_config:
