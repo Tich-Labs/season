@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Beta Legal Q&amp;A — Tech &amp; Data Protection</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.65; color: #333; max-width: 880px; margin: 0 auto; padding: 2rem; background: #FAF7F4; }
+    h1 { color: #933a35; margin-bottom: 0.35rem; font-size: 1.9rem; line-height: 1.25; }
+    h2 { color: #933a35; margin: 2rem 0 0.75rem; font-size: 1.25rem; }
+    .subtitle { color: #6B6B6B; margin-bottom: 0.5rem; font-size: 1.05rem; }
+    .meta { color: #999; font-size: 0.85rem; margin-bottom: 1.5rem; }
+    .back { display: inline-block; margin-bottom: 1.25rem; color: #933a35; font-size: 0.9rem; text-decoration: none; }
+    .back:hover { text-decoration: underline; }
+
+    .card { background: white; border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .card h3 { color: #933a35; font-size: 1.02rem; margin-bottom: 0.5rem; }
+    .card p { margin-bottom: 0.5rem; font-size: 0.95rem; }
+    .card ul, .card ol { margin: 0.25rem 0 0.5rem 1.25rem; font-size: 0.95rem; }
+    .card li { margin-bottom: 0.3rem; }
+    .card code { background: #EDE1D5; color: #933a35; padding: 0.1rem 0.4rem; border-radius: 4px; font-size: 0.85rem; }
+
+    .tag { display: inline-block; padding: 0.15rem 0.55rem; border-radius: 999px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.02em; vertical-align: middle; }
+    .tag-confirmed { background: #e7f4e7; color: #2e7d32; }
+    .tag-confirm { background: #fff3cd; color: #8a6d00; }
+    .tag-flag { background: #FDF0EE; color: #933a35; }
+
+    .callout { background: #fff8e6; border-left: 4px solid #e0a800; border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1rem; font-size: 0.95rem; }
+    .callout strong { color: #8a6d00; }
+
+    table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 1rem; }
+    th, td { text-align: left; padding: 0.75rem 1rem; font-size: 0.9rem; vertical-align: top; border-bottom: 1px solid #f0e8df; }
+    th { background: #EDE1D5; color: #933a35; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; }
+    tr:last-child td { border-bottom: none; }
+    td code { background: #EDE1D5; color: #933a35; padding: 0.1rem 0.35rem; border-radius: 4px; font-size: 0.8rem; }
+
+    footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid #EDE1D5; text-align: center; color: #6B6B6B; font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+  <a class="back" href="index.html">&larr; Back to docs</a>
+  <h1>Season Big Beta — Tech &amp; Data Protection Q&amp;A</h1>
+  <p class="subtitle">Responses drafted for Shanel's "Questions for Naijeria" — input for the Beta Terms of Participation and Beta Privacy Notice</p>
+  <p class="meta">Drafted from the codebase and internal docs · 1 October 2026</p>
+
+  <div class="callout">
+    <strong>How to read this page.</strong> Each answer is marked
+    <span class="tag tag-confirmed">confirmed</span> (fact pulled directly from the repo) or
+    <span class="tag tag-confirm">needs confirmation</span> (operational / organisational, not determinable from code).
+    Anything we could <em>not</em> determine is listed under "Needs your input" at the bottom.
+  </div>
+
+  <h2>A. Hosting and access</h2>
+
+  <table>
+    <thead>
+      <tr><th>No.</th><th>Question</th><th>Drafted answer</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>1</strong></td>
+        <td>Which hosting provider and database do we use for the Beta, and in which server region is the data stored?</td>
+        <td>
+          <strong>Hosting:</strong> Render (render.com) — platform-as-a-service. App runs at <code>seasonv2.onrender.com</code>.
+          <br><br>
+          <strong>Database:</strong> PostgreSQL (Render-managed), database <code>season</code>, user <code>season</code>, free plan. Rails is configured for PostgreSQL only (<code>config/database.yml</code>, adapter <code>postgresql</code>).
+          <br><br>
+          <strong>Region:</strong> <strong>Frankfurt (EU Central)</strong> for both the web service and the database — data is stored <strong>inside the EU</strong>, so no additional transfer safeguards (Standard Contractual Clauses) are needed for the hosting location itself.
+          <br><br>
+          <span class="tag tag-confirmed">confirmed</span> source: Render dashboard (service + database region) · <code>render.yaml</code>, <code>config/database.yml</code>
+        </td>
+      </tr>
+      <tr>
+        <td><strong>2</strong></td>
+        <td>Who has access to the production database? Please list roles (or names) and the number of people.</td>
+        <td>
+          The codebase defines an <em>application</em> admin role (<code>User#admin?</code>, routes under <code>/admin/*</code>, separate <code>/admin/login</code>), but <strong>production database access is not enumerable from the repo</strong> — it is granted via the Render Postgres connection string (<code>DATABASE_URL</code> env var) and the Render dashboard.
+          <br><br>
+          <strong>Known so far:</strong> the Render account is under <strong>Season UG</strong>; admin access via <code>naijeria@season.vision</code> (role: Admin).
+          <br><br>
+          <span class="tag tag-flag">needs your input</span> — confirm whether that is the only account, and the full list of roles/names + count of people with DB access.
+        </td>
+      </tr>
+      <tr>
+        <td><strong>3</strong></td>
+        <td>From which countries is the database accessed, and through which company (Seung UG directly or Mama Tech Limited)?</td>
+        <td>
+          The contracting party named throughout the legal texts is <strong>Season UG (haftungsbeschränkt)</strong> — a German entity (the question's "Seung UG" appears to be a typo for this). Consent copy also references Season UG as the data controller.
+          <br><br>
+          <strong>Confirmed:</strong> the Render account is under <strong>Season UG</strong> — not Mama Tech Limited — so the hosting and database sit with the German entity.
+          <br><br>
+          <strong>"Mama Tech Limited" does not appear anywhere in the codebase or docs.</strong> If Mama Tech Limited (Kenya) operates or accesses the production environment, access from Kenya is a transfer <strong>outside the EU</strong> and requires EU Standard Contractual Clauses between Season UG and Mama Tech Limited.
+          <br><br>
+          <span class="tag tag-confirmed">confirmed</span> source: <code>docs/legal/terms.en.html</code>, <code>app/services/consents/recorder.rb</code> + account info
+          <br>
+          <span class="tag tag-flag">needs your input</span> — confirm whether Mama Tech Limited staff access the environment from Kenya, and whether a DPA/SCC is in place.
+        </td>
+      </tr>
+      <tr>
+        <td><strong>4</strong></td>
+        <td>Is two-factor authentication active for all admin accounts (hosting, database, code repository, App Store Connect, Google Play Console)?</td>
+        <td>
+          Not determinable from the repo — there is no 2FA/MFA configuration in the codebase. This is a console-level setting for Render, GitHub, App Store Connect and Google Play Console.
+          <br><br>
+          For context, the <em>app's end-user</em> auth does include WebAuthn passkeys with a PIN fallback (<code>webauthn_controller.rb</code>, <code>PinProtection</code> concern), but that is separate from infra admin accounts.
+          <br><br>
+          <span class="tag tag-flag">needs your input</span> — confirm and enforce 2FA on each of the four platforms, then state it as a security measure.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Extra facts the drafts can rely on (already confirmable)</h2>
+  <div class="card">
+    <ul>
+      <li><strong>Passwords</strong> are stored only as a bcrypt hash (<code>encrypted_password</code> column, Devise). <span class="tag tag-confirmed">confirmed</span></li>
+      <li><strong>Encryption in transit</strong>: TLS is enforced app-wide with HSTS (<code>config.force_ssl = true</code>, <code>config.assume_ssl = true</code>). <span class="tag tag-confirmed">confirmed</span></li>
+      <li><strong>At rest</strong>: the beta disclosure already states entries are <em>"not yet end-to-end encrypted on our server"</em>. The GDPR audit additionally flags <em>database-level encryption not enabled</em> and <em>OAuth tokens stored unencrypted</em> — both affect the "How your data is stored and protected" section. <span class="tag tag-confirm">needs confirmation</span></li>
+      <li><strong>Retention</strong>: <code>DataRetentionJob</code> (runs daily at 2am) deletes cycle/symptom data after 3 years, calendar/superpower entries after 1 year, and consent records after 3 years; account data is deleted within 30 days of account deletion. Combined with the already-decided "technical logs 30 days / feedback up to 12 months after the Beta". <span class="tag tag-confirmed">confirmed</span></li>
+      <li><strong>Additional processors</strong>: email via <strong>Resend</strong>, error tracking via <strong>Sentry</strong> (both in <code>render.yaml</code> env). The GDPR audit notes DPAs with these are <strong>outstanding</strong>. <span class="tag tag-confirm">needs confirmation</span></li>
+    </ul>
+  </div>
+
+  <h2>Needs your input (could not be determined from the code)</h2>
+  <div class="callout">
+    <ol>
+      <li><strong>Production DB access list</strong> — roles/names and headcount (Q2).</li>
+      <li><strong>Mama Tech Limited's role</strong>, access countries, and whether a DPA/SCC exists (Q3).</li>
+      <li><strong>2FA status</strong> on Render, GitHub, App Store Connect and Google Play Console (Q4).</li>
+      <li><strong>Open GDPR items</strong> that the Privacy Notice must not overclaim: DPAs with Resend/Sentry, DPIA, DPO, and database-at-rest encryption status.</li>
+      <li><strong>Sections B onwards</strong> of the questionnaire were not provided — send them over and I'll draft those answers the same way.</li>
+    </ol>
+  </div>
+
+  <footer><p>Season &mdash; Beta legal Q&amp;A &middot; drafted from codebase · 1 Oct 2026</p></footer>
+</body>
+</html>
