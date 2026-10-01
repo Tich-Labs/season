@@ -200,3 +200,23 @@ admin = User.find_or_create_by!(email: admin_email) do |u|
   u.confirmed_at = Time.zone.now
 end
 Rails.logger.debug { "Seeded admin user #{admin.email}" }
+
+# Demo account for Apple's Beta App Review — a confirmed, onboarded user the
+# reviewer signs in with (email + password) to explore the app. Onboarded so
+# login lands on the calendar, not the onboarding flow. find_or_create_by! so
+# it's safe to re-run on every deploy; override via DEMO_ACCOUNT_EMAIL /
+# DEMO_ACCOUNT_PASSWORD env vars. Existing demo passwords are never reset.
+demo_email = ENV.fetch("DEMO_ACCOUNT_EMAIL", "demo@season.vision")
+demo = User.find_or_create_by!(email: demo_email) do |u|
+  u.name = "Apple Reviewer"
+  u.password = ENV.fetch("DEMO_ACCOUNT_PASSWORD", "SeasonDemo2026!")
+  u.password_confirmation = u.password
+  u.onboarding_completed = true
+  u.language = "en"
+  u.confirmed_at = Time.zone.now
+  u.last_period_start = Date.current - 14.days
+  u.cycle_length = 28
+  u.period_length = 5
+  u.has_regular_cycle = true
+end
+Rails.logger.debug { "Seeded demo review user #{demo.email}" }
