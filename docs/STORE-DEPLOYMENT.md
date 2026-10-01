@@ -102,7 +102,7 @@ Setup required **once** in each store console before testers can be added or the
 | Platform | Track | Invite method | Automation |
 |----------|-------|---------------|------------|
 | iOS | External Testing group | Apple emails each tester (TestFlight) | Background job adds email + fires invitation via App Store Connect API |
-| Android | Open testing | Single public link (no per-user invite) | None — confirmation page links to the public URL |
+| Android | Closed testing | Google emails each tester | Background job adds email via Google Play Developer API |
 
 ### iOS — App Store Connect (create the External Testing group)
 
@@ -114,20 +114,21 @@ Setup required **once** in each store console before testers can be added or the
 
 Once the group exists, the background job adds each new iOS tester's email to the group and triggers the invitation (Apple sends the email). API endpoints: `POST /v1/betaTesters` then `POST /v1/betaTesterInvitations`.
 
-### Android — Google Play Console (create + publish the Open testing track)
+### Android — Google Play Console (create the Closed testing track + service account)
 
-1. **Play Console → Season → Testing → Open testing**.
-2. Create the **Open testing** track, upload an AAB, and **publish** it.
-3. Copy the **"Join on the web"** link Google generates — this is the single public URL testers open to become testers.
-4. Put that URL on the confirmation page for Android signups (replaces "we'll email you" for Android).
+1. **Play Console → Season → Testing → Closed testing**, create a track (e.g. name it `beta`), upload an AAB, and **publish** it.
+2. Create a **service account** in Google Cloud: **APIs & Services → Credentials → Create credentials → Service account**, download the JSON key.
+3. In **Play Console → Users and permissions**, invite that service account with **Manage testers** (or higher) permission.
+4. Enable the **Google Play Android Developer API** for the same Google Cloud project.
+5. Put the service-account JSON into `GOOGLE_PLAY_SERVICE_ACCOUNT_JSON` (Render env var).
 
-No API, no per-user invites: anyone with the link is a tester.
+The background job then calls `POST /androidpublisher/v3/applications/{package}/testers/{track}` to add each new Android tester; Google emails the invite.
 
 ### Implementation status
 
-The app side is wired: `InviteBetaTesterJob` + `AppStoreConnectService` invite
-iOS registrations into the external group automatically, and the Android
-confirmation page shows the open-testing link when it is set.
+The app side is wired: `InviteBetaTesterJob` invites both platforms —
+`AppStoreConnectService` for iOS and `GooglePlayClosedTestingService` for
+Android.
 
 **Render env vars required** (all `sync: false` in `render.yaml`):
 
@@ -138,10 +139,12 @@ confirmation page shows the open-testing link when it is set.
 | `APPSTORE_KEY_BASE64` | `base64 -i ~/Downloads/AuthKey_XXX.p8` |
 | `APPSTORE_APP_ID` | Apple's numeric app resource ID |
 | `APPSTORE_BETA_GROUP_ID` | External testing group ID (from step 5 above) |
-| `ANDROID_OPEN_TESTING_URL` | The "Join on the web" link from Play Console |
+| `GOOGLE_PLAY_SERVICE_ACCOUNT_JSON` | Full service-account JSON from Google Cloud |
+| `GOOGLE_PLAY_PACKAGE_NAME` | `com.seasonapp.android` |
+| `GOOGLE_PLAY_TRACK` | Closed-testing track name (e.g. `beta`) |
 
-Until these are set, the iOS job no-ops (testers stay `registered` for a manual
-retry) and the Android page falls back to the email-based steps.
+Until these are set, the corresponding job no-ops (testers stay `registered`
+for a manual retry).
 
 ---
 

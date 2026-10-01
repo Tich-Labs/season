@@ -75,9 +75,9 @@ class BetaOnboardingController < ApplicationController
       result.records.each(&:save!)
     end
 
-    # iOS testers are invited straight into TestFlight (Apple emails them);
-    # Android uses a public open-testing link, so no per-user action here.
-    InviteBetaTesterJob.perform_later(@beta_tester.id) if @beta_tester.platform == "ios"
+    # iOS and Android testers are invited into the store testing tracks
+    # automatically (Apple / Google email them); web needs no store invite.
+    InviteBetaTesterJob.perform_later(@beta_tester.id) if %w[ios android].include?(@beta_tester.platform)
 
     session.delete(:health_consent)
     session.delete(:health_consent_at)

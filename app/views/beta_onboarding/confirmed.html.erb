@@ -18,10 +18,6 @@
       <a class="beta-cta beta-next__cta" href="https://seasonv2.onrender.com/welcome" target="_blank" rel="noopener">
         <%= t("beta_onboarding.confirmed.open_web") %>
       </a>
-    <% elsif @platform.casecmp("Android").zero? && android_open_testing_url.present? %>
-      <a class="beta-cta beta-next__cta" href="<%= android_open_testing_url %>" target="_blank" rel="noopener">
-        <%= t("beta_onboarding.confirmed.open_android") %>
-      </a>
     <% end %>
   </div>
 

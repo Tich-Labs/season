@@ -24,7 +24,21 @@ class InviteBetaTesterJobTest < ActiveJob::TestCase
     assert_equal "invited", @tester.reload.status
   end
 
-  test "does nothing when App Store Connect is not configured" do
+  test "invites a registered Android tester and marks it invited" do
+    @tester.update!(platform: "android")
+
+    called = false
+    stub_class_method(GooglePlayClosedTestingService, :configured?, -> { true }) do
+      stub_class_method(GooglePlayClosedTestingService, :invite, ->(_tester) { called = true }) do
+        InviteBetaTesterJob.perform_now(@tester.id)
+      end
+    end
+
+    assert called
+    assert_equal "invited", @tester.reload.status
+  end
+
+  test "does nothing for iOS when App Store Connect is not configured" do
     called = false
     stub_class_method(AppStoreConnectService, :configured?, -> { false }) do
       stub_class_method(AppStoreConnectService, :invite, ->(_tester) { called = true }) do
@@ -36,17 +50,25 @@ class InviteBetaTesterJobTest < ActiveJob::TestCase
     assert_equal "registered", @tester.reload.status
   end
 
-  test "ignores non-iOS testers" do
+  test "does nothing for Android when Google Play is not configured" do
     @tester.update!(platform: "android")
 
     called = false
-    stub_class_method(AppStoreConnectService, :configured?, -> { true }) do
-      stub_class_method(AppStoreConnectService, :invite, ->(_tester) { called = true }) do
+    stub_class_method(GooglePlayClosedTestingService, :configured?, -> { false }) do
+      stub_class_method(GooglePlayClosedTestingService, :invite, ->(_tester) { called = true }) do
         InviteBetaTesterJob.perform_now(@tester.id)
       end
     end
 
     assert_not called
+    assert_equal "registered", @tester.reload.status
+  end
+
+  test "ignores web testers" do
+    @tester.update!(platform: "web")
+
+    InviteBetaTesterJob.perform_now(@tester.id)
+
     assert_equal "registered", @tester.reload.status
   end
 
