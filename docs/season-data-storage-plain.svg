@@ -1,0 +1,131 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="920" viewBox="0 0 1280 920" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#933a35"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect x="0" y="0" width="1280" height="920" fill="#FAF7F4"/>
+  <rect x="20" y="70" width="600" height="820" rx="20" fill="#ffffff" stroke="#d8cfc4" stroke-width="2"/>
+  <rect x="660" y="70" width="600" height="820" rx="20" fill="#ffffff" stroke="#933a35" stroke-width="3"/>
+
+  <!-- Panel headers -->
+  <rect x="20" y="70" width="600" height="58" rx="20" fill="#EDE1D5"/>
+  <rect x="20" y="106" width="600" height="22" fill="#EDE1D5"/>
+  <text x="320" y="105" text-anchor="middle" font-size="22" font-weight="bold" fill="#933a35">TODAY — everything stored openly</text>
+
+  <rect x="660" y="70" width="600" height="58" rx="20" fill="#933a35"/>
+  <rect x="660" y="106" width="600" height="22" fill="#933a35"/>
+  <text x="960" y="105" text-anchor="middle" font-size="22" font-weight="bold" fill="#ffffff">PLANNED — you decide what's shared</text>
+
+  <!-- ================== TODAY PANEL ================== -->
+
+  <!-- Phone -->
+  <rect x="255" y="140" width="150" height="200" rx="26" fill="#EDE1D5" stroke="#933a35" stroke-width="2.5"/>
+  <rect x="268" y="152" width="124" height="176" rx="16" fill="#ffffff" stroke="#d8cfc4" stroke-width="1.5"/>
+  <text x="330" y="180" text-anchor="middle" font-size="13" font-weight="bold" fill="#933a35">Cycle day 12</text>
+  <text x="330" y="208" text-anchor="middle" font-size="18">🩸 💧</text>
+  <text x="330" y="234" text-anchor="middle" font-size="13" fill="#4a403a">Mood: 😊</text>
+  <text x="330" y="256" text-anchor="middle" font-size="13" fill="#4a403a">😟 · 🥱</text>
+  <text x="330" y="280" text-anchor="middle" font-size="13" fill="#4a403a">Sleep: 7 h</text>
+  <text x="330" y="302" text-anchor="middle" font-size="13" fill="#4a403a">Temp: 36.4°</text>
+
+  <text x="330" y="360" text-anchor="middle" font-size="14" font-weight="bold" fill="#933a35">Your phone</text>
+  <text x="330" y="378" text-anchor="middle" font-size="12" fill="#6b5d53">every mood, symptom and cycle day</text>
+
+  <path d="M 330 388 L 330 416" stroke="#933a35" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Server -->
+  <rect x="185" y="418" width="290" height="56" rx="12" fill="#f4efe9" stroke="#8a817a" stroke-width="2"/>
+  <text x="330" y="446" text-anchor="middle" font-size="15" font-weight="bold" fill="#4a403a">Our server</text>
+  <text x="330" y="465" text-anchor="middle" font-size="12" fill="#6b5d53">email is just the login — not how data is linked</text>
+
+  <path d="M 330 474 L 330 512" stroke="#933a35" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Database: user_id linkage made explicit -->
+  <rect x="185" y="514" width="290" height="180" rx="14" fill="#ffffff" stroke="#c0392b" stroke-width="2"/>
+  <text x="330" y="538" text-anchor="middle" font-size="14" font-weight="bold" fill="#a93226">Linked by user number — not email</text>
+  <rect x="200" y="550" width="126" height="56" rx="8" fill="#FBE4E1" stroke="#c0392b"/>
+  <text x="263" y="570" text-anchor="middle" font-size="12" font-weight="bold" fill="#a93226">Period + mood</text>
+  <text x="263" y="590" text-anchor="middle" font-size="10.5" fill="#7b241c">user_id: 47</text>
+  <rect x="336" y="550" width="126" height="56" rx="8" fill="#FBE4E1" stroke="#c0392b"/>
+  <text x="399" y="570" text-anchor="middle" font-size="12" font-weight="bold" fill="#a93226">Cycle day 12</text>
+  <text x="399" y="590" text-anchor="middle" font-size="10.5" fill="#7b241c">user_id: 47</text>
+  <rect x="200" y="618" width="262" height="36" rx="8" fill="#E8F4E6" stroke="#2e7d32"/>
+  <text x="331" y="641" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#1b5e20">ID 47 · you@gmail.com</text>
+  <text x="330" y="668" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#a93226">Every entry stores just your user number</text>
+  <text x="330" y="686" text-anchor="middle" font-size="11" fill="#7b241c">your email appears once — on the account row</text>
+
+  <!-- Today's guarantees -->
+  <rect x="60" y="700" width="520" height="170" rx="14" fill="#EDE1D5"/>
+  <text x="320" y="724" text-anchor="middle" font-size="16" font-weight="bold" fill="#933a35">Where we stand today</text>
+  <text x="178" y="750" text-anchor="middle" font-size="11" font-weight="bold" fill="#2e7d32">✔</text>
+  <text x="196" y="750" text-anchor="start" font-size="11" fill="#4a403a">works today</text>
+  <text x="318" y="750" text-anchor="middle" font-size="11" font-weight="bold" fill="#a93226">✖</text>
+  <text x="336" y="750" text-anchor="start" font-size="11" fill="#4a403a">a current weakness</text>
+  <text x="456" y="750" text-anchor="middle" font-size="11" font-weight="bold" fill="#C98A2D">⚠</text>
+  <text x="474" y="750" text-anchor="start" font-size="11" fill="#4a403a">watch out</text>
+  <text x="320" y="776" text-anchor="middle" font-size="12" fill="#4a403a">✔ you can switch between your phone and browser</text>
+  <text x="320" y="794" text-anchor="middle" font-size="12" fill="#4a403a">✖ your health data lives on our server, in readable form</text>
+  <text x="320" y="812" text-anchor="middle" font-size="12" fill="#4a403a">✖ linked to your account — one breach reveals who you are and what you track</text>
+  <text x="320" y="830" text-anchor="middle" font-size="12" fill="#4a403a">⚠ consent is only a single on/off gate — no opt-in sharing, anonymity, or ML yet</text>
+
+  <!-- ================== PLANNED PANEL ================== -->
+
+  <!-- Phone (locked) -->
+  <rect x="845" y="140" width="150" height="200" rx="26" fill="#EDE1D5" stroke="#933a35" stroke-width="2.5"/>
+  <rect x="858" y="152" width="124" height="176" rx="16" fill="#ffffff" stroke="#d8cfc4" stroke-width="1.5"/>
+  <text x="920" y="180" text-anchor="middle" font-size="13" font-weight="bold" fill="#933a35">On your phone</text>
+  <text x="920" y="222" text-anchor="middle" font-size="30">🔒</text>
+  <text x="920" y="256" text-anchor="middle" font-size="11.5" fill="#6b5d53">data stays here;</text>
+  <text x="920" y="274" text-anchor="middle" font-size="11.5" fill="#6b5d53">you decide what,</text>
+  <text x="920" y="292" text-anchor="middle" font-size="11.5" fill="#6b5d53">if anything, leaves</text>
+
+  <text x="960" y="360" text-anchor="middle" font-size="14" font-weight="bold" fill="#933a35">Your phone</text>
+  <text x="960" y="378" text-anchor="middle" font-size="12" fill="#6b5d53">three ways it can work for you</text>
+
+  <path d="M 960 388 L 960 416" stroke="#933a35" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="984" y="406" text-anchor="start" font-size="11" fill="#6b5d53">you choose what the server ever sees ↓</text>
+
+  <!-- Journey 1: Local only -->
+  <rect x="700" y="430" width="540" height="78" rx="14" fill="#E8F4E6" stroke="#2e7d32" stroke-width="2"/>
+  <circle cx="728" cy="469" r="24" fill="#ffffff"/>
+  <text x="728" y="477" text-anchor="middle" font-size="26">🔒</text>
+  <text x="762" y="458" text-anchor="start" font-size="15" font-weight="bold" fill="#1b5e20">1 · Local only</text>
+  <text x="762" y="480" text-anchor="start" font-size="11.5" fill="#2e7d32">Everything stays on your device — nothing is ever sent</text>
+  <rect x="1120" y="442" width="120" height="22" rx="11" fill="#2e7d32"/>
+  <text x="1180" y="458" text-anchor="middle" font-size="10" fill="#ffffff">nothing leaves</text>
+
+  <!-- Journey 2: Pick and choose -->
+  <rect x="700" y="520" width="540" height="78" rx="14" fill="#FBEFDC" stroke="#C98A2D" stroke-width="2"/>
+  <circle cx="728" cy="559" r="24" fill="#ffffff"/>
+  <text x="728" y="567" text-anchor="middle" font-size="26">🧩</text>
+  <text x="762" y="548" text-anchor="start" font-size="15" font-weight="bold" fill="#8a5a12">2 · Pick and choose</text>
+  <text x="762" y="570" text-anchor="start" font-size="11.5" fill="#8a5a12">Share only the entries you select — to improve your own predictions</text>
+  <rect x="1120" y="532" width="120" height="22" rx="11" fill="#C98A2D"/>
+  <text x="1180" y="548" text-anchor="middle" font-size="10" fill="#ffffff">only what you pick</text>
+
+  <!-- Journey 3: All anonymised -->
+  <rect x="700" y="610" width="540" height="78" rx="14" fill="#EFE4F1" stroke="#7E57A0" stroke-width="2"/>
+  <circle cx="728" cy="649" r="24" fill="#ffffff"/>
+  <text x="728" y="657" text-anchor="middle" font-size="26">📊</text>
+  <text x="762" y="638" text-anchor="start" font-size="15" font-weight="bold" fill="#5E3A87">3 · All in, anonymised</text>
+  <text x="762" y="660" text-anchor="start" font-size="11.5" fill="#7E57A0">Everything shared safely — for predictions and future AI/ML</text>
+  <rect x="1120" y="622" width="120" height="22" rx="11" fill="#7E57A0"/>
+  <text x="1180" y="638" text-anchor="middle" font-size="10" fill="#ffffff">no email, no name</text>
+
+  <!-- The plan -->
+  <rect x="700" y="700" width="540" height="170" rx="14" fill="#EDE1D5"/>
+  <text x="970" y="724" text-anchor="middle" font-size="16" font-weight="bold" fill="#933a35">The plan</text>
+  <text x="828" y="750" text-anchor="middle" font-size="11" font-weight="bold" fill="#2e7d32">✔</text>
+  <text x="846" y="750" text-anchor="start" font-size="11" fill="#4a403a">the goal</text>
+  <text x="968" y="750" text-anchor="middle" font-size="11" font-weight="bold" fill="#a93226">✖</text>
+  <text x="986" y="750" text-anchor="start" font-size="11" fill="#4a403a">what goes away</text>
+  <text x="1108" y="750" text-anchor="middle" font-size="11" font-weight="bold" fill="#C98A2D">⚠</text>
+  <text x="1126" y="750" text-anchor="start" font-size="11" fill="#4a403a">the honest cost</text>
+  <text x="970" y="776" text-anchor="middle" font-size="12" fill="#4a403a">✔ from never to everything — each level works, and you stay in control</text>
+  <text x="970" y="794" text-anchor="middle" font-size="12" fill="#4a403a">✔ local-only or pick-and-choose: nothing is shared unless you say so</text>
+  <text x="970" y="812" text-anchor="middle" font-size="12" fill="#4a403a">✔ anonymised level still never carries your email or name</text>
+  <text x="970" y="830" text-anchor="middle" font-size="12" fill="#4a403a">⚠ careful engineering: keys, anonymity, and keeping emails out — a rebuild</text>
+</svg>

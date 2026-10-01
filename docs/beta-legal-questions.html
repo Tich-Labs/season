@@ -4,6 +4,9 @@ title: Beta Legal Q&A — Tech & Data Protection
 ---
 
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
+  body { font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
   .subtitle { color: #6B6B6B; margin-bottom: 0.5rem; font-size: 1.05rem; }
   .meta { color: #999; font-size: 0.85rem; margin-bottom: 1.5rem; }
 
@@ -22,7 +25,6 @@ title: Beta Legal Q&A — Tech & Data Protection
 </style>
 
 <h1>Season Big Beta — Tech &amp; Data Protection Q&amp;A</h1>
-  <p class="subtitle">Responses drafted for Shanel's "Questions for Naijeria" — input for the Beta Terms of Participation and Beta Privacy Notice</p>
   <p class="meta">Drafted from the codebase and internal docs · 1 October 2026</p>
 
   <div class="callout">
@@ -142,13 +144,15 @@ title: Beta Legal Q&A — Tech & Data Protection
         <td><strong>9</strong></td>
         <td>Planned improvements (end-to-end / field-level encryption, separating account &amp; health data) + timeline?</td>
         <td>
-          Planned but <strong>not committed yet</strong> — the approach is to gather <strong>user feedback after the Beta</strong> on these options <em>before</em> building them out. The target model (per the data-storage plan) is <strong>local-first</strong>: data stays on the device by default and the person chooses what, if anything, leaves — with three levels:
+          Planned with a <strong>rough 3-month timeline</strong> and a <strong>staggered approach</strong> — roll the three levels out incrementally, prioritised by <strong>Beta feedback</strong>. The target model (per the data-storage plan) is <strong>local-first</strong>: data stays on the device by default and the person chooses what, if anything, leaves — with three levels:
           <ul>
             <li><strong>1 · Local only</strong> — everything stays on the phone, nothing is sent.</li>
             <li><strong>2 · Pick and choose</strong> — share only selected entries to improve that person's own predictions.</li>
             <li><strong>3 · All in, anonymised</strong> — share safely for predictions / future AI, never carrying email or name.</li>
           </ul>
           Plus field-level / DB encryption (pgcrypto) and Active Record Encryption for OAuth tokens + iCloud credentials — flagged in <code>docs/AUDIT-2026-08-15-SECURITY.md</code> and the backlog as <strong>post-launch</strong>.
+          <br><br>
+          <span class="tag tag-confirm">timeline</span> — roughly 3 months, staggered (build the storage levels incrementally).
         </td>
       </tr>
     </tbody>
@@ -308,6 +312,7 @@ title: Beta Legal Q&A — Tech & Data Protection
 
   <h2>Data storage model — today vs planned</h2>
   <div class="card">
+    <img src="season-data-storage-plain.svg" alt="Diagram comparing today's server-side storage with the planned local-first, choose-what-you-share model" style="width:100%; height:auto; border-radius:8px; margin-top:0.75rem;">
     <p><strong>Today:</strong> every mood, symptom and cycle day is stored on our server, linked to the account by a user number (not email). It is encrypted at rest by the host (AES-256) but <em>not</em> field-level encrypted — readable by anyone with database access. Consent is a single on/off gate.</p>
     <p><strong>Planned:</strong> local-first storage where you decide what, if anything, leaves the device — local-only, pick-and-choose, or fully anonymised. A rebuild, not a quick change.</p>
   </div>
@@ -325,8 +330,7 @@ title: Beta Legal Q&A — Tech & Data Protection
 
   <h2>Needs your input (could not be determined from the code)</h2>
   <div class="callout">
-    <ol>
-      <li><strong>Q9</strong> — after the Beta, gather user feedback on the three storage options before committing to a build.</li>
+    <ol>9</strong> — after the Beta, gather user feedback on the three storage options before committing to a build.</li>
       <li><strong>Q10</strong> — Shanel to confirm the server locations for Resend, Sentry and Trello.</li>
       <li><strong>Q11</strong> — sign / accept each provider's DPA (Render, Resend, Sentry, Google, Apple, Meta) and record the dates.</li>
     </ol>
