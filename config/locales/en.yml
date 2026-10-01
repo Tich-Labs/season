@@ -43,6 +43,7 @@ en:
       title: "Thanks, your details have been submitted"
       subtitle: "We will review your registration and email you your beta access. Here is what happens next for your device."
       open_web: "Open the web app"
+      open_android: "Become an Android tester"
       help: "Questions?"
       platform:
         ios:
@@ -54,9 +55,9 @@ en:
         android:
           title: "Getting started on Android"
           steps:
-            - "We will email you a link to the Google Play testing program."
-            - "Open the link with the Google account you use on your phone."
-            - "Tap Become a tester, then install Season from the Play Store."
+            - "Open the link below with the Google account you use on your phone."
+            - "Tap Become a tester."
+            - "Install Season from the Google Play Store."
         web:
           title: "Getting started in your browser"
           steps:

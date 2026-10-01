@@ -53,6 +53,7 @@ gem "sentry-ruby"
 gem "sentry-rails"
 gem "stripe"
 gem "httparty"
+gem "jwt"
 gem "resend"
 
 # Push notifications

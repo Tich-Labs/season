@@ -69,3 +69,15 @@ services:
         sync: false
       - key: APPLE_PRIVATE_KEY
         sync: false
+      - key: APPSTORE_KEY_ID
+        sync: false
+      - key: APPSTORE_ISSUER_ID
+        sync: false
+      - key: APPSTORE_KEY_BASE64
+        sync: false
+      - key: APPSTORE_APP_ID
+        sync: false
+      - key: APPSTORE_BETA_GROUP_ID
+        sync: false
+      - key: ANDROID_OPEN_TESTING_URL
+        sync: false

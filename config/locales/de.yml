@@ -43,6 +43,7 @@ de:
       title: "Danke, deine Angaben sind angekommen"
       subtitle: "Wir prüfen deine Anmeldung und schicken dir den Zugang zur Beta per E-Mail. Hier siehst du schon, wie es für dein Gerät weitergeht."
       open_web: "Web-App öffnen"
+      open_android: "Android-Tester:in werden"
       help: "Fragen?"
       platform:
         ios:
@@ -54,9 +55,9 @@ de:
         android:
           title: "So startest du auf Android"
           steps:
-            - "Wir schicken dir per E-Mail einen Link zum Google-Play-Testprogramm."
-            - "Öffne den Link mit dem Google-Konto, das du auf deinem Handy nutzt."
-            - "Tippe auf „Tester:in werden“ und installiere Season aus dem Play Store."
+            - "Öffne den Link unten mit dem Google-Konto, das du auf deinem Handy nutzt."
+            - "Tippe auf „Tester:in werden“."
+            - "Installiere Season aus dem Play Store."
         web:
           title: "So startest du im Browser"
           steps:

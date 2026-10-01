@@ -784,6 +784,7 @@ DEPENDENCIES
   httparty
   icalendar
   importmap-rails
+  jwt
   kamal
   letter_opener (~> 1.10)
   nokogiri

@@ -1,6 +1,6 @@
 # App Store & Play Store — Deployment Setup Guide
 
-**Last updated:** 2026-05-26
+**Last updated:** 2026-10-01
 **App:** Season (Hotwire Native wrappers around the Rails PWA)
 
 ---
@@ -92,6 +92,56 @@ xcodegen generate → SPM resolve → archive (no signing)
 
 1. Google Play Console → Internal Testing → upload AAB
 2. Add testers by email → install via Google Play link
+
+---
+
+## Testing (Beta — Test-Invite Setup)
+
+Setup required **once** in each store console before testers can be added or the automation jobs can run. The app code then hands new signups to these tracks:
+
+| Platform | Track | Invite method | Automation |
+|----------|-------|---------------|------------|
+| iOS | External Testing group | Apple emails each tester (TestFlight) | Background job adds email + fires invitation via App Store Connect API |
+| Android | Open testing | Single public link (no per-user invite) | None — confirmation page links to the public URL |
+
+### iOS — App Store Connect (create the External Testing group)
+
+1. **App Store Connect → My Apps → Season → TestFlight → External Testing**.
+2. Click **"+" → New Group**, name it e.g. `Season Beta Testers`.
+3. Attach a build to the group (builds arrive from the iOS CI workflow's `xcrun altool --upload-app`).
+4. Verify the App Store Connect **API key** used in CI has the **App Manager** role and includes this app — the invitation endpoint needs permission to manage beta testers, not just upload builds. (Key created under **Users and Access → Integrations → API Keys**, same place as `APPSTORE_KEY_ID` / `APPSTORE_ISSUER_ID`.)
+5. Save the group ID (shown in the URL when the group is open) — the automation job targets it.
+
+Once the group exists, the background job adds each new iOS tester's email to the group and triggers the invitation (Apple sends the email). API endpoints: `POST /v1/betaTesters` then `POST /v1/betaTesterInvitations`.
+
+### Android — Google Play Console (create + publish the Open testing track)
+
+1. **Play Console → Season → Testing → Open testing**.
+2. Create the **Open testing** track, upload an AAB, and **publish** it.
+3. Copy the **"Join on the web"** link Google generates — this is the single public URL testers open to become testers.
+4. Put that URL on the confirmation page for Android signups (replaces "we'll email you" for Android).
+
+No API, no per-user invites: anyone with the link is a tester.
+
+### Implementation status
+
+The app side is wired: `InviteBetaTesterJob` + `AppStoreConnectService` invite
+iOS registrations into the external group automatically, and the Android
+confirmation page shows the open-testing link when it is set.
+
+**Render env vars required** (all `sync: false` in `render.yaml`):
+
+| Env var | Value |
+|---------|-------|
+| `APPSTORE_KEY_ID` | App Store Connect API key ID |
+| `APPSTORE_ISSUER_ID` | Issuer ID (same API keys page) |
+| `APPSTORE_KEY_BASE64` | `base64 -i ~/Downloads/AuthKey_XXX.p8` |
+| `APPSTORE_APP_ID` | Apple's numeric app resource ID |
+| `APPSTORE_BETA_GROUP_ID` | External testing group ID (from step 5 above) |
+| `ANDROID_OPEN_TESTING_URL` | The "Join on the web" link from Play Console |
+
+Until these are set, the iOS job no-ops (testers stay `registered` for a manual
+retry) and the Android page falls back to the email-based steps.
 
 ---
 
