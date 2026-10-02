@@ -146,7 +146,7 @@
          already injects an ::after spacer sized to env(safe-area-inset-bottom)
          (see the ruby_native gem's CSS), so adding env() again here would
          double-count that inset on native builds. %>
-    <main class="w-full flex-1 overscroll-contain <%= 'native-inset' if native_app? %>" data-controller="pull-to-refresh" style="<%= is_authenticated_view ? (native_app? ? "padding-top: 3.5rem;" : "padding-top: calc(3.5rem + env(safe-area-inset-top, 0px));") : '' %><%= render_quick_actions ? "padding-bottom: #{native_app? ? "8rem" : "calc(8rem + env(safe-area-inset-bottom, 0px))"};" : '' %><%= ";--phase-color:#{yield(:phase_color)}" if content_for?(:phase_color) %>">
+    <main class="w-full flex-1 overscroll-contain <%= native_app? ? (is_authenticated_view ? 'native-inset' : 'native-inset-top') : '' %>" data-controller="pull-to-refresh" style="<%= is_authenticated_view ? (native_app? ? "padding-top: 3.5rem;" : "padding-top: calc(3.5rem + env(safe-area-inset-top, 0px));") : '' %><%= render_quick_actions ? "padding-bottom: #{native_app? ? "8rem" : "calc(8rem + env(safe-area-inset-bottom, 0px))"};" : '' %><%= ";--phase-color:#{yield(:phase_color)}" if content_for?(:phase_color) %>">
       <div class="max-w-app mx-auto h-full">
         <%= render "shared/flash" %>
         <%= yield %>
