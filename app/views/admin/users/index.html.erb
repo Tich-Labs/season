@@ -33,6 +33,10 @@
             class: "px-3 py-1.5 rounded-full text-xs font-medium bg-brand-field text-brand-primary hover:bg-brand-field transition-colors" %>
         <%= link_to "Secret testers", admin_users_path(q: { secret_tester_eq: true }),
             class: "px-3 py-1.5 rounded-full text-xs font-medium bg-brand-field text-brand-primary hover:bg-brand-field transition-colors" %>
+        <%= link_to "Beta testers", admin_users_path(filter_params.merge(beta: "beta")),
+            class: "px-3 py-1.5 rounded-full text-xs font-medium #{@beta == 'beta' ? 'bg-brand-primary text-white' : 'bg-brand-field text-brand-primary hover:bg-brand-field'} transition-colors" %>
+        <%= link_to "Non-beta", admin_users_path(filter_params.merge(beta: "non_beta")),
+            class: "px-3 py-1.5 rounded-full text-xs font-medium #{@beta == 'non_beta' ? 'bg-brand-primary text-white' : 'bg-brand-field text-brand-primary hover:bg-brand-field'} transition-colors" %>
         <%= link_to "↓ CSV", admin_users_path(filter_params.merge(format: :csv)),
             class: "px-3 py-1.5 rounded-full text-xs font-medium bg-green-700 text-white hover:bg-green-800 transition-colors" %>
       </div>
@@ -69,6 +73,7 @@
           <th class="px-4 py-3 text-xs font-semibold text-brand-primary uppercase tracking-wide">Onboarding</th>
           <th class="px-4 py-3 text-xs font-semibold text-brand-primary uppercase tracking-wide">Signed Up</th>
           <th class="px-4 py-3 text-xs font-semibold text-brand-primary uppercase tracking-wide">Streak</th>
+          <th class="px-4 py-3 text-xs font-semibold text-brand-primary uppercase tracking-wide">Beta</th>
           <th class="px-4 py-3 text-xs font-semibold text-brand-primary uppercase tracking-wide">Secret Tester</th>
           <th class="px-4 py-3 text-xs font-semibold text-brand-primary uppercase tracking-wide">Admin</th>
           <th class="px-4 py-3 text-xs font-semibold text-brand-primary uppercase tracking-wide"></th>
@@ -90,6 +95,16 @@
             </td>
             <td class="px-4 py-3 text-gray-600"><%= user.created_at.strftime("%Y-%m-%d %H:%M") %></td>
             <td class="px-4 py-3 text-brand-primary font-medium"><%= user.streak&.current_streak || 0 %> 🔥</td>
+            <td class="px-4 py-3">
+              <% if user.beta_tester %>
+                <%= link_to admin_beta_tester_path(user.beta_tester),
+                      class: "inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-brand-muted text-white hover:opacity-90" do %>
+                  Beta · <%= user.beta_tester.platform %>
+                <% end %>
+              <% else %>
+                <span class="text-gray-300 text-xs">—</span>
+              <% end %>
+            </td>
             <td class="px-4 py-3">
               <% if user.secret_tester? %>
                 <span class="inline-flex items-center gap-1">

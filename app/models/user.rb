@@ -37,6 +37,11 @@ class User < ApplicationRecord
   has_many :notifications, dependent: :destroy
   has_one :streak, dependent: :destroy
 
+  # The beta funnel signup this account maps back to (matched by email), so
+  # admin can see a tester's app usage and feedback.
+  has_one :beta_tester, inverse_of: :user, dependent: :nullify
+  after_create_commit :link_beta_tester
+
   EMAIL_BOUNCE_TYPES = %w[wrong_email inbox_full].freeze
 
   # A bounce only means anything for a little while -- an address that
@@ -262,6 +267,10 @@ class User < ApplicationRecord
   end
 
   private
+
+  def link_beta_tester
+    BetaTester.link_to_user!(self)
+  end
 
   def avatar_content_type_and_size
     return unless avatar.attached?

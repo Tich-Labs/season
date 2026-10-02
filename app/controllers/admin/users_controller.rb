@@ -7,14 +7,15 @@ class Admin::UsersController < Admin::BaseController
     @q = User.ransack(params[:q])
     @signed_up_from = parse_date(params[:signed_up_from])
     @signed_up_to = parse_date(params[:signed_up_to])
-    @users = filter_by_signup_date(@q.result).order(created_at: :desc)
+    @beta = params[:beta].in?(%w[beta non_beta]) ? params[:beta] : nil
+    @users = filter_by_beta(filter_by_signup_date(@q.result)).includes(:beta_tester).order(created_at: :desc)
     @page = (params[:page] || 1).to_i
     @total_count = @users.count
     @users = @users.offset((@page - 1) * ITEMS_PER_PAGE).limit(ITEMS_PER_PAGE)
 
     respond_to do |format|
       format.html
-      format.csv { send_data generate_csv(filter_by_signup_date(@q.result)), filename: "season-users-#{Time.zone.today}.csv" }
+      format.csv { send_data generate_csv(filter_by_beta(filter_by_signup_date(@q.result))), filename: "season-users-#{Time.zone.today}.csv" }
     end
   end
 
@@ -57,6 +58,15 @@ class Admin::UsersController < Admin::BaseController
     scope
   end
 
+  # "beta" → accounts linked to a beta signup; "non_beta" → accounts that aren't.
+  def filter_by_beta(scope)
+    case @beta
+    when "beta" then scope.joins(:beta_tester)
+    when "non_beta" then scope.where.missing(:beta_tester)
+    else scope
+    end
+  end
+
   def calculate_avg_cycle_length
     starts = @user.period_starts.ordered.pluck(:started_on)
     return nil if starts.size < 2
@@ -66,8 +76,9 @@ class Admin::UsersController < Admin::BaseController
   end
 
   def generate_csv(users)
+    users = users.includes(:beta_tester)
     CSV.generate(headers: true) do |csv|
-      csv << ["User ID", "Language", "Onboarding", "Signed Up", "Streak", "Secret Tester"]
+      csv << ["User ID", "Language", "Onboarding", "Signed Up", "Streak", "Secret Tester", "Beta Tester", "Beta Platform"]
       users.each do |u|
         csv << [
           u.public_id,
@@ -75,7 +86,9 @@ class Admin::UsersController < Admin::BaseController
           u.onboarding_completed? ? "Complete" : "Pending",
           u.created_at.strftime("%Y-%m-%d"),
           u.streak&.current_streak || 0,
-          u.secret_tester? ? "Yes" : "No"
+          u.secret_tester? ? "Yes" : "No",
+          u.beta_tester ? "Yes" : "No",
+          u.beta_tester&.platform || ""
         ]
       end
     end

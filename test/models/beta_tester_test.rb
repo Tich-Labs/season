@@ -107,4 +107,24 @@ class BetaTesterTest < ActiveSupport::TestCase
       tester.destroy!
     end
   end
+
+  test "link_to_user! links a beta tester to the matching account and activates it" do
+    tester = BetaTester.create!(name: "Alice Tester", email: "alice@example.com", platform: "ios", beta_consent: true)
+
+    BetaTester.link_to_user!(users(:alice))
+
+    tester.reload
+    assert_equal users(:alice).id, tester.user_id
+    assert_equal "active", tester.status
+  end
+
+  test "link_to_user! does not downgrade a completed tester" do
+    tester = BetaTester.create!(name: "Alice Tester", email: "alice@example.com", platform: "ios", beta_consent: true, status: "completed")
+
+    BetaTester.link_to_user!(users(:alice))
+
+    tester.reload
+    assert_equal "completed", tester.status
+    assert_nil tester.user_id
+  end
 end

@@ -9,6 +9,11 @@ class BetaTester < ApplicationRecord
   # foreign key on consent_records.beta_tester_id otherwise blocks deletion.
   has_many :consent_records, dependent: :destroy
 
+  # The in-app account this beta signup eventually became. Linked by email
+  # when the tester signs up in the app — this is what lets the admin see a
+  # tester's real usage and feedback, not just their registration.
+  belongs_to :user, optional: true
+
   before_validation :normalize_email
 
   validates :name, presence: true
@@ -32,6 +37,19 @@ class BetaTester < ApplicationRecord
     where("name ILIKE :q OR email ILIKE :q", q: pattern)
   }
   scope :newest_first, -> { order(created_at: :desc) }
+
+  # Links an in-app account back to its beta signup by email, promoting the
+  # tester to "active" now that they are actually using the app. Called from
+  # User's after_create_commit. Idempotent and never downgrades "completed".
+  def self.link_to_user!(user)
+    tester = where("LOWER(email) = ?", user.email.to_s.downcase).newest_first.first
+    return unless tester
+
+    tester.update!(user: user, status: "active") unless tester.completed?
+    tester
+  end
+
+  def linked? = user_id.present?
 
   private
 

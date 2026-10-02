@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_30_230000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_01_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -59,9 +59,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_30_230000) do
     t.string "platform", null: false
     t.string "status", default: "registered", null: false
     t.datetime "updated_at", null: false
+    t.bigint "user_id"
     t.index ["email"], name: "index_beta_testers_on_email", unique: true
     t.index ["platform"], name: "index_beta_testers_on_platform"
     t.index ["status"], name: "index_beta_testers_on_status"
+    t.index ["user_id"], name: "index_beta_testers_on_user_id"
   end
 
   create_table "calendar_events", force: :cascade do |t|
@@ -102,8 +104,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_30_230000) do
     t.index ["beta_tester_id"], name: "index_consent_records_on_beta_tester_id"
     t.index ["user_id"], name: "index_consent_records_on_user_id"
     t.check_constraint "char_length(text_sha256::text) = 64", name: "consent_records_sha_length_check"
-    t.check_constraint "consent_type::text = ANY (ARRAY['terms'::character varying, 'age_18'::character varying, 'health_data'::character varying, 'survey_contact'::character varying]::text[])", name: "consent_records_consent_type_check"
-    t.check_constraint "language::text = ANY (ARRAY['de'::character varying, 'en'::character varying]::text[])", name: "consent_records_language_check"
+    t.check_constraint "consent_type::text = ANY (ARRAY['terms'::character varying::text, 'age_18'::character varying::text, 'health_data'::character varying::text, 'survey_contact'::character varying::text])", name: "consent_records_consent_type_check"
+    t.check_constraint "language::text = ANY (ARRAY['de'::character varying::text, 'en'::character varying::text])", name: "consent_records_language_check"
   end
 
   create_table "cycle_day_contents", force: :cascade do |t|
@@ -413,9 +415,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_30_230000) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "beta_testers", "users"
   add_foreign_key "calendar_events", "users"
-  add_foreign_key "consent_records", "beta_testers"
-  add_foreign_key "consent_records", "users"
   add_foreign_key "cycle_entries", "users"
   add_foreign_key "feedbacks", "users"
   add_foreign_key "feedbacks", "users", column: "archived_by_id", on_delete: :nullify

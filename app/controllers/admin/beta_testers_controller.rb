@@ -12,7 +12,7 @@ class Admin::BetaTestersController < Admin::BaseController
     @counts_by_status = BetaTester.group(:status).count
     @current_page = current_page
     @total_pages = [(@total_count.to_f / ITEMS_PER_PAGE).ceil, 1].max
-    @beta_testers = scope.newest_first.offset((@current_page - 1) * ITEMS_PER_PAGE).limit(ITEMS_PER_PAGE)
+    @beta_testers = scope.newest_first.includes(:user).offset((@current_page - 1) * ITEMS_PER_PAGE).limit(ITEMS_PER_PAGE)
   end
 
   def show
