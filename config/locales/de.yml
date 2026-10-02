@@ -41,28 +41,67 @@ de:
         invalid: "Bitte alle Felder ausfüllen und zustimmen."
     confirmed:
       title: "Danke, deine Angaben sind angekommen"
-      subtitle: "Wir prüfen deine Anmeldung und schicken dir den Zugang zur Beta per E-Mail. Hier siehst du schon, wie es für dein Gerät weitergeht."
+      subtitle: "Alles klar — so legst du auf deinem Gerät los."
       open_web: "Web-App öffnen"
+      open_ios: "In TestFlight öffnen"
+      open_android: "In Google Play öffnen"
       help: "Fragen?"
       platform:
         ios:
           title: "So startest du auf Apple iOS"
           steps:
+            - "Tippe unten auf den Button."
+            - "Installiere die kostenlose App TestFlight aus dem App Store."
+            - "Tippe auf „Annehmen“ und dann auf „Installieren“."
+          steps_email:
             - "Wir schicken dir eine Einladung per E-Mail."
             - "Installiere die kostenlose App TestFlight aus dem App Store."
             - "Öffne den Link in der E-Mail, tippe auf „Annehmen“ und dann auf „Installieren“."
         android:
           title: "So startest du auf Android"
           steps:
+            - "Tippe unten auf den Button."
+            - "Öffne den Link mit dem Google-Konto, das du auf deinem Handy nutzt."
+            - "Tippe auf „Installieren“, um Season aus dem Play Store zu laden."
+          steps_email:
             - "Wir schicken dir eine Einladung per E-Mail."
             - "Öffne den Link in der E-Mail mit dem Google-Konto, das du auf deinem Handy nutzt."
             - "Tippe auf „Einladung annehmen“ und installiere Season aus dem Play Store."
         web:
           title: "So startest du im Browser"
           steps:
-            - "Wir schicken dir den Link auch per E-Mail."
             - "Öffne die Web-App und erstelle dein Konto."
             - "Mit demselben Konto kannst du später aufs Handy wechseln."
+
+  account_deletion:
+    new:
+      title: "Konto löschen"
+      subtitle: "Für die Season-App von Season UG (haftungsbeschränkt)."
+      email: "E-Mail"
+      submit: "Lösch-Link senden"
+      invalid_email: "Bitte gib eine gültige E-Mail-Adresse ein."
+      steps_title: "So löschst du dein Konto"
+      steps:
+        - "Gib die E-Mail-Adresse ein, mit der du dich angemeldet hast."
+        - "Tippe auf „Lösch-Link senden“."
+        - "Öffne den Link aus der E-Mail, um dein Konto und deine Daten dauerhaft zu löschen."
+      data_title: "Welche Daten gelöscht und welche aufbewahrt werden"
+      data_deleted_label: "Gelöscht"
+      data_deleted: "Deine Kontodaten (E-Mail, Name, Profilbild), alle Zyklus- und Gesundheitsdaten (Periodeneinträge, Symptom-Logs, Superpower-Einträge), Kalendereinträge, Erinnerungen, App-Feedback und Umfrage-Antworten sowie deine In-App-Einwilligungen."
+      data_retained_label: "Aufbewahrt"
+      data_retained: "Deine Einwilligungsaufzeichnung zur Beta-Anmeldung (falls du am Beta-Programm teilgenommen hast) wird nur so lange aufbewahrt, wie es gesetzlich zum Nachweis der Einwilligung erforderlich ist. Technische Daten (z. B. IP-Adresse) in Server-Logs werden nur kurz für Sicherheit und Fehlerdiagnose gespeichert."
+      data_note: "App-Feedback, das du bereits eingereicht hast, wurde möglicherweise an unser Support-System weitergeleitet und kann durch die Löschung nicht zurückgerufen werden."
+    sent:
+      title: "Schau in dein Postfach"
+      subtitle: "Falls zu dieser E-Mail ein Konto existiert, haben wir einen Link zum Löschen geschickt. Der Link läuft in einer Stunde ab."
+    confirm:
+      success_title: "Konto gelöscht"
+      success_subtitle: "Dein Season-Konto und alle zugehörigen Daten wurden dauerhaft gelöscht."
+      invalid_title: "Link abgelaufen oder ungültig"
+      invalid_subtitle: "Dieser Lösch-Link ist nicht mehr gültig. Bitte fordere einen neuen an."
+      start_over: "Neuen Link anfordern"
+    mailer:
+      subject: "Dein Season-Konto löschen"
 
   legal:
     full_text:

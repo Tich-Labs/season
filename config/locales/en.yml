@@ -41,28 +41,67 @@ en:
         invalid: "Please fill in all fields and accept."
     confirmed:
       title: "Thanks, your details have been submitted"
-      subtitle: "We will review your registration and email you your beta access. Here is what happens next for your device."
+      subtitle: "You're all set — here's how to get started on your device."
       open_web: "Open the web app"
+      open_ios: "Open in TestFlight"
+      open_android: "Open in Google Play"
       help: "Questions?"
       platform:
         ios:
           title: "Getting started on Apple iOS"
           steps:
+            - "Tap the button below."
+            - "Install the free TestFlight app from the App Store."
+            - "Tap Accept, then Install to get Season."
+          steps_email:
             - "We will email you an invitation."
             - "Install the free TestFlight app from the App Store."
             - "Open the link in the email, tap Accept, then Install."
         android:
           title: "Getting started on Android"
           steps:
+            - "Tap the button below."
+            - "Open the link with the Google account you use on your phone."
+            - "Tap Install to get Season from the Play Store."
+          steps_email:
             - "We will email you an invitation."
             - "Open the link in the email with the Google account you use on your phone."
             - "Tap Accept invite, then install Season from the Play Store."
         web:
           title: "Getting started in your browser"
           steps:
-            - "We will also email you the link."
             - "Open the web app and create your account."
             - "You can switch to your phone later with the same account."
+
+  account_deletion:
+    new:
+      title: "Delete your account"
+      subtitle: "For the Season app by Season UG (haftungsbeschränkt)."
+      email: "Email"
+      submit: "Send deletion link"
+      invalid_email: "Please enter a valid email address."
+      steps_title: "How to delete your account"
+      steps:
+        - "Enter the email address you used to sign up."
+        - "Tap \"Send deletion link\"."
+        - "Open the link we email you to permanently delete your account and data."
+      data_title: "What data is deleted and what is retained"
+      data_deleted_label: "Deleted"
+      data_deleted: "Your account details (email, name, profile picture), all cycle and health data (period entries, symptom logs, superpower logs), calendar entries, reminders, app feedback and survey responses, and your in-app consent records."
+      data_retained_label: "Retained"
+      data_retained: "Your beta signup consent record (if you joined the beta program) is kept only as long as legally required to prove consent. Technical data (e.g. IP address) in server logs is kept only for a short period for security and error diagnosis."
+      data_note: "App feedback you've already submitted may have been forwarded to our support system and cannot be recalled by deletion."
+    sent:
+      title: "Check your inbox"
+      subtitle: "If an account exists for that email, we've sent a link to delete it. The link expires in one hour."
+    confirm:
+      success_title: "Account deleted"
+      success_subtitle: "Your Season account and all associated data have been permanently deleted."
+      invalid_title: "Link expired or invalid"
+      invalid_subtitle: "This deletion link is no longer valid. Please request a new one."
+      start_over: "Request a new link"
+    mailer:
+      subject: "Delete your Season account"
 
   legal:
     full_text:

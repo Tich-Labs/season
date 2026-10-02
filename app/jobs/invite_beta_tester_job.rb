@@ -27,6 +27,14 @@ class InviteBetaTesterJob < ApplicationJob
   private
 
   def invite_ios(beta_tester)
+    # Public-link mode: the tester installs via the TestFlight public link
+    # shown on the confirmation page — no per-email App Store Connect API
+    # invite needed (and no 100-seat limit).
+    if ENV["TESTFLIGHT_PUBLIC_LINK"].present?
+      beta_tester.update!(status: "invited")
+      return
+    end
+
     unless AppStoreConnectService.configured?
       Rails.logger.warn("[InviteBetaTesterJob] skipped #{beta_tester.id} — App Store Connect is not configured")
       return
@@ -40,6 +48,13 @@ class InviteBetaTesterJob < ApplicationJob
   end
 
   def invite_android(beta_tester)
+    # Public-link mode: the tester installs via the Google Play open-testing
+    # link shown on the confirmation page — no per-email Play API invite.
+    if ENV["GOOGLE_PLAY_OPEN_TESTING_URL"].present?
+      beta_tester.update!(status: "invited")
+      return
+    end
+
     unless GooglePlayClosedTestingService.configured?
       Rails.logger.warn("[InviteBetaTesterJob] skipped #{beta_tester.id} — Google Play is not configured")
       return

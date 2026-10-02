@@ -287,6 +287,15 @@ Rails.application.routes.draw do
   post "/beta/register", to: "beta_onboarding#create_register"
   get "/beta/confirmed", to: "beta_onboarding#confirmed", as: :beta_confirmed
 
+  # Public account-deletion request — the web URL given to the Play Store
+  # "Account deletion" data-safety form and the App Store. Unauthenticated:
+  # anyone can request deletion by email; a signed one-hour link is emailed
+  # to that address and only that link deletes the account and its data.
+  get "/account/delete", to: "account_deletion#new", as: :account_deletion
+  post "/account/delete", to: "account_deletion#create"
+  get "/account/delete/sent", to: "account_deletion#sent", as: :account_deletion_sent
+  get "/account/delete/confirm", to: "account_deletion#confirm", as: :account_deletion_confirm
+
   # Legal pages
   get "/legal/:type", to: "legal#show", as: :legal, constraints: {type: /terms|privacy/}
 

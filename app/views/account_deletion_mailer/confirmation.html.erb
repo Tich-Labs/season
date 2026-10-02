@@ -1,0 +1,9 @@
+<p>Hi <%= @user.name.presence || "there" %>,</p>
+
+<p>We received a request to delete your Season account and all associated data.</p>
+
+<p>To confirm and permanently delete your account, click the link below:</p>
+
+<p><%= link_to "Delete my account", @deletion_url %></p>
+
+<p>This link expires in one hour. If you didn't request this, you can safely ignore this email.</p>

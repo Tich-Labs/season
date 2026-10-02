@@ -1,0 +1,9 @@
+<%= render "beta_onboarding/shared/shell", step: nil do %>
+  <%= render "beta_onboarding/shared/wordmark" %>
+
+  <h1 class="beta-h1 beta-h1--inline">
+    <span class="beta-check-mark" aria-hidden="true">✓</span>
+    <%= t("account_deletion.sent.title") %>
+  </h1>
+  <p class="beta-sub"><%= t("account_deletion.sent.subtitle") %></p>
+<% end %>

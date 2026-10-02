@@ -40,5 +40,15 @@ module ActiveSupport
       singleton.send(:undef_method, method_name) if still_own
       singleton.send(:define_method, method_name, original) if own_method
     end
+
+    # Temporarily set an ENV var for the duration of the block, then restore
+    # (or remove) it — for tests that depend on configuration env vars.
+    def with_env(key, value)
+      previous = ENV[key]
+      ENV[key] = value
+      yield
+    ensure
+      previous.nil? ? ENV.delete(key) : ENV[key] = previous
+    end
   end
 end

@@ -202,6 +202,30 @@ class BetaOnboardingControllerTest < ActionDispatch::IntegrationTest
     assert_no_match(/Open the web app/, response.body)
   end
 
+  test "iOS confirmation links to the TestFlight public link when configured" do
+    with_env("TESTFLIGHT_PUBLIC_LINK", "https://testflight.apple.com/join/ABC") do
+      get beta_confirmed_path(locale: @locale, platform: "ios")
+      assert_match "Open in TestFlight", response.body
+      assert_match "https://testflight.apple.com/join/ABC", response.body
+    end
+  end
+
+  test "Android confirmation links to the Play open-testing link when configured" do
+    with_env("GOOGLE_PLAY_OPEN_TESTING_URL", "https://play.google.com/store/apps/details?id=com.seasonapp.android") do
+      get beta_confirmed_path(locale: @locale, platform: "android")
+      assert_match "Open in Google Play", response.body
+      assert_match "https://play.google.com/store/apps/details?id=com.seasonapp.android", response.body
+    end
+  end
+
+  test "iOS confirmation shows no download button when the link is not configured" do
+    with_env("TESTFLIGHT_PUBLIC_LINK", nil) do
+      get beta_confirmed_path(locale: @locale, platform: "ios")
+      assert_no_match(/Open in TestFlight/, response.body)
+      assert_match "We will email you an invitation", response.body
+    end
+  end
+
   # ── Regression: the logo is the only brand mark on every card ─────────────
 
   test "no card renders a 'SEASON V2' text title" do

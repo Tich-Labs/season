@@ -94,6 +94,10 @@ class BetaOnboardingController < ApplicationController
 
   def confirmed
     @platform = params[:platform].presence || "Web"
+    @download_link = case @platform.to_s.downcase
+    when "ios" then ENV["TESTFLIGHT_PUBLIC_LINK"].presence
+    when "android" then ENV["GOOGLE_PLAY_OPEN_TESTING_URL"].presence
+    end
   end
 
   private

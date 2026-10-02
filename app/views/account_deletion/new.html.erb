@@ -1,0 +1,38 @@
+<%= render "beta_onboarding/shared/shell", step: nil do %>
+  <%= render "beta_onboarding/shared/wordmark" %>
+
+  <h1 class="beta-h1"><%= t("account_deletion.new.title") %></h1>
+  <p class="beta-sub"><%= t("account_deletion.new.subtitle") %></p>
+
+  <% if flash[:alert].present? %>
+    <div class="beta-alert"><%= flash[:alert] %></div>
+  <% end %>
+
+  <%= form_with model: @form, scope: :account_deletion, url: account_deletion_path, method: :post, local: true, class: "beta-form" do |f| %>
+    <label class="beta-field-label" for="account_deletion_email"><%= t("account_deletion.new.email") %></label>
+    <%= f.email_field :email, id: "account_deletion_email", class: "beta-input",
+        autocomplete: "email", placeholder: "you@example.com" %>
+
+    <%= f.submit t("account_deletion.new.submit"), class: "beta-cta" %>
+  <% end %>
+
+  <div class="mt-4 space-y-3">
+    <div class="beta-next">
+      <h3 class="beta-next__title"><%= t("account_deletion.new.steps_title") %></h3>
+      <ol class="beta-next__steps">
+        <% t("account_deletion.new.steps").each do |step| %>
+          <li><%= step %></li>
+        <% end %>
+      </ol>
+    </div>
+
+    <div class="beta-next">
+      <h3 class="beta-next__title"><%= t("account_deletion.new.data_title") %></h3>
+      <ul class="beta-next__steps">
+        <li><strong><%= t("account_deletion.new.data_deleted_label") %>:</strong> <%= t("account_deletion.new.data_deleted") %></li>
+        <li><strong><%= t("account_deletion.new.data_retained_label") %>:</strong> <%= t("account_deletion.new.data_retained") %></li>
+        <li><%= t("account_deletion.new.data_note") %></li>
+      </ul>
+    </div>
+  </div>
+<% end %>

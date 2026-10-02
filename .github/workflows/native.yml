@@ -1,0 +1,63 @@
+name: Native Beta Build
+
+# Builds and ships the Ruby Native apps to the beta tracks:
+#   - iOS     -> TestFlight (external testing)
+#   - Android -> Google Play internal testing
+#
+# Ruby Native (rubynative.com) does the actual build, signing, and store
+# submission — this workflow just triggers it. Required GitHub secret:
+#   RUBY_NATIVE_TOKEN  (run `bundle exec ruby_native login` locally, then
+#                       copy the token from ~/.ruby_native/credentials)
+
+on:
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: "Platform(s) to build"
+        type: choice
+        required: true
+        default: "both"
+        options:
+          - "both"
+          - "ios"
+          - "android"
+      force:
+        description: "Force a rebuild even if Ruby Native is already up to date"
+        type: boolean
+        default: false
+  push:
+    tags: ["v*"]
+
+env:
+  RUBY_NATIVE_TOKEN: ${{ secrets.RUBY_NATIVE_TOKEN }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: .ruby-version
+          bundler-cache: true
+
+      - name: Deploy iOS → TestFlight
+        if: github.event_name == 'push' || inputs.platform == 'both' || inputs.platform == 'ios'
+        run: |
+          if [ "${{ github.event_name == 'workflow_dispatch' && inputs.force }}" = "true" ]; then
+            bundle exec ruby_native deploy
+          else
+            bundle exec ruby_native deploy --if-needed
+          fi
+
+      - name: Deploy Android → Play Internal Testing
+        if: github.event_name == 'push' || inputs.platform == 'both' || inputs.platform == 'android'
+        run: |
+          if [ "${{ github.event_name == 'workflow_dispatch' && inputs.force }}" = "true" ]; then
+            bundle exec ruby_native deploy --android
+          else
+            bundle exec ruby_native deploy --android --if-needed
+          fi

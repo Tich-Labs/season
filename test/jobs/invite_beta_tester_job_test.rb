@@ -84,4 +84,34 @@ class InviteBetaTesterJobTest < ActiveJob::TestCase
 
     assert_not called
   end
+
+  test "skips the API and marks invited when the TestFlight public link is set" do
+    called = false
+    with_env("TESTFLIGHT_PUBLIC_LINK", "https://testflight.apple.com/join/ABC") do
+      stub_class_method(AppStoreConnectService, :configured?, -> { true }) do
+        stub_class_method(AppStoreConnectService, :invite, ->(_tester) { called = true }) do
+          InviteBetaTesterJob.perform_now(@tester.id)
+        end
+      end
+    end
+
+    assert_not called
+    assert_equal "invited", @tester.reload.status
+  end
+
+  test "skips the API and marks invited when the Play open-testing link is set" do
+    @tester.update!(platform: "android")
+
+    called = false
+    with_env("GOOGLE_PLAY_OPEN_TESTING_URL", "https://play.google.com/store/apps/details?id=com.seasonapp.android") do
+      stub_class_method(GooglePlayClosedTestingService, :configured?, -> { true }) do
+        stub_class_method(GooglePlayClosedTestingService, :invite, ->(_tester) { called = true }) do
+          InviteBetaTesterJob.perform_now(@tester.id)
+        end
+      end
+    end
+
+    assert_not called
+    assert_equal "invited", @tester.reload.status
+  end
 end

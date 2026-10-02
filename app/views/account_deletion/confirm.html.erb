@@ -1,0 +1,15 @@
+<%= render "beta_onboarding/shared/shell", step: nil do %>
+  <%= render "beta_onboarding/shared/wordmark" %>
+
+  <% if @deleted %>
+    <h1 class="beta-h1 beta-h1--inline">
+      <span class="beta-check-mark" aria-hidden="true">✓</span>
+      <%= t("account_deletion.confirm.success_title") %>
+    </h1>
+    <p class="beta-sub"><%= t("account_deletion.confirm.success_subtitle") %></p>
+  <% else %>
+    <h1 class="beta-h1"><%= t("account_deletion.confirm.invalid_title") %></h1>
+    <p class="beta-sub"><%= t("account_deletion.confirm.invalid_subtitle") %></p>
+    <%= link_to t("account_deletion.confirm.start_over"), account_deletion_path, class: "beta-cta" %>
+  <% end %>
+<% end %>
