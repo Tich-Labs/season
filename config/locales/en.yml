@@ -45,6 +45,7 @@ en:
       open_web: "Open the web app"
       open_ios: "Open in TestFlight"
       open_android: "Open in Google Play"
+      open_group: "Join the tester group"
       help: "Questions?"
       platform:
         ios:
@@ -60,9 +61,9 @@ en:
         android:
           title: "Getting started on Android"
           steps:
-            - "Tap the button below."
-            - "Open the link with the Google account you use on your phone."
-            - "Tap Install to get Season from the Play Store."
+            - "Join our tester group using the button below."
+            - "Then open the Play Store link and tap \"Become a tester\"."
+            - "Install Season from the Play Store."
           steps_email:
             - "We will email you an invitation."
             - "Open the link in the email with the Google account you use on your phone."

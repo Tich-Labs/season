@@ -11,7 +11,7 @@
     <h3 class="beta-next__title"><%= t("beta_onboarding.confirmed.platform.#{@platform.downcase}.title") %></h3>
     <%# Show the "tap the button" steps only when a link actually renders below;
         otherwise fall back to the email-invitation steps. %>
-    <% steps_key = (@platform.casecmp("Web").zero? || @download_link.present?) ? "steps" : "steps_email" %>
+    <% steps_key = (@platform.casecmp("Web").zero? || @download_link.present? || @group_link.present?) ? "steps" : "steps_email" %>
     <ol class="beta-next__steps">
       <% t("beta_onboarding.confirmed.platform.#{@platform.downcase}.#{steps_key}").each do |step| %>
         <li><%= step %></li>
@@ -21,9 +21,20 @@
       <a class="beta-cta beta-next__cta" href="https://seasonv2.onrender.com/welcome" target="_blank" rel="noopener">
         <%= t("beta_onboarding.confirmed.open_web") %>
       </a>
+    <% elsif @platform.casecmp("Android").zero? %>
+      <% if @group_link.present? %>
+        <a class="beta-cta beta-next__cta" href="<%= @group_link %>" target="_blank" rel="noopener">
+          <%= t("beta_onboarding.confirmed.open_group") %>
+        </a>
+      <% end %>
+      <% if @download_link.present? %>
+        <a class="beta-cta beta-next__cta" href="<%= @download_link %>" target="_blank" rel="noopener">
+          <%= t("beta_onboarding.confirmed.open_android") %>
+        </a>
+      <% end %>
     <% elsif @download_link.present? %>
       <a class="beta-cta beta-next__cta" href="<%= @download_link %>" target="_blank" rel="noopener">
-        <%= t("beta_onboarding.confirmed.open_#{@platform.downcase}") %>
+        <%= t("beta_onboarding.confirmed.open_ios") %>
       </a>
     <% end %>
   </div>

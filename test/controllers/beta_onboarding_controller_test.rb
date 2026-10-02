@@ -210,11 +210,19 @@ class BetaOnboardingControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
-  test "Android confirmation links to the Play open-testing link when configured" do
-    with_env("GOOGLE_PLAY_OPEN_TESTING_URL", "https://play.google.com/store/apps/details?id=com.seasonapp.android") do
+  test "Android confirmation links to the Play testing link when configured" do
+    with_env("GOOGLE_PLAY_OPEN_TESTING_URL", "https://play.google.com/apps/testing/com.onrender.seasonv2.rubynative") do
       get beta_confirmed_path(locale: @locale, platform: "android")
       assert_match "Open in Google Play", response.body
-      assert_match "https://play.google.com/store/apps/details?id=com.seasonapp.android", response.body
+      assert_match "https://play.google.com/apps/testing/com.onrender.seasonv2.rubynative", response.body
+    end
+  end
+
+  test "Android confirmation shows the Google Group link when configured" do
+    with_env("GOOGLE_PLAY_GROUP_URL", "https://groups.google.com/g/season2_beta_tester/") do
+      get beta_confirmed_path(locale: @locale, platform: "android")
+      assert_match "Join the tester group", response.body
+      assert_match "https://groups.google.com/g/season2_beta_tester/", response.body
     end
   end
 

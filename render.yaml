@@ -89,3 +89,5 @@ services:
         sync: false
       - key: GOOGLE_PLAY_OPEN_TESTING_URL
         sync: false
+      - key: GOOGLE_PLAY_GROUP_URL
+        sync: false

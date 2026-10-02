@@ -14,9 +14,11 @@ class InviteBetaTesterJobTest < ActiveJob::TestCase
 
   test "invites a registered iOS tester and marks it invited" do
     called = false
-    stub_class_method(AppStoreConnectService, :configured?, -> { true }) do
-      stub_class_method(AppStoreConnectService, :invite, ->(_tester) { called = true }) do
-        InviteBetaTesterJob.perform_now(@tester.id)
+    with_env("TESTFLIGHT_PUBLIC_LINK", nil) do
+      stub_class_method(AppStoreConnectService, :configured?, -> { true }) do
+        stub_class_method(AppStoreConnectService, :invite, ->(_tester) { called = true }) do
+          InviteBetaTesterJob.perform_now(@tester.id)
+        end
       end
     end
 
@@ -28,9 +30,13 @@ class InviteBetaTesterJobTest < ActiveJob::TestCase
     @tester.update!(platform: "android")
 
     called = false
-    stub_class_method(GooglePlayClosedTestingService, :configured?, -> { true }) do
-      stub_class_method(GooglePlayClosedTestingService, :invite, ->(_tester) { called = true }) do
-        InviteBetaTesterJob.perform_now(@tester.id)
+    with_env("GOOGLE_PLAY_GROUP_URL", nil) do
+      with_env("GOOGLE_PLAY_OPEN_TESTING_URL", nil) do
+        stub_class_method(GooglePlayClosedTestingService, :configured?, -> { true }) do
+          stub_class_method(GooglePlayClosedTestingService, :invite, ->(_tester) { called = true }) do
+            InviteBetaTesterJob.perform_now(@tester.id)
+          end
+        end
       end
     end
 
@@ -40,9 +46,11 @@ class InviteBetaTesterJobTest < ActiveJob::TestCase
 
   test "does nothing for iOS when App Store Connect is not configured" do
     called = false
-    stub_class_method(AppStoreConnectService, :configured?, -> { false }) do
-      stub_class_method(AppStoreConnectService, :invite, ->(_tester) { called = true }) do
-        InviteBetaTesterJob.perform_now(@tester.id)
+    with_env("TESTFLIGHT_PUBLIC_LINK", nil) do
+      stub_class_method(AppStoreConnectService, :configured?, -> { false }) do
+        stub_class_method(AppStoreConnectService, :invite, ->(_tester) { called = true }) do
+          InviteBetaTesterJob.perform_now(@tester.id)
+        end
       end
     end
 
@@ -54,9 +62,13 @@ class InviteBetaTesterJobTest < ActiveJob::TestCase
     @tester.update!(platform: "android")
 
     called = false
-    stub_class_method(GooglePlayClosedTestingService, :configured?, -> { false }) do
-      stub_class_method(GooglePlayClosedTestingService, :invite, ->(_tester) { called = true }) do
-        InviteBetaTesterJob.perform_now(@tester.id)
+    with_env("GOOGLE_PLAY_GROUP_URL", nil) do
+      with_env("GOOGLE_PLAY_OPEN_TESTING_URL", nil) do
+        stub_class_method(GooglePlayClosedTestingService, :configured?, -> { false }) do
+          stub_class_method(GooglePlayClosedTestingService, :invite, ->(_tester) { called = true }) do
+            InviteBetaTesterJob.perform_now(@tester.id)
+          end
+        end
       end
     end
 
@@ -103,7 +115,23 @@ class InviteBetaTesterJobTest < ActiveJob::TestCase
     @tester.update!(platform: "android")
 
     called = false
-    with_env("GOOGLE_PLAY_OPEN_TESTING_URL", "https://play.google.com/store/apps/details?id=com.seasonapp.android") do
+    with_env("GOOGLE_PLAY_OPEN_TESTING_URL", "https://play.google.com/apps/testing/com.onrender.seasonv2.rubynative") do
+      stub_class_method(GooglePlayClosedTestingService, :configured?, -> { true }) do
+        stub_class_method(GooglePlayClosedTestingService, :invite, ->(_tester) { called = true }) do
+          InviteBetaTesterJob.perform_now(@tester.id)
+        end
+      end
+    end
+
+    assert_not called
+    assert_equal "invited", @tester.reload.status
+  end
+
+  test "skips the API and marks invited when the Google Group link is set" do
+    @tester.update!(platform: "android")
+
+    called = false
+    with_env("GOOGLE_PLAY_GROUP_URL", "https://groups.google.com/g/season2_beta_tester/") do
       stub_class_method(GooglePlayClosedTestingService, :configured?, -> { true }) do
         stub_class_method(GooglePlayClosedTestingService, :invite, ->(_tester) { called = true }) do
           InviteBetaTesterJob.perform_now(@tester.id)

@@ -48,9 +48,10 @@ class InviteBetaTesterJob < ApplicationJob
   end
 
   def invite_android(beta_tester)
-    # Public-link mode: the tester installs via the Google Play open-testing
-    # link shown on the confirmation page — no per-email Play API invite.
-    if ENV["GOOGLE_PLAY_OPEN_TESTING_URL"].present?
+    # Group/closed-test link mode: testers self-join via the Google Group +
+    # Play testing link shown on the confirmation page — no per-email Play
+    # API invite (Google auto-admits group members to the closed test).
+    if ENV["GOOGLE_PLAY_GROUP_URL"].present? || ENV["GOOGLE_PLAY_OPEN_TESTING_URL"].present?
       beta_tester.update!(status: "invited")
       return
     end
