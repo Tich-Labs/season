@@ -100,7 +100,7 @@
               <span class="px-2.5 py-0.5 rounded-full text-xs font-medium <%= badge[:bg] %> <%= badge[:text] %>"><%= badge[:label] %></span>
             </td>
             <td class="px-6 py-4 text-sm text-gray-600 max-w-md truncate">
-              <%= msg.message %>
+              <%= link_to msg.message, admin_inbox_message_path(msg), class: "hover:text-brand-primary" %>
             </td>
             <% if viewing_archived %>
               <td class="px-6 py-4 whitespace-nowrap text-xs text-gray-500">
@@ -109,13 +109,17 @@
               </td>
             <% end %>
             <td class="px-6 py-4 whitespace-nowrap text-right">
-              <% if msg.archived? %>
-                <%= button_to "Restore", admin_inbox_unarchive_path(msg), method: :patch,
-                      class: "px-2.5 py-1 rounded text-xs font-medium bg-brand-field text-brand-primary hover:bg-brand-warm transition-colors" %>
-              <% else %>
-                <%= button_to "Archive", admin_inbox_archive_path(msg), method: :patch,
-                      class: "px-2.5 py-1 rounded text-xs font-medium bg-brand-field text-brand-primary hover:bg-brand-warm transition-colors" %>
-              <% end %>
+              <div class="flex items-center justify-end gap-2">
+                <%= link_to "View", admin_inbox_message_path(msg),
+                      class: "px-2.5 py-1 rounded text-xs font-medium bg-white text-brand-primary border border-brand-field hover:bg-brand-field transition-colors" %>
+                <% if msg.archived? %>
+                  <%= button_to "Restore", admin_inbox_unarchive_path(msg), method: :patch,
+                        class: "px-2.5 py-1 rounded text-xs font-medium bg-brand-field text-brand-primary hover:bg-brand-warm transition-colors" %>
+                <% else %>
+                  <%= button_to "Archive", admin_inbox_archive_path(msg), method: :patch,
+                        class: "px-2.5 py-1 rounded text-xs font-medium bg-brand-field text-brand-primary hover:bg-brand-warm transition-colors" %>
+                <% end %>
+              </div>
             </td>
           </tr>
         <% end %>

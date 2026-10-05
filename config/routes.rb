@@ -208,6 +208,7 @@ Rails.application.routes.draw do
     get "inbox/support", to: "inbox#support"
     get "inbox/export_csv", to: "inbox#export_csv"
     get "inbox/archived", to: "inbox#archived", as: :inbox_archived
+    get "inbox/:id", to: "inbox#show", as: :inbox_message
     post "inbox/archive_before", to: "inbox#archive_before", as: :inbox_archive_before
     patch "inbox/:id/archive", to: "inbox#archive", as: :inbox_archive
     patch "inbox/:id/unarchive", to: "inbox#unarchive", as: :inbox_unarchive

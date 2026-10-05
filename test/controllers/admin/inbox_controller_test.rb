@@ -19,6 +19,16 @@ class Admin::InboxControllerTest < ActionDispatch::IntegrationTest
     assert_no_match(/Old archived bug/, response.body)
   end
 
+  test "show renders full message details and links back to inbox" do
+    sign_in_as(@admin)
+    bug = Feedback.find_by!(message: "Fresh open bug")
+    get admin_inbox_message_path(bug)
+    assert_response :success
+    assert_includes response.body, "Fresh open bug"
+    assert_includes response.body, "Message ##{bug.id}"
+    assert_includes response.body, admin_inbox_path
+  end
+
   test "inbox shows the reporter's User ID, not their email" do
     sign_in_as(@admin)
     get admin_inbox_bugs_path

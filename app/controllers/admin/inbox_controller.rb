@@ -24,6 +24,11 @@ class Admin::InboxController < Admin::BaseController
     render "admin/inbox/index"
   end
 
+  def show
+    @message = Feedback.includes(:user).find(params[:id])
+    render "admin/inbox/show"
+  end
+
   def archive
     Feedback.find(params[:id]).archive!(by: current_user)
     redirect_back_or_to admin_inbox_path, notice: "Message archived." # rubocop:disable Rails/I18nLocaleTexts

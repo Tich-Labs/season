@@ -1,0 +1,77 @@
+<% content_for :page_title, "Inbox Message ##{@message.id}" %>
+
+<div class="space-y-6 max-w-4xl">
+
+  <%# Back %>
+  <%= link_to "\u2190 Back to Inbox", admin_inbox_path,
+      class: "inline-flex items-center text-sm text-brand-primary hover:underline" %>
+
+  <%# Header + actions %>
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+    <div class="flex items-start justify-between gap-4">
+      <div>
+        <p class="text-xs text-gray-500 uppercase tracking-wide">Message #<%= @message.id %></p>
+        <h1 class="text-xl font-bold text-gray-900 mt-1"><%= @message.type.humanize %></h1>
+      </div>
+      <div class="flex items-center gap-2 shrink-0">
+        <% if @message.archived? %>
+          <%= button_to "Restore", admin_inbox_unarchive_path(@message), method: :patch,
+                class: "px-3 py-1.5 rounded text-xs font-medium bg-brand-field text-brand-primary hover:bg-brand-warm transition-colors" %>
+        <% else %>
+          <%= button_to "Archive", admin_inbox_archive_path(@message), method: :patch,
+                class: "px-3 py-1.5 rounded text-xs font-medium bg-brand-field text-brand-primary hover:bg-brand-warm transition-colors" %>
+        <% end %>
+      </div>
+    </div>
+
+    <dl class="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-4">
+      <div class="bg-gray-50 rounded-lg px-4 py-3">
+        <dt class="text-xs text-gray-500">Date / time</dt>
+        <dd class="text-sm font-semibold text-gray-700 mt-0.5"><%= @message.created_at.strftime("%Y-%m-%d %H:%M") %></dd>
+      </div>
+      <div class="bg-gray-50 rounded-lg px-4 py-3">
+        <dt class="text-xs text-gray-500">User ID</dt>
+        <dd class="text-sm font-semibold mt-0.5"><%= admin_user_id_link(@message.user) %></dd>
+      </div>
+      <div class="bg-gray-50 rounded-lg px-4 py-3">
+        <dt class="text-xs text-gray-500">Type</dt>
+        <dd class="text-sm font-semibold text-gray-700 mt-0.5"><%= @message.type.humanize %></dd>
+      </div>
+      <div class="bg-gray-50 rounded-lg px-4 py-3">
+        <dt class="text-xs text-gray-500">Status</dt>
+        <dd class="mt-0.5">
+          <% if @message.archived? %>
+            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-600">Archived</span>
+          <% else %>
+            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">Active</span>
+          <% end %>
+        </dd>
+      </div>
+    </dl>
+  </div>
+
+  <%# Message body %>
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+    <h2 class="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-3">Message</h2>
+    <p class="text-sm text-gray-700 whitespace-pre-wrap wrap-break-word"><%= @message.message %></p>
+  </div>
+
+  <%# Attachment / screenshot %>
+  <% if @message.media.attached? %>
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+      <h2 class="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-3">Attachment</h2>
+      <% if @message.media.image? %>
+        <%= link_to rails_blob_path(@message.media, disposition: "attachment"), target: "_blank", rel: "noopener" do %>
+          <%= image_tag @message.media, class: "max-w-full h-auto rounded-lg border border-gray-200" %>
+        <% end %>
+      <% end %>
+      <p class="text-sm mt-3">
+        <%= link_to @message.media.filename.to_s,
+              rails_blob_path(@message.media, disposition: "attachment"),
+              class: "text-brand-primary hover:underline font-medium" %>
+        <span class="text-gray-400 text-xs">(<%= number_to_human_size(@message.media.byte_size) %>)</span>
+      </p>
+    </div>
+  <% end %>
+
+</div>
