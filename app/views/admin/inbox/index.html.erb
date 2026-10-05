@@ -99,8 +99,9 @@
                          end %>
               <span class="px-2.5 py-0.5 rounded-full text-xs font-medium <%= badge[:bg] %> <%= badge[:text] %>"><%= badge[:label] %></span>
             </td>
-            <td class="px-6 py-4 text-sm text-gray-600 max-w-md truncate">
-              <%= link_to msg.message, admin_inbox_message_path(msg), class: "hover:text-brand-primary" %>
+            <td class="px-6 py-4 text-sm text-gray-600">
+              <%= link_to msg.message, admin_inbox_message_path(msg),
+                    class: "hover:text-brand-primary whitespace-pre-wrap wrap-break-word" %>
             </td>
             <% if viewing_archived %>
               <td class="px-6 py-4 whitespace-nowrap text-xs text-gray-500">
