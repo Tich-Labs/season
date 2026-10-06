@@ -4,7 +4,7 @@ layout: default
 
 # Season — User Data Map & Privacy Architecture
 
-**Last updated:** 21 April 2026 (P1 items implemented — see Implementation Log)
+**Last updated:** 1 October 2026 (P1 items + Sentry PII scrubbing — see Implementation Log)
 **Audience:** Engineering, Product, Legal
 
 ---
@@ -248,6 +248,32 @@ add_index :users, :public_id, unique: true
 
 ---
 
+## Error Tracking: What Sentry Receives
+
+Sentry (`sentry-ruby` / `sentry-rails`) receives only error events. After the PII scrubbing pass (1 October 2026), each event contains:
+
+**Sent to Sentry:**
+
+- **Error identity** — event id, timestamp, environment, hostname, Ruby version + OS name/version, and the loaded gem list (names + versions).
+- **The exception** — class, message, and the stack trace (file paths, line numbers, method names). Local variable *values* are **not** captured by default (`include_local_variables` is false).
+- **The route that failed** — e.g. `GET /symptoms`, `POST /settings/connect_icloud_calendar` (path + HTTP method only). No query string, no request body.
+- **Breadcrumbs** — recent Rails log lines (values already redacted to `[FILTERED]` by `filter_parameters`) and the app's outbound HTTP calls (Google Calendar API, iCloud CalDAV, Resend) as URL + status only, no headers or bodies.
+- **A user tag** — `public_id` (an opaque UUID), set by `ApplicationController#set_sentry_user_context`. Nothing else.
+
+**Never sent** (scrubbed via `config.enable_pii = false`, `send_default_pii = false`, and a `before_send` hook):
+
+- IP address
+- Email / username
+- Request body / form params
+- Cookies (including the session cookie)
+- Request headers
+- Query string
+- Server env
+
+Source: `config/initializers/sentry.rb`, `app/controllers/application_controller.rb`.
+
+---
+
 ## Rules for Engineers
 
 These apply to every PR that touches data:
@@ -260,7 +286,7 @@ These apply to every PR that touches data:
 
 4. **Feedback cards to Trello exclude health content.** The `TrelloMailer` sends the feedback message — fine. It must never append cycle phase, symptom data, or health profile fields.
 
-5. **Sentry / error logging must not capture health payloads.** Add `config.filter_parameters` to exclude `symptom_log`, `cycle_entry`, `last_period_start`, `contraception_type`, `birthday` from logs.
+5. **Sentry / error logging must not capture health payloads.** Implemented via `config/initializers/filter_parameter_logging.rb` (excludes `symptom_log`, `cycle_entry`, `last_period_start`, `contraception_type`, `birthday`, plus identity/OAuth/health fields). Sentry additionally strips request body/headers/cookies and user email/IP — see "Error Tracking: What Sentry Receives" above.
 
 6. **Free-text fields (`notes`, `message`, `title`) are never searched across users.** No admin full-text search against user-authored content.
 

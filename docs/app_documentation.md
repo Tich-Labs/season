@@ -1066,7 +1066,8 @@ Steps 5 and 6 are necessary because `db:prepare` only processes the primary data
 The initializer is already in place at `config/initializers/sentry.rb`. It:
 - Enables breadcrumbs for ActiveSupport logger + HTTP requests
 - Sets traces_sample_rate to 0.1 (10% of requests — adjust as needed)
-- Enables PII capture for user context
+- Disables PII capture and scrubs request body/headers/cookies and user email/IP in `before_send`
+- Tags events with the user's `public_id` (never email)
 - Silences `RoutingError` and `RecordNotFound` (common production noise)
 
 To verify Sentry is working after deploy, trigger a test error:

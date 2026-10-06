@@ -171,7 +171,7 @@ title: Beta Legal Q&A — Tech & Data Protection
           From the Gemfile + env (<code>render.yaml</code>):
           <ul>
             <li><strong>Resend</strong> — transactional email (confirmation, password reset, reminders, support, feedback forwarding). <em>Sees:</em> recipient email addresses + full email body — reminder summaries include phase/cycle content.</li>
-            <li><strong>Sentry</strong> — crash/error reporting (<code>sentry-ruby</code>/<code>sentry-rails</code>). <em>Sees:</em> error events with <strong>PII enabled</strong> (<code>config.enable_pii = true</code>) — can include IP, email and request params.</li>
+            <li><strong>Sentry</strong> — crash/error reporting (<code>sentry-ruby</code>/<code>sentry-rails</code>). <em>Sees:</em> error events with <strong>PII scrubbed</strong> (<code>config.enable_pii = false</code>) — no IP, email, request params, cookies or headers; events are tagged with an opaque <code>public_id</code> only.</li>
             <li><strong>Google</strong> — Sign in + Google Calendar sync (<code>google-apis-calendar_v3</code>).</li>
             <li><strong>Facebook</strong> — Sign in (<code>omniauth-facebook</code>).</li>
             <li><strong>Apple</strong> — Sign in with Apple; iCloud Calendar via CalDAV (<code>icalendar</code> + HTTP Basic).</li>
@@ -321,7 +321,7 @@ title: Beta Legal Q&A — Tech & Data Protection
   <div class="card">
     <ul>
       <li><strong>OAuth tokens + iCloud credentials stored unencrypted (field-level)</strong> — plain string columns, no Active Record encryption; a live credential risk. Distinct from at-rest AES-256 (which <em>is</em> active): the values sit in plaintext <em>inside</em> the encrypted-at-rest database. Don't claim field-level encryption.</li>
-      <li><strong>Sentry captures PII</strong> — <code>config.enable_pii = true</code>, so error events can include IP, email and request params (possibly health data). Consider scrubbing before the Beta.</li>
+      <li><strong>Sentry PII capture</strong> — <strong>fixed</strong>: <code>config.enable_pii = false</code> plus a <code>before_send</code> scrub removes request body/headers/cookies and user email/IP; errors are tagged with <code>public_id</code> only.</li>
       <li><strong>Trello receives user data</strong> — feedback forwards the user's email, message text and optional screenshots (screenshots may contain health data). <code>docs/userdata.md</code> already requires never appending health fields.</li>
       <li><strong>No IP anonymization</strong> (GDPR audit) and <strong>no DPO / DPIA</strong> yet.</li>
       <li><strong>Stripe</strong> is wired in the Gemfile but not active — do not list it as a live processor.</li>

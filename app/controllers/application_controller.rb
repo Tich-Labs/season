@@ -4,6 +4,7 @@ class ApplicationController < ActionController::Base
   include Pundit::Authorization
 
   before_action :set_locale
+  before_action :set_sentry_user_context
   helper_method :safe_back_path
 
   # Not currently raised by anything a user can reach — every `authorize`
@@ -47,6 +48,13 @@ class ApplicationController < ActionController::Base
 
   def set_locale
     I18n.locale = resolve_locale
+  end
+
+  def set_sentry_user_context
+    return unless defined?(Sentry)
+
+    # public_id is an opaque UUID — never send email or IP to Sentry.
+    authenticated? ? Sentry.set_user(id: current_user.public_id) : Sentry.set_user({})
   end
 
   def resolve_locale

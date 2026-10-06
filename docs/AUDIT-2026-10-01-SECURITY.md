@@ -25,6 +25,7 @@
 - **Server region:** Frankfurt (EU Central) for both the web service and database — data stays inside the EU.
 - **Backups:** Render Pro — point-in-time recovery covers 7 days; logical backups retained 7 days after creation.
 - **Logs:** retention set to 30 days in Render and Sentry (decided).
+- **Error tracking (Sentry):** PII capture disabled (`enable_pii = false`, `send_default_pii = false`); request body/headers/cookies/query string and user email/IP stripped in `before_send`; errors tagged with an opaque `public_id` only.
 - **End-user auth:** WebAuthn passkeys with PIN fallback; CSRF, CSP and rate limiting active (per prior audit).
 
 ---
@@ -36,7 +37,7 @@
 |---|---|---|
 | 1 | **Field-level encryption not enabled** | pgcrypto is post-launch backlog; OAuth tokens + iCloud credentials are stored in plaintext (`string` columns, no `encrypts` on `User`) — readable by anyone with database access. This is *field-level* encryption and is distinct from the **at-rest AES-256 disk encryption provided by Render, which is active**. |
 | 2 | **DPAs outstanding** | Art. 28 agreements with Render, Resend, Sentry (and Google, Apple, Meta) not yet evidenced. Legally required before real user data is processed. |
-| 3 | **Sentry captures PII** | `config.enable_pii = true` — error events can include IP, email and request params (possibly health data). Recommend scrubbing before the Beta. |
+| 3 | **Sentry captures PII** | ✅ **FIXED this pass** — `enable_pii = false` + `before_send` scrubs request body/headers/cookies/query string and user email/IP; events tagged with `public_id`. |
 
 ### 🟡 MEDIUM
 | # | Item | Detail |
@@ -61,7 +62,7 @@
 |---|---|---|
 | Render | Hosting + database | All stored data (encrypted at rest, AES-256) |
 | Resend | Transactional email | Email addresses + full email body (incl. health content in reminders) |
-| Sentry | Error tracking | Error events with PII enabled (IP, email, request params) |
+| Sentry | Error tracking | Error events, PII-scrubbed (no request body/headers/cookies; no email/IP; `public_id` tag only) |
 | Google / Apple / Facebook | OAuth sign-in + calendar sync | Identity + calendar access as authorised |
 | APNs / Web Push | Notifications | Device tokens |
 | Trello | Feedback / survey forwarding | User email + message text + optional screenshots |
