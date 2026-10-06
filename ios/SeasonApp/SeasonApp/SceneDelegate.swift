@@ -13,9 +13,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private var backgroundedAt: Date?
     private static let pinTimeout: TimeInterval = 5 * 60
 
+    // /app (HomeController#app), not the bare domain root — root maps to the
+    // Login/Create Account welcome screen with no auth check at all, so an
+    // already-logged-in user would see it flash by on every cold launch before
+    // landing on calendar. /app does the authenticated?-based redirect instead.
     private lazy var navigator = Navigator(
-        delegate: self,
-        rootViewController: UINavigationController()
+        configuration: Navigator.Configuration(
+            name: "main",
+            startLocation: baseURL.appendingPathComponent("app")
+        ),
+        delegate: self
     )
 
     private lazy var notificationRouter = NotificationRouter(
@@ -24,7 +31,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     func scene(
         _ scene: UIScene,
-        willConnectTo session: UISession,
+        willConnectTo session: UISceneSession,
         options connectionOptions: UIScene.ConnectionOptions
     ) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
@@ -37,11 +44,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         self.window = window
 
         navigator.rootViewController.navigationBar.isHidden = true
-        // /app (HomeController#app), not the bare domain root — root maps to the
-        // Login/Create Account welcome screen with no auth check at all, so an
-        // already-logged-in user would see it flash by on every cold launch before
-        // landing on calendar. /app does the authenticated?-based redirect instead.
-        navigator.route(baseURL.appendingPathComponent("app"))
         navigator.start()
     }
 
@@ -70,7 +72,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
               Date().timeIntervalSince(backgroundedAt) >= Self.pinTimeout else { return }
 
         guard let visitable = navigator.rootViewController.visibleViewController as? Visitable else { return }
-        navigator.route(visitable.visitableURL, options: VisitOptions(action: .replace), animated: false)
+        navigator.route(visitable.currentVisitableURL, options: VisitOptions(action: .replace))
     }
 }
 
