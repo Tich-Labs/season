@@ -4,7 +4,7 @@ layout: default
 
 # Season — User Data Map & Privacy Architecture
 
-**Last updated:** 1 October 2026 (P1 items + Sentry PII scrubbing — see Implementation Log)
+**Last updated:** 6 October 2026 (P1 items + Sentry PII scrubbing + log parameter filter restored — see Implementation Log)
 **Audience:** Engineering, Product, Legal
 
 ---
@@ -257,7 +257,7 @@ Sentry (`sentry-ruby` / `sentry-rails`) receives only error events. After the PI
 - **Error identity** — event id, timestamp, environment, hostname, Ruby version + OS name/version, and the loaded gem list (names + versions).
 - **The exception** — class, message, and the stack trace (file paths, line numbers, method names). Local variable *values* are **not** captured by default (`include_local_variables` is false).
 - **The route that failed** — e.g. `GET /symptoms`, `POST /settings/connect_icloud_calendar` (path + HTTP method only). No query string, no request body.
-- **Breadcrumbs** — recent Rails log lines (values already redacted to `[FILTERED]` by `filter_parameters`) and the app's outbound HTTP calls (Google Calendar API, iCloud CalDAV, Resend) as URL + status only, no headers or bodies.
+- **Breadcrumbs** — recent Rails log lines (request parameters are already `[FILTERED]` by `filter_parameters`, because Sentry reads the filtered params Rails puts on each request event) and the app's outbound HTTP calls (Google Calendar API, iCloud CalDAV, Resend) as URL + status only, no headers or bodies.
 - **A user tag** — `public_id` (an opaque UUID), set by `ApplicationController#set_sentry_user_context`. Nothing else.
 
 **Never sent** (scrubbed via `config.enable_pii = false`, `send_default_pii = false`, and a `before_send` hook):
@@ -377,26 +377,26 @@ Sentry.set_user(id: current_user.public_id)
 
 Rails logs every HTTP request parameter by default. Without filtering, a `PATCH /symptoms` request would write the user's mood score, weight, temperature, and notes to the Rails log in plain text — both in development and production.
 
-**What was added:**
+**Status:** added 21 April 2026, then accidentally dropped in the Rails 8.1 defaults update (`cf85c4c`, 6 May 2026) and restored on 6 October 2026. `test/config/filter_parameters_test.rb` now fails if it is dropped again.
+
+**Filtered (partial match, so `:mood` also covers `mood_text`, `:physical` covers `physical_symptoms`, etc.):**
 
 ```ruby
-# Identity
-:email, :name,
+# Credentials
+:passw, :secret, :token, :_key, :crypt, :salt, :certificate, :otp, :pin, :api_key, :auth, ...
 
-# OAuth UIDs
-:google_uid, :facebook_uid, :apple_uid,
+# Identity and OAuth UIDs
+:email, :name, :google_uid, :facebook_uid, :apple_uid,
 
 # Health — GDPR Article 9
-:birthday, :last_period_start,
-:cycle_length, :period_length,
-:has_regular_cycle, :contraception_type, :uses_hormonal_birth_control,
-:food_preference, :life_stage,
+:birthday, :last_period_start, :last_period_end, :period_start, :period_end, :started_on,
+:cycle_length, :period_length, :has_regular_cycle, :contraception_type,
+:uses_hormonal_birth_control, :food_preference, :life_stage,
+:mood, :energy, :sleep, :physical, :mental, :pain, :cravings, :discharge, :bleeding,
+:temperature, :weight, :sexual_intercourse, :intercourse_tags, :ratings,
 
-# Symptom fields
-:mood, :energy, :sleep, :physical, :mental,
-:pain, :cravings, :discharge,
-:temperature, :weight, :sexual_intercourse,
-:notes
+# Free text
+:notes, :message, :title, :location, :guests
 ```
 
 **How filtering works:**
@@ -427,7 +427,7 @@ This applies to:
 | Priority | Action | Effort | Status |
 |----------|--------|--------|--------|
 | P1 | Add `public_id` UUID to `users` | 30 min | ✅ Done — 21 Apr 2026 |
-| P1 | `filter_parameters` for health fields in logs | 15 min | ✅ Done — 21 Apr 2026 |
+| P1 | `filter_parameters` for health fields in logs | 15 min | ✅ Done — 21 Apr 2026; dropped 6 May 2026 (Rails 8.1 defaults); restored + tested 6 Oct 2026 |
 | P2 | Truncate email in admin list views | 30 min | ⬜ Open |
 | P2 | Create `user_health_profiles` table + migration | 2 hrs | ⬜ Open |
 | P3 | Move health columns from `users` to `user_health_profiles` | 3 hrs | ⬜ Requires P2 |

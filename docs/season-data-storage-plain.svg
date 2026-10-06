@@ -13,7 +13,7 @@
   <!-- Panel headers -->
   <rect x="20" y="70" width="600" height="58" rx="20" fill="#EDE1D5"/>
   <rect x="20" y="106" width="600" height="22" fill="#EDE1D5"/>
-  <text x="320" y="105" text-anchor="middle" font-size="22" font-weight="bold" fill="#933a35">TODAY — everything stored openly</text>
+  <text x="320" y="105" text-anchor="middle" font-size="22" font-weight="bold" fill="#933a35">TODAY — stored on our server, readable</text>
 
   <rect x="660" y="70" width="600" height="58" rx="20" fill="#933a35"/>
   <rect x="660" y="106" width="600" height="22" fill="#933a35"/>
@@ -67,9 +67,9 @@
   <text x="456" y="750" text-anchor="middle" font-size="11" font-weight="bold" fill="#C98A2D">⚠</text>
   <text x="474" y="750" text-anchor="start" font-size="11" fill="#4a403a">watch out</text>
   <text x="320" y="776" text-anchor="middle" font-size="12" fill="#4a403a">✔ you can switch between your phone and browser</text>
-  <text x="320" y="794" text-anchor="middle" font-size="12" fill="#4a403a">✖ your health data lives on our server, in readable form</text>
+  <text x="320" y="794" text-anchor="middle" font-size="12" fill="#4a403a">✖ your health data lives on our server — disk-encrypted, not end-to-end</text>
   <text x="320" y="812" text-anchor="middle" font-size="12" fill="#4a403a">✖ linked to your account — one breach reveals who you are and what you track</text>
-  <text x="320" y="830" text-anchor="middle" font-size="12" fill="#4a403a">⚠ consent is only a single on/off gate — no opt-in sharing, anonymity, or ML yet</text>
+  <text x="320" y="830" text-anchor="middle" font-size="12" fill="#4a403a">⚠ consent is a recorded on/off gate — no opt-in sharing, anonymity, or ML yet</text>
 
   <!-- ================== PLANNED PANEL ================== -->
 

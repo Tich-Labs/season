@@ -122,7 +122,7 @@ title: Beta Legal Q&A — Tech & Data Protection
         <td><strong>7</strong></td>
         <td>Server/app logs: what do they contain and how long are they kept? Can we limit to 30 days?</td>
         <td>
-          Rails logs to STDOUT at <code>warn</code> level with <code>request_id</code> tags (<code>production.rb</code>) — at that level no health data is deliberately logged. Sentry captures errors (<code>SENTRY_DSN</code>).
+          Rails logs to STDOUT at <code>warn</code> level with <code>request_id</code> tags (<code>production.rb</code>) — at that level no health data is deliberately logged. As a second layer, <code>filter_parameter_logging.rb</code> replaces the values of identity, health and free-text parameters (mood, symptoms, weight, temperature, intercourse, cycle dates, birthday, contraception, notes, calendar titles/guests, email, name) with <code>[FILTERED]</code>; this also covers the request parameters Sentry records as breadcrumbs. The filter list was restored on 6 Oct 2026 after being dropped in the Rails 8.1 defaults update. Sentry captures errors (<code>SENTRY_DSN</code>).
           <br><br>
           No log-retention setting exists in the repo.
           <br><br>
@@ -291,7 +291,9 @@ title: Beta Legal Q&A — Tech & Data Protection
         <td><strong>20</strong></td>
         <td>Free-text notes field? Can calendar entries contain names of other people?</td>
         <td>
-          <strong>Yes to both.</strong> Symptom logs and superpower logs have a free-text <code>notes</code> field; calendar events have <code>title</code>, <code>notes</code> and a <code>guests</code> field (other people's names can be stored).
+          <strong>Yes to both.</strong> Symptom logs and superpower logs have a free-text <code>notes</code> field; calendar events have <code>title</code>, <code>notes</code>, <code>location</code> and a <code>guests</code> field (other people's names can be stored).
+          <br><br>
+          <strong>Structured health data the app also stores</strong> (<code>symptom_logs</code>, <code>users</code>): mood, energy, sleep, pain, physical and mental symptoms, cravings, discharge, bleeding, temperature, weight, <strong>sexual intercourse</strong> (<code>sexual_intercourse</code>, <code>intercourse_tags</code>), <strong>contraception type</strong> and hormonal-birth-control flag, <strong>birthday</strong>, cycle and period length, and period dates (<code>period_starts</code>, <code>cycle_entries</code>). The Beta Privacy Notice must list all of these categories.
           <br><br>
           <span class="tag tag-confirmed">confirmed</span> source: <code>db/schema.rb</code> (symptom_logs, calendar_events)
         </td>
@@ -313,7 +315,7 @@ title: Beta Legal Q&A — Tech & Data Protection
   <h2>Data storage model — today vs planned</h2>
   <div class="card">
     <img src="season-data-storage-plain.svg" alt="Diagram comparing today's server-side storage with the planned local-first, choose-what-you-share model" style="width:100%; height:auto; border-radius:8px; margin-top:0.75rem;">
-    <p><strong>Today:</strong> every mood, symptom and cycle day is stored on our server, linked to the account by a user number (not email). It is encrypted at rest by the host (AES-256) but <em>not</em> field-level encrypted — readable by anyone with database access. Consent is a single on/off gate.</p>
+    <p><strong>Today:</strong> every mood, symptom and cycle day is stored on our server, linked to the account by a user number (not email). It is encrypted at rest by the host (AES-256) but <em>not</em> field-level encrypted — readable by anyone with database access. Consent is recorded as an append-only ledger (<code>consent_records</code>: terms, age 18, health data, survey contact — each with text hash, language, IP address and user agent), not a single flag.</p>
     <p><strong>Planned:</strong> local-first storage where you decide what, if anything, leaves the device — local-only, pick-and-choose, or fully anonymised. A rebuild, not a quick change.</p>
   </div>
 
@@ -321,9 +323,11 @@ title: Beta Legal Q&A — Tech & Data Protection
   <div class="card">
     <ul>
       <li><strong>OAuth tokens + iCloud credentials stored unencrypted (field-level)</strong> — plain string columns, no Active Record encryption; a live credential risk. Distinct from at-rest AES-256 (which <em>is</em> active): the values sit in plaintext <em>inside</em> the encrypted-at-rest database. Don't claim field-level encryption.</li>
-      <li><strong>Sentry PII capture</strong> — <strong>fixed</strong>: <code>config.enable_pii = false</code> plus a <code>before_send</code> scrub removes request body/headers/cookies and user email/IP; errors are tagged with <code>public_id</code> only.</li>
+      <li><strong>Sentry PII capture</strong> — <strong>fixed</strong> (see also Q7 for log/breadcrumb parameter filtering): <code>config.enable_pii = false</code> plus a <code>before_send</code> scrub removes request body/headers/cookies and user email/IP; errors are tagged with <code>public_id</code> only.</li>
       <li><strong>Trello receives user data</strong> — feedback forwards the user's email, message text and optional screenshots (screenshots may contain health data). <code>docs/userdata.md</code> already requires never appending health fields.</li>
-      <li><strong>No IP anonymization</strong> (GDPR audit) and <strong>no DPO / DPIA</strong> yet.</li>
+      <li><strong>No IP anonymization</strong> (GDPR audit) and <strong>no DPO / DPIA</strong> yet. IP address and user agent are stored in <code>consent_records</code> (kept up to 3 years as proof) and in the older <code>user_consents</code> table — two overlapping consent tables to reconcile.</li>
+      <li><strong>Retention gap:</strong> <code>DataRetentionJob</code> deletes cycle, symptom and superpower logs after 3 years and calendar events after 1 year, but never purges <code>consent_records</code> even though a 3-year constant is defined.</li>
+      <li><strong>Notice vs. code:</strong> the Beta Privacy Notice does not yet name intercourse, cravings, weight, birthday or contraception type, which the app stores.</li>
       <li><strong>Stripe</strong> is wired in the Gemfile but not active — do not list it as a live processor.</li>
     </ul>
   </div>
@@ -336,4 +340,4 @@ title: Beta Legal Q&A — Tech & Data Protection
     </ol>
   </div>
 
-  <footer><p>Season &mdash; Beta legal Q&amp;A &middot; drafted from codebase · 1 Oct 2026</p></footer>
+  <footer><p>Season &mdash; Beta legal Q&amp;A &middot; drafted from codebase · updated 6 Oct 2026</p></footer>
