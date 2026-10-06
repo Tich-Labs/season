@@ -1,3 +1,6 @@
+# In-app consent a signed-in user gives or withdraws per feature (health data
+# processing, reminders, ...). Gates features through ConsentCheck and is
+# deleted with the user. The beta-funnel proof of consent is ConsentRecord.
 class UserConsent < ApplicationRecord
   belongs_to :user
 

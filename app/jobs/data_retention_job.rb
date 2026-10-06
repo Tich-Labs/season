@@ -19,7 +19,8 @@ class DataRetentionJob < ApplicationJob
       cycle_entries: delete_old_cycle_entries,
       symptom_logs: delete_old_symptom_logs,
       calendar_events: delete_old_calendar_events,
-      superpower_logs: delete_old_superpower_logs
+      superpower_logs: delete_old_superpower_logs,
+      consent_records: delete_old_consent_records
     }
 
     Rails.logger.info "[DataRetentionJob] Deleted: #{deleted_counts.inspect}"
@@ -56,6 +57,20 @@ class DataRetentionJob < ApplicationJob
     SuperpowerLog.where(updated_at: ...cutoff_date).delete_all
   rescue => e
     Rails.logger.error "[DataRetentionJob] Error deleting superpower logs: #{e.message}"
+    0
+  end
+
+  # The consent ledger is proof of what a person agreed to, kept while the
+  # person is still a user. Once they have no account, the proof is only
+  # retained for CONSENT_RETENTION_YEARS (as the Beta Privacy Notice states).
+  def delete_old_consent_records
+    cutoff_date = CONSENT_RETENTION_YEARS.years.ago
+    ConsentRecord
+      .where(created_at: ...cutoff_date)
+      .where(beta_tester_id: BetaTester.where(user_id: nil).select(:id))
+      .delete_all
+  rescue => e
+    Rails.logger.error "[DataRetentionJob] Error deleting consent records: #{e.message}"
     0
   end
 end
