@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_01_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_06_183000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -52,12 +52,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_01_120000) do
   end
 
   create_table "beta_testers", force: :cascade do |t|
-    t.boolean "beta_consent", default: false, null: false
-    t.datetime "created_at", null: false
-    t.string "email", null: false
     t.string "name", null: false
+    t.string "email", null: false
     t.string "platform", null: false
+    t.boolean "beta_consent", default: false, null: false
     t.string "status", default: "registered", null: false
+    t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id"
     t.index ["email"], name: "index_beta_testers_on_email", unique: true
@@ -74,7 +74,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_01_120000) do
     t.time "end_time"
     t.string "google_event_id"
     t.text "guests"
-    t.string "icloud_event_id"
     t.string "location"
     t.text "notes"
     t.integer "reminder_minutes"
@@ -83,6 +82,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_01_120000) do
     t.string "title", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
+    t.string "icloud_event_id"
     t.index ["google_event_id"], name: "index_calendar_events_on_google_event_id"
     t.index ["icloud_event_id"], name: "index_calendar_events_on_icloud_event_id"
     t.index ["user_id", "date"], name: "index_calendar_events_on_user_id_and_date"
@@ -90,22 +90,22 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_01_120000) do
   end
 
   create_table "consent_records", force: :cascade do |t|
+    t.bigint "user_id"
     t.bigint "beta_tester_id", null: false
     t.string "consent_type", null: false
-    t.datetime "created_at", null: false
-    t.string "doc_version", null: false
     t.boolean "granted", null: false
-    t.string "ip_address"
+    t.string "doc_version", null: false
     t.string "language", null: false
     t.string "text_sha256", limit: 64, null: false
     t.string "user_agent"
-    t.bigint "user_id"
+    t.string "ip_address"
+    t.datetime "created_at", null: false
     t.index ["beta_tester_id", "consent_type", "created_at"], name: "index_consent_records_on_subject_and_type"
     t.index ["beta_tester_id"], name: "index_consent_records_on_beta_tester_id"
     t.index ["user_id"], name: "index_consent_records_on_user_id"
     t.check_constraint "char_length(text_sha256::text) = 64", name: "consent_records_sha_length_check"
-    t.check_constraint "consent_type::text = ANY (ARRAY['terms'::character varying::text, 'age_18'::character varying::text, 'health_data'::character varying::text, 'survey_contact'::character varying::text])", name: "consent_records_consent_type_check"
-    t.check_constraint "language::text = ANY (ARRAY['de'::character varying::text, 'en'::character varying::text])", name: "consent_records_language_check"
+    t.check_constraint "consent_type::text = ANY (ARRAY['terms'::character varying, 'age_18'::character varying, 'health_data'::character varying, 'survey_contact'::character varying]::text[])", name: "consent_records_consent_type_check"
+    t.check_constraint "language::text = ANY (ARRAY['de'::character varying, 'en'::character varying]::text[])", name: "consent_records_language_check"
   end
 
   create_table "cycle_day_contents", force: :cascade do |t|
@@ -152,8 +152,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_01_120000) do
 
   create_table "feedbacks", force: :cascade do |t|
     t.boolean "active", default: true, null: false
-    t.datetime "archived_at"
-    t.bigint "archived_by_id"
     t.string "attachment"
     t.datetime "created_at", null: false
     t.text "message", null: false
@@ -161,6 +159,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_01_120000) do
     t.string "type", default: "feedback", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
+    t.datetime "archived_at"
+    t.bigint "archived_by_id"
     t.index ["archived_by_id"], name: "index_feedbacks_on_archived_by_id"
     t.index ["user_id"], name: "index_feedbacks_on_user_id"
   end
@@ -172,11 +172,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_01_120000) do
   end
 
   create_table "m1_checklist_checks", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "item_key", null: false
     t.datetime "checked_at", null: false
     t.datetime "created_at", null: false
-    t.string "item_key", null: false
     t.datetime "updated_at", null: false
-    t.bigint "user_id", null: false
     t.index ["user_id", "item_key"], name: "index_m1_checklist_checks_on_user_id_and_item_key", unique: true
     t.index ["user_id"], name: "index_m1_checklist_checks_on_user_id"
   end
@@ -320,8 +320,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_01_120000) do
     t.integer "cycle_length"
     t.boolean "cycle_stage_reminder"
     t.string "email", default: "", null: false
-    t.string "email_bounce_type"
-    t.datetime "email_bounced_at"
     t.string "encrypted_password", default: "", null: false
     t.string "facebook_uid"
     t.string "food_preference"
@@ -332,8 +330,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_01_120000) do
     t.string "google_uid"
     t.boolean "has_regular_cycle"
     t.boolean "hide_past_events"
-    t.string "icloud_app_password"
-    t.string "icloud_email"
     t.datetime "invite_accepted_at"
     t.string "invite_token"
     t.datetime "invite_token_expires_at"
@@ -351,7 +347,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_01_120000) do
     t.datetime "remember_created_at"
     t.datetime "reset_password_sent_at"
     t.string "reset_password_token"
-    t.boolean "secret_tester", default: false, null: false
     t.boolean "show_appointments", default: true
     t.boolean "show_cycle_day_on_band", default: false
     t.boolean "show_cycledays", default: true
@@ -360,13 +355,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_01_120000) do
     t.boolean "show_phases"
     t.boolean "show_prediction"
     t.boolean "show_superpowers"
-    t.boolean "show_tracked_days", default: true, null: false
     t.boolean "show_week_numbers", default: false
-    t.datetime "tester_tour_seen_at"
     t.string "unconfirmed_email"
     t.datetime "updated_at", null: false
     t.boolean "uses_hormonal_birth_control"
     t.string "week_start_day"
+    t.boolean "show_tracked_days", default: true, null: false
+    t.string "email_bounce_type"
+    t.datetime "email_bounced_at"
+    t.datetime "tester_tour_seen_at"
+    t.string "icloud_email"
+    t.string "icloud_app_password"
+    t.boolean "secret_tester", default: false, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["invite_token"], name: "index_users_on_invite_token"
     t.index ["language"], name: "index_users_on_language"
@@ -417,6 +417,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_01_120000) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "beta_testers", "users"
   add_foreign_key "calendar_events", "users"
+  add_foreign_key "consent_records", "beta_testers"
+  add_foreign_key "consent_records", "users", on_delete: :nullify
   add_foreign_key "cycle_entries", "users"
   add_foreign_key "feedbacks", "users"
   add_foreign_key "feedbacks", "users", column: "archived_by_id", on_delete: :nullify
