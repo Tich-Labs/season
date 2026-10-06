@@ -46,7 +46,7 @@ bin/setup-hooks
 | Pre-push hook | ✅ (rubocop + erb_lint + standard) | N/A |
 | E2E tests | ✅ 32 Playwright smoke tests | N/A |
 | Manual codesign (headless CI) | ✅ dist cert + provisioning profile | N/A |
-| Bundle ID | `com.season-app.ios` | `com.seasonapp.android` |
+| Bundle ID | `com.onrender.seasonv2.rubynative` | `com.seasonapp.android` |
 
 ---
 
