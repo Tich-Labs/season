@@ -8,6 +8,9 @@ gem "bcrypt", "~> 3.1.7"
 # Asset pipeline
 gem "propshaft"
 
+# Image variants (Active Storage)
+gem "image_processing", "~> 1.2"
+
 # Use JavaScript with ESM import maps
 gem "importmap-rails"
 

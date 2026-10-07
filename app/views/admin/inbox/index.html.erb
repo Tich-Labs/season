@@ -74,6 +74,7 @@
         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date / time</th>
         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User ID</th>
         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Media</th>
         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Message</th>
         <% if viewing_archived %>
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Archived</th>
@@ -98,6 +99,24 @@
                          when 'support'   then { label: 'Support',   bg: 'bg-brand-field',       text: 'text-brand-primary' }
                          end %>
               <span class="px-2.5 py-0.5 rounded-full text-xs font-medium <%= badge[:bg] %> <%= badge[:text] %>"><%= badge[:label] %></span>
+            </td>
+            <td class="px-6 py-4">
+              <% if msg.media.attached? %>
+                <% if msg.media.image? %>
+                  <%= link_to admin_inbox_message_path(msg), title: msg.media.filename.to_s do %>
+                    <%= image_tag msg.media.variant(resize_to_limit: [128, 128]), alt: msg.media.filename.to_s,
+                          class: "w-16 h-16 object-cover rounded-lg border border-gray-200 bg-gray-100" %>
+                  <% end %>
+                <% else %>
+                  <%= link_to rails_blob_path(msg.media, disposition: "attachment"),
+                        class: "text-xs text-brand-primary hover:underline break-all",
+                        title: msg.media.filename.to_s do %>
+                    <%= msg.media.filename.to_s.truncate(20) %>
+                  <% end %>
+                <% end %>
+              <% else %>
+                <span class="text-gray-300">—</span>
+              <% end %>
             </td>
             <td class="px-6 py-4 text-sm text-gray-600">
               <%= link_to msg.message, admin_inbox_message_path(msg),
@@ -126,7 +145,7 @@
         <% end %>
       <% else %>
         <tr>
-          <td colspan="<%= viewing_archived ? 6 : 5 %>" class="px-6 py-8 text-center text-sm text-gray-500">
+          <td colspan="<%= viewing_archived ? 7 : 6 %>" class="px-6 py-8 text-center text-sm text-gray-500">
             <%= viewing_archived ? "Nothing archived" : "No messages yet" %>
           </td>
         </tr>

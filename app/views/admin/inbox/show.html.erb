@@ -62,7 +62,8 @@
       <h2 class="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-3">Attachment</h2>
       <% if @message.media.image? %>
         <%= link_to rails_blob_path(@message.media, disposition: "attachment"), target: "_blank", rel: "noopener" do %>
-          <%= image_tag @message.media, class: "max-w-full h-auto rounded-lg border border-gray-200" %>
+          <%= image_tag @message.media.variant(resize_to_limit: [1200, 1200]),
+                class: "max-w-full h-auto rounded-lg border border-gray-200" %>
         <% end %>
       <% end %>
       <p class="text-sm mt-3">

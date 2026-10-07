@@ -87,4 +87,37 @@ class Admin::InboxControllerTest < ActionDispatch::IntegrationTest
     post admin_inbox_archive_before_path, params: {filter: "bugs", before: ""}
     assert_equal "Pick a valid date to archive before.", flash[:alert]
   end
+
+  test "inbox list shows a thumbnail for image attachments" do
+    sign_in_as(@admin)
+    bug = Feedback.find_by!(message: "Fresh open bug")
+    bug.media.attach(io: StringIO.new(png_blob), filename: "screenshot.png", content_type: "image/png")
+
+    get admin_inbox_bugs_path
+    assert_response :success
+    assert_select "img[alt='screenshot.png']"
+  end
+
+  test "inbox list shows a download link for non-image attachments" do
+    sign_in_as(@admin)
+    bug = Feedback.find_by!(message: "Fresh open bug")
+    bug.media.attach(io: StringIO.new("hello"), filename: "recording.m4a", content_type: "audio/mp4")
+
+    get admin_inbox_bugs_path
+    assert_response :success
+    assert_includes response.body, "recording.m4a"
+  end
+
+  test "inbox list shows a dash when a message has no attachment" do
+    sign_in_as(@admin)
+    get admin_inbox_bugs_path
+    assert_response :success
+    assert_select "td span.text-gray-300", text: "—"
+  end
+
+  private
+
+  def png_blob
+    Base64.decode64("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==")
+  end
 end

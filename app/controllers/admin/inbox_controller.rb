@@ -1,26 +1,26 @@
 class Admin::InboxController < Admin::BaseController
   def overview
-    @messages = Feedback.active.order(created_at: :desc).limit(50)
+    @messages = inbox_messages(Feedback.active)
     render "admin/inbox/index"
   end
 
   def feedback
-    @messages = Feedback.active.feedback_type_feedback.order(created_at: :desc).limit(50)
+    @messages = inbox_messages(Feedback.active.feedback_type_feedback)
     render "admin/inbox/index"
   end
 
   def bugs
-    @messages = Feedback.active.feedback_type_bug_report.order(created_at: :desc).limit(50)
+    @messages = inbox_messages(Feedback.active.feedback_type_bug_report)
     render "admin/inbox/index"
   end
 
   def support
-    @messages = Feedback.active.feedback_type_support.order(created_at: :desc).limit(50)
+    @messages = inbox_messages(Feedback.active.feedback_type_support)
     render "admin/inbox/index"
   end
 
   def archived
-    @messages = Feedback.archived.includes(:user, :archived_by).order(archived_at: :desc).limit(50)
+    @messages = inbox_messages(Feedback.archived, order: {archived_at: :desc})
     render "admin/inbox/index"
   end
 
@@ -65,6 +65,10 @@ class Admin::InboxController < Admin::BaseController
   end
 
   private
+
+  def inbox_messages(scope, order: {created_at: :desc})
+    scope.includes(:user, :archived_by, media_attachment: :blob).order(order).limit(50)
+  end
 
   def inbox_scope(filter)
     case filter
