@@ -86,7 +86,7 @@ services:
       - key: GOOGLE_PLAY_TRACK
         sync: false
       - key: TESTFLIGHT_PUBLIC_LINK
-        sync: false
+        value: https://testflight.apple.com/join/ZxRQwVww
       - key: GOOGLE_PLAY_OPEN_TESTING_URL
         sync: false
       - key: GOOGLE_PLAY_GROUP_URL

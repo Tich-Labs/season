@@ -12,7 +12,7 @@ class InviteBetaTesterJobTest < ActiveJob::TestCase
     )
   end
 
-  test "invites a registered iOS tester and marks it invited" do
+  test "marks a registered iOS tester invited via the public link fallback" do
     called = false
     with_env("TESTFLIGHT_PUBLIC_LINK", nil) do
       stub_class_method(AppStoreConnectService, :configured?, -> { true }) do
@@ -22,7 +22,7 @@ class InviteBetaTesterJobTest < ActiveJob::TestCase
       end
     end
 
-    assert called
+    assert_not called
     assert_equal "invited", @tester.reload.status
   end
 
@@ -44,7 +44,7 @@ class InviteBetaTesterJobTest < ActiveJob::TestCase
     assert_equal "invited", @tester.reload.status
   end
 
-  test "does nothing for iOS when App Store Connect is not configured" do
+  test "marks iOS testers invited without App Store Connect via the public link" do
     called = false
     with_env("TESTFLIGHT_PUBLIC_LINK", nil) do
       stub_class_method(AppStoreConnectService, :configured?, -> { false }) do
@@ -55,7 +55,7 @@ class InviteBetaTesterJobTest < ActiveJob::TestCase
     end
 
     assert_not called
-    assert_equal "registered", @tester.reload.status
+    assert_equal "invited", @tester.reload.status
   end
 
   test "does nothing for Android when Google Play is not configured" do

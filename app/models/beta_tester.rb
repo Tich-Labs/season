@@ -2,6 +2,11 @@ class BetaTester < ApplicationRecord
   PLATFORMS = %w[ios android web].freeze
   STATUSES = %w[registered invited active completed].freeze
 
+  # TestFlight public link for the external testing group (up to 600 testers).
+  # Public by design; an ENV override wins so staging or alternate tracks can
+  # point elsewhere.
+  TESTFLIGHT_PUBLIC_LINK = "https://testflight.apple.com/join/ZxRQwVww".freeze
+
   enum :status, {registered: "registered", invited: "invited", active: "active", completed: "completed"}
 
   # The consent ledger is append-only while the tester exists, but a tester can
@@ -50,6 +55,10 @@ class BetaTester < ApplicationRecord
   end
 
   def linked? = user_id.present?
+
+  def self.testflight_public_link
+    ENV["TESTFLIGHT_PUBLIC_LINK"].presence || TESTFLIGHT_PUBLIC_LINK
+  end
 
   private
 

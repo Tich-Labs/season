@@ -9,14 +9,22 @@
 
   <div class="beta-next">
     <h3 class="beta-next__title"><%= t("beta_onboarding.confirmed.platform.#{@platform.downcase}.title") %></h3>
-    <%# Show the "tap the button" steps only when a link actually renders below;
-        otherwise fall back to the email-invitation steps. %>
-    <% steps_key = (@platform.casecmp("Web").zero? || @download_link.present? || @group_link.present?) ? "steps" : "steps_email" %>
-    <ol class="beta-next__steps">
-      <% t("beta_onboarding.confirmed.platform.#{@platform.downcase}.#{steps_key}").each do |step| %>
-        <li><%= step %></li>
-      <% end %>
-    </ol>
+    <%# iOS points straight at Apple's TestFlight page, which already walks the
+        user through installing TestFlight and then Season — so a one-line note
+        replaces the step list there instead of duplicating Apple's steps. %>
+    <% note = t("beta_onboarding.confirmed.platform.#{@platform.downcase}.note", default: nil) %>
+    <% if note.present? %>
+      <p class="beta-next__note"><%= note %></p>
+    <% else %>
+      <%# Show the "tap the button" steps only when a link actually renders below;
+          otherwise fall back to the email-invitation steps. %>
+      <% steps_key = (@platform.casecmp("Web").zero? || @download_link.present? || @group_link.present?) ? "steps" : "steps_email" %>
+      <ol class="beta-next__steps">
+        <% t("beta_onboarding.confirmed.platform.#{@platform.downcase}.#{steps_key}").each do |step| %>
+          <li><%= step %></li>
+        <% end %>
+      </ol>
+    <% end %>
     <% if @platform.casecmp("Web").zero? %>
       <a class="beta-cta beta-next__cta" href="https://seasonv2.onrender.com/welcome" target="_blank" rel="noopener">
         <%= t("beta_onboarding.confirmed.open_web") %>

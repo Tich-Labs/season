@@ -661,6 +661,7 @@
 .beta-next { background: var(--beta-card); border-radius: 16px; padding: 16px 18px; }
 .beta-next__title { margin: 0 0 10px; color: var(--beta-brand); font-size: 14px; }
 .beta-next__steps { margin: 0; padding-left: 20px; display: grid; gap: 8px; font-size: 12.5px; }
+.beta-next__note { margin: 0; font-size: 12.5px; }
 .beta-next__cta { display: block; margin-top: 14px; width: auto; }
 .beta-check-mark { font-size: 38px; margin-bottom: 4px; }
 /* Confirmation: the tick and the message read as one line, so the tick drops

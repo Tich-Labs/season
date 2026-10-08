@@ -50,14 +50,7 @@ de:
       platform:
         ios:
           title: "So startest du auf Apple iOS"
-          steps:
-            - "Tippe unten auf den Button."
-            - "Installiere die kostenlose App TestFlight aus dem App Store."
-            - "Tippe auf „Annehmen“ und dann auf „Installieren“."
-          steps_email:
-            - "Wir schicken dir eine Einladung per E-Mail."
-            - "Installiere die kostenlose App TestFlight aus dem App Store."
-            - "Öffne den Link in der E-Mail, tippe auf „Annehmen“ und dann auf „Installieren“."
+          note: "Öffne unten TestFlight — Apple führt dich durch die Installation von TestFlight und dann Season."
         android:
           title: "So startest du auf Android"
           steps:

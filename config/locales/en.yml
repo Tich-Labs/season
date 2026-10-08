@@ -50,14 +50,7 @@ en:
       platform:
         ios:
           title: "Getting started on Apple iOS"
-          steps:
-            - "Tap the button below."
-            - "Install the free TestFlight app from the App Store."
-            - "Tap Accept, then Install to get Season."
-          steps_email:
-            - "We will email you an invitation."
-            - "Install the free TestFlight app from the App Store."
-            - "Open the link in the email, tap Accept, then Install."
+          note: "Open TestFlight below — Apple will walk you through installing TestFlight, then Season."
         android:
           title: "Getting started on Android"
           steps:

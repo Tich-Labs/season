@@ -226,11 +226,12 @@ class BetaOnboardingControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
-  test "iOS confirmation shows no download button when the link is not configured" do
+  test "iOS confirmation always links to the TestFlight public link" do
     with_env("TESTFLIGHT_PUBLIC_LINK", nil) do
       get beta_confirmed_path(locale: @locale, platform: "ios")
-      assert_no_match(/Open in TestFlight/, response.body)
-      assert_match "We will email you an invitation", response.body
+      assert_match "Open in TestFlight", response.body
+      assert_match "https://testflight.apple.com/join/ZxRQwVww", response.body
+      assert_no_match(/We will email you an invitation/, response.body)
     end
   end
 

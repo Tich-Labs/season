@@ -30,7 +30,7 @@ class InviteBetaTesterJob < ApplicationJob
     # Public-link mode: the tester installs via the TestFlight public link
     # shown on the confirmation page — no per-email App Store Connect API
     # invite needed (and no 100-seat limit).
-    if ENV["TESTFLIGHT_PUBLIC_LINK"].present?
+    if BetaTester.testflight_public_link.present?
       beta_tester.update!(status: "invited")
       return
     end
