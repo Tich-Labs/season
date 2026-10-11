@@ -67,7 +67,8 @@ Rails.application.routes.draw do
   get "/app", to: "home#app", as: :app_landing
   get "/loader", to: "home#loader", as: :loader
   get "/welcome", to: "home#welcome", as: :welcome
-  post "/launch-signup", to: "launch_signups#create"
+
+  # launch_signups (the /countdown waitlist) was removed — no signup endpoint.
 
   resource :registration, only: [:new, :create] do
     get :check_email, on: :collection
@@ -212,8 +213,6 @@ Rails.application.routes.draw do
     post "inbox/archive_before", to: "inbox#archive_before", as: :inbox_archive_before
     patch "inbox/:id/archive", to: "inbox#archive", as: :inbox_archive
     patch "inbox/:id/unarchive", to: "inbox#unarchive", as: :inbox_unarchive
-    get "launch_signups", to: "launch_signups#index", as: :launch_signups
-    get "launch_signups/export_csv", to: "launch_signups#export_csv", as: :launch_signups_export_csv
     # Must precede the resources line: `resources` declares show as
     # /beta_testers/:id, which otherwise swallows "export_csv" as an id.
     get "beta_testers/export_csv", to: "beta_testers#export_csv", as: :beta_testers_export_csv
@@ -271,8 +270,9 @@ Rails.application.routes.draw do
   get "information", to: "information#index", as: :information
   get "information/:phase", to: "information#show", as: :information_phase
 
-  get "/launch", to: "launch#index", as: :launch
-  get "/countdown", to: "home#countdown", as: :countdown_page
+  # The old /launch splash was redundant with the root loader — redirect it
+  # to "/" so any lingering link/bookmark still lands on the auth-aware splash.
+  get "/launch", to: redirect("/")
 
   # Beta tester recruitment — deliberately unlinked from the app navigation
   # and noindex, shared by direct link only.

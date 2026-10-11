@@ -51,7 +51,7 @@ class OnboardingController < ApplicationController
         params.dig(:user, :name)
       end
       if name.blank?
-        @error = t(".name_required", default: "Please enter your name")
+        @error = t("onboarding.errors.name_required")
         render :show, status: :unprocessable_content
         return
       end
@@ -68,7 +68,7 @@ class OnboardingController < ApplicationController
         raise ArgumentError if birthday > Time.zone.today || year < 1946
         current_user.update!(birthday: birthday)
       rescue ArgumentError, TypeError
-        @error = t(".invalid_birthday", default: "Please enter a valid date of birth")
+        @error = t("onboarding.errors.invalid_birthday")
         render :show, status: :unprocessable_content
         return
       end
@@ -82,7 +82,7 @@ class OnboardingController < ApplicationController
       start_date = params[:last_period_start]
       end_date = params[:last_period_end]
       if start_date.blank?
-        @error = "Please select a date or tap Unsure"
+        @error = t("onboarding.errors.select_date")
         render :show, status: :unprocessable_content
         return
       end
@@ -96,7 +96,7 @@ class OnboardingController < ApplicationController
           current_user.period_starts.find_or_create_by!(started_on: parsed_start)
         end
       rescue ArgumentError, TypeError
-        @error = "Invalid date — please select again"
+        @error = t("onboarding.errors.invalid_date")
         render :show, status: :unprocessable_content and return
       end
       redirect_to onboarding_path(4) and return
@@ -105,7 +105,7 @@ class OnboardingController < ApplicationController
       # Regular cycle?
       regular = params[:has_regular_cycle]
       if regular.blank?
-        @error = "Please select an option"
+        @error = t("onboarding.errors.select_option")
         render :show, status: :unprocessable_content
         return
       end
@@ -126,7 +126,7 @@ class OnboardingController < ApplicationController
       end
       cycle_length = params[:cycle_length].to_i
       if cycle_length < 20 || cycle_length > 45
-        @error = "Please select a valid cycle length"
+        @error = t("onboarding.errors.invalid_cycle_length")
         render :show, status: :unprocessable_content
         return
       end
@@ -137,7 +137,7 @@ class OnboardingController < ApplicationController
       # Hormonal birth control?
       hormonal = params[:uses_hormonal_birth_control]
       if hormonal.blank?
-        @error = "Please select an option"
+        @error = t("onboarding.errors.select_option")
         render :show, status: :unprocessable_content
         return
       end
@@ -153,7 +153,7 @@ class OnboardingController < ApplicationController
       # Birth control reminder
       reminder = params[:birth_control_reminder]
       if reminder.blank?
-        @error = "Please select an option"
+        @error = t("onboarding.errors.select_option")
         render :show, status: :unprocessable_content
         return
       end
@@ -164,7 +164,7 @@ class OnboardingController < ApplicationController
       # Birth control method
       method = params[:birth_control_method]
       if method.blank?
-        @error = "Please select a method"
+        @error = t("onboarding.errors.select_method")
         render :show, status: :unprocessable_content
         return
       end
@@ -184,7 +184,7 @@ class OnboardingController < ApplicationController
       # Food preferences
       food_pref = params[:food_preference]
       if food_pref.blank?
-        @error = "Please select an option"
+        @error = t("onboarding.errors.select_option")
         render :show, status: :unprocessable_content
         return
       end

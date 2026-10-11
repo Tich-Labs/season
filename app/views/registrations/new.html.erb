@@ -81,7 +81,7 @@
 
       <!-- Email -->
       <div class="mt-[29px]">
-        <label for="email" class="sr-only">Email</label>
+        <label for="email" class="sr-only"><%= t("registrations.new.email") %></label>
         <%= f.email_field :email,
             id: "email",
             autofocus: true,
@@ -94,7 +94,7 @@
 
       <!-- Password -->
       <div class="mt-[15px] relative" data-controller="password-visibility">
-        <label for="password_field" class="sr-only">Password</label>
+        <label for="password_field" class="sr-only"><%= t("registrations.new.password") %></label>
         <%= f.password_field :password,
             id: "password_field",
             autocomplete: "new-password",
@@ -109,7 +109,7 @@
 
       <!-- Confirm Password -->
       <div class="mt-[15px] relative" data-controller="password-visibility">
-        <label for="password_confirmation_field" class="sr-only">Repeat password</label>
+        <label for="password_confirmation_field" class="sr-only"><%= t("registrations.new.repeat_password") %></label>
         <%= f.password_field :password_confirmation,
             id: "password_confirmation_field",
             autocomplete: "new-password",

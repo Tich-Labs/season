@@ -42,7 +42,7 @@
 
       <%# ── Toggle row ── %>
       <div style="background:#FFFFFF; padding:16px 20px; border-bottom:1px solid #EDE1D5; display:flex; align-items:center; justify-content:space-between;">
-        <span style="color:#3d2b28; font-size:16px; font-weight:500;">Enable Good Morning</span>
+        <span style="color:#3d2b28; font-size:16px; font-weight:500;"><%= t("settings.notification_morning.enable") %></span>
         <label style="position:relative; width:44px; height:24px; cursor:pointer; flex-shrink:0;" aria-label="Enable Good Morning notification">
           <%= f.check_box :enabled, {id: "morning_enabled", style: "opacity:0; width:0; height:0;",
                           checked: @reminder.active?}, "1", "0" %>

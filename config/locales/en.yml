@@ -120,6 +120,31 @@ en:
       - "Thu"
       - "Fri"
       - "Sat"
+    # Month labels for the onboarding birthday picker (index 0 is nil per
+    # Rails convention, so January sits at index 1; callers `.compact`).
+    abbr_month_names:
+      - ~
+      - "Jan"
+      - "Feb"
+      - "Mar"
+      - "Apr"
+      - "May"
+      - "Jun"
+      - "Jul"
+      - "Aug"
+      - "Sep"
+      - "Oct"
+      - "Nov"
+      - "Dec"
+    # Single-letter Mon-Sun initials for calendar weekday headers.
+    day_initials:
+      - "M"
+      - "T"
+      - "W"
+      - "T"
+      - "F"
+      - "S"
+      - "S"
   oauth:
     errors:
       authentication_failed: "Authentication failed. Please try again."
@@ -194,13 +219,16 @@ en:
     login: "Login"
     logo_alt: "Season wordmark"
     wordmark_alt: "Season title"
-    countdown_label: "Launch countdown"
-    countdown_to: "Until 7 April 2026"
-    days: "Days"
-    hours: "Hours"
-    minutes: "Minutes"
-    seconds: "Seconds"
   onboarding:
+    back: "Back"
+    errors:
+      name_required: "Please enter your name"
+      invalid_birthday: "Please enter a valid date of birth"
+      select_date: "Please select a date or tap Unsure"
+      invalid_date: "Invalid date — please select again"
+      select_option: "Please select an option"
+      invalid_cycle_length: "Please select a valid cycle length"
+      select_method: "Please select a method"
     require_user:
       sign_in_first: "Please sign in first"
     step1:
@@ -233,6 +261,7 @@ en:
       heading: "How long is your average cycle?"
       note: "Small note: Cycles usually last 24-38 days."
       days_suffix: "Days"
+      picker_label: "Cycle length in days"
       submit: "Submit"
       not_sure: "Not sure"
     step6:
@@ -276,6 +305,8 @@ en:
     header: "Hello %{name} — This is your month"
     greeting: "Hello %{name} — This is your month"
     subheading: "Track your cycle"
+    appointments:
+      no_appointments_this_month: "No appointments this month"
     index:
       day_view: "Day View"
       week_view: "Week View"
@@ -329,10 +360,15 @@ en:
       rights_withdraw: "Withdraw consent at any time"
   tracking:
     feedback: "Give feedback"
+    create:
+      period_logged: "Period logged! Day %{day}"
     index:
       current_phase: "You are in your:"
       log_period: "Log your last period start date to see your cycle phase and predictions."
       my_symptoms: "My Symptoms"
+      my_superpowers: "My Superpowers"
+      track_my_period: "Track My Period"
+      cycle_day: "Cycle Day"
       give_feedback: "Give feedback"
     period_update:
       saved: "Period dates saved."
@@ -353,6 +389,34 @@ en:
       updated: "Event updated"
     destroy:
       deleted: "Event deleted"
+    form:
+      invite_guests: "Invite guests"
+      invite_guests_title: "Invite Guests"
+      choose_icon: "Choose an icon"
+      add_icon: "Add icon"
+      delete_icon: "Delete icon"
+      submit: "Submit"
+      your_notes: "Your Notes"
+      set_reminder: "Set reminder"
+      add_reminder: "Add reminder"
+      repeat_this_event: "Repeat this event"
+      save: "Save"
+      custom_repeat: "Custom repeat"
+      every: "Every"
+      repeat_until: "Repeat until"
+      recurring_event: "This is a recurring event."
+      others_involved: "Others are also involved in this meeting."
+      attention: "Attention"
+      repeat: "Repeat"
+      from: "From"
+      all_day: "All day"
+      set_date: "Set date"
+    index:
+      note: "Note:"
+      no_appointments_yet: "No appointments yet"
+      create_first_appointment: "Create your first appointment to get started"
+    show:
+      invite_guests: "Invite guests"
   admin:
     cycle_phase_contents:
       create:
@@ -377,6 +441,10 @@ en:
       invalid_link: "Invalid invite link."
       token_expired: "This invite link has expired. Please contact support for a new invite."
   passwords:
+    new:
+      email: "Email"
+    error_contact:
+      go_back: "Go back to LogIn"
     edit:
       back: "< back"
       title: "NEW<br>PASSWORD"
@@ -469,6 +537,13 @@ en:
       sunday: "Sunday"
       saturday: "Saturday"
       timezone: "Timezone"
+      timezone_utc: "UTC / GMT"
+      timezone_cet: "Central European Time (CET)"
+      timezone_est: "Eastern Standard Time (EST)"
+      timezone_pst: "Pacific Standard Time (PST)"
+      timezone_ist: "Indian Standard Time (IST)"
+      timezone_jst: "Japan Standard Time (JST)"
+      timezone_aest: "Australian Eastern (AEST)"
       saving: "Saving..."
       google_calendar: "Google Calendar"
       microsoft: "Microsoft"
@@ -491,6 +566,9 @@ en:
       start_time: "Start → 12:00 a.m."
       end_time: "End → 12:00 a.m."
       birth_control: "Birth control reminder"
+      birth_control_pill: "Birth control pill"
+      daily_9pm: "Daily → 09:00 p.m."
+      keep_track_day: "Keep track of: Today is day 15 of taking the pill"
       supplement: "Supplement reminder"
       in_app_popups: "In-App Popups"
       in_app_new_appt: "New appointments synced"
@@ -500,6 +578,22 @@ en:
       in_app_appointments: "Appointments"
       edit: "edit"
       daily_pm: "Daily → 06:00 p.m."
+      taking_pill: "Taking the pill → 21 Days"
+      pillbreak: "Pillbreak → 7 Days"
+      push_not_supported: "Not supported"
+      push_enabled: "Enabled"
+      push_off: "Off"
+      push_blocked: "Blocked"
+    notification_birth_control:
+      current_method: "Current method"
+      enable_reminder: "Enable Reminder"
+      keep_track_of: "Keep track of:"
+      active_days: "Active days"
+      break_days: "Break days"
+    notification_period:
+      enable: "Enable Period Reminder"
+    notification_morning:
+      enable: "Enable Good Morning"
     subscriptions:
       title: "My Subscriptions"
       my_plan: "My Plan"
@@ -595,6 +689,9 @@ en:
         oops: "OOPS!"
         already_registered: "This email is already registered. Please log in instead."
         terms_not_accepted: "You must accept the terms and privacy policy to continue."
+      email: "Email"
+      password: "Password"
+      repeat_password: "Repeat password"
   sessions:
     new:
       errors:
@@ -602,6 +699,11 @@ en:
         wrong_password: "Wrong E-mail or password."
         wrong_email: "Wrong E-mail or password."
         unconfirmed: "Please confirm your email first. Check your inbox or request a new confirmation link."
+      email: "Email"
+      password: "Password"
+      please_try_again: "Please try again."
+      unrecognized_email: "Hmm... we don't recognize this email."
+      check_again_or_sign_up: "Check again or sign up."
     rate_limited:
       too_many_attempts: "Too many login attempts. Please try again later."
   symptoms:
@@ -643,6 +745,10 @@ en:
       read_more: "…read more"
       choose: "Choose"
       close: "Close"
+      physical_aria: "Physical symptoms"
+      mental_aria: "Mental symptoms"
+    discharge:
+      title: "Discharge"
     # Content for the "?" info modal on each Vaginal Discharge grid icon.
     # Source: docs/Cervical mucus tracking(Tabelle1).csv — the 7 keys match
     # the discharge_grid keys in symptoms/index.html.erb. Spotting/Period
@@ -730,6 +836,8 @@ en:
       create_appointment: "Create appointment"
       add_appointment: "Add appointment"
       no_content: "No content yet for this day."
+      note: "Note:"
+      here_are_tips: "Here are your tips for today:"
       tips: "Tips for this phase"
       you_are_in: "You're in %{phase} phase"
       got_it: "Got it"
@@ -739,6 +847,19 @@ en:
       message_received: "Your message has been received."
       close: "Close"
   shared:
+    consent_info:
+      what: "What this includes:"
+      why: "Why we need it:"
+      rights: "Your Rights"
+    pwa:
+      update_available: "New version of Season available"
+      refresh: "Refresh"
+      add_home: "Add Season to your home screen"
+      add: "Add"
+      ios_tap: "Tap"
+      ios_share: "Share"
+      ios_then: "then"
+      ios_add_home: "Add to Home Screen"
     feedback_modal:
       title: "Share your feedback"
       description: "We'd love to hear what you think"
@@ -895,3 +1016,32 @@ en:
   confirmations:
     success: "Email confirmed! Welcome to Season."
     expired: "That confirmation link has expired or already been used. Request a new one below."
+
+  daily_view:
+    show:
+      all_day: "All day"
+      note: "Note:"
+  information:
+    index:
+      title: "Your cycle phases"
+      subtitle: "Learn about each phase of your cycle and how it affects your body and mind."
+      read_more: "Read more →"
+    show:
+      emotional_world: "Emotional world"
+      that_will_do_you_good: "That will do you good"
+  notifications:
+    index:
+      title: "Notifications"
+      no_notifications: "No notifications yet"
+      all_caught_up: "You're all caught up!"
+    show:
+      title: "Notification"
+  account:
+    show:
+      cycle_history: "Cycle tracking history"
+      symptom_logs: "Symptom logs"
+      superpower_entries: "Superpower entries"
+      calendar_events: "Calendar events"
+      reminders: "Reminders"
+      streaks: "Streaks & achievements"
+      profile_picture: "Profile picture"

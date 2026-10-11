@@ -24,7 +24,7 @@
     <div class="bg-white rounded-xl p-5 mb-3"
          data-controller="superpower"
          data-superpower-url-value="<%= superpowers_path %>">
-      <p class="text-brand-primary text-lg font-medium text-center font-sans">You are in your</p>
+      <p class="text-brand-primary text-lg font-medium text-center font-sans"><%= t("forecast.index.phase_prefix") %></p>
       <p class="font-extrabold text-3xl leading-tight text-center font-sans mb-6" style="color:<%= @phase_colour %>;">
         <%= @phase.capitalize %> Phase
       </p>
@@ -124,7 +124,7 @@
     <!-- Recent logs -->
     <% if @superpower_logs&.any? %>
       <div class="bg-white rounded-xl p-5">
-        <h2 class="text-brand-primary text-lg font-bold mb-4">Recent logs</h2>
+        <h2 class="text-brand-primary text-lg font-bold mb-4"><%= t("superpowers.index.recent_logs") %></h2>
         <div class="flex flex-col gap-2">
           <% @superpower_logs.last(7).reverse.each do |log| %>
             <a href="<%= superpower_path(log) %>"

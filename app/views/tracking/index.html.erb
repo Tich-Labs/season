@@ -167,7 +167,7 @@
         </div>
       </div>
       <% if @cycle_day %>
-        <p class="text-center text-xs text-brand-primary font-sans mb-4">Cycle Day <%= @cycle_day %></p>
+        <p class="text-center text-xs text-brand-primary font-sans mb-4"><%= t("tracking.index.cycle_day") %> <%= @cycle_day %></p>
       <% end %>
     <% end %>
 
@@ -185,7 +185,7 @@
 
       <%= link_to superpowers_path,
             class: "flex justify-between items-center rounded-lg px-5 min-h-[3rem] py-3 bg-white no-underline" do %>
-        <span class="flex-1 min-w-0 text-xl font-medium text-brand-primary font-sans">My Superpowers</span>
+        <span class="flex-1 min-w-0 text-xl font-medium text-brand-primary font-sans"><%= t("tracking.index.my_superpowers") %></span>
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none"
              stroke="<%= phase_colour %>" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true" class="shrink-0">
           <polyline points="9 18 15 12 9 6" />
@@ -194,7 +194,7 @@
 
       <%= link_to period_tracking_index_path,
             class: "flex justify-between items-center rounded-lg px-5 min-h-[3rem] py-3 bg-white no-underline" do %>
-        <span class="flex-1 min-w-0 text-xl font-medium text-brand-primary font-sans">Track My Period</span>
+        <span class="flex-1 min-w-0 text-xl font-medium text-brand-primary font-sans"><%= t("tracking.index.track_my_period") %></span>
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none"
              stroke="<%= phase_colour %>" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true" class="shrink-0">
           <polyline points="9 18 15 12 9 6" />

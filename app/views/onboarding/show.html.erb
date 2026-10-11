@@ -5,7 +5,7 @@
     <% if @step > 1 %>
       <%= link_to onboarding_path(@step - 1),
             class: "absolute left-0 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center",
-            aria: { label: "Back" } do %>
+            aria: { label: t("onboarding.back") } do %>
         <svg width="20" height="20" fill="none" stroke="#933a35" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6" /></svg>
       <% end %>
     <% end %>
@@ -86,7 +86,7 @@
                  data-scroll-picker-min-value="1"
                  data-scroll-picker-max-value="12"
                  data-scroll-picker-step-value="1"
-                 data-scroll-picker-labels-value='["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]'
+                 data-scroll-picker-labels-value='<%= I18n.t("date.abbr_month_names").compact.to_json %>'
                  data-scroll-picker-placeholder="<%= t('onboarding.step2.placeholder_month') %>">
               <div class="relative" style="width:56px; height:180px;">
                 <div class="sp-highlight" style="top:69px; height:42px;"></div>
@@ -159,7 +159,7 @@
           <a href="<%= onboarding_path(3, cal_year: (cal_start - 1.month).year, cal_month: (cal_start - 1.month).month) %>"
              class="text-brand-primary text-sm font-medium px-1">&lt;</a>
           <span class="text-brand-primary text-sm font-medium">
-            <%= cal_start.strftime("%B %Y") %>
+            <%= I18n.l(cal_start, format: "%B %Y") %>
           </span>
           <a href="<%= onboarding_path(3, cal_year: (cal_start + 1.month).year, cal_month: (cal_start + 1.month).month) %>"
              class="text-brand-primary text-sm font-medium px-1">&gt;</a>
@@ -274,7 +274,7 @@
                  style="top:84px; height:42px;"></div>
 
             <div data-onboarding-picker-target="track"
-                 role="listbox" aria-label="Cycle length in days" aria-activedescendant="cycle-day-28"
+                 role="listbox" aria-label="<%= t('onboarding.step5.picker_label') %>" aria-activedescendant="cycle-day-28"
                  tabindex="0"
                  class="relative overflow-y-scroll flex flex-col items-center"
                  style="height:210px; scroll-snap-type:y mandatory; -webkit-overflow-scrolling:touch; scrollbar-width:none;">

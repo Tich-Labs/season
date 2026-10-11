@@ -38,7 +38,7 @@ class TrackingController < ApplicationController
         period_start: true
       )
 
-      redirect_to tracking_index_path(tracking_saved: 1), notice: "Period logged! Day #{cycle_day}"
+      redirect_to tracking_index_path(tracking_saved: 1), notice: t(".period_logged", day: cycle_day)
     end
   end
 

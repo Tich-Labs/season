@@ -29,8 +29,8 @@
 
     <%# Header %>
     <div class="mb-6">
-      <h1 class="text-3xl font-semibold text-brand-primary tracking-tight">Your cycle phases</h1>
-      <p class="mt-2 text-sm text-brand-secondary max-w-xl">Learn about each phase of your cycle and how it affects your body and mind.</p>
+      <h1 class="text-3xl font-semibold text-brand-primary tracking-tight"><%= t("information.index.title") %></h1>
+      <p class="mt-2 text-sm text-brand-secondary max-w-xl"><%= t("information.index.subtitle") %></p>
     </div>
 
     <%# Phase cards %>
@@ -52,7 +52,7 @@
           </div>
 
           <div class="border-t border-gray-100 p-5 flex justify-end">
-            <span class="text-xs font-semibold uppercase tracking-[0.24em] text-brand-primary">Read more →</span>
+            <span class="text-xs font-semibold uppercase tracking-[0.24em] text-brand-primary"><%= t("information.index.read_more") %></span>
           </div>
         <% end %>
       <% end %>

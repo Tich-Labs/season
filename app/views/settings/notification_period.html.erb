@@ -42,7 +42,7 @@
 
       <%# ── Toggle ── %>
       <div style="background:#FFFFFF; padding:16px 20px; border-bottom:1px solid #EDE1D5; display:flex; align-items:center; justify-content:space-between;">
-        <span style="color:#3d2b28; font-size:16px; font-weight:500;">Enable Period Reminder</span>
+        <span style="color:#3d2b28; font-size:16px; font-weight:500;"><%= t("settings.notification_period.enable") %></span>
         <label style="position:relative; width:44px; height:24px; cursor:pointer; flex-shrink:0;" aria-label="Enable period reminder">
           <%= f.check_box :enabled, {id: "period_enabled", style: "opacity:0; width:0; height:0;",
                           checked: @start_reminder.active?}, "1", "0" %>

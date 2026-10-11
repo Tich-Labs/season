@@ -184,7 +184,7 @@
           </svg>
         </div>
         <div class="flex-1 min-w-0">
-          <span data-season-modal-target="guestsLabel" class="text-brand-primary text-base font-medium tracking-007 font-sans <%= guest_list.any? ? 'hidden' : '' %>">Invite guests</span>
+          <span data-season-modal-target="guestsLabel" class="text-brand-primary text-base font-medium tracking-007 font-sans <%= guest_list.any? ? 'hidden' : '' %>"><%= t("calendar_events.form.invite_guests") %></span>
           <div data-season-modal-target="guestsInlineList" class="<%= guest_list.any? ? '' : 'hidden' %> flex flex-col gap-1">
             <% guest_list.each do |email| %>
               <div class="flex items-center justify-between gap-2">
@@ -280,7 +280,7 @@
         <button type="button" data-season-modal-target="closeBtn" data-action="click->season-modal#close"
                 class="absolute top-4 right-4 z-[2] bg-transparent border-none text-brand-primary text-[34px] w-11 h-11 flex items-center justify-center cursor-pointer font-sans">×</button>
         <div class="flex justify-center items-center relative mb-8">
-          <h2 id="edit-choose-icon-title" class="text-22 font-medium text-brand-primary text-center font-sans leading-[45px]">Choose an icon</h2>
+          <h2 id="edit-choose-icon-title" class="text-22 font-medium text-brand-primary text-center font-sans leading-[45px]"><%= t("calendar_events.form.choose_icon") %></h2>
         </div>
         <hr class="border-brand-field mb-4">
         <div class="flex-1 min-h-0 overflow-y-auto [scrollbar-width:none] py-4 flex flex-col gap-2.5">
@@ -326,9 +326,9 @@
         </div>
         <div class="flex flex-col gap-2.5 mt-auto">
           <button type="button" data-action="click->season-modal#close"
-                  class="w-full h-[52px] bg-brand-primary text-white rounded-lg border-none font-medium text-lg font-sans text-center cursor-pointer">Add icon</button>
+                  class="w-full h-[52px] bg-brand-primary text-white rounded-lg border-none font-medium text-lg font-sans text-center cursor-pointer"><%= t("calendar_events.form.add_icon") %></button>
           <button type="button" data-action="click->season-modal#deleteCategory click->season-modal#close"
-                  class="w-full bg-transparent text-brand-primary border-none font-medium text-lg font-sans cursor-pointer leading-[45px]">Delete icon</button>
+                  class="w-full bg-transparent text-brand-primary border-none font-medium text-lg font-sans cursor-pointer leading-[45px]"><%= t("calendar_events.form.delete_icon") %></button>
         </div>
       </div>
     </div>
@@ -359,7 +359,7 @@
              class="absolute left-[33px] top-[203px] w-[283px] h-11 bg-brand-primary opacity-50 rounded-lg transition-[top,opacity] duration-[250ms] ease-in-out"></div>
         <button type="button" data-action="click->season-modal#submitLocation"
                 data-season-modal-target="locationSubmitBtn"
-                class="absolute left-[33px] top-[203px] w-[283px] h-11 bg-transparent border-none cursor-pointer p-0 flex items-center justify-center font-medium text-base tracking-003 text-white transition-[top] duration-[250ms] ease-in-out">Submit</button>
+                class="absolute left-[33px] top-[203px] w-[283px] h-11 bg-transparent border-none cursor-pointer p-0 flex items-center justify-center font-medium text-base tracking-003 text-white transition-[top] duration-[250ms] ease-in-out"><%= t("calendar_events.form.submit") %></button>
       </div>
     </div>
 
@@ -374,14 +374,14 @@
         </button>
         <svg width="40" height="44" viewBox="0 0 40 44" fill="none" class="absolute left-[173px] top-[32px]"><path d="M26.3864 7.33325H29.6847C30.5594 7.33325 31.3984 7.71956 32.0169 8.40719C32.6355 9.09483 32.983 10.0275 32.983 10.9999V36.6666C32.983 37.639 32.6355 38.5717 32.0169 39.2593C31.3984 39.9469 30.5594 40.3333 29.6847 40.3333H9.89497C9.02021 40.3333 8.18127 39.9469 7.56273 39.2593C6.94418 38.5717 6.59668 37.639 6.59668 36.6666V10.9999C6.59668 10.0275 6.94418 9.09483 7.56273 8.40719C8.18127 7.71956 9.02021 7.33325 9.89497 7.33325H13.1933" stroke="#933A35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /><path d="M24.7374 3.66675H14.8425C13.9317 3.66675 13.1934 4.48756 13.1934 5.50008V9.16675C13.1934 10.1793 13.9317 11.0001 14.8425 11.0001H24.7374C25.6482 11.0001 26.3865 10.1793 26.3865 9.16675V5.50008C26.3865 4.48756 25.6482 3.66675 24.7374 3.66675Z" stroke="#933A35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
         <div class="absolute left-[33px] top-[101px] w-[320px] h-0 border border-brand-field"></div>
-        <span class="absolute left-[32px] top-[127px] font-medium text-base leading-5 tracking-007 text-brand-primary">Your Notes</span>
+        <span class="absolute left-[32px] top-[127px] font-medium text-base leading-5 tracking-007 text-brand-primary"><%= t("calendar_events.form.your_notes") %></span>
         <div class="absolute left-[32px] top-[158px] w-[322px] h-[225px] bg-brand-field opacity-50 rounded-lg"></div>
         <textarea data-season-modal-target="notesInput"
                   class="absolute left-[53px] top-[158px] w-[280px] h-[225px] bg-transparent border-none py-4 px-0 font-medium text-base leading-5 tracking-007 text-brand-primary/50 outline-none resize-none"
                   placeholder="Enter your notes here..."><%= @event.notes %></textarea>
         <div class="absolute left-[32px] top-[392px] w-[322px] h-[52px] bg-brand-primary rounded-lg"></div>
         <button type="button" data-action="click->season-modal#submitNotes"
-                class="absolute left-[32px] top-[392px] w-[322px] h-[52px] bg-transparent border-none cursor-pointer p-0 flex items-center justify-center font-medium text-22 leading-[27px] tracking-003 text-white">Submit</button>
+                class="absolute left-[32px] top-[392px] w-[322px] h-[52px] bg-transparent border-none cursor-pointer p-0 flex items-center justify-center font-medium text-22 leading-[27px] tracking-003 text-white"><%= t("calendar_events.form.submit") %></button>
       </div>
     </div>
 
@@ -425,7 +425,7 @@
         <% end %>
         <div class="absolute left-[37px] top-[430px] w-[281px] h-[52px] bg-brand-primary rounded-lg"></div>
         <button type="button" data-action="click->season-modal#confirmReminder"
-                class="absolute left-[37px] top-[430px] w-[281px] h-[52px] bg-transparent border-none cursor-pointer p-0 flex items-center justify-center font-medium text-base leading-5 tracking-007 text-white">Set reminder</button>
+                class="absolute left-[37px] top-[430px] w-[281px] h-[52px] bg-transparent border-none cursor-pointer p-0 flex items-center justify-center font-medium text-base leading-5 tracking-007 text-white"><%= t("calendar_events.form.set_reminder") %></button>
       </div>
     </div>
 
@@ -462,7 +462,7 @@
         </div>
         <div class="absolute left-[37px] top-[285px] w-[281px] h-[52px] bg-brand-primary rounded-lg"></div>
         <button type="button" data-action="click->season-modal#confirmCustomReminder"
-                class="absolute left-[37px] top-[285px] w-[281px] h-[52px] bg-transparent border-none cursor-pointer p-0 flex items-center justify-center font-medium text-base leading-5 tracking-007 text-white">Add reminder</button>
+                class="absolute left-[37px] top-[285px] w-[281px] h-[52px] bg-transparent border-none cursor-pointer p-0 flex items-center justify-center font-medium text-base leading-5 tracking-007 text-white"><%= t("calendar_events.form.add_reminder") %></button>
       </div>
     </div>
 
@@ -480,7 +480,7 @@
           <svg width="44" height="44" viewBox="0 0 44 44" fill="none"><path d="M36.667 38.5V35.3333C36.667 33.3884 35.894 31.5232 34.519 30.1479C33.144 28.7726 31.278 28 29.333 28H14.667C12.722 28 10.857 28.7726 9.4813 30.1479C8.1059 31.5232 7.33337 33.3884 7.33337 35.3333V38.5" stroke="#933A35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /><circle cx="22" cy="15.1667" r="7.33333" stroke="#933A35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
         </div>
         <div class="absolute left-[34px] top-[100px] w-[280px] h-0 border border-brand-field"></div>
-        <span class="absolute left-1/2 -translate-x-1/2 top-[120px] font-medium text-22 leading-[27px] tracking-003 text-brand-primary whitespace-nowrap">Invite Guests</span>
+        <span class="absolute left-1/2 -translate-x-1/2 top-[120px] font-medium text-22 leading-[27px] tracking-003 text-brand-primary whitespace-nowrap"><%= t("calendar_events.form.invite_guests_title") %></span>
         <div class="absolute left-[32px] top-[166px] w-[284px] h-[52px] bg-brand-field opacity-50 rounded-lg"></div>
         <input type="email" autocomplete="off"
                data-season-modal-target="guestsInput"
@@ -493,7 +493,7 @@
              class="absolute left-[32px] top-[241px] w-[284px] h-[52px] bg-brand-primary rounded-lg transition-[top] duration-[250ms] ease-in-out"></div>
         <button type="button" data-action="click->season-modal#addGuest"
                 data-season-modal-target="guestsSubmitBtn"
-                class="absolute left-[32px] top-[241px] w-[284px] h-[52px] bg-transparent border-none cursor-pointer p-0 flex items-center justify-center font-medium text-22 leading-[27px] tracking-003 text-white transition-[top] duration-[250ms] ease-in-out">Invite Guests</button>
+                class="absolute left-[32px] top-[241px] w-[284px] h-[52px] bg-transparent border-none cursor-pointer p-0 flex items-center justify-center font-medium text-22 leading-[27px] tracking-003 text-white transition-[top] duration-[250ms] ease-in-out"><%= t("calendar_events.form.invite_guests_title") %></button>
       </div>
     </div>
 
@@ -506,7 +506,7 @@
                 class="absolute left-[304px] top-[13px] w-[37px] h-[37px] bg-transparent border-none cursor-pointer p-0 z-[2]">
           <svg width="37" height="37" viewBox="0 0 53 53" fill="none"><path d="M35.8 16.2L36 16.4C36.2 16.6 36.4 17 36.4 17.4C36.4 17.7 36.3 18.1 36.1 18.4L36 18.5L28.3 26.2L36 33.8C36.2 34.1 36.4 34.4 36.4 34.8C36.4 35.2 36.3 35.5 36.1 35.8L36 36C35.7 36.2 35.4 36.4 35 36.4C34.6 36.4 34.2 36.3 33.9 36.1L33.8 36L26.2 28.3L18.5 36C18.3 36.2 17.9 36.4 17.5 36.4C17.2 36.4 16.8 36.3 16.5 36.1L16.4 36C16.1 35.7 16 35.4 15.9 35C15.9 34.6 16 34.2 16.2 33.9L16.4 33.8L24 26.2L16.4 18.5C16.1 18.3 16 17.9 15.9 17.5C15.9 17.2 16 16.8 16.2 16.5L16.4 16.4C16.6 16.1 17 16 17.4 15.9C17.7 15.9 18.1 16 18.4 16.2L18.5 16.4L26.2 24L33.8 16.4C34.1 16.1 34.4 16 34.8 15.9C35.2 15.9 35.5 16 35.8 16.2L36 16.4L35.8 16.2Z" fill="#A43600" /></svg>
         </button>
-        <p class="absolute left-1/2 -translate-x-1/2 top-[34px] font-medium text-22 leading-[27px] tracking-003 text-brand-primary whitespace-nowrap">Repeat this event</p>
+        <p class="absolute left-1/2 -translate-x-1/2 top-[34px] font-medium text-22 leading-[27px] tracking-003 text-brand-primary whitespace-nowrap"><%= t("calendar_events.form.repeat_this_event") %></p>
         <div class="absolute left-[13px] top-[96px] w-[335px] h-0 border border-brand-field"></div>
         <% edit_repeat_opts = [['daily','Daily'],['weekly','Weekly'],['monthly','Monthly'],['yearly','Every Year'],['custom','Custom']] %>
         <% edit_sel_repeat = repeat_val || 'monthly' %>
@@ -554,7 +554,7 @@
         </div>
         <div class="absolute left-[33px] top-[676px] w-[290px] h-[52px] bg-brand-primary rounded-lg"></div>
         <button type="button" data-action="click->season-modal#confirmRepeat"
-                class="absolute left-[33px] top-[676px] w-[290px] h-[52px] bg-transparent border-none cursor-pointer p-0 flex items-center justify-center font-medium text-base leading-5 tracking-007 text-white">Save</button>
+                class="absolute left-[33px] top-[676px] w-[290px] h-[52px] bg-transparent border-none cursor-pointer p-0 flex items-center justify-center font-medium text-base leading-5 tracking-007 text-white"><%= t("calendar_events.form.save") %></button>
       </div>
     </div>
 
@@ -567,7 +567,7 @@
                 class="absolute left-[304px] top-[13px] w-[37px] h-[37px] bg-transparent border-none cursor-pointer p-0 z-[2]">
           <svg width="37" height="37" viewBox="0 0 53 53" fill="none"><path d="M35.8 16.2L36 16.4C36.2 16.6 36.4 17 36.4 17.4C36.4 17.7 36.3 18.1 36.1 18.4L36 18.5L28.3 26.2L36 33.8C36.2 34.1 36.4 34.4 36.4 34.8C36.4 35.2 36.3 35.5 36.1 35.8L36 36C35.7 36.2 35.4 36.4 35 36.4C34.6 36.4 34.2 36.3 33.9 36.1L33.8 36L26.2 28.3L18.5 36C18.3 36.2 17.9 36.4 17.5 36.4C17.2 36.4 16.8 36.3 16.5 36.1L16.4 36C16.1 35.7 16 35.4 15.9 35C15.9 34.6 16 34.2 16.2 33.9L16.4 33.8L24 26.2L16.4 18.5C16.1 18.3 16 17.9 15.9 17.5C15.9 17.2 16 16.8 16.2 16.5L16.4 16.4C16.6 16.1 17 16 17.4 15.9C17.7 15.9 18.1 16 18.4 16.2L18.5 16.4L26.2 24L33.8 16.4C34.1 16.1 34.4 16 34.8 15.9C35.2 15.9 35.5 16 35.8 16.2L36 16.4L35.8 16.2Z" fill="#A43600" /></svg>
         </button>
-        <p class="absolute left-1/2 -translate-x-1/2 top-[34px] font-medium text-22 leading-[27px] tracking-003 text-brand-primary whitespace-nowrap">Custom repeat</p>
+        <p class="absolute left-1/2 -translate-x-1/2 top-[34px] font-medium text-22 leading-[27px] tracking-003 text-brand-primary whitespace-nowrap"><%= t("calendar_events.form.custom_repeat") %></p>
         <div class="absolute left-[36px] top-[100px] w-[287px] h-0 border border-brand-field"></div>
         <%# One interval — "Every [N] [days/weeks/months]" — not three rows
              held simultaneously. A recurring event has exactly one
@@ -577,7 +577,7 @@
              never even read any of them — this whole modal was decorative
              until now). %>
         <div class="absolute left-[36px] top-[140px] w-[287px] h-[38px] bg-brand-field/50 rounded-[10px] flex items-center px-4 gap-2">
-          <span class="font-medium text-base tracking-007 text-brand-primary">Every</span>
+          <span class="font-medium text-base tracking-007 text-brand-primary"><%= t("calendar_events.form.every") %></span>
           <input type="number" inputmode="numeric" min="1" max="365" value="1" autocomplete="off"
                  data-season-modal-target="customRepeatN"
                  class="w-14 h-full bg-transparent border-none font-bold text-base text-brand-primary text-center outline-none">
@@ -590,7 +590,7 @@
         </div>
         <div class="absolute left-[36px] top-[352px] w-[287px] h-[52px] bg-brand-primary rounded-lg"></div>
         <button type="button" data-action="click->season-modal#confirmCustomRepeat"
-                class="absolute left-[36px] top-[352px] w-[287px] h-[52px] bg-transparent border-none cursor-pointer p-0 flex items-center justify-center font-medium text-base leading-5 tracking-007 text-white">Save</button>
+                class="absolute left-[36px] top-[352px] w-[287px] h-[52px] bg-transparent border-none cursor-pointer p-0 flex items-center justify-center font-medium text-base leading-5 tracking-007 text-white"><%= t("calendar_events.form.save") %></button>
       </div>
     </div>
 
@@ -607,7 +607,7 @@
         <% days_count = (until_date - evt_date).to_i %>
         <% d = until_date.day; m = until_date.month; y = until_date.year %>
         <% date_label = "#{until_date.strftime('%a')} #{format('%02d', d)} #{Date::ABBR_MONTHNAMES[m]} #{y}" %>
-        <p class="font-medium text-22 leading-[27px] tracking-003 text-brand-primary text-center pt-2">Repeat until</p>
+        <p class="font-medium text-22 leading-[27px] tracking-003 text-brand-primary text-center pt-2"><%= t("calendar_events.form.repeat_until") %></p>
         <hr class="border-none h-px bg-black opacity-20 w-[132px] self-center mt-3 mb-2">
         <p data-season-modal-target="repeatUntilLabel" class="font-bold text-base tracking-007 text-brand-primary text-center py-2"><%= date_label %></p>
         <div class="w-full h-[80px] bg-white rounded-lg flex items-center justify-center gap-3 overflow-hidden relative">
@@ -643,7 +643,7 @@
           </div>
         </div>
         <button type="button" data-action="click->season-modal#confirmRepeatUntil"
-                class="w-full h-[52px] bg-brand-primary rounded-lg border-none cursor-pointer flex items-center justify-center font-medium text-base leading-5 tracking-007 text-white mt-4">Save</button>
+                class="w-full h-[52px] bg-brand-primary rounded-lg border-none cursor-pointer flex items-center justify-center font-medium text-base leading-5 tracking-007 text-white mt-4"><%= t("calendar_events.form.save") %></button>
       </div>
     </div>
 
@@ -652,7 +652,7 @@
     <div data-season-modal-target="recurringModal" role="dialog" aria-modal="true"
          class="hidden fixed inset-0 z-[150] flex items-center justify-center">
       <div class="w-[337px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] px-7 pt-8 pb-6">
-        <p class="font-medium text-lg text-brand-primary mb-2 mt-0 text-center">This is a recurring event.</p>
+        <p class="font-medium text-lg text-brand-primary mb-2 mt-0 text-center"><%= t("calendar_events.form.recurring_event") %></p>
         <div class="h-px bg-brand-field my-4"></div>
         <div class="flex flex-col gap-3">
           <% [['Edit only this event', :single], ['Edit this and subsequent events', :forward], ['Edit all events', :all]].each do |(label, scope)| %>
@@ -675,7 +675,7 @@
     <div data-season-modal-target="notifyModal" role="dialog" aria-modal="true"
          class="hidden fixed inset-0 z-[150] flex items-center justify-center">
       <div class="w-[337px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] px-7 pt-8 pb-6">
-        <p class="font-medium text-base text-brand-primary mb-2 mt-0 text-center">Others are also involved in this meeting.</p>
+        <p class="font-medium text-base text-brand-primary mb-2 mt-0 text-center"><%= t("calendar_events.form.others_involved") %></p>
         <div class="h-px bg-brand-field my-4"></div>
         <div class="flex flex-col gap-3">
           <%= button_to "Notify all parties involved",
@@ -699,7 +699,7 @@
     <div data-season-modal-target="attentionModal" role="alertdialog" aria-modal="true"
          class="hidden fixed inset-0 z-[200] flex items-center justify-center">
       <div class="w-[337px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] px-7 pt-8 pb-6">
-        <p class="font-bold text-lg text-brand-primary mb-3 mt-0">Attention</p>
+        <p class="font-bold text-lg text-brand-primary mb-3 mt-0"><%= t("calendar_events.form.attention") %></p>
         <p data-season-modal-target="attentionBody" class="font-normal text-sm leading-relaxed text-brand-primary mb-6 mt-0"></p>
         <div class="flex flex-col gap-2.5">
           <button type="button" data-season-modal-target="attentionConfirm"

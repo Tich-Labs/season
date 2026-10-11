@@ -35,10 +35,6 @@ if defined?(Rack::Attack)
     req.ip if req.post? && req.path == "/registration"
   end
 
-  Rack::Attack.throttle("launch_signups/ip", limit: 10, period: 300) do |req|
-    req.ip if req.post? && req.path == "/launch-signup"
-  end
-
   Rack::Attack.throttle("password_resets/ip", limit: 3, period: 300) do |req|
     req.ip if req.post? && req.path == "/users/password"
   end

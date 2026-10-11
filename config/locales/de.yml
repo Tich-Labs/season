@@ -119,6 +119,31 @@ de:
       - "Do"
       - "Fr"
       - "Sa"
+    # Month labels for the onboarding birthday picker (index 0 is nil per
+    # Rails convention, so January sits at index 1; callers `.compact`).
+    abbr_month_names:
+      - ~
+      - "Jan"
+      - "Feb"
+      - "Mär"
+      - "Apr"
+      - "Mai"
+      - "Jun"
+      - "Jul"
+      - "Aug"
+      - "Sep"
+      - "Okt"
+      - "Nov"
+      - "Dez"
+    # Single-letter Mon-Sun initials for calendar weekday headers.
+    day_initials:
+      - "M"
+      - "D"
+      - "M"
+      - "D"
+      - "F"
+      - "S"
+      - "S"
   nav:
     calendar: "Kalender"
     today: "Heute"
@@ -145,6 +170,13 @@ de:
       email_placeholder: "E-Mail..."
       password_placeholder: "Passwort..."
       confirm_password_placeholder: "Passwort wiederholen..."
+      email: "E-Mail"
+      password: "Passwort"
+      repeat_password: "Passwort wiederholen"
+      errors:
+        oops: "HOPPLA!"
+        already_registered: "Diese E-Mail ist bereits registriert. Bitte melde dich stattdessen an."
+        terms_not_accepted: "Du musst den Nutzungsbedingungen und der Datenschutzrichtlinie zustimmen, um fortzufahren."
       fast_lane: "Verwende die Schnellspur:"
       or_email: "...oder melde dich mit deiner E-Mail-Adresse an:"
       submit: "Registrieren"
@@ -187,13 +219,16 @@ de:
     login: "Anmelden"
     logo_alt: "Season Wortmarke"
     wordmark_alt: "Season Titel"
-    countdown_label: "Start-Countdown"
-    countdown_to: "Bis zum 7. April 2026"
-    days: "Tage"
-    hours: "Stunden"
-    minutes: "Minuten"
-    seconds: "Sekunden"
   onboarding:
+    back: "Zurück"
+    errors:
+      name_required: "Bitte gib deinen Namen ein"
+      invalid_birthday: "Bitte gib ein gültiges Geburtsdatum ein"
+      select_date: "Bitte wähle ein Datum oder tippe auf „Nicht sicher“"
+      invalid_date: "Ungültiges Datum — bitte erneut auswählen"
+      select_option: "Bitte wähle eine Option"
+      invalid_cycle_length: "Bitte wähle eine gültige Zykluslänge"
+      select_method: "Bitte wähle eine Methode"
     require_user:
       sign_in_first: "Bitte melde dich zuerst an"
     step1:
@@ -226,6 +261,7 @@ de:
       heading: "Wie lange dauert dein durchschnittlicher Zyklus?"
       note: "Hinweis: Zyklen dauern meist 24–38 Tage."
       days_suffix: "Tage"
+      picker_label: "Zykluslänge in Tagen"
       submit: "Weiter"
       not_sure: "Nicht sicher"
     step6:
@@ -269,6 +305,8 @@ de:
     header: "Hallo %{name} — Das ist dein Monat"
     greeting: "Hallo %{name} — Das ist dein Monat"
     subheading: "Verfolge deinen Zyklus"
+    appointments:
+      no_appointments_this_month: "Keine Termine in diesem Monat"
     index:
       day_view: "Tagesansicht"
       week_view: "Wochenansicht"
@@ -310,10 +348,15 @@ de:
       view_privacy: "Datenschutzerklärung anzeigen"
   tracking:
     feedback: "Feedback geben"
+    create:
+      period_logged: "Periode gespeichert! Tag %{day}"
     index:
       current_phase: "Du bist in deiner:"
       log_period: "Trage dein letztes Periodenstartdatum ein, um deine Zyklusphase und Vorhersagen zu sehen."
       my_symptoms: "Meine Symptome"
+      my_superpowers: "Meine Superkräfte"
+      track_my_period: "Meine Periode tracken"
+      cycle_day: "Zyklustag"
       give_feedback: "Feedback geben"
     period_update:
       saved: "Periodendaten gespeichert."
@@ -334,6 +377,34 @@ de:
       updated: "Termin aktualisiert"
     destroy:
       deleted: "Termin gelöscht"
+    form:
+      invite_guests: "Gäste einladen"
+      invite_guests_title: "Gäste einladen"
+      choose_icon: "Icon auswählen"
+      add_icon: "Icon hinzufügen"
+      delete_icon: "Icon löschen"
+      submit: "Absenden"
+      your_notes: "Deine Notizen"
+      set_reminder: "Erinnerung einstellen"
+      add_reminder: "Erinnerung hinzufügen"
+      repeat_this_event: "Dieses Ereignis wiederholen"
+      save: "Speichern"
+      custom_repeat: "Benutzerdefiniert wiederholen"
+      every: "Alle"
+      repeat_until: "Wiederholen bis"
+      recurring_event: "Dies ist ein wiederkehrendes Ereignis."
+      others_involved: "An diesem Termin sind auch andere beteiligt."
+      attention: "Achtung"
+      repeat: "Wiederholen"
+      from: "Von"
+      all_day: "Ganztägig"
+      set_date: "Datum festlegen"
+    index:
+      note: "Hinweis:"
+      no_appointments_yet: "Noch keine Termine"
+      create_first_appointment: "Erstelle deinen ersten Termin, um loszulegen"
+    show:
+      invite_guests: "Gäste einladen"
   admin:
     cycle_phase_contents:
       create:
@@ -352,6 +423,10 @@ de:
       invalid_link: "Ungültiger Einladungslink."
       token_expired: "Dieser Einladungslink ist abgelaufen. Bitte kontaktieren Sie den Support für eine neue Einladung."
   passwords:
+    new:
+      email: "E-Mail"
+    error_contact:
+      go_back: "Zurück zum Login"
     edit:
       back: "< zurück"
       title: "NEUES<br>PASSWORT"
@@ -366,6 +441,17 @@ de:
       password_updated_notice: "Passwort erfolgreich aktualisiert"
       unable_to_update: "Passwort konnte nicht aktualisiert werden"
   sessions:
+    new:
+      errors:
+        oops: "HOPPLA!"
+        wrong_password: "Falsche E-Mail oder Passwort."
+        wrong_email: "Falsche E-Mail oder Passwort."
+        unconfirmed: "Bitte bestätige zuerst deine E-Mail. Schau in dein Postfach oder fordere einen neuen Bestätigungslink an."
+      email: "E-Mail"
+      password: "Passwort"
+      please_try_again: "Bitte versuche es erneut."
+      unrecognized_email: "Hmm... diese E-Mail kennen wir nicht."
+      check_again_or_sign_up: "Prüfe sie noch einmal oder registriere dich."
     rate_limit_login:
       too_many_attempts: "Zu viele Anmeldeversuche. Bitte versuche es später erneut."
   settings:
@@ -447,6 +533,13 @@ de:
       sunday: "Sonntag"
       saturday: "Samstag"
       timezone: "Zeitzone"
+      timezone_utc: "UTC / GMT"
+      timezone_cet: "Mitteleuropäische Zeit (CET)"
+      timezone_est: "Ostküstenzeit (EST)"
+      timezone_pst: "Pazifikzeit (PST)"
+      timezone_ist: "Indische Standardzeit (IST)"
+      timezone_jst: "Japanische Standardzeit (JST)"
+      timezone_aest: "Australische Ostküstenzeit (AEST)"
       saving: "Wird gespeichert..."
       google_calendar: "Google Kalender"
       microsoft: "Microsoft"
@@ -469,6 +562,9 @@ de:
       start_time: "Start → 00:00 Uhr"
       end_time: "Ende → 00:00 Uhr"
       birth_control: "Verhütungserinnerung"
+      birth_control_pill: "Antibabypille"
+      daily_9pm: "Täglich → 21:00 Uhr"
+      keep_track_day: "Im Blick behalten: Heute ist Tag 15 der Pilleneinnahme"
       supplement: "Nahrungsergänzungs-Erinnerung"
       in_app_popups: "In-App-Popups"
       in_app_new_appt: "Neue Termine synchronisiert"
@@ -478,6 +574,22 @@ de:
       in_app_appointments: "Termine"
       edit: "bearbeiten"
       daily_pm: "Täglich → 18:00 Uhr"
+      taking_pill: "Pille nehmen → 21 Tage"
+      pillbreak: "Pillenpause → 7 Tage"
+      push_not_supported: "Nicht unterstützt"
+      push_enabled: "Aktiviert"
+      push_off: "Aus"
+      push_blocked: "Blockiert"
+    notification_birth_control:
+      current_method: "Aktuelle Methode"
+      enable_reminder: "Erinnerung aktivieren"
+      keep_track_of: "Im Blick behalten:"
+      active_days: "Aktive Tage"
+      break_days: "Pausentage"
+    notification_period:
+      enable: "Perioden-Erinnerung aktivieren"
+    notification_morning:
+      enable: "Guten-Morgen aktivieren"
     subscriptions:
       title: "Meine Abonnements"
       my_plan: "Mein Plan"
@@ -621,6 +733,10 @@ de:
       read_more: "…mehr erfahren"
       choose: "Auswählen"
       close: "Schließen"
+      physical_aria: "Körperliche Symptome"
+      mental_aria: "Mentale Symptome"
+    discharge:
+      title: "Ausfluss"
     # Siehe die englische Version für den Quellenhinweis (CSV-Leitfaden).
     discharge_info:
       dry:
@@ -705,6 +821,8 @@ de:
       create_appointment: "Termin erstellen"
       add_appointment: "Termin hinzufügen"
       no_content: "Noch keine Inhalte für diesen Tag."
+      note: "Hinweis:"
+      here_are_tips: "Hier sind deine Tipps für heute:"
       tips: "Tipps für diese Phase"
       you_are_in: "Du bist in der %{phase}-Phase"
       got_it: "Verstanden"
@@ -717,6 +835,19 @@ de:
       thank_you: "Vielen Dank für dein Feedback!"
       enter_message: "Bitte gib eine Nachricht ein."
   shared:
+    consent_info:
+      what: "Das beinhaltet es:"
+      why: "Warum wir es brauchen:"
+      rights: "Deine Rechte"
+    pwa:
+      update_available: "Neue Version von Season verfügbar"
+      refresh: "Aktualisieren"
+      add_home: "Season zum Home-Bildschirm hinzufügen"
+      add: "Hinzufügen"
+      ios_tap: "Tippe auf"
+      ios_share: "Teilen"
+      ios_then: "und dann"
+      ios_add_home: "Zum Home-Bildschirm"
     feedback_modal:
       title: "Teile dein Feedback"
       description: "Wir würden gerne hören, was du denkst"
@@ -856,3 +987,32 @@ de:
     success: "E-Mail bestätigt! Willkommen bei Season."
     expired: "Der Bestätigungslink ist abgelaufen oder wurde bereits verwendet. Fordere unten einen neuen an."
 
+
+  daily_view:
+    show:
+      all_day: "Ganztägig"
+      note: "Hinweis:"
+  information:
+    index:
+      title: "Deine Zyklusphasen"
+      subtitle: "Erfahre mehr über jede Phase deines Zyklus und wie sie Körper und Geist beeinflusst."
+      read_more: "Mehr lesen →"
+    show:
+      emotional_world: "Emotionale Welt"
+      that_will_do_you_good: "Das tut dir gut"
+  notifications:
+    index:
+      title: "Benachrichtigungen"
+      no_notifications: "Noch keine Benachrichtigungen"
+      all_caught_up: "Du bist auf dem neuesten Stand!"
+    show:
+      title: "Benachrichtigung"
+  account:
+    show:
+      cycle_history: "Zyklus-Tracking-Verlauf"
+      symptom_logs: "Symptom-Protokolle"
+      superpower_entries: "Superkraft-Einträge"
+      calendar_events: "Kalenderereignisse"
+      reminders: "Erinnerungen"
+      streaks: "Streaks & Erfolge"
+      profile_picture: "Profilbild"

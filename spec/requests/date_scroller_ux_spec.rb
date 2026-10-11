@@ -38,6 +38,25 @@ RSpec.describe "Date scroller UX", type: :request do
     expect(response.body).to include("touch-action: pan-y; overscroll-behavior: contain;")
   end
 
+  # (5) the drum scrollers had no space above the first item or below the
+  #     last, so scrollTop clamped at 0 / max before those items could ever
+  #     reach the centre highlight. The picker reads the centred item
+  #     (appointment_date_picker_controller.js #closestItem), so the first
+  #     and last item of every drum were unreachable: minute "00" (every
+  #     full hour) and hour "23" could never be picked -- reported as
+  #     "can't enter appointments at a full hour" / "only up to 22:00".
+  #     A half-viewport (26px) cap at each end lets both ends centre.
+  it "end-caps every appointment drum so the first and last item can be centred" do
+    get new_calendar_event_path
+    expect(response.body.scan('class="drum-cap"').size).to eq(10)
+  end
+
+  it "still exposes minute 00 and hour 23 as pickable values" do
+    get new_calendar_event_path
+    expect(response.body).to match(/data-value="0"[^>]*snap-center snap-always[^>]*>00</)
+    expect(response.body).to match(/data-value="23"[^>]*snap-center snap-always[^>]*>23</)
+  end
+
   it "uses 3-letter weekday abbreviations in the picker JS, not ambiguous single letters" do
     js = Rails.root.join("app/javascript/controllers/appointment_date_picker_controller.js").read
     expect(js).to include("['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']")

@@ -127,7 +127,7 @@
       <div class="mt-2">
         <% @all_day_events.each do |evt| %>
           <div class="bg-brand-field px-3 py-1.5 flex items-center gap-3 min-h-6">
-            <span class="text-xs font-medium min-w-11" style="color: <%= phase_col %>;">All day</span>
+            <span class="text-xs font-medium min-w-11" style="color: <%= phase_col %>;"><%= t("daily_view.show.all_day") %></span>
             <span class="text-base font-bold" style="color: <%= phase_col %>;"><%= evt.title %></span>
           </div>
         <% end %>
@@ -175,7 +175,7 @@
               <div class="text-white text-xs opacity-80 mt-0.5"><%= st.strftime("%H:%M") %>&ndash;<%= et.strftime("%H:%M") %></div>
             <% end %>
             <% if height_px > 46 && evt.notes.present? %>
-              <div class="text-white text-xs opacity-85 mt-0.5 whitespace-nowrap overflow-hidden text-ellipsis">Note: <%= evt.notes %></div>
+              <div class="text-white text-xs opacity-85 mt-0.5 whitespace-nowrap overflow-hidden text-ellipsis"><%= t("daily_view.show.note") %> <%= evt.notes %></div>
             <% end %>
           <% end %>
         <% end %>
@@ -195,7 +195,7 @@
           <%# Super Power %>
           <% if @content&.superpower_text.present? %>
             <div class="rounded-lg px-3.5 py-3" style="background: <%= phase_col %>;">
-              <p class="text-white text-xs font-semibold uppercase tracking-widest m-0 mb-0.5 opacity-80">Super Power</p>
+              <p class="text-white text-xs font-semibold uppercase tracking-widest m-0 mb-0.5 opacity-80"><%= t("forecast.index.superpower") %></p>
               <p class="text-white text-base font-medium m-0 leading-snug"><%= @content.superpower_text %></p>
             </div>
           <% end %>
@@ -203,7 +203,7 @@
           <%# Watch out for %>
           <% if @content&.take_care_text.present? %>
             <div class="rounded-lg px-3.5 py-3" style="background: <%= phase_col %>;">
-              <p class="text-white text-xs font-semibold uppercase tracking-widest m-0 mb-0.5 opacity-80">Watch out for</p>
+              <p class="text-white text-xs font-semibold uppercase tracking-widest m-0 mb-0.5 opacity-80"><%= t("forecast.index.watch_out") %></p>
               <p class="text-white text-base font-medium m-0 leading-snug"><%= @content.take_care_text %></p>
             </div>
           <% end %>
@@ -211,7 +211,7 @@
           <%# Sport %>
           <% if @content&.sport_text.present? %>
             <div class="rounded-lg px-3.5 py-3" style="background: <%= phase_col %>;">
-              <p class="text-white text-xs font-semibold uppercase tracking-widest m-0 mb-0.5 opacity-80">Sport</p>
+              <p class="text-white text-xs font-semibold uppercase tracking-widest m-0 mb-0.5 opacity-80"><%= t("forecast.index.sport") %></p>
               <p class="text-white text-base font-medium m-0 leading-snug"><%= @content.sport_text %></p>
             </div>
           <% end %>
@@ -219,7 +219,7 @@
           <%# Nutrition %>
           <% if @content&.nutrition_text.present? %>
             <div class="rounded-lg px-3.5 py-3" style="background: <%= phase_col %>;">
-              <p class="text-white text-xs font-semibold uppercase tracking-widest m-0 mb-0.5 opacity-80">Nutrition</p>
+              <p class="text-white text-xs font-semibold uppercase tracking-widest m-0 mb-0.5 opacity-80"><%= t("forecast.index.nutrition") %></p>
               <p class="text-white text-base font-medium m-0 leading-snug"><%= @content.nutrition_text %></p>
             </div>
           <% end %>
@@ -228,7 +228,7 @@
           <% if false %>
             <% if fertility_status %>
               <div class="rounded-lg px-3.5 py-3" style="background: <%= phase_col %>;">
-                <p class="text-white text-xs font-semibold uppercase tracking-widest m-0 mb-0.5 opacity-80">Fertility</p>
+                <p class="text-white text-xs font-semibold uppercase tracking-widest m-0 mb-0.5 opacity-80"><%= t("forecast.index.fertility") %></p>
                 <p class="text-white text-base font-medium m-0"><%= fertility_status %></p>
               </div>
             <% end %>
@@ -237,7 +237,7 @@
           <%# Mood %>
           <% if @content&.mood_text.present? %>
             <div class="rounded-lg px-3.5 py-3" style="background: <%= phase_col %>;">
-              <p class="text-white text-xs font-semibold uppercase tracking-widest m-0 mb-0.5 opacity-80">Mood</p>
+              <p class="text-white text-xs font-semibold uppercase tracking-widest m-0 mb-0.5 opacity-80"><%= t("forecast.index.mood") %></p>
               <p class="text-white text-base font-medium m-0 leading-snug"><%= @content.mood_text %></p>
             </div>
           <% end %>

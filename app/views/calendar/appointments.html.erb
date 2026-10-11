@@ -139,7 +139,7 @@
         <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#EDE1D5" stroke-width="1.5" xmlns="http://www.w3.org/2000/svg">
           <rect x="3" y="4" width="18" height="18" rx="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" />
         </svg>
-        <p class="text-brand-muted text-base font-medium m-0">No appointments this month</p>
+        <p class="text-brand-muted text-base font-medium m-0"><%= t("calendar.appointments.no_appointments_this_month") %></p>
         <%= link_to new_calendar_event_path(date: @date), class: "mt-2 inline-flex items-center justify-center rounded-full bg-brand-primary px-4 py-2 text-white text-sm font-semibold no-underline" do %>
           + Add appointment
         <% end %>

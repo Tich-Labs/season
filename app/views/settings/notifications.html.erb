@@ -27,6 +27,10 @@
     <% prefs = current_user.notification_preferences || {} %>
     <div data-controller="push-subscription"
          data-vapid-key="<%= Rails.application.credentials.dig(:vapid, :public_key) %>"
+         data-push-subscription-not-supported-value="<%= t("settings.notifications.push_not_supported") %>"
+         data-push-subscription-enabled-value="<%= t("settings.notifications.push_enabled") %>"
+         data-push-subscription-off-value="<%= t("settings.notifications.push_off") %>"
+         data-push-subscription-blocked-value="<%= t("settings.notifications.push_blocked") %>"
          class="flex items-center justify-between py-3.5 pb-2">
       <div>
         <span class="text-brand-primary text-base font-medium"><%= t("settings.notifications.general_push") %></span>
@@ -107,12 +111,12 @@
     </div>
     <div class="flex items-center justify-between mb-3">
       <div>
-        <p class="text-brand-muted text-sm font-medium m-0 mb-0.5">birth control pill</p>
-        <p class="text-brand-muted text-sm font-medium m-0 mb-0.5">Daily → 09:00 p.m.</p>
-        <p class="text-brand-muted text-sm font-medium m-0 mb-0.5">Taking the pill → 21 Days</p>
-        <p class="text-brand-muted text-sm font-medium m-0 mb-0.5">Pillbreak → 7 Days</p>
+        <p class="text-brand-muted text-sm font-medium m-0 mb-0.5"><%= t("settings.notifications.birth_control_pill") %></p>
+        <p class="text-brand-muted text-sm font-medium m-0 mb-0.5"><%= t("settings.notifications.daily_9pm") %></p>
+        <p class="text-brand-muted text-sm font-medium m-0 mb-0.5"><%= t("settings.notifications.taking_pill") %></p>
+        <p class="text-brand-muted text-sm font-medium m-0 mb-0.5"><%= t("settings.notifications.pillbreak") %></p>
         <p class="text-brand-primary text-[10px] font-medium m-0 leading-relaxed">
-          Keep track of: Today is day 15 of taking the pill
+          <%= t("settings.notifications.keep_track_day") %>
         </p>
       </div>
       <%= link_to t("settings.notifications.edit"), notification_birth_control_settings_path, class: "text-brand-muted text-sm font-medium no-underline self-start" %>

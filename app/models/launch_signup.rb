@@ -1,2 +1,0 @@
-class LaunchSignup < ApplicationRecord
-end

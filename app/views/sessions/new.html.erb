@@ -91,7 +91,7 @@
 
         <!-- Email -->
         <div class="mt-[29px]">
-          <label for="email" class="sr-only">Email</label>
+          <label for="email" class="sr-only"><%= t("sessions.new.email") %></label>
           <%= f.email_field :email,
               id: "email",
               autofocus: true,
@@ -103,7 +103,7 @@
 
         <!-- Password -->
         <div class="mt-[15px] relative" data-controller="password-visibility">
-          <label for="password_field" class="sr-only">Password</label>
+          <label for="password_field" class="sr-only"><%= t("sessions.new.password") %></label>
           <%= f.password_field :password,
               id: "password_field",
               autocomplete: "current-password",
@@ -131,10 +131,10 @@
             <div>
               <% if @error_type == :wrong_password %>
                 <p class="text-brand-primary text-15 font-medium"><%= t('sessions.new.errors.wrong_password') %></p>
-                <p class="text-brand-primary text-15 font-normal">Please try again.</p>
+                <p class="text-brand-primary text-15 font-normal"><%= t("sessions.new.please_try_again") %></p>
               <% else %>
-                <p class="text-brand-primary text-15 font-medium">Hmm... we don't recognize this email.</p>
-                <p class="text-brand-primary text-15 font-normal">Check again or sign up.</p>
+                <p class="text-brand-primary text-15 font-medium"><%= t("sessions.new.unrecognized_email") %></p>
+                <p class="text-brand-primary text-15 font-normal"><%= t("sessions.new.check_again_or_sign_up") %></p>
               <% end %>
             </div>
           </div>

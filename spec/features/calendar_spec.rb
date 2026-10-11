@@ -19,9 +19,9 @@ RSpec.describe "Calendar Navigation", type: :feature do
   end
 
   it "displays the monthly calendar" do
-    # Not "/" — that's the public landing/countdown page (see
-    # home/countdown.html.erb), not the authenticated calendar. Visiting it
-    # after logging in was silently landing back on logged-out content.
+    # Not "/" — that's the auth-aware loader (home#loader), which redirects
+    # signed-in users to /calendar. Visit the calendar directly so we land
+    # on authenticated content regardless.
     login_as(user)
     visit "/calendar"
 

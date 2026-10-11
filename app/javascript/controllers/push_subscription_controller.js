@@ -2,6 +2,12 @@
 
 export default class extends Controller {
   static targets = ['status', 'toggle']
+  static values = {
+    notSupported: { type: String, default: 'Not supported' },
+    enabled: { type: String, default: 'Enabled' },
+    off: { type: String, default: 'Off' },
+    blocked: { type: String, default: 'Blocked' }
+  }
 
   connect () {
     this._updateStatus()
@@ -64,17 +70,17 @@ export default class extends Controller {
   _updateStatus () {
     if (!this.hasStatusTarget) return
     if (!('Notification' in window)) {
-      this.statusTarget.textContent = 'Not supported'
+      this.statusTarget.textContent = this.notSupportedValue
       return
     }
     if (Notification.permission === 'granted') {
       navigator.serviceWorker.ready.then((reg) => {
         reg.pushManager.getSubscription().then((sub) => {
-          this.statusTarget.textContent = sub ? 'Enabled' : 'Off'
+          this.statusTarget.textContent = sub ? this.enabledValue : this.offValue
         })
       })
     } else {
-      this.statusTarget.textContent = Notification.permission === 'denied' ? 'Blocked' : 'Off'
+      this.statusTarget.textContent = Notification.permission === 'denied' ? this.blockedValue : this.offValue
     }
   }
 

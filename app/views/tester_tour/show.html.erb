@@ -17,11 +17,11 @@
   <div class="flex-1 px-8 pb-8 pt-6 flex flex-col">
     <% slides = [
          [:introduction, nil],
-         [:calendar, image_path("tester_tour/calendar.png")],
-         [:track_day, image_path("tester_tour/track-day.png")],
-         [:create_appointment, image_path("tester_tour/create-appointment.png")],
-         [:forecast, image_path("tester_tour/forecast.png")],
-         [:cycle_colors, image_path("tester_tour/calendar.png")]
+         [:calendar, tester_tour_image("calendar")],
+         [:track_day, tester_tour_image("track-day")],
+         [:create_appointment, tester_tour_image("create-appointment")],
+         [:forecast, tester_tour_image("forecast")],
+         [:cycle_colors, tester_tour_image("calendar")]
        ] %>
 
     <% slides.each_with_index do |(key, image), i| %>

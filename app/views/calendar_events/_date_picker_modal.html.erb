@@ -10,7 +10,7 @@
     <hr class="border-none h-px bg-black opacity-20 w-[132px] self-center mt-3 mb-5">
     <div data-appointment-date-picker-target="slot1Row" class="flex items-center justify-between py-2 min-h-[30px]">
       <button type="button" data-action="click->appointment-date-picker#editDate1" data-appointment-date-picker-target="slot1Btn" class="bg-transparent border-none cursor-pointer p-0 flex items-center gap-2 text-left flex-1 min-w-0">
-        <span class="text-11 font-semibold tracking-[0.08em] text-brand-primary opacity-50 uppercase w-9 shrink-0">From</span>
+        <span class="text-11 font-semibold tracking-[0.08em] text-brand-primary opacity-50 uppercase w-9 shrink-0"><%= t("calendar_events.form.from") %></span>
         <span data-appointment-date-picker-target="slot1Label" class="font-medium text-base tracking-007 text-brand-primary truncate"></span>
         <span data-appointment-date-picker-target="slot1InlineDate" class="hidden flex items-center gap-1"></span>
       </button>
@@ -52,7 +52,9 @@
              regardless of the finger's actual angle. overscroll-behavior
              stops a fast scroll from bleeding into the page behind it. %>
         <div data-appointment-date-picker-target="dayScroll" data-action="scroll->appointment-date-picker#onDayScroll" style="touch-action: pan-y; overscroll-behavior: contain;" class="overflow-y-auto snap-y snap-mandatory h-full w-12 [scrollbar-width:none] relative z-[1]">
+          <div class="drum-cap" style="height:26px" aria-hidden="true"></div>
           <% (1..31).each do |d| %><div data-value="<%= d %>" class="h-7 flex items-center justify-center text-base tracking-007 text-brand-primary snap-center snap-always"><%= format('%02d', d) %></div><% end %>
+          <div class="drum-cap" style="height:26px" aria-hidden="true"></div>
         </div>
         <span class="text-base text-brand-primary relative z-[1]">/</span>
         <%# Named months, not "01".."12" — this scroller sits right next to
@@ -63,31 +65,39 @@
              into edit mode. Matches the "Repeat until" picker's month
              wheel (season_modal_controller.js), which already did this. %>
         <div data-appointment-date-picker-target="monthScroll" data-action="scroll->appointment-date-picker#onMonthScroll" style="touch-action: pan-y; overscroll-behavior: contain;" class="overflow-y-auto snap-y snap-mandatory h-full w-14 [scrollbar-width:none] relative z-[1]">
+          <div class="drum-cap" style="height:26px" aria-hidden="true"></div>
           <% %w[Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec].each_with_index do |mon, mi| %><div data-value="<%= mi + 1 %>" class="h-7 flex items-center justify-center text-base tracking-007 text-brand-primary snap-center snap-always"><%= mon %></div><% end %>
+          <div class="drum-cap" style="height:26px" aria-hidden="true"></div>
         </div>
         <span class="text-base text-brand-primary relative z-[1]">/</span>
         <div data-appointment-date-picker-target="yearScroll" data-action="scroll->appointment-date-picker#onYearScroll" style="touch-action: pan-y; overscroll-behavior: contain;" class="overflow-y-auto snap-y snap-mandatory h-full w-16 [scrollbar-width:none] relative z-[1]">
+          <div class="drum-cap" style="height:26px" aria-hidden="true"></div>
           <% ((Time.zone.today.year - 5)..(Time.zone.today.year + 5)).each do |y| %><div data-value="<%= y %>" class="h-7 flex items-center justify-center text-base tracking-007 text-brand-primary snap-center snap-always"><%= y %></div><% end %>
+          <div class="drum-cap" style="height:26px" aria-hidden="true"></div>
         </div>
       </div>
       <div data-appointment-date-picker-target="protoTimePicker" data-picker="time" class="w-full h-[80px] hidden items-center justify-center gap-1 relative">
         <div class="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-7 bg-brand-field rounded-lg pointer-events-none"></div>
         <div data-appointment-date-picker-target="hourScroll" data-action="scroll->appointment-date-picker#onHourScroll" style="touch-action: pan-y; overscroll-behavior: contain;" class="overflow-y-auto snap-y snap-mandatory h-full w-[50px] [scrollbar-width:none] relative z-[1]">
+          <div class="drum-cap" style="height:26px" aria-hidden="true"></div>
           <% (0..23).each do |h| %><div data-value="<%= h %>" class="h-7 flex items-center justify-center text-base tracking-007 text-brand-primary snap-center snap-always"><%= format('%02d', h) %></div><% end %>
+          <div class="drum-cap" style="height:26px" aria-hidden="true"></div>
         </div>
         <span class="font-bold text-base text-brand-primary relative z-[1]">:</span>
         <div data-appointment-date-picker-target="minuteScroll" data-action="scroll->appointment-date-picker#onMinuteScroll" style="touch-action: pan-y; overscroll-behavior: contain;" class="overflow-y-auto snap-y snap-mandatory h-full w-14 [scrollbar-width:none] relative z-[1]">
+          <div class="drum-cap" style="height:26px" aria-hidden="true"></div>
           <% [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55].each do |m| %><div data-value="<%= m %>" class="h-7 flex items-center justify-center text-base tracking-007 text-brand-primary snap-center snap-always"><%= format('%02d', m) %></div><% end %>
+          <div class="drum-cap" style="height:26px" aria-hidden="true"></div>
         </div>
       </div>
     </div>
     <hr class="border-none h-px bg-black opacity-10 mt-3">
     <div class="flex items-center justify-between py-3">
-      <span class="font-medium text-base tracking-007 text-brand-primary">All day</span>
+      <span class="font-medium text-base tracking-007 text-brand-primary"><%= t("calendar_events.form.all_day") %></span>
       <button type="button" data-action="click->appointment-date-picker#toggleAllDay" data-appointment-date-picker-target="allDayToggle" class="w-[63px] h-[34px] rounded-[17px] bg-brand-lightgray border-none cursor-pointer relative p-0">
         <span class="absolute left-[3px] top-[2px] w-[30px] h-[30px] bg-white rounded-full shadow-[0_1px_4px_rgba(0,0,0,0.2)] transition-transform duration-200"></span>
       </button>
     </div>
-    <button type="button" data-action="click->appointment-date-picker#confirm" class="w-full h-12 bg-brand-primary rounded-lg border-none cursor-pointer font-medium text-22 leading-[27px] tracking-003 text-white text-center mt-1">Set date</button>
+    <button type="button" data-action="click->appointment-date-picker#confirm" class="w-full h-12 bg-brand-primary rounded-lg border-none cursor-pointer font-medium text-22 leading-[27px] tracking-003 text-white text-center mt-1"><%= t("calendar_events.form.set_date") %></button>
   </div>
 </div>

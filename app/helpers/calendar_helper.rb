@@ -12,7 +12,7 @@ module CalendarHelper
   # Single-letter Mon-Sun day initials, matching Figma / the main calendar.
   # Used by any weekday-header row that follows /calendar's convention.
   def weekday_initials
-    %w[M T W T F S S]
+    I18n.t("date.day_initials")
   end
 
   # A month can need 6 calendar rows (e.g. a 31-day month starting on a
