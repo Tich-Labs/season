@@ -97,8 +97,13 @@ class BetaOnboardingController < ApplicationController
     case @platform.to_s.downcase
     when "ios" then @download_link = BetaTester.testflight_public_link
     when "android"
-      @group_link = ENV["GOOGLE_PLAY_GROUP_URL"].presence
-      @download_link = ENV["GOOGLE_PLAY_OPEN_TESTING_URL"].presence
+      # Only surface the self-serve group + Play links when the Play Developer
+      # API isn't configured; otherwise Google emails the invite and the links
+      # would point at a group the tester is never added to.
+      unless GooglePlayClosedTestingService.configured?
+        @group_link = ENV["GOOGLE_PLAY_GROUP_URL"].presence
+        @download_link = ENV["GOOGLE_PLAY_OPEN_TESTING_URL"].presence
+      end
     end
   end
 

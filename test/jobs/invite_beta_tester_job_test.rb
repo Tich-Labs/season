@@ -3,6 +3,8 @@
 require "test_helper"
 
 class InviteBetaTesterJobTest < ActiveJob::TestCase
+  include ActionMailer::TestHelper
+
   setup do
     @tester = BetaTester.create!(
       name: "Alice Smith",
@@ -111,35 +113,49 @@ class InviteBetaTesterJobTest < ActiveJob::TestCase
     assert_equal "invited", @tester.reload.status
   end
 
-  test "skips the API and marks invited when the Play open-testing link is set" do
-    @tester.update!(platform: "android")
-
-    called = false
-    with_env("GOOGLE_PLAY_OPEN_TESTING_URL", "https://play.google.com/apps/testing/com.onrender.seasonv2.rubynative") do
-      stub_class_method(GooglePlayClosedTestingService, :configured?, -> { true }) do
-        stub_class_method(GooglePlayClosedTestingService, :invite, ->(_tester) { called = true }) do
-          InviteBetaTesterJob.perform_now(@tester.id)
-        end
-      end
-    end
-
-    assert_not called
-    assert_equal "invited", @tester.reload.status
-  end
-
-  test "skips the API and marks invited when the Google Group link is set" do
+  test "prefers the Play API invite over self-serve group links" do
     @tester.update!(platform: "android")
 
     called = false
     with_env("GOOGLE_PLAY_GROUP_URL", "https://groups.google.com/g/season2_beta_tester/") do
-      stub_class_method(GooglePlayClosedTestingService, :configured?, -> { true }) do
-        stub_class_method(GooglePlayClosedTestingService, :invite, ->(_tester) { called = true }) do
+      with_env("GOOGLE_PLAY_OPEN_TESTING_URL", "https://play.google.com/apps/testing/com.onrender.seasonv2.rubynative") do
+        stub_class_method(GooglePlayClosedTestingService, :configured?, -> { true }) do
+          stub_class_method(GooglePlayClosedTestingService, :invite, ->(_tester) { called = true }) do
+            InviteBetaTesterJob.perform_now(@tester.id)
+          end
+        end
+      end
+    end
+
+    assert called
+    assert_equal "invited", @tester.reload.status
+  end
+
+  test "emails the group and Play links when Google Play is not configured (Play link)" do
+    @tester.update!(platform: "android")
+
+    with_env("GOOGLE_PLAY_OPEN_TESTING_URL", "https://play.google.com/apps/testing/com.onrender.seasonv2.rubynative") do
+      stub_class_method(GooglePlayClosedTestingService, :configured?, -> { false }) do
+        assert_emails 1 do
           InviteBetaTesterJob.perform_now(@tester.id)
         end
       end
     end
 
-    assert_not called
+    assert_equal "invited", @tester.reload.status
+  end
+
+  test "emails the group and Play links when Google Play is not configured (group link)" do
+    @tester.update!(platform: "android")
+
+    with_env("GOOGLE_PLAY_GROUP_URL", "https://groups.google.com/g/season2_beta_tester/") do
+      stub_class_method(GooglePlayClosedTestingService, :configured?, -> { false }) do
+        assert_emails 1 do
+          InviteBetaTesterJob.perform_now(@tester.id)
+        end
+      end
+    end
+
     assert_equal "invited", @tester.reload.status
   end
 end

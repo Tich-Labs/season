@@ -1,0 +1,17 @@
+Hi <%= @beta_tester.name.presence || "there" %>,
+
+You're on the list to test Season on Android. Here's how to get the app:
+
+<% if @group_link.present? %>
+1. Join the tester group:
+<%= @group_link %>
+<% end %>
+<% if @play_link.present? %>
+<%= @group_link.present? ? "2." : "1." %> Open in Google Play and tap "Become a tester":
+<%= @play_link %>
+<% end %>
+
+Use the Google account you use on your phone. Google can take a short while to
+activate your access — if the button isn't ready yet, try again in a little while.
+
+Questions? Reply to shanel@season.vision

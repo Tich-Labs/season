@@ -4,8 +4,10 @@
 #
 # - iOS  → adds the tester to the App Store Connect external testing group
 #          and triggers the TestFlight invitation email.
-# - Android → adds the tester to the Google Play closed-testing track;
-#          Google Play emails the invite link.
+# - Android → the Google Play Developer API adds the tester to the closed-testing
+#          track (Google emails the invite link); when that API isn't configured,
+#          the tester is emailed the self-serve Google Group + Play links instead
+#          of being left to wait out Google's group → Play propagation delay.
 #
 # Best-effort by design: a failure leaves the tester at "registered" so the
 # admin can retry, and the underlying API calls are idempotent so Solid
@@ -48,21 +50,25 @@ class InviteBetaTesterJob < ApplicationJob
   end
 
   def invite_android(beta_tester)
-    # Group/closed-test link mode: testers self-join via the Google Group +
-    # Play testing link shown on the confirmation page — no per-email Play
-    # API invite (Google auto-admits group members to the closed test).
-    if ENV["GOOGLE_PLAY_GROUP_URL"].present? || ENV["GOOGLE_PLAY_OPEN_TESTING_URL"].present?
+    # Preferred: the Play Developer API emails the tester an invite link
+    # immediately, so there is no group → Play propagation delay to wait out.
+    if GooglePlayClosedTestingService.configured?
+      GooglePlayClosedTestingService.invite(beta_tester)
       beta_tester.update!(status: "invited")
       return
     end
 
-    unless GooglePlayClosedTestingService.configured?
-      Rails.logger.warn("[InviteBetaTesterJob] skipped #{beta_tester.id} — Google Play is not configured")
+    # Fallback: self-serve Google Group mode. A consumer Google Group has no
+    # API to add members and access takes a while to activate in Play, so email
+    # the group + Play links rather than leaving the tester on the confirmation
+    # page to wait.
+    if ENV["GOOGLE_PLAY_GROUP_URL"].present? || ENV["GOOGLE_PLAY_OPEN_TESTING_URL"].present?
+      BetaInviteMailer.android_group_links(beta_tester).deliver_later
+      beta_tester.update!(status: "invited")
       return
     end
 
-    GooglePlayClosedTestingService.invite(beta_tester)
-    beta_tester.update!(status: "invited")
+    Rails.logger.warn("[InviteBetaTesterJob] skipped #{beta_tester.id} — Google Play is not configured")
   rescue GooglePlayClosedTestingService::Error => e
     Rails.logger.error("[InviteBetaTesterJob] Android invite failed for #{beta_tester.id}: #{e.message}")
     raise

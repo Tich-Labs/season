@@ -226,6 +226,19 @@ class BetaOnboardingControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "Android confirmation hides self-serve links when the Play API is configured" do
+    with_env("GOOGLE_PLAY_GROUP_URL", "https://groups.google.com/g/season2_beta_tester/") do
+      with_env("GOOGLE_PLAY_OPEN_TESTING_URL", "https://play.google.com/apps/testing/com.onrender.seasonv2.rubynative") do
+        stub_class_method(GooglePlayClosedTestingService, :configured?, -> { true }) do
+          get beta_confirmed_path(locale: @locale, platform: "android")
+          assert_no_match "Join the tester group", response.body
+          assert_no_match "Open in Google Play", response.body
+          assert_match "We will email you an invitation", response.body
+        end
+      end
+    end
+  end
+
   test "iOS confirmation always links to the TestFlight public link" do
     with_env("TESTFLIGHT_PUBLIC_LINK", nil) do
       get beta_confirmed_path(locale: @locale, platform: "ios")

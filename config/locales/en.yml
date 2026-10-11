@@ -54,7 +54,7 @@ en:
         android:
           title: "Getting started on Android"
           steps:
-            - "Join our tester group using the button below."
+            - "Join the tester group using the button below — use the Google account you use on your phone."
             - "Then open the Play Store link and tap \"Become a tester\"."
             - "Install Season from the Play Store."
           steps_email:
@@ -96,6 +96,10 @@ en:
       start_over: "Request a new link"
     mailer:
       subject: "Delete your Season account"
+
+  beta_invite_mailer:
+    android_group_links:
+      subject: "Your Season Android beta access 📱"
 
   legal:
     full_text:

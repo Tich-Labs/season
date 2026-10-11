@@ -54,7 +54,7 @@ de:
         android:
           title: "So startest du auf Android"
           steps:
-            - "Tritt über den Button unten unserer Tester-Gruppe bei."
+            - "Tritt über den Button unten unserer Tester-Gruppe bei — verwende das Google-Konto, das du auf deinem Handy nutzt."
             - "Öffne dann den Play-Store-Link und tippe auf „Tester werden“."
             - "Installiere Season aus dem Play Store."
           steps_email:
@@ -96,6 +96,10 @@ de:
       start_over: "Neuen Link anfordern"
     mailer:
       subject: "Dein Season-Konto löschen"
+
+  beta_invite_mailer:
+    android_group_links:
+      subject: "Dein Zugang zur Season Android-Beta 📱"
 
   legal:
     full_text:

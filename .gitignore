@@ -65,6 +65,10 @@ android/gradle/
 android/gradlew
 android/gradlew.bat
 
+# iOS build artifacts
+ios/SeasonApp/build/
+ios/**/*.xcarchive
+
 # Ruby Native
 .ruby_native/
 
