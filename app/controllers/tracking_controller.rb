@@ -1,4 +1,6 @@
 class TrackingController < ApplicationController
+  include Streakable
+
   def index
     @date = begin
       params[:date].present? ? Date.iso8601(params[:date]) : Time.zone.today
@@ -8,7 +10,7 @@ class TrackingController < ApplicationController
     @phase = current_user.current_phase
     @meta = CycleCalculatorService::PHASE_META[@phase] || {}
     @cycle_day = current_user.current_cycle_day
-    @streak = current_user.streak&.current_streak || 0
+    @streak = current_user.streak&.current_value || 0
 
     if current_user.last_period_start
       svc = CycleCalculatorService.new(current_user)
@@ -37,6 +39,9 @@ class TrackingController < ApplicationController
         cycle_day: cycle_day,
         period_start: true
       )
+
+      # Logging today's period is a tracking day — feed the streak.
+      update_streak!(today)
 
       redirect_to tracking_index_path(tracking_saved: 1), notice: t(".period_logged", day: cycle_day)
     end
@@ -87,6 +92,11 @@ class TrackingController < ApplicationController
       cycle_day: 1,
       period_start: true
     )
+
+    # Period updates count as a tracking day — but only if it's for today
+    # (a backdated start date must not advance the streak, same rule as
+    # symptom/superpower logs).
+    update_streak!(start_date)
 
     redirect_to tracking_index_path(tracking_saved: 1), notice: t(".saved")
   end

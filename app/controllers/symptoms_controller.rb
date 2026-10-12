@@ -40,7 +40,7 @@ class SymptomsController < ApplicationController
     )
 
     if @log.update(symptom_params)
-      update_streak!
+      update_streak!(@log.date)
       render json: {status: "ok"}
     else
       render json: {errors: @log.errors.full_messages}, status: :unprocessable_content
@@ -48,17 +48,23 @@ class SymptomsController < ApplicationController
   end
 
   def log_physical
-    log_for_today.record_physical_symptom(params[:symptom_key], params[:value])
+    log = log_for_today
+    log.record_physical_symptom(params[:symptom_key], params[:value])
+    update_streak!(log.date)
     render json: {status: "ok"}
   end
 
   def log_mental
-    log_for_today.record_mental_symptom(params[:symptom_key], params[:value])
+    log = log_for_today
+    log.record_mental_symptom(params[:symptom_key], params[:value])
+    update_streak!(log.date)
     render json: {status: "ok"}
   end
 
   def log_bleeding
-    log_for_today.record_bleeding_flow(params[:flow])
+    log = log_for_today
+    log.record_bleeding_flow(params[:flow])
+    update_streak!(log.date)
     render json: {status: "ok"}
   end
 

@@ -97,4 +97,27 @@ class SuperpowersControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "a[data-selected='true']", text: Time.zone.today.strftime("%-d %B")
   end
+
+  # --- Streak counting (Streakable) ---
+
+  test "POST /superpowers for today advances the streak" do
+    streak = fresh_streak
+    post superpowers_path, params: {date: Time.zone.today.to_s, ratings: {"Focused" => 3}}
+    assert_equal 1, streak.reload.current_streak
+    assert_equal Time.zone.today, streak.reload.last_tracked_date
+  end
+
+  test "POST /superpowers backdated to a past day does not advance the streak" do
+    streak = fresh_streak
+    post superpowers_path, params: {date: 2.days.ago.to_date.to_s, ratings: {"Focused" => 3}}
+    assert_equal 0, streak.reload.current_streak
+    assert_nil streak.reload.last_tracked_date
+  end
+
+  private
+
+  def fresh_streak
+    @alice.streak&.destroy
+    @alice.create_streak!(current_streak: 0, longest_streak: 0, total_flames: 0)
+  end
 end

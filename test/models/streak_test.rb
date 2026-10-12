@@ -90,4 +90,101 @@ class StreakTest < ActiveSupport::TestCase
     @streak.current_streak = 15
     assert_not @streak.milestone_reached?
   end
+
+  # --- Forgiveness (grace + rest days) ---
+
+  test "forgives a single missed non-rest day using the weekly grace" do
+    travel_to Date.new(2026, 7, 8) do # Wednesday, week starts Mon 6 Jul
+      @streak.update_columns(current_streak: 10, last_tracked_date: Date.new(2026, 7, 6))
+      @streak.increment_streak!
+      assert_equal 11, @streak.current_streak
+      assert_equal Date.new(2026, 7, 6), @streak.grace_week
+      assert_equal 1, @streak.grace_used
+    end
+  end
+
+  test "resets when more than one non-rest day is missed in the same week" do
+    travel_to Date.new(2026, 7, 8) do
+      @streak.update_columns(current_streak: 10, last_tracked_date: Date.new(2026, 7, 5)) # Sun
+      @streak.increment_streak!
+      assert_equal 1, @streak.current_streak
+      assert_nil @streak.grace_week
+      assert_equal 0, @streak.grace_used
+    end
+  end
+
+  test "forgives missed days that straddle a week boundary, one per week" do
+    travel_to Date.new(2026, 7, 7) do # Tuesday, week starts Mon 6 Jul
+      # Missed: Sunday 5 Jul (prev week) + Monday 6 Jul (this week).
+      @streak.update_columns(current_streak: 5, last_tracked_date: Date.new(2026, 7, 4))
+      @streak.increment_streak!
+      assert_equal 6, @streak.current_streak
+      assert_equal Date.new(2026, 7, 6), @streak.grace_week
+      assert_equal 1, @streak.grace_used
+    end
+  end
+
+  test "grace is available again in a new week" do
+    travel_to Date.new(2026, 7, 8) do
+      @streak.update_columns(current_streak: 10, last_tracked_date: Date.new(2026, 7, 6))
+      @streak.increment_streak!
+      assert_equal 11, @streak.current_streak
+    end
+    travel_to Date.new(2026, 7, 15) do # next Wednesday
+      @streak.update_columns(last_tracked_date: Date.new(2026, 7, 13))
+      @streak.increment_streak!
+      assert_equal 12, @streak.current_streak
+      assert_equal Date.new(2026, 7, 13), @streak.grace_week
+      assert_equal 1, @streak.grace_used
+    end
+  end
+
+  test "forgives missed days inside a tracked period without spending grace" do
+    @user.period_starts.create!(started_on: Time.zone.today - 4)
+    @streak.update_columns(current_streak: 10, last_tracked_date: Time.zone.today - 3)
+    @streak.increment_streak!
+    assert_equal 11, @streak.current_streak
+    assert_nil @streak.grace_week
+    assert_equal 0, @streak.grace_used
+  end
+
+  test "ignores out-of-order (backdated) increments" do
+    @streak.update_columns(current_streak: 5, last_tracked_date: Time.zone.today)
+    @streak.increment_streak!(on: Time.zone.today - 1)
+    assert_equal 5, @streak.current_streak
+    assert_equal Time.zone.today, @streak.last_tracked_date
+  end
+
+  # --- current_value (effective display value) ---
+
+  test "current_value returns 0 when never tracked" do
+    assert_equal 0, @streak.current_value
+  end
+
+  test "current_value returns stored streak when tracked today" do
+    @streak.update_columns(current_streak: 5, last_tracked_date: Time.zone.today)
+    assert_equal 5, @streak.current_value
+  end
+
+  test "current_value returns stored streak when tracked yesterday" do
+    @streak.update_columns(current_streak: 5, last_tracked_date: Time.zone.today - 1)
+    assert_equal 5, @streak.current_value
+  end
+
+  test "current_value returns stored streak when the missed day is forgivable" do
+    @streak.update_columns(current_streak: 5, last_tracked_date: Time.zone.today - 2)
+    assert_equal 5, @streak.current_value
+    assert_equal 0, @streak.grace_used # a read must never mutate the streak
+  end
+
+  test "current_value returns 0 when the gap is unforgivable" do
+    @streak.update_columns(current_streak: 5, last_tracked_date: Time.zone.today - 3)
+    assert_equal 0, @streak.current_value
+  end
+
+  test "current_value returns stored streak when all missed days are rest days" do
+    @user.period_starts.create!(started_on: Time.zone.today - 4)
+    @streak.update_columns(current_streak: 5, last_tracked_date: Time.zone.today - 3)
+    assert_equal 5, @streak.current_value
+  end
 end

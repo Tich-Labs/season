@@ -141,6 +141,17 @@ class User < ApplicationRecord
     CycleCalculatorService.new(self).cycle_day_for(date)
   end
 
+  # True when `date` falls inside a tracked period (start date plus the user's
+  # period_length). Used by Streak to treat missed days during menstruation as
+  # rest days instead of streak-breakers.
+  def menstruating_on?(date)
+    date = date.to_date
+    length = period_length.presence || 5
+    starts = period_starts.map(&:started_on)
+    starts << last_period_start if last_period_start
+    starts.compact.uniq.any? { |start| date >= start && date < start + length.days }
+  end
+
   def first_name
     name&.split&.first || name
   end

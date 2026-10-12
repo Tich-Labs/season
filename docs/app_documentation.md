@@ -313,9 +313,11 @@ streaks
   longest_streak    integer DEFAULT 0
   total_flames      integer DEFAULT 0
   last_tracked_date date
+  grace_week        date      -- Monday of the week the last grace day was spent
+  grace_used        integer DEFAULT 0 -- grace days spent that week (max 1/week)
 ```
 
-Milestones: `[30, 50, 75, 100, 125]`. Logic in `increment_streak!`: increments if yesterday was last tracked; resets to 1 otherwise; no-ops if today already tracked.
+Milestones: `[30, 50, 75, 100, 125]`. Logic in `increment_streak!`: increments if yesterday was last tracked; resets to 1 otherwise; no-ops if today already tracked. Missed days are forgiven when they fall inside a tracked period (rest days) or when the weekly grace budget (1 non-rest day/week) allows. See `docs/streaks.md`.
 
 ---
 

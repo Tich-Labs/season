@@ -147,7 +147,7 @@ class CalendarController < ApplicationController
     @next_month = @date + 1.month
 
     @current_season = CycleCalculatorService::SEASON_NAMES[@current_phase]
-    @streak = current_user.streak&.current_streak || 0
+    @streak = current_user.streak&.current_value || 0
   end
 
   private

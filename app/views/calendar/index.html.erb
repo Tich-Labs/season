@@ -238,7 +238,6 @@
 <%
   phase = @current_phase
   season = @current_season || CycleCalculatorService::SEASON_NAMES[phase]
-  cycle_day = current_user.streak&.current_streak
 
   # Colours come from CycleCalculatorService::PHASE_META (the single source
   # of truth, shared with the calendar bands/legend) rather than a second

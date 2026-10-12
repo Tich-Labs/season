@@ -146,4 +146,56 @@ class SymptomsControllerTest < ActionDispatch::IntegrationTest
     assert_select "div[data-scroll-picker-field-value='temperature'] input[value='36.7']"
     assert_select "div[data-scroll-picker-field-value='weight'] input[value='61.0']"
   end
+
+  # --- Streak counting (Streakable) ---
+
+  test "POST /symptoms for today advances the streak" do
+    streak = fresh_streak
+    post symptoms_path, params: {symptom_log: {date: Time.zone.today.to_s, mood: 4}}
+    assert_equal 1, streak.reload.current_streak
+    assert_equal Time.zone.today, streak.reload.last_tracked_date
+  end
+
+  test "POST /symptoms backdated to a past day does not advance the streak" do
+    streak = fresh_streak
+    post symptoms_path, params: {symptom_log: {date: 2.days.ago.to_date.to_s, mood: 4}}
+    assert_equal 0, streak.reload.current_streak
+    assert_nil streak.reload.last_tracked_date
+  end
+
+  test "log_physical for today advances the streak" do
+    streak = fresh_streak
+    post log_physical_symptom_path, params: {symptom_key: "headache", value: 3}
+    assert_response :success
+    assert_equal 1, streak.reload.current_streak
+  end
+
+  test "log_mental for today advances the streak" do
+    streak = fresh_streak
+    post log_mental_symptom_path, params: {symptom_key: "anxiety", value: 3}
+    assert_response :success
+    assert_equal 1, streak.reload.current_streak
+  end
+
+  test "log_bleeding for today advances the streak" do
+    streak = fresh_streak
+    post log_bleeding_symptom_path, params: {flow: "Light"}
+    assert_response :success
+    assert_equal 1, streak.reload.current_streak
+  end
+
+  test "backdated quick-action log does not advance the streak" do
+    streak = fresh_streak
+    post log_physical_symptom_path, params: {symptom_key: "headache", value: 3, date: 2.days.ago.to_date.to_s}
+    assert_response :success
+    assert_equal 0, streak.reload.current_streak
+    assert_nil streak.reload.last_tracked_date
+  end
+
+  private
+
+  def fresh_streak
+    @alice.streak&.destroy
+    @alice.create_streak!(current_streak: 0, longest_streak: 0, total_flames: 0)
+  end
 end

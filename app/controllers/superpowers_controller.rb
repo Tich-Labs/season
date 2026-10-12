@@ -55,7 +55,7 @@ class SuperpowersController < ApplicationController
     current_ratings = @log.ratings || {}
     new_ratings = current_ratings.merge(ratings_params.transform_values(&:to_i))
     if @log.update(ratings: new_ratings)
-      update_streak!
+      update_streak!(@log.date)
       head :ok
     else
       head :unprocessable_content
