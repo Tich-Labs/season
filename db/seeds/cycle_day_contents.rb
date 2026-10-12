@@ -244,30 +244,271 @@ fertilities = {
   35 => {s: "Fertility probability: 0% (except a fertilized egg successfully implants, which then leads to pregnancy)"}
 }
 
+# ── German translations ────────────────────────────────────────────────────
+superpowers_de = {
+  1 => {s: "Loslassen & Neuanfang", l: "Das Progesteron ist auf seinem niedrigsten Stand, was das körperliche und seelische 'Loslassen' erleichtert. Dein Körper stößt die Gebärmutterschleimhaut ab – so kannst du auch gedanklich alte Lasten loslassen."},
+  2 => {s: "Kreativität durch Ruhe", l: "Der Östrogenspiegel fällt stark ab, was zu weniger äußerer Aktivität, aber mehr innerer Klarheit führt. Dein Gehirn verarbeitet Erlebnisse langsamer, aber tiefer – eine Grundlage für kreative Einfälle."},
+  3 => {s: "Stärkere Intuition", l: "Da das Östrogen niedrig ist, wechselt dein Gehirn von rationaler Analyse zu emotionaler Wahrnehmung. Die Amygdala (Emotionszentrum) und der Hippocampus (Gedächtnisverarbeitung) arbeiten enger zusammen – du spürst Dinge klarer."},
+  4 => {s: "Erhöhtes Einfühlungsvermögen", l: "Niedriges Östrogen bedeutet weniger Dopamin → du wirst ruhiger, aber empfänglicher für emotionale Signale. Dein Gehirn richtet seinen Fokus stärker auf zwischenmenschliche Nuancen – du spürst, was andere fühlen."},
+  5 => {s: "Effiziente Priorisierung", l: "Dein Körper drosselt den Stoffwechsel, um Energie zu sparen – du konzentrierst dich auf das Wesentliche. Der präfrontale Kortex (für Entscheidungen zuständig) wird entlastet und blendet Unwichtiges automatisch aus."},
+  6 => {s: "Tiefere Selbstreflexion", l: "Der niedrige Östrogenspiegel reduziert äußere Ablenkungen, sodass dein Fokus stärker nach innen gerichtet ist. Dein Gehirn arbeitet langsamer, aber tiefer – du erkennst deine eigenen Muster und emotionalen Prozesse klarer. Das ermöglicht es dir, alte Denkweisen zu hinterfragen, tiefere Einsichten zu gewinnen und bewusster zu reflektieren, was dir wirklich guttut."},
+  7 => {s: "Scharfes analytisches Denken", l: "Niedriges Östrogen bedeutet weniger emotionale Ablenkung, wodurch dein logisches Denken klarer wird. Dein Gehirn ist nicht im 'Kontaktmodus', sondern verarbeitet Informationen auf einer tieferen Ebene."},
+  8 => {s: "Hohes Energieniveau", l: "Östrogen wirkt wie ein natürlicher Energiespender – es steigert deine Ausdauer, Konzentration und Motivation. Dein Stoffwechsel zieht an, du bist körperlich leistungsfähiger und hast mehr Lust, Dinge zu tun."},
+  9 => {s: "Kreative Ideenexplosion", l: "Da dein Gehirn jetzt besonders aktiv ist, kommen neue Ideen schneller. Der steigende Östrogenspiegel verbessert die Kommunikation zwischen den Hirnregionen und verstärkt kreative Inspiration."},
+  10 => {s: "Optimales Muskelwachstum", l: "In dieser Phase ist dein Körper besonders empfänglich für den Muskelaufbau. Steigendes Östrogen verbessert die Regeneration, während Testosteron mehr Kraft liefert – perfekt für intensivere Workouts."},
+  11 => {s: "Soziale Ausstrahlung", l: "Östrogen beeinflusst nicht nur deine Stimmung, sondern auch deine Ausstrahlung. Du fühlst dich selbstbewusster, kommunikativer und ziehst andere mit deiner Energie an – ein natürlicher Effekt, der evolutionär mit der Vorbereitung auf den Eisprung zusammenhängt."},
+  12 => {s: "Mehr Geduld & Toleranz", l: "Der steigende Östrogenspiegel stabilisiert deine Stimmung und sorgt für mehr emotionale Belastbarkeit. Dadurch bist du geduldiger und kannst auf Herausforderungen gelassener reagieren."},
+  13 => {s: "Bessere Entscheidungen", l: "Da dein präfrontaler Kortex (zuständig für logisches Denken) aktiver ist, kannst du Entscheidungen schneller und effektiver treffen. Du bist weniger unsicher und erkennst Chancen klarer."},
+  14 => {s: "Höhere Anpassungsfähigkeit", l: "Steigendes Östrogen macht dich offener für Veränderungen. Du kannst dich leichter an neue Situationen anpassen und fühlst dich motiviert, Neues auszuprobieren."},
+  15 => {s: "Höhere Gedächtnisleistung", l: "Steigendes Östrogen stärkt die synaptischen Verbindungen, sodass du Wissen leichter aufnimmst und abrufst. Dein Arbeitsgedächtnis ist besonders aktiv, du merkst dir Details besser und lernst schneller."},
+  16 => {s: "Größere Fähigkeit, andere zu begeistern", l: "Durch den Testosteronanstieg fühlst du dich selbstbewusster, während Dopamin deine Begeisterung steigert. Du kannst andere mit deiner Energie mitreißen, überzeugend auftreten und Ideen klar vermitteln."},
+  17 => {s: "Ausgeprägte diplomatische Fähigkeiten", l: "Östrogen verbessert die emotionale Wahrnehmung und die Sprachverarbeitung, sodass du einfühlsam, aber dennoch klar kommunizierst. So entschärfst du geschickt Konflikte und versetzt dich in andere hinein."},
+  18 => {s: "Natürliche Anziehung auf Gleichgesinnte", l: "Aufgrund des hohen Östrogenspiegels wirkst du offener und charismatischer, was evolutionär mit der Partnerwahl zusammenhängt. Diese Phase ist ideal, um Beziehungen zu stärken – sowohl persönlich als auch beruflich."},
+  19 => {s: "Maximale Problemlösungsfähigkeit", l: "Östrogen fördert schnelles analytisches Denken, während Dopamin deine geistige Flexibilität erhöht. So findest du kreative Lösungen für komplexe Probleme und erkennst Muster schneller."},
+  20 => {s: "Optimale Wahrnehmung nonverbaler Kommunikation", l: "Dein Gehirn ist jetzt besonders sensibel für Mimik, Gestik und Stimmung. Du erkennst intuitiv, was andere fühlen, auch wenn sie es nicht aussprechen."},
+  21 => {s: "Maximale Klarheit über eigene Wünsche & Ziele", l: "Ein hoher Testosteronspiegel verleiht dir Entschlossenheit, während Östrogen emotionale Klarheit bringt. So spürst du genau, was du willst und welche Schritte nötig sind, um es zu erreichen."},
+  22 => {s: "Hohe Belastbarkeit", l: "Progesteron stabilisiert dein Nervensystem und sorgt dafür, dass du Herausforderungen gelassener meisterst. Dein Körper ist in dieser Phase darauf programmiert, belastbarer zu sein."},
+  23 => {s: "Verbesserte Detailwahrnehmung", l: "Progesteron schaltet dein Gehirn auf 'Gefahrenanalyse', wodurch du kleine Unstimmigkeiten und Details schneller bemerkst. Dein analytisches Denken ist in dieser Phase besonders ausgeprägt."},
+  24 => {s: "Erhöhte Produktivität", l: "Da sich dein Körper auf die bevorstehende Menstruation vorbereitet, sendet Progesteron ein biologisches Signal zum Strukturieren und Erledigen von Aufgaben. Du lässt dich seltener ablenken und erledigst Dinge effizient."},
+  25 => {s: "Hohe Disziplin", l: "Fallendes Östrogen macht dich weniger impulsiv, während Progesteron für mehr Durchhaltevermögen sorgt. Du kannst Pläne und Routinen in dieser Phase besonders gut einhalten."},
+  26 => {s: "Effiziente Problemlösung", l: "Weniger Östrogen bedeutet weniger emotionale Ablenkung, sodass du dich auf praktische Lösungen konzentrieren kannst. Dein Gehirn verarbeitet Informationen pragmatischer und strategischer."},
+  27 => {s: "Präzise Kommunikation", l: "Da sich dein Körper auf Ruhe und Struktur einstellt, wirst du in deiner Kommunikation automatisch direkter. Du hast weniger Geduld für unnötige Diskussionen und formulierst deine Gedanken effizienter."},
+  28 => {s: "Scharfes Urteilsvermögen über Menschen", l: "Progesteron schärft dein Bauchgefühl, während weniger Östrogen dich nicht durch Wunschdenken beeinflussen lässt. Du kannst leichter einschätzen, wem du vertrauen kannst und wer vielleicht nicht ehrlich ist."},
+  29 => {s: "Effektives Krisenmanagement", l: "Diese Phase ist evolutionär darauf ausgelegt, dich stressresistenter zu machen. Dein Körper ist bereit, effizient zu handeln, statt emotional zu reagieren."},
+  30 => {s: "Klare Grenzen setzen", l: "Fallendes Östrogen senkt dein Bedürfnis nach Harmonie. Du hast jetzt weniger Geduld für Kompromisse, die dir nicht dienen, und setzt Grenzen klarer."},
+  31 => {s: "Erhöhte Durchsetzungsfähigkeit", l: "Da dein Testosteronspiegel leicht erhöht ist, bist du in dieser Phase besonders durchsetzungsfähig. Du verteidigst deine Meinung und setzt dich entschlossener durch."},
+  32 => {s: "Höhere Motivation für Selbstfürsorge", l: "Progesteron signalisiert deinem Körper, sich auf die nächste Phase vorzubereiten. Dadurch spürst du intensiver, was dir guttut – sei es gesunde Ernährung, Ruhe oder Bewegung."},
+  33 => {s: "Höhere Stressresilienz", l: "Progesteron stabilisiert deine Reaktion auf Stresshormone wie Cortisol. Dadurch reagierst du ruhiger auf Probleme und kannst Situationen objektiver betrachten."},
+  34 => {s: "Gutes Zeitmanagement", l: "Da Progesteron dein Bedürfnis nach Ordnung erhöht, fällt es dir leichter, Prioritäten zu setzen und Aufgaben effizient zu planen."},
+  35 => {s: "Tiefere Selbstakzeptanz", l: "Diese Phase bringt dich in eine natürliche Reflexion über deine eigenen Bedürfnisse. Du fühlst dich stärker mit dir selbst verbunden und kannst alte Denkmuster hinterfragen."}
+}
+
+watch_outs_de = {
+  1 => {s: "Höre auf deinen Körper, statt gegen ihn zu arbeiten", l: "Statt dich durch anstrengende Tage zu zwingen, ist es hilfreicher, dein Tempo anzupassen und deinem Körper zu geben, was er jetzt braucht."},
+  2 => {s: "Gehe sanft mit emotionalen Schwankungen um", l: "Hormonelle Schwankungen können dich empfindlicher machen; statt dich dafür zu verurteilen, hilft es, diese Gefühle bewusst wahrzunehmen und mit mehr Selbstmitgefühl anzunehmen."},
+  3 => {s: "Setze klare Grenzen in stressigen Situationen", l: "Dein Nervensystem ist in dieser Phase empfindlicher, deshalb ist es hilfreich, dich in stressigen Momenten bewusst zu schützen und nicht alles an dich heranzulassen."},
+  4 => {s: "Übe Selbstmitgefühl statt Selbstkritik", l: "In dieser Phase ist es leicht, sich selbst zu kritisieren oder sich weniger leistungsfähig zu fühlen, doch dein Körper leistet viel – deshalb hilft es, nachsichtiger und freundlicher mit dir umzugehen."},
+  5 => {s: "Vermeide übermäßige soziale Verpflichtungen", l: "In dieser Phase bist du eher introvertiert und brauchst mehr Ruhe, daher kann zu viel sozialer Austausch deine Energie schneller rauben und dich stressen."},
+  6 => {s: "Reduziere geistige Überlastung", l: "Komplexe, stressige Aufgaben oder hitzige Diskussionen können sich in dieser Phase belastender anfühlen, weshalb es sinnvoll ist, die geistige Anstrengung bewusst zu dosieren."},
+  7 => {s: "Nutze diese Zeit zur Reflexion", l: "Dein Körper befindet sich in einer natürlichen Phase des Rückzugs und der Verarbeitung, deshalb ist es eine gute Gelegenheit, deine Gefühle, Ziele und Bedürfnisse neu zu bewerten."},
+  8 => {s: "Nutze dein steigendes Energieniveau bewusst", l: "Dein Körper bildet wieder mehr Östrogen, was deine Energie und Motivation steigert; achte darauf, diese Phase aktiv zu nutzen, ohne dich zu überfordern."},
+  9 => {s: "Passe dein Training an dein steigendes Leistungsniveau an", l: "Dein Körper regeneriert schneller, weshalb dies der perfekte Zeitpunkt für intensivere Workouts oder neue sportliche Herausforderungen ist."},
+  10 => {s: "Sei offen für spontane Erlebnisse", l: "In dieser Phase fällt es leichter, Neues auszuprobieren, da deine Risikobereitschaft und dein Abenteuergeist zunehmen."},
+  11 => {s: "Achte darauf, dich nicht zu überfordern", l: "Auch wenn du voller Tatendrang bist, könntest du zu viel auf dich nehmen und dafür später in den Zyklusphasen bezahlen."},
+  12 => {s: "Nutze deine emotionale Balance für wichtige Gespräche", l: "Jetzt ist die beste Zeit für klärende oder strategische Gespräche, da du ausgeglichener und lösungsorientierter bist."},
+  13 => {s: "Achte auf deine Schlafqualität", l: "Da du aktiver bist, könntest du deinen Schlaf vernachlässigen, doch guter Schlaf hilft dir, deine Energie nachhaltig zu nutzen."},
+  14 => {s: "Bereite dich bewusst auf die Eisprungphase vor", l: "Diese Phase ist der Übergang zum Eisprung, in dem du deine größte Ausstrahlung hast; jetzt ist der perfekte Zeitpunkt, um deine nächsten Schritte vorzubereiten."},
+  15 => {s: "Nimm nicht zu viele Verpflichtungen auf einmal an", l: "Dein Energieniveau ist hoch, aber du könntest dich übernehmen, da du in dieser Phase oft euphorisch und voller Tatendrang bist, ohne zu merken, dass du deine Kapazitäten überstrapazierst."},
+  16 => {s: "Unterschätze Stress nicht", l: "Auch wenn du dich leistungsfähig fühlst, kann zu viel Druck negative Folgen haben, da dein Nervensystem durch den Hormonanstieg in einer Hochphase ist, Stress aber dennoch langfristig erschöpfen kann."},
+  17 => {s: "Iss und trink genug", l: "Dein Stoffwechsel arbeitet schneller, daher ist eine ausgewogene Ernährung besonders wichtig, um Heißhunger, Energieschwankungen und Nährstoffmangel zu vermeiden."},
+  18 => {s: "Höre auf die Signale deines Körpers", l: "In dieser Phase übersiehst du manchmal kleine Beschwerden, weil du dich so gut fühlst, was dazu führen kann, dass du Warnsignale wie Dehydration, Muskelverspannungen oder Kopfschmerzen ignorierst."},
+  19 => {s: "Wahre deine Grenzen", l: "Weil du so offen und kommunikativ bist, könnten andere dich ausnutzen, indem sie dir zusätzliche Aufgaben aufhalsen oder dich emotional beanspruchen."},
+  20 => {s: "Plane nicht zu viele soziale Verpflichtungen", l: "Du bist geselliger, brauchst danach aber Erholungszeit, da die nächste Zyklusphase (Lutealphase) stärker nach innen gerichtet ist und du dann mehr Rückzug brauchst."},
+  21 => {s: "Bereite dich auf Hormonschwankungen nach dem Eisprung vor", l: "Die Stimmung kann nach dem Eisprung stark schwanken, da der Östrogenspiegel schnell fällt und Progesteron spürbarer wird, was oft zu Gereiztheit oder Erschöpfung führt."},
+  22 => {s: "Emotional empfindlicher und stressanfälliger", l: "Dein Progesteronspiegel steigt, während Östrogen langsam sinkt, was dich emotional empfindlicher und leichter gereizt machen kann, besonders in stressigen oder überfordernden Situationen."},
+  23 => {s: "Achte auf plötzliche Gereiztheit", l: "Dein Progesteronspiegel steigt, während Östrogen langsam sinkt, was dich emotional empfindlicher und leichter gereizt machen kann, besonders in stressigen oder überfordernden Situationen."},
+  24 => {s: "Übertreibe es nicht mit Perfektionismus", l: "Du hast jetzt einen starken Drang, alles ordentlich und makellos zu erledigen, was dazu führen kann, dass du dich in Details verlierst und dich unnötig unter Druck setzt."},
+  25 => {s: "Achte auf körperliche Verspannungen", l: "Progesteron kann Wassereinlagerungen und Verspannungen fördern, die sich als Spannungsgefühl in Brüsten, Kopf oder Gelenken zeigen können; sanfte Bewegung hilft, diese Beschwerden zu lindern."},
+  26 => {s: "Verurteile dich nicht für emotionale Schwankungen", l: "Die Lutealphase bringt oft Stimmungsschwankungen mit sich, die sich echt anfühlen, aber hormonell bedingt sind; es hilft, sich mit Mitgefühl zu betrachten und nicht alles zu ernst zu nehmen."},
+  27 => {s: "Lass Konflikte nicht eskalieren", l: "Deine Geduld ist geringer, weshalb du auf Streitigkeiten gereizter reagieren könntest; in dieser Phase ist es wichtig, bewusster mit deinen Worten umzugehen, um unnötige Spannungen zu vermeiden."},
+  28 => {s: "Gestalte soziale Interaktionen bewusster", l: "Du hast weniger Lust auf Small Talk und oberflächliche Gespräche, weshalb es hilfreich ist, dich auf tiefere, bedeutungsvolle Gespräche zu konzentrieren oder dir bewusst Zeit für dich zu nehmen."},
+  29 => {s: "Übertreibe es nicht mit Perfektionismus", l: "Du hast jetzt einen starken Drang, alles ordentlich und makellos zu erledigen, was dazu führen kann, dass du dich in Details verlierst und dich unnötig unter Druck setzt."},
+  30 => {s: "Sei achtsam mit Koffein und Alkohol", l: "Dein Körper verarbeitet Stimulanzien langsamer, weshalb zu viel Kaffee Unruhe und Schlafprobleme verstärken kann und Alkohol intensivere Stimmungsschwankungen auslösen kann."},
+  31 => {s: "Geh früher ins Bett", l: "Deine Schlafqualität kann durch Hormonschwankungen beeinflusst werden, weshalb bewusste Schlafhygiene dir hilft, erholsamer zu schlafen und Müdigkeit am nächsten Tag zu minimieren."},
+  32 => {s: "Plane ausreichend Erholung ein", l: "Dein Körper arbeitet intensiver, um sich auf die Menstruation vorzubereiten, was mehr Energie kostet; ohne genügend Ruhe kann das schneller zu Erschöpfung führen."},
+  33 => {s: "Starte nicht zu viele neue Projekte", l: "Dein Fokus liegt jetzt eher auf Abschluss und Reflexion als auf Neuanfängen, weshalb es sinnvoller ist, bestehende Aufgaben zu beenden, statt neue Herausforderungen anzunehmen."},
+  34 => {s: "Gehe bewusst mit Heißhunger auf ungesundes Essen um", l: "Heißhunger ist hormonell bedingt, aber zu viel Zucker oder verarbeitete Lebensmittel können deine Stimmungsschwankungen verstärken und Energietiefs verursachen."},
+  35 => {s: "Achte auf negative Selbstgespräche", l: "In dieser Phase neigt man dazu, sich selbst kritischer zu sehen, was dein Selbstwertgefühl beeinflussen kann, obwohl es nur hormonell bedingt ist."}
+}
+
+moods_de = {
+  1 => "Niedergeschlagen, unwohl",
+  2 => "Gereizt, traurig",
+  3 => "Unmotiviert, selbstkritisch",
+  4 => "Ruhig, besinnlich",
+  5 => "Normal, schüchtern",
+  6 => "Glücklich, inspiriert",
+  7 => "Energiegeladen, ausgelassen",
+  8 => "Energiegeladen, inspiriert",
+  9 => "Glücklich, ruhig",
+  10 => "Sexy, selbstbewusst",
+  11 => "Ausgelassen, lustvoll",
+  12 => "Normal, gesellig",
+  13 => "Euphorisch, kreativ",
+  14 => "Sexy, optimistisch",
+  15 => "Lustvoll, glücklich",
+  16 => "Sexy, energiegeladen",
+  17 => "Glücklich, ausgelassen",
+  18 => "Inspiriert, selbstbewusst",
+  19 => "Normal, ruhig",
+  20 => "Besorgt, misstrauisch",
+  21 => "Gereizt, ungeduldig",
+  22 => "Stimmungsschwankungen, unmotiviert",
+  23 => "Gereizt, besorgt",
+  24 => "Niedergeschlagen, traurig",
+  25 => "Unwohl, selbstkritisch",
+  26 => "Verwirrt, misstrauisch",
+  27 => "Ungeduldig, genervt",
+  28 => "Traurig, unmotiviert",
+  29 => "Ruhig, nachdenklich",
+  30 => "Glücklich, normal",
+  31 => "Normal, ruhig",
+  32 => "Glücklich, inspiriert",
+  33 => "Sexy, ausgelassen",
+  34 => "Normal, gesellig",
+  35 => "Energiegeladen, motiviert"
+}
+
+sports_de = {
+  1 => {s: "Gönn dir ausreichend Ruhe, wenn dein Körper sie verlangt", l: "In den ersten Tagen kann dein Energieniveau durch den Hormonabfall (Östrogen & Progesteron) sehr niedrig sein, deshalb solltest du dich nicht zu körperlicher Aktivität zwingen, wenn du dich erschöpft fühlst."},
+  2 => {s: "Vermeide hochintensives Training oder lange Ausdauerläufe", l: "Dein Körper befindet sich in einer Regenerationsphase, und intensives Training kann zusätzliche Stresshormone (Cortisol) freisetzen, die deine Erschöpfung verstärken."},
+  3 => {s: "Konzentriere dich auf Mobilität und Flexibilität", l: "Dehnübungen oder leichtes Mobilitätstraining können helfen, Verspannungen im unteren Rücken und in den Hüften zu lösen, die oft durch Krämpfe entstehen."},
+  4 => {s: "Vermeide schweres Krafttraining", l: "Dein Körper regeneriert noch, und schweres Heben kann Gelenke und Muskeln zusätzlich belasten, da deine Muskelkoordination in dieser Phase leicht beeinträchtigt sein kann."},
+  5 => {s: "Steigere deine Aktivität allmählich", l: "Dein Östrogenspiegel beginnt wieder zu steigen, was zu mehr Energie führt; dies ist ein guter Zeitpunkt, um sanft zum Krafttraining oder moderatem Cardio zurückzukehren."},
+  6 => {s: "Nutze moderate Kraftübungen zur Aktivierung", l: "Leichtes Krafttraining mit moderatem Widerstand kann helfen, deine Muskeln zu aktivieren, ohne deinen Körper zu überlasten."},
+  7 => {s: "Bereite dich auf die nächste Zyklusphase vor", l: "Da die Follikelphase einen natürlichen Leistungsschub mit sich bringt, kannst du deine Trainingsintensität langsam anpassen, um wieder in einen stärkeren Rhythmus zu kommen."},
+  8 => {s: "Baue sanftes Krafttraining ein", l: "Leichtes bis moderates Krafttraining ist jetzt ideal, da deine Muskeln wieder leistungsfähiger werden und du dich stärker fühlst."},
+  9 => {s: "Steigere dein Cardiotraining allmählich", l: "Dein Herz-Kreislauf-System wird belastbarer, sodass du jetzt langsam längere oder intensivere Cardio-Einheiten wie Joggen oder Radfahren integrieren kannst."},
+  10 => {s: "Erhöhe die Intensität deines Krafttrainings", l: "In dieser Phase kannst du schwerere Gewichte oder höheren Widerstand nutzen, da dein Körper besser regeneriert und deine Muskeln effizienter arbeiten."},
+  11 => {s: "Nutze deine gesteigerte Ausdauer für längere Workouts", l: "Dein Körper ist jetzt leistungsfähiger und kann längere Cardio- oder HIIT-Einheiten (Hochintensives Intervalltraining) besser verkraften."},
+  12 => {s: "Teste neue sportliche Herausforderungen", l: "Deine geistige Klarheit und körperliche Belastbarkeit sind hoch, weshalb du neue Workouts oder Sportarten ausprobieren kannst, ohne dich schnell überfordert zu fühlen."},
+  13 => {s: "Plane deine anspruchsvollsten Trainingstage bewusst", l: "Wenn du persönliche Bestleistungen anstrebst, sind diese Tage optimal, da dein Körper durch den hohen Östrogenspiegel besonders belastbar ist."},
+  14 => {s: "Nutze deine Topform für intensive Workouts", l: "Jetzt ist der perfekte Zeitpunkt für anspruchsvolles Training wie Krafttraining mit schweren Gewichten, Sprints oder lange Cardio-Einheiten."},
+  15 => {s: "Nutze dein Kraftmaximum für intensive Workouts", l: "Jetzt ist der perfekte Zeitpunkt für schweres Krafttraining, da dein Körper hohe Lasten besser verkraftet und schneller Muskeln aufbaut."},
+  16 => {s: "Konzentriere dich auf explosive Bewegungen", l: "Hohe Östrogen- und Testosteronspiegel verbessern deine Reaktionsgeschwindigkeit, Kraft und Leistung. Dein Körper verkraftet intensive Belastungen jetzt besser und regeneriert schneller. Nutze diese Phase für Sprinttraining, HIIT oder Kraftübungen mit explosiven Bewegungen, um dein volles Leistungspotenzial auszuschöpfen."},
+  17 => {s: "Achte auf dein Verletzungsrisiko", l: "Durch die hormonell bedingte Lockerung von Bändern und Sehnen steigt die Wahrscheinlichkeit von Verstauchungen oder Überdehnungen, daher solltest du dich besonders gut aufwärmen und kontrollierte Bewegungen ausführen."},
+  18 => {s: "Nutze deine hohe mentale Belastbarkeit für Disziplintraining", l: "Da du in dieser Phase besonders fokussiert bist, kannst du gezielt an Technik, Haltung oder Ausdauergrenzen arbeiten."},
+  19 => {s: "Plane Krafttraining bewusst", l: "Dein Körper kann jetzt das meiste Gewicht heben und effizient Muskeln aufbauen, weshalb dies der perfekte Moment für Maximalkrafttraining ist."},
+  20 => {s: "Nutze deine soziale Energie für Gruppen- oder Mannschaftssport", l: "Körper und Geist sind optimal für gemeinsames Training, egal ob Mannschaftssport, Gruppenkurse oder Training mit Freundinnen."},
+  21 => {s: "Bereite dich mental auf den Übergang in die Lutealphase vor", l: "Nach dem Eisprung beginnt der Progesteronanstieg, der dein Energieniveau langsam verändert – passe dein Training rechtzeitig an."},
+  22 => {s: "Reduziere die Intensität deines Trainings", l: "Dein Körper braucht mehr Regeneration, da Progesteron deine Körpertemperatur erhöht und deine Ausdauerleistung leicht senkt."},
+  23 => {s: "Konzentriere dich auf moderates Krafttraining statt Maximalkraft", l: "Dein Körper speichert jetzt mehr Wasser in den Muskeln, was Bewegungen ungewohnt 'schwer' machen kann. Arbeite mit mittleren Gewichten und achte auf die Technik."},
+  24 => {s: "Konzentriere dich auf Balance und Stabilität", l: "Dein Körper hat in dieser Phase weniger Koordinationskraft, daher sind Stabilisationsübungen und die gezielte Aktivierung der tiefen Muskulatur sinnvoll."},
+  25 => {s: "Nutze entspannende Workouts für die mentale Balance", l: "Sanftes Yoga, Stretching oder Pilates können helfen, Stress abzubauen und Menstruationsbeschwerden vorzubeugen."},
+  26 => {s: "Höre auf die Signale deines Körpers & passe dein Training flexibel an", l: "An manchen Tagen fühlst du dich leistungsfähig, an anderen brauchst du mehr Ruhe – achte auf dein individuelles Wohlbefinden."},
+  27 => {s: "Integriere leichtes Stretching & Mobilitätstraining", l: "Wassereinlagerungen und Muskelverspannungen können zunehmen; sanftes Dehnen kann Verspannungen im unteren Rücken oder in den Beinen lösen."},
+  28 => {s: "Vermeide lange Ausdauereinheiten", l: "Dein Körper verbrennt in dieser Phase mehr Kohlenhydrate als Fett, was deine Ausdauerleistung senken kann – kurze, moderate Einheiten sind jetzt effektiver."},
+  29 => {s: "Sanftes Faszientraining oder myofasziale Entspannung", l: "Nutze eine Faszienrolle oder sanfte Massagebälle, um Verspannungen in Beinen, unterem Rücken oder Schultern zu lösen, da Wassereinlagerungen das Gewebe straffer machen können."},
+  30 => {s: "Gehe sanft mit Leistungsschwankungen um", l: "Es ist normal, sich an manchen Tagen schwächer oder träger zu fühlen – diese Phase ist nicht für Höchstleistungen gedacht, sondern für angepasste Bewegung."},
+  31 => {s: "Vermeide plötzliche, intensive Belastung", l: "Deine Sehnen und Gelenke sind empfindlicher, weshalb du das Verletzungsrisiko durch kontrollierte Bewegungen minimieren solltest."},
+  32 => {s: "Nutze sanften Sport zur Entspannung", l: "Schwimmen, Spazierengehen oder leichtes Radfahren können dein Wohlbefinden steigern, ohne dich zu überlasten."},
+  33 => {s: "Führe bewusste Atemübungen in dein Training ein", l: "Deine Atmung kann flacher werden, was zu Verspannungen führen kann – langsame, tiefe Atemzüge unterstützen die Sauerstoffversorgung deiner Muskeln."},
+  34 => {s: "Vermeide übermäßigen Stress & Übertraining", l: "Progesteron macht dich empfindlicher für Stresshormone, achte also darauf, dich nicht zu überfordern oder frustriert zu sein, wenn dein Energieniveau niedrig ist."},
+  35 => {s: "Bereite dich mental & körperlich auf die nächste Phase vor", l: "Deine Menstruation steht bevor, deshalb ist es sinnvoll, deine Routinen jetzt anzupassen und Bewegung bewusst zur Unterstützung deiner Regeneration zu nutzen."}
+}
+
+nutritions_de = {
+  1 => {s: "Iss eisenreiche Lebensmittel", l: "Der Blutverlust senkt deinen Eisenspiegel, was Müdigkeit verursachen kann. Greife zu Spinat, Linsen, Rote Bete, Kürbiskernen oder Fleisch (Rind, Leber) und kombiniere sie mit vitamin-C-reichen Lebensmitteln (Zitrusfrüchte, Paprika), um die Eisenaufnahme zu verbessern.", f: [{name: "Rote Bete", desc: "Liefert Eisen, Folsäure, Kalium und antioxidative Pflanzenstoffe. Eisen und Folsäure tragen zur normalen Bildung roter Blutkörperchen und zur normalen Zellteilung bei (im Rahmen einer ausgewogenen Ernährung)."}]},
+  2 => {s: "Magnesium für Muskelentspannung & weniger Krämpfe", l: "Dunkle Schokolade (mindestens 85 % Kakao), Mandeln, Bananen und Avocados sind reich an Magnesium und helfen, Muskelkrämpfe zu lindern."},
+  3 => {s: "Gesunde Omega-3-Fette für entzündungshemmende Wirkung", l: "Lachs, Chiasamen, Walnüsse und Leinsamen lindern Menstruationskrämpfe und helfen, Entzündungen im Körper zu senken."},
+  4 => {s: "Vermeide salzige Fertiggerichte", l: "Stark verarbeitete Lebensmittel und Fertiggerichte enthalten oft viel Natrium, was Wassereinlagerungen fördert und Blähungen begünstigen kann."},
+  5 => {s: "Dunkelgrünes Blattgemüse für den Nährstoffhaushalt", l: "Spinat, Grünkohl und Brokkoli enthalten Eisen, Magnesium und B-Vitamine, die deine Energie steigern und den Hormonhaushalt unterstützen."},
+  6 => {s: "Mehr Vitamin B6 für Stimmung & Hormone", l: "Bananen, Lachs, Kartoffeln und Sonnenblumenkerne enthalten Vitamin B6, das die Serotoninproduktion fördert und Stimmungsschwankungen reduzieren kann."},
+  7 => {s: "Nüsse & Samen für den Hormonhaushalt", l: "Kürbiskerne, Sesam und Mandeln liefern gesunde Fette und Zink, das den Hormonhaushalt reguliert und die Haut während der Menstruation unterstützt."},
+  8 => {s: "Setze auf eisenreiche Lebensmittel", l: "Dein Körper bildet nach der Menstruation neue Blutzellen. Gute Eisenquellen sind Rote Bete, Linsen, Spinat, Quinoa und Eier. Kombiniere sie mit Vitamin C (z. B. Orangen, Paprika) für eine bessere Aufnahme."},
+  9 => {s: "Antioxidantien für Zellschutz & Hautgesundheit", l: "Beeren, dunkle Schokolade (mindestens 85 % Kakao) und grüner Tee schützen Zellen vor oxidativem Stress und fördern eine strahlende Haut."},
+  10 => {s: "Erhöhe gesunde Fette für die Hormonproduktion", l: "Avocados, Olivenöl, Walnüsse und Chiasamen unterstützen die Östrogenproduktion und fördern einen stabilen Hormonhaushalt."},
+  11 => {s: "Flüssigkeitszufuhr mit frischen Kräutertees & Zitronenwasser", l: "Petersilien- oder Löwenzahntee helfen, überschüssiges Wasser auszuschwemmen, und unterstützen die Nierenfunktion."},
+  12 => {s: "Fermentierte Lebensmittel für eine starke Darmflora", l: "Sauerkraut, Kefir und Kimchi fördern eine gesunde Darmflora, die wichtig für die Hormonregulation und Nährstoffaufnahme ist."},
+  13 => {s: "Mehr Omega-3-Fettsäuren für entzündungshemmende Wirkung & Zellschutz", l: "Leinöl, Lachs, Chiasamen und Walnüsse unterstützen das Nervensystem und sorgen für eine optimale Gehirnfunktion."},
+  14 => {s: "Vitamin-E-reiche Lebensmittel für Fruchtbarkeit & Hormonregulation", l: "Mandeln, Haselnüsse, Weizenkeime und Avocados helfen, Zellmembranen zu schützen und Östrogen zu stabilisieren."},
+  15 => {s: "Leichte Proteine für Muskelaufbau & Regeneration", l: "Eier, Fisch, Tofu oder Joghurt helfen, Muskelabbau zu verhindern und deine Leistung zu halten."},
+  16 => {s: "Zink für Eisprung & Hautgesundheit", l: "Kürbiskerne, Kichererbsen, Austern und Cashews unterstützen die Eireifung und helfen, unreine Haut in dieser Phase zu vermeiden."},
+  17 => {s: "Vitamin B6 für Stimmung & Serotoninproduktion", l: "Kartoffeln, Pistazien, Bananen und Sonnenblumenkerne helfen, das Nervensystem zu stärken und Heißhunger vorzubeugen."},
+  18 => {s: "Probiotika für eine gesunde Darmflora", l: "Sauerkraut, Kimchi, Kefir und Joghurt fördern eine stabile Verdauung und unterstützen das Immunsystem."},
+  19 => {s: "Komplexe Kohlenhydrate für anhaltende Energie", l: "Quinoa, Süßkartoffeln und Vollkornreis stabilisieren deinen Blutzucker und beugen Energietiefs vor."},
+  20 => {s: "Vitamin E für Zellschutz & Hautregeneration", l: "Avocados, Haselnüsse, Sonnenblumenkerne und Weizenkeime schützen deine Haut vor Hormonschwankungen."},
+  21 => {s: "Gesunde Fette für eine optimale Progesteronproduktion", l: "Nüsse, Olivenöl und fetter Fisch helfen, den Hormonhaushalt zu stabilisieren und PMS-Symptome zu minimieren."},
+  22 => {s: "Sesam- & Sonnenblumenkerne für natürliche Progesteronunterstützung", l: "Sie enthalten Lignane, die helfen, den Hormonspiegel auszugleichen."},
+  23 => {s: "Kräuter wie Mönchspfeffer & Frauenmantel zur Zyklusregulation", l: "Diese Pflanzen können helfen, Progesteron zu stabilisieren und PMS-Symptome zu lindern. Nicht einnehmen bei hormoneller Verhütung, da sie den Zyklus beeinflussen können."},
+  24 => {s: "Wildreis & Hirse für natürliche Entgiftung", l: "Diese glutenfreien Alternativen unterstützen die Leber beim Abbau überschüssiger Hormone. Vermeide zu viel Hirse bei einer Schilddrüsenunterfunktion, da sie Goitrogene enthält, die die Jodaufnahme hemmen können."},
+  25 => {s: "Knochenbrühe & Gelatine für Gelenke & Darmgesundheit", l: "Diese helfen, Entzündungen zu reduzieren und eine stabile Darmflora zu fördern. Nicht geeignet für Vegetarier oder Veganer – Alternativen sind Algenbrühe oder pflanzliche Kollagen-Booster wie Hagebuttenpulver."},
+  26 => {s: "Fenchel & Sellerie zur Reduzierung von Wassereinlagerungen", l: "Diese haben eine natürliche entwässernde Wirkung und helfen gegen ein aufgeblähtes Gefühl. Vermeide Fenchel bei einer östrogensensitiven Erkrankung (z. B. Endometriose), da Fenchel eine leichte östrogenähnliche Wirkung haben kann."},
+  27 => {s: "Datteln & Feigen als natürliche Süßungsmittel", l: "Sie bieten eine gesunde Alternative zu Zucker und liefern Mineralstoffe wie Kalium & Magnesium. Vermeide sie bei Neigung zu Blutzuckerschwankungen, da sie den Insulinspiegel schnell erhöhen können."},
+  28 => {s: "Bohnen & Linsen für eine sanfte Blutzuckerregulation", l: "Sie helfen, Heißhunger zu vermeiden, und liefern wertvolle Proteine. Nicht geeignet bei empfindlicher Verdauung, da sie Blähungen fördern können – in diesem Fall vorher gut einweichen oder gekeimt essen."},
+  29 => {s: "Brennnesseltee zur Unterstützung der Nierenfunktion", l: "Dieser Tee hilft, überschüssige Flüssigkeit auszuscheiden. Trinke ihn nicht, wenn du bereits entwässernde Medikamente nimmst oder niedrigen Blutdruck hast, da Brennnessel eine stark entwässernde Wirkung hat."},
+  30 => {s: "Dunkle Trauben & Granatapfel für eine bessere Durchblutung", l: "Sie enthalten Polyphenole, die Menstruationsbeschwerden reduzieren. Vermeide große Mengen bei Fruktoseempfindlichkeit, da sie Verdauungsbeschwerden verursachen können."},
+  31 => {s: "Haferflocken & warmer Getreidebrei für eine entspannende Wirkung", l: "Sie helfen bei der Serotoninproduktion und wirken beruhigend auf das Nervensystem. Vermeide Instant-Haferflocken, da sie einen hohen glykämischen Index haben und den Blutzucker schnell erhöhen."},
+  32 => {s: "Kürbis & Zucchini für sanfte Verdauung & Magnesiumversorgung", l: "Sie sind leicht verdaulich und helfen, Krämpfen vorzubeugen."},
+  33 => {s: "Cashewmilch & Macadamianüsse für ein beruhigendes Abendritual", l: "Sie enthalten Tryptophan, das die Schlafqualität verbessert. Vermeide Macadamianüsse bei empfindlichem Magen, da sie fetthaltig sind und bei manchen Menschen Magen-Darm-Beschwerden auslösen können."},
+  34 => {s: "Lavendel- & Kamillentee für mentale Entspannung", l: "Diese Kräuter beruhigen das Nervensystem und helfen gegen Schlafprobleme. Nicht in Kombination mit Beruhigungs- oder Schlafmitteln einnehmen, da sie die Wirkung verstärken können."},
+  35 => {s: "Süßkartoffeln & Zimt zur Blutzuckerstabilisierung", l: "Diese Kombination hilft, Heißhunger zu vermeiden, und liefert nachhaltige Energie. Vermeide zu viel Zimt (besonders Cassia-Zimt) bei Leberproblemen, da er viel Cumarin enthält, das die Leber belasten kann."}
+}
+
+fertilities_de = {
+  1 => {s: "Fruchtbarkeitswahrscheinlichkeit: 0–1 % (äußerst unwahrscheinlich, außer bei sehr kurzen Zyklen)",
+        l: "Bei einem sehr kurzen Zyklus (21–24 Tage) ist eine Schwangerschaft weiterhin unwahrscheinlich, aber nicht unmöglich, da der Eisprung bereits an Tag 7–10 stattfinden könnte."},
+  2 => {s: "Fruchtbarkeitswahrscheinlichkeit: 0–1 % (äußerst unwahrscheinlich, außer bei sehr kurzen Zyklen)",
+        l: "Bei einem sehr kurzen Zyklus (21–24 Tage) ist eine Schwangerschaft weiterhin unwahrscheinlich, aber nicht unmöglich, da der Eisprung bereits an Tag 7–10 stattfinden könnte."},
+  3 => {s: "Fruchtbarkeitswahrscheinlichkeit: 0–1 % (äußerst unwahrscheinlich, außer bei sehr kurzen Zyklen)",
+        l: "Bei einem sehr kurzen Zyklus (21–24 Tage) ist eine Schwangerschaft weiterhin unwahrscheinlich, aber nicht unmöglich, da der Eisprung bereits an Tag 7–10 stattfinden könnte."},
+  4 => {s: "Fruchtbarkeitswahrscheinlichkeit: 1–3 % (gering, aber möglich bei kurzen Zyklen)",
+        l: "Bei einem sehr kurzen Zyklus (21–24 Tage) ist eine Schwangerschaft weiterhin unwahrscheinlich, aber nicht unmöglich, da der Eisprung bereits an Tag 7–10 stattfinden könnte."},
+  5 => {s: "Fruchtbarkeitswahrscheinlichkeit: 1–3 % (gering, aber möglich bei kurzen Zyklen)",
+        l: "Bei einem kurzen Zyklus von 21–24 Tagen könnte eine frühe Befruchtung möglich sein, da Spermien bis zu 5 Tage überleben können und der Eisprung um Tag 7–10 stattfinden könnte."},
+  6 => {s: "Fruchtbarkeitswahrscheinlichkeit: 5–10 % (nur bei kurzen Zyklen relevant, sonst weiterhin sehr gering)",
+        l: "Bei einem kurzen Zyklus von 21–24 Tagen könnte eine frühe Befruchtung möglich sein, da Spermien bis zu 5 Tage überleben können und der Eisprung um Tag 7–10 stattfinden könnte."},
+  7 => {s: "Fruchtbarkeitswahrscheinlichkeit: 5–10 % (nur bei kurzen Zyklen relevant, sonst weiterhin sehr gering)",
+        l: "Bei einem kurzen Zyklus von 21–24 Tagen könnte eine frühe Befruchtung möglich sein, da Spermien bis zu 5 Tage überleben können und der Eisprung um Tag 7–10 stattfinden könnte."},
+  8 => {s: "Fruchtbarkeitswahrscheinlichkeit: 10–20 % (hoch bei kurzen Zyklen, moderat bei längeren Zyklen)"},
+  9 => {s: "Fruchtbarkeitswahrscheinlichkeit: 10–20 % (hoch bei kurzen Zyklen, moderat bei längeren Zyklen)"},
+  10 => {s: "Fruchtbarkeitswahrscheinlichkeit: 30–50 % (hoch, besonders bei mittellangen Zyklen von 26–28 Tagen)"},
+  11 => {s: "Fruchtbarkeitswahrscheinlichkeit: 30–50 % (hoch, besonders bei mittellangen Zyklen von 26–28 Tagen)"},
+  12 => {s: "Fruchtbarkeitswahrscheinlichkeit: 50–80 % (maximal bei Zyklen von 26–30 Tagen, da der Eisprung unmittelbar bevorsteht oder stattgefunden hat)"},
+  13 => {s: "Fruchtbarkeitswahrscheinlichkeit: 50–80 % (maximal bei Zyklen von 26–30 Tagen, da der Eisprung unmittelbar bevorsteht oder stattgefunden hat)"},
+  14 => {s: "Fruchtbarkeitswahrscheinlichkeit: 50–80 % (maximal bei Zyklen von 26–30 Tagen, da der Eisprung unmittelbar bevorsteht oder stattgefunden hat)"},
+  15 => {s: "Fruchtbarkeitswahrscheinlichkeit: 70–90 % (maximale Schwangerschaftschance bei regelmäßigem Zyklus)"},
+  16 => {s: "Fruchtbarkeitswahrscheinlichkeit: 70–90 % (maximale Schwangerschaftschance bei regelmäßigem Zyklus)"},
+  17 => {s: "Fruchtbarkeitswahrscheinlichkeit: 20–40 % (nur noch möglich, wenn der Eisprung später als erwartet stattfand oder bereits Spermien vorhanden waren)"},
+  18 => {s: "Fruchtbarkeitswahrscheinlichkeit: 20–40 % (nur noch möglich, wenn der Eisprung später als erwartet stattfand)"},
+  19 => {s: "Fruchtbarkeitswahrscheinlichkeit: 20–40 % (nur noch möglich, wenn der Eisprung später als erwartet stattfand)"},
+  20 => {s: "Fruchtbarkeitswahrscheinlichkeit: 5–10 % (nur bei sehr langen Zyklen oder spätem Eisprung relevant)"},
+  21 => {s: "Fruchtbarkeitswahrscheinlichkeit: 5–10 % (nur bei sehr langen Zyklen oder spätem Eisprung relevant)"},
+  22 => {s: "Fruchtbarkeitswahrscheinlichkeit: 0–1 % (keine neue Befruchtung möglich, nur Einnistung einer bereits befruchteten Eizelle)"},
+  23 => {s: "Fruchtbarkeitswahrscheinlichkeit: 0–1 % (keine neue Befruchtung möglich, nur Einnistung einer bereits befruchteten Eizelle)"},
+  24 => {s: "Fruchtbarkeitswahrscheinlichkeit: 0–1 % (keine neue Befruchtung möglich, nur Einnistung einer bereits befruchteten Eizelle)"},
+  25 => {s: "Fruchtbarkeitswahrscheinlichkeit: 0–1 % (keine neue Befruchtung möglich, nur Einnistung einer bereits befruchteten Eizelle)"},
+  26 => {s: "Fruchtbarkeitswahrscheinlichkeit: 0 % (keine Befruchtung mehr möglich, außer eine bereits befruchtete Eizelle nistet sich ein)"},
+  27 => {s: "Fruchtbarkeitswahrscheinlichkeit: 0 % (keine Befruchtung mehr möglich, außer eine bereits befruchtete Eizelle nistet sich ein)"},
+  28 => {s: "Fruchtbarkeitswahrscheinlichkeit: 0 % (keine Befruchtung mehr möglich, außer eine bereits befruchtete Eizelle nistet sich ein)"},
+  29 => {s: "Fruchtbarkeitswahrscheinlichkeit: 0 % (keine Befruchtung mehr möglich, außer eine bereits befruchtete Eizelle nistet sich ein)"},
+  30 => {s: "Fruchtbarkeitswahrscheinlichkeit: 0 % (keine Befruchtung mehr möglich, außer eine bereits befruchtete Eizelle nistet sich ein)"},
+  31 => {s: "Fruchtbarkeitswahrscheinlichkeit: 0 % (keine Befruchtung mehr möglich, außer eine bereits befruchtete Eizelle nistet sich ein)"},
+  32 => {s: "Fruchtbarkeitswahrscheinlichkeit: 0 % (außer eine befruchtete Eizelle nistet sich erfolgreich ein, was zu einer Schwangerschaft führt)"},
+  33 => {s: "Fruchtbarkeitswahrscheinlichkeit: 0 % (außer eine befruchtete Eizelle nistet sich erfolgreich ein, was zu einer Schwangerschaft führt)"},
+  34 => {s: "Fruchtbarkeitswahrscheinlichkeit: 0 % (außer eine befruchtete Eizelle nistet sich erfolgreich ein, was zu einer Schwangerschaft führt)"},
+  35 => {s: "Fruchtbarkeitswahrscheinlichkeit: 0 % (außer eine befruchtete Eizelle nistet sich erfolgreich ein, was zu einer Schwangerschaft führt)"}
+}
+
 # ── Seed all content (upserts so re-running updates existing records) ──────
-(1..35).each do |day|
-  sp = superpowers[day]
-  rec = CycleDayContent.find_or_initialize_by(cycle_day: day, card_type: "superpower", locale: "en")
-  rec.update!(short_text: sp[:s], long_text: sp[:l])
+[
+  ["en", superpowers, watch_outs, moods, sports, nutritions, fertilities],
+  ["de", superpowers_de, watch_outs_de, moods_de, sports_de, nutritions_de, fertilities_de]
+].each do |locale, sp_data, wo_data, moods_data, sports_data, nu_data, fe_data|
+  (1..35).each do |day|
+    sp = sp_data[day]
+    rec = CycleDayContent.find_or_initialize_by(cycle_day: day, card_type: "superpower", locale: locale)
+    rec.update!(short_text: sp[:s], long_text: sp[:l])
 
-  wo = watch_outs[day]
-  rec = CycleDayContent.find_or_initialize_by(cycle_day: day, card_type: "watch_out_for", locale: "en")
-  rec.update!(short_text: wo[:s], long_text: wo[:l])
+    wo = wo_data[day]
+    rec = CycleDayContent.find_or_initialize_by(cycle_day: day, card_type: "watch_out_for", locale: locale)
+    rec.update!(short_text: wo[:s], long_text: wo[:l])
 
-  rec = CycleDayContent.find_or_initialize_by(cycle_day: day, card_type: "mood", locale: "en")
-  rec.update!(short_text: moods[day], long_text: moods[day])
+    rec = CycleDayContent.find_or_initialize_by(cycle_day: day, card_type: "mood", locale: locale)
+    rec.update!(short_text: moods_data[day], long_text: moods_data[day])
 
-  sp_s = sports[day]
-  rec = CycleDayContent.find_or_initialize_by(cycle_day: day, card_type: "sport", locale: "en")
-  rec.update!(short_text: sp_s[:s], long_text: sp_s[:l])
+    sp_s = sports_data[day]
+    rec = CycleDayContent.find_or_initialize_by(cycle_day: day, card_type: "sport", locale: locale)
+    rec.update!(short_text: sp_s[:s], long_text: sp_s[:l])
 
-  nu = nutritions[day]
-  rec = CycleDayContent.find_or_initialize_by(cycle_day: day, card_type: "nutrition", locale: "en")
-  rec.update!(short_text: nu[:s], long_text: nu[:l], food_items: nu[:f])
+    nu = nu_data[day]
+    rec = CycleDayContent.find_or_initialize_by(cycle_day: day, card_type: "nutrition", locale: locale)
+    rec.update!(short_text: nu[:s], long_text: nu[:l], food_items: nu[:f])
 
-  fe = fertilities[day]
-  rec = CycleDayContent.find_or_initialize_by(cycle_day: day, card_type: "fertility", locale: "en")
-  rec.update!(short_text: fe[:s], long_text: fe[:l] || fe[:s])
+    fe = fe_data[day]
+    rec = CycleDayContent.find_or_initialize_by(cycle_day: day, card_type: "fertility", locale: locale)
+    rec.update!(short_text: fe[:s], long_text: fe[:l] || fe[:s])
+  end
 end
 
-Rails.logger.debug { "✅ Seeded #{CycleDayContent.count} cycle day content records (35 days × 6 cards)" }
+Rails.logger.debug { "✅ Seeded #{CycleDayContent.count} cycle day content records (35 days × 6 cards × 2 locales)" }

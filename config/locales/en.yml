@@ -305,6 +305,34 @@ en:
     header: "Hello %{name} — This is your month"
     greeting: "Hello %{name} — This is your month"
     subheading: "Track your cycle"
+    season_modal:
+      winter:
+        description: "This is your menstruation phase — a time for rest and reflection."
+        tips:
+          - "Rest and prioritize sleep"
+          - "Gentle movement like yoga"
+          - "Stay hydrated"
+      spring:
+        description: "You're in the follicular phase — energy and creativity are rising!"
+        tips:
+          - "Start new projects"
+          - "High energy workouts"
+          - "Social activities"
+      summer:
+        description: "You're ovulating — peak energy and confidence!"
+        tips:
+          - "Network and collaborate"
+          - "Creative brainstorming"
+          - "Focus on relationships"
+      autumn:
+        description: "You're in the luteal phase — time for introspection and planning."
+        tips:
+          - "Organize and plan"
+          - "Self-care routines"
+          - "Reflect on goals"
+      your_cycle:
+        description: "Track your cycle to see your phase."
+        tips: []
     appointments:
       no_appointments_this_month: "No appointments this month"
     index:
@@ -328,6 +356,17 @@ en:
 
       season_modal_tips: "Tips for this phase"
       season_modal_got_it: "Got it"
+  phases:
+    menstrual: "Menstrual"
+    follicular: "Follicular"
+    ovulation: "Ovulation"
+    luteal: "Luteal"
+  seasons:
+    winter: "Winter"
+    spring: "Spring"
+    summer: "Summer"
+    autumn: "Autumn"
+    your_cycle: "Your Cycle"
   consent:
     saved: "Preferences saved"
     revoked: "Consent withdrawn"
@@ -431,15 +470,6 @@ en:
     beta_tester_setting:
       update:
         updated: "Beta tester page copy updated."
-  invites:
-    show:
-      already_used: "This invite has already been used."
-      invalid_link: "Invalid invite link."
-      token_expired: "This invite link has expired. Please contact support for a new invite."
-    update:
-      welcome: "Welcome to Season!"
-      invalid_link: "Invalid invite link."
-      token_expired: "This invite link has expired. Please contact support for a new invite."
   passwords:
     new:
       email: "Email"
@@ -585,14 +615,17 @@ en:
       push_off: "Off"
       push_blocked: "Blocked"
     notification_birth_control:
+      title: "Birth Control Reminder"
       current_method: "Current method"
       enable_reminder: "Enable Reminder"
       keep_track_of: "Keep track of:"
       active_days: "Active days"
       break_days: "Break days"
     notification_period:
+      title: "Period Reminder"
       enable: "Enable Period Reminder"
     notification_morning:
+      title: "Good Morning Set"
       enable: "Enable Good Morning"
     subscriptions:
       title: "My Subscriptions"
@@ -656,10 +689,6 @@ en:
   bug_reports:
     create:
       thank_you: "Thank you for reporting this bug!"
-  feedback:
-    create:
-      thank_you: "Thank you for your feedback!"
-      enter_message: "Please enter a message."
   menu:
     coming_soon: "Coming soon"
     premium_title: "Get Season Premium now"
@@ -707,7 +736,32 @@ en:
     rate_limited:
       too_many_attempts: "Too many login attempts. Please try again later."
   symptoms:
+    moods:
+      balanced: "Balanced"
+      worried: "Worried"
+      depressed: "Depressed"
+      energetic: "Energetic"
+      calm: "Calm"
+      irritated: "Irritated"
+      happy: "Happy"
+      sick: "Sick"
+      flirty: "Flirty"
+      normal: "Normal"
+      suspicious: "Suspicious"
+      inspired: "Inspired"
+      shy: "Shy"
+      unmotivated: "Unmotivated"
+      confused: "Confused"
+      impatient: "Impatient"
+      sad: "Sad"
+      mood_swings: "Mood swings"
+      sexy: "Sexy"
+      self_critical: "Self-critical"
+      guilty: "Guilty"
     index:
+      page_title: "My Symptoms"
+      mood_picker_aria: "Mood picker"
+      phase_heading: "%{phase} Phase"
       confirm_tracking_title: "Confirm tracking"
       mood: "Mood"
       physical: "Physical"
@@ -798,6 +852,7 @@ en:
         long: "In the days before the next period, mucus production is at its minimum. What remains looks thick, cloudy and sticky, almost like glue paste. It barely leaves traces on underwear. The vaginal opening feels dry to slightly moist, without any notable wetness. Both your estrogen and progesterone levels are dropping. This is the end of a complete cycle and at the same time the beginning of the next bloom."
   streaks:
     index:
+      title: "Streaks"
       current_streak: "Current Streak"
       best_streak: "Best streak"
       total_flames: "Total flames"
@@ -830,6 +885,8 @@ en:
       fertility: "Fertility"
       greeting: "Hello %{name}"
       phase_prefix: "You are in your"
+      phase_prefix_season: "You are in your"
+      back: "< back"
       and_this: "And this is your day:"
       no_appointments: "No appointments"
       no_appointments_text: "You haven't entered any appointments yet"
@@ -842,6 +899,9 @@ en:
       you_are_in: "You're in %{phase} phase"
       got_it: "Got it"
   feedback:
+    create:
+      thank_you: "Thank you for your feedback!"
+      enter_message: "Please enter a message."
     success:
       thank_you: "Thank you!"
       message_received: "Your message has been received."
@@ -875,6 +935,13 @@ en:
       placeholder: "How can we help? Describe your issue..."
       add_attachment: "Add screenshot or audio"
       send: "Send"
+      bug_heading: "Report a bug"
+      bug_description: "Something isn't working as it should"
+      bug_placeholder: "Describe what happened and what you expected to happen..."
+      support_heading: "Get support"
+      support_description: "We're here to help"
+      support_placeholder: "How can we help? Describe your issue..."
+      no_file_selected: "No file selected"
       close: "Close"
   tester_tour:
     show:
@@ -942,41 +1009,24 @@ en:
       success: "Your account has been deleted."
   invites:
     show:
+      already_used: "This invite has already been used."
+      invalid_link: "Invalid invite link."
+      token_expired: "This invite link has expired. Please contact support for a new invite."
       welcome: "Welcome to Season!"
       create_password: "Create your password to get started"
       password_placeholder: "Create password..."
       confirm_placeholder: "Confirm password..."
       submit: "GET STARTED"
+    update:
+      welcome: "Welcome to Season!"
+      invalid_link: "Invalid invite link."
+      token_expired: "This invite link has expired. Please contact support for a new invite."
   language:
     title: "Language"
     save: "Save Language"
     updated: "Language updated successfully."
     invalid: "Invalid language selection."
     error: "Could not save language preference."
-    names:
-      en: "English"
-      de: "Deutsch"
-      es: "Español"
-      pt: "Português"
-      fr: "Français"
-      it: "Italiano"
-      ja: "日本語"
-      ko: "한국어"
-      ru: "Русский"
-      ar: "العربية"
-      pl: "Polski"
-      nl: "Nederlands"
-      ca: "Català"
-      cs: "Čeština"
-      da: "Dansk"
-      el: "Ελληνικά"
-      fa: "فارسی"
-      fi: "Suomi"
-      hu: "Magyar"
-      id: "Bahasa Indonesia"
-      ro: "Română"
-      bg: "Български"
-      az: "Azərbaycan dili"
     names:
       en: "English"
       de: "Deutsch"

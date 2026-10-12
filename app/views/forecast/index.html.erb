@@ -21,7 +21,7 @@
     # { key: "fertility",     title: t("forecast.index.fertility") },
   ]
   pc = @phase_colour
-  phase_name = CycleCalculatorService::PHASE_META[@phase][:season]
+  phase_name = localized_season(CycleCalculatorService::PHASE_META[@phase][:season])
 %>
 
 <div class="bg-white min-h-screen pb-32" data-controller="forecast-tabs forecast-modal"
@@ -36,7 +36,7 @@
       <a href="<%= calendar_path %>"
          onclick="if (window.history.length > 1) { window.history.back(); return false; }"
          class="text-sm font-medium no-underline font-sans"
-         style="color:var(--phase-color)">&lt; back</a>
+         style="color:var(--phase-color)"><%= t("forecast.index.back") %></a>
     </div>
 
     <%# ── Greeting ─────────────────────────────────────────────────────── %>
@@ -45,7 +45,7 @@
         <%= t("forecast.index.greeting", name: current_user.name&.split&.first || "there") %>
       </p>
       <p class="font-medium text-2xl leading-[29px] font-sans m-0 mt-1" style="color:var(--phase-color)">
-        <%= t("forecast.index.phase_prefix") %> <%= phase_name %>
+        <%= t("forecast.index.phase_prefix_season") %> <%= phase_name %>
       </p>
     </div>
 

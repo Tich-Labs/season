@@ -305,6 +305,34 @@ de:
     header: "Hallo %{name} — Das ist dein Monat"
     greeting: "Hallo %{name} — Das ist dein Monat"
     subheading: "Verfolge deinen Zyklus"
+    season_modal:
+      winter:
+        description: "Das ist deine Menstruationsphase — eine Zeit für Ruhe und Reflexion."
+        tips:
+          - "Ruhe dich aus und priorisiere Schlaf"
+          - "Sanfte Bewegung wie Yoga"
+          - "Bleib hydriert"
+      spring:
+        description: "Du bist in der Follikelphase — Energie und Kreativität steigen!"
+        tips:
+          - "Starte neue Projekte"
+          - "Workouts mit viel Energie"
+          - "Soziale Aktivitäten"
+      summer:
+        description: "Du hast Eisprung — höchste Energie und Selbstvertrauen!"
+        tips:
+          - "Netzwerken und zusammenarbeiten"
+          - "Kreatives Brainstorming"
+          - "Fokus auf Beziehungen"
+      autumn:
+        description: "Du bist in der Lutealphase — Zeit für Innenschau und Planung."
+        tips:
+          - "Organisieren und planen"
+          - "Self-Care-Routinen"
+          - "Ziele reflektieren"
+      your_cycle:
+        description: "Tracke deinen Zyklus, um deine Phase zu sehen."
+        tips: []
     appointments:
       no_appointments_this_month: "Keine Termine in diesem Monat"
     index:
@@ -328,6 +356,17 @@ de:
 
       season_modal_tips: "Tipps für diese Phase"
       season_modal_got_it: "Verstanden"
+  phases:
+    menstrual: "Menstruation"
+    follicular: "Follikelphase"
+    ovulation: "Eisprung"
+    luteal: "Lutealphase"
+  seasons:
+    winter: "Winter"
+    spring: "Frühling"
+    summer: "Sommer"
+    autumn: "Herbst"
+    your_cycle: "Dein Zyklus"
   consent:
     saved: "Einstellungen gespeichert"
     revoked: "Einwilligung widerrufen"
@@ -418,6 +457,11 @@ de:
       already_used: "Diese Einladung wurde bereits verwendet."
       invalid_link: "Ungültiger Einladungslink."
       token_expired: "Dieser Einladungslink ist abgelaufen. Bitte kontaktieren Sie den Support für eine neue Einladung."
+      welcome: "Willkommen bei Season!"
+      create_password: "Erstelle dein Passwort, um loszulegen"
+      password_placeholder: "Passwort erstellen..."
+      confirm_placeholder: "Passwort bestätigen..."
+      submit: "LOS GEHT'S"
     update:
       welcome: "Willkommen bei Season!"
       invalid_link: "Ungültiger Einladungslink."
@@ -581,14 +625,17 @@ de:
       push_off: "Aus"
       push_blocked: "Blockiert"
     notification_birth_control:
+      title: "Verhütungserinnerung"
       current_method: "Aktuelle Methode"
       enable_reminder: "Erinnerung aktivieren"
       keep_track_of: "Im Blick behalten:"
       active_days: "Aktive Tage"
       break_days: "Pausentage"
     notification_period:
+      title: "Periodenerinnerung"
       enable: "Perioden-Erinnerung aktivieren"
     notification_morning:
+      title: "Guten-Morgen-Set"
       enable: "Guten-Morgen aktivieren"
     subscriptions:
       title: "Meine Abonnements"
@@ -649,24 +696,6 @@ de:
       subject_period_end: "Deine Periode ist fast vorbei 🌱"
     birth_control_reminder:
       subject: "Deine tägliche Erinnerung 💊 Season"
-  forecast:
-    index:
-      superpower: "Superkraft"
-      watch_out: "Achte auf"
-      mood: "Stimmung"
-      sport: "Sport"
-      nutrition: "Ernährung"
-      fertility: "Fruchtbarkeit"
-      greeting: "Hallo %{name}"
-      phase_prefix: "Du bist in deiner"
-      and_this: "Und das ist dein Tag:"
-      no_appointments: "Keine Termine"
-      no_appointments_text: "Du hast noch keine Termine eingetragen"
-      create_appointment: "Termin erstellen"
-      no_content: "Noch keine Inhalte für diesen Tag."
-      tips: "Tipps für diese Phase"
-      you_are_in: "Du bist in der %{phase}-Phase"
-      got_it: "Verstanden"
   bug_reports:
     create:
       thank_you: "Vielen Dank für deine Fehlermeldung!"
@@ -695,13 +724,38 @@ de:
       email_required: "E-Mail von %{provider} konnte nicht abgerufen werden. Bitte melde dich mit E-Mail an."
       creation_failed: "Konto konnte nicht erstellt werden. Bitte versuche es erneut."
   symptoms:
+    moods:
+      balanced: "Ausgeglichen"
+      worried: "Besorgt"
+      depressed: "Niedergeschlagen"
+      energetic: "Energiegeladen"
+      calm: "Ruhig"
+      irritated: "Gereizt"
+      happy: "Glücklich"
+      sick: "Krank"
+      flirty: "Flirty"
+      normal: "Normal"
+      suspicious: "Misstrauisch"
+      inspired: "Inspiriert"
+      shy: "Schüchtern"
+      unmotivated: "Unmotiviert"
+      confused: "Verwirrt"
+      impatient: "Ungeduldig"
+      sad: "Traurig"
+      mood_swings: "Stimmungsschwankungen"
+      sexy: "Sexy"
+      self_critical: "Selbstkritisch"
+      guilty: "Schuldig"
     index:
+      page_title: "Meine Symptome"
+      mood_picker_aria: "Stimmungsauswahl"
+      phase_heading: "%{phase}-Phase"
       confirm_tracking_title: "Tracking bestätigen"
+      sexual_intercourse: "Geschlechtsverkehr"
+      cravings: "Heißhunger"
       mood: "Stimmung"
       physical: "Körperlich"
       mental: "Mental"
-      sexual_intercourse: "Sexual Intercourse"
-      cravings: "Cravings"
       sleep: "Schlaf"
       temperature: "Temperatur"
       weight: "Gewicht"
@@ -783,6 +837,7 @@ de:
         long: "In den Tagen vor der nächsten Periode ist die Schleimproduktion auf ihrem Minimum. Was noch vorhanden ist, wirkt dickflüssig, trüb und klebrig, fast wie Kleister. Es hinterlässt kaum noch Spuren auf der Unterwäsche. Der Scheideneingang fühlt sich trocken bis leicht feucht an, ohne ein ausgeprägtes Nässegefühl. Dein Östrogen- und Progesteronspiegel sinken beide ab. Das ist das Ende eines vollständigen Zyklus und gleichzeitig der Beginn des nächsten Aufblühens."
   streaks:
     index:
+      title: "Streaks"
       current_streak: "Aktuelle Serie"
       best_streak: "Beste Serie"
       total_flames: "Gesamtflammen"
@@ -823,6 +878,8 @@ de:
       no_content: "Noch keine Inhalte für diesen Tag."
       note: "Hinweis:"
       here_are_tips: "Hier sind deine Tipps für heute:"
+      phase_prefix_season: "Du bist in deinem"
+      back: "< zurück"
       tips: "Tipps für diese Phase"
       you_are_in: "Du bist in der %{phase}-Phase"
       got_it: "Verstanden"
@@ -863,6 +920,13 @@ de:
       placeholder: "Wie können wir helfen? Beschreibe dein Problem..."
       add_attachment: "Screenshot oder Audio hinzufügen"
       send: "Senden"
+      bug_heading: "Fehler melden"
+      bug_description: "Etwas funktioniert nicht wie es sollte"
+      bug_placeholder: "Beschreibe, was passiert ist und was du erwartet hättest..."
+      support_heading: "Support erhalten"
+      support_description: "Wir sind hier, um zu helfen"
+      support_placeholder: "Wie können wir helfen? Beschreibe dein Problem..."
+      no_file_selected: "Keine Datei ausgewählt"
       close: "Schließen"
   tester_tour:
     show:

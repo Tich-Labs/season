@@ -1,19 +1,16 @@
 import { Controller } from '@hotwired/stimulus'
 
-const TYPE_META = {
-  bug_report: {
-    heading: 'Report a bug',
-    description: "Something isn't working as it should",
-    placeholder: 'Describe what happened and what you expected to happen...'
-  },
-  support: {
-    heading: 'Get support',
-    description: "We're here to help",
-    placeholder: 'How can we help? Describe your issue...'
-  }
-}
-
 export default class extends Controller {
+  static values = {
+    bugHeading: String,
+    bugDescription: String,
+    bugPlaceholder: String,
+    supportHeading: String,
+    supportDescription: String,
+    supportPlaceholder: String,
+    noFile: String
+  }
+
   connect () {
     window.openSupportModal = (type) => this.openWithType(type)
     this._openHandler = (e) => this.openWithType(e.detail?.type || 'support')
@@ -23,6 +20,21 @@ export default class extends Controller {
 
   disconnect () {
     document.removeEventListener('support-modal:open', this._openHandler)
+  }
+
+  get typeMeta () {
+    return {
+      bug_report: {
+        heading: this.bugHeadingValue,
+        description: this.bugDescriptionValue,
+        placeholder: this.bugPlaceholderValue
+      },
+      support: {
+        heading: this.supportHeadingValue,
+        description: this.supportDescriptionValue,
+        placeholder: this.supportPlaceholderValue
+      }
+    }
   }
 
   openWithType (event) {
@@ -54,7 +66,7 @@ export default class extends Controller {
     if (fileInput) fileInput.value = ''
 
     const label = document.getElementById('sm-attachment-name')
-    if (label) label.textContent = 'No file selected'
+    if (label) label.textContent = this.noFileValue || 'No file selected'
   }
 
   clickOutside (event) {
@@ -62,7 +74,7 @@ export default class extends Controller {
   }
 
   applyType (type) {
-    const meta = TYPE_META[type] || TYPE_META.support
+    const meta = this.typeMeta[type] || this.typeMeta.support
 
     const typeInput = document.getElementById('support_type')
     if (typeInput) typeInput.value = type
