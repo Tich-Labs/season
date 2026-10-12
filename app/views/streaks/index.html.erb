@@ -36,7 +36,7 @@
         <p class="text-brand-primary text-3xl font-bold leading-none">
           <%= @streak.longest_streak || 0 %>
         </p>
-        <p class="text-brand-secondary text-sm mt-1">days</p>
+        <p class="text-brand-secondary text-sm mt-1"><%= t("streaks.index.days") %></p>
       </div>
       <div class="bg-white rounded-xl p-4 text-center">
         <p class="text-brand-secondary text-xs font-medium uppercase letter-spacing-widest mb-2"><%= t("streaks.index.total_flames") %></p>

@@ -2,7 +2,7 @@
   phase_meta   = CycleCalculatorService::PHASE_META[@phase] || {}
   phase_colour = phase_meta[:colour] || "#933a35"
 %>
-<% content_for(:page_title) { "Discharge" } %>
+<% content_for(:page_title) { t("symptoms.discharge.page_title") } %>
 <% content_for(:header_color) { phase_colour } %>
 <% content_for(:header_dark) { "true" } %>
 <%# Not under settings/ or calendar#index, so the layout was showing both

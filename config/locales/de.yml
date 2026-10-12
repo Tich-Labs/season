@@ -165,6 +165,10 @@ de:
       bug_report: "Fehler melden"
       log_out: "Abmelden"
   registrations:
+    check_email:
+      title: "Postfach prüfen"
+      description: "Wir haben einen Bestätigungslink an deine E-Mail gesendet. Klicke darauf, um dein Konto zu aktivieren."
+      resend: "Bestätigungs-E-Mail erneut senden"
     new:
       subtitle: "Erstelle ein Konto, damit wir deine Daten und Einstellungen speichern können."
       email_placeholder: "E-Mail..."
@@ -385,11 +389,24 @@ de:
       your_rights: "Deine Rechte:"
       rights_text: "Du kannst deine Einwilligung jederzeit widerrufen. Deine Daten werden gemäß unserer Aufbewahrungsrichtlinie gelöscht."
       view_privacy: "Datenschutzerklärung anzeigen"
+    index:
+      title: "Daten & Datenschutz"
+      health_consent: "Ich stimme zu, dass Season meine Gesundheitsdaten (Zyklusdaten, Symptome, Stimmungen und zugehörige Tracking-Daten) verarbeitet, um personalisierte Einblicke zu liefern."
+      health_consent_note: "Beinhaltet Zyklusdaten, Symptomprotokolle, Stimmungs-Tracking und Superkraft-Einträge. Für die Funktion der App erforderlich."
+      marketing_consent: "Ich stimme zu, gelegentlich E-Mails über Season-Funktionen, Tipps und Updates zu erhalten."
+      marketing_consent_note: "Du kannst dich jederzeit abmelden. Wir geben deine Daten niemals an Dritte weiter."
+      save: "Einstellungen speichern"
+      rights: "Deine Rechte:"
+      rights_access: "Auf deine Daten zugreifen"
+      rights_portability: "Daten exportieren (JSON)"
+      rights_erasure: "Konto und Daten löschen"
+      rights_withdraw: "Einwilligung jederzeit widerrufen"
   tracking:
     feedback: "Feedback geben"
     create:
       period_logged: "Periode gespeichert! Tag %{day}"
     index:
+      page_title: "Selbstanalyse"
       current_phase: "Du bist in deiner:"
       log_period: "Trage dein letztes Periodenstartdatum ein, um deine Zyklusphase und Vorhersagen zu sehen."
       my_symptoms: "Meine Symptome"
@@ -397,6 +414,8 @@ de:
       track_my_period: "Meine Periode tracken"
       cycle_day: "Zyklustag"
       give_feedback: "Feedback geben"
+    period:
+      page_title: "Meine Periode tracken"
     period_update:
       saved: "Periodendaten gespeichert."
       end_saved: "Enddatum der Periode gespeichert."
@@ -417,6 +436,7 @@ de:
     destroy:
       deleted: "Termin gelöscht"
     form:
+      page_title: "Termin"
       invite_guests: "Gäste einladen"
       invite_guests_title: "Gäste einladen"
       choose_icon: "Icon auswählen"
@@ -439,6 +459,7 @@ de:
       all_day: "Ganztägig"
       set_date: "Datum festlegen"
     index:
+      title: "Termine"
       note: "Hinweis:"
       no_appointments_yet: "Noch keine Termine"
       create_first_appointment: "Erstelle deinen ersten Termin, um loszulegen"
@@ -791,6 +812,7 @@ de:
       mental_aria: "Mentale Symptome"
     discharge:
       title: "Ausfluss"
+      page_title: "Ausfluss"
     # Siehe die englische Version für den Quellenhinweis (CSV-Leitfaden).
     discharge_info:
       dry:
@@ -849,6 +871,7 @@ de:
       more_days: "%{count} weitere Tage bis %{milestone}"
   superpowers:
     index:
+      page_title: "Superkräfte"
       title: "Heutige Superkräfte"
       confirm_tracking_title: "Tracking bestätigen"
       save: "Superkräfte speichern"
@@ -858,6 +881,7 @@ de:
       recent_logs: "Letzte Einträge"
       no_logs: "Für diesen Tag wurden keine Superkräfte protokolliert."
     show:
+      page_title: "Superkräfte — %{date}"
       no_logs: "Für diesen Tag wurden keine Superkräfte protokolliert."
       view_day: "Tag ansehen"
   forecast:
@@ -1057,6 +1081,29 @@ de:
       all_day: "Ganztägig"
       note: "Hinweis:"
   information:
+    page_title: "Information"
+    back: "< zurück"
+    phase_names:
+      menstrual: "Menstruation"
+      follicular: "Follikel"
+      ovulation: "Ovulation"
+      luteal: "Luteal"
+    phase_label: "%{phase}-Phase"
+    seasons:
+      menstrual: "Winter"
+      follicular: "Frühling"
+      ovulation: "Sommer"
+      luteal: "Herbst"
+    days:
+      menstrual: "Tag 1–5"
+      follicular: "Tag 6–13"
+      ovulation: "Tag 14–21"
+      luteal: "Tag 22–28"
+    hormone_notes:
+      menstrual: "Östrogen wird langsam produziert"
+      follicular: "Östrogen- und Testosteronspiegel steigen"
+      ovulation: "Der Progesteronspiegel steigt"
+      luteal: "Östrogen- und Progesteronspiegel sinken"
     index:
       title: "Deine Zyklusphasen"
       subtitle: "Erfahre mehr über jede Phase deines Zyklus und wie sie Körper und Geist beeinflusst."

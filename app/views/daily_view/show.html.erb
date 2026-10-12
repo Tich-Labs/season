@@ -1,4 +1,4 @@
-<% dv_page_title = @date.strftime("%B") %>
+<% dv_page_title = l(@date, format: "%B") %>
 <% content_for(:page_title) { dv_page_title } %>
 <% phase_color(@phase_colour || "#933a35") %>
 <% content_for(:hide_calendar_fab) { "true" } %>

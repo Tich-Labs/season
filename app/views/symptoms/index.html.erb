@@ -55,7 +55,7 @@
   total_symptoms += 1 if temperature_done
   total_symptoms += 1 if weight_done
 %>
-<% content_for(:page_title) { "My Symptoms" } %>
+<% content_for(:page_title) { t("symptoms.index.page_title") } %>
 <% content_for(:header_dark) { "true" } %>
 <% content_for(:header_color) { phase_colour } %>
 <%# No bottom FAB on this screen per Figma — opt out of both shared FABs

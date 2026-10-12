@@ -402,6 +402,7 @@ en:
     create:
       period_logged: "Period logged! Day %{day}"
     index:
+      page_title: "Self Analysis"
       current_phase: "You are in your:"
       log_period: "Log your last period start date to see your cycle phase and predictions."
       my_symptoms: "My Symptoms"
@@ -409,6 +410,8 @@ en:
       track_my_period: "Track My Period"
       cycle_day: "Cycle Day"
       give_feedback: "Give feedback"
+    period:
+      page_title: "Track my period"
     period_update:
       saved: "Period dates saved."
       end_saved: "Period end date saved."
@@ -429,6 +432,7 @@ en:
     destroy:
       deleted: "Event deleted"
     form:
+      page_title: "Appointment"
       invite_guests: "Invite guests"
       invite_guests_title: "Invite Guests"
       choose_icon: "Choose an icon"
@@ -451,6 +455,7 @@ en:
       all_day: "All day"
       set_date: "Set date"
     index:
+      title: "Appointments"
       note: "Note:"
       no_appointments_yet: "No appointments yet"
       create_first_appointment: "Create your first appointment to get started"
@@ -803,6 +808,7 @@ en:
       mental_aria: "Mental symptoms"
     discharge:
       title: "Discharge"
+      page_title: "Discharge"
     # Content for the "?" info modal on each Vaginal Discharge grid icon.
     # Source: docs/Cervical mucus tracking(Tabelle1).csv — the 7 keys match
     # the discharge_grid keys in symptoms/index.html.erb. Spotting/Period
@@ -864,6 +870,7 @@ en:
       more_days: "%{count} more days to %{milestone}"
   superpowers:
     index:
+      page_title: "Superpowers"
       title: "Today's superpowers"
       confirm_tracking_title: "Confirm tracking"
       save: "Save Superpowers"
@@ -873,6 +880,7 @@ en:
       recent_logs: "Recent logs"
       no_logs: "No superpowers logged for this day."
     show:
+      page_title: "Superpowers — %{date}"
       no_logs: "No superpowers logged for this day."
       view_day: "View day"
   forecast:
@@ -1072,6 +1080,29 @@ en:
       all_day: "All day"
       note: "Note:"
   information:
+    page_title: "Information"
+    back: "< back"
+    phase_names:
+      menstrual: "Menstruation"
+      follicular: "Follicular"
+      ovulation: "Ovulation"
+      luteal: "Luteal"
+    phase_label: "%{phase} phase"
+    seasons:
+      menstrual: "Winter"
+      follicular: "Spring"
+      ovulation: "Summer"
+      luteal: "Autumn"
+    days:
+      menstrual: "Day 1–5"
+      follicular: "Day 6–13"
+      ovulation: "Day 14–21"
+      luteal: "Day 22–28"
+    hormone_notes:
+      menstrual: "Estrogen is produced slowly"
+      follicular: "Estrogen and testosterone levels rise"
+      ovulation: "Progesterone levels rise"
+      luteal: "Decline in estrogen and progesterone levels"
     index:
       title: "Your cycle phases"
       subtitle: "Learn about each phase of your cycle and how it affects your body and mind."

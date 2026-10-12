@@ -1,4 +1,4 @@
-<% cal_index_title = @date.strftime("%B") %>
+<% cal_index_title = l(@date, format: "%B") %>
 <% content_for(:page_title) { cal_index_title } %>
 <% phase_color(CycleCalculatorService::PHASE_META[@current_phase]&.dig(:colour) || "#933a35") %>
 <%# This page owns the "+" FAB itself (rendered at the bottom so its clearance

@@ -1,4 +1,4 @@
-<% page_title = @selected_date.strftime("%-d %B") %>
+<% page_title = l(@selected_date, format: "%-d %B") %>
 <% content_for(:page_title) { page_title } %>
 <% content_for(:header_color) { @phase_colour } %>
 <% content_for(:header_dark) { "true" } %>

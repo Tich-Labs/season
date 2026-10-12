@@ -1,5 +1,5 @@
 <%
-  app_page_title = @date.strftime("%B")
+  app_page_title = l(@date, format: "%B")
   app_phase_colour = CycleCalculatorService::PHASE_META[@current_phase]&.dig(:colour) || "#933a35"
 %>
 <% content_for(:page_title) { app_page_title } %>

@@ -1,5 +1,5 @@
 <% weekly_phase_colour = @current_phase ? (CycleCalculatorService::PHASE_META[@current_phase]&.dig(:colour) || "#933a35") : "#933a35" %>
-<% content_for(:page_title) { @date.strftime("%B") } %>
+<% content_for(:page_title) { l(@date, format: "%B") } %>
 <% phase_color(weekly_phase_colour) %>
 <% content_for(:hide_calendar_fab) { "true" } %>
 <% content_for(:header_left) do %>

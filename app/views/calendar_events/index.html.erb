@@ -1,4 +1,4 @@
-<% content_for(:page_title) { "Appointments" } %>
+<% content_for(:page_title) { t("calendar_events.index.title") } %>
 <% content_for(:header_left) do %>
   <%= link_to user_root_path,
         class: "inline-flex items-center justify-center w-10 h-10 rounded-xl text-brand-primary" do %>
@@ -14,7 +14,7 @@
     <% if @events.any? %>
       <% @events.group_by { |e| e.date }.sort.each do |date, events| %>
         <div class="mb-6">
-          <p class="text-sm font-semibold text-brand-secondary uppercase mb-3"><%= date.strftime("%A, %B %-d %Y") %></p>
+          <p class="text-sm font-semibold text-brand-secondary uppercase mb-3"><%= l(date, format: "%A, %B %-d %Y") %></p>
           <div class="space-y-3">
             <% events.sort_by { |e| e.start_time || Time.zone.now }.each do |event| %>
               <%= link_to edit_calendar_event_path(event), class: "block no-underline", data: { turbo_action: "replace" } do %>
