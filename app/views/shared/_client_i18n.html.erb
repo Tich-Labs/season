@@ -1,5 +1,7 @@
 <%# Client-side translations for Stimulus controllers (see
-     app/javascript/i18n.js). `js` holds JS-only strings; `moods` reuses the
-     existing symptom-mood names so the review modal can localize them. %>
-<% js_i18n = I18n.t("js").merge("moods" => I18n.t("symptoms.moods")) %>
-<script nonce="<%= content_security_policy_nonce %>">window.I18n = <%= raw js_i18n.to_json %>;</script>
+     app/javascript/i18n.js). Controllers look keys up as `js.<key>` (and
+     `moods.<key>` for the symptom-mood names reused by the review modal),
+     so window.I18n nests the `js` namespace under a `js` key and keeps
+     `moods` at the top level. %>
+<% js_i18n = I18n.t("js") %>
+<script nonce="<%= content_security_policy_nonce %>">window.I18n = <%= raw({ "js" => js_i18n, "moods" => I18n.t("symptoms.moods") }.to_json) %>;</script>
