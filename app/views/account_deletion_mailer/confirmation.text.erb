@@ -1,9 +1,9 @@
-Hi <%= @user.name.presence || "there" %>,
+<%= t("account_deletion.mailer.greeting", name: @user.name.presence || t("account_deletion.mailer.fallback_name")) %>
 
-We received a request to delete your Season account and all associated data.
+<%= t("account_deletion.mailer.intro") %>
 
-To confirm and permanently delete your account, open this link (expires in one hour):
+<%= t("account_deletion.mailer.instruction_text") %>
 
 <%= @deletion_url %>
 
-If you didn't request this, you can safely ignore this email.
+<%= t("account_deletion.mailer.expiry") %>

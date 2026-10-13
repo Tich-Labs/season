@@ -1,4 +1,5 @@
 import { Controller } from '@hotwired/stimulus'
+import { t } from 'i18n'
 
 export default class extends Controller {
   static values = {
@@ -88,7 +89,7 @@ export default class extends Controller {
       } else {
         const data = await resp.json()
         const errorEl = this.errorTarget
-        errorEl.textContent = data.error || 'Incorrect code'
+        errorEl.textContent = data.error || t('js.incorrect_code')
         errorEl.classList.remove('hidden')
         this.inputTarget.value = ''
         this.#syncDots()
@@ -96,7 +97,7 @@ export default class extends Controller {
       }
     } catch (e) {
       const errorEl = this.errorTarget
-      errorEl.textContent = 'Connection error'
+      errorEl.textContent = t('js.connection_error')
       errorEl.classList.remove('hidden')
     }
   }

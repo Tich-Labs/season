@@ -1,4 +1,5 @@
 import { Controller } from '@hotwired/stimulus'
+import { t } from 'i18n'
 
 export default class extends Controller {
   static targets = ['select']
@@ -28,16 +29,16 @@ export default class extends Controller {
 
       if (response.ok) {
         this.currentLanguageValue = selectedLanguage
-        this.showSuccess(data.message || 'Language updated')
+        this.showSuccess(data.message || t('js.language_updated'))
         setTimeout(() => window.location.reload(), 500)
       } else {
         this.selectTarget.value = this.currentLanguageValue
-        this.showError(data.error || 'Failed to update language')
+        this.showError(data.error || t('js.language_update_failed'))
       }
     } catch (error) {
       console.error('Language update error:', error)
       this.selectTarget.value = this.currentLanguageValue
-      this.showError('Error updating language. Please try again.')
+      this.showError(t('js.language_update_error'))
     } finally {
       this.selectTarget.disabled = false
       this.selectTarget.classList.remove('opacity-50')

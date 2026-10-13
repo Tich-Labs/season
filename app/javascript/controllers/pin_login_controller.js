@@ -1,5 +1,6 @@
 /* global localStorage */
 import { Controller } from '@hotwired/stimulus'
+import { t } from 'i18n'
 
 export default class extends Controller {
   static targets = ['pinForm', 'emailForm', 'dots', 'dot', 'input', 'error', 'greeting']
@@ -54,7 +55,7 @@ export default class extends Controller {
     if (this.hasEmailFormTarget) this.emailFormTarget.classList.add('hidden')
     if (this.hasPinFormTarget) this.pinFormTarget.classList.remove('hidden')
     if (this.hasGreetingTarget) {
-      this.greetingTarget.textContent = `Welcome back, ${email.split('@')[0]}`
+      this.greetingTarget.textContent = t('js.welcome_back', { name: email.split('@')[0] })
     }
     this.inputTarget.focus()
   }
@@ -84,7 +85,7 @@ export default class extends Controller {
         window.location.href = data.redirect
       } else {
         const errorEl = this.errorTarget
-        errorEl.textContent = data.error || 'Incorrect code'
+        errorEl.textContent = data.error || t('js.incorrect_code')
         errorEl.classList.remove('hidden')
         this.inputTarget.value = ''
         this.#syncDots()
@@ -92,7 +93,7 @@ export default class extends Controller {
       }
     } catch (e) {
       const errorEl = this.errorTarget
-      errorEl.textContent = 'Connection error. Please try again.'
+      errorEl.textContent = t('js.connection_error_retry')
       errorEl.classList.remove('hidden')
     }
   }

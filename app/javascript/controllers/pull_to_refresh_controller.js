@@ -1,5 +1,6 @@
 /* global Turbo */
 import { Controller } from '@hotwired/stimulus'
+import { t } from 'i18n'
 
 export default class extends Controller {
   static targets = ['indicator']
@@ -33,9 +34,9 @@ export default class extends Controller {
     this.element.style.transition = 'transform 0s'
 
     if (pull > 60 && !this._indicatorVisible()) {
-      this._showIndicator('Release to refresh')
+      this._showIndicator(t('js.release_to_refresh'))
     } else if (pull <= 60 && this._indicatorVisible()) {
-      this._showIndicator('Pull down to refresh')
+      this._showIndicator(t('js.pull_to_refresh'))
     }
   }
 

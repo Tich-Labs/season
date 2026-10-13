@@ -96,6 +96,13 @@ de:
       start_over: "Neuen Link anfordern"
     mailer:
       subject: "Dein Season-Konto löschen"
+      greeting: "Hallo %{name},"
+      fallback_name: "du"
+      intro: "Wir haben eine Anfrage erhalten, dein Season-Konto und alle zugehörigen Daten zu löschen."
+      instruction_html: "Um dein Konto zu bestätigen und dauerhaft zu löschen, klicke auf den folgenden Link:"
+      instruction_text: "Um dein Konto zu bestätigen und dauerhaft zu löschen, öffne diesen Link (läuft in einer Stunde ab):"
+      cta: "Mein Konto löschen"
+      expiry: "Dieser Link läuft in einer Stunde ab. Falls du dies nicht angefordert hast, kannst du diese E-Mail ignorieren."
 
   beta_invite_mailer:
     android_group_links:
@@ -170,10 +177,6 @@ de:
       description: "Wir haben einen Bestätigungslink an deine E-Mail gesendet. Klicke darauf, um dein Konto zu aktivieren."
       resend: "Bestätigungs-E-Mail erneut senden"
     new:
-      subtitle: "Erstelle ein Konto, damit wir deine Daten und Einstellungen speichern können."
-      email_placeholder: "E-Mail..."
-      password_placeholder: "Passwort..."
-      confirm_password_placeholder: "Passwort wiederholen..."
       email: "E-Mail"
       password: "Passwort"
       repeat_password: "Passwort wiederholen"
@@ -181,13 +184,6 @@ de:
         oops: "HOPPLA!"
         already_registered: "Diese E-Mail ist bereits registriert. Bitte melde dich stattdessen an."
         terms_not_accepted: "Du musst den Nutzungsbedingungen und der Datenschutzrichtlinie zustimmen, um fortzufahren."
-      fast_lane: "Verwende die Schnellspur:"
-      or_email: "...oder melde dich mit deiner E-Mail-Adresse an:"
-      submit: "Registrieren"
-      have_account: "Ich habe bereits ein Konto"
-      terms_html: "Ich akzeptiere die %{terms} und die %{privacy}"
-      terms_link: "Nutzungsbedingungen"
-      privacy_link: "Datenschutzbestimmungen"
   devise:
     registrations:
       new:
@@ -215,6 +211,7 @@ de:
         or_email: "... oder melde dich mit deiner E-Mail an"
         submit: "Anmelden"
         no_account: "Ich bin neu... Registriere dich!"
+        forgot_password: "Ich habe mein Passwort vergessen..."
   home:
     welcome_title: "Willkommen bei Season!"
     welcome_subtitle: "Maximiere deine Produktivität mit Hilfe deines Zyklus."
@@ -223,6 +220,7 @@ de:
     login: "Anmelden"
     logo_alt: "Season Wortmarke"
     wordmark_alt: "Season Titel"
+    welcome_text: "Willkommen bei Season!<br>Maximiere deine Produktivität mit Hilfe deines Zyklus."
   onboarding:
     back: "Zurück"
     errors:
@@ -374,11 +372,13 @@ de:
   consent:
     saved: "Einstellungen gespeichert"
     revoked: "Einwilligung widerrufen"
+    required: "Bitte erteile die erforderliche Einwilligung, um fortzufahren."
     show:
       title: "Daten & Datenschutz"
       intro: "Deine Gesundheitsdaten werden nur mit deiner ausdrücklichen Einwilligung verarbeitet."
       health_data: "Gesundheitsdaten"
       health_data_desc: "Zyklusdaten, Symptome, Stimmung, Energie und andere von dir protokollierte Gesundheitsinformationen."
+      learn_more: "Mehr über %{title} erfahren"
       symptom_tracking: "Symptom-Tracking"
       symptom_tracking_desc: "Tägliche Symptomprotokolle einschließlich Schmerzen, Stimmung, Energie, Schlaf und Ausfluss."
       cycle_tracking: "Zyklus-Tracking"
@@ -473,6 +473,19 @@ de:
         updated: "Informationsinhalt aktualisiert."
       destroy:
         destroyed: "Informationsinhalt gelöscht."
+    weekly_feedback_questions:
+      create:
+        created: "Frage erstellt."
+      update:
+        updated: "Frage aktualisiert."
+      destroy:
+        destroyed: "Frage gelöscht."
+    beta_testers:
+      update:
+        updated: "Beta-Tester aktualisiert."
+    beta_tester_setting:
+      update:
+        updated: "Beta-Tester-Seitentext aktualisiert."
   invites:
     show:
       already_used: "Diese Einladung wurde bereits verwendet."
@@ -492,6 +505,8 @@ de:
       email: "E-Mail"
     error_contact:
       go_back: "Zurück zum Login"
+    create:
+      unable_to_send: "Zurücksetzen-E-Mail konnte nicht gesendet werden. Bitte kontaktiere den Support."
     edit:
       back: "< zurück"
       title: "NEUES<br>PASSWORT"
@@ -517,7 +532,7 @@ de:
       please_try_again: "Bitte versuche es erneut."
       unrecognized_email: "Hmm... diese E-Mail kennen wir nicht."
       check_again_or_sign_up: "Prüfe sie noch einmal oder registriere dich."
-    rate_limit_login:
+    rate_limited:
       too_many_attempts: "Zu viele Anmeldeversuche. Bitte versuche es später erneut."
   settings:
     language:
@@ -543,8 +558,8 @@ de:
       rate_app_store: "Im App Store bewerten"
       share_season: "Season mit Freunden teilen"
       for_more_benefits: "für noch mehr Vorteile!"
-      on: "An"
-      off: "Aus"
+      "on": "An"
+      "off": "Aus"
       coming_soon: "Demnächst"
       log_out: "Abmelden"
     profile:
@@ -563,8 +578,8 @@ de:
       change_password: "Passwort ändern"
       access_code: "Zugangscode"
       face_id: "FaceID"
-      on: "An"
-      off: "Aus"
+      "on": "An"
+      "off": "Aus"
       personal_information: "Persönliche Informationen"
       name: "Name:"
       age: "Alter:"
@@ -612,6 +627,24 @@ de:
       google_calendar_sync: "Google-Kalender-Sync"
       microsoft_sync: "Microsoft-Outlook-Sync"
       icloud_sync: "Apple-iCloud-Sync"
+      not_connected: "Nicht verbunden"
+      connected: "Verbunden"
+      sync_now: "Jetzt synchronisieren"
+      disconnect: "Trennen"
+      connect: "Verbinden"
+      icloud_email_placeholder: "Apple-ID-E-Mail"
+      icloud_password_placeholder: "App-spezifisches Passwort"
+      icloud_get_password: "Erstelle eines auf appleid.apple.com"
+      saved: "Kalendereinstellungen gespeichert"
+      error: "Einstellungen konnten nicht gespeichert werden"
+      google_connected: "Google Kalender verbunden"
+      google_disconnected: "Google Kalender getrennt"
+      google_failed: "Google Kalender konnte nicht verbunden werden"
+      google_synced: "%{count} Termine aus Google Kalender synchronisiert"
+      icloud_connected: "iCloud Kalender verbunden"
+      icloud_disconnected: "iCloud Kalender getrennt"
+      icloud_failed: "Verbindung fehlgeschlagen — überprüfe deine Apple-ID und das App-spezifische Passwort"
+      icloud_synced: "%{count} Termine aus iCloud Kalender synchronisiert"
     notifications:
       title: "Benachrichtigungen & Erinnerungen"
       heading: "Benachrichtigungen & Erinnerung"
@@ -676,6 +709,7 @@ de:
     update_profile:
       confirmation_sent: "Bestätigungsmail gesendet. Bitte überprüfe deinen Posteingang."
       saved: "Gespeichert"
+      invalid_password: "Das aktuelle Passwort ist falsch."
     update_password:
       invalid_password: "Aktuelles Passwort ist falsch, bitte versuche es erneut"
       passwords_not_identical: "Die neuen Passwörter stimmen nicht überein, bitte versuche es erneut"
@@ -709,6 +743,9 @@ de:
     incorrect: "Falscher Code"
     too_many_attempts: "Zu viele Versuche. Bitte versuche es später erneut."
     logout: "Abmelden"
+    show_pin: "PIN anzeigen"
+    hide_pin: "PIN ausblenden"
+    input_label: "PIN-Code"
   reminder_mailer:
     morning_summary:
       subject: "Guten Morgen, %{name} 🌸 Deine Season-Zusammenfassung"
@@ -767,10 +804,44 @@ de:
       sexy: "Sexy"
       self_critical: "Selbstkritisch"
       guilty: "Schuldig"
+    items:
+      headaches: "Kopfschmerzen"
+      migraines: "Migräne"
+      dizziness: "Schwindel"
+      acne: "Akne"
+      neck_pain: "Nackenschmerzen"
+      shoulder_pain: "Schulterschmerzen"
+      back_pain: "Rückenschmerzen"
+      breast_tenderness: "Brustspannen"
+      breast_sensitivity: "Brustempfindlichkeit"
+      lumbago: "Hexenschuss"
+      lower_back_pain: "Kreuzschmerzen"
+      joint_pain: "Gelenkschmerzen"
+      abdominal_pain: "Bauchschmerzen"
+      flu: "Grippe"
+      illness: "Krankheit"
+      cramps: "Krämpfe"
+      itching: "Juckreiz"
+      rash: "Hautausschlag"
+      night_sweats: "Nachtschweiß"
+      hot_flashes: "Hitzewallungen"
+      weight_gain: "Gewichtszunahme"
+      pms: "PMS"
+      pmdd: "PMDD"
+      pcos: "PCOS"
+      anxiety: "Angst"
+      insomnia: "Schlaflosigkeit"
+      moodiness: "Stimmungsschwankungen"
+      tension: "Anspannung"
+      irritability: "Gereiztheit"
+      lack_of_concentration: "Konzentrationsschwäche"
+      fatigue: "Müdigkeit"
+      confusion: "Verwirrung"
     index:
       page_title: "Meine Symptome"
       mood_picker_aria: "Stimmungsauswahl"
       phase_heading: "%{phase}-Phase"
+      slider_aria: "%{label} Intensität"
       confirm_tracking_title: "Tracking bestätigen"
       sexual_intercourse: "Geschlechtsverkehr"
       cravings: "Heißhunger"
@@ -782,6 +853,10 @@ de:
       weight: "Gewicht"
       notes: "Notizen zum heutigen Tag"
       add_note: "Notiz hinzufügen..."
+      notes_placeholder: "Gib hier deine Notizen ein..."
+      sleep_aria: "Schlafstunden"
+      temperature_aria: "Temperatur"
+      weight_aria: "Gewicht"
       submit: "Absenden"
       bleeding: "Blutung"
       vaginal_discharge: "Ausfluss"
@@ -810,6 +885,8 @@ de:
       close: "Schließen"
       physical_aria: "Körperliche Symptome"
       mental_aria: "Mentale Symptome"
+      bleeding_flow_aria: "Blutungsstärke"
+      discharge_type_aria: "Art des Ausflusses"
     discharge:
       title: "Ausfluss"
       page_title: "Ausfluss"
@@ -915,7 +992,161 @@ de:
     create:
       thank_you: "Vielen Dank für dein Feedback!"
       enter_message: "Bitte gib eine Nachricht ein."
+  # Von Stimulus-Controllern genutzte Texte. Werden in
+  # layouts/application.html.erb als window.I18n gerendert und über
+  # app/javascript/i18n.js gelesen.
+  js:
+    all_day: "Ganztägig"
+    month_names: ["Jan", "Feb", "März", "Apr", "Mai", "Juni", "Juli", "Aug", "Sept", "Okt", "Nov", "Dez"]
+    language_updated: "Sprache aktualisiert"
+    language_update_failed: "Sprache konnte nicht aktualisiert werden"
+    language_update_error: "Fehler beim Aktualisieren der Sprache. Bitte versuche es erneut."
+    welcome_back: "Willkommen zurück, %{name}"
+    incorrect_code: "Falscher Code"
+    connection_error: "Verbindungsfehler"
+    connection_error_retry: "Verbindungsfehler. Bitte versuche es erneut."
+    biometrics_not_supported: "Biometrie wird auf diesem Gerät nicht unterstützt"
+    registration_start_failed: "Registrierung konnte nicht gestartet werden"
+    registration_cancelled: "Registrierung abgebrochen"
+    biometrics_enabled: "Face ID / Touch ID aktiviert"
+    registration_failed: "Registrierung fehlgeschlagen"
+    release_to_refresh: "Zum Aktualisieren loslassen"
+    pull_to_refresh: "Zum Aktualisieren nach unten ziehen"
+    no_file_selected: "Keine Datei ausgewählt"
+    next: "Weiter"
+    get_started: "Loslegen"
+    saving: "Speichern…"
+    keep_editing: "Weiter bearbeiten"
+    delete: "Löschen"
+    add_location: "Ort hinzufügen"
+    notes_placeholder: "Notizen..."
+    no_reminder: "Keine Erinnerung"
+    reminder_1_week: "1 Woche vorher"
+    reminder_1_day: "1 Tag vorher"
+    reminder_6_hours: "6 Stunden vorher"
+    reminder_1_hour: "1 Stunde vorher"
+    reminder_custom: "Eigener Timer"
+    reminder_minutes: "%{minutes} Minuten vorher"
+    repeat_until: "Wiederholen bis %{day}. %{month} %{year}"
+    unsaved_changes: "Der Termin wurde noch nicht gespeichert. Möchtest du die Seite wirklich verlassen?"
+    repeat_until_future: "Das Datum für „Wiederholen bis“ muss in der Zukunft liegen."
+    past_date_alert: "Dieser Termin liegt in der Vergangenheit. Möchtest du ihn wirklich festlegen? Für vergangene Termine werden keine Erinnerungen gesendet."
+    choose_another_date: "Anderes Datum wählen"
+    yes_set_it: "Ja, festlegen"
+    sensitive_period_alert: "Während deiner Periode ist dein Körper oft empfindlicher. Behandlungen wie Tattoos, Piercings, Laserbehandlungen, Waxing, Sugaring, Microneedling, chemische Peelings, Botox, Filler, Zahnbehandlungen oder kleinere Operationen können schmerzhafter sein oder stärkere Hautreizungen verursachen."
+    go_back: "Zurück"
+    ok: "OK"
+    set_date: "Datum festlegen"
+    no_locations: "Keine Orte gefunden"
+    until_suffix: " bis %{day}. %{month} %{year}"
+    times_suffix: ", %{count} Mal"
+    every_custom: "Alle %{n} %{unit}"
+    custom_unit:
+      days: "Tage"
+      weeks: "Wochen"
+      months: "Monate"
+      years: "Jahre"
+    repeat_labels:
+      daily: "Täglich"
+      weekly: "Wöchentlich"
+      monthly: "Monatlich"
+      yearly: "Jährlich"
+    repeat_fallback: "Wiederholen"
+    mood: "Stimmung"
+    physical: "Körperlich"
+    mental: "Mental"
+    other: "Sonstiges"
+    bleeding: "Blutung"
+    discharge: "Ausfluss"
+    intercourse: "Geschlechtsverkehr"
+    cravings: "Gelüste"
+    sleep: "Schlaf"
+    temperature: "Temperatur"
+    weight: "Gewicht"
+    levels: ["", "Niedrig", "Mittel", "Hoch"]
+    symptoms_selected: "%{count} Symptome ausgewählt"
+    bleeding_prefix: "Blutung: %{value}"
+    discharge_prefix: "Ausfluss: %{value}"
+    intercourse_prefix: "Geschlechtsverkehr: %{value}"
+    cravings_prefix: "Gelüste: %{value}"
+    discharge_labels:
+      dry: "Trocken"
+      creamy-light: "Milchig"
+      creamy: "Cremig"
+      stretchy: "Dehnbar"
+      egg-white: "Eiweißartig"
+      thick: "Klumpig"
+      sticky: "Klebrig"
+      spotting: "Schmierblutung"
+      period: "Periode"
+    intercourse_labels:
+      keiner: "Keiner"
+      ungeschuetzt: "Ungeschützt"
+      geschuetzt: "Geschützt"
+      orgasmus: "Orgasmus"
+      kein-orgasmus: "Kein Orgasmus"
+      masturbation: "Masturbation"
+    bleeding_labels:
+      light: "Leicht"
+      medium: "Mittel"
+      heavy: "Stark"
+      disaster: "Sehr stark"
+    craving_labels:
+      fatty-fried: "Fettig & frittiert"
+      salty-food: "Salziges"
+      bread-noodles: "Brot & Nudeln"
+      chocolate: "Schokolade"
+      sugar: "Zuckerhaltige Getränke & Speisen"
+    consent:
+      health_data_processing:
+        title: "Verarbeitung von Gesundheitsdaten"
+        what: "Alle gesundheitsbezogenen Informationen, die du in der App protokollierst."
+        items:
+          - "Zyklusdaten, Symptome, Stimmung, Energieniveau"
+          - "Schmerzen, Schlaf, Temperatur und Gewicht"
+          - "Persönliche Notizen zu deiner Gesundheit"
+          - "Gelüste, Ausfluss und Geschlechtsverkehr"
+        why: "Diese Daten ermöglichen deine Zyklusvorhersagen, Symptomtrends und personalisierten Einblicke. Sie werden verschlüsselt gespeichert und niemals an Dritte weitergegeben."
+        rights: "Du kannst deine Einwilligung jederzeit widerrufen. Historische Daten werden gemäß unserer Aufbewahrungsrichtlinie gelöscht."
+      symptom_tracking:
+        title: "Symptom-Tracking"
+        what: "Deine täglichen Symptomprotokolle über alle Kategorien hinweg."
+        items:
+          - "Körperliche Symptome (Schmerzen, Krämpfe, Blähungen usw.)"
+          - "Mentale & emotionale Verfassung (Stimmung, Angst, Energie)"
+          - "Gelüste und ernährungsbezogene Symptome"
+          - "Ausfluss-Tracking und Muster"
+        why: "Ermöglicht deine Symptomhistorie, Trendanalysen und hilft, Muster über deine Zyklusphasen hinweg zu erkennen."
+        rights: "Widerrufe die Einwilligung jederzeit. Zuvor protokollierte Daten werden gemäß unserem Aufbewahrungsplan gelöscht."
+      cycle_tracking:
+        title: "Zyklus-Tracking"
+        what: "Deine Menstruationszyklus-Daten und Vorhersagen."
+        items:
+          - "Start- und Enddaten der Periode"
+          - "Berechnungen und Bezeichnungen der Zyklusphasen"
+          - "Vorhersagen für Eisprung und fruchtbares Fenster"
+          - "Verlauf von Zyklus- und Periodendauer"
+        why: "Kernfunktion der App — Vorhersagen, Phasenerkennung und Kalenderansichten hängen von diesen Daten ab."
+        rights: "Erforderlich für die App-Funktionalität. Zur Löschung ist eine Kontolöschung erforderlich."
+      menstrual_data:
+        title: "Menstruationsdaten"
+        what: "Deine periodspezifischen Informationen und die Blutungsstärke."
+        items:
+          - "Start- und Enddaten der Periode"
+          - "Blutungsstärke (leicht, mittel, stark)"
+          - "Blutungsmuster im Zeitverlauf"
+        why: "Ermöglicht Periodenvorhersagen, Zyklusstatistiken und die Phasenfärbung im Kalender."
+        rights: "Du kannst die Einwilligung widerrufen. Vergangene Daten werden anonymisiert."
   shared:
+    back: "< zurück"
+    phase_banner: "Du bist im %{season}"
+    select_date: "Datum auswählen"
+    close_date_picker: "Datumsauswahl schließen"
+    dismiss: "Ausblenden"
+    toggle_password_visibility: "Passwortsichtbarkeit umschalten"
+    close: "Schließen"
+    got_it: "Verstanden"
+    go_to_calendar: "Zum Kalender"
     consent_info:
       what: "Das beinhaltet es:"
       why: "Warum wir es brauchen:"
@@ -998,8 +1229,8 @@ de:
       no_questions: "Für diese Woche gibt es noch keine Feedback-Fragen — schau bald wieder vorbei."
       thank_you: "Vielen Dank!"
       success_text: "Dein Feedback hilft uns, Season zu verbessern."
-      yes: "Ja"
-      no: "Nein"
+      "yes": "Ja"
+      "no": "Nein"
       why_placeholder: "Warum? (optional)"
       answer_placeholder: "Antwort..."
       next: "Weiter"
@@ -1046,19 +1277,6 @@ de:
       ro: "Rumänisch"
       bg: "Bulgarisch"
       az: "Aserbaidschanisch"
-      name: "English (USA)"
-  en-NZ:
-    language:
-      name: "English (New Zealand)"
-  en-ZA:
-    language:
-      name: "English (South Africa)"
-  es-AR:
-    language:
-      name: "Español (Argentina)"
-  es-MX:
-    language:
-      name: "Español (México)"
   fr-CA:
     language:
       name: "Français (Canada)"
@@ -1118,6 +1336,10 @@ de:
       all_caught_up: "Du bist auf dem neuesten Stand!"
     show:
       title: "Benachrichtigung"
+    mark_read:
+      success: "Benachrichtigung als gelesen markiert."
+    destroy:
+      deleted: "Benachrichtigung gelöscht."
   account:
     show:
       cycle_history: "Zyklus-Tracking-Verlauf"

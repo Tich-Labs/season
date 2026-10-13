@@ -28,7 +28,7 @@
                         <% elsif event.start_time.present? %>
                           <%= event.start_time.strftime("%H:%M") %>
                         <% else %>
-                          All day
+                          <%= t("calendar_events.form.all_day") %>
                         <% end %>
                       </p>
                     </div>

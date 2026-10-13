@@ -24,8 +24,8 @@
     <button class="w-full h-[31px] flex items-center justify-center gap-2 text-brand-primary font-medium text-base font-sans focus:outline-none"
             data-date-picker-target="toggleButton"
             data-action="click->date-picker#toggle"
-            aria-label="Select date">
-      <%= date.strftime("%-d %B") %>
+            aria-label="<%= t("shared.select_date") %>">
+      <%= l(date, format: "%-d %B") %>
       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none"
            stroke="currentColor" stroke-width="3" viewBox="0 0 24 24" aria-hidden="true">
         <polyline points="6 9 12 15 18 9" />
@@ -35,7 +35,7 @@
     <%# Expanded content %>
     <div class="hidden" data-date-picker-target="content">
       <div class="flex justify-end pt-3 pr-4 pb-1">
-        <button data-action="click->date-picker#close" aria-label="Close date picker"
+        <button data-action="click->date-picker#close" aria-label="<%= t("shared.close_date_picker") %>"
                 class="text-brand-primary focus:outline-none">
           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none"
                stroke="currentColor" stroke-width="3" viewBox="0 0 24 24" aria-hidden="true">
@@ -55,7 +55,7 @@
         <% ((Date.current - 29)..Date.current).each do |d| %>
           <% selected = d == date %>
           <li class="py-px leading-tight">
-            <%= link_to d.strftime("%-d %B"), date_path.call(d),
+            <%= link_to l(d, format: "%-d %B"), date_path.call(d),
                   class: "block font-sans no-underline text-brand-primary #{selected ? 'font-bold text-sm' : 'font-normal text-sm'}",
                   data: (selected ? {selected: true} : {}) %>
           </li>

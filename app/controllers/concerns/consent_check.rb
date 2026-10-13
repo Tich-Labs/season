@@ -14,7 +14,7 @@ module ConsentCheck
     account_path = "/account"
     return if request.fullpath == consent_path || request.fullpath == account_path
 
-    redirect_to consent_settings_path, alert: t("consents.required") unless performed?
+    redirect_to consent_settings_path, alert: t("consent.required") unless performed?
   end
 
   def consent_settings_path

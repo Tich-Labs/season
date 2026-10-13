@@ -106,16 +106,16 @@ export default class extends Controller {
     if (!query) return
 
     const matches = COUNTRIES
-      .filter(c => c.name.toLowerCase().includes(query) || c.code === query)
+      .filter(c => this.#countryName(c.code).toLowerCase().includes(query) || c.name.toLowerCase().includes(query) || c.code === query)
       .slice(0, 6)
 
     matches.forEach(c => {
       const btn = document.createElement('button')
       btn.type = 'button'
-      btn.textContent = c.name
+      btn.textContent = this.#countryName(c.code)
       btn.className = 'w-full text-left px-4 py-3 text-base text-brand-primary hover:bg-brand-field'
       btn.dataset.countryCode = c.code
-      btn.addEventListener('pointerdown', () => this.#selectCountry(c.code, c.name))
+      btn.addEventListener('pointerdown', () => this.#selectCountry(c.code))
       this.countryResultsTarget.appendChild(btn)
     })
     this.countryResultsTarget.classList.toggle('hidden', matches.length === 0)
@@ -125,10 +125,31 @@ export default class extends Controller {
     this.#clearResults()
   }
 
-  #selectCountry (code, name) {
+  // Country names aren't stored per-locale — Intl.DisplayNames resolves them
+  // from the region code in the page's language, so the selector reads
+  // "Deutschland" on a German page without a 50-entry translation table.
+  #countryName (code) {
+    if (this._displayNames === undefined) {
+      try {
+        this._displayNames = new Intl.DisplayNames([document.documentElement.lang || 'en'], { type: 'region' })
+      } catch (_) {
+        this._displayNames = null
+      }
+    }
+    if (this._displayNames) {
+      try {
+        const name = this._displayNames.of(code.toUpperCase())
+        if (name) return name
+      } catch (_) { /* unknown code — fall through to the English name */ }
+    }
+    const found = COUNTRIES.find(c => c.code === code)
+    return found ? found.name : code
+  }
+
+  #selectCountry (code) {
     this.country = code
     localStorage.setItem(STORAGE_COUNTRY, code)
-    this.countryInputTarget.value = name
+    this.countryInputTarget.value = this.#countryName(code)
     this.#clearResults()
     if (this.enabled) this.#fetchHolidays()
   }
@@ -136,7 +157,7 @@ export default class extends Controller {
   #reflectState () {
     this.#reflectEnabled()
     const country = COUNTRIES.find(c => c.code === this.country)
-    if (country) this.countryInputTarget.value = country.name
+    if (country) this.countryInputTarget.value = this.#countryName(country.code)
   }
 
   #reflectEnabled () {

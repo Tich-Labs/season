@@ -1,4 +1,5 @@
 import { Controller } from '@hotwired/stimulus'
+import { t } from 'i18n'
 
 // Drives the first-run beta-tester welcome tour
 // (app/views/tester_tour/show.html.erb) — simple linear paging through
@@ -50,8 +51,8 @@ export default class extends Controller {
   _updateButtonLabel () {
     const isLast = this.index === this.slideTargets.length - 1
     this.nextBtnTarget.textContent = isLast
-      ? (this.nextBtnTarget.dataset.finishLabel || 'Get started')
-      : (this.nextBtnTarget.dataset.nextLabel || 'Next')
+      ? (this.nextBtnTarget.dataset.finishLabel || t('js.get_started'))
+      : (this.nextBtnTarget.dataset.nextLabel || t('js.next'))
   }
 
   async _complete () {

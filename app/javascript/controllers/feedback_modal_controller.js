@@ -1,4 +1,5 @@
 import { Controller } from '@hotwired/stimulus'
+import { t } from 'i18n'
 
 export default class extends Controller {
   connect () {
@@ -31,7 +32,7 @@ export default class extends Controller {
     if (fileInput) fileInput.value = ''
 
     const label = document.getElementById('attachment-name')
-    if (label) label.textContent = 'No file selected'
+    if (label) label.textContent = t('js.no_file_selected')
   }
 
   clickOutside (event) {

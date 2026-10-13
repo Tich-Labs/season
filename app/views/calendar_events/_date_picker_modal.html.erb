@@ -66,7 +66,7 @@
              wheel (season_modal_controller.js), which already did this. %>
         <div data-appointment-date-picker-target="monthScroll" data-action="scroll->appointment-date-picker#onMonthScroll" style="touch-action: pan-y; overscroll-behavior: contain;" class="overflow-y-auto snap-y snap-mandatory h-full w-14 [scrollbar-width:none] relative z-[1]">
           <div class="drum-cap" style="height:26px" aria-hidden="true"></div>
-          <% %w[Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec].each_with_index do |mon, mi| %><div data-value="<%= mi + 1 %>" class="h-7 flex items-center justify-center text-base tracking-007 text-brand-primary snap-center snap-always"><%= mon %></div><% end %>
+          <% I18n.t("js.month_names").each_with_index do |mon, mi| %><div data-value="<%= mi + 1 %>" class="h-7 flex items-center justify-center text-base tracking-007 text-brand-primary snap-center snap-always"><%= mon %></div><% end %>
           <div class="drum-cap" style="height:26px" aria-hidden="true"></div>
         </div>
         <span class="text-base text-brand-primary relative z-[1]">/</span>

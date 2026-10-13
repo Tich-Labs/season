@@ -11,12 +11,12 @@
 <%
   meta   = CycleCalculatorService::PHASE_META[phase] || {}
   colour = meta[:colour] || "#933a35"
-  season = meta[:season]
+  season_key = CycleCalculatorService::SEASON_NAMES[phase.to_s]&.downcase
 %>
 <div class="p-6 pb-5 font-montserrat" style="background:<%= colour %>;">
-  <% if season %>
+  <% if season_key %>
     <p class="text-white font-semibold uppercase letter-spacing-wider m-0 mb-0.5 opacity-80">
-      You are in your <%= season %>
+      <%= t("shared.phase_banner", season: t("seasons.#{season_key}")) %>
     </p>
   <% end %>
   <h1 class="text-white font-bold m-0 mb-0.5 leading-tight">
@@ -29,7 +29,7 @@
   <% end %>
   <% if local_assigns[:date] %>
     <p class="text-white font-normal m-0 mt-1 opacity-70">
-      <%= date.strftime("%A, %-d %B %Y") %>
+      <%= l(date, format: "%A, %-d %B %Y") %>
     </p>
   <% end %>
 </div>

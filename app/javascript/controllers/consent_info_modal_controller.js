@@ -1,52 +1,19 @@
 import { Controller } from '@hotwired/stimulus'
+import { t, tArray } from 'i18n'
 
-const CONSENT_DETAILS = {
-  health_data_processing: {
-    title: 'Health Data Processing',
-    what: 'All health-related information you log in the app.',
-    items: [
-      'Cycle dates, symptoms, mood, energy levels',
-      'Pain, sleep, temperature, and weight',
-      'Personal notes about your health',
-      'Cravings, discharge, and intercourse'
-    ],
-    why: 'This data powers your cycle predictions, symptom trends, and personalized insights. It is stored encrypted and never shared with third parties.',
-    rights: 'You can withdraw consent at any time. Historical data will be deleted per our retention policy.'
-  },
-  symptom_tracking: {
-    title: 'Symptom Tracking',
-    what: 'Your daily symptom logs across all categories.',
-    items: [
-      'Physical symptoms (pain, cramps, bloating, etc.)',
-      'Mental & emotional state (mood, anxiety, energy)',
-      'Cravings and food-related symptoms',
-      'Discharge tracking and patterns'
-    ],
-    why: 'Enables your symptom history, trend analysis, and helps identify patterns across your cycle phases.',
-    rights: 'Withdraw consent anytime. Previously logged data will be deleted per our retention schedule.'
-  },
-  cycle_tracking: {
-    title: 'Cycle Tracking',
-    what: 'Your menstrual cycle dates and predictions.',
-    items: [
-      'Period start and end dates',
-      'Cycle phase calculations and labels',
-      'Ovulation and fertility window predictions',
-      'Cycle length and period length history'
-    ],
-    why: 'Core app functionality — predictions, phase detection, and calendar views depend on this data.',
-    rights: 'Required for app functionality. Deletion requires account deletion.'
-  },
-  menstrual_data: {
-    title: 'Menstrual Data',
-    what: 'Your period-specific information and flow intensity.',
-    items: [
-      'Period start and end dates',
-      'Flow intensity (light, medium, heavy)',
-      'Bleeding patterns over time'
-    ],
-    why: 'Enables period predictions, cycle statistics, and phase colouring on the calendar.',
-    rights: 'You can withdraw consent. Past data will be anonymized.'
+const CONSENT_TYPES = ['health_data_processing', 'symptom_tracking', 'cycle_tracking', 'menstrual_data']
+
+// Content lives in config/locales/*.yml under `js.consent.<type>` so the
+// consent explainer modal is translated alongside the rest of the app.
+function consentDetails (type) {
+  if (!CONSENT_TYPES.includes(type)) return null
+  const base = `js.consent.${type}`
+  return {
+    title: t(`${base}.title`),
+    what: t(`${base}.what`),
+    items: tArray(`${base}.items`),
+    why: t(`${base}.why`),
+    rights: t(`${base}.rights`)
   }
 }
 
@@ -72,7 +39,7 @@ export default class extends Controller {
   }
 
   _render (type) {
-    const details = CONSENT_DETAILS[type]
+    const details = consentDetails(type)
     if (!details) return
 
     document.getElementById('ci-title').textContent = details.title

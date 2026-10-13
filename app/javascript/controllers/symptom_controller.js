@@ -1,4 +1,5 @@
 import { Controller } from '@hotwired/stimulus'
+import { t } from 'i18n'
 
 const FILLED_COLOR = '#933a35'
 const EMPTY_COLOR = '#EDE1D5'
@@ -68,8 +69,8 @@ export default class extends Controller {
     if (checkEl) { checkEl.style.display = this.#activeMoods.length > 0 ? '' : 'none' }
     if (summary) {
       summary.textContent = this.#activeMoods.length > 0
-        ? `Mood (${this.#activeMoods.length})`
-        : 'Mood'
+        ? `${t('js.mood')} (${this.#activeMoods.length})`
+        : t('js.mood')
     }
   }
 
@@ -116,7 +117,7 @@ export default class extends Controller {
     const checkEl = document.getElementById('section-intercourse-check')
 
     if (this.#activeIntercourse.includes(tag)) {
-      this.#activeIntercourse = this.#activeIntercourse.filter(t => t !== tag)
+      this.#activeIntercourse = this.#activeIntercourse.filter(slug => slug !== tag)
     } else {
       this.#activeIntercourse.push(tag)
     }

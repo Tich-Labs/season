@@ -11,6 +11,7 @@
     <%= csp_meta_tag %>
     <%= yield :head %>
     <%= tag.link rel: "manifest", href: pwa_manifest_path %>
+    <%= render "shared/client_i18n" %>
     <link rel="icon" type="image/png" href="/favicon.png">
     <link rel="apple-touch-icon" href="/icon.png">
     <meta name="theme-color" content="#933a35">

@@ -1,0 +1,5 @@
+<%# Client-side translations for Stimulus controllers (see
+     app/javascript/i18n.js). `js` holds JS-only strings; `moods` reuses the
+     existing symptom-mood names so the review modal can localize them. %>
+<% js_i18n = I18n.t("js").merge("moods" => I18n.t("symptoms.moods")) %>
+<script nonce="<%= content_security_policy_nonce %>">window.I18n = <%= raw js_i18n.to_json %>;</script>

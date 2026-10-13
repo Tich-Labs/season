@@ -4,11 +4,13 @@
   fill_bg  = val.positive? \
     ? "background:linear-gradient(to right,#933a35 #{fill_pct}%,#EDE1D5 #{fill_pct}%)" \
     : "background:#EDE1D5"
+  label    = t("symptoms.items.#{symptom[:key]}", default: symptom[:label])
+  levels   = I18n.t("js.levels")
 %>
 <div class="sp-row" style="margin-bottom:25px;">
   <span class="block font-medium font-sans mb-2"
         style="font-size:16px; color:#933a35; letter-spacing:0.07em;">
-    <%= symptom[:label] %>
+    <%= label %>
   </span>
 
   <div class="relative" style="padding-bottom:22px;">
@@ -17,23 +19,23 @@
            data-action="input->symptom#saveSymptomSlider"
            data-symptom-key="<%= symptom[:key] %>"
            data-log-url="<%= log_url %>"
-           aria-label="<%= symptom[:label] %> intensity"
+           aria-label="<%= t("symptoms.index.slider_aria", label: label) %>"
            style="<%= fill_bg %>;">
 
     <span class="absolute text-xs font-sans font-normal tracking-[0.4px] pointer-events-none"
           style="left:calc(22px + (100% - 44px) * 1 / 3); top:20px; transform:translateX(-50%); color:<%= val == 1 ? '#933a35' : '#999' %>;"
           data-level="1">
-      low
+      <%= levels[1] %>
     </span>
     <span class="absolute text-xs font-sans font-normal tracking-[0.4px] pointer-events-none"
           style="left:calc(22px + (100% - 44px) * 2 / 3); top:20px; transform:translateX(-50%); color:<%= val == 2 ? '#933a35' : '#999' %>;"
           data-level="2">
-      medium
+      <%= levels[2] %>
     </span>
     <span class="absolute text-xs font-sans font-normal tracking-[0.4px] pointer-events-none"
           style="right:22px; top:20px; transform:translateX(50%); color:<%= val == 3 ? '#933a35' : '#999' %>;"
           data-level="3">
-      high
+      <%= levels[3] %>
     </span>
   </div>
 </div>

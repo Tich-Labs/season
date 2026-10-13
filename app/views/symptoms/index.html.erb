@@ -87,7 +87,7 @@
   <div class="text-center pt-6 pb-5">
     <p class="text-brand-primary text-lg font-medium font-sans"><%= t("forecast.index.phase_prefix") %></p>
     <p class="font-extrabold text-3xl leading-tight font-sans" style="color:<%= phase_colour %>;">
-      <%= phase_label %> Phase
+      <%= t("symptoms.index.phase_heading", phase: phase_label) %>
     </p>
   </div>
 
@@ -105,26 +105,27 @@
             <polyline points="9 18 15 12 9 6" />
           </svg>
           <span class="font-medium text-22 tracking-p66" id="mood-summary-label" style="color:<%= phase_colour %>;">
-            Mood<%= " (#{@log.moods.length})" if @log.moods.present? %>
+            <%= t("symptoms.index.mood") %><%= " (#{@log.moods.length})" if @log.moods.present? %>
           </span>
         </div>
         <span id="section-mood-check" style="display:<%= mood_done ? '' : 'none' %>"><%= render 'symptoms/bi_check', colour: phase_colour %></span>
       </summary>
-      <div class="pb-5 grid grid-cols-3 gap-4" role="group" aria-label="Mood picker">
+      <div class="pb-5 grid grid-cols-3 gap-4" role="group" aria-label="<%= t("symptoms.index.mood_picker_aria") %>">
         <% MoodPickerService.all.each do |mood_opt| %>
           <% selected = @log.moods&.include?(mood_opt[:name]) %>
           <% border_colour = mood_opt[:color] %>
+          <% mood_label = t("symptoms.moods.#{mood_opt[:name].downcase.gsub(/[\s-]+/, '_')}", default: mood_opt[:name]) %>
           <button class="flex flex-col items-center justify-center gap-2 transition-all duration-150 focus:outline-none"
                   data-action="click->symptom#toggleMood" data-mood-name="<%= mood_opt[:name] %>"
                   data-value="<%= mood_opt[:name] %>"
-                  aria-label="<%= mood_opt[:name] %>" aria-pressed="<%= selected %>"
+                  aria-label="<%= mood_label %>" aria-pressed="<%= selected %>"
                   style="cursor:pointer; opacity: <%= selected ? '1' : '0.35' %>; transform: <%= selected ? 'scale(1.08)' : 'scale(1)' %>; filter: <%= selected ? '' : 'grayscale(0.6)' %>;">
             <%# Emoji SVG from icons/emojis folder %>
             <div class="w-16 h-16 flex items-center justify-center">
               <%= image_tag "icons/emojis/#{mood_opt[:svg]}", alt: "", class: "w-full h-full" %>
             </div>
             <span class="text-xs font-medium text-center" style="color: <%= border_colour %>;">
-              <%= mood_opt[:name] %>
+              <%= mood_label %>
             </span>
           </button>
         <% end %>
@@ -194,17 +195,18 @@
       <div class="pb-5">
         <% if @phase == "menstrual" %>
           <%# Bleeding flow options (Light, Medium, Heavy, Disaster) %>
-          <div class="grid grid-cols-4 gap-4 px-2" role="group" aria-label="Bleeding flow">
+          <div class="grid grid-cols-4 gap-4 px-2" role="group" aria-label="<%= t("symptoms.index.bleeding_flow_aria") %>">
             <% BleedingService.all.each_with_index do |bleeding_opt, idx| %>
               <%
                 selected = @log.bleeding == bleeding_opt[:name]
                 num_small_drops = idx  # 0, 1, 2, 3 small drops
+                flow_label = t("js.bleeding_labels.#{bleeding_opt[:name].downcase}", default: bleeding_opt[:name])
               %>
               <button class="bleeding-btn flex flex-col items-center gap-3 p-3 rounded-2xl transition-all duration-200"
                       data-action="click->symptom#saveBleedingFlow"
                       data-flow="<%= bleeding_opt[:name] %>"
                       data-url="<%= log_bleeding_symptom_path %>"
-                      aria-label="<%= bleeding_opt[:name] %> bleeding" aria-pressed="<%= selected %>"
+                      aria-label="<%= flow_label %>" aria-pressed="<%= selected %>"
                       style="cursor:pointer;
                              opacity: <%= selected ? 1 : 0.35 %>;
                              transform: scale(<%= selected ? 1.08 : 1 %>);
@@ -268,7 +270,7 @@
                       style="color:<%= selected ? bleeding_opt[:color] : '#999' %>;
                              letter-spacing: 0.3px;
                              transition: color 200ms;">
-                  <%= bleeding_opt[:name] %>
+                  <%= flow_label %>
                 </span>
               </button>
             <% end %>
@@ -297,11 +299,12 @@
               { key: 'period',       img: 'period.jpg',       label: 'Period',    ring: '#933A35' },
             ]
           %>
-          <div class="grid grid-cols-3 gap-3" role="group" aria-label="Vaginal Discharge type">
+          <div class="grid grid-cols-3 gap-3" role="group" aria-label="<%= t("symptoms.index.discharge_type_aria") %>">
             <% discharge_grid.each do |item| %>
               <% sel = @log.discharge == item[:key] %>
               <% has_info = I18n.exists?("symptoms.discharge_info.#{item[:key]}") %>
               <% ring_colour = item[:ring] %>
+              <% item_label = t("js.discharge_labels.#{item[:key]}", default: item[:label]) %>
               <%# The 4.38px phase-colour border is applied to the photo <img>
                    itself (inline style, following the circle via rounded-full),
                    so image and border are one element that scales and dims
@@ -316,7 +319,7 @@
                 <button class="flex flex-col items-center gap-2 transition-all duration-150 focus:outline-none"
                         data-action="click->symptom#toggleDischarge"
                         data-discharge="<%= item[:key] %>"
-                        aria-label="<%= item[:label] %>" aria-pressed="<%= sel %>"
+                        aria-label="<%= item_label %>" aria-pressed="<%= sel %>"
                         style="cursor:pointer; opacity: <%= sel ? 1 : 0.35 %>; transform: scale(<%= sel ? 1.08 : 1 %>); filter: <%= sel ? '' : 'grayscale(0.6)' %>; border: none; background: none;">
                   <div class="w-[90px] h-[90px] flex items-center justify-center overflow-hidden rounded-full">
                     <%# w-full h-full (not a scaled-up size) — object-cover already
@@ -324,12 +327,12 @@
                          image size on top of that (a past regression) zoomed in an
                          extra 2x and cropped away the lace trim Figma shows on both
                          sides of the garment. %>
-                    <%= image_tag "vaginal_discharge/#{item[:img]}", alt: item[:label],
+                    <%= image_tag "vaginal_discharge/#{item[:img]}", alt: item_label,
                           class: "w-full h-full object-cover rounded-full",
                           style: "border: 4.38px solid #{ring_colour};" %>
                   </div>
                   <span class="text-11 font-medium text-center leading-tight text-brand-primary tracking-007"
-                        style="opacity:<%= sel ? 1 : 0.5 %>;"><%= item[:label] %></span>
+                        style="opacity:<%= sel ? 1 : 0.5 %>;"><%= item_label %></span>
                 </button>
                 <% if has_info %>
                   <%# Figma: 35×35, #EDE1D5 (brand-field) fill, #933A35 (brand-primary) glyph. %>
@@ -337,7 +340,7 @@
                         role="button" tabindex="0"
                         data-action="click->symptom#openDischargeInfo keydown->symptom#openDischargeInfo"
                         data-discharge-info="<%= item[:key] %>"
-                        aria-label="<%= t("symptoms.index.discharge_info_aria") %> <%= item[:label] %>">?</span>
+                        aria-label="<%= t("symptoms.index.discharge_info_aria") %> <%= item_label %>">?</span>
                 <% end %>
               </div>
             <% end %>
@@ -352,6 +355,7 @@
          so it isn't affected by the accordion collapsing. %>
     <% if @phase != "menstrual" %>
       <% discharge_grid.select { |item| I18n.exists?("symptoms.discharge_info.#{item[:key]}") }.each do |item| %>
+        <% item_label = t("js.discharge_labels.#{item[:key]}", default: item[:label]) %>
         <div id="discharge-info-<%= item[:key] %>"
              style="top: env(safe-area-inset-top, 0px);" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-sm px-4"
              data-discharge-info-modal="<%= item[:key] %>">
@@ -388,15 +392,15 @@
                           class="block w-full h-full p-0 border-0 bg-transparent cursor-pointer"
                           data-action="click->symptom#openDischargeSlip"
                           data-discharge-slip="<%= item[:key] %>"
-                          aria-label="<%= t("symptoms.index.enlarge_photo_aria") %> <%= item[:label] %>">
-                    <%= image_tag "vaginal_discharge/#{item[:img]}", alt: item[:label], class: "w-full h-full object-cover" %>
+                          aria-label="<%= t("symptoms.index.enlarge_photo_aria") %> <%= item_label %>">
+                    <%= image_tag "vaginal_discharge/#{item[:img]}", alt: item_label, class: "w-full h-full object-cover" %>
                   </button>
                 </div>
                 <button type="button"
                         class="absolute -top-3 -right-3 w-7 h-7 rounded-full flex items-center justify-center bg-brand-primary shadow cursor-pointer p-0 border-0"
                         data-action="click->symptom#openDischargeSlip"
                         data-discharge-slip="<%= item[:key] %>"
-                        aria-label="<%= t("symptoms.index.enlarge_photo_aria") %> <%= item[:label] %>">
+                        aria-label="<%= t("symptoms.index.enlarge_photo_aria") %> <%= item_label %>">
                   <%= expand_badge %>
                 </button>
               </div>
@@ -418,7 +422,7 @@
                             class="relative block w-full h-full p-0 border-0 bg-transparent cursor-pointer"
                             data-action="click->symptom#openDischargeVideo"
                             data-discharge-video="<%= item[:key] %>"
-                            aria-label="<%= t("symptoms.index.play_video_aria") %> <%= item[:label] %>">
+                            aria-label="<%= t("symptoms.index.play_video_aria") %> <%= item_label %>">
                       <video class="w-full h-full object-cover discharge-loop-video" autoplay muted loop playsinline preload="metadata"
                              poster="<%= asset_path("vaginal_discharge/finger/#{item[:key]}.jpg") %>">
                         <source src="<%= asset_path("vaginal_discharge/finger/#{item[:key]}.mp4") %>" type="video/mp4">
@@ -429,7 +433,7 @@
                           class="absolute -top-3 -right-3 w-7 h-7 rounded-full flex items-center justify-center bg-brand-primary shadow cursor-pointer p-0 border-0"
                           data-action="click->symptom#openDischargeVideo"
                           data-discharge-video="<%= item[:key] %>"
-                          aria-label="<%= t("symptoms.index.play_video_aria") %> <%= item[:label] %>">
+                          aria-label="<%= t("symptoms.index.play_video_aria") %> <%= item_label %>">
                     <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M4 2.5V9.5L9.5 6L4 2.5Z" fill="white" />
                     </svg>
@@ -442,7 +446,7 @@
                             class="block w-full h-full p-0 border-0 bg-transparent cursor-pointer"
                             data-action="click->symptom#openDischargePhoto"
                             data-discharge-photo="<%= item[:key] %>"
-                            aria-label="<%= t("symptoms.index.enlarge_photo_aria") %> <%= item[:label] %>">
+                            aria-label="<%= t("symptoms.index.enlarge_photo_aria") %> <%= item_label %>">
                       <%= image_tag "vaginal_discharge/finger/#{item[:key]}.jpg", alt: "", class: "w-full h-full object-cover" %>
                     </button>
                   </div>
@@ -450,7 +454,7 @@
                           class="absolute -top-3 -right-3 w-7 h-7 rounded-full flex items-center justify-center bg-brand-primary shadow cursor-pointer p-0 border-0"
                           data-action="click->symptom#openDischargePhoto"
                           data-discharge-photo="<%= item[:key] %>"
-                          aria-label="<%= t("symptoms.index.enlarge_photo_aria") %> <%= item[:label] %>">
+                          aria-label="<%= t("symptoms.index.enlarge_photo_aria") %> <%= item_label %>">
                     <%= expand_badge %>
                   </button>
                 </div>
@@ -522,7 +526,7 @@
                   <path d="M18 6 6 18M6 6l12 12" />
                 </svg>
               </button>
-              <%= image_tag "vaginal_discharge/finger/#{item[:key]}.jpg", alt: item[:label], class: "w-full rounded-xl" %>
+              <%= image_tag "vaginal_discharge/finger/#{item[:key]}.jpg", alt: item_label, class: "w-full rounded-xl" %>
             </div>
           </div>
         <% end %>
@@ -543,7 +547,7 @@
                 <path d="M18 6 6 18M6 6l12 12" />
               </svg>
             </button>
-            <%= image_tag "vaginal_discharge/#{item[:img]}", alt: item[:label], class: "w-full rounded-xl" %>
+            <%= image_tag "vaginal_discharge/#{item[:img]}", alt: item_label, class: "w-full rounded-xl" %>
           </div>
         </div>
       <% end %>
@@ -566,26 +570,26 @@
         <div class="flex justify-around mb-3">
           <% sel = intercourse_list.include?('keiner') %>
           <button class="craving-btn" data-intercourse="keiner" data-action="click->symptom#toggleIntercourse"
-                  aria-pressed="<%= sel %>" aria-label="No intercourse"
+                  aria-pressed="<%= sel %>" aria-label="<%= t("symptoms.index.intercourse_none") %>"
                   style="opacity:<%= sel ? 1 : 0.35 %>;transform:scale(<%= sel ? 1.08 : 1 %>);filter:<%= sel ? '' : 'grayscale(0.6)' %>;">
             <div class="w-14 h-14 flex items-center justify-center">
-              <%= image_tag "sexual_intercourse/keiner.png", alt: "No intercourse" %>
+              <%= image_tag "sexual_intercourse/keiner.png", alt: t("symptoms.index.intercourse_none") %>
             </div>
           </button>
           <% sel = intercourse_list.include?('ungeschuetzt') %>
           <button class="craving-btn" data-intercourse="ungeschuetzt" data-action="click->symptom#toggleIntercourse"
-                  aria-pressed="<%= sel %>" aria-label="Unprotected intercourse"
+                  aria-pressed="<%= sel %>" aria-label="<%= t("symptoms.index.intercourse_unprotected") %>"
                   style="opacity:<%= sel ? 1 : 0.35 %>;transform:scale(<%= sel ? 1.08 : 1 %>);filter:<%= sel ? '' : 'grayscale(0.6)' %>;">
             <div class="w-14 h-14 flex items-center justify-center">
-              <%= image_tag "sexual_intercourse/ungeschuetzt.png", alt: "Unprotected" %>
+              <%= image_tag "sexual_intercourse/ungeschuetzt.png", alt: t("symptoms.index.intercourse_unprotected") %>
             </div>
           </button>
           <% sel = intercourse_list.include?('geschuetzt') %>
           <button class="craving-btn" data-intercourse="geschuetzt" data-action="click->symptom#toggleIntercourse"
-                  aria-pressed="<%= sel %>" aria-label="Protected intercourse"
+                  aria-pressed="<%= sel %>" aria-label="<%= t("symptoms.index.intercourse_protected") %>"
                   style="opacity:<%= sel ? 1 : 0.35 %>;transform:scale(<%= sel ? 1.08 : 1 %>);filter:<%= sel ? '' : 'grayscale(0.6)' %>;">
             <div class="w-14 h-14 flex items-center justify-center">
-              <%= image_tag "sexual_intercourse/geschuetzt.png", alt: "Protected" %>
+              <%= image_tag "sexual_intercourse/geschuetzt.png", alt: t("symptoms.index.intercourse_protected") %>
             </div>
           </button>
         </div>
@@ -597,26 +601,26 @@
         <div class="flex justify-around mb-3">
           <% sel = intercourse_list.include?('orgasmus') %>
           <button class="craving-btn" data-intercourse="orgasmus" data-action="click->symptom#toggleIntercourse"
-                  aria-pressed="<%= sel %>" aria-label="Orgasm"
+                  aria-pressed="<%= sel %>" aria-label="<%= t("symptoms.index.intercourse_orgasm") %>"
                   style="opacity:<%= sel ? 1 : 0.35 %>;transform:scale(<%= sel ? 1.08 : 1 %>);filter:<%= sel ? '' : 'grayscale(0.6)' %>;">
             <div class="w-14 h-14 flex items-center justify-center">
-              <%= image_tag "sexual_intercourse/orgasmus.png", alt: "Orgasm" %>
+              <%= image_tag "sexual_intercourse/orgasmus.png", alt: t("symptoms.index.intercourse_orgasm") %>
             </div>
           </button>
           <% sel = intercourse_list.include?('kein-orgasmus') %>
           <button class="craving-btn" data-intercourse="kein-orgasmus" data-action="click->symptom#toggleIntercourse"
-                  aria-pressed="<%= sel %>" aria-label="No orgasm"
+                  aria-pressed="<%= sel %>" aria-label="<%= t("symptoms.index.intercourse_no_orgasm") %>"
                   style="opacity:<%= sel ? 1 : 0.35 %>;transform:scale(<%= sel ? 1.08 : 1 %>);filter:<%= sel ? '' : 'grayscale(0.6)' %>;">
             <div class="w-14 h-14 flex items-center justify-center">
-              <%= image_tag "sexual_intercourse/kein-orgasmus.png", alt: "No orgasm" %>
+              <%= image_tag "sexual_intercourse/kein-orgasmus.png", alt: t("symptoms.index.intercourse_no_orgasm") %>
             </div>
           </button>
           <% sel = intercourse_list.include?('masturbation') %>
           <button class="craving-btn" data-intercourse="masturbation" data-action="click->symptom#toggleIntercourse"
-                  aria-pressed="<%= sel %>" aria-label="Masturbation"
+                  aria-pressed="<%= sel %>" aria-label="<%= t("symptoms.index.intercourse_masturbation") %>"
                   style="opacity:<%= sel ? 1 : 0.35 %>;transform:scale(<%= sel ? 1.08 : 1 %>);filter:<%= sel ? '' : 'grayscale(0.6)' %>;">
             <div class="w-14 h-14 flex items-center justify-center">
-              <%= image_tag "sexual_intercourse/masturbation.png", alt: "Vibrator / Masturbation" %>
+              <%= image_tag "sexual_intercourse/masturbation.png", alt: t("symptoms.index.intercourse_masturbation") %>
             </div>
           </button>
         </div>
@@ -649,10 +653,10 @@
           <% sel = cravings_list.include?('fatty-fried') %>
           <button class="craving-btn flex flex-col items-center gap-2" data-craving="fatty-fried"
                   data-action="click->symptom#toggleCravings"
-                  aria-pressed="<%= sel %>" aria-label="Fatty and fried food"
+                  aria-pressed="<%= sel %>" aria-label="<%= t("symptoms.index.craving_fatty") %>"
                   style="opacity:<%= sel ? 1 : 0.35 %>;transform:scale(<%= sel ? 1.08 : 1 %>);filter:<%= sel ? '' : 'grayscale(0.6)' %>;">
             <div class="w-[65px] h-[65px] flex items-center justify-center">
-              <%= image_tag "cravings/fries.svg", alt: "Fries and burger" %>
+              <%= image_tag "cravings/fries.svg", alt: t("symptoms.index.craving_fatty") %>
             </div>
             <span class="text-brand-primary font-medium text-xs tracking-007 text-center w-[80px] leading-tight"><%= t("symptoms.index.craving_fatty") %></span>
           </button>
@@ -660,10 +664,10 @@
           <% sel = cravings_list.include?('salty-food') %>
           <button class="craving-btn flex flex-col items-center gap-2" data-craving="salty-food"
                   data-action="click->symptom#toggleCravings"
-                  aria-pressed="<%= sel %>" aria-label="Salty food"
+                  aria-pressed="<%= sel %>" aria-label="<%= t("symptoms.index.craving_salty") %>"
                   style="opacity:<%= sel ? 1 : 0.35 %>;transform:scale(<%= sel ? 1.08 : 1 %>);filter:<%= sel ? '' : 'grayscale(0.6)' %>;">
             <div class="w-[65px] h-[65px] flex items-center justify-center">
-              <%= image_tag "cravings/macarons.svg", alt: "Macarons / Salty food" %>
+              <%= image_tag "cravings/macarons.svg", alt: t("symptoms.index.craving_salty") %>
             </div>
             <span class="text-brand-primary font-medium text-xs tracking-007 text-center w-[80px] leading-tight"><%= t("symptoms.index.craving_salty") %></span>
           </button>
@@ -671,10 +675,10 @@
           <% sel = cravings_list.include?('bread-noodles') %>
           <button class="craving-btn flex flex-col items-center gap-2" data-craving="bread-noodles"
                   data-action="click->symptom#toggleCravings"
-                  aria-pressed="<%= sel %>" aria-label="Bread and noodles"
+                  aria-pressed="<%= sel %>" aria-label="<%= t("symptoms.index.craving_bread") %>"
                   style="opacity:<%= sel ? 1 : 0.35 %>;transform:scale(<%= sel ? 1.08 : 1 %>);filter:<%= sel ? '' : 'grayscale(0.6)' %>;">
             <div class="w-[65px] h-[65px] flex items-center justify-center">
-              <%= image_tag "cravings/noodles.svg", alt: "Noodles bowl" %>
+              <%= image_tag "cravings/noodles.svg", alt: t("symptoms.index.craving_bread") %>
             </div>
             <span class="text-brand-primary font-medium text-xs tracking-007 text-center w-[80px] leading-tight"><%= t("symptoms.index.craving_bread") %></span>
           </button>
@@ -682,10 +686,10 @@
           <% sel = cravings_list.include?('chocolate') %>
           <button class="craving-btn flex flex-col items-center gap-2" data-craving="chocolate"
                   data-action="click->symptom#toggleCravings"
-                  aria-pressed="<%= sel %>" aria-label="Chocolate"
+                  aria-pressed="<%= sel %>" aria-label="<%= t("symptoms.index.craving_chocolate") %>"
                   style="opacity:<%= sel ? 1 : 0.35 %>;transform:scale(<%= sel ? 1.08 : 1 %>);filter:<%= sel ? '' : 'grayscale(0.6)' %>;">
             <div class="w-[65px] h-[65px] flex items-center justify-center">
-              <%= image_tag "cravings/chocolate.svg", alt: "Chocolate bar" %>
+              <%= image_tag "cravings/chocolate.svg", alt: t("symptoms.index.craving_chocolate") %>
             </div>
             <span class="text-brand-primary font-medium text-xs tracking-007 text-center w-[80px] leading-tight"><%= t("symptoms.index.craving_chocolate") %></span>
           </button>
@@ -693,7 +697,7 @@
           <% sel = cravings_list.include?('sugar') %>
           <button class="craving-btn flex flex-col items-center gap-2" data-craving="sugar"
                   data-action="click->symptom#toggleCravings"
-                  aria-pressed="<%= sel %>" aria-label="Sugar drinks and food"
+                  aria-pressed="<%= sel %>" aria-label="<%= t("symptoms.index.craving_sugar") %>"
                   style="opacity:<%= sel ? 1 : 0.35 %>;transform:scale(<%= sel ? 1.08 : 1 %>);filter:<%= sel ? '' : 'grayscale(0.6)' %>;">
             <div class="relative w-[70px] h-[65px]">
               <%= image_tag "cravings/doughnut.svg", alt: "", class: "absolute left-0 top-0 w-[55px] h-[55px]" %>
@@ -733,7 +737,7 @@
             <div data-scroll-picker-target="track" class="sp-track"
                  style="height:150px; padding:54px 0; width:55px;"
                  data-action="scroll->scroll-picker#scroll click->scroll-picker#click keydown->scroll-picker#keydown"
-                 role="listbox" aria-label="Sleep hours" tabindex="0">
+                 role="listbox" aria-label="<%= t("symptoms.index.sleep_aria") %>" tabindex="0">
             </div>
             <span class="font-sans font-bold text-base text-brand-primary tracking-007 leading-5">h</span>
           </div>
@@ -770,7 +774,7 @@
             <div data-scroll-picker-target="track" class="sp-track"
                  style="height:150px; padding:54px 0; width:65px;"
                  data-action="scroll->scroll-picker#scroll click->scroll-picker#click keydown->scroll-picker#keydown"
-                 role="listbox" aria-label="Temperature" tabindex="0">
+                 role="listbox" aria-label="<%= t("symptoms.index.temperature_aria") %>" tabindex="0">
             </div>
             <span class="font-sans font-bold text-base text-brand-primary tracking-007 leading-5">°C</span>
           </div>
@@ -807,7 +811,7 @@
             <div data-scroll-picker-target="track" class="sp-track"
                  style="height:150px; padding:54px 0; width:70px;"
                  data-action="scroll->scroll-picker#scroll click->scroll-picker#click keydown->scroll-picker#keydown"
-                 role="listbox" aria-label="Weight" tabindex="0">
+                 role="listbox" aria-label="<%= t("symptoms.index.weight_aria") %>" tabindex="0">
             </div>
             <span class="font-sans font-bold text-base text-brand-primary tracking-007 leading-5">kg</span>
           </div>
@@ -832,9 +836,9 @@
       <div class="pb-5">
         <label for="symptom_notes" class="sr-only"><%= t("symptoms.index.notes") %></label>
         <textarea id="symptom_notes" name="symptom_log[notes]" rows="4"
-                  placeholder="Enter your notes here..."
+                  placeholder="<%= t("symptoms.index.notes_placeholder") %>"
                   data-action="input->symptom#saveNotes"
-                  aria-label="Notes regarding today"
+                  aria-label="<%= t("symptoms.index.notes") %>"
                   class="w-full rounded-xl px-4 py-3 text-base border-0 resize-none outline-none font-sans placeholder-brand-primary"
                   style="background:#EDE1D5; color:#3d2b28;"><%= @log.notes %></textarea>
       </div>
@@ -854,7 +858,7 @@
            data-action="click->submit-modal#overlayClick">
         <div class="relative bg-white rounded-[29px] mx-4 mt-8" style="width:351px; max-width:calc(100vw - 32px);">
           <%# Close button %>
-          <button data-action="click->submit-modal#close" aria-label="Close"
+          <button data-action="click->submit-modal#close" aria-label="<%= t("symptoms.index.close") %>"
                   class="absolute top-3 right-3 w-11 h-11 flex items-center justify-center rounded-full rotate-45 border-0 bg-transparent cursor-pointer"
                   style="color:#A43600;">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#933a35" stroke-width="3">

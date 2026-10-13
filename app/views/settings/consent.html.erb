@@ -36,17 +36,17 @@
     <%# Intro %>
     <div class="bg-brand-error rounded-xl p-4 mb-5">
       <p class="text-brand-primary text-sm font-medium m-0">
-        Your health data is processed only with your explicit consent.
+        <%= t("consent.show.intro") %>
       </p>
     </div>
 
     <%# Consent Form %>
     <%= form_with url: "/settings/consent", method: :post, local: true do %>
       <% consents = [
-        { key: "health_data_processing", title: "Health Data", desc: "Cycle dates, symptoms, mood, energy, and other health information you log." },
-        { key: "symptom_tracking", title: "Symptom Tracking", desc: "Daily symptom logs including pain, mood, energy, sleep, and discharge." },
-        { key: "cycle_tracking", title: "Cycle Tracking", desc: "Menstrual dates, cycle phases, and predictions." },
-        { key: "menstrual_data", title: "Menstrual Data", desc: "Period start/end dates and flow intensity." }
+        { key: "health_data_processing", title: t("consent.show.health_data"), desc: t("consent.show.health_data_desc") },
+        { key: "symptom_tracking", title: t("consent.show.symptom_tracking"), desc: t("consent.show.symptom_tracking_desc") },
+        { key: "cycle_tracking", title: t("consent.show.cycle_tracking"), desc: t("consent.show.cycle_tracking_desc") },
+        { key: "menstrual_data", title: t("consent.show.menstrual_data"), desc: t("consent.show.menstrual_data_desc") }
       ] %>
 
       <% consents.each do |c| %>
@@ -60,7 +60,7 @@
               <button type="button"
                       onclick="document.dispatchEvent(new CustomEvent('consent-info:open', { detail: { type: <%= c[:key].to_json %> } }))"
                       class="bg-none border-none p-0 cursor-pointer text-brand-muted hover:text-brand-primary shrink-0"
-                      aria-label="Learn more about <%= c[:title] %>">
+                      aria-label="<%= t("consent.show.learn_more", title: c[:title]) %>">
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                   <circle cx="12" cy="12" r="10" />
                   <line x1="12" y1="16" x2="12" y2="12" />
@@ -75,7 +75,7 @@
 
       <button type="submit"
               class="w-full h-12 bg-brand-primary text-white rounded-xl text-base font-medium tracking-wide mt-2 cursor-pointer">
-        Save Preferences
+        <%= t("consent.show.save_preferences") %>
       </button>
     <% end %>
 
@@ -83,12 +83,12 @@
     <div class="mt-6 p-4 bg-brand-field rounded-xl">
       <p class="text-brand-muted text-xs leading-relaxed m-0">
         <strong class="text-brand-primary"><%= t("consent.show.your_rights") %></strong><br>
-        You can withdraw consent at any time. Your data will be deleted according to our retention policy.
+        <%= t("consent.show.rights_text") %>
       </p>
     </div>
 
     <%# Link to Privacy Policy %>
-    <%= link_to "View Privacy Policy", privacy_path, class: "block text-center text-brand-primary text-sm underline mt-4" %>
+    <%= link_to t("consent.show.view_privacy"), privacy_path, class: "block text-center text-brand-primary text-sm underline mt-4" %>
 
   </div>
 </div>

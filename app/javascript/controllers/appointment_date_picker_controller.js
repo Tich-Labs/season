@@ -1,5 +1,6 @@
 /* global requestAnimationFrame */
 import { Controller } from '@hotwired/stimulus'
+import { t, tArray } from 'i18n'
 
 // Fallback only — the real, locale-aware list comes from the
 // weekdayNamesValue Stimulus value (see static values below), rendered
@@ -41,6 +42,17 @@ export default class extends Controller {
   // instead of throwing on an out-of-range index.
   get #SHORT () {
     return (this.weekdayNamesValue.length === 7) ? this.weekdayNamesValue : SHORT_FALLBACK
+  }
+
+  // Locale-aware month abbreviations from the js.month_names locale array,
+  // falling back to the English list if the value is missing.
+  get #MON () {
+    const months = tArray('js.month_names')
+    return months.length === 12 ? months : MON_SHORT
+  }
+
+  #isGerman () {
+    return (document.documentElement.lang || '').startsWith('de')
   }
 
   _allDay = false
@@ -262,7 +274,7 @@ export default class extends Controller {
   }
 
   confirmTime () {
-    const time12 = this._allDay ? 'All day' : this.#fmtTime24(this.#getPickHour(), this.#getPickMin())
+    const time12 = this._allDay ? t('js.all_day') : this.#fmtTime24(this.#getPickHour(), this.#getPickMin())
     const time24 = this.#fmtTime24(this.#getPickHour(), this.#getPickMin())
     this.#setSlotTime24(this._editingSlot, time24)
     this.#updateSlotTimeDisplay(this._editingSlot, time12)
@@ -287,8 +299,8 @@ export default class extends Controller {
       const s = this.#getSlotTime24(1).split(':').map(Number); this.startFieldTarget.value = `${String(s[0]).padStart(2, '0')}:${String(s[1]).padStart(2, '0')}`
       const e = this.#getSlotTime24(2).split(':').map(Number); this.endFieldTarget.value = `${String(e[0]).padStart(2, '0')}:${String(e[1]).padStart(2, '0')}`
     }
-    if (this.hasStartTimeDisplayTarget) { const [sh, sm] = (this.startFieldTarget.value || '00:00').split(':').map(Number); this.startTimeDisplayTarget.textContent = this._allDay ? 'All day' : this.#fmt12h(sh, sm) }
-    if (this.hasEndTimeDisplayTarget) { const [eh, em] = (this.endFieldTarget.value || '23:59').split(':').map(Number); this.endTimeDisplayTarget.textContent = this._allDay ? 'All day' : this.#fmt12h(eh, em) }
+    if (this.hasStartTimeDisplayTarget) { const [sh, sm] = (this.startFieldTarget.value || '00:00').split(':').map(Number); this.startTimeDisplayTarget.textContent = this._allDay ? t('js.all_day') : this.#fmt12h(sh, sm) }
+    if (this.hasEndTimeDisplayTarget) { const [eh, em] = (this.endFieldTarget.value || '23:59').split(':').map(Number); this.endTimeDisplayTarget.textContent = this._allDay ? t('js.all_day') : this.#fmt12h(eh, em) }
     this.close()
   }
 
@@ -299,8 +311,8 @@ export default class extends Controller {
   }
 
   #updateAllDayLabels () {
-    const l1 = this._allDay ? 'All day' : this.#fmt12h(this._pickHour1, this._pickMin1)
-    const l2 = this._allDay ? 'All day' : this.#fmt12h(this._pickHour2, this._pickMin2)
+    const l1 = this._allDay ? t('js.all_day') : this.#fmt12h(this._pickHour1, this._pickMin1)
+    const l2 = this._allDay ? t('js.all_day') : this.#fmt12h(this._pickHour2, this._pickMin2)
     this.#updateSlotTimeDisplay(1, l1); this.#updateSlotTimeDisplay(2, l2)
   }
 
@@ -332,7 +344,7 @@ export default class extends Controller {
   onMonthScroll () { if (this._moRaf) return; this._moRaf = requestAnimationFrame(() => { this._moRaf = null; const it = this.#closestItem(this.monthScrollTarget); if (it) { if (this._editingSlot === 2 && this._mode === 'date') this._pickMonth2 = parseInt(it.dataset.value); else this._pickMonth = parseInt(it.dataset.value) } this.#highlightScrollers(); this.#updateActiveSlotLabel() }) }
   onYearScroll () { if (this._yRaf) return; this._yRaf = requestAnimationFrame(() => { this._yRaf = null; const it = this.#closestItem(this.yearScrollTarget); if (it) { if (this._editingSlot === 2 && this._mode === 'date') this._pickYear2 = parseInt(it.dataset.value); else this._pickYear = parseInt(it.dataset.value) } this.#highlightScrollers(); this.#updateActiveSlotLabel() }) }
   #updateActiveSlotLabel () {
-    const fmt = (d) => `${this.#SHORT[d.getDay()]} ${String(d.getDate()).padStart(2, '0')} ${MON_SHORT[d.getMonth()]} ${d.getFullYear()}`
+    const fmt = (d) => `${this.#SHORT[d.getDay()]} ${String(d.getDate()).padStart(2, '0')} ${this.#MON[d.getMonth()]} ${d.getFullYear()}`
     if (this._editingSlot === 1) {
       const d1 = new Date(this._pickYear, this._pickMonth - 1, this._pickDay)
       this.slot1LabelTargets.forEach(el => { el.textContent = fmt(d1) })
@@ -344,7 +356,7 @@ export default class extends Controller {
 
   #updateAllSlotLabels () {
     const d1 = new Date(this._pickYear, this._pickMonth - 1, this._pickDay); const d2 = this.#getSlot2Date()
-    const fmt = (d) => `${this.#SHORT[d.getDay()]} ${String(d.getDate()).padStart(2, '0')} ${MON_SHORT[d.getMonth()]} ${d.getFullYear()}`
+    const fmt = (d) => `${this.#SHORT[d.getDay()]} ${String(d.getDate()).padStart(2, '0')} ${this.#MON[d.getMonth()]} ${d.getFullYear()}`
     this.slot1LabelTargets.forEach(el => { el.textContent = fmt(d1) }); this.slot2LabelTargets.forEach(el => { el.textContent = fmt(d2) })
   }
 
@@ -364,14 +376,26 @@ export default class extends Controller {
   #closestItem (track) { const cy = track.scrollTop + track.clientHeight / 2; let c = null; let md = Infinity; for (const el of track.querySelectorAll('[data-value]')) { const ec = el.offsetTop + el.clientHeight / 2; const d = Math.abs(ec - cy); if (d < md) { md = d; c = el } } return c }
   #applyDateDisplay (startDateStr, endDateStr) {
     const d1 = new Date(startDateStr + 'T00:00:00'); const d2 = endDateStr ? new Date(endDateStr + 'T00:00:00') : null; const multi = d2 && d2.toDateString() !== d1.toDateString()
-    const dn1 = d1.toLocaleDateString('en-US', { weekday: 'short' }); const mn1 = d1.toLocaleDateString('en-US', { month: 'short' }); const n1 = d1.getDate(); const y1 = d1.getFullYear(); const o1 = this.#ordinal(n1)
-    if (multi) { const dn2 = d2.toLocaleDateString('en-US', { weekday: 'short' }); const mn2 = d2.toLocaleDateString('en-US', { month: 'short' }); const n2 = d2.getDate(); const o2 = this.#ordinal(n2); const y2 = d2.getFullYear(); const l1 = `${dn1}. ${mn1} ${n1}${o1} ${y1}`; const l2 = `${dn2}. ${mn2} ${n2}${o2} ${y2}`; this.dateDisplayTarget.innerHTML = `${l1}<br><span class="font-light">-</span><br>${l2}` } else { this.dateDisplayTarget.textContent = `${dn1}. ${mn1} ${n1}${o1} ${y1}` }
+    if (multi) { const l1 = this.#formatDate(d1); const l2 = this.#formatDate(d2); this.dateDisplayTarget.innerHTML = `${l1}<br><span class="font-light">-</span><br>${l2}` } else { this.dateDisplayTarget.textContent = this.#formatDate(d1) }
     this.dateDisplayTarget.style.fontSize = ''; if (this.hasTimeRowTarget) this.timeRowTarget.classList.toggle('hidden', multi)
   }
 
+  // Locale-aware "weekday, day month year" — English keeps the ordinal
+  // ("Mon. Oct 23rd 2026"); German uses day-first without an ordinal
+  // ("Mo., 23. Okt 2026").
+  #formatDate (d) {
+    const wd = this.#SHORT[d.getDay()]
+    const mon = this.#MON[d.getMonth()]
+    const day = d.getDate()
+    const year = d.getFullYear()
+    return this.#isGerman()
+      ? `${wd}., ${day}. ${mon} ${year}`
+      : `${wd}. ${mon} ${day}${this.#ordinal(day)} ${year}`
+  }
+
   #setDateFromField () { const ds = this.dateFieldTarget.value || this.#todayStr(); const [y, m, d] = ds.split('-').map(Number); this._pickYear = y; this._pickMonth = m; this._pickDay = d; const eds = this.hasEndDateFieldTarget ? this.endDateFieldTarget.value : ''; if (eds) { const [ey, em, ed] = eds.split('-').map(Number); this._pickYear2 = ey; this._pickMonth2 = em; this._pickDay2 = ed } else { this._pickDay2 = null; this._pickMonth2 = null; this._pickYear2 = null } this.#updateDateTitle() }
-  #buildSlots () { const d1 = new Date(this._pickYear, this._pickMonth - 1, this._pickDay); const d2 = this.#getSlot2Date(); const fmt = (d) => `${this.#SHORT[d.getDay()]} ${String(d.getDate()).padStart(2, '0')} ${MON_SHORT[d.getMonth()]} ${d.getFullYear()}`; this.slot1LabelTargets.forEach(el => { el.textContent = fmt(d1) }); this.slot2LabelTargets.forEach(el => { el.textContent = fmt(d2) }); const a = this.#fmt12h(this._pickHour1, this._pickMin1); const b = this.#fmt12h(this._pickHour2, this._pickMin2); this.slot1TimeTargets.forEach(el => { el.textContent = a }); this.slot2TimeTargets.forEach(el => { el.textContent = b }); this.slot1BtnTargets.forEach(el => { el.dataset.time24 = this.#getSlotTime24(1) }); this.slot2BtnTargets.forEach(el => { el.dataset.time24 = this.#getSlotTime24(2) }) }
-  #updateDateTitle () { const d = new Date(this._pickYear, this._pickMonth - 1, this._pickDay); const dn = this.#SHORT[d.getDay()]; const mon = MON_SHORT[d.getMonth()]; const dd = String(d.getDate()).padStart(2, '0'); const yy = d.getFullYear(); this.dateTitleTarget.textContent = `${dn} ${dd} ${mon} ${yy}` }
+  #buildSlots () { const d1 = new Date(this._pickYear, this._pickMonth - 1, this._pickDay); const d2 = this.#getSlot2Date(); const fmt = (d) => `${this.#SHORT[d.getDay()]} ${String(d.getDate()).padStart(2, '0')} ${this.#MON[d.getMonth()]} ${d.getFullYear()}`; this.slot1LabelTargets.forEach(el => { el.textContent = fmt(d1) }); this.slot2LabelTargets.forEach(el => { el.textContent = fmt(d2) }); const a = this.#fmt12h(this._pickHour1, this._pickMin1); const b = this.#fmt12h(this._pickHour2, this._pickMin2); this.slot1TimeTargets.forEach(el => { el.textContent = a }); this.slot2TimeTargets.forEach(el => { el.textContent = b }); this.slot1BtnTargets.forEach(el => { el.dataset.time24 = this.#getSlotTime24(1) }); this.slot2BtnTargets.forEach(el => { el.dataset.time24 = this.#getSlotTime24(2) }) }
+  #updateDateTitle () { const d = new Date(this._pickYear, this._pickMonth - 1, this._pickDay); const dn = this.#SHORT[d.getDay()]; const mon = this.#MON[d.getMonth()]; const dd = String(d.getDate()).padStart(2, '0'); const yy = d.getFullYear(); this.dateTitleTarget.textContent = `${dn} ${dd} ${mon} ${yy}` }
   #updateDateDisplay () { const s = this.dateFieldTarget.value; if (!s) return; const e = this.hasEndDateFieldTarget ? this.endDateFieldTarget.value : ''; this.#applyDateDisplay(s, e || null) }
   #updateTimeDisplays () { if (this.hasStartTimeDisplayTarget) { const [sh, sm] = (this.startFieldTarget.value || '19:00').split(':').map(Number); this.startTimeDisplayTarget.textContent = this.#fmt12h(...this.#round5(sh, sm)) } if (this.hasEndTimeDisplayTarget) { const [eh, em] = (this.endFieldTarget.value || '20:00').split(':').map(Number); this.endTimeDisplayTarget.textContent = this.#fmt12h(...this.#round5(eh, em)) } }
   #isOnPeriod (ds) { return this.periodRangesValue.some(([s, e]) => ds >= s && ds <= e) }

@@ -52,7 +52,7 @@
 
     <%# Notifications & Reminders %>
     <a href="<%= notifications_settings_path %>" class="flex items-center gap-4 py-4">
-      <%= image_tag "icons/notifications-reminder.svg", alt: "Notifications", class: "w-6 h-6 shrink-0 object-contain" %>
+      <%= image_tag "icons/notifications-reminder.svg", alt: t("settings.edit.notifications_and_reminder"), class: "w-6 h-6 shrink-0 object-contain" %>
       <span class="flex-1 text-brand-primary text-base font-medium"><%= t("settings.edit.notifications_and_reminder") %></span>
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="text-brand-primary">
         <polyline points="9 18 15 12 9 6" />
@@ -78,7 +78,7 @@
     <%# Language — navigates to dedicated language page (same as header language button) %>
     <% cur_lang = current_user.language.presence || I18n.default_locale.to_s %>
     <a href="<%= settings_language_path %>" class="flex items-center gap-4 py-4">
-      <%= image_tag "icons/language.svg", alt: "Language", class: "w-6 h-6 shrink-0 object-contain" %>
+      <%= image_tag "icons/language.svg", alt: t("settings.language.title"), class: "w-6 h-6 shrink-0 object-contain" %>
       <span class="flex-1 text-brand-primary text-base font-medium"><%= I18n.t("language.names.#{cur_lang}", default: cur_lang.upcase) %></span>
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="text-brand-primary">
         <polyline points="9 18 15 12 9 6" />

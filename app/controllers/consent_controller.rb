@@ -17,7 +17,7 @@ class ConsentController < ApplicationController
       end
     end
 
-    redirect_to user_root_path, notice: t(".saved")
+    redirect_to user_root_path, notice: t("consent.saved")
   end
 
   def destroy
@@ -25,6 +25,6 @@ class ConsentController < ApplicationController
     consent = current_user.user_consents.active.find_by(consent_type: consent_type)
     consent&.revoke!(request.remote_ip, request.user_agent)
 
-    redirect_to consent_settings_path, notice: t(".revoked")
+    redirect_to consent_settings_path, notice: t("consent.revoked")
   end
 end

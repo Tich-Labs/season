@@ -1,4 +1,5 @@
 import { Controller } from '@hotwired/stimulus'
+import { t } from 'i18n'
 
 export default class extends Controller {
   static targets = ['status']
@@ -11,14 +12,14 @@ export default class extends Controller {
     event.preventDefault()
 
     if (!this.supported) {
-      this._status('Biometrics not supported on this device')
+      this._status(t('js.biometrics_not_supported'))
       return
     }
 
     try {
       const challengeResp = await fetch('/webauthn/registration-challenge')
       if (!challengeResp.ok) {
-        this._status('Failed to start registration')
+        this._status(t('js.registration_start_failed'))
         return
       }
       const options = await challengeResp.json()
@@ -27,7 +28,7 @@ export default class extends Controller {
 
       const cred = await navigator.credentials.create({ publicKey: options })
       if (!cred) {
-        this._status('Registration cancelled')
+        this._status(t('js.registration_cancelled'))
         return
       }
 
@@ -53,10 +54,10 @@ export default class extends Controller {
       })
 
       if (resp.ok) {
-        this._status('Face ID / Touch ID enabled')
+        this._status(t('js.biometrics_enabled'))
         window.location.reload()
       } else {
-        this._status('Registration failed')
+        this._status(t('js.registration_failed'))
       }
     } catch (e) {
       this._status(e.message)

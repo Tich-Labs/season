@@ -1,9 +1,22 @@
 import { Controller } from '@hotwired/stimulus'
-
-const LEVELS = ['', 'Low', 'Medium', 'High']
+import { t, tArray } from 'i18n'
 
 export default class extends Controller {
   static targets = ['modal', 'count', 'mood', 'physical', 'mental', 'other']
+
+  // Localized mood label from the `moods` namespace (reuses symptoms.moods).
+  #moodLabel (name) {
+    const key = `moods.${name.toLowerCase().replace(/[\s-]+/g, '_')}`
+    const value = t(key)
+    return value === key ? name : value
+  }
+
+  // Localized label from a js.<namespace>.<key> map, falling back to `name`.
+  #label (namespace, key, name) {
+    const path = `js.${namespace}.${key}`
+    const value = t(path)
+    return value === path ? name : value
+  }
 
   open () {
     this.#populate()
@@ -28,8 +41,8 @@ export default class extends Controller {
     const moods = JSON.parse(root.dataset.activeMoods || '[]')
     if (this.hasMoodTarget) {
       this.moodTarget.innerHTML = moods.length > 0
-        ? `<p class="text-brand-primary font-medium text-base tracking-003 font-sans mb-1">Mood (${moods.length})</p>
-           <p class="text-brand-muted font-medium text-sm tracking-003 font-sans mb-3">${moods.map(m => m.charAt(0).toUpperCase() + m.slice(1)).join(', ')}</p>`
+        ? `<p class="text-brand-primary font-medium text-base tracking-003 font-sans mb-1">${t('js.mood')} (${moods.length})</p>
+           <p class="text-brand-muted font-medium text-sm tracking-003 font-sans mb-3">${moods.map(m => this.#moodLabel(m)).join(', ')}</p>`
         : ''
     }
 
@@ -37,7 +50,7 @@ export default class extends Controller {
     const physical = this.#gatherSliders('physical')
     if (this.hasPhysicalTarget) {
       this.physicalTarget.innerHTML = physical.length > 0
-        ? `<p class="text-brand-primary font-medium text-base tracking-003 font-sans mb-1">Physical (${physical.length})</p>
+        ? `<p class="text-brand-primary font-medium text-base tracking-003 font-sans mb-1">${t('js.physical')} (${physical.length})</p>
            ${physical.map(p => `<p class="text-brand-muted font-medium text-sm tracking-003 font-sans ml-2 mb-0.5">${p.label} → ${p.level}</p>`).join('')}
            <div class="mb-3"></div>`
         : ''
@@ -47,7 +60,7 @@ export default class extends Controller {
     const mental = this.#gatherSliders('mental')
     if (this.hasMentalTarget) {
       this.mentalTarget.innerHTML = mental.length > 0
-        ? `<p class="text-brand-primary font-medium text-base tracking-003 font-sans mb-1">Mental (${mental.length})</p>
+        ? `<p class="text-brand-primary font-medium text-base tracking-003 font-sans mb-1">${t('js.mental')} (${mental.length})</p>
            ${mental.map(p => `<p class="text-brand-muted font-medium text-sm tracking-003 font-sans ml-2 mb-0.5">${p.label} → ${p.level}</p>`).join('')}
            <div class="mb-3"></div>`
         : ''
@@ -56,30 +69,32 @@ export default class extends Controller {
     // Other sections
     const other = []
     const bleedingBtn = root.querySelector('[data-flow][aria-pressed="true"]')
-    if (bleedingBtn) other.push('Bleeding: ' + bleedingBtn.dataset.flow)
+    if (bleedingBtn) {
+      other.push(t('js.bleeding_prefix', { value: this.#label('bleeding_labels', bleedingBtn.dataset.flow.toLowerCase(), bleedingBtn.dataset.flow) }))
+    }
     const dischargeBtn = root.querySelector('[data-discharge][aria-pressed="true"]')
     if (dischargeBtn) {
       const key = dischargeBtn.dataset.discharge
-      const labels = { dry: 'Dry', 'creamy-light': 'Milky', creamy: 'Creamy', stretchy: 'Stretchy', 'egg-white': 'Egg white', thick: 'Lumpy', sticky: 'Sticky', spotting: 'Spotting', period: 'Period' }
-      other.push('Discharge: ' + (labels[key] || key.charAt(0).toUpperCase() + key.slice(1).replace(/-/g, ' ')))
+      const fallback = key.charAt(0).toUpperCase() + key.slice(1).replace(/-/g, ' ')
+      other.push(t('js.discharge_prefix', { value: this.#label('discharge_labels', key, fallback) }))
     }
 
     const intercourse = JSON.parse(root.dataset.activeIntercourse || '[]')
     if (intercourse.length > 0) {
-      const labels = { keiner: 'None', ungeschuetzt: 'Unprotected', geschuetzt: 'Protected', orgasmus: 'Orgasm', 'kein-orgasmus': 'No orgasm', masturbation: 'Masturbation' }
-      other.push('Intercourse: ' + intercourse.map(t => labels[t] || t).join(', '))
+      const fallback = k => k.charAt(0).toUpperCase() + k.slice(1).replace(/-/g, ' ')
+      other.push(t('js.intercourse_prefix', { value: intercourse.map(k => this.#label('intercourse_labels', k, fallback(k))).join(', ') }))
     }
 
     const cravings = JSON.parse(root.dataset.activeCravings || '[]')
     if (cravings.length > 0) {
-      const labels = { 'fatty-fried': 'Fatty & fried', 'salty-food': 'Salty food', 'bread-noodles': 'Bread & noodles', chocolate: 'Chocolate', sugar: 'Sugar drinks & food' }
-      other.push('Cravings: ' + cravings.map(c => labels[c] || c).join(', '))
+      const fallback = k => k.charAt(0).toUpperCase() + k.slice(1).replace(/-/g, ' ')
+      other.push(t('js.cravings_prefix', { value: cravings.map(k => this.#label('craving_labels', k, fallback(k))).join(', ') }))
     }
 
     const pickers = [
-      ['sleep', 'Sleep'],
-      ['temperature', 'Temperature'],
-      ['weight', 'Weight']
+      ['sleep', t('js.sleep')],
+      ['temperature', t('js.temperature')],
+      ['weight', t('js.weight')]
     ]
     for (const [field, label] of pickers) {
       const picker = root.querySelector(`[data-scroll-picker-field-value="${field}"]`)
@@ -92,7 +107,7 @@ export default class extends Controller {
 
     if (this.hasOtherTarget) {
       this.otherTarget.innerHTML = other.length > 0
-        ? `<p class="text-brand-primary font-medium text-base tracking-003 font-sans mb-2">Other</p>
+        ? `<p class="text-brand-primary font-medium text-base tracking-003 font-sans mb-2">${t('js.other')}</p>
            ${other.map(o => `<p class="text-brand-muted font-medium text-sm tracking-003 font-sans ml-2 mb-0.5">${o}</p>`).join('')}`
         : ''
     }
@@ -100,11 +115,12 @@ export default class extends Controller {
     // Total count
     const total = moods.length + physical.length + mental.length + other.length
     if (this.hasCountTarget) {
-      this.countTarget.textContent = total > 0 ? `${total} symptoms selected` : ''
+      this.countTarget.textContent = total > 0 ? t('js.symptoms_selected', { count: total }) : ''
     }
   }
 
   #gatherSliders (section) {
+    const levels = tArray('js.levels')
     const items = []
     const sectionEl = document.getElementById('section-' + section)
     if (!sectionEl) return items
@@ -117,7 +133,7 @@ export default class extends Controller {
         // label and leaving only "→ Medium" etc. in the review modal.
         const row = slider.closest('.sp-row')
         const labelEl = row?.querySelector('span:first-child')
-        items.push({ label: labelEl?.textContent || '', level: LEVELS[v] })
+        items.push({ label: labelEl?.textContent || '', level: levels[v] })
       }
     })
     return items

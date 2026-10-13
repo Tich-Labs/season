@@ -12,14 +12,14 @@
       <div role="status" data-controller="auto-hide" data-auto-hide-delay-value="5"
            class="relative bg-brand-field rounded-xl px-6 py-4 flex items-center justify-center text-center flash-bounce-in">
         <span class="text-brand-primary text-sm font-medium text-center px-6"><%= notice %></span>
-        <button type="button" data-action="click->auto-hide#dismiss" aria-label="Dismiss" class="absolute top-3 right-3 text-brand-primary/70 bg-transparent border-0 p-1 cursor-pointer leading-none">✕</button>
+        <button type="button" data-action="click->auto-hide#dismiss" aria-label="<%= t("shared.dismiss") %>" class="absolute top-3 right-3 text-brand-primary/70 bg-transparent border-0 p-1 cursor-pointer leading-none">✕</button>
       </div>
     <% end %>
     <% if alert.present? %>
       <div role="alert" data-controller="auto-hide" data-auto-hide-delay-value="5"
            class="relative bg-brand-error rounded-xl px-6 py-4 flex items-center justify-center text-center flash-bounce-in">
         <span class="text-brand-primary text-sm font-medium text-center px-6"><%= alert %></span>
-        <button type="button" data-action="click->auto-hide#dismiss" aria-label="Dismiss" class="absolute top-3 right-3 text-brand-primary/70 bg-transparent border-0 p-1 cursor-pointer leading-none">✕</button>
+        <button type="button" data-action="click->auto-hide#dismiss" aria-label="<%= t("shared.dismiss") %>" class="absolute top-3 right-3 text-brand-primary/70 bg-transparent border-0 p-1 cursor-pointer leading-none">✕</button>
       </div>
     <% end %>
   </div>

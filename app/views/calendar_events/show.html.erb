@@ -44,7 +44,7 @@
             <% if @event.start_time.present? %>
               <%= @event.start_time.strftime("%l:%M %p").strip %> - <%= @event.end_time&.strftime("%l:%M %p")&.strip || "..." %>
             <% else %>
-              All day
+              <%= t("calendar_events.form.all_day") %>
             <% end %>
           </p>
         </div>

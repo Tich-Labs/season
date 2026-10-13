@@ -28,9 +28,11 @@ class StreakTest < ActiveSupport::TestCase
   end
 
   test "resets to 1 after a missed day" do
-    @streak.update_columns(current_streak: 10, last_tracked_date: Time.zone.today - 3)
-    @streak.increment_streak!
-    assert_equal 1, @streak.current_streak
+    travel_to Date.new(2026, 7, 8) do # Wednesday; missed Mon 6 + Tue 7 in the same week
+      @streak.update_columns(current_streak: 10, last_tracked_date: Date.new(2026, 7, 5))
+      @streak.increment_streak!
+      assert_equal 1, @streak.current_streak
+    end
   end
 
   test "does not double-increment when called twice on same day" do
@@ -178,8 +180,10 @@ class StreakTest < ActiveSupport::TestCase
   end
 
   test "current_value returns 0 when the gap is unforgivable" do
-    @streak.update_columns(current_streak: 5, last_tracked_date: Time.zone.today - 3)
-    assert_equal 0, @streak.current_value
+    travel_to Date.new(2026, 7, 8) do # Wednesday; missed Mon 6 + Tue 7 in the same week
+      @streak.update_columns(current_streak: 5, last_tracked_date: Date.new(2026, 7, 5))
+      assert_equal 0, @streak.current_value
+    end
   end
 
   test "current_value returns stored streak when all missed days are rest days" do

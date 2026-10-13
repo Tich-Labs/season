@@ -1,5 +1,6 @@
 /* global requestAnimationFrame */
 import { Controller } from '@hotwired/stimulus'
+import { t, tArray } from 'i18n'
 
 export default class extends Controller {
   static targets = ['modal', 'backdrop', 'closeBtn', 'categoryInput', 'categoryOption', 'triggerButton', 'submitBtn', 'locationModal', 'locationBackdrop', 'locationInput', 'locationField', 'locationCard', 'locationResults', 'locationSubmitBg', 'locationSubmitBtn', 'locationLabel', 'locationIconBg', 'notesModal', 'notesBackdrop', 'notesInput', 'notesField', 'notesLabel', 'notesIconBg', 'guestsModal', 'guestsBackdrop', 'guestsInput', 'guestsField', 'guestsLabel', 'guestsIconBg', 'guestsList', 'guestsCard', 'guestsSubmitBg', 'guestsSubmitBtn', 'guestsInlineList', 'reminderModal', 'reminderBackdrop', 'reminderField', 'reminderLabel', 'reminderIconBg', 'reminderOption', 'reminderClearBtn', 'repeatModal', 'repeatBackdrop', 'repeatLabel', 'repeatIconBg', 'repeatOption', 'repeatSubOptions', 'repeatField', 'customRepeatModal', 'customRepeatBackdrop', 'customRepeatN', 'customRepeatUnit', 'repeatUntilModal', 'repeatUntilBackdrop', 'repeatUntilDay', 'repeatUntilMonth', 'repeatUntilYear', 'repeatUntilLabel', 'repeatUntilRowLabel', 'repeatCountInput', 'repeatCountUnit', 'repeatCountRowLabel', 'customReminderModal', 'customReminderBackdrop', 'customReminderNum', 'customReminderUnit', 'attentionModal', 'attentionBackdrop', 'attentionTitle', 'attentionBody', 'attentionConfirm', 'attentionCancel', 'recurringModal', 'recurringBackdrop', 'notifyModal', 'notifyBackdrop']
@@ -58,7 +59,7 @@ export default class extends Controller {
         // further clicks, not the one already happening.
         if (this.hasSubmitBtnTarget) {
           this.submitBtnTarget.disabled = true
-          this.submitBtnTarget.value = 'Saving…'
+          this.submitBtnTarget.value = t('js.saving')
         }
       })
     }
@@ -74,9 +75,9 @@ export default class extends Controller {
       event.preventDefault()
       this._pendingNavUrl = event.detail.url
       this.openAttention({
-        body: "The appointment hasn't been saved yet. Are you sure you want to leave?",
-        cancelLabel: 'Keep editing',
-        confirmLabel: 'Delete',
+        body: t('js.unsaved_changes'),
+        cancelLabel: t('js.keep_editing'),
+        confirmLabel: t('js.delete'),
         onConfirm: () => { window.location.href = this._pendingNavUrl }
       })
     }
@@ -308,7 +309,7 @@ export default class extends Controller {
         if (svg) svg.removeAttribute('opacity')
       }
     } else {
-      this.locationLabelTarget.textContent = 'Add location'
+      this.locationLabelTarget.textContent = t('js.add_location')
       this.locationLabelTarget.classList.add('text-brand-graytext')
       this.locationLabelTarget.classList.remove('text-brand-primary')
       if (this.hasLocationIconBgTarget) {
@@ -361,7 +362,7 @@ export default class extends Controller {
         if (svg) svg.removeAttribute('stroke-opacity')
       }
     } else {
-      this.notesLabelTarget.textContent = 'Notes...'
+      this.notesLabelTarget.textContent = t('js.notes_placeholder')
       this.notesLabelTarget.classList.add('text-brand-graytext')
       this.notesLabelTarget.classList.remove('text-brand-primary')
       if (this.hasNotesIconBgTarget) {
@@ -691,8 +692,8 @@ export default class extends Controller {
 
   #updateReminderLabel (minutes) {
     if (!this.hasReminderLabelTarget) return
-    const labels = { 0: 'No reminder', 10080: '1 week before', 1440: '1 day before', 360: '6 hours before', 60: '1 hour before', '-1': 'Custom timer' }
-    const label = labels[minutes] || `${minutes} minutes before`
+    const labels = { 0: t('js.no_reminder'), 10080: t('js.reminder_1_week'), 1440: t('js.reminder_1_day'), 360: t('js.reminder_6_hours'), 60: t('js.reminder_1_hour'), '-1': t('js.reminder_custom') }
+    const label = labels[minutes] || t('js.reminder_minutes', { minutes })
     this.reminderLabelTarget.textContent = label
     // The inline "X" quick-clear only makes sense once a reminder is set.
     if (this.hasReminderClearBtnTarget) {
@@ -822,10 +823,10 @@ export default class extends Controller {
   // date confirmed, count typed) funnel through, so none of them can wipe
   // out what another one set.
   #syncRepeatField () {
-    const patternLabels = { daily: 'Daily', weekly: 'Weekly', monthly: 'Monthly', yearly: 'Every Year' }
+    const patternLabels = { daily: t('js.repeat_labels.daily'), weekly: t('js.repeat_labels.weekly'), monthly: t('js.repeat_labels.monthly'), yearly: t('js.repeat_labels.yearly') }
     const patternLabel = this._selectedRepeat === 'custom'
-      ? `Every ${this._customN} ${this._customUnit}`
-      : (patternLabels[this._selectedRepeat] || 'Repeat')
+      ? t('js.every_custom', { n: this._customN, unit: t(`js.custom_unit.${this._customUnit}`) })
+      : (patternLabels[this._selectedRepeat] || t('js.repeat_fallback'))
     const patternValue = this._selectedRepeat === 'custom'
       ? `custom:${this._customN}:${this._customUnit}`
       : this._selectedRepeat
@@ -834,10 +835,10 @@ export default class extends Controller {
     let durationValue = ''
     if (this._durationMode === 'until' && this._durationUntil) {
       const { y, m, d } = this._durationUntil
-      durationLabel = ` until ${m} ${d}, ${y}`
+      durationLabel = t('js.until_suffix', { month: m, day: d, year: y })
       durationValue = `|until:${y}-${m}-${d}`
     } else if (this._durationMode === 'count') {
-      durationLabel = `, ${this._durationCount} times`
+      durationLabel = t('js.times_suffix', { count: this._durationCount })
       durationValue = `|count:${this._durationCount}`
     }
 
@@ -964,15 +965,15 @@ export default class extends Controller {
     }
     const d = picked(dayCol); const m = picked(monCol); const y = picked(yrCol)
     if (d && m && y) {
-      const monthMap = { Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5, Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11 }
-      const pickedDate = new Date(parseInt(y), monthMap[m] ?? 0, parseInt(d))
+      const monthIdx = tArray('js.month_names').indexOf(m)
+      const pickedDate = new Date(parseInt(y), monthIdx === -1 ? 0 : monthIdx, parseInt(d))
       const today = new Date(); today.setHours(0, 0, 0, 0)
       if (pickedDate < today) {
         this.closeRepeatUntil()
         this.openAttention({
-          body: 'The "Repeat until" date must be in the future.',
-          cancelLabel: 'Go back',
-          confirmLabel: 'OK',
+          body: t('js.repeat_until_future'),
+          cancelLabel: t('js.go_back'),
+          confirmLabel: t('js.ok'),
           onConfirm: () => { if (this.hasRepeatUntilModalTarget) { this.repeatUntilModalTarget.classList.remove('hidden'); this.repeatUntilModalTarget.style.display = 'flex'; this.repeatUntilBackdropTarget.classList.remove('hidden'); this.repeatUntilBackdropTarget.style.display = 'block' } }
         })
         return
@@ -980,7 +981,7 @@ export default class extends Controller {
       // The row itself, back in the "Repeat this event" modal's sub-options
       // list — was left static ("Repeat until") after this target was
       // added; never actually wired to update.
-      if (this.hasRepeatUntilRowLabelTarget) this.repeatUntilRowLabelTarget.textContent = `Repeat until ${m} ${d}, ${y}`
+      if (this.hasRepeatUntilRowLabelTarget) this.repeatUntilRowLabelTarget.textContent = t('js.repeat_until', { month: m, day: d, year: y })
       // Confirming a date here means "until" is now the active duration —
       // store it and route through the same combine-with-pattern path
       // every other confirm action uses, instead of overwriting
@@ -1038,7 +1039,7 @@ export default class extends Controller {
     this.locationResultsTarget.innerHTML = ''
 
     if (results.length === 0) {
-      this.locationResultsTarget.innerHTML = '<div style="padding:12px 40px;font-family:Montserrat;font-size:13px;font-weight:500;letter-spacing:0.07em;color:rgba(147,58,53,0.4);">No locations found</div>'
+      this.locationResultsTarget.innerHTML = `<div style="padding:12px 40px;font-family:Montserrat;font-size:13px;font-weight:500;letter-spacing:0.07em;color:rgba(147,58,53,0.4);">${t('js.no_locations')}</div>`
       this.locationResultsTarget.style.display = 'flex'
       this._expandLocation()
       return
@@ -1131,7 +1132,7 @@ export default class extends Controller {
 
   // ── Attention dialogs ────────────────────────────────────────────────────
 
-  openAttention ({ body, confirmLabel = 'OK', cancelLabel = 'Keep editing', onConfirm = null, onCancel = null } = {}) {
+  openAttention ({ body, confirmLabel = t('js.ok'), cancelLabel = t('js.keep_editing'), onConfirm = null, onCancel = null } = {}) {
     if (!this.hasAttentionModalTarget) return
     if (body) this.attentionBodyTarget.textContent = body
     if (confirmLabel) this.attentionConfirmTarget.textContent = confirmLabel
@@ -1171,18 +1172,18 @@ export default class extends Controller {
     if (!title) return
     event.preventDefault()
     this.openAttention({
-      body: "The appointment hasn't been saved yet. Are you sure you want to leave?",
-      cancelLabel: 'Keep editing',
-      confirmLabel: 'Delete',
+      body: t('js.unsaved_changes'),
+      cancelLabel: t('js.keep_editing'),
+      confirmLabel: t('js.delete'),
       onConfirm: () => { window.history.back() }
     })
   }
 
   showPastDateAlert (onConfirm) {
     this.openAttention({
-      body: "This appointment is in the past. Are you sure you want to set it? Reminder notifications won't be sent for past dates.",
-      cancelLabel: 'Choose another date',
-      confirmLabel: 'Yes, set it',
+      body: t('js.past_date_alert'),
+      cancelLabel: t('js.choose_another_date'),
+      confirmLabel: t('js.yes_set_it'),
       onConfirm: onConfirm || (() => {})
     })
   }
@@ -1196,9 +1197,9 @@ export default class extends Controller {
   // just closes the alert, unchanged from before.
   showSensitivePeriodAlert (message, onSetDate, onChooseAnother) {
     this.openAttention({
-      body: message || 'During your period, your body is often more sensitive. Procedures such as tattoos, piercings, laser treatments, waxing, sugaring, microneedling, chemical peels, Botox, fillers, dental work, or minor surgeries may be more painful or cause more skin irritation.',
-      cancelLabel: 'Set date',
-      confirmLabel: 'Choose another date',
+      body: message || t('js.sensitive_period_alert'),
+      cancelLabel: t('js.set_date'),
+      confirmLabel: t('js.choose_another_date'),
       onCancel: onSetDate,
       onConfirm: onChooseAnother
     })

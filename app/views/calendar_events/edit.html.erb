@@ -625,7 +625,7 @@
               <div data-value="<%= day %>" class="h-7 flex items-center justify-center text-base text-brand-primary snap-center snap-always" style="font-weight:<%= day == d ? '700' : '400' %>;opacity:<%= day == d ? '1' : '0.35' %>"><%= format('%02d', day) %></div>
             <% end %>
           </div>
-          <% months = %w[Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec] %>
+          <% months = I18n.t("js.month_names") %>
           <div data-season-modal-target="repeatUntilMonth" data-action="scroll->season-modal#onRepeatUntilScroll" style="touch-action: pan-y; overscroll-behavior: contain;" class="overflow-y-auto snap-y snap-mandatory h-full w-[52px] [scrollbar-width:none] text-center relative z-[1]">
             <% months.each_with_index do |mon, mi| %>
               <% mo = mi + 1 %>

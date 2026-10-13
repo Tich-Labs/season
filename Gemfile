@@ -44,6 +44,9 @@ gem "webauthn"
 # UI
 gem "pagy"
 
+# i18n
+gem "rails-i18n"
+
 # Data & Logic
 gem "csv"
 gem "ransack"
@@ -85,6 +88,7 @@ group :development, :test do
   gem "erb_lint", require: false
   gem "factory_bot_rails"
   gem "faker"
+  gem "i18n-tasks", require: false
   gem "letter_opener", "~> 1.10"
   gem "pry-byebug"
   gem "rspec-rails"
