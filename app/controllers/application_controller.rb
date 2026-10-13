@@ -6,6 +6,17 @@ class ApplicationController < ActionController::Base
   before_action :set_locale
   before_action :set_sentry_user_context
   helper_method :safe_back_path
+  helper_method :native_app?
+
+  # The ruby_native gem's native_app? only matches the "Ruby Native" UA, but
+  # the iOS app is hand-rolled Hotwire Native — its WKWebView sends
+  # "Hotwire Native iOS; Turbo Native iOS;" via applicationNameForUserAgent,
+  # not "Ruby Native". Match all three so the native-only gating in the
+  # layout (PWA install/update banners, native-inset padding, etc.) applies
+  # in the iOS app too, not just the Ruby Native binary.
+  def native_app?
+    request.user_agent.to_s.match?(/(Ruby Native|Turbo Native|Hotwire Native)/)
+  end
 
   # Not currently raised by anything a user can reach — every `authorize`
   # call today only runs against records already scoped to current_user by
