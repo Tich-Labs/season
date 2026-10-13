@@ -268,6 +268,27 @@ class SettingsControllerTest < ActionDispatch::IntegrationTest
     assert_nil @alice.reload.google_access_token
   end
 
+  # The token exchange (Google rejecting an expired/reused code, or a
+  # redirect_uri mismatch) used to raise unhandled out of the callback and
+  # surface as a raw 500. It must redirect back to the settings page with
+  # the generic failure alert instead, and leave no token behind.
+  test "GET /settings/google_calendar_callback redirects gracefully when the token exchange fails" do
+    get connect_google_calendar_settings_path
+    state = session[:google_oauth_state]
+
+    bad_client = Object.new
+    bad_client.define_singleton_method(:code=) { |_| nil }
+    bad_client.define_singleton_method(:redirect_uri=) { |_| nil }
+    bad_client.define_singleton_method(:fetch_access_token!) { raise Signet::AuthorizationError, "invalid_grant" }
+
+    stub_class_method(Signet::OAuth2::Client, :new, ->(*_args, **_kwargs) { bad_client }) do
+      get google_calendar_callback_settings_path, params: {code: "good-code", state: state}
+    end
+
+    assert_redirected_to calendar_settings_path
+    assert_nil @alice.reload.google_access_token
+  end
+
   # AUTH-04 follow-up: update_password re-issues login() so the device that
   # just proved its identity (via current_password below) doesn't end up
   # signed out by its own action once its session cookie eventually expires

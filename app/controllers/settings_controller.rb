@@ -85,24 +85,40 @@ class SettingsController < ApplicationController
     state_ok = expected_state.present? && params[:state].present? &&
       ActiveSupport::SecurityUtils.secure_compare(params[:state], expected_state)
 
-    if params[:code].present? && state_ok
-      client = build_google_oauth_client
-      client.code = params[:code]
-      client.redirect_uri = google_calendar_callback_url
-      client.fetch_access_token!
-
-      email = fetch_google_email(client.access_token)
-
-      current_user.update!(
-        google_access_token: client.access_token,
-        google_refresh_token: client.refresh_token.presence || current_user.google_refresh_token,
-        google_token_expires_at: client.expires_at ? Time.zone.at(client.expires_at) : nil,
-        google_calendar_email: email
-      )
-      redirect_to calendar_settings_path, notice: t("settings.calendar.google_connected", default: "Google Calendar connected")
-    else
+    unless params[:code].present? && state_ok
       redirect_to calendar_settings_path, alert: t("settings.calendar.google_failed", default: "Failed to connect Google Calendar")
+      return
     end
+
+    client = build_google_oauth_client
+    client.code = params[:code]
+    client.redirect_uri = google_calendar_callback_url
+
+    begin
+      client.fetch_access_token!
+    rescue Signet::AuthorizationError => e
+      # invalid_grant / redirect_uri_mismatch / expired or reused code. The
+      # user already completed consent, so fail gracefully and log the real
+      # reason instead of a bare 500.
+      Rails.logger.warn("[GoogleCalendar] token exchange rejected: #{e.message}")
+      redirect_to calendar_settings_path, alert: t("settings.calendar.google_failed", default: "Failed to connect Google Calendar")
+      return
+    rescue => e
+      # Network/SSL/Google 5xx on the token request — same deal: never 500.
+      Rails.logger.error("[GoogleCalendar] token exchange failed: #{e.class}: #{e.message}")
+      redirect_to calendar_settings_path, alert: t("settings.calendar.google_failed", default: "Failed to connect Google Calendar")
+      return
+    end
+
+    email = fetch_google_email(client.access_token)
+
+    current_user.update!(
+      google_access_token: client.access_token,
+      google_refresh_token: client.refresh_token.presence || current_user.google_refresh_token,
+      google_token_expires_at: client.expires_at ? Time.zone.at(client.expires_at) : nil,
+      google_calendar_email: email
+    )
+    redirect_to calendar_settings_path, notice: t("settings.calendar.google_connected", default: "Google Calendar connected")
   end
 
   def disconnect_google_calendar
