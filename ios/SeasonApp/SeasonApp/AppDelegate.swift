@@ -9,6 +9,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
+        Hotwire.config.applicationUserAgentPrefix = "Ruby Native"
+
         Hotwire.loadPathConfiguration(from: [
             .server(baseURL.appending(path: "configurations/ios_v1.json"))
         ])
