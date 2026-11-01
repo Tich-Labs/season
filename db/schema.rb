@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_12_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_01_105705) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -83,8 +83,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_12_120000) do
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.string "icloud_event_id"
+    t.string "source", default: "season", null: false
     t.index ["google_event_id"], name: "index_calendar_events_on_google_event_id"
     t.index ["icloud_event_id"], name: "index_calendar_events_on_icloud_event_id"
+    t.index ["source"], name: "index_calendar_events_on_source"
     t.index ["user_id", "date"], name: "index_calendar_events_on_user_id_and_date"
     t.index ["user_id"], name: "index_calendar_events_on_user_id"
   end
@@ -363,6 +365,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_12_120000) do
     t.string "icloud_email"
     t.string "icloud_app_password"
     t.boolean "secret_tester", default: false, null: false
+    t.string "calendar_sync_level", default: "off", null: false
+    t.index ["calendar_sync_level"], name: "index_users_on_calendar_sync_level"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["invite_token"], name: "index_users_on_invite_token"
     t.index ["language"], name: "index_users_on_language"
