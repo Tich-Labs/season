@@ -60,6 +60,8 @@ playwright-report/
 android/.gradle/
 android/.idea/
 android/build/
+android/app/build/
+android/.kotlin/
 android/local.properties
 android/gradle/
 android/gradlew

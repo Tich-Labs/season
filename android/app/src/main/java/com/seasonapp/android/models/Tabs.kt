@@ -1,7 +1,7 @@
 package com.seasonapp.android.models
 
 import com.seasonapp.android.R
-import com.seasonapp.android.activities.baseURL
+import com.seasonapp.android.config.AppConfig
 import dev.hotwire.navigation.navigator.NavigatorConfiguration
 import dev.hotwire.navigation.tabs.HotwireBottomTab
 
@@ -11,7 +11,7 @@ private val calendar = HotwireBottomTab(
     configuration = NavigatorConfiguration(
         name = "calendar",
         navigatorHostId = R.id.calendar_nav_host,
-        startLocation = "$baseURL/calendar"
+        startLocation = "${AppConfig.baseUrl}/calendar"
     )
 )
 
@@ -21,7 +21,7 @@ private val tracking = HotwireBottomTab(
     configuration = NavigatorConfiguration(
         name = "tracking",
         navigatorHostId = R.id.tracking_nav_host,
-        startLocation = "$baseURL/tracking"
+        startLocation = "${AppConfig.baseUrl}/tracking"
     )
 )
 
@@ -31,7 +31,7 @@ private val settings = HotwireBottomTab(
     configuration = NavigatorConfiguration(
         name = "settings",
         navigatorHostId = R.id.settings_nav_host,
-        startLocation = "$baseURL/settings/edit"
+        startLocation = "${AppConfig.baseUrl}/settings/edit"
     )
 )
 
