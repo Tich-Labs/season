@@ -58,6 +58,7 @@ class CalendarEventsController < ApplicationController
   # GoogleCalendarPushJob for why this runs in the background.
   def push_to_google(action, calendar_event_id, google_event_id: nil)
     return unless current_user.google_calendar_connected?
+    return unless current_user.google_calendar_push_allowed?
 
     GoogleCalendarPushJob.perform_later(action, user_id: current_user.id, calendar_event_id: calendar_event_id, google_event_id: google_event_id)
   end

@@ -7,6 +7,9 @@ class User < ApplicationRecord
   # Encrypt Google Calendar OAuth tokens at rest (P3).
   encrypts :google_access_token, :google_refresh_token
 
+  CALENDAR_SYNC_LEVELS = %w[off one_way export two_way].freeze
+  validates :calendar_sync_level, inclusion: {in: CALENDAR_SYNC_LEVELS}
+
   validates :name, presence: true, if: :onboarding_completed?
 
   has_one_attached :avatar
@@ -216,6 +219,32 @@ class User < ApplicationRecord
 
   def google_calendar_connected?
     google_access_token.present? && google_refresh_token.present?
+  end
+
+  # Gate pushes behind export/two_way, but preserve existing behavior for
+  # users already connected before this policy change.
+  def google_calendar_push_allowed?
+    return true if %w[export two_way].include?(calendar_sync_level)
+    # Legacy: if connected and still on default/off, keep current behavior
+    google_calendar_connected? && calendar_sync_level == "off"
+  end
+
+  # Remove Google copies created by Season (source: season with google_event_id)
+  # on disconnect/account deletion per policy.
+  def delete_google_copies_created_by_season!
+    return true unless google_calendar_connected?
+    service = GoogleCalendarService.new(self)
+    calendar_events.from_season.where.not(google_event_id: nil).find_each do |ev|
+      service.delete_event(ev.google_event_id)
+    rescue => e
+      Rails.logger.warn("[GoogleCalendar] delete season copy failed for event #{ev.id}: #{e.class}: #{e.message}")
+    ensure
+      ev.update_column(:google_event_id, nil)
+    end
+    true
+  rescue => e
+    Rails.logger.warn("[GoogleCalendar] delete_google_copies_created_by_season! failed for user #{id}: #{e.message}")
+    false
   end
 
   def revoke_google_token!

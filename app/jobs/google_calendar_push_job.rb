@@ -13,6 +13,7 @@ class GoogleCalendarPushJob < ApplicationJob
   def perform(action, user_id:, calendar_event_id: nil, google_event_id: nil)
     user = User.find_by(id: user_id)
     return unless user&.google_calendar_connected?
+    return unless user.google_calendar_push_allowed?
 
     service = GoogleCalendarService.new(user)
 
