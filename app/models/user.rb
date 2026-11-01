@@ -4,6 +4,9 @@ class User < ApplicationRecord
     :confirmable,
     :omniauthable, omniauth_providers: [:google_oauth2, :facebook, :apple]
 
+  # Encrypt Google Calendar OAuth tokens at rest (P3).
+  encrypts :google_access_token, :google_refresh_token
+
   validates :name, presence: true, if: :onboarding_completed?
 
   has_one_attached :avatar
@@ -213,6 +216,21 @@ class User < ApplicationRecord
 
   def google_calendar_connected?
     google_access_token.present? && google_refresh_token.present?
+  end
+
+  def revoke_google_token!
+    token = google_access_token.presence || google_refresh_token
+    return true if token.blank?
+    uri = URI("https://oauth2.googleapis.com/revoke")
+    res = Net::HTTP.start(uri.host, uri.port, use_ssl: true) do |http|
+      req = Net::HTTP::Post.new(uri)
+      req.set_form([["token", token]], "application/x-www-form-urlencoded")
+      http.request(req)
+    end
+    res.is_a?(Net::HTTPSuccess)
+  rescue => e
+    Rails.logger.warn("[GoogleCalendar] token revoke failed: #{e.class}: #{e.message}")
+    false
   end
 
   # No OAuth exists for iCloud Calendar (Sign in with Apple only covers

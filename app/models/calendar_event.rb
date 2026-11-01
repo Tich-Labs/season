@@ -1,8 +1,11 @@
 class CalendarEvent < ApplicationRecord
   belongs_to :user
   validates :title, :date, presence: true
+  validates :source, inclusion: {in: %w[season google]}
   scope :for_date, ->(date) { where(date: date) }
   scope :ordered, -> { order(:start_time) }
+  scope :from_season, -> { where(source: "season") }
+  scope :from_google, -> { where(source: "google") }
 
   # Combines the date-only `date`/`end_date` columns with the time-only
   # `start_time`/`end_time` columns into real timestamps -- Google Calendar

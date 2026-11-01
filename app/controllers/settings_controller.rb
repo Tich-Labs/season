@@ -122,6 +122,11 @@ class SettingsController < ApplicationController
   end
 
   def disconnect_google_calendar
+    begin
+      current_user.revoke_google_token!
+    rescue => e
+      Rails.logger.warn("[GoogleCalendar] revoke during disconnect failed: #{e.message}")
+    end
     current_user.update!(
       google_access_token: nil,
       google_refresh_token: nil,
@@ -129,6 +134,8 @@ class SettingsController < ApplicationController
       google_calendar_email: nil,
       google_uid: nil
     )
+    # Google copies created by Season (source: season with google_event_id) are not auto-deleted
+    # here per current decision; removal on account deletion is handled separately if/when deletion flow exists.
     redirect_to calendar_settings_path, notice: t("settings.calendar.google_disconnected", default: "Google Calendar disconnected")
   end
 
@@ -153,12 +160,13 @@ class SettingsController < ApplicationController
       CalendarEvent.create!(
         user: current_user,
         google_event_id: event.id,
+        source: "google",
         title: event.summary.presence || "Untitled",
         date: start_time.to_date,
         start_time: start_time.respond_to?(:strftime) ? start_time.strftime("%H:%M") : nil,
-        end_time: end_time&.respond_to?(:strftime) ? end_time.strftime("%H:%M") : nil,
-        notes: event.description,
-        location: event.location
+        end_time: end_time&.respond_to?(:strftime) ? end_time.strftime("%H:%M") : nil
+        # Import minimised: only title, date, times and category (category left nil).
+        # Attendees, descriptions/notes and locations are not imported.
       )
       imported += 1
     end
