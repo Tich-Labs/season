@@ -45,21 +45,21 @@
         <% end %>
 
         <p class="text-xs text-brand-secondary mt-5">
-          <%= @notification.created_at.strftime("%B %-d, %Y at %-I:%M %p") %>
+              <%= l(@notification.created_at, format: t("notifications.show.created_at_format")) %>
         </p>
       </div>
 
       <div class="space-y-2">
         <% if @notification.unread? %>
-          <%= button_to "Mark as read", notification_mark_read_path(@notification),
+          <%= button_to t("notifications.show.mark_as_read"), notification_mark_read_path(@notification),
                 method: :patch,
                 class: "w-full bg-brand-primary text-white rounded-xl py-3 font-semibold" %>
         <% end %>
 
-        <%= button_to "Delete",
+        <%= button_to t("notifications.show.delete"),
               notification_path(@notification),
               method: :delete,
-              form: { data: { turbo_confirm: "Are you sure?" } },
+              form: { data: { turbo_confirm: t("notifications.show.confirm_delete") } },
               class: "w-full bg-transparent text-brand-primary border border-brand-primary rounded-xl py-3 font-semibold" %>
       </div>
     </div>

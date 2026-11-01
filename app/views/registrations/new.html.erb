@@ -3,21 +3,21 @@
   <!-- Title -->
   <div class="w-full text-center">
     <h1 class="text-brand-primary text-4xl font-bold uppercase tracking-[3.24px] text-center">
-      SIGN UP
+      <%= t('devise.registrations.new.title') %>
     </h1>
   </div>
 
   <!-- Subtitle -->
   <div class="w-full text-center mt-6">
     <p class="text-brand-primary text-22 font-medium text-center leading-[27px] tracking-[1.32px]">
-      <%= t('devise.registrations.new.subtitle', default: 'Create an account, so we can save your tracked data and app settings.') %>
+      <%= t('devise.registrations.new.subtitle') %>
     </p>
   </div>
 
   <!-- Social Login -->
   <div class="w-full mt-8">
     <p class="text-brand-primary text-base font-normal mb-[21px] text-center">
-      <%= t('devise.registrations.new.fast_lane', default: 'Use the fast lane:') %>
+      <%= t('devise.registrations.new.fast_lane') %>
     </p>
 
     <div class="flex justify-center gap-[19px]">
@@ -26,7 +26,7 @@
       <%= button_to omniauth_authorize_path(:user, :apple),
             method: :post,
             data: { turbo: false },
-            aria: { label: "Sign up with Apple" },
+            aria: { label: t("registrations.new.sign_up_with", provider: "Apple") },
             class: "w-[59px] h-[52px] bg-black rounded-lg flex items-center justify-center border-0 p-0 cursor-pointer" do %>
         <%= image_tag "apple-logo.png", alt: "Apple", class: "w-[35px] h-[35px] object-contain" %>
       <% end %>
@@ -35,7 +35,7 @@
       <%= button_to omniauth_authorize_path(:user, :facebook),
             method: :post,
             data: { turbo: false },
-            aria: { label: "Sign up with Facebook" },
+            aria: { label: t("registrations.new.sign_up_with", provider: "Facebook") },
             class: "w-[59px] h-[52px] bg-google-blue rounded-lg flex items-center justify-center border-0 p-0 cursor-pointer" do %>
         <%= image_tag "facebook.png", alt: "Facebook", class: "w-[45px] h-[45px] object-contain" %>
       <% end %>
@@ -44,7 +44,7 @@
       <%= button_to omniauth_authorize_path(:user, :google_oauth2),
             method: :post,
             data: { turbo: false },
-            aria: { label: "Sign up with Google" },
+            aria: { label: t("registrations.new.sign_up_with", provider: "Google") },
             class: "w-[59px] h-[52px] bg-white border border-gray-200 rounded-lg flex items-center justify-center p-0 cursor-pointer" do %>
         <%= image_tag "google.png", alt: "Google", class: "w-[34px] h-[34px] object-contain" %>
       <% end %>
@@ -54,7 +54,7 @@
 
   <div class="w-full mt-6 text-center">
     <span class="text-brand-primary text-base font-normal">
-      <%= t('devise.registrations.new.or_email', default: '...or sign up with your E-mail:') %>
+      <%= t('devise.registrations.new.or_email') %>
     </span>
   </div>
 
@@ -69,7 +69,7 @@
         <div id="reg-error" role="alert" class="bg-brand-error rounded-lg px-4 py-3 mt-[29px]">
           <p class="text-brand-primary text-28 font-bold mb-2"><%= t('registrations.new.errors.oops') %></p>
           <p class="text-brand-primary text-base font-normal mb-4"><%= t('registrations.new.errors.already_registered') %></p>
-          <%= link_to "Log In", new_session_path,
+          <%= link_to t('devise.sessions.new.submit'), new_session_path,
               class: "block w-full bg-brand-primary text-white text-center py-[14px] rounded-lg text-lg font-medium no-underline" %>
         </div>
       <% elsif has_errors %>
@@ -86,7 +86,7 @@
             id: "email",
             autofocus: true,
             autocomplete: "email",
-            placeholder: t('devise.registrations.new.email_placeholder', default: 'E-mail...'),
+            placeholder: t('devise.registrations.new.email_placeholder'),
             value: @user&.email,
             aria: { invalid: @user&.errors[:email]&.any?, describedby: has_errors ? "reg-error" : nil },
             class: "w-full bg-brand-field rounded-lg px-[21px] h-[52px] text-22 font-medium text-brand-primary outline-none placeholder:text-brand-primary/40 #{@user&.errors[:email]&.any? ? 'border-2 border-brand-primary' : 'border-0'}" %>
@@ -98,10 +98,10 @@
         <%= f.password_field :password,
             id: "password_field",
             autocomplete: "new-password",
-            placeholder: t('devise.registrations.new.password_placeholder', default: 'Password...'),
+            placeholder: t('devise.registrations.new.password_placeholder'),
             data: { "password-visibility-target": "input" },
             class: "w-full bg-brand-field rounded-lg px-[21px] pr-[50px] h-[52px] text-22 font-medium text-brand-primary outline-none placeholder:text-brand-primary/40 border-0" %>
-        <button type="button" aria-label="Toggle password visibility" data-action="click->password-visibility#toggle" class="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer bg-transparent border-0 p-0">
+        <button type="button" aria-label="<%= t('shared.toggle_password_visibility') %>" data-action="click->password-visibility#toggle" class="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer bg-transparent border-0 p-0">
           <svg data-password-visibility-target="eyeOpen" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(147,58,53,0.5)" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
           <svg data-password-visibility-target="eyeClosed" class="hidden" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(147,58,53,0.5)" stroke-width="1.5"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" /><line x1="1" y1="1" x2="23" y2="23" /></svg>
         </button>
@@ -113,11 +113,11 @@
         <%= f.password_field :password_confirmation,
             id: "password_confirmation_field",
             autocomplete: "new-password",
-            placeholder: t('devise.registrations.new.confirm_password_placeholder', default: 'Repeat password...'),
+            placeholder: t('devise.registrations.new.confirm_password_placeholder'),
             aria: { invalid: has_errors, describedby: has_errors ? "reg-error" : nil },
             data: { "password-visibility-target": "input" },
             class: "w-full rounded-lg px-[21px] pr-[50px] h-[52px] text-22 font-medium text-brand-primary outline-none placeholder:text-brand-primary/40 #{has_errors ? 'bg-brand-error border-2 border-brand-primary' : 'bg-brand-field border-0'}" %>
-        <button type="button" aria-label="Toggle password visibility" data-action="click->password-visibility#toggle" class="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer bg-transparent border-0 p-0">
+        <button type="button" aria-label="<%= t('shared.toggle_password_visibility') %>" data-action="click->password-visibility#toggle" class="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer bg-transparent border-0 p-0">
           <svg data-password-visibility-target="eyeOpen" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="<%= has_errors ? '#933a35' : 'rgba(147,58,53,0.5)' %>" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
           <svg data-password-visibility-target="eyeClosed" class="hidden" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="<%= has_errors ? '#933a35' : 'rgba(147,58,53,0.5)' %>" stroke-width="1.5"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" /><line x1="1" y1="1" x2="23" y2="23" /></svg>
         </button>
@@ -129,8 +129,8 @@
                class="mt-1 w-[31px] h-[27px] accent-brand-primary rounded-lg shrink-0 <%= 'border-2 border-brand-primary' if @error_type == :terms_not_accepted %>">
         <span class="text-brand-primary text-base font-normal leading-snug">
           <%= t('devise.registrations.new.terms_html',
-                terms: link_to("terms of use", terms_path, class: "text-brand-primary underline"),
-                privacy: link_to("privacy policy", privacy_path, class: "text-brand-primary underline")) %>
+                terms: link_to(t('registrations.new.terms_link'), terms_path, class: "text-brand-primary underline"),
+                privacy: link_to(t('registrations.new.privacy_link'), privacy_path, class: "text-brand-primary underline")) %>
         </span>
       </div>
       <% if @error_type == :terms_not_accepted %>
@@ -139,7 +139,7 @@
 
       <!-- Submit -->
       <div class="flex justify-center mt-8">
-        <%= f.submit t('devise.registrations.new.submit', default: 'Create account'),
+        <%= f.submit t('devise.registrations.new.submit'),
             class: "w-[322px] bg-brand-primary text-white text-22 font-medium tracking-p66 rounded-lg border-0 cursor-pointer #{has_errors ? 'h-[62px]' : 'h-[52px]'}" %>
       </div>
     <% end %>
@@ -147,7 +147,7 @@
 
   <!-- Login link -->
   <div class="w-full text-center mt-[22px]">
-    <%= link_to t('devise.registrations.new.have_account', default: 'I already have an account'),
+    <%= link_to t('devise.registrations.new.have_account'),
         new_session_path,
         class: "text-brand-primary text-base font-normal no-underline" %>
   </div>

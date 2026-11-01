@@ -1,6 +1,5 @@
 import { Controller } from '@hotwired/stimulus'
-
-const LEVELS = ['', 'Low', 'Medium', 'High']
+import { t, tArray } from 'i18n'
 
 // Pre-submit review modal for /superpowers -- mirrors submit_modal_controller.js
 // (used by /symptoms) but simpler: superpowers is a single flat list of
@@ -27,11 +26,12 @@ export default class extends Controller {
     const root = document.querySelector('[data-controller~="superpower"]')
     if (!root) return
 
+    const levels = tArray('js.levels')
     const rated = []
     root.querySelectorAll('.symptom-slider[data-field]').forEach(slider => {
       const value = parseInt(slider.value)
       if (value > 0) {
-        rated.push({ label: slider.dataset.field, level: LEVELS[value] })
+        rated.push({ label: slider.dataset.label || slider.dataset.field, level: levels[value] })
       }
     })
 
@@ -42,7 +42,7 @@ export default class extends Controller {
     }
 
     if (this.hasCountTarget) {
-      this.countTarget.textContent = rated.length > 0 ? `${rated.length} superpowers rated` : ''
+      this.countTarget.textContent = rated.length > 0 ? t('js.superpowers_rated', { count: rated.length }) : ''
     }
   }
 }

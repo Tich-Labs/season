@@ -1,3 +1,10 @@
+<%
+  focus = [
+    [t(".superpower"), "⚡", t(".focus.superpower.#{@phase}")],
+    [t(".movement"), "🏃", t(".focus.movement.#{@phase}")],
+    [t(".nutrition"), "🥗", @content&.nutrition_text.presence || t(".focus.nutrition.#{@phase}")]
+  ]
+%>
 <table width="100%" cellpadding="0" cellspacing="0" style="background:#FAF7F4; padding:32px 16px;">
   <tr><td align="center">
     <table width="100%" cellpadding="0" cellspacing="0" style="max-width:480px;">
@@ -5,13 +12,13 @@
       <%# Header %>
       <tr><td style="background:<%= @phase_meta[:colour] %>; border-radius:16px 16px 0 0; padding:28px 28px 24px; text-align:center;">
         <p style="color:rgba(255,255,255,0.8); font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.1em; margin:0 0 6px;">
-          <%= Date.current.strftime("%A, %B %-d") %>
+          <%= l(Date.current, format: t("reminder_mailer.common.date_format")) %>
         </p>
         <h1 style="color:#FFFFFF; font-size:24px; font-weight:700; margin:0 0 4px; line-height:1.2;">
-          Good morning, <%= @user.name.split.first %> 🌸
+          <%= t(".greeting", name: @user.name.split.first) %>
         </h1>
         <p style="color:rgba(255,255,255,0.85); font-size:14px; font-weight:400; margin:0;">
-          Here's your Season summary for today
+          <%= t(".subtitle") %>
         </p>
       </td></tr>
 
@@ -20,13 +27,13 @@
         <table width="100%" cellpadding="0" cellspacing="0">
           <tr>
             <td>
-              <p style="color:#6B6B6B; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.07em; margin:0 0 4px;">Your cycle phase</p>
+              <p style="color:#6B6B6B; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.07em; margin:0 0 4px;"><%= t(".phase_label") %></p>
               <p style="color:<%= @phase_meta[:colour] %>; font-size:20px; font-weight:700; margin:0;">
-                <%= @phase.capitalize %> · <%= @phase_meta[:season] %>
+                <%= t("phases.#{@phase}") %> · <%= t("seasons.#{@phase_meta[:season].downcase}") %>
               </p>
               <% if @cycle_day %>
                 <p style="color:#6B6B6B; font-size:13px; font-weight:400; margin:4px 0 0;">
-                  Day <%= @cycle_day %> of your cycle
+                  <%= t("reminder_mailer.common.day_of_cycle", day: @cycle_day) %>
                 </p>
               <% end %>
             </td>
@@ -43,16 +50,12 @@
 
       <%# Tips grid %>
       <tr><td style="background:#FFFFFF; padding:20px 28px; border-bottom:1px solid #EDE1D5;">
-        <p style="color:#6B6B6B; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.07em; margin:0 0 14px;">Today's focus</p>
+        <p style="color:#6B6B6B; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.07em; margin:0 0 14px;"><%= t(".focus_label") %></p>
         <table width="100%" cellpadding="0" cellspacing="0">
-          <% {
-            "Superpower" => {"menstrual" => "Rest & reflect", "follicular" => "New beginnings", "ovulation" => "Connect & create", "luteal" => "Analyse & plan"}[@phase],
-            "Movement" => {"menstrual" => "Gentle yoga or walking", "follicular" => "HIIT & strength training", "ovulation" => "High-intensity cardio", "luteal" => "Moderate, steady exercise"}[@phase],
-            "Nutrition" => @content&.nutrition_text.presence || {"menstrual" => "Iron-rich foods & warmth", "follicular" => "Light, fresh foods", "ovulation" => "Raw & vibrant foods", "luteal" => "Complex carbs & magnesium"}[@phase]
-          }.each do |label, tip| %>
+          <% focus.each do |label, icon, tip| %>
             <tr>
               <td style="padding:8px 0; border-bottom:1px solid #EDE1D5; vertical-align:top;" width="36">
-                <span style="font-size:20px;"><%= {"Superpower" => "⚡", "Movement" => "🏃", "Nutrition" => "🥗"}[label] %></span>
+                <span style="font-size:20px;"><%= icon %></span>
               </td>
               <td style="padding:8px 0 8px 10px; border-bottom:1px solid #EDE1D5; vertical-align:top;">
                 <p style="color:#933a35; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; margin:0 0 2px;"><%= label %></p>
@@ -67,11 +70,11 @@
       <tr><td style="background:#FFFFFF; padding:20px 28px; border-radius:0 0 16px 16px; text-align:center;">
         <a href="<%= root_url %>"
            style="display:inline-block; background:#933a35; color:#FFFFFF; text-decoration:none; font-size:15px; font-weight:600; padding:14px 32px; border-radius:12px; letter-spacing:0.02em;">
-          Open Season
+          <%= t("reminder_mailer.common.open_season") %>
         </a>
         <p style="color:#6B6B6B; font-size:12px; margin:16px 0 0;">
-          You're receiving this because you enabled morning reminders in Season.
-          <%= link_to "Manage reminders", notifications_settings_url, style: "color:#933a35;" %>
+          <%= t(".footer_reason") %>
+          <%= link_to t("reminder_mailer.common.manage_reminders"), notifications_settings_url, style: "color:#933a35;" %>
         </p>
       </td></tr>
 

@@ -64,6 +64,9 @@
       </svg>
       <span class="text-brand-primary text-lg font-bold"><%= t("settings.calendar.title") %></span>
     </div>
+    <a href="<%= edit_settings_path %>"
+       onclick="if (window.history.length > 1) { window.history.back(); return false; }"
+       class="inline-block text-sm font-medium no-underline font-sans text-brand-primary mb-2"><%= t("shared.back") %></a>
     <div class="border-b border-brand-divider"></div>
 
     <%# Links & Syncs (first per Figma) %>
@@ -81,7 +84,7 @@
         <% if @user.google_calendar_connected? %>
           <span class="text-brand-muted text-sm font-medium"><%= @user.google_calendar_email %></span>
         <% else %>
-          <span class="text-brand-muted text-sm font-medium"><%= t("settings.calendar.not_connected", default: "Not connected") %></span>
+          <span class="text-brand-muted text-sm font-medium"><%= t("settings.calendar.not_connected") %></span>
         <% end %>
         <span class="block text-brand-primary/60 text-xs"><%= t("settings.calendar.google_calendar") %></span>
       </div>
@@ -91,23 +94,23 @@
             <svg width="16" height="16" fill="none" stroke="#2E6B3E" stroke-width="2.5" viewBox="0 0 24 24">
               <polyline points="20 6 9 17 4 12" />
             </svg>
-            <span class="text-brand-primary/60 text-xs"><%= t("settings.calendar.connected", default: "Connected") %></span>
+            <span class="text-brand-primary/60 text-xs"><%= t("settings.calendar.connected") %></span>
           </div>
           <div class="flex items-center gap-3">
             <%= button_to sync_google_calendar_settings_path, method: :post,
                   class: "px-4 py-2 bg-brand-primary text-white text-xs font-semibold rounded-lg" do %>
-              <%= t("settings.calendar.sync_now", default: "Sync now") %>
+              <%= t("settings.calendar.sync_now") %>
             <% end %>
             <%= button_to disconnect_google_calendar_settings_path, method: :post,
                   class: "text-brand-muted text-xs underline" do %>
-              <%= t("settings.calendar.disconnect", default: "Disconnect") %>
+              <%= t("settings.calendar.disconnect") %>
             <% end %>
           </div>
         <% else %>
           <span class="text-brand-primary/60 text-xs"><%= t("settings.calendar.google_calendar_sync") %></span>
           <%= link_to connect_google_calendar_settings_path,
                 class: "px-4 py-2 bg-brand-primary text-white text-xs font-semibold rounded-lg no-underline" do %>
-            <%= t("settings.calendar.connect", default: "Connect") %>
+            <%= t("settings.calendar.connect") %>
           <% end %>
         <% end %>
       </div>
@@ -132,7 +135,7 @@
         <% if @user.icloud_connected? %>
           <span class="text-brand-muted text-sm font-medium"><%= @user.icloud_email %></span>
         <% else %>
-          <span class="text-brand-muted text-sm font-medium"><%= t("settings.calendar.not_connected", default: "Not connected") %></span>
+          <span class="text-brand-muted text-sm font-medium"><%= t("settings.calendar.not_connected") %></span>
         <% end %>
         <span class="block text-brand-primary/60 text-xs"><%= t("settings.calendar.icloud_sync") %></span>
       </div>
@@ -142,31 +145,31 @@
             <svg width="16" height="16" fill="none" stroke="#2E6B3E" stroke-width="2.5" viewBox="0 0 24 24">
               <polyline points="20 6 9 17 4 12" />
             </svg>
-            <span class="text-brand-primary/60 text-xs"><%= t("settings.calendar.connected", default: "Connected") %></span>
+            <span class="text-brand-primary/60 text-xs"><%= t("settings.calendar.connected") %></span>
           </div>
           <div class="flex items-center gap-3">
             <%= button_to sync_icloud_calendar_settings_path, method: :post,
                   class: "px-4 py-2 bg-brand-primary text-white text-xs font-semibold rounded-lg" do %>
-              <%= t("settings.calendar.sync_now", default: "Sync now") %>
+              <%= t("settings.calendar.sync_now") %>
             <% end %>
             <%= button_to disconnect_icloud_calendar_settings_path, method: :post,
                   class: "text-brand-muted text-xs underline" do %>
-              <%= t("settings.calendar.disconnect", default: "Disconnect") %>
+              <%= t("settings.calendar.disconnect") %>
             <% end %>
           </div>
         </div>
       <% else %>
         <%= form_with url: connect_icloud_calendar_settings_path, method: :post, class: "py-2 space-y-2" do %>
-          <input type="email" name="icloud_email" placeholder="<%= t("settings.calendar.icloud_email_placeholder", default: "Apple ID email") %>"
+          <input type="email" name="icloud_email" placeholder="<%= t("settings.calendar.icloud_email_placeholder") %>"
                  required autocomplete="username" class="w-full bg-brand-field rounded-lg px-3 py-2 text-sm text-brand-dark placeholder:text-brand-primary/50">
-          <input type="password" name="icloud_app_password" placeholder="<%= t("settings.calendar.icloud_password_placeholder", default: "App-specific password") %>"
+          <input type="password" name="icloud_app_password" placeholder="<%= t("settings.calendar.icloud_password_placeholder") %>"
                  required autocomplete="off" class="w-full bg-brand-field rounded-lg px-3 py-2 text-sm text-brand-dark placeholder:text-brand-primary/50">
           <div class="flex items-center justify-between gap-2">
             <a href="https://appleid.apple.com" target="_blank" rel="noopener" class="text-brand-primary/60 text-xs underline">
-              <%= t("settings.calendar.icloud_get_password", default: "Generate one at appleid.apple.com") %>
+              <%= t("settings.calendar.icloud_get_password") %>
             </a>
             <button type="submit" class="px-4 py-2 bg-brand-primary text-white text-xs font-semibold rounded-lg shrink-0">
-              <%= t("settings.calendar.connect", default: "Connect") %>
+              <%= t("settings.calendar.connect") %>
             </button>
           </div>
         <% end %>

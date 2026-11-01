@@ -34,6 +34,37 @@ class ForecastControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "GET /forecast shows Track my day for today" do
+    get forecast_path
+    assert_match(/href="#{Regexp.escape(tracking_index_path(date: Time.zone.today.to_s))}"/, response.body)
+    assert_match(/Track my day/, response.body)
+  end
+
+  test "GET /forecast shows Track my day for a past date" do
+    past = 5.days.ago.to_date
+    get forecast_path(date: past.to_s)
+    assert_match(/href="#{Regexp.escape(tracking_index_path(date: past.to_s))}"/, response.body)
+  end
+
+  # The button belongs to the Forecast tab only, not the Appointments tab.
+  test "Track my day is inside the forecast tab, not the appointments tab" do
+    get forecast_path
+    body = response.body
+    button = body.index('href="/tracking?date=')
+    forecast_tab = body.index('data-forecast-tabs-target="forecast"')
+    modal = body.index('data-forecast-modal-target="modal"')
+    assert button, "Track my day button missing"
+    assert_operator button, :>, forecast_tab
+    assert_operator button, :<, modal
+  end
+
+  test "GET /forecast hides Track my day for a future date" do
+    future = 3.days.from_now.to_date
+    get forecast_path(date: future.to_s)
+    assert_no_match(/Track my day/, response.body)
+    assert_no_match(/href="#{Regexp.escape(tracking_index_path(date: future.to_s))}"/, response.body)
+  end
+
   test "GET /forecast shows only the calendar button, not the + FAB" do
     get forecast_path
     assert_response :success

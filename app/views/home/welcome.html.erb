@@ -7,23 +7,23 @@
 
   <div class="w-full text-center">
     <p class="text-brand-primary text-base font-normal mb-10 leading-relaxed">
-      <%= sanitize t('home.welcome_text', default: 'Welcome to Season!<br>Maximize your productivity with the help of your cycle.') %>
+      <%= sanitize t('home.welcome_text') %>
     </p>
 
     <% if returning_user? %>
-      <%= link_to t('home.login', default: 'Login'),
+      <%= link_to t('home.login'),
           new_session_path,
           class: "block w-[322px] h-[52px] leading-[52px] bg-brand-primary text-white text-center rounded-lg font-medium text-22 no-underline mx-auto mb-5" %>
 
-      <%= link_to t('home.lets_go', default: 'Create Account'),
+      <%= link_to t('home.lets_go'),
           new_registration_path,
           class: "block text-brand-primary text-center font-medium text-22 no-underline" %>
     <% else %>
-      <%= link_to t('home.lets_go', default: 'Create Account'),
+      <%= link_to t('home.lets_go'),
           new_registration_path,
           class: "block w-[322px] h-[52px] leading-[52px] bg-brand-primary text-white text-center rounded-lg font-medium text-22 no-underline mx-auto mb-5" %>
 
-      <%= link_to t('home.have_account', default: 'I already have an account'),
+      <%= link_to t('home.have_account'),
           new_session_path,
           class: "block text-brand-primary text-center font-medium text-22 no-underline" %>
     <% end %>

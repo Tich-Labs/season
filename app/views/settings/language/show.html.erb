@@ -28,18 +28,28 @@
       <%= image_tag "icons/language.svg", alt: t("settings.language.title"), class: "w-6 h-6 shrink-0 object-contain" %>
       <span class="text-brand-primary text-lg font-bold"><%= t("settings.language.title") %></span>
     </div>
+    <a href="<%= safe_back_path(edit_settings_path, allowed: [edit_settings_path, user_root_path]) %>"
+       onclick="if (window.history.length > 1) { window.history.back(); return false; }"
+       class="inline-block text-sm font-medium no-underline font-sans text-brand-primary mb-2"><%= t("shared.back") %></a>
     <div class="border-b border-brand-divider"></div>
 
     <%= form_tag settings_language_path, method: :patch, "data-turbo": false do %>
       <% current_language = @user.language.presence || I18n.default_locale.to_s %>
       <% I18n.available_locales.each do |locale| %>
-        <label class="flex items-center justify-between gap-4 py-4 border-b border-brand-divider cursor-pointer">
+        <% translated = TRANSLATED_LOCALES.include?(locale) %>
+        <label class="flex items-center justify-between gap-4 py-4 border-b border-brand-divider <%= translated ? 'cursor-pointer' : 'cursor-not-allowed opacity-40' %>">
           <span class="text-brand-primary text-base font-medium">
             <%= I18n.t("language.names.#{locale}", default: locale.to_s.upcase) %>
           </span>
-          <input type="radio" name="user[language]" value="<%= locale %>"
-                 <%= "checked" if current_language == locale.to_s %>
-                 class="w-5 h-5 accent-brand-primary shrink-0">
+          <% if translated %>
+            <input type="radio" name="user[language]" value="<%= locale %>"
+                   <%= "checked" if current_language == locale.to_s %>
+                   class="w-5 h-5 accent-brand-primary shrink-0">
+          <% else %>
+            <span class="text-brand-primary text-xs font-normal tracking-wide"><%= t("menu.coming_soon") %></span>
+            <input type="radio" name="user[language]" value="<%= locale %>" disabled
+                   class="w-5 h-5 accent-brand-primary shrink-0">
+          <% end %>
         </label>
       <% end %>
       <div class="pt-6">

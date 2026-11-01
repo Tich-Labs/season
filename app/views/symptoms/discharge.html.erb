@@ -63,7 +63,7 @@
     <div class="max-w-app mx-auto">
       <p class="text-white text-lg font-bold"><%= t("symptoms.discharge.title") %></p>
       <p class="text-white text-xs opacity-70 mt-0.5">
-        Cervical mucus tracking &mdash; <%= Time.zone.today.strftime("%-d %B %Y") %>
+        <%= t("symptoms.discharge.cervical_mucus_tracking") %> &mdash; <%= l(Time.zone.today, format: :day_month_year) %>
       </p>
     </div>
   </div>

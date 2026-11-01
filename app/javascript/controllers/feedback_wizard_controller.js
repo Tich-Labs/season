@@ -1,4 +1,5 @@
 import { Controller } from '@hotwired/stimulus'
+import { t } from 'i18n'
 
 // Drives the one-question-at-a-time weekly feedback wizard
 // (app/views/weekly_feedbacks/show.html.erb) — per Figma nodes 12178:6399 /
@@ -89,7 +90,7 @@ export default class extends Controller {
 
   _updateButtonLabel () {
     const isLast = this.index === this.questionTargets.length - 1
-    this.nextBtnTarget.textContent = isLast ? this.nextBtnTarget.dataset.submitLabel || 'Submit' : this.nextBtnTarget.dataset.nextLabel || 'Next'
+    this.nextBtnTarget.textContent = isLast ? this.nextBtnTarget.dataset.submitLabel || t('js.submit') : this.nextBtnTarget.dataset.nextLabel || t('js.next')
   }
 
   async _submit () {

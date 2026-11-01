@@ -4,9 +4,9 @@ module Beta
   module BetaHelper
     def beta_platform_options
       [
-        {value: "iOS", label: "Apple iOS"},
-        {value: "Android", label: "Android"},
-        {value: "Web", label: "Web"}
+        {value: "iOS", label: t("beta_onboarding.platforms.ios")},
+        {value: "Android", label: t("beta_onboarding.platforms.android")},
+        {value: "Web", label: t("beta_onboarding.platforms.web")}
       ]
     end
 

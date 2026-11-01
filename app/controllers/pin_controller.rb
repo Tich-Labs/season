@@ -26,7 +26,7 @@ class PinController < ApplicationController
       respond_to do |format|
         format.json { render json: {error: t("pin.incorrect", default: "Incorrect code")}, status: :unprocessable_content }
         format.html do
-          flash.now[:alert] = t("pin.incorrect", default: "Incorrect code")
+          flash.now[:alert] = t("pin.incorrect")
           render :show, status: :unprocessable_content
         end
       end
@@ -39,7 +39,7 @@ class PinController < ApplicationController
     if request.format.json?
       render json: {error: t("pin.too_many_attempts", default: "Too many attempts. Please try again later.")}, status: :too_many_requests
     else
-      flash.now[:alert] = t("pin.too_many_attempts", default: "Too many attempts. Please try again later.")
+      flash.now[:alert] = t("pin.too_many_attempts")
       render :show, status: :too_many_requests
     end
   end

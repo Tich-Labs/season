@@ -5,14 +5,14 @@
   <!-- Title -->
   <div class="w-full text-center">
     <h1 class="text-brand-primary text-4xl font-bold uppercase tracking-[3.24px] text-center">
-      Log In
+      <%= t('devise.sessions.new.title') %>
     </h1>
   </div>
 
   <!-- Social Login -->
   <div class="w-full mt-[62px]">
     <p class="text-brand-primary text-base font-normal mb-[21px] text-center">
-      <%= t('devise.sessions.new.fast_lane', default: 'Use the fast lane:') %>
+      <%= t('devise.sessions.new.fast_lane') %>
     </p>
 
     <div class="flex justify-center gap-[19px]">
@@ -21,7 +21,7 @@
       <%= button_to omniauth_authorize_path(:user, :apple),
             method: :post,
             data: { turbo: false },
-            aria: { label: "Sign in with Apple" },
+            aria: { label: t("sessions.new.sign_in_with", provider: "Apple") },
             class: "w-[59px] h-[52px] bg-black rounded-lg flex items-center justify-center border-0 p-0 cursor-pointer" do %>
         <%= image_tag "apple-logo.png", alt: "Apple", class: "w-[35px] h-[35px] object-contain" %>
       <% end %>
@@ -30,7 +30,7 @@
       <%= button_to omniauth_authorize_path(:user, :facebook),
             method: :post,
             data: { turbo: false },
-            aria: { label: "Sign in with Facebook" },
+            aria: { label: t("sessions.new.sign_in_with", provider: "Facebook") },
             class: "w-[59px] h-[52px] bg-google-blue rounded-lg flex items-center justify-center border-0 p-0 cursor-pointer" do %>
         <%= image_tag "facebook.png", alt: "Facebook", class: "w-[45px] h-[45px] object-contain" %>
       <% end %>
@@ -39,7 +39,7 @@
       <%= button_to omniauth_authorize_path(:user, :google_oauth2),
             method: :post,
             data: { turbo: false },
-            aria: { label: "Sign in with Google" },
+            aria: { label: t("sessions.new.sign_in_with", provider: "Google") },
             class: "w-[59px] h-[52px] bg-white border border-gray-200 rounded-lg flex items-center justify-center p-0 cursor-pointer" do %>
         <%= image_tag "google.png", alt: "Google", class: "w-[34px] h-[34px] object-contain" %>
       <% end %>
@@ -69,7 +69,7 @@
     <div class="w-full text-center mt-8">
       <button type="button" data-action="click->pin-login#switchToEmail"
               class="text-brand-primary text-base font-normal no-underline bg-transparent border-0 p-0 cursor-pointer">
-        Log in with email instead
+        <%= t('sessions.new.email_instead') %>
       </button>
     </div>
   </div>
@@ -80,7 +80,7 @@
     <!-- Email divider -->
     <div class="w-full mt-[62px] text-center">
       <span class="text-brand-primary text-base font-normal">
-        <%= t('devise.sessions.new.or_email', default: '... or login with your E-mail') %>
+        <%= t('devise.sessions.new.or_email') %>
       </span>
     </div>
 
@@ -96,7 +96,7 @@
               id: "email",
               autofocus: true,
               autocomplete: "username",
-              placeholder: t('devise.sessions.new.email_placeholder', default: 'E-mail...'),
+              placeholder: t('devise.sessions.new.email_placeholder'),
               aria: { invalid: @error_type == :wrong_email, describedby: @error_type == :wrong_email ? "auth-error" : nil },
               class: "w-full bg-brand-field rounded-lg px-[21px] h-[52px] text-22 font-medium text-brand-primary outline-none #{@error_type == :wrong_email ? 'border-2 border-brand-primary' : 'border-0'}" %>
         </div>
@@ -107,11 +107,11 @@
           <%= f.password_field :password,
               id: "password_field",
               autocomplete: "current-password",
-              placeholder: t('devise.sessions.new.password_placeholder', default: 'Password...'),
+              placeholder: t('devise.sessions.new.password_placeholder'),
               aria: { invalid: @error_type == :wrong_password, describedby: @error_type == :wrong_password ? "auth-error" : nil },
               data: { "password-visibility-target": "input" },
               class: "w-full bg-brand-field rounded-lg px-[21px] pr-[50px] h-[52px] text-22 font-medium text-brand-primary outline-none #{@error_type == :wrong_password ? 'border-2 border-brand-primary' : 'border-0'}" %>
-          <button type="button" data-action="click->password-visibility#toggle" aria-label="Toggle password visibility" class="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer bg-transparent border-0 p-0">
+          <button type="button" data-action="click->password-visibility#toggle" aria-label="<%= t('shared.toggle_password_visibility') %>" class="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer bg-transparent border-0 p-0">
             <svg data-password-visibility-target="eyeOpen" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(147,58,53,0.5)" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
             <svg data-password-visibility-target="eyeClosed" class="hidden" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(147,58,53,0.5)" stroke-width="1.5"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" /><line x1="1" y1="1" x2="23" y2="23" /></svg>
           </button>
@@ -119,7 +119,7 @@
 
         <!-- Forgot password -->
         <div class="mt-[15px] text-right">
-          <%= link_to t('devise.sessions.new.forgot_password', default: 'I forgot my password...'),
+          <%= link_to t('devise.sessions.new.forgot_password'),
               new_user_password_path,
               class: "text-brand-primary text-base font-normal no-underline" %>
         </div>
@@ -144,7 +144,7 @@
             <div>
               <p class="text-brand-primary text-15 font-medium"><%= t('sessions.new.errors.unconfirmed') %></p>
               <p class="text-brand-primary text-15 font-normal">
-                Check your inbox, or <%= link_to "resend the confirmation email", new_user_confirmation_path, class: "underline" %>.
+                <%= t('sessions.new.unconfirmed_hint_html', link: link_to(t('sessions.new.resend_confirmation'), new_user_confirmation_path, class: "underline")) %>
               </p>
             </div>
           </div>
@@ -156,7 +156,7 @@
 
         <!-- Submit -->
         <div class="flex justify-center mt-8">
-          <%= f.submit t('devise.sessions.new.submit', default: 'Log In'),
+          <%= f.submit t('devise.sessions.new.submit'),
               class: "w-[322px] h-[52px] bg-brand-primary text-white text-22 font-medium tracking-p66 rounded-lg border-0 cursor-pointer" %>
         </div>
       <% end %>
@@ -165,7 +165,7 @@
 
   <!-- Sign Up link -->
   <div class="w-full text-center mt-[22px]">
-    <%= link_to t('devise.sessions.new.no_account', default: "I am new... Sign up!"),
+    <%= link_to t('devise.sessions.new.no_account'),
         new_registration_path,
         class: "text-brand-primary text-base font-normal no-underline" %>
   </div>

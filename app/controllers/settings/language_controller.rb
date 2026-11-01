@@ -7,7 +7,7 @@ class Settings::LanguageController < ApplicationController
     @user = current_user
     new_language = params.dig(:user, :language)
 
-    unless new_language.present? && new_language.to_sym.in?(I18n.available_locales)
+    unless new_language.present? && new_language.to_sym.in?(TRANSLATED_LOCALES)
       redirect_to edit_settings_path, alert: t("settings.language.invalid")
       return
     end

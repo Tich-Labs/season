@@ -30,8 +30,10 @@ class OnboardingController < ApplicationController
     # mid-onboarding. If they've already reached the resume point once in
     # this session, landing on an earlier step (via the back button or
     # browser back) is an intentional revisit to review or change an
-    # answer, not a stale resume — so let it through.
-    if resume_step && resume_step > @step && previously_reached < resume_step
+    # answer, not a stale resume — so let it through. The step-8 date prompt
+    # also bypasses this: it re-visits step 8 after step 8 is already
+    # complete, so `resume_step` would otherwise race it forward to step 9.
+    if resume_step && resume_step > @step && previously_reached < resume_step && !@birth_control_date_step
       redirect_to onboarding_path(resume_step) and return
     end
 
@@ -205,6 +207,16 @@ class OnboardingController < ApplicationController
   end
 
   private
+
+  # The step-8 date prompt posts "YYYY-MM-DD" or "" (skipped). Blank or
+  # malformed values are treated as "no date yet" rather than erroring — the
+  # user can set or fix it later in Settings.
+  def parse_start_date(raw)
+    return nil if raw.blank?
+    Date.iso8601(raw)
+  rescue ArgumentError
+    nil
+  end
 
   def require_completed_onboarding
     redirect_to user_root_path if !authenticated? || current_user.profile_complete?

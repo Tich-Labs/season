@@ -16,11 +16,11 @@
           <td style="background-color: #ffffff; border-radius: 20px; padding: 40px 36px;">
 
             <p style="margin: 0 0 8px; font-size: 20px; font-weight: 600; color: #3d2b28;">
-              Welcome to Season 🌸
+              <%= t('devise.mailer.confirmation_instructions.heading') %>
             </p>
 
             <p style="margin: 0 0 28px; font-size: 15px; color: #6B6B6B; line-height: 1.6;">
-              Hi <%= @email %> — please confirm your email address to activate your account.
+              <%= t('devise.mailer.confirmation_instructions.greeting', email: @email) %>
             </p>
 
             <%# Button %>

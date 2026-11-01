@@ -66,7 +66,7 @@
         </svg>
         <p class="text-brand-secondary text-lg font-medium font-sans"><%= t("calendar_events.index.no_appointments_yet") %></p>
         <p class="text-brand-secondary text-sm mt-2 font-sans"><%= t("calendar_events.index.create_first_appointment") %></p>
-        <%= link_to "Create appointment", new_calendar_event_path, class: "mt-6 inline-block bg-brand-primary text-white px-6 py-3 rounded-xl font-semibold no-underline font-sans" %>
+        <%= link_to t("calendar_events.index.create_appointment"), new_calendar_event_path, class: "mt-6 inline-block bg-brand-primary text-white px-6 py-3 rounded-xl font-semibold no-underline font-sans" %>
       </div>
     <% end %>
 

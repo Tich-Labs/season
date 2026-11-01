@@ -16,19 +16,19 @@
   <div style="max-width:430px; margin:0 auto;">
 
     <%# ── Header band ── %>
-    <div style="background:#933a35; padding:24px 20px 20px;">
-      <p style="color:#FFFFFF; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.07em; margin:0 0 6px; opacity:0.8;">
-        Notifications
+    <div style="background:#FFFFFF; padding:24px 20px 20px; border-bottom:1px solid #EDE1D5;">
+      <p style="color:#933a35; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.07em; margin:0 0 6px;">
+        <%= t("notifications.index.title") %>
       </p>
-      <h1 style="color:#FFFFFF; font-size:22px; font-weight:700; margin:0; line-height:1.2;">
-        Period Reminder
+      <h1 style="color:#3d2b28; font-size:22px; font-weight:700; margin:0; line-height:1.2;">
+        <%= t("settings.notification_period.title") %>
       </h1>
     </div>
 
     <%# ── Description ── %>
     <div style="background:#FFFFFF; padding:16px 20px; border-bottom:1px solid #EDE1D5;">
       <p style="color:#6B6B6B; font-size:14px; font-weight:400; margin:0; line-height:1.5;">
-        Get reminded when your period is about to start and when it ends. Set the exact times that work for you.
+        <%= t("settings.notification_period.description") %>
       </p>
     </div>
 
@@ -43,7 +43,7 @@
       <%# ── Toggle ── %>
       <div style="background:#FFFFFF; padding:16px 20px; border-bottom:1px solid #EDE1D5; display:flex; align-items:center; justify-content:space-between;">
         <span style="color:#3d2b28; font-size:16px; font-weight:500;"><%= t("settings.notification_period.enable") %></span>
-        <label style="position:relative; width:44px; height:24px; cursor:pointer; flex-shrink:0;" aria-label="Enable period reminder">
+        <label style="position:relative; width:44px; height:24px; cursor:pointer; flex-shrink:0;" aria-label="<%= t("settings.notification_period.aria_enable") %>">
           <%= f.check_box :enabled, {id: "period_enabled", style: "opacity:0; width:0; height:0;",
                           checked: @start_reminder.active?}, "1", "0" %>
           <span style="position:absolute; inset:0; background:#933a35; border-radius:24px; transition:0.2s;"></span>
@@ -54,7 +54,7 @@
       <%# ── Start time ── %>
       <div style="background:#FFFFFF; padding:16px 20px; border-bottom:1px solid #EDE1D5;">
         <p style="color:#933a35; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; margin:0 0 10px;">
-          Period start reminder
+          <%= t("settings.notification_period.start_reminder") %>
         </p>
         <div style="display:flex; align-items:center; gap:12px;">
           <svg width="20" height="20" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0;">
@@ -70,7 +70,7 @@
       <%# ── End time ── %>
       <div style="background:#FFFFFF; padding:16px 20px; border-bottom:1px solid #EDE1D5;">
         <p style="color:#933a35; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; margin:0 0 10px;">
-          Period end reminder
+          <%= t("settings.notification_period.end_reminder") %>
         </p>
         <div style="display:flex; align-items:center; gap:12px;">
           <svg width="20" height="20" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0;">
@@ -86,7 +86,7 @@
       <%# ── Advance notice ── %>
       <div style="background:#FFFFFF; padding:16px 20px; border-bottom:1px solid #EDE1D5;">
         <p style="color:#933a35; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; margin:0 0 10px;">
-          Advance notice
+          <%= t("settings.notification_period.advance_notice") %>
         </p>
         <div style="display:flex; gap:10px;">
           <% saved_advance = @start_reminder.advance_days || 2 %>
@@ -96,7 +96,7 @@
                      <%= "checked" if saved_advance == days %>
                      style="display:none;">
               <span style="display:block; padding:10px 4px; border-radius:10px; border:2px solid <%= saved_advance == days ? '#933a35' : '#EDE1D5' %>; background:<%= saved_advance == days ? '#933a35' : '#FFFFFF' %>; color:<%= saved_advance == days ? '#FFFFFF' : '#6B6B6B' %>; font-size:13px; font-weight:600; font-family:'Montserrat',sans-serif; text-align:center;">
-                <%= days %> <%= days == 1 ? "day" : "days" %>
+                <%= t("settings.notification_period.advance_days", count: days) %>
               </span>
             </label>
           <% end %>
@@ -105,7 +105,7 @@
 
       <%# ── Save button ── %>
       <div style="padding:20px 20px 0;">
-        <%= f.submit "Save", style: "width:100%; background:#933a35; color:#FFFFFF; padding:16px; border-radius:12px; border:none; font-size:16px; font-weight:600; font-family:'Montserrat',sans-serif; cursor:pointer; letter-spacing:0.02em;" %>
+        <%= f.submit t("settings.profile.save"), style: "width:100%; background:#933a35; color:#FFFFFF; padding:16px; border-radius:12px; border:none; font-size:16px; font-weight:600; font-family:'Montserrat',sans-serif; cursor:pointer; letter-spacing:0.02em;" %>
       </div>
 
     <% end %>

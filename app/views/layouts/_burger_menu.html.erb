@@ -20,7 +20,7 @@
         <%# Close button — Figma: left-[250px] top-[27px] %>
         <button class="absolute left-[250px] top-[27px] size-11 bg-brand-field rounded-full flex items-center justify-center z-10"
                 data-action="click->menu#close"
-                aria-label="Close">
+                aria-label="<%= t("shared.close") %>">
           <span class="text-brand-primary text-2xl font-medium leading-none">X</span>
         </button>
 
@@ -40,7 +40,7 @@
 
         <%# Premium box — Figma: left-[30px] top-[197px] w-64 h-20 %>
         <div class="absolute left-[30px] top-[197px] w-64 h-20 bg-brand-primary rounded-lg z-10">
-          <%= image_tag "icons/crown.svg", alt: "Premium", class: "absolute left-[11.5px] top-[16px] w-3 h-3 object-contain" %>
+          <%= image_tag "icons/crown.svg", alt: t("nav.menu.premium"), class: "absolute left-[11.5px] top-[16px] w-3 h-3 object-contain" %>
           <p class="absolute left-[28px] top-[11px] w-48 text-white text-base font-medium tracking-wide leading-snug"><%= t("nav.menu.premium_now") %></p>
           <p class="absolute left-[28px] top-[51px] text-white text-xs font-light tracking-wide"><%= t("nav.menu.premium_benefits") %></p>
         </div>
@@ -117,14 +117,14 @@
 
         <%# Settings %>
         <%= link_to edit_settings_path, class: "absolute left-0 top-[564px] w-full h-[49px] flex items-center hover:bg-stone-50", "data-turbo-action": "replace" do %>
-          <%= image_tag "icons/setting.svg", alt: "Settings", class: "ml-[30px] w-5 h-5 shrink-0 object-contain" %>
+          <%= image_tag "icons/setting.svg", alt: t("nav.menu.settings"), class: "ml-[30px] w-5 h-5 shrink-0 object-contain" %>
           <span class="ml-[21px] text-brand-primary text-base font-medium tracking-wide"><%= t("nav.menu.settings") %></span>
         <% end %>
 
         <%# Feedback — links to the weekly feedback hub (Figma "Feedback geben",
              node 12178:6273) rather than the generic open-ended feedback modal. %>
         <%= link_to weekly_feedback_path, class: "absolute left-0 top-[613px] w-full h-[49px] flex items-center hover:bg-stone-50", "data-turbo-action": "replace" do %>
-          <%= image_tag "icons/feedback.svg", alt: "Feedback", class: "ml-[31px] w-5 h-5 shrink-0 object-contain" %>
+          <%= image_tag "icons/feedback.svg", alt: t("nav.menu.feedback"), class: "ml-[31px] w-5 h-5 shrink-0 object-contain" %>
           <span class="ml-[20px] text-brand-primary text-base font-medium tracking-wide"><%= t("nav.menu.feedback") %></span>
         <% end %>
 
@@ -133,7 +133,7 @@
                 data-type="bug_report"
                 data-action="click->menu#openFeedback"
                 class="absolute left-0 top-[661px] w-full h-[49px] flex items-center hover:bg-stone-50 cursor-pointer">
-          <%= image_tag "icons/bug-report.svg", alt: "Bug report", class: "ml-[31px] w-5 h-5 shrink-0 object-contain" %>
+          <%= image_tag "icons/bug-report.svg", alt: t("nav.menu.bug_report"), class: "ml-[31px] w-5 h-5 shrink-0 object-contain" %>
           <span class="ml-[20px] text-brand-primary text-base font-medium tracking-wide"><%= t("nav.menu.bug_report") %></span>
         </button>
 

@@ -3,11 +3,11 @@
   <%= image_tag "season-logo.svg", class: "w-32 h-auto mb-12", alt: "Season" %>
 
   <h1 class="text-xl font-bold text-brand-primary text-center mb-2">
-    <%= "Welcome back, #{@user.name}!" %>
+    <%= t("onboarding.invite.welcome_back", name: @user.name) %>
   </h1>
 
   <p class="text-sm text-brand-primary text-center mb-10">
-    Your Season V2 account is ready.
+    <%= t("onboarding.invite.account_ready") %>
   </p>
 
   <%= form_with url: invite_path(params[:token]),
@@ -22,10 +22,10 @@
 
     <!-- Password field -->
     <%= f.password_field :password,
-        placeholder: 'Set your password...',
+        placeholder: t("onboarding.invite.password_placeholder"),
         class: "w-full bg-brand-field rounded-2xl p-4 border-none text-base mb-8" %>
 
-    <%= f.submit 'Get started',
+    <%= f.submit t("onboarding.invite.submit"),
         class: "w-full bg-brand-primary text-white border-none rounded-2xl p-4 text-base font-semibold cursor-pointer" %>
   <% end %>
 </div>

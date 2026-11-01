@@ -4,15 +4,15 @@
 
   <div class="w-full flex flex-col items-center">
     <div class="w-[219px] h-[219px] rounded-full bg-brand-field overflow-hidden mb-10">
-      <%= image_tag("error_screens_login/errorscreen-already-reset.png", alt: "Already reset", class: "w-full h-full object-contain") %>
+      <%= image_tag("error_screens_login/errorscreen-already-reset.png", alt: t('passwords.error_already_reset.image_alt'), class: "w-full h-full object-contain") %>
     </div>
 
     <p class="text-brand-primary text-lg font-normal tracking-[1.62px] text-center max-w-[290px] mb-12">
-      We already sent you an email an hour ago to help you reset your password; you'll need to wait an hour before you can try again
+      <%= t('passwords.error_already_reset.message') %>
     </p>
 
     <div class="w-full">
-      <%= link_to "Go back to login", new_session_path,
+      <%= link_to t('passwords.error_already_reset.go_back'), new_session_path,
           class: "block w-[322px] h-[52px] bg-brand-primary text-white text-center leading-[52px] text-22 font-medium tracking-p66 no-underline rounded-lg mx-auto" %>
     </div>
   </div>

@@ -7,10 +7,14 @@
 # links means the tester isn't left on the confirmation page waiting.
 class BetaInviteMailer < ApplicationMailer
   def android_group_links(beta_tester)
-    @beta_tester = beta_tester
-    @group_link = ENV["GOOGLE_PLAY_GROUP_URL"].presence
-    @play_link = ENV["GOOGLE_PLAY_OPEN_TESTING_URL"].presence
+    # BetaTester has no language column, so testers get the default locale
+    # rather than whatever locale the job's thread happens to carry.
+    I18n.with_locale(I18n.default_locale) do
+      @beta_tester = beta_tester
+      @group_link = ENV["GOOGLE_PLAY_GROUP_URL"].presence
+      @play_link = ENV["GOOGLE_PLAY_OPEN_TESTING_URL"].presence
 
-    mail(to: beta_tester.email, subject: t(".subject"))
+      mail(to: beta_tester.email, subject: t(".subject"))
+    end
   end
 end

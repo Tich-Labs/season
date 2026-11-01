@@ -32,7 +32,7 @@
 %>
 
 <% phase_colour = @meta&.dig(:colour) || "#933a35" %>
-<% phase_label  = @phase ? @phase.capitalize : nil %>
+<% phase_label  = @phase ? t("phases.#{@phase}") : nil %>
 <% phase_season = @meta&.dig(:season) %>
 
 <%# The centred calendar FAB below (shared/_calendar_center_fab, 66px
@@ -59,7 +59,7 @@
          data-action="click@window->profile-modal#clickOutside">
       <button type="button" data-action="click->profile-modal#openAvatarModal"
               class="relative block w-56 h-56 shrink-0 bg-transparent border-0 p-0 cursor-pointer"
-              aria-label="Change profile picture">
+              aria-label="<%= t("tracking.index.change_avatar_aria") %>">
         <div class="w-56 h-56 rounded-full flex items-center justify-center overflow-hidden"
              style="background:<%= phase_colour %>;">
           <% if current_user.avatar_preset.present? %>
@@ -104,7 +104,7 @@
       <% if phase_label %>
         <p class="text-2xl font-medium text-brand-primary font-sans"><%= t('tracking.index.current_phase') %></p>
         <h1 class="text-3xl font-extrabold leading-tight" style="color:<%= phase_colour %>;">
-          <%= phase_label %> Phase
+          <%= t("tracking.index.phase_heading", phase: phase_label) %>
         </h1>
       <% else %>
         <div class="rounded-2xl px-4 py-3 text-sm bg-brand-error text-brand-primary">
@@ -147,7 +147,7 @@
             <% dot_colour = day[:colour] || "#D18D83" %>
             <% if day[:date] > Time.zone.today %>
               <%# Future days are for preview only — tapping them does nothing. %>
-              <div aria-hidden="true" title="<%= day[:date].strftime("%A, %d %B") %>"
+              <div aria-hidden="true" title="<%= l(day[:date], format: "%A, %d %B") %>"
                    class="w-12 h-12 rounded-full flex items-center justify-center text-base font-semibold text-white opacity-75 cursor-default"
                    style="background:<%= dot_colour %>;">
                 <%= day[:date].day %>
@@ -155,7 +155,7 @@
             <% else %>
               <%= link_to tracking_index_path(date: day[:date].to_s),
                     class: "no-underline",
-                    "aria-label": day[:date].strftime("%A, %d %B") do %>
+                    "aria-label": l(day[:date], format: "%A, %d %B") do %>
                 <div class="w-12 h-12 rounded-full flex items-center justify-center text-base font-semibold <%= day[:current] ? 'text-white ring-2 ring-offset-2 ring-white' : 'text-white opacity-75' %>"
                      style="background:<%= dot_colour %>;"
                      <%= 'data-center-scroll-target="current"'.html_safe if day[:current] %>>
@@ -218,10 +218,10 @@
 <% if params[:tracking_saved] == "1" %>
   <div id="tracking-saved-modal" data-controller="tracking-saved-modal"
        class="fixed inset-0 z-[200] flex items-center justify-center bg-brand-overlay/90"
-       role="dialog" aria-modal="true" aria-label="Tracking saved"
+       role="dialog" aria-modal="true" aria-label="<%= t("tracking.index.tracking_saved_aria") %>"
        data-action="click->tracking-saved-modal#overlayClick">
     <div class="relative w-[337px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] px-7 pt-8 pb-8 flex flex-col items-center gap-5">
-      <button type="button" aria-label="Close" data-action="click->tracking-saved-modal#close"
+      <button type="button" aria-label="<%= t("shared.close") %>" data-action="click->tracking-saved-modal#close"
               class="absolute top-3 right-3 w-11 h-11 flex items-center justify-center rounded-full rotate-45 border-0 bg-brand-field cursor-pointer">
         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#933a35" stroke-width="3">
           <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
@@ -229,11 +229,11 @@
       </button>
       <%= image_tag "screen1logo.png", alt: "Season", class: "w-[87px] h-[88px] object-contain mt-4" %>
       <p class="text-brand-primary font-medium text-2xl leading-[30px] text-center font-sans m-0">
-        Your prediction will be adjusted based on the information you provide
+        <%= t("tracking.index.saved_prediction") %>
       </p>
       <button type="button" data-action="click->tracking-saved-modal#close"
               class="w-full h-[52px] bg-brand-primary text-white rounded-xl border-none font-medium text-lg font-sans cursor-pointer">
-        Done
+        <%= t("tracking.index.done") %>
       </button>
     </div>
   </div>

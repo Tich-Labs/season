@@ -20,7 +20,7 @@
           <polyline points="15 18 9 12 15 6" />
         </svg>
       <% end %>
-      <h1 class="text-brand-primary text-xl font-bold"><%= @superpower_log.date.strftime("%A, %-d %B") %></h1>
+      <h1 class="text-brand-primary text-xl font-bold"><%= l(@superpower_log.date, format: :superpower_day) %></h1>
     </div>
 
     <% if @superpower_log.ratings.present? %>
@@ -30,7 +30,7 @@
           <% pct = (val / 3.0 * 100).round %>
           <div class="bg-white rounded-xl p-4">
             <div class="flex justify-between items-center mb-3">
-              <span class="text-brand-primary text-sm font-semibold"><%= name %></span>
+              <span class="text-brand-primary text-sm font-semibold"><%= superpower_label(name) %></span>
               <span class="text-brand-primary text-sm font-bold"><%= val %>/3</span>
             </div>
             <div class="flex gap-1.5">
@@ -39,7 +39,7 @@
               <% end %>
             </div>
             <% if val > 0 %>
-              <p class="text-xs text-brand-secondary mt-2 capitalize"><%= ["", "low", "medium", "high"][val] %></p>
+              <p class="text-xs text-brand-secondary mt-2 capitalize"><%= t("js.levels")[val] %></p>
             <% end %>
           </div>
         <% end %>

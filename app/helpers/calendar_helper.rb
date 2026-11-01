@@ -9,6 +9,14 @@ module CalendarHelper
     date.cwday == 1
   end
 
+  # Event date card text, e.g. "Mon. Jan 1st 2026" (en) / "Mo., 1. Jan 2026" (de).
+  # The day-of-month suffix is locale-specific, so it is interpolated into the
+  # date.formats.event_card pattern before strftime runs.
+  def event_card_date(date)
+    day = t("date.ordinal_day", day: date.day, ordinal: date.day.ordinalize)
+    l(date, format: t("date.formats.event_card", day: day))
+  end
+
   # Single-letter Mon-Sun day initials, matching Figma / the main calendar.
   # Used by any weekday-header row that follows /calendar's convention.
   def weekday_initials

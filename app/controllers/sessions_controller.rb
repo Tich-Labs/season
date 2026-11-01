@@ -59,7 +59,7 @@ class SessionsController < ApplicationController
       cookies.permanent[:season_email] = {value: @user.email, httponly: false}
       render json: {success: true, redirect: after_sign_in_path}
     else
-      render json: {success: false, error: "Wrong PIN. Please try again."}, status: :unauthorized
+      render json: {success: false, error: t(".wrong_pin")}, status: :unauthorized
     end
   end
 
@@ -67,7 +67,7 @@ class SessionsController < ApplicationController
 
   def rate_limited
     if request.format.json?
-      render json: {success: false, error: "Too many attempts. Please wait 15 minutes."}, status: :too_many_requests
+      render json: {success: false, error: t("sessions.pin_login.rate_limited")}, status: :too_many_requests
     else
       flash.now[:alert] = t(".too_many_attempts")
       render :new, status: :too_many_requests

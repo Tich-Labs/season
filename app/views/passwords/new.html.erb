@@ -1,13 +1,13 @@
 <div class="bg-white min-h-screen flex flex-col items-center justify-center px-8 max-w-app mx-auto" style="padding-top:calc(60px + env(safe-area-inset-top,0px));padding-bottom:calc(60px + env(safe-area-inset-bottom,0px))">
 
   <div class="w-full">
-    <%= link_to "‹ back", new_session_path, class: "text-brand-primary text-base font-medium no-underline" %>
+    <%= link_to t('passwords.new.back'), new_session_path, class: "text-brand-primary text-base font-medium no-underline" %>
   </div>
 
   <div class="w-full max-w-[384px] mx-auto">
 
     <h1 class="text-brand-primary text-4xl font-bold uppercase tracking-[3.24px] text-center leading-tight">
-      Change<br>password
+      <%= t('passwords.new.title_html') %>
     </h1>
 
     <div class="mt-20">
@@ -19,19 +19,19 @@
             value: current_user&.email,
             autofocus: true,
             autocomplete: "email",
-            placeholder: "E–mail...",
+            placeholder: t('passwords.new.email_placeholder'),
             class: "w-full h-14 rounded-2xl bg-brand-field px-5 text-22 font-medium text-brand-primary placeholder:text-brand-primary/50 placeholder:text-xl outline-none border-0" %>
 
         <div class="mt-10">
-          <%= f.submit "Forgot password",
+          <%= f.submit t('passwords.new.submit'),
               class: "w-full h-12 bg-brand-primary rounded-lg text-white text-xl font-medium tracking-wide border-0 cursor-pointer",
-              data: { disable_with: "Sending..." } %>
+              data: { disable_with: t('passwords.new.sending') } %>
         </div>
       <% end %>
     </div>
 
     <div class="mt-6 text-center">
-      <%= link_to "I'm new — Sign up!", new_registration_path, class: "text-brand-primary text-base font-normal no-underline" %>
+      <%= link_to t('passwords.new.sign_up_link'), new_registration_path, class: "text-brand-primary text-base font-normal no-underline" %>
     </div>
 
   </div>

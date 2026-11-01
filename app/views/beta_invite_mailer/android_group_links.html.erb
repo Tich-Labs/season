@@ -4,50 +4,49 @@
 
       <tr><td style="background:#933a35; border-radius:16px 16px 0 0; padding:28px 28px 24px; text-align:center;">
         <h1 style="color:#FFFFFF; font-size:24px; font-weight:700; margin:0 0 6px; line-height:1.2;">
-          Your Season Android beta access 📱
+          <%= t(".subject") %>
         </h1>
         <p style="color:rgba(255,255,255,0.85); font-size:14px; margin:0;">
-          A heads-up from Season
+          <%= t(".heads_up") %>
         </p>
       </td></tr>
 
       <tr><td style="background:#FFFFFF; padding:24px 28px; border-bottom:1px solid #EDE1D5;">
         <p style="color:#3d2b28; font-size:14px; margin:0 0 16px; line-height:1.6;">
-          Hi <%= @beta_tester.name.presence || "there" %>,
+          <%= @beta_tester.name.present? ? t(".greeting", name: @beta_tester.name) : t(".greeting_anonymous") %>
         </p>
         <p style="color:#3d2b28; font-size:14px; margin:0 0 16px; line-height:1.6;">
-          You're on the list to test Season on Android. Here's how to get the app:
+          <%= t(".intro") %>
         </p>
 
         <% if @group_link.present? %>
           <p style="color:#6B6B6B; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.07em; margin:0 0 8px;">
-            Step 1 — Join the tester group
+            <%= t(".step_group_label") %>
           </p>
           <a href="<%= @group_link %>"
              style="display:inline-block; background:#933a35; color:#FFFFFF; text-decoration:none; font-size:15px; font-weight:600; padding:14px 32px; border-radius:12px; letter-spacing:0.02em; margin:0 0 20px;">
-            Join the tester group
+            <%= t(".join_group") %>
           </a>
         <% end %>
 
         <% if @play_link.present? %>
           <p style="color:#6B6B6B; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.07em; margin:0 0 8px;">
-            <%= @group_link.present? ? "Step 2 — Open in Google Play" : "Open in Google Play" %>
+            <%= @group_link.present? ? t(".step_play_label") : t(".open_play") %>
           </p>
           <a href="<%= @play_link %>"
              style="display:inline-block; background:#933a35; color:#FFFFFF; text-decoration:none; font-size:15px; font-weight:600; padding:14px 32px; border-radius:12px; letter-spacing:0.02em; margin:0 0 16px;">
-            Open in Google Play
+            <%= t(".open_play") %>
           </a>
         <% end %>
 
         <p style="color:#6B6B6B; font-size:13px; margin:0; line-height:1.6;">
-          Use the Google account you use on your phone, and tap "Become a tester" in the Play Store.
-          Google can take a short while to activate your access — if the button isn't ready yet, try again in a little while.
+          <%= t(".become_tester_hint") %>
         </p>
       </td></tr>
 
       <tr><td style="background:#FFFFFF; padding:20px 28px; border-radius:0 0 16px 16px; text-align:center;">
         <p style="color:#6B6B6B; font-size:12px; margin:0;">
-          Questions? Reply to shanel@season.vision
+          <%= t(".questions", email: "shanel@season.vision") %>
         </p>
       </td></tr>
 

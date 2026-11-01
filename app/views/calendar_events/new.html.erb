@@ -35,13 +35,20 @@
        onclick="if (window.history.length > 1) { window.history.back(); return false; }"
        data-turbo="false"
        class="inline-flex items-center py-2 mb-2 text-brand-primary text-sm font-medium no-underline">
-       &lt; back
-    </a>
+        <%= t("shared.back") %>
+     </a>
 
     <% category_icons = {
       'Friends' => 'family.svg', 'Dinner' => 'dinner.svg', 'Date' => 'date.svg',
       'Sport' => 'sport.svg', 'Medical' => 'medical.svg', 'Birthday' => 'birthday.svg',
       'Work' => 'work.svg', 'Coffee' => 'coffee.svg', 'Shopping' => 'shopping.svg'
+    } %>
+    <% category_names = {
+      'Friends' => t("calendar_events.categories.friends"), 'Dinner' => t("calendar_events.categories.dinner"),
+      'Date' => t("calendar_events.categories.date"), 'Sport' => t("calendar_events.categories.sport"),
+      'Medical' => t("calendar_events.categories.medical"), 'Birthday' => t("calendar_events.categories.birthday"),
+      'Work' => t("calendar_events.categories.work"), 'Coffee' => t("calendar_events.categories.coffee"),
+      'Shopping' => t("calendar_events.categories.shopping")
     } %>
     <%= form_with model: @event, url: calendar_events_path, local: true, data: { turbo: false } do |f| %>
 
@@ -51,14 +58,14 @@
         <% has_category = @event.category.present? && category_icons.key?(@event.category) %>
         <button type="button" data-action="click->season-modal#open"
                 data-season-modal-target="triggerButton"
-                aria-label="Choose event type"
+                aria-label="<%= t("calendar_events.form.choose_event_type") %>"
                 class="absolute top-0 right-0 w-11 h-11 rounded-full bg-brand-field flex items-center justify-center p-0 cursor-pointer">
           <% if has_category %>
             <%# Height-constrained, width auto — not a fixed square box. The
                  nine category assets range from 27x38 to 63x57 (see the
                  icon-picker modal below for the full breakdown); forcing a
                  fixed w+h here would squish/stretch every non-square one. %>
-            <%= image_tag "icons/appointment/#{category_icons[@event.category]}", alt: @event.category, class: "max-h-[22px] w-auto" %>
+            <%= image_tag "icons/appointment/#{category_icons[@event.category]}", alt: category_names[@event.category], class: "max-h-[22px] w-auto" %>
           <% else %>
             <svg width="24" height="24" fill="none" viewBox="0 0 24 24">
               <path d="M12 5v14M5 12h14" stroke="#A43600" stroke-width="2.5" stroke-linecap="round"></path>
@@ -69,7 +76,7 @@
         <%# Title input %>
         <div class="bg-white rounded-3xl px-4 pt-4 pb-1 pr-12">
           <%= f.text_field :title,
-                placeholder: "Enter title",
+                placeholder: t("calendar_events.form.enter_title"),
                 required: true,
                 class: "w-full bg-transparent border-none text-22 font-medium text-brand-primary placeholder:text-brand-field p-0 outline-none font-sans" %>
         </div>
@@ -92,20 +99,20 @@
                    date, a "-" on its own line, date — not two dates
                    stacked directly on each other. %>
               <% if multi_day %>
-                <%= evt_date.strftime("%a. %b ") %><%= evt_date.day.ordinalize %><%= evt_date.strftime(" %Y") %><br>
+                <%= event_card_date(evt_date) %><br>
                 <span class="font-light">-</span><br>
-                <%= evt_end_date.strftime("%a. %b ") %><%= evt_end_date.day.ordinalize %><%= evt_end_date.strftime(" %Y") %>
+                <%= event_card_date(evt_end_date) %>
               <% else %>
-                <%= evt_date.strftime("%a. %b ") %><%= evt_date.day.ordinalize %><%= evt_date.strftime(" %Y") %>
+                <%= event_card_date(evt_date) %>
               <% end %>
             </button>
           <%
             st_h = default_start.hour > 12 ? default_start.hour - 12 : (default_start.hour == 0 ? 12 : default_start.hour)
             st_m = (default_start.min / 5).round * 5
-            st_ampm = default_start.hour >= 12 ? 'PM' : 'AM'
+            st_ampm = default_start.hour >= 12 ? t("calendar_events.form.pm") : t("calendar_events.form.am")
             et_h = default_end.hour > 12 ? default_end.hour - 12 : (default_end.hour == 0 ? 12 : default_end.hour)
             et_m = (default_end.min / 5).round * 5
-            et_ampm = default_end.hour >= 12 ? 'PM' : 'AM'
+            et_ampm = default_end.hour >= 12 ? t("calendar_events.form.pm") : t("calendar_events.form.am")
           %>
           <%# Time is display-only here — editing happens exclusively through
                the "Set date" modal above (its own From/To time scroller),
@@ -115,7 +122,7 @@
                between single- and multi-day live in the picker can show/
                hide it via the timeRow target instead of needing a reload;
                #applyDateDisplay keeps this in sync going forward. %>
-          <button type="button" data-action="click->appointment-date-picker#open" data-appointment-date-picker-target="timeRow" class="flex items-center justify-center gap-1 bg-transparent border-none p-0 cursor-pointer <%= 'hidden' if multi_day %>" aria-label="Edit date and time">
+          <button type="button" data-action="click->appointment-date-picker#open" data-appointment-date-picker-target="timeRow" class="flex items-center justify-center gap-1 bg-transparent border-none p-0 cursor-pointer <%= 'hidden' if multi_day %>" aria-label="<%= t("calendar_events.form.edit_date_time") %>">
             <span data-appointment-date-picker-target="startTimeDisplay"
                   class="text-white text-22 font-medium tracking-wide font-sans"><%= st_h %>:<%= format('%02d', st_m) %> <%= st_ampm %></span>
             <span class="text-white text-22 font-light font-sans">-</span>
@@ -135,7 +142,7 @@
 
       <%# Reminder row %>
       <% rem = @event.reminder_minutes || 15 %>
-      <% rem_label = case rem when 0 then 'No reminder' when -1 then 'Custom timer' when 10080 then '1 week before' when 1440 then '1 day before' when 60 then '1 hour before' else "#{rem} minutes before" end %>
+      <% rem_label = case rem when 0 then t("js.no_reminder") when -1 then t("js.reminder_custom") when 10080 then t("js.reminder_1_week") when 1440 then t("js.reminder_1_day") when 60 then t("js.reminder_1_hour") else t("js.reminder_minutes", minutes: rem) end %>
       <div class="flex items-center gap-3 py-3.5 px-5 cursor-pointer"
            data-action="click->season-modal#openReminder">
         <div data-season-modal-target="reminderIconBg" class="w-[39px] h-[38px] rounded-full flex items-center justify-center shrink-0 <%= rem == 0 ? 'bg-brand-field/50' : 'bg-brand-field' %>">
@@ -150,7 +157,7 @@
              only way to clear one otherwise. Stops propagation so it doesn't
              also fire the row's own openReminder click. %>
         <button type="button" data-season-modal-target="reminderClearBtn" data-action="click->season-modal#clearReminder"
-                aria-label="Remove reminder" class="shrink-0 bg-transparent border-none cursor-pointer p-1 text-brand-primary <%= 'hidden' if rem == 0 %>">
+                aria-label="<%= t("calendar_events.form.remove_reminder") %>" class="shrink-0 bg-transparent border-none cursor-pointer p-1 text-brand-primary <%= 'hidden' if rem == 0 %>">
           <svg width="14" height="14" viewBox="0 0 12 12" fill="none"><path d="M9 3L3 9M3 3l6 6" stroke="#933A35" stroke-width="1.5" stroke-linecap="round" /></svg>
         </button>
       </div>
@@ -168,7 +175,7 @@
         </div>
         <%# Figma's label colour for this row is solid #933a35 whether it's
              set or empty — only the icon/circle behind it dims. %>
-        <span data-season-modal-target="locationLabel" class="text-base font-medium tracking-007 flex-1 font-sans text-brand-primary"><%= loc ? @event.location : 'Add location' %></span>
+        <span data-season-modal-target="locationLabel" class="text-base font-medium tracking-007 flex-1 font-sans text-brand-primary"><%= loc ? @event.location : t("js.add_location") %></span>
       </div>
 
       <%# Guests row — before Notes, per Figma %>
@@ -208,7 +215,7 @@
             <path d="M15 2H9C8.44772 2 8 2.44772 8 3V5C8 5.55228 8.44772 6 9 6H15C15.5523 6 16 5.55228 16 5V3C16 2.44772 15.5523 2 15 2Z" stroke="#933A35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
           </svg>
         </div>
-        <span data-season-modal-target="notesLabel" class="text-base font-medium tracking-007 flex-1 font-sans text-brand-primary"><%= has_notes ? @event.notes.truncate(30) : 'Notes...' %></span>
+        <span data-season-modal-target="notesLabel" class="text-base font-medium tracking-007 flex-1 font-sans text-brand-primary"><%= has_notes ? @event.notes.truncate(30) : t("js.notes_placeholder") %></span>
       </div>
 
       <%# Repeat row %>
@@ -230,7 +237,7 @@
              firing a second POST while the first is still in flight —
              season_modal_controller.js's existing submit listener disables
              this button synchronously to prevent that double-save. %>
-        <%= f.submit "Set appointment",
+        <%= f.submit t("calendar_events.form.set_appointment"),
               data: { season_modal_target: "submitBtn" },
               class: "w-full text-white py-3.5 rounded-lg border-none text-22 font-medium font-sans cursor-pointer tracking-003 bg-brand-primary" %>
       </div>
@@ -252,12 +259,12 @@
            id-less record. Same label and position either way. %>
       <div class="flex justify-center pt-3">
         <% if @event&.persisted? %>
-          <%= button_to "Delete appointment",
+          <%= button_to t("calendar_events.form.delete_appointment"),
                 calendar_event_path(@event),
                 method: :delete,
                 class: "w-full bg-transparent text-brand-primary rounded-lg text-22 font-medium font-sans cursor-pointer tracking-003 py-3.5 border-0" %>
         <% else %>
-          <%= link_to "Delete appointment", safe_back_path(calendar_path),
+          <%= link_to t("calendar_events.form.delete_appointment"), safe_back_path(calendar_path),
                 onclick: "if (window.history.length > 1) { window.history.back(); return false; }",
                 data: { turbo: false },
                 class: "block w-full text-center bg-transparent text-brand-primary rounded-lg text-22 font-medium font-sans cursor-pointer tracking-003 py-3.5 border-0 no-underline" %>
@@ -274,7 +281,7 @@
                  active:scale-95 transition-all duration-150 shadow-[0px_4px_9px_rgba(0,0,0,0.07)]",
           style: "bottom: calc(2.5rem + env(safe-area-inset-bottom, 0px));",
           data: { turbo_action: "replace" },
-          aria: { label: "Go to calendar" } do %>
+          aria: { label: t("shared.go_to_calendar") } do %>
       <svg width="42" height="42" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M14.001 3.5V8.75" stroke="#933A35" stroke-width="3" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
         <path d="M28 3.5V8.75" stroke="#933A35" stroke-width="3" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
@@ -349,10 +356,10 @@
                    do, instead of lining up together. w-10 fits the widest
                    icon post-crop (Friends renders ~40px wide at max-h-9). %>
               <span class="w-10 h-9 flex items-center justify-center shrink-0">
-                <%= image_tag(selected ? selected_src : pale_src, alt: item[:label], class: "max-h-9 w-auto",
+                 <%= image_tag(selected ? selected_src : pale_src, alt: category_names[item[:label]], class: "max-h-9 w-auto",
                               data: { icon_pale_src: image_path(pale_src), icon_selected_src: image_path(selected_src) }) %>
               </span>
-              <span><%= item[:label] %></span>
+              <span><%= category_names[item[:label]] %></span>
             </button>
           <% end %>
         </div>
@@ -369,7 +376,7 @@
 
     <%# ── Location picker modal ── %>
     <div data-season-modal-target="locationBackdrop" style="top: env(safe-area-inset-top, 0px);" class="hidden fixed inset-0 bg-black/40 z-[65]"></div>
-    <div data-season-modal-target="locationModal" role="dialog" aria-modal="true" aria-label="Add location"
+    <div data-season-modal-target="locationModal" role="dialog" aria-modal="true" aria-label="<%= t("js.add_location") %>"
          class="hidden fixed inset-0 z-[70] flex items-center justify-center">
       <div data-season-modal-target="locationCard"
            class="w-[347px] h-[301px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] relative transition-[height] duration-[250ms] ease-in-out overflow-hidden">
@@ -397,7 +404,7 @@
                data-action="input->season-modal#searchLocations"
                value="<%= @event.location %>"
                class="absolute left-[50px] top-[130px] w-[249px] h-[52px] bg-transparent border-none p-0 font-medium text-22 leading-[52px] tracking-003 text-brand-primary/50 outline-none"
-               placeholder="Add Location">
+               placeholder="<%= t("js.add_location") %>">
 
         <div data-season-modal-target="locationResults"
              class="absolute left-[33px] top-[190px] w-[283px] max-h-[230px] overflow-y-auto hidden flex-col [scrollbar-width:none]">
@@ -413,7 +420,7 @@
 
     <%# ── Notes modal ── %>
     <div data-season-modal-target="notesBackdrop" style="top: env(safe-area-inset-top, 0px);" class="hidden fixed inset-0 bg-black/40 z-[65]"></div>
-    <div data-season-modal-target="notesModal" role="dialog" aria-modal="true" aria-label="Add notes"
+    <div data-season-modal-target="notesModal" role="dialog" aria-modal="true" aria-label="<%= t("calendar_events.form.add_notes") %>"
          class="hidden fixed inset-0 z-[70] flex items-center justify-center">
       <div class="w-[385px] h-[477px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] relative">
 
@@ -434,7 +441,7 @@
         <div class="absolute left-[32px] top-[158px] w-[322px] h-[225px] bg-brand-field opacity-50 rounded-lg"></div>
         <textarea data-season-modal-target="notesInput"
                   class="absolute left-[53px] top-[158px] w-[280px] h-[225px] bg-transparent border-none py-4 px-0 font-medium text-base leading-5 tracking-007 text-brand-primary/50 outline-none resize-none"
-                  placeholder="Enter your notes here..."></textarea>
+                  placeholder="<%= t("calendar_events.form.enter_notes") %>"></textarea>
 
         <div class="absolute left-[32px] top-[392px] w-[322px] h-[52px] bg-brand-primary rounded-lg"></div>
         <button type="button" data-action="click->season-modal#submitNotes"
@@ -444,7 +451,7 @@
 
     <%# ── Reminder picker modal ── %>
     <div data-season-modal-target="reminderBackdrop" style="top: env(safe-area-inset-top, 0px);" class="hidden fixed inset-0 bg-black/40 z-[65]"></div>
-    <div data-season-modal-target="reminderModal" role="dialog" aria-modal="true" aria-label="Set reminder"
+    <div data-season-modal-target="reminderModal" role="dialog" aria-modal="true" aria-label="<%= t("calendar_events.form.set_reminder") %>"
          class="hidden fixed inset-0 z-[70] flex items-center justify-center">
       <div class="w-[355px] h-[524px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] relative">
 
@@ -467,7 +474,7 @@
              gets its own inserted pill with a clear "X", further down;
              that's a distinct, bigger behaviour change tracked separately
              in docs/M4.md rather than guessed at here. %>
-        <% reminder_options = [[15, '15 minutes earlier'], [60, '1 h earlier'], [1440, '1 day earlier'], [10080, '1 week earlier'], [-1, 'Setting my own timer']] %>
+        <% reminder_options = [[15, t("calendar_events.form.reminder_15_minutes_earlier")], [60, t("calendar_events.form.reminder_1_hour_earlier")], [1440, t("calendar_events.form.reminder_1_day_earlier")], [10080, t("calendar_events.form.reminder_1_week_earlier")], [-1, t("calendar_events.form.reminder_custom_timer")]] %>
         <% sel_min = @event.reminder_minutes || 15 %>
         <% positions = [140, 185, 230, 276, 354] %>
         <% heights = [39, 38, 38, 38, 39] %>
@@ -495,7 +502,7 @@
 
     <%# ── Custom reminder picker modal ── %>
     <div data-season-modal-target="customReminderBackdrop" style="top: env(safe-area-inset-top, 0px);" class="hidden fixed inset-0 bg-black/40 z-[65]" data-action="click->season-modal#closeCustomReminder"></div>
-    <div data-season-modal-target="customReminderModal" role="dialog" aria-modal="true" aria-label="Set reminder"
+    <div data-season-modal-target="customReminderModal" role="dialog" aria-modal="true" aria-label="<%= t("calendar_events.form.set_reminder") %>"
          class="hidden fixed inset-0 z-[70] flex items-center justify-center">
       <div class="w-[355px] h-[380px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] relative">
 
@@ -523,7 +530,7 @@
           </div>
           <div data-season-modal-target="customReminderUnit"
                class="overflow-y-auto snap-y snap-mandatory h-full w-[90px] [scrollbar-width:none] text-center relative z-[1]">
-            <% [['minutes', 'Minutes'], ['hours', 'Hours'], ['days', 'Days']].each_with_index do |(val, label), i| %>
+            <% [['minutes', t("calendar_events.form.minutes")], ['hours', t("calendar_events.form.hours")], ['days', t("calendar_events.form.days")]].each_with_index do |(val, label), i| %>
               <div data-value="<%= val %>" class="h-7 flex items-center justify-center text-base tracking-007 text-brand-primary snap-center snap-always" style="font-weight:<%= i == 0 ? '700' : '400' %>;opacity:<%= i == 0 ? '1' : '0.4' %>"><%= label %></div>
             <% end %>
           </div>
@@ -537,7 +544,7 @@
 
     <%# ── Guests modal ── %>
     <div data-season-modal-target="guestsBackdrop" style="top: env(safe-area-inset-top, 0px);" class="hidden fixed inset-0 bg-black/40 z-[65]"></div>
-    <div data-season-modal-target="guestsModal" role="dialog" aria-modal="true" aria-label="Invite guests"
+    <div data-season-modal-target="guestsModal" role="dialog" aria-modal="true" aria-label="<%= t("calendar_events.form.invite_guests") %>"
          class="hidden fixed inset-0 z-[70] flex items-center justify-center">
       <div data-season-modal-target="guestsCard"
            class="w-[348px] h-[331px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] relative transition-[height] duration-[250ms] ease-in-out overflow-hidden">
@@ -564,7 +571,7 @@
                data-season-modal-target="guestsInput"
                data-action="keydown->season-modal#guestsKeydown"
                class="absolute left-[49px] top-[166px] w-[250px] h-[52px] bg-transparent border-none p-0 font-medium text-22 leading-[52px] tracking-003 text-brand-primary/50 outline-none"
-               placeholder="Add email address">
+               placeholder="<%= t("calendar_events.form.add_email_address") %>">
 
         <div data-season-modal-target="guestsList"
              class="absolute left-[32px] top-[228px] w-[284px] max-h-[120px] overflow-y-auto flex flex-col gap-1 [scrollbar-width:none]">
@@ -580,7 +587,7 @@
 
     <%# ── Repeat modal ── %>
     <div data-season-modal-target="repeatBackdrop" style="top: env(safe-area-inset-top, 0px);" class="hidden fixed inset-0 bg-black/40 z-[65]"></div>
-    <div data-season-modal-target="repeatModal" role="dialog" aria-modal="true" aria-label="Repeat"
+    <div data-season-modal-target="repeatModal" role="dialog" aria-modal="true" aria-label="<%= t("calendar_events.form.repeat") %>"
          class="hidden fixed inset-0 z-[70] flex items-center justify-center">
       <div class="w-[361px] h-[776px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] relative overflow-y-auto [scrollbar-width:none]">
 
@@ -592,7 +599,7 @@
         <p class="absolute left-1/2 -translate-x-1/2 top-[34px] font-medium text-22 leading-[27px] tracking-003 text-brand-primary whitespace-nowrap"><%= t("calendar_events.form.repeat_this_event") %></p>
         <div class="absolute left-[13px] top-[96px] w-[335px] h-0 border border-brand-field"></div>
 
-        <% repeat_opts = [['daily','Daily'],['weekly','Weekly'],['monthly','Monthly'],['yearly','Every Year'],['custom','Custom']] %>
+        <% repeat_opts = [['daily', t("js.repeat_labels.daily")],['weekly', t("js.repeat_labels.weekly")],['monthly', t("js.repeat_labels.monthly")],['yearly', t("js.repeat_labels.yearly")],['custom', t("calendar_events.form.repeat_custom_label")]] %>
         <% sel_repeat = 'monthly' %>
         <% tops = [144,199,254,309,364] %>
         <% repeat_opts.each_with_index do |(val, label), idx| %>
@@ -610,9 +617,9 @@
 
         <div data-season-modal-target="repeatSubOptions" class="absolute left-[30px] right-[30px] top-[456px]">
           <% sub_opts = [
-            {val:'endless', label:'Repeat endlessly', active:true, top:0},
-            {val:'until', label:'Repeat until', active:false, top:49},
-            {val:'count', label:'Repeat', active:false, top:98}
+            {val:'endless', label:t("calendar_events.form.repeat_endlessly"), active:true, top:0},
+            {val:'until', label:t("calendar_events.form.repeat_until"), active:false, top:49},
+            {val:'count', label:t("calendar_events.form.repeat"), active:false, top:98}
           ] %>
           <% sub_opts.each do |opt| %>
             <div class="absolute left-0 right-0 h-[34px] flex items-center justify-between" style="top:<%= opt[:top] %>px">
@@ -626,7 +633,7 @@
                            data-action="input->season-modal#updateRepeatCount"
                            class="w-full h-full bg-transparent border-none text-center font-bold text-brand-primary outline-none placeholder:text-brand-primary/50 placeholder:font-normal [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
                   </div>
-                  <span data-season-modal-target="repeatCountUnit" class="font-medium text-base tracking-007 text-brand-primary">times</span>
+                  <span data-season-modal-target="repeatCountUnit" class="font-medium text-base tracking-007 text-brand-primary"><%= t("calendar_events.form.times") %></span>
                 </div>
               <% elsif opt[:val] == 'until' %>
                 <span data-season-modal-target="repeatUntilRowLabel" class="font-medium text-base tracking-007 text-brand-primary"><%= opt[:label] %></span>
@@ -661,12 +668,12 @@
         <div class="flex flex-col gap-2.5">
           <button type="button" data-season-modal-target="attentionConfirm"
                   class="w-full h-11 bg-brand-primary border-none rounded-[10px] font-medium text-15 text-white cursor-pointer">
-            OK
+            <%= t("js.ok") %>
           </button>
           <button type="button" data-action="click->season-modal#closeAttention"
                   data-season-modal-target="attentionCancel"
                   class="w-full h-11 bg-brand-field border-none rounded-[10px] font-medium text-15 text-brand-primary cursor-pointer">
-            Keep editing
+            <%= t("js.keep_editing") %>
           </button>
         </div>
       </div>
@@ -674,7 +681,7 @@
 
     <%# ── Custom repeat modal ── %>
     <div data-season-modal-target="customRepeatBackdrop" style="top: env(safe-area-inset-top, 0px);" class="hidden fixed inset-0 bg-black/40 z-[65]"></div>
-    <div data-season-modal-target="customRepeatModal" role="dialog" aria-modal="true" aria-label="Custom repeat"
+    <div data-season-modal-target="customRepeatModal" role="dialog" aria-modal="true" aria-label="<%= t("calendar_events.form.custom_repeat") %>"
          class="hidden fixed inset-0 z-[70] flex items-center justify-center">
       <div class="w-[361px] h-[451px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] relative overflow-y-auto [scrollbar-width:none]">
 
@@ -700,9 +707,9 @@
                  class="w-14 h-full bg-transparent border-none font-bold text-base text-brand-primary text-center outline-none">
           <select data-season-modal-target="customRepeatUnit"
                   class="flex-1 h-full bg-transparent border-none font-medium text-base text-brand-primary outline-none">
-            <option value="days">days</option>
-            <option value="weeks" selected>weeks</option>
-            <option value="months">months</option>
+            <option value="days"><%= t("js.custom_unit.days") %></option>
+            <option value="weeks" selected><%= t("js.custom_unit.weeks") %></option>
+            <option value="months"><%= t("js.custom_unit.months") %></option>
           </select>
         </div>
 
@@ -714,7 +721,7 @@
 
     <%# ── Repeat until date modal ── %>
     <div data-season-modal-target="repeatUntilBackdrop" style="top: env(safe-area-inset-top, 0px);" class="hidden fixed inset-0 bg-black/40 z-[65]" data-action="click->season-modal#closeRepeatUntil"></div>
-    <div data-season-modal-target="repeatUntilModal" role="dialog" aria-modal="true" aria-label="Repeat until"
+    <div data-season-modal-target="repeatUntilModal" role="dialog" aria-modal="true" aria-label="<%= t("calendar_events.form.repeat_until") %>"
          class="hidden fixed inset-0 z-[70] flex items-center justify-center">
       <div class="w-[380px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] relative flex flex-col px-[36px] pt-[22px] pb-[22px]">
         <button type="button" data-action="click->season-modal#closeRepeatUntil"
@@ -724,7 +731,7 @@
         <% until_date = evt_date + 30 %>
         <% days_count = (until_date - evt_date).to_i %>
         <% d = until_date.day; m = until_date.month; y = until_date.year %>
-        <% date_label = "#{until_date.strftime('%a')} #{format('%02d', d)} #{Date::ABBR_MONTHNAMES[m]} #{y}" %>
+        <% date_label = l(until_date, format: t("date.formats.repeat_until_label")) %>
         <p class="font-medium text-22 leading-[27px] tracking-003 text-brand-primary text-center pt-2"><%= t("calendar_events.form.repeat_until") %></p>
         <hr class="border-none h-px bg-black opacity-20 w-[132px] self-center mt-3 mb-2">
         <p data-season-modal-target="repeatUntilLabel" class="font-bold text-base tracking-007 text-brand-primary text-center py-2"><%= date_label %></p>

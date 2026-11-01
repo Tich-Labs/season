@@ -4,15 +4,15 @@
 
   <div class="w-full flex flex-col items-center">
     <div class="w-[219px] h-[219px] rounded-full bg-brand-field overflow-hidden mb-10">
-      <%= image_tag("error_screens_login/errorscreen-contact-support.png", alt: "Contact support", class: "w-full h-full object-contain") %>
+      <%= image_tag("error_screens_login/errorscreen-contact-support.png", alt: t('passwords.error_contact.image_alt'), class: "w-full h-full object-contain") %>
     </div>
 
     <p class="text-brand-primary text-lg font-normal tracking-[1.62px] text-center max-w-[290px] mb-12">
-      Something seems off here—please contact our support team!
+      <%= t('passwords.error_contact.message') %>
     </p>
 
     <div class="w-full mb-4">
-      <a href="mailto:info@season.vision" class="block w-[322px] h-[52px] bg-brand-primary text-white text-center leading-[52px] text-22 font-medium tracking-p66 no-underline rounded-lg mx-auto">contact support</a>
+      <a href="mailto:info@season.vision" class="block w-[322px] h-[52px] bg-brand-primary text-white text-center leading-[52px] text-22 font-medium tracking-p66 no-underline rounded-lg mx-auto"><%= t('passwords.error_contact.contact_support') %></a>
     </div>
 
     <a href="<%= new_session_path %>" class="text-brand-primary text-base font-normal no-underline"><%= t("passwords.error_contact.go_back") %></a>

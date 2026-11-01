@@ -20,6 +20,9 @@
       <%= vuesax_icon "sms-notification", size: 24 %>
       <h2 class="text-brand-primary text-base font-bold"><%= t("settings.notifications.heading") %></h2>
     </div>
+    <a href="<%= edit_settings_path %>"
+       onclick="if (window.history.length > 1) { window.history.back(); return false; }"
+       class="inline-block text-sm font-medium no-underline font-sans text-brand-primary mb-2"><%= t("shared.back") %></a>
     <div class="border-b border-brand-divider"></div>
 
     <%# General Push-Notifications %>
@@ -37,7 +40,7 @@
         <span data-push-subscription-target="status" class="text-brand-secondary text-xs ml-2"></span>
       </div>
       <button type="button" id="general_push_toggle" role="switch"
-              aria-label="General Push-Notifications"
+              aria-label="<%= t("settings.notifications.general_push") %>"
               aria-checked="<%= push_on %>"
               data-action="click->push-subscription#toggle"
               data-push-subscription-target="toggle"
@@ -74,13 +77,16 @@
       <%= render "shared/toggle_switch",
             field_id: "cycle_reminder",
             checked: @notifications.cycle_reminder,
-            aria_label: "Good morning set" %>
+            aria_label: t("settings.notifications.good_morning") %>
     </div>
-    <div class="mb-3">
-      <p class="text-brand-muted text-sm font-medium m-0"><%= t("settings.notifications.summary_time") %></p>
-      <p class="text-brand-primary text-[10px] font-medium mt-1 leading-relaxed">
-        Superpower of the day, pay attention to, mood, sport, nutrition, fertility
-      </p>
+    <div class="flex items-center justify-between mb-3">
+      <div>
+        <p class="text-brand-muted text-sm font-medium m-0"><%= t("settings.notifications.summary_time") %></p>
+        <p class="text-brand-primary text-[10px] font-medium mt-1 leading-relaxed">
+          <%= t("settings.notifications.morning_contents") %>
+        </p>
+      </div>
+      <%= link_to t("settings.notifications.edit"), notification_morning_settings_path, class: "text-brand-muted text-sm font-medium no-underline self-start" %>
     </div>
     <div class="border-b border-brand-divider"></div>
 
@@ -90,7 +96,7 @@
       <%= render "shared/toggle_switch",
             field_id: "period_prediction",
             checked: @notifications.period_prediction,
-            aria_label: "Period reminder" %>
+            aria_label: t("settings.notifications.period_reminder") %>
     </div>
     <div class="flex items-center justify-between mb-3">
       <div class="flex gap-4">
@@ -107,7 +113,7 @@
       <%= render "shared/toggle_switch",
             field_id: "ovulation_alert",
             checked: @notifications.ovulation_alert,
-            aria_label: "Birth control reminder" %>
+            aria_label: t("settings.notifications.birth_control") %>
     </div>
     <div class="flex items-center justify-between mb-3">
       <div>
@@ -135,7 +141,7 @@
         <%= render "shared/toggle_switch",
               field_id: "newsletter",
               checked: @notifications.newsletter,
-              aria_label: "Supplement reminder" %>
+              aria_label: t("settings.notifications.supplement") %>
       </div>
       <div class="flex items-center justify-between mb-3">
         <p class="text-brand-muted text-sm font-medium m-0"><%= t("settings.notifications.daily_pm") %></p>
@@ -156,7 +162,7 @@
         <%= render "shared/toggle_switch",
               field_id: "email_notifications",
               checked: inapp_on,
-              aria_label: "In-App Popups" %>
+              aria_label: t("settings.notifications.in_app_popups") %>
       </div>
       <% [
         ["in_app_new_appt_synced",   t("settings.notifications.in_app_new_appt")],

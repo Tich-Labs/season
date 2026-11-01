@@ -316,7 +316,7 @@ class SettingsController < ApplicationController
       # Rendered inline inside the reopened password modal (see profile.html.erb),
       # not the top-of-page flash banner — that was easy to miss since this form
       # does a full page reload, closing the modal, with no error visible on it.
-      redirect_to profile_settings_path, flash: {password_modal_error: t(".invalid_password", default: "Current password is wrong, please try again")}
+      redirect_to profile_settings_path, flash: {password_modal_error: t(".invalid_password")}
       return
     end
 

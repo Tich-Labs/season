@@ -2,6 +2,10 @@ en:
 
   beta_onboarding:
     eyebrow_beta: "BETA"
+    platforms:
+      ios: "Apple iOS"
+      android: "Android"
+      web: "Web"
     language:
       label: "Language"
     before_you_start:
@@ -107,6 +111,17 @@ en:
   beta_invite_mailer:
     android_group_links:
       subject: "Your Season Android beta access 📱"
+      heads_up: "A heads-up from Season"
+      greeting: "Hi %{name},"
+      greeting_anonymous: "Hi there,"
+      intro: "You're on the list to test Season on Android. Here's how to get the app:"
+      step_group_label: "Step 1 — Join the tester group"
+      step_play_label: "Step 2 — Open in Google Play"
+      join_group: "Join the tester group"
+      open_play: "Open in Google Play"
+      text_open_play: "Open in Google Play and tap \"Become a tester\":"
+      become_tester_hint: "Use the Google account you use on your phone, and tap \"Become a tester\" in the Play Store. Google can take a short while to activate your access — if the button isn't ready yet, try again in a little while."
+      questions: "Questions? Reply to %{email}"
 
   legal:
     full_text:
@@ -114,6 +129,16 @@ en:
       back_to_flow: "← Back"
 
   date:
+    # Locale-specific named formats for views that used strftime literals.
+    # Keep word order and punctuation per locale (see de.yml).
+    formats:
+      superpower_day: "%A, %-d %B"
+      day_month_year: "%-d %B %Y"
+      event_card: "%a. %b %{day} %Y"
+      repeat_until_label: "%a %d %b %Y"
+      appointment_day: "%A, %-d. %B"
+    # Day-of-month with the locale's suffix. %{ordinal} is English "1st".
+    ordinal_day: "%{ordinal}"
     # Sunday-first, matching JS Date#getDay() — used to build the
     # appointment date/time picker's weekday abbreviations locale-aware
     # instead of a hardcoded English array. 3 letters, not 1: a single
@@ -167,6 +192,7 @@ en:
       coming_soon: "Coming soon"
       premium_now: "Get Season Premium now"
       premium_benefits: "for even more benefits!"
+      premium: "Premium"
       schedule_overview: "Schedule Overview"
       day_view: "Day-View"
       weekly_view: "Weekly-View"
@@ -205,6 +231,27 @@ en:
         submit: "Log In"
         no_account: "I am new... Sign up!"
         forgot_password: "I forgot my password..."
+    confirmations:
+      new:
+        back: "‹ back"
+        title_html: "Resend<br>confirmation"
+        email_label: "Email"
+        email_placeholder: "E–mail..."
+        submit: "Resend confirmation"
+        sending: "Sending..."
+        back_to_login: "Back to Log in"
+    mailer:
+      fallback_link: "Button not working? Copy and paste this link into your browser:"
+      reset_password_instructions:
+        heading: "Reset your password"
+        greeting: "Hi %{email} — someone requested a password reset for your Season account."
+        button: "Reset my password"
+        expiry_html: "This link expires in <strong>2 hours</strong>. If you didn't request a reset, you can safely ignore this email — your password won't change."
+      confirmation_instructions:
+        heading: "Welcome to Season 🌸"
+        greeting: "Hi %{email} — please confirm your email address to activate your account."
+        button: "Confirm my account"
+        ignore_notice: "If you didn't sign up for Season, you can safely ignore this email."
   home:
     welcome_title: "Welcome to Season!"
     welcome_subtitle: "Maximize your productivity with the help of your cycle."
@@ -215,6 +262,11 @@ en:
     wordmark_alt: "Season title"
     welcome_text: "Welcome to Season!<br>Maximize your productivity with the help of your cycle."
   onboarding:
+    invite:
+      welcome_back: "Welcome back, %{name}!"
+      account_ready: "Your Season V2 account is ready."
+      password_placeholder: "Set your password..."
+      submit: "Get started"
     back: "Back"
     errors:
       name_required: "Please enter your name"
@@ -273,11 +325,15 @@ en:
       methods:
         - "None"
         - "Birth control pill"
-        - "Hormonering"
-        - "Hormoneplaster"
-        - "Hormone injection"
+        - "Hormone ring"
+        - "Hormone patch"
+        - "Hormonal IUD"
         - "Copper IUD"
         - "Hormonal implant"
+        - "Hormone injection"
+      date_heading: "When was “%{method}” last inserted or injected?"
+      date_help: "We'll use this to show when a replacement is due."
+      date_submit: "Continue"
     step9:
       heading: "Would you like a reminder of your cycle stages to be more prepared?"
       body: "You will receive it two days before the predicted start date of your cycle phase. You can change these later."
@@ -328,8 +384,13 @@ en:
       your_cycle:
         description: "Track your cycle to see your phase."
         tips: []
+    day_cell:
+      full_moon: "Full moon"
+      new_moon: "New moon"
     appointments:
       no_appointments_this_month: "No appointments this month"
+      add_appointment: "Add appointment"
+      cycle_day: "Day"
     index:
       day_view: "Day View"
       week_view: "Week View"
@@ -351,6 +412,10 @@ en:
 
       season_modal_tips: "Tips for this phase"
       season_modal_got_it: "Got it"
+      appointment_scheduled: "Your appointment has been scheduled!"
+      appointment_scheduled_label: "Appointment scheduled"
+      fallback_name: "there"
+      season_emoji_label: "%{season} phase emoji"
   phases:
     menstrual: "Menstrual"
     follicular: "Follicular"
@@ -407,8 +472,20 @@ en:
       track_my_period: "Track My Period"
       cycle_day: "Cycle Day"
       give_feedback: "Give feedback"
+      change_avatar_aria: "Change profile picture"
+      phase_heading: "%{phase} Phase"
+      analysis:
+        menstrual: "This is your time to rest and restore. Listen to your body — it knows what it needs."
+        follicular: "Energy is rising and ideas are flowing. A great time to start new projects and plan ahead."
+        ovulation: "You are magnetic and at your peak. Embrace social connection and communicate with confidence."
+        luteal: "Turn inward and focus on the details. Execute projects and reflect on what matters most."
+        default: "Track your symptoms daily to unlock personalized insights."
+      tracking_saved_aria: "Tracking saved"
+      saved_prediction: "Your prediction will be adjusted based on the information you provide"
+      done: "Done"
     period:
       page_title: "Track my period"
+      submit: "Submit"
     period_update:
       saved: "Period dates saved."
       end_saved: "Period end date saved."
@@ -449,15 +526,59 @@ en:
       attention: "Attention"
       repeat: "Repeat"
       from: "From"
+      to: "To"
       all_day: "All day"
       set_date: "Set date"
+      choose_event_type: "Choose event type"
+      edit_date_time: "Edit date and time"
+      remove_reminder: "Remove reminder"
+      enter_title: "Enter title"
+      set_appointment: "Set appointment"
+      delete_appointment: "Delete appointment"
+      add_notes: "Add notes"
+      enter_notes: "Enter your notes here..."
+      add_email_address: "Add email address"
+      home: "Home"
+      cancel: "Cancel"
+      repeat_endlessly: "Repeat endlessly"
+      repeat_custom_label: "Custom"
+      times: "times"
+      minutes: "Minutes"
+      hours: "Hours"
+      days: "Days"
+      reminder_15_minutes_earlier: "15 minutes earlier"
+      reminder_1_hour_earlier: "1 h earlier"
+      reminder_1_day_earlier: "1 day earlier"
+      reminder_1_week_earlier: "1 week earlier"
+      reminder_custom_timer: "Setting my own timer"
+      reminder_2_hours_before: "2 hours before"
+      am: "AM"
+      pm: "PM"
+      notify_all_parties: "Notify all parties involved"
+      notify_nobody: "Notify nobody"
+      recurring_edit_single: "Edit only this event"
+      recurring_edit_forward: "Edit this and subsequent events"
+      recurring_edit_all: "Edit all events"
     index:
       title: "Appointments"
       note: "Note:"
       no_appointments_yet: "No appointments yet"
       create_first_appointment: "Create your first appointment to get started"
+      create_appointment: "Create appointment"
     show:
       invite_guests: "Invite guests"
+      edit_appointment: "Edit appointment"
+      confirm_delete: "Are you sure?"
+    categories:
+      friends: "Friends"
+      dinner: "Dinner"
+      date: "Date"
+      sport: "Sport"
+      medical: "Medical"
+      birthday: "Birthday"
+      work: "Work"
+      coffee: "Coffee"
+      shopping: "Shopping"
   admin:
     cycle_phase_contents:
       create:
@@ -482,8 +603,37 @@ en:
   passwords:
     new:
       email: "Email"
+      back: "‹ back"
+      title_html: "Change<br>password"
+      email_placeholder: "E–mail..."
+      submit: "Forgot password"
+      sending: "Sending..."
+      sign_up_link: "I'm new — Sign up!"
+    done:
+      title_html: "Check your<br>E-Mail inbox"
+      back_to_login: "Back to LogIn"
+    error_already_reset:
+      image_alt: "Already reset"
+      message: "We already sent you an email an hour ago to help you reset your password; you'll need to wait an hour before you can try again"
+      go_back: "Go back to login"
     error_contact:
       go_back: "Go back to LogIn"
+      image_alt: "Contact support"
+      message: "Something seems off here—please contact our support team!"
+      contact_support: "contact support"
+    error_inbox_full:
+      image_alt: "Inbox full"
+      message: "Your email inbox is full and isn't accepting our emails"
+      go_back: "Go back to login"
+    error_link_expired:
+      image_alt: "Link expired"
+      message: "That link has expired. Please request a new password reset email."
+      request_new_link: "Request new link"
+      back_to_login: "Back to login"
+    error_wrong_email:
+      image_alt: "Wrong email"
+      message: "The provider of your email address has reported that your email address is unknown. Did you make a typo?"
+      go_back: "Go back to login"
     create:
       unable_to_send: "Unable to send reset email. Please contact support."
     edit:
@@ -560,6 +710,8 @@ en:
       name_field: "Name"
       cycle_length: "Cycle Length (days)"
       period_length: "Period Length (days)"
+      avatar_alt: "Profile"
+      password_confirm_placeholder: "Enter your password to confirm"
     calendar:
       title: "My Calendar"
       links_and_syncs: "Links & Syncs"
@@ -643,6 +795,8 @@ en:
       push_enabled: "Enabled"
       push_off: "Off"
       push_blocked: "Blocked"
+      back_to_settings: "Back to settings"
+      morning_contents: "Superpower of the day, pay attention to, mood, sport, nutrition, fertility"
     notification_birth_control:
       title: "Birth Control Reminder"
       current_method: "Current method"
@@ -650,12 +804,125 @@ en:
       keep_track_of: "Keep track of:"
       active_days: "Active days"
       break_days: "Break days"
+      change: "Change"
+      aria_enable: "Enable birth control reminder"
+      reminder_time: "Reminder time"
+      cycle_tracking: "Cycle tracking"
+      today_is_day_html: "Today is day <strong>%{day}</strong> of the %{method}"
+      no_method_hint: "No birth control method selected. Tap \"Change\" above to set your method."
+      choose_method: "Choose your method"
+      method_saved: "Birth control method updated."
+      renewal: "Renewal"
+      last_inserted: "When was it last inserted or injected?"
+      renewal_due_on: "Renewal due on %{date}"
+      renewal_overdue: "Renewal overdue — was due %{date}"
+      variant: "Variant"
+      pack_start: "When did you start this pack?"
+      ring_inserted: "When did you insert it?"
+      patch_applied: "When did you apply it?"
+      skip_break: "Skip the ring-free week"
+      duration_years: "Duration (years)"
+      next_due_on: "Next due %{date}"
+      expires_on: "Expires %{date}"
+      expires_overdue: "Expired on %{date}"
+      lead_days_info: "You'll be reminded %{first} days and %{second} days before."
+      eyebrow: "Birthcontrolreminder"
+      name_reminder: "Name reminder"
+      name_placeholder: "Give your reminder a name"
+      recalling_in_stages: "Recalling in stages"
+      send_regular_reminders: "Send regular reminders"
+      schedule: "Schedule"
+      messages_title: "Message"
+      lead_days_title: "Remind me before"
+      message_labels:
+        daily: "Daily reminder"
+        insert: "Insert reminder"
+        remove: "Removal reminder"
+        apply: "Apply reminder"
+        appointment: "Appointment reminder"
+        checkup: "Checkup reminder"
+        replace: "Replacement reminder"
+        injection: "Injection reminder"
+      lead_day_stages:
+        one_month: "1 month before"
+        two_weeks: "2 weeks before"
+        one_week: "1 week before"
+        one_day: "1 day before"
+      message_defaults:
+        pill:
+          daily: "Remember to take your pill today."
+        hormonering:
+          insert: "Your ring-free week is over — insert a new ring today."
+          remove: "Remove your hormone ring today and start your ring-free week."
+        plaster:
+          apply: "Your patch-free week is over — apply a new patch today."
+          remove: "Remove your patch today and take your patch-free week."
+        hormonal_iud:
+          appointment: "Make an appointment with your gynecologist for a checkup."
+          checkup: "It's time for your IUD checkup — make an appointment."
+          replace: "Your IUD is due for replacement soon."
+        copper_iud:
+          appointment: "Make an appointment with your gynecologist for a checkup."
+          checkup: "It's time for your IUD checkup — make an appointment."
+          replace: "Your IUD is due for replacement soon."
+        implant:
+          appointment: "Make an appointment with your gynecologist for a checkup."
+          checkup: "It's time for your implant checkup — make an appointment."
+          replace: "Your implant is due for replacement soon."
+        injection:
+          appointment: "Make an appointment for your next injection."
+          injection: "Your next injection is due — book your appointment."
+      methods:
+        pill: "Pill"
+        hormonering: "Hormone Ring"
+        plaster: "Patch"
+        hormonal_iud: "Hormonal IUD"
+        copper_iud: "Copper IUD"
+        implant: "Implant"
+        injection: "Injection"
+        none: "No birth control"
+      variants:
+        pill:
+          "21_7": "21 + 7"
+          "24_4": "24 + 4"
+          "28_continuous": "28 (continuous)"
+          progestin_only: "Progestin-only"
+        hormonal_iud:
+          mirena: "Mirena"
+          liletta: "Liletta"
+          kyleena: "Kyleena"
+          skyla: "Skyla"
+        implant:
+          nexplanon: "Nexplanon"
+          implanon: "Implanon"
+          jadelle: "Jadelle"
+        injection:
+          depo_provera: "Depo-Provera"
+          sayana_press: "Sayana Press"
+          noristerat: "Noristerat"
     notification_period:
       title: "Period Reminder"
       enable: "Enable Period Reminder"
+      description: "Get reminded when your period is about to start and when it ends. Set the exact times that work for you."
+      aria_enable: "Enable period reminder"
+      start_reminder: "Period start reminder"
+      end_reminder: "Period end reminder"
+      advance_notice: "Advance notice"
+      advance_days:
+        one: "%{count} day"
+        other: "%{count} days"
     notification_morning:
       title: "Good Morning Set"
       enable: "Enable Good Morning"
+      description: "Your daily morning summary: phase of the day, superpower, tips for sport & nutrition."
+      aria_enable: "Enable Good Morning notification"
+      delivery_time: "Delivery time"
+      whats_included: "What's included"
+      included_phase: "Cycle phase of the day"
+      included_superpower: "Your superpower"
+      included_sport: "Sport recommendation"
+      included_nutrition: "Nutrition tip"
+      included_fertility: "Fertility status"
     subscriptions:
       title: "My Subscriptions"
       my_plan: "My Plan"
@@ -711,14 +978,120 @@ en:
     show_pin: "Show PIN"
     hide_pin: "Hide PIN"
     input_label: "PIN code"
+  reminders:
+    birth_control:
+      pill_daily:
+        subject: "Time for your pill"
+        body: "Remember to take your pill today."
+      pill_placebo:
+        subject: "Pill-free week"
+        body: "You're on your break week — no pill today."
+      ring_remove:
+        subject: "Time to remove your ring"
+        body: "Remove your hormone ring today and start your ring-free week."
+      ring_insert:
+        subject: "Time to insert your ring"
+        body: "Your ring-free week is over — insert a new ring today."
+      ring_swap:
+        subject: "Time to swap your ring"
+        body: "Swap your hormone ring today."
+      patch_change:
+        subject: "Time to change your patch"
+        body: "Change your patch today."
+      patch_free:
+        subject: "Patch-free week"
+        body: "Remove your patch today and take your patch-free week."
+      patch_apply:
+        subject: "Time to apply your patch"
+        body: "Your patch-free week is over — apply a new patch today."
+      expiry:
+        subject: "Your contraception is expiring"
+        body: "Your contraception is due for replacement on %{date}."
+      injection_due:
+        subject: "Your next injection is coming up"
+        body: "Your next injection is due on %{date}."
   reminder_mailer:
+    common:
+      heads_up: "A heads-up from Season"
+      open_season: "Open Season"
+      manage_reminders: "Manage reminders"
+      log_in_season: "Log in Season"
+      today: "Today"
+      day_of_cycle: "Day %{day} of your cycle"
+      date_format: "%A, %B %-d"
     morning_summary:
       subject: "Good morning, %{name} 🌸 Your Season summary"
+      greeting: "Good morning, %{name} 🌸"
+      subtitle: "Here's your Season summary for today"
+      phase_label: "Your cycle phase"
+      footer_reason: "You're receiving this because you enabled morning reminders in Season."
+      superpower: "Superpower"
+      movement: "Movement"
+      nutrition: "Nutrition"
+      focus_label: "Today's focus"
+      focus:
+        superpower:
+          menstrual: "Rest & reflect"
+          follicular: "New beginnings"
+          ovulation: "Connect & create"
+          luteal: "Analyse & plan"
+        movement:
+          menstrual: "Gentle yoga or walking"
+          follicular: "HIIT & strength training"
+          ovulation: "High-intensity cardio"
+          luteal: "Moderate, steady exercise"
+        nutrition:
+          menstrual: "Iron-rich foods & warmth"
+          follicular: "Light, fresh foods"
+          ovulation: "Raw & vibrant foods"
+          luteal: "Complex carbs & magnesium"
+      text_heading: "YOUR SEASON SUMMARY"
+      text_focus: "TODAY'S FOCUS"
+      text_cycle_phase: "Cycle phase: %{phase} · %{season}"
     period_reminder:
       subject_period_start: "Your period is starting soon 🌙"
       subject_period_end: "Your period is almost over 🌱"
+      headline_start: "Your period is starting soon 🌙"
+      headline_end: "Your period is almost over 🌱"
+      expected_start: "Expected period start"
+      expected_end: "Expected period end"
+      body_start: "Your body is entering the menstrual phase. Take it easy, prioritise warmth and rest, and listen to what you need."
+      body_end: "Your period is wrapping up. The follicular phase is just ahead — energy and clarity are on their way."
+      prepare_with: "Prepare with"
+      coming_next: "Coming next"
+      tips_start:
+        warm_baths: "Warm baths or a heating pad"
+        dark_chocolate: "Dark chocolate for magnesium"
+        extra_rest: "Extra rest is productive"
+        journalling: "Journalling and reflection"
+      tips_end:
+        energy: "Energy begins to rise"
+        exercise: "Great time to start exercising"
+        lighter_foods: "Focus on lighter, fresh foods"
+        clarity: "Clarity and motivation return"
     birth_control_reminder:
       subject: "Your daily reminder 💊 Season"
+      methods:
+        pill: "your pill"
+        hormonering: "your hormone ring"
+        plaster: "your patch"
+        hormonal_iud: "your hormonal IUD"
+        copper_iud: "your copper IUD"
+        implant: "your implant"
+        injection: "your injection"
+        none: "your contraception"
+      title: "Time for %{method}"
+      text_title: "Time for %{method} reminder"
+      daily_reminder: "Daily reminder from Season"
+      stay_consistent: "Stay consistent — taking %{method} at the same time every day is key to its effectiveness."
+      quick_tip: "Quick tip"
+      missed_dose: "If you miss a dose, check the instructions for %{method} brand. Most methods have catch-up rules — don't panic."
+  support_mailer:
+    support_request:
+      subject: "[Season Support] %{message}"
+      heading: "New Support Request"
+      from: "From:"
+      message: "Message:"
   bug_reports:
     create:
       thank_you: "Thank you for reporting this bug!"
@@ -746,6 +1119,7 @@ en:
       title: "Check your inbox"
       description: "We sent a confirmation link to your email. Click it to activate your account."
       resend: "Resend confirmation email"
+      back_to_login: "Back to login"
     new:
       errors:
         oops: "OOPS!"
@@ -754,6 +1128,9 @@ en:
       email: "Email"
       password: "Password"
       repeat_password: "Repeat password"
+      sign_up_with: "Sign up with %{provider}"
+      terms_link: "terms of use"
+      privacy_link: "privacy policy"
   sessions:
     new:
       errors:
@@ -766,9 +1143,28 @@ en:
       please_try_again: "Please try again."
       unrecognized_email: "Hmm... we don't recognize this email."
       check_again_or_sign_up: "Check again or sign up."
+      sign_in_with: "Sign in with %{provider}"
+      email_instead: "Log in with email instead"
+      unconfirmed_hint_html: "Check your inbox, or %{link}."
+      resend_confirmation: "resend the confirmation email"
     rate_limited:
       too_many_attempts: "Too many login attempts. Please try again later."
+    pin_login:
+      wrong_pin: "Wrong PIN. Please try again."
+      rate_limited: "Too many attempts. Please wait 15 minutes."
   symptoms:
+    show:
+      mood: "Mood"
+      energy: "Energy"
+      pain: "Pain"
+      sleep: "Sleep"
+      physical: "Physical"
+      mental: "Mental"
+      cravings: "Cravings"
+      discharge: "Discharge"
+      temperature: "Temperature"
+      notes: "Notes"
+      view_day: "View day"
     moods:
       balanced: "Balanced"
       worried: "Worried"
@@ -828,6 +1224,7 @@ en:
       page_title: "My Symptoms"
       mood_picker_aria: "Mood picker"
       phase_heading: "%{phase} Phase"
+      unknown_phase: "Unknown"
       slider_aria: "%{label} intensity"
       confirm_tracking_title: "Confirm tracking"
       mood: "Mood"
@@ -877,6 +1274,7 @@ en:
     discharge:
       title: "Discharge"
       page_title: "Discharge"
+      cervical_mucus_tracking: "Cervical mucus tracking"
     # Content for the "?" info modal on each Vaginal Discharge grid icon.
     # Source: docs/Cervical mucus tracking(Tabelle1).csv — the 7 keys match
     # the discharge_grid keys in symptoms/index.html.erb. Spotting/Period
@@ -937,6 +1335,30 @@ en:
       track_today: "Track today to keep streak"
       more_days: "%{count} more days to %{milestone}"
   superpowers:
+    # Display names for SUPERPOWERS (app/controllers/superpowers_controller.rb).
+    # Keys are the name downcased with non-letters replaced by "_"; the stored
+    # rating keys stay the English names.
+    items:
+      spatial_reasoning: "Spatial reasoning"
+      developing_planning_projects: "Developing/planning projects"
+      executing_projects: "Executing projects"
+      imaginative: "Imaginative"
+      creativity: "Creativity"
+      quick_on_the_uptake: "Quick on the uptake"
+      high_intellectual_capacity: "High intellectual capacity"
+      eloquent: "Eloquent"
+      drive: "Drive"
+      talkative: "Talkative"
+      self_confidence: "Self-confidence"
+      positivity: "Positivity"
+      motivated: "Motivated"
+      extroverted: "Extroverted"
+      feeling_attractive: "Feeling attractive"
+      good_listener: "Good listener"
+      open_to_change: "Open to change"
+      focused: "Focused"
+      making_decisions_is_easier: "Making decisions is easier"
+      self_reflective: "Self-reflective"
     index:
       page_title: "Superpowers"
       title: "Today's superpowers"
@@ -946,6 +1368,12 @@ en:
       submit_tracking: "Submit tracking"
       go_back: "Go back to change"
       recent_logs: "Recent logs"
+      phase_heading: "%{phase} Phase"
+      rating_aria: "%{name} rating"
+      level_low: "low"
+      level_medium: "medium"
+      level_high: "high"
+      rated: "%{count} rated"
       no_logs: "No superpowers logged for this day."
     show:
       page_title: "Superpowers — %{date}"
@@ -986,6 +1414,8 @@ en:
   # layouts/application.html.erb and read via app/javascript/i18n.js.
   js:
     all_day: "All day"
+    submit: "Submit"
+    superpowers_rated: "%{count} superpowers rated"
     month_names: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
     language_updated: "Language updated"
     language_update_failed: "Failed to update language"
@@ -1136,6 +1566,7 @@ en:
     close: "Close"
     got_it: "Got it"
     go_to_calendar: "Go to calendar"
+    greeting_anonymous: "Hello there"
     consent_info:
       what: "What this includes:"
       why: "Why we need it:"
@@ -1336,8 +1767,13 @@ en:
       title: "Notifications"
       no_notifications: "No notifications yet"
       all_caught_up: "You're all caught up!"
+      time_ago: "%{time} ago"
     show:
       title: "Notification"
+      mark_as_read: "Mark as read"
+      delete: "Delete"
+      confirm_delete: "Are you sure?"
+      created_at_format: "%B %-d, %Y at %-I:%M %p"
     mark_read:
       success: "Notification marked as read."
     destroy:

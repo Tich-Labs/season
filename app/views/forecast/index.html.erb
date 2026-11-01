@@ -42,7 +42,8 @@
     <%# ── Greeting ─────────────────────────────────────────────────────── %>
     <div class="pt-2 pb-2">
       <p class="italic font-medium text-4xl leading-[44px] font-sans m-0" style="color:var(--phase-color)">
-        <%= t("forecast.index.greeting", name: current_user.name&.split&.first || "there") %>
+        <% first_name = current_user.name&.split&.first %>
+        <%= first_name ? t("forecast.index.greeting", name: first_name) : t("shared.greeting_anonymous") %>
       </p>
       <p class="font-medium text-2xl leading-[29px] font-sans m-0 mt-1" style="color:var(--phase-color)">
         <%= t("forecast.index.phase_prefix_season") %> <%= phase_name %>
@@ -115,7 +116,7 @@
           <%= link_to new_calendar_event_path(date: @selected_date),
                 class: "inline-flex items-center justify-center w-8 h-8 rounded-full no-underline",
                 style: "background:var(--phase-color)",
-                aria: { label: t("forecast.index.add_appointment", default: "Add appointment") } do %>
+                aria: { label: t("forecast.index.add_appointment") } do %>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
               <path d="M12 5v14M5 12h14" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" />
             </svg>
@@ -156,7 +157,7 @@
           <button type="button"
                   data-action="<%= card[:key] == 'mood' ? '' : 'click->forecast-modal#open' %>"
                   data-forecast-modal-title="<%= card[:key] == 'mood' ? '' : card[:title] %>"
-                  data-forecast-modal-body="<%= card[:key] == 'mood' ? '' : h(content&.long_text || 'No content yet for this day.') %>"
+                  data-forecast-modal-body="<%= card[:key] == 'mood' ? '' : h(content&.long_text || t("forecast.index.no_content")) %>"
                   data-forecast-modal-food="<%= card[:key] == 'mood' || card[:key] != 'nutrition' || !content&.food_items.present? ? '' : h(content.food_items.to_json) %>"
                   class="rounded-xl p-4 text-center w-full <%= card[:key] == 'mood' ? '' : 'cursor-pointer hover:shadow-md' %> transition-shadow border-0"
                   style="min-height:95px;background:color-mix(in srgb, var(--phase-color) 10%, transparent)">
@@ -189,6 +190,16 @@
           </button>
         <% end %>
       </div>
+    <%# ── Track my day — opens tracking on the selected day. Past and today only;
+         future days are not trackable, so the button is not rendered. ── %>
+    <% if @selected_date <= Time.zone.today %>
+      <div class="flex justify-center mt-8">
+        <%= link_to t("menu.track_day"), tracking_index_path(date: @selected_date.to_s),
+              data: { turbo: false },
+              class: "inline-block w-[253px] rounded-lg py-[14px] text-white text-xl font-medium font-sans text-center no-underline",
+              style: "background:var(--phase-color)" %>
+      </div>
+    <% end %>
     </div>
 
     <%# ── Modal ─────────────────────────────────────────────────────────── %>
@@ -196,7 +207,7 @@
          data-forecast-modal-target="modal"
          data-action="click->forecast-modal#overlayClick">
       <div class="relative bg-white rounded-[29px] mx-4 p-6 pt-10 overflow-y-auto" style="width:337px; max-height:80vh;">
-        <button data-action="click->forecast-modal#close" aria-label="Close"
+        <button data-action="click->forecast-modal#close" aria-label="<%= t("shared.close") %>"
                 class="absolute top-3 right-3 w-[44px] h-[44px] rounded-full flex items-center justify-center border-0 cursor-pointer"
                 style="background:#EDE1D5;">
           <span class="text-2xl font-medium leading-none font-sans" style="color:var(--phase-color)">&times;</span>
@@ -219,7 +230,7 @@
              active:scale-95 transition-all duration-150 shadow-[0px_4px_9px_rgba(0,0,0,0.07)]",
       style: "bottom: calc(2.5rem + env(safe-area-inset-bottom, 0px));",
       data: { turbo_action: "replace" },
-      aria: { label: "Go to calendar" } do %>
+      aria: { label: t("shared.go_to_calendar") } do %>
   <svg width="42" height="42" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M14.001 3.5V8.75" stroke="#933A35" stroke-width="3" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
     <path d="M28 3.5V8.75" stroke="#933A35" stroke-width="3" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />

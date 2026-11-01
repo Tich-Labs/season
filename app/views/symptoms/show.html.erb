@@ -21,7 +21,7 @@
         </svg>
       </a>
       <div>
-        <h1 style="color:<%= @phase_colour %>; font-size:20px; font-weight:700;"><%= @symptom_log.date.strftime("%A, %d %B") %></h1>
+        <h1 style="color:<%= @phase_colour %>; font-size:20px; font-weight:700;"><%= l(@symptom_log.date, format: "%A, %d %B") %></h1>
       </div>
     </div>
   </div>
@@ -31,14 +31,14 @@
     <!-- Stats grid -->
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;">
       <% [
-        [:mood,     "Mood",     "😊"],
-        [:energy,   "Energy",   "⚡"],
-        [:pain,     "Pain",     "🤕"],
-        [:sleep,    "Sleep",    "😴"],
-        [:physical, "Physical", "💪"],
-        [:mental,   "Mental",   "🧠"],
-        [:cravings, "Cravings", "🍫"],
-        [:discharge,"Discharge","💧"]
+        [:mood,     t("symptoms.show.mood"),      "😊"],
+        [:energy,   t("symptoms.show.energy"),    "⚡"],
+        [:pain,     t("symptoms.show.pain"),      "🤕"],
+        [:sleep,    t("symptoms.show.sleep"),     "😴"],
+        [:physical, t("symptoms.show.physical"),  "💪"],
+        [:mental,   t("symptoms.show.mental"),    "🧠"],
+        [:cravings, t("symptoms.show.cravings"),  "🍫"],
+        [:discharge,t("symptoms.show.discharge"), "💧"]
       ].each do |field, label, emoji| %>
         <% value = @symptom_log.send(field) %>
         <% if value %>
@@ -60,7 +60,7 @@
     <!-- Temperature -->
     <% if @symptom_log.temperature %>
       <div style="background:#ffffff; border-radius:12px; padding:14px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
-        <span style="color:#6B6B6B; font-size:14px; font-weight:500;">🌡️ Temperature</span>
+        <span style="color:#6B6B6B; font-size:14px; font-weight:500;">🌡️ <%= t("symptoms.show.temperature") %></span>
         <span style="color:#933a35; font-size:18px; font-weight:700;"><%= @symptom_log.temperature %>°C</span>
       </div>
     <% end %>
@@ -68,7 +68,7 @@
     <!-- Notes -->
     <% if @symptom_log.notes.present? %>
       <div style="background:#ffffff; border-radius:12px; padding:16px;">
-        <p style="color:#6B6B6B; font-size:13px; font-weight:500; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px;">📝 Notes</p>
+        <p style="color:#6B6B6B; font-size:13px; font-weight:500; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px;">📝 <%= t("symptoms.show.notes") %></p>
         <p style="color:#933a35; font-size:15px; line-height:1.5;"><%= @symptom_log.notes %></p>
       </div>
     <% end %>
@@ -76,7 +76,7 @@
     <!-- Back to daily view -->
     <a href="<%= daily_view_path(date: @symptom_log.date.to_s) %>"
        style="display:block; width:100%; background:#933a35; color:#ffffff; text-align:center; padding:16px; border-radius:12px; font-size:16px; font-weight:500; text-decoration:none; margin-top:16px;">
-      View day
+      <%= t("symptoms.show.view_day") %>
     </a>
 
   </div>

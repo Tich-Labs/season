@@ -60,6 +60,27 @@ class Settings::LanguageControllerTest < ActionDispatch::IntegrationTest
     assert_equal "de", @alice.reload.language
   end
 
+  # Only languages with a real locale file are selectable. The rest are
+  # listed greyed out with "Coming soon".
+  test "GET /settings/language disables languages without translations" do
+    get settings_language_path
+    assert_match(/<input[^>]*value="es"[^>]*disabled/m, response.body)
+    assert_match(/Coming soon/, response.body)
+  end
+
+  test "GET /settings/language keeps translated languages selectable" do
+    get settings_language_path
+    assert_no_match(/<input[^>]*value="en"[^>]*disabled/m, response.body)
+    assert_no_match(/<input[^>]*value="de"[^>]*disabled/m, response.body)
+  end
+
+  test "PATCH /settings/language rejects a language without translations" do
+    patch settings_language_path, params: {user: {language: "es"}}
+    assert_redirected_to edit_settings_path
+    assert_not_nil flash[:alert]
+    assert_not_equal "es", @alice.reload.language
+  end
+
   test "PATCH /settings/language with an invalid language shows an error" do
     patch settings_language_path, params: {user: {language: "xx"}}
     assert_redirected_to edit_settings_path

@@ -6,12 +6,12 @@
 
   <div class="w-full">
     <h1 class="text-brand-primary text-4xl font-bold text-center leading-tight">
-      Check your<br>E-Mail inbox
+      <%= t('passwords.done.title_html') %>
     </h1>
   </div>
 
   <div class="w-full">
-    <%= link_to "Back to LogIn", new_session_path,
+    <%= link_to t('passwords.done.back_to_login'), new_session_path,
         class: "block w-[322px] h-[52px] bg-brand-primary text-white text-center leading-[52px] text-22 font-medium tracking-p66 no-underline rounded-lg mx-auto" %>
   </div>
 

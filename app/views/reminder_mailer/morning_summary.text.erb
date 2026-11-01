@@ -1,24 +1,27 @@
-Good morning, <%= @user.name.split.first %> 🌸
-<%= Date.current.strftime("%A, %B %-d") %>
+<%
+  focus = [
+    [t(".superpower"), "⚡", t(".focus.superpower.#{@phase}")],
+    [t(".movement"), "🏃", t(".focus.movement.#{@phase}")],
+    [t(".nutrition"), "🥗", @content&.nutrition_text.presence || t(".focus.nutrition.#{@phase}")]
+  ]
+-%>
+<%= t(".greeting", name: @user.name.split.first) %>
+<%= l(Date.current, format: t("reminder_mailer.common.date_format")) %>
 
-YOUR SEASON SUMMARY
--------------------
+<%= t(".text_heading") %>
+<%= "-" * t(".text_heading").length %>
 
-Cycle phase: <%= @phase.capitalize %> · <%= @phase_meta[:season] %>
-<% if @cycle_day %>Cycle day: <%= @cycle_day %><% end %>
+<%= t(".text_cycle_phase", phase: t("phases.#{@phase}"), season: t("seasons.#{@phase_meta[:season].downcase}")) %>
+<% if @cycle_day %><%= t("reminder_mailer.common.day_of_cycle", day: @cycle_day) %><% end %>
 
-TODAY'S FOCUS
--------------
+<%= t(".text_focus") %>
+<%= "-" * t(".text_focus").length %>
 
-⚡ Superpower
-<%= {"menstrual" => "Rest & reflect", "follicular" => "New beginnings", "ovulation" => "Connect & create", "luteal" => "Analyse & plan"}[@phase] %>
+<% focus.each do |label, icon, tip| -%>
+<%= icon %> <%= label %>
+<%= tip %>
 
-🏃 Movement
-<%= {"menstrual" => "Gentle yoga or walking", "follicular" => "HIIT & strength training", "ovulation" => "High-intensity cardio", "luteal" => "Moderate, steady exercise"}[@phase] %>
-
-🥗 Nutrition
-<%= @content&.nutrition_text.presence || {"menstrual" => "Iron-rich foods & warmth", "follicular" => "Light, fresh foods", "ovulation" => "Raw & vibrant foods", "luteal" => "Complex carbs & magnesium"}[@phase] %>
-
+<% end -%>
 ---
-Open Season: <%= root_url %>
-Manage reminders: <%= notifications_settings_url %>
+<%= t("reminder_mailer.common.open_season") %>: <%= root_url %>
+<%= t("reminder_mailer.common.manage_reminders") %>: <%= notifications_settings_url %>

@@ -1,16 +1,16 @@
-<%= @event_type == "period_start" ? "Your period is starting soon 🌙" : "Your period is almost over 🌱" %>
+<%= @event_type == "period_start" ? t(".headline_start") : t(".headline_end") %>
 
 <% if @predicted_date %>
-<%= @event_type == "period_start" ? "Expected period start" : "Expected period end" %>: <%= @predicted_date.strftime("%A, %B %-d") %>
+<%= @event_type == "period_start" ? t(".expected_start") : t(".expected_end") %>: <%= l(@predicted_date, format: t("reminder_mailer.common.date_format")) %>
 <% end %>
 
 <% if @event_type == "period_start" %>
-Your body is entering the menstrual phase. Take it easy, prioritise warmth and rest, and listen to what you need.
+<%= t(".body_start") %>
 <% else %>
-Your period is wrapping up. The follicular phase is just ahead — energy and clarity are on their way.
+<%= t(".body_end") %>
 <% end %>
 
-Log in Season: <%= tracking_index_url %>
+<%= t("reminder_mailer.common.log_in_season") %>: <%= tracking_index_url %>
 
 ---
-Manage reminders: <%= notifications_settings_url %>
+<%= t("reminder_mailer.common.manage_reminders") %>: <%= notifications_settings_url %>

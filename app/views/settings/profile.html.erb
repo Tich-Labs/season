@@ -22,6 +22,9 @@
     <div class="py-5 pb-2">
       <h2 class="text-brand-primary text-base font-bold"><%= t("settings.profile.my_profile") %></h2>
     </div>
+    <a href="<%= safe_back_path(edit_settings_path, allowed: [edit_settings_path, tracking_index_path]) %>"
+       onclick="if (window.history.length > 1) { window.history.back(); return false; }"
+       class="inline-block text-sm font-medium no-underline font-sans text-brand-primary mb-2"><%= t("shared.back") %></a>
     <div class="border-b border-brand-divider"></div>
 
     <%# Profile Picture %>
@@ -33,9 +36,9 @@
           <%= image_tag "avatars/#{preset[:file]}", class: "w-12 h-12 rounded-full object-cover shrink-0", alt: preset[:name] %>
         <% end %>
       <% elsif @user.avatar.attached? %>
-        <%= image_tag @user.avatar, class: "w-12 h-12 rounded-full object-cover shrink-0", alt: "Profile" %>
+        <%= image_tag @user.avatar, class: "w-12 h-12 rounded-full object-cover shrink-0", alt: t("settings.profile.avatar_alt") %>
       <% elsif @user.avatar_url.present? %>
-        <%= image_tag @user.avatar_url, alt: "Profile", class: "w-12 h-12 rounded-full object-cover shrink-0" %>
+        <%= image_tag @user.avatar_url, alt: t("settings.profile.avatar_alt"), class: "w-12 h-12 rounded-full object-cover shrink-0" %>
       <% else %>
         <div class="w-12 h-12 rounded-full bg-brand-field flex items-center justify-center shrink-0">
           <%= vuesax_icon "user", size: 24 %>
@@ -163,7 +166,7 @@
              class="w-full bg-white border border-brand-divider rounded-xl p-4 text-base text-brand-primary box-border mb-3">
       <label class="block text-brand-primary text-13 font-medium mb-1.5"><%= t("settings.profile.current_password") %></label>
       <input type="password" name="current_password" required autocomplete="current-password"
-             placeholder="Enter your password to confirm"
+             placeholder="<%= t("settings.profile.password_confirm_placeholder") %>"
              class="w-full bg-white border border-brand-divider rounded-xl p-4 text-base text-brand-primary box-border mb-4">
       <button type="submit" class="w-full bg-brand-primary text-white border-none rounded-xl py-3.5 text-base font-medium cursor-pointer">
         <%= t("settings.profile.save") %>

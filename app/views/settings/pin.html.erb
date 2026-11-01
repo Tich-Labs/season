@@ -21,20 +21,24 @@
       </svg>
     </div>
     <h1 class="text-xl font-semibold text-brand-primary">
-      <%= current_user.pin_set? ? t("settings.pin.change", default: "Change Access Code") : t("settings.pin.set", default: "Set Access Code") %>
+      <%= current_user.pin_set? ? t("settings.pin.change") : t("settings.pin.set") %>
     </h1>
-    <p class="text-sm text-brand-secondary mt-1"><%= t("settings.pin.description", default: "Enter a 4-6 digit code to lock the app") %></p>
+    <p class="text-sm text-brand-secondary mt-1"><%= t("settings.pin.description") %></p>
   </div>
+
+  <a href="<%= profile_settings_path %>"
+     onclick="if (window.history.length > 1) { window.history.back(); return false; }"
+     class="inline-block text-sm font-medium no-underline font-sans text-brand-primary mb-2"><%= t("shared.back") %></a>
 
   <% unless current_user.pin_set? %>
     <div role="alert" class="bg-brand-error rounded-xl px-4 py-3 mb-6 text-sm text-brand-primary font-medium">
-      <%= t("settings.pin.no_pin_warning", default: "You haven't set an access code — anyone with this device can open Season and see your data.") %>
+      <%= t("settings.pin.no_pin_warning") %>
     </div>
   <% end %>
 
   <%= form_tag pin_settings_path, method: :post, class: "space-y-4", data: { controller: "pin-entry" } do %>
     <div>
-      <%= label_tag :pin, t("settings.pin.code", default: "Code"), class: "text-sm font-medium text-brand-primary mb-1 block" %>
+      <%= label_tag :pin, t("settings.pin.code"), class: "text-sm font-medium text-brand-primary mb-1 block" %>
       <%= password_field_tag :pin, nil,
             required: true,
             autocomplete: "one-time-code",
@@ -45,7 +49,7 @@
     </div>
 
     <div>
-      <%= label_tag :pin_confirmation, t("settings.pin.confirm", default: "Confirm code"), class: "text-sm font-medium text-brand-primary mb-1 block" %>
+      <%= label_tag :pin_confirmation, t("settings.pin.confirm"), class: "text-sm font-medium text-brand-primary mb-1 block" %>
       <%= password_field_tag :pin_confirmation, nil,
             required: true,
             autocomplete: "one-time-code",
@@ -55,12 +59,12 @@
             class: "w-full px-4 py-3 rounded-xl border border-brand-field bg-white text-gray-800 text-base font-mono text-center text-2xl tracking-widest focus:border-brand-primary focus:ring-1 focus:ring-brand-primary focus:outline-none" %>
     </div>
 
-    <%= submit_tag t("settings.pin.save", default: "Save"), class: "w-full py-3 bg-brand-primary text-white rounded-xl text-base font-semibold mt-6" %>
+    <%= submit_tag t("settings.pin.save"), class: "w-full py-3 bg-brand-primary text-white rounded-xl text-base font-semibold mt-6" %>
   <% end %>
 
   <% if current_user.pin_set? %>
     <div class="mt-8 pt-6 border-t border-brand-divider">
-      <h2 class="text-sm font-medium text-brand-primary mb-3"><%= t("settings.pin.remove_title", default: "Remove access code") %></h2>
+      <h2 class="text-sm font-medium text-brand-primary mb-3"><%= t("settings.pin.remove_title") %></h2>
       <%= form_tag pin_settings_path, method: :delete, class: "space-y-3" do %>
         <%= password_field_tag :pin, nil,
               required: true,
@@ -68,11 +72,11 @@
               inputmode: "numeric",
               pattern: "[0-9]*",
               maxlength: 6,
-              placeholder: t("settings.pin.enter_current", default: "Enter current code"),
+              placeholder: t("settings.pin.enter_current"),
               class: "w-full px-4 py-3 rounded-xl border border-brand-field bg-white text-gray-800 text-base font-mono text-center tracking-widest focus:border-brand-primary focus:ring-1 focus:ring-brand-primary focus:outline-none" %>
-        <%= submit_tag t("settings.pin.remove", default: "Remove"),
+        <%= submit_tag t("settings.pin.remove"),
               class: "w-full py-3 bg-white text-brand-primary border-2 border-brand-primary rounded-xl text-base font-semibold",
-              data: { confirm: t("settings.pin.confirm_remove", default: "Are you sure?") } %>
+              data: { confirm: t("settings.pin.confirm_remove") } %>
       <% end %>
     </div>
   <% end %>

@@ -31,6 +31,9 @@
     <div class="py-5 pb-2">
       <h2 class="text-brand-primary text-base font-bold"><%= t("consent.show.title") %></h2>
     </div>
+    <a href="<%= edit_settings_path %>"
+       onclick="if (window.history.length > 1) { window.history.back(); return false; }"
+       class="inline-block text-sm font-medium no-underline font-sans text-brand-primary mb-2"><%= t("shared.back") %></a>
     <div class="border-b border-brand-divider mb-4"></div>
 
     <%# Intro %>

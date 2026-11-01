@@ -16,19 +16,19 @@
   <div style="max-width:430px; margin:0 auto;">
 
     <%# ── Header band ── %>
-    <div style="background:#933a35; padding:24px 20px 20px;">
-      <p style="color:#FFFFFF; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.07em; margin:0 0 6px; opacity:0.8;">
-        Notifications
+    <div style="background:#FFFFFF; padding:24px 20px 20px; border-bottom:1px solid #EDE1D5;">
+      <p style="color:#933a35; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.07em; margin:0 0 6px;">
+        <%= t("notifications.index.title") %>
       </p>
-      <h1 style="color:#FFFFFF; font-size:22px; font-weight:700; margin:0; line-height:1.2;">
-        Good Morning Set
+      <h1 style="color:#3d2b28; font-size:22px; font-weight:700; margin:0; line-height:1.2;">
+        <%= t("settings.notification_morning.title") %>
       </h1>
     </div>
 
     <%# ── Description ── %>
     <div style="background:#FFFFFF; padding:16px 20px; border-bottom:1px solid #EDE1D5;">
       <p style="color:#6B6B6B; font-size:14px; font-weight:400; margin:0; line-height:1.5;">
-        Your daily morning summary: phase of the day, superpower, tips for sport &amp; nutrition.
+        <%= t("settings.notification_morning.description") %>
       </p>
     </div>
 
@@ -43,7 +43,7 @@
       <%# ── Toggle row ── %>
       <div style="background:#FFFFFF; padding:16px 20px; border-bottom:1px solid #EDE1D5; display:flex; align-items:center; justify-content:space-between;">
         <span style="color:#3d2b28; font-size:16px; font-weight:500;"><%= t("settings.notification_morning.enable") %></span>
-        <label style="position:relative; width:44px; height:24px; cursor:pointer; flex-shrink:0;" aria-label="Enable Good Morning notification">
+        <label style="position:relative; width:44px; height:24px; cursor:pointer; flex-shrink:0;" aria-label="<%= t("settings.notification_morning.aria_enable") %>">
           <%= f.check_box :enabled, {id: "morning_enabled", style: "opacity:0; width:0; height:0;",
                           checked: @reminder.active?}, "1", "0" %>
           <span style="position:absolute; inset:0; background:#933a35; border-radius:24px; transition:0.2s;"></span>
@@ -54,7 +54,7 @@
       <%# ── Time picker ── %>
       <div style="background:#FFFFFF; padding:16px 20px; border-bottom:1px solid #EDE1D5;">
         <p style="color:#933a35; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; margin:0 0 10px;">
-          Delivery time
+          <%= t("settings.notification_morning.delivery_time") %>
         </p>
         <div style="display:flex; align-items:center; gap:12px;">
           <svg width="20" height="20" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0;">
@@ -70,14 +70,14 @@
       <%# ── What's included ── %>
       <div style="background:#FFFFFF; padding:16px 20px; border-bottom:1px solid #EDE1D5;">
         <p style="color:#933a35; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; margin:0 0 12px;">
-          What's included
+          <%= t("settings.notification_morning.whats_included") %>
         </p>
         <% [
-          ["🌙", "Cycle phase of the day"],
-          ["⚡", "Your superpower"],
-          ["🏃", "Sport recommendation"],
-          ["🥗", "Nutrition tip"],
-          ["🌸", "Fertility status"]
+          ["🌙", t("settings.notification_morning.included_phase")],
+          ["⚡", t("settings.notification_morning.included_superpower")],
+          ["🏃", t("settings.notification_morning.included_sport")],
+          ["🥗", t("settings.notification_morning.included_nutrition")],
+          ["🌸", t("settings.notification_morning.included_fertility")]
         ].each do |emoji, text| %>
           <div style="display:flex; align-items:center; gap:10px; padding:6px 0;">
             <span style="font-size:16px; width:24px; text-align:center;"><%= emoji %></span>
@@ -88,7 +88,7 @@
 
       <%# ── Save button ── %>
       <div style="padding:20px 20px 0;">
-        <%= f.submit "Save", style: "width:100%; background:#933a35; color:#FFFFFF; padding:16px; border-radius:12px; border:none; font-size:16px; font-weight:600; font-family:'Montserrat',sans-serif; cursor:pointer; letter-spacing:0.02em;" %>
+        <%= f.submit t("settings.profile.save"), style: "width:100%; background:#933a35; color:#FFFFFF; padding:16px; border-radius:12px; border:none; font-size:16px; font-weight:600; font-family:'Montserrat',sans-serif; cursor:pointer; letter-spacing:0.02em;" %>
       </div>
 
     <% end %>
