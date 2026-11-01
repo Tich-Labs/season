@@ -4,9 +4,6 @@ class User < ApplicationRecord
     :confirmable,
     :omniauthable, omniauth_providers: [:google_oauth2, :facebook, :apple]
 
-  # Encrypt Google Calendar OAuth tokens at rest (P3).
-  encrypts :google_access_token, :google_refresh_token
-
   CALENDAR_SYNC_LEVELS = %w[off one_way export two_way].freeze
   validates :calendar_sync_level, inclusion: {in: CALENDAR_SYNC_LEVELS}
 
@@ -239,7 +236,7 @@ class User < ApplicationRecord
     rescue => e
       Rails.logger.warn("[GoogleCalendar] delete season copy failed for event #{ev.id}: #{e.class}: #{e.message}")
     ensure
-      ev.update_column(:google_event_id, nil)
+      ev.update(google_event_id: nil)
     end
     true
   rescue => e
