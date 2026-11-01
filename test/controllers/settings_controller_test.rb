@@ -77,6 +77,17 @@ class SettingsControllerTest < ActionDispatch::IntegrationTest
     assert_select "header a[href='/account']", false
   end
 
+  # Good morning set, period reminder and birth control reminder are not live
+  # yet: greyed out with "Coming soon" and no links into their sub-pages.
+  test "GET /settings/notifications locks morning, period and birth control reminders" do
+    get notifications_settings_path
+    assert_response :success
+    assert_no_match(%r{href="/settings/notification_morning"}, response.body)
+    assert_no_match(%r{href="/settings/notification_period"}, response.body)
+    assert_no_match(%r{href="/settings/notification_birth_control"}, response.body)
+    assert_operator response.body.scan(/Coming soon/).size, :>=, 4
+  end
+
   test "GET /settings/notifications returns 200" do
     get notifications_settings_path
     assert_response :success

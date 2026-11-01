@@ -71,61 +71,76 @@
     <% end %>
     <div class="border-b border-brand-divider mt-2"></div>
 
-    <%# Good morning set %>
-    <div class="flex items-center justify-between py-3.5 pb-1">
-      <span class="text-brand-primary text-base font-medium"><%= t("settings.notifications.good_morning") %></span>
-      <%= render "shared/toggle_switch",
-            field_id: "cycle_reminder",
-            checked: @notifications.cycle_reminder,
-            aria_label: t("settings.notifications.good_morning") %>
-    </div>
-    <div class="flex items-center justify-between mb-3">
-      <div>
-        <p class="text-brand-muted text-sm font-medium m-0"><%= t("settings.notifications.summary_time") %></p>
-        <p class="text-brand-primary text-[10px] font-medium mt-1 leading-relaxed">
-          <%= t("settings.notifications.morning_contents") %>
-        </p>
+    <%# Good morning set — coming soon: greyed out, no link into the sub-page %>
+    <div class="opacity-40 pointer-events-none">
+      <div class="flex items-center justify-between py-3.5 pb-1">
+        <div class="flex items-center gap-2">
+          <span class="text-brand-primary text-base font-medium"><%= t("settings.notifications.good_morning") %></span>
+          <span class="bg-brand-field rounded-full px-2 py-0.5 text-brand-primary text-xs"><%= t("settings.edit.coming_soon") %></span>
+        </div>
+        <%= render "shared/toggle_switch",
+              field_id: "cycle_reminder",
+              checked: @notifications.cycle_reminder,
+              aria_label: t("settings.notifications.good_morning") %>
       </div>
-      <%= link_to t("settings.notifications.edit"), notification_morning_settings_path, class: "text-brand-muted text-sm font-medium no-underline self-start" %>
+      <div class="flex items-center justify-between mb-3">
+        <div>
+          <p class="text-brand-muted text-sm font-medium m-0"><%= t("settings.notifications.summary_time") %></p>
+          <p class="text-brand-primary text-[10px] font-medium mt-1 leading-relaxed">
+            <%= t("settings.notifications.morning_contents") %>
+          </p>
+        </div>
+        <span class="text-brand-muted text-sm font-medium self-start"><%= t("settings.notifications.edit") %></span>
+      </div>
     </div>
     <div class="border-b border-brand-divider"></div>
 
-    <%# Period reminder %>
-    <div class="flex items-center justify-between py-3.5 pb-1">
-      <span class="text-brand-primary text-base font-medium"><%= t("settings.notifications.period_reminder") %></span>
-      <%= render "shared/toggle_switch",
-            field_id: "period_prediction",
-            checked: @notifications.period_prediction,
-            aria_label: t("settings.notifications.period_reminder") %>
-    </div>
-    <div class="flex items-center justify-between mb-3">
-      <div class="flex gap-4">
-        <p class="text-brand-muted text-sm font-medium m-0"><%= t("settings.notifications.start_time") %></p>
-        <p class="text-brand-muted text-sm font-medium m-0"><%= t("settings.notifications.end_time") %></p>
+    <%# Period reminder — coming soon: greyed out, no link into the sub-page %>
+    <div class="opacity-40 pointer-events-none">
+      <div class="flex items-center justify-between py-3.5 pb-1">
+        <div class="flex items-center gap-2">
+          <span class="text-brand-primary text-base font-medium"><%= t("settings.notifications.period_reminder") %></span>
+          <span class="bg-brand-field rounded-full px-2 py-0.5 text-brand-primary text-xs"><%= t("settings.edit.coming_soon") %></span>
+        </div>
+        <%= render "shared/toggle_switch",
+              field_id: "period_prediction",
+              checked: @notifications.period_prediction,
+              aria_label: t("settings.notifications.period_reminder") %>
       </div>
-      <%= link_to t("settings.notifications.edit"), notification_period_settings_path, class: "text-brand-muted text-sm font-medium no-underline" %>
+      <div class="flex items-center justify-between mb-3">
+        <div class="flex gap-4">
+          <p class="text-brand-muted text-sm font-medium m-0"><%= t("settings.notifications.start_time") %></p>
+          <p class="text-brand-muted text-sm font-medium m-0"><%= t("settings.notifications.end_time") %></p>
+        </div>
+        <span class="text-brand-muted text-sm font-medium"><%= t("settings.notifications.edit") %></span>
+      </div>
     </div>
     <div class="border-b border-brand-divider"></div>
 
-    <%# Birth control reminder %>
-    <div class="flex items-center justify-between py-3.5 pb-1">
-      <span class="text-brand-primary text-base font-medium"><%= t("settings.notifications.birth_control") %></span>
-      <%= render "shared/toggle_switch",
-            field_id: "ovulation_alert",
-            checked: @notifications.ovulation_alert,
-            aria_label: t("settings.notifications.birth_control") %>
-    </div>
-    <div class="flex items-center justify-between mb-3">
-      <div>
-        <p class="text-brand-muted text-sm font-medium m-0 mb-0.5"><%= t("settings.notifications.birth_control_pill") %></p>
-        <p class="text-brand-muted text-sm font-medium m-0 mb-0.5"><%= t("settings.notifications.daily_9pm") %></p>
-        <p class="text-brand-muted text-sm font-medium m-0 mb-0.5"><%= t("settings.notifications.taking_pill") %></p>
-        <p class="text-brand-muted text-sm font-medium m-0 mb-0.5"><%= t("settings.notifications.pillbreak") %></p>
-        <p class="text-brand-primary text-[10px] font-medium m-0 leading-relaxed">
-          <%= t("settings.notifications.keep_track_day") %>
-        </p>
+    <%# Birth control reminder — coming soon: greyed out, no link into the sub-page %>
+    <div class="opacity-40 pointer-events-none">
+      <div class="flex items-center justify-between py-3.5 pb-1">
+        <div class="flex items-center gap-2">
+          <span class="text-brand-primary text-base font-medium"><%= t("settings.notifications.birth_control") %></span>
+          <span class="bg-brand-field rounded-full px-2 py-0.5 text-brand-primary text-xs"><%= t("settings.edit.coming_soon") %></span>
+        </div>
+        <%= render "shared/toggle_switch",
+              field_id: "ovulation_alert",
+              checked: @notifications.ovulation_alert,
+              aria_label: t("settings.notifications.birth_control") %>
       </div>
-      <%= link_to t("settings.notifications.edit"), notification_birth_control_settings_path, class: "text-brand-muted text-sm font-medium no-underline self-start" %>
+      <div class="flex items-center justify-between mb-3">
+        <div>
+          <p class="text-brand-muted text-sm font-medium m-0 mb-0.5"><%= t("settings.notifications.birth_control_pill") %></p>
+          <p class="text-brand-muted text-sm font-medium m-0 mb-0.5"><%= t("settings.notifications.daily_9pm") %></p>
+          <p class="text-brand-muted text-sm font-medium m-0 mb-0.5"><%= t("settings.notifications.taking_pill") %></p>
+          <p class="text-brand-muted text-sm font-medium m-0 mb-0.5"><%= t("settings.notifications.pillbreak") %></p>
+          <p class="text-brand-primary text-[10px] font-medium m-0 leading-relaxed">
+            <%= t("settings.notifications.keep_track_day") %>
+          </p>
+        </div>
+        <span class="text-brand-muted text-sm font-medium self-start"><%= t("settings.notifications.edit") %></span>
+      </div>
     </div>
     <div class="border-b border-brand-divider"></div>
 
