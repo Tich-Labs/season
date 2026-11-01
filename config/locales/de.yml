@@ -1,3 +1,6 @@
+# NOTE (2026-11-01): birth control keys below are unused on this branch
+# (the birth control schedule feature is not merged yet). They are commented
+# out, not deleted. Re-enable them with that feature.
 de:
 
   beta_onboarding:
@@ -850,102 +853,102 @@ de:
       keep_track_of: "Im Blick behalten:"
       active_days: "Aktive Tage"
       break_days: "Pausentage"
-      change: "Ändern"
-      aria_enable: "Verhütungserinnerung aktivieren"
-      reminder_time: "Erinnerungszeit"
-      cycle_tracking: "Zyklus-Tracking"
-      today_is_day_html: "Heute ist Tag <strong>%{day}</strong> (%{method})"
-      no_method_hint: "Keine Verhütungsmethode ausgewählt. Tippe oben auf „Ändern“, um deine Methode festzulegen."
-      choose_method: "Wähle deine Methode"
-      method_saved: "Verhütungsmethode aktualisiert."
-      renewal: "Erneuerung"
-      last_inserted: "Wann wurde es zuletzt eingesetzt oder gespritzt?"
-      renewal_due_on: "Erneuerung fällig am %{date}"
-      renewal_overdue: "Erneuerung überfällig — war fällig am %{date}"
-      variant: "Variante"
-      pack_start: "Wann hast du mit dieser Packung begonnen?"
-      ring_inserted: "Wann hast du ihn eingesetzt?"
-      patch_applied: "Wann hast du es aufgeklebt?"
-      skip_break: "Ringfreie Woche überspringen"
-      duration_years: "Dauer (Jahre)"
-      next_due_on: "Als Nächstes fällig am %{date}"
-      expires_on: "Läuft ab am %{date}"
-      expires_overdue: "Abgelaufen am %{date}"
-      lead_days_info: "Du wirst %{first} Tage und %{second} Tage vorher erinnert."
-      eyebrow: "Verhütungserinnerung"
-      name_reminder: "Name der Erinnerung"
-      name_placeholder: "Gib deiner Erinnerung einen Namen"
-      recalling_in_stages: "Erinnerung in Etappen"
-      send_regular_reminders: "Regelmäßige Erinnerungen senden"
-      schedule: "Zeitplan"
-      messages_title: "Nachricht"
-      lead_days_title: "Vorher erinnern"
-      message_labels:
-        daily: "Tägliche Erinnerung"
-        insert: "Erinnerung zum Einsetzen"
-        remove: "Erinnerung zum Entfernen"
-        apply: "Erinnerung zum Aufkleben"
-        appointment: "Termin-Erinnerung"
-        checkup: "Kontrolltermin-Erinnerung"
-        replace: "Erinnerung zum Wechseln"
-        injection: "Spritzen-Erinnerung"
-      lead_day_stages:
-        one_month: "1 Monat vorher"
-        two_weeks: "2 Wochen vorher"
-        one_week: "1 Woche vorher"
-        one_day: "1 Tag vorher"
-      message_defaults:
-        pill:
-          daily: "Denk daran, deine Pille heute zu nehmen."
-        hormonering:
-          insert: "Deine ringfreie Woche ist vorbei – setze heute einen neuen Ring ein."
-          remove: "Entferne deinen Hormonring heute und beginne deine ringfreie Woche."
-        plaster:
-          apply: "Deine pflasterfreie Woche ist vorbei – klebe heute ein neues Pflaster auf."
-          remove: "Entferne dein Pflaster heute und mache deine pflasterfreie Woche."
-        hormonal_iud:
-          appointment: "Vereinbare einen Termin bei deiner Gynäkologin oder deinem Gynäkologen."
-          checkup: "Zeit für deine Kontrolluntersuchung – vereinbare einen Termin."
-          replace: "Deine Spirale muss bald ersetzt werden."
-        copper_iud:
-          appointment: "Vereinbare einen Termin bei deiner Gynäkologin oder deinem Gynäkologen."
-          checkup: "Zeit für deine Kontrolluntersuchung – vereinbare einen Termin."
-          replace: "Deine Spirale muss bald ersetzt werden."
-        implant:
-          appointment: "Vereinbare einen Termin bei deiner Gynäkologin oder deinem Gynäkologen."
-          checkup: "Zeit für deine Kontrolluntersuchung – vereinbare einen Termin."
-          replace: "Dein Implantat muss bald ersetzt werden."
-        injection:
-          appointment: "Vereinbare einen Termin für deine nächste Spritze."
-          injection: "Deine nächste Spritze ist fällig – buche deinen Termin."
-      methods:
-        pill: "Pille"
-        hormonering: "Hormonring"
-        plaster: "Pflaster"
-        hormonal_iud: "Hormonspirale"
-        copper_iud: "Kupferspirale"
-        implant: "Implantat"
-        injection: "Spritze"
-        none: "Keine Verhütung"
-      variants:
-        pill:
-          "21_7": "21 + 7"
-          "24_4": "24 + 4"
-          "28_continuous": "28 (durchgehend)"
-          progestin_only: "Nur Gestagen"
-        hormonal_iud:
-          mirena: "Mirena"
-          liletta: "Liletta"
-          kyleena: "Kyleena"
-          skyla: "Skyla"
-        implant:
-          nexplanon: "Nexplanon"
-          implanon: "Implanon"
-          jadelle: "Jadelle"
-        injection:
-          depo_provera: "Depo-Provera"
-          sayana_press: "Sayana Press"
-          noristerat: "Noristerat"
+#       change: "Ändern"
+#       aria_enable: "Verhütungserinnerung aktivieren"
+#       reminder_time: "Erinnerungszeit"
+#       cycle_tracking: "Zyklus-Tracking"
+#       today_is_day_html: "Heute ist Tag <strong>%{day}</strong> (%{method})"
+#       no_method_hint: "Keine Verhütungsmethode ausgewählt. Tippe oben auf „Ändern“, um deine Methode festzulegen."
+#       choose_method: "Wähle deine Methode"
+#       method_saved: "Verhütungsmethode aktualisiert."
+#       renewal: "Erneuerung"
+#       last_inserted: "Wann wurde es zuletzt eingesetzt oder gespritzt?"
+#       renewal_due_on: "Erneuerung fällig am %{date}"
+#       renewal_overdue: "Erneuerung überfällig — war fällig am %{date}"
+#       variant: "Variante"
+#       pack_start: "Wann hast du mit dieser Packung begonnen?"
+#       ring_inserted: "Wann hast du ihn eingesetzt?"
+#       patch_applied: "Wann hast du es aufgeklebt?"
+#       skip_break: "Ringfreie Woche überspringen"
+#       duration_years: "Dauer (Jahre)"
+#       next_due_on: "Als Nächstes fällig am %{date}"
+#       expires_on: "Läuft ab am %{date}"
+#       expires_overdue: "Abgelaufen am %{date}"
+#       lead_days_info: "Du wirst %{first} Tage und %{second} Tage vorher erinnert."
+#       eyebrow: "Verhütungserinnerung"
+#       name_reminder: "Name der Erinnerung"
+#       name_placeholder: "Gib deiner Erinnerung einen Namen"
+#       recalling_in_stages: "Erinnerung in Etappen"
+#       send_regular_reminders: "Regelmäßige Erinnerungen senden"
+#       schedule: "Zeitplan"
+#       messages_title: "Nachricht"
+#       lead_days_title: "Vorher erinnern"
+#       message_labels:
+#         daily: "Tägliche Erinnerung"
+#         insert: "Erinnerung zum Einsetzen"
+#         remove: "Erinnerung zum Entfernen"
+#         apply: "Erinnerung zum Aufkleben"
+#         appointment: "Termin-Erinnerung"
+#         checkup: "Kontrolltermin-Erinnerung"
+#         replace: "Erinnerung zum Wechseln"
+#         injection: "Spritzen-Erinnerung"
+#       lead_day_stages:
+#         one_month: "1 Monat vorher"
+#         two_weeks: "2 Wochen vorher"
+#         one_week: "1 Woche vorher"
+#         one_day: "1 Tag vorher"
+#       message_defaults:
+#         pill:
+#           daily: "Denk daran, deine Pille heute zu nehmen."
+#         hormonering:
+#           insert: "Deine ringfreie Woche ist vorbei – setze heute einen neuen Ring ein."
+#           remove: "Entferne deinen Hormonring heute und beginne deine ringfreie Woche."
+#         plaster:
+#           apply: "Deine pflasterfreie Woche ist vorbei – klebe heute ein neues Pflaster auf."
+#           remove: "Entferne dein Pflaster heute und mache deine pflasterfreie Woche."
+#         hormonal_iud:
+#           appointment: "Vereinbare einen Termin bei deiner Gynäkologin oder deinem Gynäkologen."
+#           checkup: "Zeit für deine Kontrolluntersuchung – vereinbare einen Termin."
+#           replace: "Deine Spirale muss bald ersetzt werden."
+#         copper_iud:
+#           appointment: "Vereinbare einen Termin bei deiner Gynäkologin oder deinem Gynäkologen."
+#           checkup: "Zeit für deine Kontrolluntersuchung – vereinbare einen Termin."
+#           replace: "Deine Spirale muss bald ersetzt werden."
+#         implant:
+#           appointment: "Vereinbare einen Termin bei deiner Gynäkologin oder deinem Gynäkologen."
+#           checkup: "Zeit für deine Kontrolluntersuchung – vereinbare einen Termin."
+#           replace: "Dein Implantat muss bald ersetzt werden."
+#         injection:
+#           appointment: "Vereinbare einen Termin für deine nächste Spritze."
+#           injection: "Deine nächste Spritze ist fällig – buche deinen Termin."
+#       methods:
+#         pill: "Pille"
+#         hormonering: "Hormonring"
+#         plaster: "Pflaster"
+#         hormonal_iud: "Hormonspirale"
+#         copper_iud: "Kupferspirale"
+#         implant: "Implantat"
+#         injection: "Spritze"
+#         none: "Keine Verhütung"
+#       variants:
+#         pill:
+#           "21_7": "21 + 7"
+#           "24_4": "24 + 4"
+#           "28_continuous": "28 (durchgehend)"
+#           progestin_only: "Nur Gestagen"
+#         hormonal_iud:
+#           mirena: "Mirena"
+#           liletta: "Liletta"
+#           kyleena: "Kyleena"
+#           skyla: "Skyla"
+#         implant:
+#           nexplanon: "Nexplanon"
+#           implanon: "Implanon"
+#           jadelle: "Jadelle"
+#         injection:
+#           depo_provera: "Depo-Provera"
+#           sayana_press: "Sayana Press"
+#           noristerat: "Noristerat"
     notification_period:
       title: "Periodenerinnerung"
       enable: "Perioden-Erinnerung aktivieren"
@@ -1024,38 +1027,38 @@ de:
     show_pin: "PIN anzeigen"
     hide_pin: "PIN ausblenden"
     input_label: "PIN-Code"
-  reminders:
-    birth_control:
-      pill_daily:
-        subject: "Zeit für deine Pille"
-        body: "Denk daran, deine Pille heute zu nehmen."
-      pill_placebo:
-        subject: "Pillenfreie Woche"
-        body: "Du bist in deiner Pausenwoche – heute keine Pille."
-      ring_remove:
-        subject: "Zeit, den Ring zu entfernen"
-        body: "Entferne deinen Hormonring heute und beginne deine ringfreie Woche."
-      ring_insert:
-        subject: "Zeit, den Ring einzusetzen"
-        body: "Deine ringfreie Woche ist vorbei – setze heute einen neuen Ring ein."
-      ring_swap:
-        subject: "Zeit, den Ring zu wechseln"
-        body: "Wechsle deinen Hormonring heute."
-      patch_change:
-        subject: "Zeit, das Pflaster zu wechseln"
-        body: "Wechsle dein Pflaster heute."
-      patch_free:
-        subject: "Pflasterfreie Woche"
-        body: "Entferne dein Pflaster heute und mache deine pflasterfreie Woche."
-      patch_apply:
-        subject: "Zeit, das Pflaster aufzukleben"
-        body: "Deine pflasterfreie Woche ist vorbei – klebe heute ein neues Pflaster auf."
-      expiry:
-        subject: "Deine Verhütung läuft bald ab"
-        body: "Deine Verhütung muss am %{date} ersetzt werden."
-      injection_due:
-        subject: "Deine nächste Spritze steht an"
-        body: "Deine nächste Spritze ist am %{date} fällig."
+#   reminders:
+#     birth_control:
+#       pill_daily:
+#         subject: "Zeit für deine Pille"
+#         body: "Denk daran, deine Pille heute zu nehmen."
+#       pill_placebo:
+#         subject: "Pillenfreie Woche"
+#         body: "Du bist in deiner Pausenwoche – heute keine Pille."
+#       ring_remove:
+#         subject: "Zeit, den Ring zu entfernen"
+#         body: "Entferne deinen Hormonring heute und beginne deine ringfreie Woche."
+#       ring_insert:
+#         subject: "Zeit, den Ring einzusetzen"
+#         body: "Deine ringfreie Woche ist vorbei – setze heute einen neuen Ring ein."
+#       ring_swap:
+#         subject: "Zeit, den Ring zu wechseln"
+#         body: "Wechsle deinen Hormonring heute."
+#       patch_change:
+#         subject: "Zeit, das Pflaster zu wechseln"
+#         body: "Wechsle dein Pflaster heute."
+#       patch_free:
+#         subject: "Pflasterfreie Woche"
+#         body: "Entferne dein Pflaster heute und mache deine pflasterfreie Woche."
+#       patch_apply:
+#         subject: "Zeit, das Pflaster aufzukleben"
+#         body: "Deine pflasterfreie Woche ist vorbei – klebe heute ein neues Pflaster auf."
+#       expiry:
+#         subject: "Deine Verhütung läuft bald ab"
+#         body: "Deine Verhütung muss am %{date} ersetzt werden."
+#       injection_due:
+#         subject: "Deine nächste Spritze steht an"
+#         body: "Deine nächste Spritze ist am %{date} fällig."
   reminder_mailer:
     common:
       heads_up: "Eine kurze Info von Season"
@@ -1117,21 +1120,21 @@ de:
         clarity: "Klarheit und Motivation kehren zurück"
     birth_control_reminder:
       subject: "Deine tägliche Erinnerung 💊 Season"
-      methods:
-        pill: "deine Pille"
-        hormonering: "deinen Hormonring"
-        plaster: "dein Verhütungspflaster"
-        hormonal_iud: "deine Hormonspirale"
-        copper_iud: "deine Kupferspirale"
-        implant: "dein Implantat"
-        injection: "deine Verhütungsspritze"
-        none: "deine Verhütung"
-      title: "Zeit für %{method}"
-      text_title: "Erinnerung: Zeit für %{method}"
-      daily_reminder: "Tägliche Erinnerung von Season"
-      stay_consistent: "Bleib dran – %{method} jeden Tag zur gleichen Uhrzeit einzunehmen ist entscheidend für die Wirksamkeit."
-      quick_tip: "Kurzer Tipp"
-      missed_dose: "Wenn du eine Dosis vergisst, schau in die Anleitung für %{method}. Die meisten Methoden haben Nachholregeln – keine Panik."
+#       methods:
+#         pill: "deine Pille"
+#         hormonering: "deinen Hormonring"
+#         plaster: "dein Verhütungspflaster"
+#         hormonal_iud: "deine Hormonspirale"
+#         copper_iud: "deine Kupferspirale"
+#         implant: "dein Implantat"
+#         injection: "deine Verhütungsspritze"
+#         none: "deine Verhütung"
+#       title: "Zeit für %{method}"
+#       text_title: "Erinnerung: Zeit für %{method}"
+#       daily_reminder: "Tägliche Erinnerung von Season"
+#       stay_consistent: "Bleib dran – %{method} jeden Tag zur gleichen Uhrzeit einzunehmen ist entscheidend für die Wirksamkeit."
+#       quick_tip: "Kurzer Tipp"
+#       missed_dose: "Wenn du eine Dosis vergisst, schau in die Anleitung für %{method}. Die meisten Methoden haben Nachholregeln – keine Panik."
   support_mailer:
     support_request:
       subject: "[Season Support] %{message}"

@@ -1,3 +1,6 @@
+# NOTE (2026-11-01): birth control keys below are unused on this branch
+# (the birth control schedule feature is not merged yet). They are commented
+# out, not deleted. Re-enable them with that feature.
 en:
 
   beta_onboarding:
@@ -804,102 +807,102 @@ en:
       keep_track_of: "Keep track of:"
       active_days: "Active days"
       break_days: "Break days"
-      change: "Change"
-      aria_enable: "Enable birth control reminder"
-      reminder_time: "Reminder time"
-      cycle_tracking: "Cycle tracking"
-      today_is_day_html: "Today is day <strong>%{day}</strong> of the %{method}"
-      no_method_hint: "No birth control method selected. Tap \"Change\" above to set your method."
-      choose_method: "Choose your method"
-      method_saved: "Birth control method updated."
-      renewal: "Renewal"
-      last_inserted: "When was it last inserted or injected?"
-      renewal_due_on: "Renewal due on %{date}"
-      renewal_overdue: "Renewal overdue — was due %{date}"
-      variant: "Variant"
-      pack_start: "When did you start this pack?"
-      ring_inserted: "When did you insert it?"
-      patch_applied: "When did you apply it?"
-      skip_break: "Skip the ring-free week"
-      duration_years: "Duration (years)"
-      next_due_on: "Next due %{date}"
-      expires_on: "Expires %{date}"
-      expires_overdue: "Expired on %{date}"
-      lead_days_info: "You'll be reminded %{first} days and %{second} days before."
-      eyebrow: "Birthcontrolreminder"
-      name_reminder: "Name reminder"
-      name_placeholder: "Give your reminder a name"
-      recalling_in_stages: "Recalling in stages"
-      send_regular_reminders: "Send regular reminders"
-      schedule: "Schedule"
-      messages_title: "Message"
-      lead_days_title: "Remind me before"
-      message_labels:
-        daily: "Daily reminder"
-        insert: "Insert reminder"
-        remove: "Removal reminder"
-        apply: "Apply reminder"
-        appointment: "Appointment reminder"
-        checkup: "Checkup reminder"
-        replace: "Replacement reminder"
-        injection: "Injection reminder"
-      lead_day_stages:
-        one_month: "1 month before"
-        two_weeks: "2 weeks before"
-        one_week: "1 week before"
-        one_day: "1 day before"
-      message_defaults:
-        pill:
-          daily: "Remember to take your pill today."
-        hormonering:
-          insert: "Your ring-free week is over — insert a new ring today."
-          remove: "Remove your hormone ring today and start your ring-free week."
-        plaster:
-          apply: "Your patch-free week is over — apply a new patch today."
-          remove: "Remove your patch today and take your patch-free week."
-        hormonal_iud:
-          appointment: "Make an appointment with your gynecologist for a checkup."
-          checkup: "It's time for your IUD checkup — make an appointment."
-          replace: "Your IUD is due for replacement soon."
-        copper_iud:
-          appointment: "Make an appointment with your gynecologist for a checkup."
-          checkup: "It's time for your IUD checkup — make an appointment."
-          replace: "Your IUD is due for replacement soon."
-        implant:
-          appointment: "Make an appointment with your gynecologist for a checkup."
-          checkup: "It's time for your implant checkup — make an appointment."
-          replace: "Your implant is due for replacement soon."
-        injection:
-          appointment: "Make an appointment for your next injection."
-          injection: "Your next injection is due — book your appointment."
-      methods:
-        pill: "Pill"
-        hormonering: "Hormone Ring"
-        plaster: "Patch"
-        hormonal_iud: "Hormonal IUD"
-        copper_iud: "Copper IUD"
-        implant: "Implant"
-        injection: "Injection"
-        none: "No birth control"
-      variants:
-        pill:
-          "21_7": "21 + 7"
-          "24_4": "24 + 4"
-          "28_continuous": "28 (continuous)"
-          progestin_only: "Progestin-only"
-        hormonal_iud:
-          mirena: "Mirena"
-          liletta: "Liletta"
-          kyleena: "Kyleena"
-          skyla: "Skyla"
-        implant:
-          nexplanon: "Nexplanon"
-          implanon: "Implanon"
-          jadelle: "Jadelle"
-        injection:
-          depo_provera: "Depo-Provera"
-          sayana_press: "Sayana Press"
-          noristerat: "Noristerat"
+#       change: "Change"
+#       aria_enable: "Enable birth control reminder"
+#       reminder_time: "Reminder time"
+#       cycle_tracking: "Cycle tracking"
+#       today_is_day_html: "Today is day <strong>%{day}</strong> of the %{method}"
+#       no_method_hint: "No birth control method selected. Tap \"Change\" above to set your method."
+#       choose_method: "Choose your method"
+#       method_saved: "Birth control method updated."
+#       renewal: "Renewal"
+#       last_inserted: "When was it last inserted or injected?"
+#       renewal_due_on: "Renewal due on %{date}"
+#       renewal_overdue: "Renewal overdue — was due %{date}"
+#       variant: "Variant"
+#       pack_start: "When did you start this pack?"
+#       ring_inserted: "When did you insert it?"
+#       patch_applied: "When did you apply it?"
+#       skip_break: "Skip the ring-free week"
+#       duration_years: "Duration (years)"
+#       next_due_on: "Next due %{date}"
+#       expires_on: "Expires %{date}"
+#       expires_overdue: "Expired on %{date}"
+#       lead_days_info: "You'll be reminded %{first} days and %{second} days before."
+#       eyebrow: "Birthcontrolreminder"
+#       name_reminder: "Name reminder"
+#       name_placeholder: "Give your reminder a name"
+#       recalling_in_stages: "Recalling in stages"
+#       send_regular_reminders: "Send regular reminders"
+#       schedule: "Schedule"
+#       messages_title: "Message"
+#       lead_days_title: "Remind me before"
+#       message_labels:
+#         daily: "Daily reminder"
+#         insert: "Insert reminder"
+#         remove: "Removal reminder"
+#         apply: "Apply reminder"
+#         appointment: "Appointment reminder"
+#         checkup: "Checkup reminder"
+#         replace: "Replacement reminder"
+#         injection: "Injection reminder"
+#       lead_day_stages:
+#         one_month: "1 month before"
+#         two_weeks: "2 weeks before"
+#         one_week: "1 week before"
+#         one_day: "1 day before"
+#       message_defaults:
+#         pill:
+#           daily: "Remember to take your pill today."
+#         hormonering:
+#           insert: "Your ring-free week is over — insert a new ring today."
+#           remove: "Remove your hormone ring today and start your ring-free week."
+#         plaster:
+#           apply: "Your patch-free week is over — apply a new patch today."
+#           remove: "Remove your patch today and take your patch-free week."
+#         hormonal_iud:
+#           appointment: "Make an appointment with your gynecologist for a checkup."
+#           checkup: "It's time for your IUD checkup — make an appointment."
+#           replace: "Your IUD is due for replacement soon."
+#         copper_iud:
+#           appointment: "Make an appointment with your gynecologist for a checkup."
+#           checkup: "It's time for your IUD checkup — make an appointment."
+#           replace: "Your IUD is due for replacement soon."
+#         implant:
+#           appointment: "Make an appointment with your gynecologist for a checkup."
+#           checkup: "It's time for your implant checkup — make an appointment."
+#           replace: "Your implant is due for replacement soon."
+#         injection:
+#           appointment: "Make an appointment for your next injection."
+#           injection: "Your next injection is due — book your appointment."
+#       methods:
+#         pill: "Pill"
+#         hormonering: "Hormone Ring"
+#         plaster: "Patch"
+#         hormonal_iud: "Hormonal IUD"
+#         copper_iud: "Copper IUD"
+#         implant: "Implant"
+#         injection: "Injection"
+#         none: "No birth control"
+#       variants:
+#         pill:
+#           "21_7": "21 + 7"
+#           "24_4": "24 + 4"
+#           "28_continuous": "28 (continuous)"
+#           progestin_only: "Progestin-only"
+#         hormonal_iud:
+#           mirena: "Mirena"
+#           liletta: "Liletta"
+#           kyleena: "Kyleena"
+#           skyla: "Skyla"
+#         implant:
+#           nexplanon: "Nexplanon"
+#           implanon: "Implanon"
+#           jadelle: "Jadelle"
+#         injection:
+#           depo_provera: "Depo-Provera"
+#           sayana_press: "Sayana Press"
+#           noristerat: "Noristerat"
     notification_period:
       title: "Period Reminder"
       enable: "Enable Period Reminder"
@@ -978,38 +981,38 @@ en:
     show_pin: "Show PIN"
     hide_pin: "Hide PIN"
     input_label: "PIN code"
-  reminders:
-    birth_control:
-      pill_daily:
-        subject: "Time for your pill"
-        body: "Remember to take your pill today."
-      pill_placebo:
-        subject: "Pill-free week"
-        body: "You're on your break week — no pill today."
-      ring_remove:
-        subject: "Time to remove your ring"
-        body: "Remove your hormone ring today and start your ring-free week."
-      ring_insert:
-        subject: "Time to insert your ring"
-        body: "Your ring-free week is over — insert a new ring today."
-      ring_swap:
-        subject: "Time to swap your ring"
-        body: "Swap your hormone ring today."
-      patch_change:
-        subject: "Time to change your patch"
-        body: "Change your patch today."
-      patch_free:
-        subject: "Patch-free week"
-        body: "Remove your patch today and take your patch-free week."
-      patch_apply:
-        subject: "Time to apply your patch"
-        body: "Your patch-free week is over — apply a new patch today."
-      expiry:
-        subject: "Your contraception is expiring"
-        body: "Your contraception is due for replacement on %{date}."
-      injection_due:
-        subject: "Your next injection is coming up"
-        body: "Your next injection is due on %{date}."
+#   reminders:
+#     birth_control:
+#       pill_daily:
+#         subject: "Time for your pill"
+#         body: "Remember to take your pill today."
+#       pill_placebo:
+#         subject: "Pill-free week"
+#         body: "You're on your break week — no pill today."
+#       ring_remove:
+#         subject: "Time to remove your ring"
+#         body: "Remove your hormone ring today and start your ring-free week."
+#       ring_insert:
+#         subject: "Time to insert your ring"
+#         body: "Your ring-free week is over — insert a new ring today."
+#       ring_swap:
+#         subject: "Time to swap your ring"
+#         body: "Swap your hormone ring today."
+#       patch_change:
+#         subject: "Time to change your patch"
+#         body: "Change your patch today."
+#       patch_free:
+#         subject: "Patch-free week"
+#         body: "Remove your patch today and take your patch-free week."
+#       patch_apply:
+#         subject: "Time to apply your patch"
+#         body: "Your patch-free week is over — apply a new patch today."
+#       expiry:
+#         subject: "Your contraception is expiring"
+#         body: "Your contraception is due for replacement on %{date}."
+#       injection_due:
+#         subject: "Your next injection is coming up"
+#         body: "Your next injection is due on %{date}."
   reminder_mailer:
     common:
       heads_up: "A heads-up from Season"
@@ -1071,21 +1074,21 @@ en:
         clarity: "Clarity and motivation return"
     birth_control_reminder:
       subject: "Your daily reminder 💊 Season"
-      methods:
-        pill: "your pill"
-        hormonering: "your hormone ring"
-        plaster: "your patch"
-        hormonal_iud: "your hormonal IUD"
-        copper_iud: "your copper IUD"
-        implant: "your implant"
-        injection: "your injection"
-        none: "your contraception"
-      title: "Time for %{method}"
-      text_title: "Time for %{method} reminder"
-      daily_reminder: "Daily reminder from Season"
-      stay_consistent: "Stay consistent — taking %{method} at the same time every day is key to its effectiveness."
-      quick_tip: "Quick tip"
-      missed_dose: "If you miss a dose, check the instructions for %{method} brand. Most methods have catch-up rules — don't panic."
+#       methods:
+#         pill: "your pill"
+#         hormonering: "your hormone ring"
+#         plaster: "your patch"
+#         hormonal_iud: "your hormonal IUD"
+#         copper_iud: "your copper IUD"
+#         implant: "your implant"
+#         injection: "your injection"
+#         none: "your contraception"
+#       title: "Time for %{method}"
+#       text_title: "Time for %{method} reminder"
+#       daily_reminder: "Daily reminder from Season"
+#       stay_consistent: "Stay consistent — taking %{method} at the same time every day is key to its effectiveness."
+#       quick_tip: "Quick tip"
+#       missed_dose: "If you miss a dose, check the instructions for %{method} brand. Most methods have catch-up rules — don't panic."
   support_mailer:
     support_request:
       subject: "[Season Support] %{message}"
