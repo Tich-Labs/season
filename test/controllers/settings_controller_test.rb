@@ -17,6 +17,17 @@ class SettingsControllerTest < ActionDispatch::IntegrationTest
 
   # Removed — not in Figma. Access code lives only on My Profile now, which
   # is /settings/pin's sole entry point, so its hardcoded back link is correct.
+  # My Subscriptions and Notifications & Reminders are coming soon: greyed out,
+  # with a Coming soon pill and no links into their pages.
+  test "GET /settings/edit locks My Subscriptions and Notifications & Reminders" do
+    get edit_settings_path
+    assert_response :success
+    assert_no_match(%r{href="/settings/subscriptions"}, response.body)
+    assert_no_match(%r{href="/settings/notifications"}, response.body)
+    assert_match(/opacity-40 pointer-events-none/, response.body)
+    assert_includes response.body, ERB::Util.html_escape(I18n.t("settings.edit.notifications_and_reminder"))
+  end
+
   test "GET /settings/edit has no App Lock row" do
     get edit_settings_path
     assert_no_match(/App Lock/, response.body)
@@ -85,7 +96,7 @@ class SettingsControllerTest < ActionDispatch::IntegrationTest
     assert_no_match(%r{href="/settings/notification_morning"}, response.body)
     assert_no_match(%r{href="/settings/notification_period"}, response.body)
     assert_no_match(%r{href="/settings/notification_birth_control"}, response.body)
-    assert_operator response.body.scan(/Coming soon/).size, :>=, 4
+    assert_operator response.body.scan("Coming soon").size, :>=, 4
   end
 
   test "GET /settings/notifications returns 200" do
