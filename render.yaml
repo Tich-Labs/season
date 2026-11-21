@@ -34,7 +34,7 @@ services:
       - key: SOLID_QUEUE_IN_PUMA
         value: "true"
       - key: RUBY_VERSION
-        value: "3.4.7"
+        value: "3.4.13"
       - key: RESEND_API_KEY
         sync: false
       - key: RESEND_FROM_EMAIL
