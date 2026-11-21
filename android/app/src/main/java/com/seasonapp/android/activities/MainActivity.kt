@@ -3,7 +3,7 @@ package com.seasonapp.android.activities
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
-import androidx.activity.enableEdgeToEdge
+import androidx.core.view.WindowCompat
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.seasonapp.android.R
 import com.seasonapp.android.config.AppConfig
@@ -31,9 +31,10 @@ class MainActivity : HotwireActivity(), AuthGate {
     private var tabsLoaded = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        Hotwire.config.applicationUserAgentPrefix = "Season Native"
         Hotwire.defaultFragmentDestination = SeasonWebFragment::class
         Hotwire.registerFragmentDestinations(SeasonWebFragment::class)
-        enableEdgeToEdge()
+        WindowCompat.setDecorFitsSystemWindows(window, true)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         findViewById<View>(R.id.main).applyDefaultImeWindowInsets()

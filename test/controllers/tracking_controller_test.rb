@@ -134,17 +134,20 @@ class TrackingControllerTest < ActionDispatch::IntegrationTest
     assert_equal 1, streak.reload.current_streak
   end
 
-  test "PATCH /tracking/period backdated to a past day does not advance the streak" do
+  test "PATCH /tracking/period backdated to a past day counts toward the streak" do
     streak = fresh_streak
     patch period_tracking_index_path, params: {last_period_start: 5.days.ago.to_date.to_s}
-    assert_equal 0, streak.reload.current_streak
-    assert_nil streak.reload.last_tracked_date
+    assert_equal 1, streak.reload.current_streak
+    assert_equal 5.days.ago.to_date, streak.last_tracked_date
   end
 
   private
 
   def fresh_streak
     @alice.streak&.destroy
+    @alice.symptom_logs.delete_all
+    @alice.superpower_logs.delete_all
+    @alice.period_starts.delete_all
     @alice.create_streak!(current_streak: 0, longest_streak: 0, total_flames: 0)
   end
 end

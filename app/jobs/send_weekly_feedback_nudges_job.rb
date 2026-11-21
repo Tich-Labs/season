@@ -12,12 +12,14 @@ class SendWeeklyFeedbackNudgesJob < ApplicationJob
           .exists?(week_number: week)
         next if already_completed
 
-        PushNotificationService.send_to_user(
-          user,
-          title: "How was Week #{week}?",
-          body: "Share your experience with Season — your feedback helps us improve.",
-          url: "/tracking"
-        )
+        with_user_locale(user) do
+          PushNotificationService.send_to_user(
+            user,
+            title: I18n.t("push_notifications.weekly_feedback.title", week: week),
+            body: I18n.t("push_notifications.weekly_feedback.body"),
+            url: "/tracking"
+          )
+        end
     end
   end
 end

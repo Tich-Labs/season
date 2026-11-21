@@ -1,14 +1,24 @@
+allowed_hosts = [
+  "seasonv2.onrender.com",
+  "localhost",
+  "127.0.0.1"
+]
+allowed_hosts += ENV.fetch("OMNIAUTH_ALLOWED_HOSTS", "").split(",").map(&:strip).reject(&:empty?)
+allowed_hosts << "www.example.com" if Rails.env.test?
+OmniAuth.config.allowed_hosts = allowed_hosts.uniq
+
 # Fix omniauth-rails_csrf_protection compatibility with Rails 8.1 + iOS Safari
 #
 # Two issues handled here:
 # 1. Rails 8.1: ActionController::RequestForgeryProtection internals changed,
 #    causing valid_authenticity_token? to raise when called from OmniAuth context.
-# 2. iOS Safari / WKWebView: The session cookie is frequently not sent with
-#    button_to form POSTs, causing valid_authenticity_token? to return false
-#    (no exception) — which silently blocks the OAuth redirect.
+# 2. Native WebViews (iOS WKWebView / Android WebView): The session cookie is
+#    frequently not sent with button_to form POSTs, causing
+#    valid_authenticity_token? to return false (no exception) — which silently
+#    blocks the OAuth redirect.
 #
 # Solution: only relax the check for requests actually coming from the native
-# app's WKWebView — the one client where issue #2 is real. A missing/invalid
+# apps — the clients where issue #2 is real. A missing/invalid
 # token from an ordinary browser is treated as a real CSRF failure and
 # rejected, same as Rails' default behavior; the OAuth `state` param only
 # protects the callback leg, not this initiation request.
@@ -36,12 +46,11 @@ Rails.application.config.after_initialize do
 
     private
 
-    # Mirrors RubyNative::NativeDetection#native_app? (app/helpers), but that
-    # helper is mixed into ActionController::Base — unreachable here, since
-    # OmniAuth::Strategy#request is a plain Rack::Request, not an
-    # ActionDispatch::Request. Read the same header directly instead.
+    # Both native shells send a "Season Native" user-agent prefix. The old
+    # "Ruby Native" value is kept for already-installed builds.
     def native_request?
-      request.env["HTTP_USER_AGENT"].to_s.include?("Ruby Native")
+      user_agent = request.env["HTTP_USER_AGENT"].to_s
+      user_agent.include?("Season Native") || user_agent.include?("Ruby Native")
     end
   end
 end

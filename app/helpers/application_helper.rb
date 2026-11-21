@@ -15,6 +15,10 @@ module ApplicationHelper
     key ? t("seasons.#{key}") : season_name
   end
 
+  def avatar_preset_name(preset)
+    t("settings.profile.avatar_presets.#{preset[:id]}", default: preset[:name])
+  end
+
   # Returns :new_moon, :full_moon, or nil for a given Date.
   # Uses Julian Day 2451549.5 (2000-01-06) as a known new moon reference.
   # Synodic month = 29.53059 days.

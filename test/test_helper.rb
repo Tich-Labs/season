@@ -26,19 +26,17 @@ module ActiveSupport
     # The original method is restored when the block exits.
     def stub_class_method(target, method_name, callable)
       singleton = target.singleton_class
-      own_method = singleton.method_defined?(method_name, false) ||
-        singleton.private_method_defined?(method_name, false)
-      original = target.method(method_name) if own_method
-      singleton.send(:undef_method, method_name) if own_method
+      original = target.method(method_name)
       singleton.send(:define_method, method_name) do |*args, **kwargs, &blk|
         callable.call(*args, **kwargs, &blk)
       end
       yield
     ensure
-      still_own = singleton.method_defined?(method_name, false) ||
-        singleton.private_method_defined?(method_name, false)
-      singleton.send(:undef_method, method_name) if still_own
-      singleton.send(:define_method, method_name, original) if own_method
+      if original
+        singleton.send(:define_method, method_name) do |*args, **kwargs, &blk|
+          original.call(*args, **kwargs, &blk)
+        end
+      end
     end
 
     # Temporarily set an ENV var for the duration of the block, then restore

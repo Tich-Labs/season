@@ -7,7 +7,7 @@ import { Controller } from '@hotwired/stimulus'
 // z-50, so it would otherwise render fully clickable on top of an open menu
 // instead of being covered by it. Hiding them by hand sidesteps having to
 // keep every FAB's z-index below the menu's forever.
-const FAB_SELECTOR = '[data-controller="quick-actions"], a[aria-label="Back to calendar"], a[aria-label="Go to calendar"]'
+const FAB_SELECTOR = '[data-controller="quick-actions"], [data-calendar-fab]'
 
 export default class extends Controller {
   static targets = ['slider', 'panel']

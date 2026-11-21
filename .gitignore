@@ -84,3 +84,37 @@ ios/**/*.xcarchive
 /docs/PII-AND-PREDICTION.md
 docs/M4.md
 docs/season-data-storage.svg
+/docs/PROGRESS.md
+
+# Docs not linked from the admin pages or loaded by the app
+/docs/AUDIT-2026-04-10.md
+/docs/AUDIT-2026-08-15-SECURITY.md
+/docs/AUDIT-2026-10-01-SECURITY.md
+/docs/AUDIT-M2-PIXEL-PERFECT.md
+/docs/AUDIT_SUMMARY.md
+/docs/BACKLOG.md
+/docs/Cervical mucus tracking(Tabelle1).csv
+/docs/DEVISE-AUDIT.md
+/docs/FIGMA-ALIGNMENT-CHECK-2026-05-02.md
+/docs/FIGMA-AUDIT-REPORT-2026-05-02.md
+/docs/GDPR-AUDIT.md
+/docs/M2-ACCESSIBILITY-AUDIT.md
+/docs/M2-OAUTH-SETUP.md
+/docs/M3-COUNTER-CHECK-2026-05-02.md
+/docs/NATIVE-PARITY-PLAN.md
+/docs/STAKEHOLDER-REPORT-2026-04-15.md
+/docs/STORE-DEPLOYMENT.md
+/docs/STYLING-AUDIT.md
+/docs/app_documentation.md
+/docs/audit_checklist.md
+/docs/audit_skills.md
+/docs/beta-legal-questions.html
+/docs/future_builds.md
+/docs/ios.md
+/docs/overview.md
+/docs/season-data-storage-plain.svg
+/docs/streaks.md
+/docs/testing-sheet-ios.html
+/docs/testing-sheet.html
+/docs/testing_steps.md
+/docs/userjourney.md

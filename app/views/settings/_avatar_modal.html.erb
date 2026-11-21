@@ -27,9 +27,9 @@
             <% selected = current_user.avatar_preset == preset[:id] %>
             <button type="button" data-action="click->profile-modal#selectAvatarPreset"
                     data-avatar-preset="<%= preset[:id] %>"
-                    title="<%= preset[:name] %>" aria-label="<%= preset[:name] %>" aria-pressed="<%= selected %>"
+                    title="<%= avatar_preset_name(preset) %>" aria-label="<%= avatar_preset_name(preset) %>" aria-pressed="<%= selected %>"
                     class="<%= selected ? 'border-[3px] border-brand-primary' : 'border border-brand-divider' %> flex items-center justify-center w-full aspect-square bg-white rounded-xl p-2 cursor-pointer transition-all">
-              <%= image_tag "avatars/#{preset[:file]}", alt: preset[:name], class: "w-full h-full object-cover rounded-lg" %>
+              <%= image_tag "avatars/#{preset[:file]}", alt: avatar_preset_name(preset), class: "w-full h-full object-cover rounded-lg" %>
             </button>
           <% end %>
         </div>

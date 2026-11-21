@@ -5,13 +5,18 @@ module Streakable
 
   # Records a tracking action for the streak.
   #
-  # Only *today's* activity counts: a save backdated to a past day (e.g. the
-  # user filling in yesterday via the date drum) must not advance today's
-  # streak, so past/future dates are ignored. Callers pass the saved entry's
-  # date; anything that isn't today is a no-op.
+  # Today's entries advance the streak directly. Backfilled entries rebuild it
+  # from the user's actual tracking dates, so logging several past days in one
+  # sitting counts each consecutive day instead of leaving the flame at 1.
+  # Future dates are ignored.
   def update_streak!(on = Time.zone.today)
     on = on.to_date
-    return unless on == Time.zone.today
+    return if on > Time.zone.today
+
+    if on < Time.zone.today
+      Streaks::RecomputeService.call(user: current_user)
+      return
+    end
 
     streak = current_user.streak || current_user.build_streak(
       current_streak: 0,

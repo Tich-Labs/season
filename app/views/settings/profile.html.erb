@@ -33,7 +33,7 @@
       <% if @user.avatar_preset.present? %>
         <% preset = AvatarService.find_by_id(@user.avatar_preset) %>
         <% if preset %>
-          <%= image_tag "avatars/#{preset[:file]}", class: "w-12 h-12 rounded-full object-cover shrink-0", alt: preset[:name] %>
+          <%= image_tag "avatars/#{preset[:file]}", class: "w-12 h-12 rounded-full object-cover shrink-0", alt: avatar_preset_name(preset) %>
         <% end %>
       <% elsif @user.avatar.attached? %>
         <%= image_tag @user.avatar, class: "w-12 h-12 rounded-full object-cover shrink-0", alt: t("settings.profile.avatar_alt") %>

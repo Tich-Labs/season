@@ -130,6 +130,34 @@ en:
     full_text:
       read_full: "Read full version"
       back_to_flow: "← Back"
+    terms:
+      title: "Terms of Use"
+      intro: "By using Season, you agree to these terms. Please read them carefully."
+      use:
+        title: "1. Use of the App"
+        body: "Season is a personal menstrual cycle tracking app. You must be at least 16 years old to use it. You are responsible for keeping your account credentials secure."
+      health:
+        title: "2. Health disclaimer"
+        body: "Season is not a medical device and does not provide medical advice. The information provided is for informational purposes only. Always consult a qualified healthcare professional for medical advice, diagnosis, or treatment."
+      data:
+        title: "3. Your data"
+        body_html: "You own your data. We process it only to provide the service. See our %{privacy_link} for full details."
+        privacy_link: "Privacy Policy"
+      changes:
+        title: "4. Changes to these terms"
+        body: "We may update these terms from time to time. We will notify you of significant changes via the app or email."
+      contact:
+        title: "5. Contact"
+        body_html: "Questions? Email us at %{email_link}"
+        email_link: "info@season.vision"
+
+  pwa:
+    manifest:
+      description: "Season — your cycle, your superpower."
+    offline:
+      title: "You're offline"
+      message: "Season needs a network connection to load. Check your connection and try again."
+      retry: "Try Again"
 
   date:
     # Locale-specific named formats for views that used strftime literals.
@@ -279,6 +307,7 @@ en:
       select_option: "Please select an option"
       invalid_cycle_length: "Please select a valid cycle length"
       select_method: "Please select a method"
+      save_failed: "We couldn't save your details. Please try again."
     require_user:
       sign_in_first: "Please sign in first"
     step1:
@@ -394,6 +423,7 @@ en:
       no_appointments_this_month: "No appointments this month"
       add_appointment: "Add appointment"
       cycle_day: "Day"
+      untitled: "Untitled"
     index:
       day_view: "Day View"
       week_view: "Week View"
@@ -685,6 +715,18 @@ en:
       my_profile: "My profile"
       profile_picture: "Profile Picture"
       choose_cat_avatar: "Choose a cat avatar"
+      avatar_presets:
+        frame-219: "Birthday Cat"
+        frame-220: "Licking Cat"
+        frame-225: "Playful Cat"
+        frame-230: "Sleepy Cat"
+        frame-231: "Purring Cat"
+        frame-242: "Happy Cat"
+        frame-243: "Curious Cat"
+        frame-244: "Calm Cat"
+        frame-245: "Silly Cat"
+        frame-248: "Proud Cat"
+        frame-249: "Tender Cat"
       upload_from_device: "Upload from device"
       add_photo: "Add Photo"
       crop_photo: "Crop photo"
@@ -767,6 +809,7 @@ en:
       icloud_synced: "Synced %{count} events from iCloud Calendar"
     notifications:
       title: "Notifications & Reminders"
+      back_to_settings: "Back to settings"
       heading: "Notifications & reminder"
       general_push: "General Push-Notifications"
       push_new_appt: "New appointments synced"
@@ -798,23 +841,33 @@ en:
       push_enabled: "Enabled"
       push_off: "Off"
       push_blocked: "Blocked"
-      back_to_settings: "Back to settings"
       morning_contents: "Superpower of the day, pay attention to, mood, sport, nutrition, fertility"
     notification_birth_control:
       title: "Birth Control Reminder"
+      eyebrow: "Notifications"
       current_method: "Current method"
       enable_reminder: "Enable Reminder"
       keep_track_of: "Keep track of:"
       active_days: "Active days"
       break_days: "Break days"
-#       change: "Change"
-#       aria_enable: "Enable birth control reminder"
-#       reminder_time: "Reminder time"
-#       cycle_tracking: "Cycle tracking"
-#       today_is_day_html: "Today is day <strong>%{day}</strong> of the %{method}"
-#       no_method_hint: "No birth control method selected. Tap \"Change\" above to set your method."
-#       choose_method: "Choose your method"
-#       method_saved: "Birth control method updated."
+      change: "Change"
+      aria_enable: "Enable birth control reminder"
+      reminder_time: "Reminder time"
+      cycle_tracking: "Cycle tracking"
+      today_is_day_html: "Today is day <strong>%{day}</strong> of the %{method}"
+      no_method_hint: "No birth control method selected. Tap \"Change\" above to set your method."
+      long_acting_hint: "%{method} is a long-acting method — no daily tracking needed."
+      choose_method: "Choose your method"
+      save: "Save"
+      methods:
+        pill: "Pill"
+        hormonering: "Hormone Ring"
+        plaster: "Plaster"
+        iud: "IUD"
+        implant: "Implant"
+        injection: "Injection"
+        none: "No birth control"
+      method_saved: "Birth control method updated."
 #       renewal: "Renewal"
 #       last_inserted: "When was it last inserted or injected?"
 #       renewal_due_on: "Renewal due on %{date}"
@@ -931,6 +984,7 @@ en:
       my_plan: "My Plan"
       view_invoices: "View invoices"
       payment_method: "Payment method"
+      no_payment_method: "None"
       change_to: "Change to"
       yearly_price: "Yearly · 59,95€"
       monthly_price: "4,99€ / month"
@@ -981,6 +1035,7 @@ en:
     show_pin: "Show PIN"
     hide_pin: "Hide PIN"
     input_label: "PIN code"
+    biometric: "Use Face ID / Touch ID"
 #   reminders:
 #     birth_control:
 #       pill_daily:
@@ -1074,21 +1129,21 @@ en:
         clarity: "Clarity and motivation return"
     birth_control_reminder:
       subject: "Your daily reminder 💊 Season"
-#       methods:
-#         pill: "your pill"
-#         hormonering: "your hormone ring"
-#         plaster: "your patch"
-#         hormonal_iud: "your hormonal IUD"
-#         copper_iud: "your copper IUD"
-#         implant: "your implant"
-#         injection: "your injection"
-#         none: "your contraception"
-#       title: "Time for %{method}"
-#       text_title: "Time for %{method} reminder"
-#       daily_reminder: "Daily reminder from Season"
-#       stay_consistent: "Stay consistent — taking %{method} at the same time every day is key to its effectiveness."
-#       quick_tip: "Quick tip"
-#       missed_dose: "If you miss a dose, check the instructions for %{method} brand. Most methods have catch-up rules — don't panic."
+      methods:
+        pill: "your pill"
+        hormonering: "your hormone ring"
+        plaster: "your patch"
+        hormonal_iud: "your hormonal IUD"
+        copper_iud: "your copper IUD"
+        implant: "your implant"
+        injection: "your injection"
+        none: "your contraception"
+      title: "Time for %{method}"
+      text_title: "Time for %{method} reminder"
+      daily_reminder: "Daily reminder from Season"
+      stay_consistent: "Stay consistent — taking %{method} at the same time every day is key to its effectiveness."
+      quick_tip: "Quick tip"
+      missed_dose: "If you miss a dose, check the instructions for %{method} brand. Most methods have catch-up rules — don't panic."
   support_mailer:
     support_request:
       subject: "[Season Support] %{message}"
@@ -1278,6 +1333,24 @@ en:
       title: "Discharge"
       page_title: "Discharge"
       cervical_mucus_tracking: "Cervical mucus tracking"
+      intro: "Tracking your cervical mucus helps predict your fertile window. Tap the type that matches what you observe today."
+      clear_selection: "Clear selection"
+      types:
+        dry:
+          name: "Dry / None"
+          description: "No discharge visible or felt. Typical just after your period ends."
+        sticky:
+          name: "Sticky"
+          description: "White or yellow, thick and clumpy. Low fertility window."
+        creamy:
+          name: "Creamy"
+          description: "Smooth, lotion-like, white or pale yellow. Approaching fertile window."
+        watery:
+          name: "Watery"
+          description: "Clear, thin, feels wet. You may be approaching ovulation."
+        egg_white:
+          name: "Egg white"
+          description: "Clear, stretchy and slippery — like raw egg white. Peak fertility."
     # Content for the "?" info modal on each Vaginal Discharge grid icon.
     # Source: docs/Cervical mucus tracking(Tabelle1).csv — the 7 keys match
     # the discharge_grid keys in symptoms/index.html.erb. Spotting/Period
@@ -1491,6 +1564,7 @@ en:
     discharge_prefix: "Discharge: %{value}"
     intercourse_prefix: "Intercourse: %{value}"
     cravings_prefix: "Cravings: %{value}"
+    unknown_label: "Unknown"
     discharge_labels:
       dry: "Dry"
       creamy-light: "Milky"
@@ -1765,6 +1839,13 @@ en:
     show:
       emotional_world: "Emotional world"
       that_will_do_you_good: "That will do you good"
+  push_notifications:
+    morning:
+      title: "Good morning!"
+      body: "Your daily cycle summary is ready."
+    weekly_feedback:
+      title: "How was Week %{week}?"
+      body: "Share your experience with Season — your feedback helps us improve."
   notifications:
     index:
       title: "Notifications"

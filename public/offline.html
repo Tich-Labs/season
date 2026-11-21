@@ -32,9 +32,17 @@
     <circle cx="40" cy="40" r="38" fill="#EDE1D5" stroke="#933a35" stroke-width="2"/>
     <path d="M40 20v22l12 12" stroke="#933a35" stroke-width="3" stroke-linecap="round"/>
   </svg>
-  <h1>You're offline</h1>
-  <p>Season needs a network connection to load. Check your connection and try again.</p>
-  <button class="retry-btn" onclick="window.location.reload()">Try Again</button>
-  <script>window.addEventListener('online', () => window.location.reload());</script>
+  <h1 id="offline-title">You're offline</h1>
+  <p id="offline-message">Season needs a network connection to load. Check your connection and try again.</p>
+  <button id="offline-retry" class="retry-btn" onclick="window.location.reload()">Try Again</button>
+  <script>
+    if ((navigator.language || '').toLowerCase().startsWith('de')) {
+      document.documentElement.lang = 'de';
+      document.getElementById('offline-title').textContent = "Du bist offline";
+      document.getElementById('offline-message').textContent = "Season braucht eine Internetverbindung, um zu laden. Prüfe deine Verbindung und versuche es erneut.";
+      document.getElementById('offline-retry').textContent = "Erneut versuchen";
+    }
+    window.addEventListener('online', () => window.location.reload());
+  </script>
 </body>
 </html>

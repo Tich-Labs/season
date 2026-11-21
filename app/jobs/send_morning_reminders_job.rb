@@ -5,10 +5,12 @@ class SendMorningRemindersJob < ApplicationJob
     Reminder.active.where(reminder_type: "morning").includes(:user).find_each do |reminder|
       next if reminder.user&.email.blank?
       ReminderMailer.morning_summary(reminder.user).deliver_later
-      PushNotificationService.send_to_user(reminder.user,
-        title: "Good morning!",
-        body: "Your daily cycle summary is ready.",
-        url: "/daily/#{Time.zone.today}")
+      with_user_locale(reminder.user) do
+        PushNotificationService.send_to_user(reminder.user,
+          title: I18n.t("push_notifications.morning.title"),
+          body: I18n.t("push_notifications.morning.body"),
+          url: "/daily/#{Time.zone.today}")
+      end
     end
   end
 end

@@ -8,7 +8,7 @@ Women's health tracking app — Rails 8 + Hotwire + Turbo Native (iOS).
 
 - **Backend**: Ruby 3.4, Rails 8, PostgreSQL
 - **Frontend**: Tailwind CSS, Stimulus, Turbo
-- **Mobile**: Hotwire Native iOS (Turbo Native)
+- **Mobile**: Hotwire Native iOS + Android (Turbo Native)
 - **Hosting**: Render (free tier)
 - **Queue**: SolidQueue (in-process with Puma)
 
@@ -59,3 +59,24 @@ Pre-commit hook runs: lint → test → push.
 - `AGENTS.md` — critical defaults, gotchas, iOS best practices
 - `docs/` — Figma notes, iOS integration, audit system, future build plans
 - `ios/SeasonApp/` — Xcode project for iOS Turbo Native app
+
+## Android local testing (Turbo Native)
+
+You can point the Android wrapper at any base URL at build time.
+
+1. Start Rails locally:
+
+```bash
+bin/dev
+```
+
+2. Build/install debug app against local web server:
+
+```bash
+cd android
+./gradlew :app:installDebug -PwebBaseUrl=http://10.0.2.2:3000
+```
+
+- Emulator: use `10.0.2.2` for your Mac localhost.
+- Physical device: use your Mac LAN IP (for example `http://192.168.1.42:3000`).
+- If using a public tunnel URL, pass it as `-PwebBaseUrl=https://...`.

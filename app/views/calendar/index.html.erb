@@ -151,7 +151,7 @@
     <%# ── Greeting ── %>
     <div class="mb-5">
       <p class="text-brand-primary text-4xl font-medium m-0 leading-tight">
-        <%= t("calendar.index.hello") %> <%= current_user.first_name || "there" %>
+        <%= t("calendar.index.hello") %> <%= current_user.first_name || t("calendar.index.fallback_name") %>
       </p>
       <p class="text-brand-primary text-base font-medium m-0">
         <%= t("calendar.index.subheading") %>
@@ -177,7 +177,7 @@
         <% CycleCalculatorService::PHASE_META.each do |phase, meta| %>
           <div class="flex items-center gap-1">
             <span class="w-2.5 h-2.5 rounded-full" style="background: <%= meta[:colour] %>;"></span>
-            <span class="text-xs text-brand-secondary"><%= phase.titleize %></span>
+            <span class="text-xs text-brand-secondary"><%= t("phases.#{phase}") %></span>
           </div>
         <% end %>
 
@@ -243,28 +243,20 @@
   # of truth, shared with the calendar bands/legend) rather than a second
   # hardcoded copy — a prior hardcoded copy here drifted to a stale palette
   # that no longer matched the rest of the calendar.
-  season_info = case season
-  when "Winter"
-    { title: "Winter", colour: CycleCalculatorService::PHASE_META["menstrual"][:colour], emoji: "❄️",
-      description: "This is your menstruation phase — a time for rest and reflection.",
-      tips: ["Rest and prioritize sleep", "Gentle movement like yoga", "Stay hydrated"] }
-  when "Spring"
-    { title: "Spring", colour: CycleCalculatorService::PHASE_META["follicular"][:colour], emoji: "🌸",
-      description: "You're in the follicular phase — energy and creativity are rising!",
-      tips: ["Start new projects", "High energy workouts", "Social activities"] }
-  when "Summer"
-    { title: "Summer", colour: CycleCalculatorService::PHASE_META["ovulation"][:colour], emoji: "☀️",
-      description: "You're ovulating — peak energy and confidence!",
-      tips: ["Network and collaborate", "Creative brainstorming", "Focus on relationships"] }
-  when "Autumn"
-    { title: "Autumn", colour: CycleCalculatorService::PHASE_META["luteal"][:colour], emoji: "🍂",
-      description: "You're in the luteal phase — time for introspection and planning.",
-      tips: ["Organize and plan", "Self-care routines", "Reflect on goals"] }
-  else
-    { title: "Your Cycle", colour: CycleCalculatorService::PHASE_META["menstrual"][:colour], emoji: "🌙",
-      description: "Track your cycle to see your phase.",
-      tips: [] }
+  season_key, phase_key, emoji = case season
+  when "Winter" then ["winter", "menstrual", "❄️"]
+  when "Spring" then ["spring", "follicular", "🌸"]
+  when "Summer" then ["summer", "ovulation", "☀️"]
+  when "Autumn" then ["autumn", "luteal", "🍂"]
+  else ["your_cycle", "menstrual", "🌙"]
   end
+  season_info = {
+    title: t("seasons.#{season_key}"),
+    colour: CycleCalculatorService::PHASE_META[phase_key][:colour],
+    emoji: emoji,
+    description: t("calendar.season_modal.#{season_key}.description"),
+    tips: t("calendar.season_modal.#{season_key}.tips", default: [])
+  }
 %>
 
 <div id="season-info-modal"
@@ -279,7 +271,7 @@
   <div data-season-modal-target="modal" class="relative z-10 bg-brand-background rounded-2xl p-6 w-11/12 max-w-sm">
     <div class="text-center mb-4">
       <div class="w-16 h-16 rounded-full inline-flex items-center justify-center text-2xl mb-3" style="background: <%= season_info[:colour] %>;">
-        <span aria-label="<%= season_info[:title].downcase %> phase emoji"><%= season_info[:emoji] %></span>
+        <span aria-label="<%= t("calendar.index.season_emoji_label", season: season_info[:title]) %>"><%= season_info[:emoji] %></span>
       </div>
       <h2 id="season-modal-title" class="text-brand-primary text-xl font-semibold m-0"><%= season_info[:title] %></h2>
       <p class="text-brand-secondary text-sm mt-1 mb-0"><%= t("forecast.index.you_are_in", phase: season_info[:title].downcase) %></p>
@@ -324,17 +316,17 @@
 <% if params[:appointment_scheduled] == "1" %>
   <div id="appointment-scheduled-modal" data-controller="appointment-scheduled-modal"
        class="fixed inset-0 z-[200] flex items-center justify-center bg-brand-overlay/90"
-       role="dialog" aria-modal="true" aria-label="Appointment scheduled"
+       role="dialog" aria-modal="true" aria-label="<%= t("calendar.index.appointment_scheduled_label") %>"
        data-action="click->appointment-scheduled-modal#overlayClick">
     <div class="relative w-[337px] bg-white rounded-[29px] shadow-[0_24px_64px_rgba(0,0,0,0.16)] px-7 py-10 flex flex-col items-center">
-      <button type="button" aria-label="Close" data-action="click->appointment-scheduled-modal#close"
+      <button type="button" aria-label="<%= t("shared.close") %>" data-action="click->appointment-scheduled-modal#close"
               class="absolute top-3 right-3 w-11 h-11 flex items-center justify-center rounded-full rotate-45 border-0 bg-transparent cursor-pointer">
         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#A43600" stroke-width="3">
           <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
         </svg>
       </button>
       <p class="text-brand-primary font-medium text-[28px] leading-[34px] text-center font-sans m-0">
-        Your appointment has been scheduled!
+        <%= t("calendar.index.appointment_scheduled") %>
       </p>
     </div>
   </div>

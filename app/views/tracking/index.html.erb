@@ -65,7 +65,7 @@
           <% if current_user.avatar_preset.present? %>
             <% preset = AvatarService.find_by_id(current_user.avatar_preset) %>
             <% if preset %>
-              <%= image_tag "avatars/#{preset[:file]}", class: "w-full h-full object-cover", alt: preset[:name] %>
+              <%= image_tag "avatars/#{preset[:file]}", class: "w-full h-full object-cover", alt: avatar_preset_name(preset) %>
             <% end %>
           <% elsif current_user.avatar.attached? %>
             <%= image_tag current_user.avatar,
@@ -118,13 +118,7 @@
          when tapping a day in the strip below. Auto-closes after ~10s. %>
     <% if params[:date].blank? && phase_label %>
       <%
-        analysis_messages = {
-          "menstrual"  => "This is your time to rest and restore. Listen to your body — it knows what it needs.",
-          "follicular" => "Energy is rising and ideas are flowing. A great time to start new projects and plan ahead.",
-          "ovulation"  => "You are magnetic and at your peak. Embrace social connection and communicate with confidence.",
-          "luteal"     => "Turn inward and focus on the details. Execute projects and reflect on what matters most."
-        }
-        analysis_text = analysis_messages[@phase] || "Track your symptoms daily to unlock personalized insights."
+        analysis_text = t("tracking.index.analysis.#{@phase}", default: t("tracking.index.analysis.default"))
       %>
       <div class="flex justify-center mb-4" data-controller="dismissible">
         <div class="relative bg-white rounded-[29px] pl-5 pr-3 py-5 w-full max-w-[400px] flex items-center gap-1" data-dismissible-target="card">

@@ -75,20 +75,17 @@ export default class extends Controller {
     const dischargeBtn = root.querySelector('[data-discharge][aria-pressed="true"]')
     if (dischargeBtn) {
       const key = dischargeBtn.dataset.discharge
-      const fallback = key.charAt(0).toUpperCase() + key.slice(1).replace(/-/g, ' ')
-      other.push(t('js.discharge_prefix', { value: this.#label('discharge_labels', key, fallback) }))
+      other.push(t('js.discharge_prefix', { value: this.#label('discharge_labels', key, t('js.unknown_label')) }))
     }
 
     const intercourse = JSON.parse(root.dataset.activeIntercourse || '[]')
     if (intercourse.length > 0) {
-      const fallback = k => k.charAt(0).toUpperCase() + k.slice(1).replace(/-/g, ' ')
-      other.push(t('js.intercourse_prefix', { value: intercourse.map(k => this.#label('intercourse_labels', k, fallback(k))).join(', ') }))
+      other.push(t('js.intercourse_prefix', { value: intercourse.map(k => this.#label('intercourse_labels', k, t('js.unknown_label'))).join(', ') }))
     }
 
     const cravings = JSON.parse(root.dataset.activeCravings || '[]')
     if (cravings.length > 0) {
-      const fallback = k => k.charAt(0).toUpperCase() + k.slice(1).replace(/-/g, ' ')
-      other.push(t('js.cravings_prefix', { value: cravings.map(k => this.#label('craving_labels', k, fallback(k))).join(', ') }))
+      other.push(t('js.cravings_prefix', { value: cravings.map(k => this.#label('craving_labels', k, t('js.unknown_label'))).join(', ') }))
     }
 
     const pickers = [

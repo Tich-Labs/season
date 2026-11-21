@@ -11,6 +11,7 @@
   <%= link_to user_root_path,
         class: "pointer-events-auto w-14 h-14 rounded-full bg-white shadow-[0px_4px_9px_rgba(0,0,0,0.15)] flex items-center justify-center active:scale-95 transition-all duration-150",
         "data-turbo-action": "replace",
+        "data-calendar-fab": "true",
         aria: { label: t("menu.back_to_calendar") } do %>
     <%= vuesax_icon "calendar", size: 26 %>
   <% end %>

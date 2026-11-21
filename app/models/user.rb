@@ -205,15 +205,6 @@ class User < ApplicationRecord
     end
   end
 
-  def store_google_tokens!(auth)
-    creds = auth.credentials
-    update!(
-      google_access_token: creds.token,
-      google_refresh_token: creds.refresh_token.presence || google_refresh_token,
-      google_token_expires_at: creds.expires_at ? Time.zone.at(creds.expires_at) : nil
-    )
-  end
-
   def google_calendar_connected?
     google_access_token.present? && google_refresh_token.present?
   end

@@ -48,7 +48,7 @@
     <div class="flex items-center gap-4 py-4">
       <%= image_tag "icons/vuesax/linear/card-pos.svg", class: "w-6 h-6" %>
       <span class="flex-1 text-brand-primary text-base font-medium"><%= t("settings.subscriptions.payment_method") %></span>
-      <span class="text-brand-muted text-sm"><%= @subscription.payment_method %></span>
+      <span class="text-brand-muted text-sm"><%= @subscription.payment_method == "none" ? t("settings.subscriptions.no_payment_method") : @subscription.payment_method %></span>
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
         <polyline points="9 18 15 12 9 6" />
       </svg>

@@ -130,6 +130,34 @@ de:
     full_text:
       read_full: "Vollständige Version lesen"
       back_to_flow: "← Zurück"
+    terms:
+      title: "Nutzungsbedingungen"
+      intro: "Durch die Nutzung von Season stimmst du diesen Bedingungen zu. Bitte lies sie sorgfältig durch."
+      use:
+        title: "1. Nutzung der App"
+        body: "Season ist eine persönliche App zur Verfolgung des Menstruationszyklus. Du musst mindestens 16 Jahre alt sein, um sie zu nutzen. Du bist für die Sicherheit deiner Kontodaten verantwortlich."
+      health:
+        title: "2. Gesundheitshinweis"
+        body: "Season ist kein Medizinprodukt und gibt keine medizinischen Empfehlungen. Die bereitgestellten Informationen dienen nur der Information. Wende dich für medizinische Beratung, Diagnose oder Behandlung immer an eine qualifizierte Fachkraft."
+      data:
+        title: "3. Deine Daten"
+        body_html: "Deine Daten gehören dir. Wir verarbeiten sie nur, um den Dienst bereitzustellen. Details findest du in unserer %{privacy_link}."
+        privacy_link: "Datenschutzerklärung"
+      changes:
+        title: "4. Änderungen dieser Bedingungen"
+        body: "Wir können diese Bedingungen gelegentlich aktualisieren. Über wesentliche Änderungen informieren wir dich in der App oder per E-Mail."
+      contact:
+        title: "5. Kontakt"
+        body_html: "Fragen? Schreib uns an %{email_link}"
+        email_link: "info@season.vision"
+
+  pwa:
+    manifest:
+      description: "Season – dein Zyklus, deine Superkraft."
+    offline:
+      title: "Du bist offline"
+      message: "Season braucht eine Internetverbindung, um zu laden. Prüfe deine Verbindung und versuche es erneut."
+      retry: "Erneut versuchen"
 
   date:
     # Locale-specific named formats for views that used strftime literals.
@@ -290,6 +318,7 @@ de:
       select_option: "Bitte wähle eine Option"
       invalid_cycle_length: "Bitte wähle eine gültige Zykluslänge"
       select_method: "Bitte wähle eine Methode"
+      save_failed: "Deine Angaben konnten nicht gespeichert werden. Bitte versuche es erneut."
     require_user:
       sign_in_first: "Bitte melde dich zuerst an"
     step1:
@@ -405,6 +434,7 @@ de:
       no_appointments_this_month: "Keine Termine in diesem Monat"
       add_appointment: "Termin hinzufügen"
       cycle_day: "Tag"
+      untitled: "Ohne Titel"
     index:
       day_view: "Tagesansicht"
       week_view: "Wochenansicht"
@@ -731,6 +761,18 @@ de:
       my_profile: "Mein Profil"
       profile_picture: "Profilbild"
       choose_cat_avatar: "Wähle einen Katzen-Avatar"
+      avatar_presets:
+        frame-219: "Geburtstagskatze"
+        frame-220: "Katze beim Lecken"
+        frame-225: "Verspielte Katze"
+        frame-230: "Schlafende Katze"
+        frame-231: "Schnurrende Katze"
+        frame-242: "Fröhliche Katze"
+        frame-243: "Neugierige Katze"
+        frame-244: "Ruhige Katze"
+        frame-245: "Alberne Katze"
+        frame-248: "Stolze Katze"
+        frame-249: "Zärtliche Katze"
       upload_from_device: "Vom Gerät hochladen"
       add_photo: "Foto hinzufügen"
       crop_photo: "Foto zuschneiden"
@@ -848,19 +890,30 @@ de:
       morning_contents: "Superkraft des Tages, worauf du achten solltest, Stimmung, Sport, Ernährung, Fruchtbarkeit"
     notification_birth_control:
       title: "Verhütungserinnerung"
+      eyebrow: "Benachrichtigungen"
       current_method: "Aktuelle Methode"
       enable_reminder: "Erinnerung aktivieren"
       keep_track_of: "Im Blick behalten:"
       active_days: "Aktive Tage"
       break_days: "Pausentage"
-#       change: "Ändern"
-#       aria_enable: "Verhütungserinnerung aktivieren"
-#       reminder_time: "Erinnerungszeit"
-#       cycle_tracking: "Zyklus-Tracking"
-#       today_is_day_html: "Heute ist Tag <strong>%{day}</strong> (%{method})"
-#       no_method_hint: "Keine Verhütungsmethode ausgewählt. Tippe oben auf „Ändern“, um deine Methode festzulegen."
-#       choose_method: "Wähle deine Methode"
-#       method_saved: "Verhütungsmethode aktualisiert."
+      change: "Ändern"
+      aria_enable: "Verhütungserinnerung aktivieren"
+      reminder_time: "Erinnerungszeit"
+      cycle_tracking: "Zyklus-Tracking"
+      today_is_day_html: "Heute ist Tag <strong>%{day}</strong> (%{method})"
+      no_method_hint: "Keine Verhütungsmethode ausgewählt. Tippe oben auf „Ändern“, um deine Methode festzulegen."
+      long_acting_hint: "%{method} ist eine langanhaltende Methode – kein tägliches Tracking nötig."
+      choose_method: "Wähle deine Methode"
+      save: "Speichern"
+      methods:
+        pill: "Pille"
+        hormonering: "Hormonring"
+        plaster: "Pflaster"
+        iud: "IUP"
+        implant: "Implantat"
+        injection: "Spritze"
+        none: "Keine Verhütung"
+      method_saved: "Verhütungsmethode aktualisiert."
 #       renewal: "Erneuerung"
 #       last_inserted: "Wann wurde es zuletzt eingesetzt oder gespritzt?"
 #       renewal_due_on: "Erneuerung fällig am %{date}"
@@ -977,6 +1030,7 @@ de:
       my_plan: "Mein Plan"
       view_invoices: "Rechnungen anzeigen"
       payment_method: "Zahlungsmethode"
+      no_payment_method: "Keine"
       change_to: "Wechseln zu"
       yearly_price: "Jährlich · 59,95€"
       monthly_price: "4,99€ / Monat"
@@ -1027,6 +1081,7 @@ de:
     show_pin: "PIN anzeigen"
     hide_pin: "PIN ausblenden"
     input_label: "PIN-Code"
+    biometric: "Face ID / Touch ID verwenden"
 #   reminders:
 #     birth_control:
 #       pill_daily:
@@ -1120,21 +1175,21 @@ de:
         clarity: "Klarheit und Motivation kehren zurück"
     birth_control_reminder:
       subject: "Deine tägliche Erinnerung 💊 Season"
-#       methods:
-#         pill: "deine Pille"
-#         hormonering: "deinen Hormonring"
-#         plaster: "dein Verhütungspflaster"
-#         hormonal_iud: "deine Hormonspirale"
-#         copper_iud: "deine Kupferspirale"
-#         implant: "dein Implantat"
-#         injection: "deine Verhütungsspritze"
-#         none: "deine Verhütung"
-#       title: "Zeit für %{method}"
-#       text_title: "Erinnerung: Zeit für %{method}"
-#       daily_reminder: "Tägliche Erinnerung von Season"
-#       stay_consistent: "Bleib dran – %{method} jeden Tag zur gleichen Uhrzeit einzunehmen ist entscheidend für die Wirksamkeit."
-#       quick_tip: "Kurzer Tipp"
-#       missed_dose: "Wenn du eine Dosis vergisst, schau in die Anleitung für %{method}. Die meisten Methoden haben Nachholregeln – keine Panik."
+      methods:
+        pill: "deine Pille"
+        hormonering: "deinen Hormonring"
+        plaster: "dein Verhütungspflaster"
+        hormonal_iud: "deine Hormonspirale"
+        copper_iud: "deine Kupferspirale"
+        implant: "dein Implantat"
+        injection: "deine Verhütungsspritze"
+        none: "deine Verhütung"
+      title: "Zeit für %{method}"
+      text_title: "Erinnerung: Zeit für %{method}"
+      daily_reminder: "Tägliche Erinnerung von Season"
+      stay_consistent: "Bleib dran – %{method} jeden Tag zur gleichen Uhrzeit einzunehmen ist entscheidend für die Wirksamkeit."
+      quick_tip: "Kurzer Tipp"
+      missed_dose: "Wenn du eine Dosis vergisst, schau in die Anleitung für %{method}. Die meisten Methoden haben Nachholregeln – keine Panik."
   support_mailer:
     support_request:
       subject: "[Season Support] %{message}"
@@ -1291,6 +1346,24 @@ de:
       title: "Ausfluss"
       page_title: "Ausfluss"
       cervical_mucus_tracking: "Zervixschleim-Tracking"
+      intro: "Das Verfolgen deines Zervixschleims hilft, deine fruchtbare Phase vorherzusagen. Tippe auf den Typ, der deiner heutigen Beobachtung entspricht."
+      clear_selection: "Auswahl löschen"
+      types:
+        dry:
+          name: "Trocken / Keiner"
+          description: "Kein Ausfluss sichtbar oder spürbar. Typisch direkt nach Periodenende."
+        sticky:
+          name: "Klebrig"
+          description: "Weiß oder gelb, dick und klumpig. Geringe Fruchtbarkeit."
+        creamy:
+          name: "Cremig"
+          description: "Glatt, lotionartig, weiß oder hellgelb. Die fruchtbare Phase nähert sich."
+        watery:
+          name: "Wässrig"
+          description: "Klar, dünn, fühlt sich feucht an. Du näherst dich vielleicht dem Eisprung."
+        egg_white:
+          name: "Eiklar"
+          description: "Klar, dehnbar und schlüpfrig – wie rohes Eiklar. Höchste Fruchtbarkeit."
     # Siehe die englische Version für den Quellenhinweis (CSV-Leitfaden).
     discharge_info:
       dry:
@@ -1502,6 +1575,7 @@ de:
     discharge_prefix: "Ausfluss: %{value}"
     intercourse_prefix: "Geschlechtsverkehr: %{value}"
     cravings_prefix: "Gelüste: %{value}"
+    unknown_label: "Unbekannt"
     discharge_labels:
       dry: "Trocken"
       creamy-light: "Milchig"
@@ -1763,6 +1837,13 @@ de:
     show:
       emotional_world: "Emotionale Welt"
       that_will_do_you_good: "Das tut dir gut"
+  push_notifications:
+    morning:
+      title: "Guten Morgen!"
+      body: "Deine tägliche Zyklusübersicht ist bereit."
+    weekly_feedback:
+      title: "Wie war Woche %{week}?"
+      body: "Teile deine Erfahrungen mit Season – dein Feedback hilft uns, besser zu werden."
   notifications:
     index:
       title: "Benachrichtigungen"

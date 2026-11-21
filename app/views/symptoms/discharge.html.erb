@@ -14,41 +14,16 @@
 <% content_for(:header_left) do %>
   <%= link_to symptoms_path,
         style: "color:#933a35; font-size:15px; font-weight:500; text-decoration:none; padding:8px 4px; font-family:'Montserrat',sans-serif;" do %>
-    &lt; back
+    <%= t("shared.back") %>
   <% end %>
 <% end %>
 
 <% discharge_types = [
-    {
-      value: 1,
-      name:  "Dry / None",
-      description: "No discharge visible or felt. Typical just after your period ends.",
-      colour: "#D1C5BD"
-    },
-    {
-      value: 2,
-      name:  "Sticky",
-      description: "White or yellow, thick and clumpy. Low fertility window.",
-      colour: "#C8B8A8"
-    },
-    {
-      value: 3,
-      name:  "Creamy",
-      description: "Smooth, lotion-like, white or pale yellow. Approaching fertile window.",
-      colour: "#B8A898"
-    },
-    {
-      value: 4,
-      name:  "Watery",
-      description: "Clear, thin, feels wet. You may be approaching ovulation.",
-      colour: "#899884"
-    },
-    {
-      value: 5,
-      name:  "Egg white",
-      description: "Clear, stretchy and slippery — like raw egg white. Peak fertility.",
-      colour: "#50705b"
-    }
+    { value: 1, key: "dry", colour: "#D1C5BD" },
+    { value: 2, key: "sticky", colour: "#C8B8A8" },
+    { value: 3, key: "creamy", colour: "#B8A898" },
+    { value: 4, key: "watery", colour: "#899884" },
+    { value: 5, key: "egg_white", colour: "#50705b" }
   ]
 
   current_value = @log&.discharge %>
@@ -71,8 +46,7 @@
   <div class="max-w-app mx-auto px-4 pt-5">
 
     <p class="text-sm mb-5 leading-relaxed text-brand-secondary">
-      Tracking your cervical mucus helps predict your fertile window.
-      Tap the type that matches what you observe today.
+      <%= t("symptoms.discharge.intro") %>
     </p>
 
     <div class="flex flex-col gap-3">
@@ -95,10 +69,10 @@
 
           <div class="flex-1">
             <p class="font-semibold text-sm mb-0.5" style="color:#3d2b28;">
-              <%= type[:name] %>
+              <%= t("symptoms.discharge.types.#{type[:key]}.name") %>
             </p>
             <p class="text-xs leading-relaxed" style="color:#6B6B6B;">
-              <%= type[:description] %>
+              <%= t("symptoms.discharge.types.#{type[:key]}.description") %>
             </p>
           </div>
 
@@ -121,7 +95,7 @@
               data-action="click->symptom#save"
               data-field="discharge"
               data-value="">
-        Clear selection
+        <%= t("symptoms.discharge.clear_selection") %>
       </button>
     <% end %>
 

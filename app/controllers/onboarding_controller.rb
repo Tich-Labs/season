@@ -193,8 +193,8 @@ class OnboardingController < ApplicationController
       current_user.update!(food_preference: food_pref, onboarding_completed: true)
       redirect_to onboarding_finish_path and return
     end
-  rescue ActiveRecord::RecordInvalid => e
-    @error = e.message
+  rescue ActiveRecord::RecordInvalid
+    @error = t("onboarding.errors.save_failed")
     render :show, status: :unprocessable_content
   end
 

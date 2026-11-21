@@ -8,7 +8,9 @@ class ReminderMailer < ApplicationMailer
     @phase_meta = CycleCalculatorService::PHASE_META[@phase]
     @content = CyclePhaseContent.for(@phase, user.language || "en", dietary_preference: user.food_preference || "")
 
-    mail(to: user.email, subject: t(".subject", name: user.name.split.first))
+    with_recipient_locale(user) do
+      mail(to: user.email, subject: t(".subject", name: user.name.split.first))
+    end
   end
 
   def period_reminder(user, event_type)
@@ -17,7 +19,9 @@ class ReminderMailer < ApplicationMailer
     next_start = CycleCalculatorService.new(user).next_period_start
     @predicted_date = (event_type == "period_end" && next_start) ? next_start + (user.period_length || 5) - 1 : next_start
 
-    mail(to: user.email, subject: t(".subject_#{event_type}"))
+    with_recipient_locale(user) do
+      mail(to: user.email, subject: t(".subject_#{event_type}"))
+    end
   end
 
   def birth_control_reminder(user)
@@ -26,6 +30,11 @@ class ReminderMailer < ApplicationMailer
     @calculator = CycleCalculatorService.new(user)
     @cycle_day = @calculator.current_cycle_day
 
-    mail(to: user.email, subject: t(".subject"))
+    with_recipient_locale(user) do
+      method = t(".methods.#{@contraception}", default: t(".methods.none"))
+      @title = t(".title", method: method)
+      @body = "#{t(".daily_reminder")} #{t(".stay_consistent", method: method)} #{t(".missed_dose", method: method)}"
+      mail(to: user.email, subject: t(".subject"))
+    end
   end
 end

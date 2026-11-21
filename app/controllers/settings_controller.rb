@@ -1,4 +1,7 @@
 class SettingsController < ApplicationController
+  before_action :require_google_calendar_credentials,
+    only: [:connect_google_calendar, :google_calendar_callback, :sync_google_calendar]
+
   def edit
     @user = current_user
   end
@@ -164,7 +167,7 @@ class SettingsController < ApplicationController
         user: current_user,
         google_event_id: event.id,
         source: "google",
-        title: event.summary.presence || "Untitled",
+        title: event.summary.presence || t("calendar.appointments.untitled"),
         date: start_time.to_date,
         start_time: start_time.respond_to?(:strftime) ? start_time.strftime("%H:%M") : nil,
         end_time: end_time&.respond_to?(:strftime) ? end_time.strftime("%H:%M") : nil
@@ -210,7 +213,7 @@ class SettingsController < ApplicationController
       CalendarEvent.create!(
         user: current_user,
         icloud_event_id: event.uid,
-        title: event.summary.presence || "Untitled",
+        title: event.summary.presence || t("calendar.appointments.untitled"),
         date: event.starts_at.to_date,
         start_time: event.starts_at.strftime("%H:%M"),
         end_time: event.ends_at&.strftime("%H:%M"),
@@ -462,17 +465,28 @@ class SettingsController < ApplicationController
     params.expect(user: [:name, :language, :cycle_length, :period_length, :contraception_type, :life_stage])
   end
 
+  def require_google_calendar_credentials
+    return if ENV["GOOGLE_CLIENT_ID"].present? && ENV["GOOGLE_CLIENT_SECRET"].present?
+
+    redirect_to calendar_settings_path,
+      alert: t("settings.calendar.google_failed", default: "Failed to connect Google Calendar")
+  end
+
   def build_google_oauth_client
     Signet::OAuth2::Client.new(
       client_id: ENV["GOOGLE_CLIENT_ID"],
       client_secret: ENV["GOOGLE_CLIENT_SECRET"],
-      authorization_uri: "https://accounts.google.com/o/oauth2/auth",
+      authorization_uri: "https://accounts.google.com/o/oauth2/v2/auth",
       token_credential_uri: "https://oauth2.googleapis.com/token"
     )
   end
 
+  # A fixed URI is required: preview deployments and the native WebView all
+  # generate different request.base_url values, but Google only accepts the
+  # redirect URI registered in the Cloud console.
   def google_calendar_callback_url
-    "#{request.base_url}/settings/google_calendar_callback"
+    ENV["GOOGLE_CALENDAR_REDIRECT_URI"].presence ||
+      "#{request.base_url}/settings/google_calendar_callback"
   end
 
   def fetch_google_email(access_token)

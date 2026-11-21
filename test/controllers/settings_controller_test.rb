@@ -272,6 +272,34 @@ class SettingsControllerTest < ActionDispatch::IntegrationTest
     assert_not @alice.reload.avatar.attached?
   end
 
+  test "GET /settings/connect_google_calendar uses the v2 endpoint and the configured redirect URI" do
+    with_env("GOOGLE_CLIENT_ID", "season-client-id") do
+      with_env("GOOGLE_CALENDAR_REDIRECT_URI", "https://seasonv2.onrender.com/settings/google_calendar_callback") do
+        get connect_google_calendar_settings_path
+      end
+    end
+
+    uri = URI(response.location)
+    query = Rack::Utils.parse_query(uri.query)
+    assert_equal "accounts.google.com", uri.host
+    assert_equal "/o/oauth2/v2/auth", uri.path
+    assert_equal "season-client-id", query["client_id"]
+    assert_equal "https://seasonv2.onrender.com/settings/google_calendar_callback", query["redirect_uri"]
+    assert_equal "https://www.googleapis.com/auth/calendar", query["scope"]
+    assert_equal "offline", query["access_type"]
+    assert_equal "consent", query["prompt"]
+    assert_equal session[:google_oauth_state], query["state"]
+  end
+
+  test "GET /settings/connect_google_calendar fails gracefully without OAuth credentials" do
+    with_env("GOOGLE_CLIENT_ID", nil) do
+      get connect_google_calendar_settings_path
+    end
+
+    assert_redirected_to calendar_settings_path
+    assert_match(/Failed to connect Google Calendar/, flash[:alert])
+  end
+
   # google_calendar_callback — classic OAuth "connect CSRF": without a state
   # check, an attacker can capture their own authorization code and get a
   # logged-in victim to hit this URL, linking the attacker's Google account
