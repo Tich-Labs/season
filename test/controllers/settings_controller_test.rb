@@ -274,8 +274,10 @@ class SettingsControllerTest < ActionDispatch::IntegrationTest
 
   test "GET /settings/connect_google_calendar uses the v2 endpoint and the configured redirect URI" do
     with_env("GOOGLE_CLIENT_ID", "season-client-id") do
-      with_env("GOOGLE_CALENDAR_REDIRECT_URI", "https://seasonv2.onrender.com/settings/google_calendar_callback") do
-        get connect_google_calendar_settings_path
+      with_env("GOOGLE_CLIENT_SECRET", "season-client-secret") do
+        with_env("GOOGLE_CALENDAR_REDIRECT_URI", "https://seasonv2.onrender.com/settings/google_calendar_callback") do
+          get connect_google_calendar_settings_path
+        end
       end
     end
 
@@ -293,7 +295,9 @@ class SettingsControllerTest < ActionDispatch::IntegrationTest
 
   test "GET /settings/connect_google_calendar fails gracefully without OAuth credentials" do
     with_env("GOOGLE_CLIENT_ID", nil) do
-      get connect_google_calendar_settings_path
+      with_env("GOOGLE_CLIENT_SECRET", nil) do
+        get connect_google_calendar_settings_path
+      end
     end
 
     assert_redirected_to calendar_settings_path
