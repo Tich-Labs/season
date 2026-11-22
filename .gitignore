@@ -63,8 +63,6 @@ android/build/
 android/app/build/
 android/.kotlin/
 android/local.properties
-android/gradle/
-android/gradlew
 android/gradlew.bat
 
 # iOS build artifacts
