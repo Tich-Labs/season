@@ -1,16 +1,25 @@
-/* Ruby Native styles — only loaded when the app is rendered inside the native iOS shell */
+/* Native shell styles — only loaded when native_app? is true (the Hotwire Native
+   iOS/Android shells wrapping the server-rendered Rails views). */
 
-/* Hide elements that are replaced by native UI (header, burger menu, FAB, banners) */
-.d-hotwire-native-none {
-  display: none !important;
+/* Safe-area insets. <main> carries `native-inset` / `native-inset-top` and its
+   inline padding deliberately omits env(safe-area-inset-*) in native mode, so
+   these pseudo-elements supply the top (and, for native-inset, bottom) spacing
+   that the native chrome otherwise owns. */
+.native-inset-top::before,
+.native-inset::before {
+  content: "";
+  display: block;
+  height: env(safe-area-inset-top, 0px);
 }
 
-/* Show elements that are hidden in the web layout but needed in native */
-.d-hotwire-native-block {
-  display: block !important;
+.native-inset-bottom::after,
+.native-inset::after {
+  content: "";
+  display: block;
+  height: env(safe-area-inset-bottom, 0px);
 }
 
-/* Onboarding: strip the 20px web base padding — native nav bar handles that space */
-[data-ruby-native] .onboarding-layout {
+/* Onboarding: strip the 20px web base padding — the native nav bar owns that space. */
+[data-native-app] .onboarding-layout {
   padding-top: env(safe-area-inset-top, 0px) !important;
 }

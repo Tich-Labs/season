@@ -197,28 +197,14 @@ On Symptoms page, Submit button opens a review modal (`submit_modal_controller.j
 - **Push notifications**: `NotificationTokenComponent` → `NotificationRouter` → `NotificationTokenViewModel`
 - **No KeychainHelper / WKUserScript auth bridge** — not implemented. There is no `NativeAuthTokenComponent.swift` and no `KeychainHelper.swift`; native auth currently rides on the Rails session cookie.
 
-### Rails-side native layer (`ruby_native` gem)
+### Rails-side native layer (Hotwire Native only)
 
-The Rails side is **not** Hotwire Native — it uses the `ruby_native` gem (`~> 0.10.0`). Only the iOS binary is Hotwire Native. The old Hotwire Native view layer was deleted in `e84f20d` and `cec8cb9`.
+The `ruby_native` gem was removed — Hotwire Native is now the single native stack.
 
-- **`native_app?`** — provided by `RubyNative::NativeDetection`; `request.user_agent.to_s.include?("Ruby Native")`. Consumed via `TurboNativeHelper#web_only?`
-- **Layout hooks** in `app/views/layouts/application.html.erb`: `data-ruby-native` on `<html>` (line 2), `native` + `:ruby_native` stylesheets (line 22), `native-inset` class on `<main>` (line 149)
-- **Gated on `unless native_app?`**: PWA update banner (line 108), feedback + support modals (line 158)
-- **`native_controller.js`** — adds the `ruby-native` class to `<html>` and strips PWA controllers (`install`, `update-prompt`) when running natively
-- **KNOWN BUG — `native_app?` never returns true in the app.** The gem matches on a `"Ruby Native"` user-agent substring, but the iOS binary is hand-rolled Hotwire Native and **sets no custom user agent** (no `applicationNameForUserAgent` / `customUserAgent` in any Swift file), so the WKWebView sends a default Safari UA. Every `native_app?` branch above therefore takes the *web* path inside the native shell.
-- **The gem is only half-wired — decide whether to finish it or drop it.** `config/ruby_native.yml` exists (name, tint, 3 tabs, `app_id: app_cu4qa08l`), and generator setup step 2 (`stylesheet_link_tag :ruby_native`) was done, but **step 3 (`native_tabs_tag`) was never added** to any layout. The gem also ships **zero Swift/ObjC** — no `Navigator`, no bridge components — because it is designed to pair with its *own* prebuilt `ruby-native-ios` binary, not with hand-rolled Hotwire Native. It also has its own OAuth routes (`RubyNative::Auth::SessionsController`) that the app does not use; auth rides on the Devise session cookie instead. The `ruby_native` iOS binary has therefore never been built or run for this app. See "Ruby Native adoption decision" below.
-- **No custom HTML top bar or overflow dropdown exists** on the Rails side. Native chrome comes from the iOS side; `SceneDelegate.swift:39` already hides the system nav bar via `navigator.rootViewController.navigationBar.isHidden = true`, which resolves the old `native_navbar_tag` clashing issue. `native_navbar_tag` is no longer called anywhere in the app.
-- **No native tab bar** — `HotwireTabBarController` / `switchToTabs()` are not referenced by the current sources. Navigation is web-side only.
-
-### Ruby Native adoption decision (open)
-
-Two conflicting native stacks are half-present. Pick one and delete the other.
-
-**A. Finish Ruby Native** — means writing/using a `ruby-native-ios` binary (the gem ships no Swift, so this is a new app target or a prebuilt binary), adding `native_tabs_tag` to the layout, and moving auth onto the gem's `RubyNative::Auth::SessionsController`. Then set the `Ruby Native` user agent so `native_app?` works.
-
-**B. Drop the gem** — `bundle remove ruby_native`, delete `config/ruby_native.yml`, drop the `data-ruby-native` / `native` / `:ruby_native` stylesheet / `native-inset` / `unless native_app?` hooks from `application.html.erb` and `native_controller.js`, and keep the hand-rolled Hotwire Native app as the single native stack. Native-detection then belongs in `TurboNative::NativeApp?` (turbo-rails), which already ships and matches `Turbo Native` / the Hotwire Native UA.
-
-Until one is chosen, `native_app?` is dead code on every request and the two stacks' assumptions are silently mixed.
+- **`native_app?`** — defined in `app/controllers/application_controller.rb`; matches `(Turbo Native|Hotwire Native)` in the user agent. Consumed via `TurboNativeHelper#web_only?` and the layout's `unless native_app?` gates.
+- **Detection source** — the iOS app sets `Hotwire.config.applicationUserAgentPrefix = "Season Native"` (`AppDelegate.swift:12`); hotwire-native-ios then composes a UA like `Season Native Hotwire Native iOS; Turbo Native iOS; …`, which `native_app?` matches. `config/initializers/omniauth.rb` separately keys the OAuth CSRF relaxation on the `Season Native` prefix.
+- **Layout hooks** in `app/views/layouts/application.html.erb`: `data-native-app` on `<html>`, the `native` stylesheet, and the `native-inset` class on `<main>`. The safe-area spacer CSS lives in `app/assets/stylesheets/native.css`.
+- **Gated on `unless native_app?`**: PWA update banner, feedback + support modals.
 
 ## Docs
 - Figma: `docs/figma_nodes.md`

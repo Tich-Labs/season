@@ -305,7 +305,7 @@ Rails.application.routes.draw do
   get "/terms", to: "legal#show", defaults: {type: "terms"}, as: :terms
   get "/privacy", to: "legal#show", defaults: {type: "privacy"}, as: :privacy
 
-  # Ruby Native iOS configuration endpoint
+  # Hotwire Native iOS configuration endpoint
   get "/configurations/ios_v1", to: "configurations#ios_v1", defaults: {format: :json}
   get "/configurations/android_v1", to: "configurations#android_v1", defaults: {format: :json}
 

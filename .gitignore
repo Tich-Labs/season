@@ -69,9 +69,6 @@ android/gradlew.bat
 ios/SeasonApp/build/
 ios/**/*.xcarchive
 
-# Ruby Native
-.ruby_native/
-
 # IDE / local tooling
 .idea/
 .claude/

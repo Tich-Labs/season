@@ -8,14 +8,13 @@ class ApplicationController < ActionController::Base
   helper_method :safe_back_path
   helper_method :native_app?
 
-  # The ruby_native gem's native_app? only matches the "Ruby Native" UA, but
-  # the iOS app is hand-rolled Hotwire Native — its WKWebView sends
-  # "Hotwire Native iOS; Turbo Native iOS;" via applicationNameForUserAgent,
-  # not "Ruby Native". Match all three so the native-only gating in the
-  # layout (PWA install/update banners, native-inset padding, etc.) applies
-  # in the iOS app too, not just the Ruby Native binary.
+  # The iOS and Android apps are Hotwire Native shells. Their WKWebView sends a
+  # "Hotwire Native iOS; Turbo Native iOS;" user-agent (composed by
+  # hotwire-native-ios from the "Season Native" applicationUserAgentPrefix), so
+  # matching those tokens drives all native-only gating in the layout (PWA
+  # install/update banners, native-inset safe-area padding, etc.).
   def native_app?
-    request.user_agent.to_s.match?(/(Ruby Native|Turbo Native|Hotwire Native)/)
+    request.user_agent.to_s.match?(/(Turbo Native|Hotwire Native)/)
   end
 
   # Not currently raised by anything a user can reach — every `authorize`

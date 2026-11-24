@@ -47,7 +47,7 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
 
   test "POST /session from native sets permanent (20-year) user_id cookie" do
     post session_path, params: {email: @alice.email, password: "password123"},
-      headers: {"User-Agent" => "Ruby Native iOS"}
+      headers: {"User-Agent" => "Hotwire Native iOS"}
     set_cookies = Array(response.headers["Set-Cookie"])
     uid_cookie = set_cookies.find { |c| c.start_with?("user_id=") }
     assert_includes uid_cookie, "expires="
@@ -59,7 +59,7 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
 
   test "native session survives past the old 7-day boundary" do
     post session_path, params: {email: @alice.email, password: "password123"},
-      headers: {"User-Agent" => "Ruby Native iOS"}
+      headers: {"User-Agent" => "Hotwire Native iOS"}
 
     travel_to 10.days.from_now do
       get tracking_index_path
@@ -80,7 +80,7 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
 
   test "DELETE /session revokes permanent native cookie" do
     post session_path, params: {email: @alice.email, password: "password123"},
-      headers: {"User-Agent" => "Ruby Native iOS"}
+      headers: {"User-Agent" => "Hotwire Native iOS"}
     delete session_path
     assert_redirected_to root_path
 
@@ -96,7 +96,7 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "unauthenticated request redirects to root for native" do
-    get tracking_index_path, headers: {"User-Agent" => "Ruby Native iOS"}
+    get tracking_index_path, headers: {"User-Agent" => "Hotwire Native iOS"}
     assert_redirected_to root_path
   end
 

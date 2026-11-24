@@ -11,7 +11,7 @@ export default class extends Controller {
   static values = { timeout: Number } // ms
 
   connect () {
-    if (document.documentElement.hasAttribute('data-ruby-native')) return
+    if (document.documentElement.hasAttribute('data-native-app')) return
 
     this.hiddenAt = null
     this._onVisibilityChange = this._onVisibilityChange.bind(this)

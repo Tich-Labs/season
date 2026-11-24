@@ -20,13 +20,14 @@ class CalendarControllerTest < ActionDispatch::IntegrationTest
     # /calendar hides quick actions (it renders its own "+" FAB + modals inside
     # the page's white wrapper), so <main> must not reserve any bottom padding
     # on this page anymore. The "native-inset" class (added when native_app?)
-    # still injects the safe-area-inset-bottom spacer via the ruby_native gem's
-    # CSS, and the page wrapper provides its own FAB clearance (bg-white pb-32).
+    # still injects the safe-area-inset-bottom spacer via
+    # app/assets/stylesheets/native.css, and the page wrapper provides its own
+    # FAB clearance (bg-white pb-32).
     sign_in_as(@alice)
-    get user_root_path, headers: {"User-Agent" => "Ruby Native iOS"}
+    get user_root_path, headers: {"User-Agent" => "Hotwire Native iOS"}
     assert_response :success
     assert_no_match(/<main[^>]*padding-bottom/, response.body)
-    assert_match "data-ruby-native", response.body
+    assert_match "data-native-app", response.body
     assert_match(/<main[^>]*native-inset/, response.body)
     assert_match "bg-white pb-32", response.body
   end
@@ -44,7 +45,7 @@ class CalendarControllerTest < ActionDispatch::IntegrationTest
     # so <main> still reserves 8rem there, and must not double-count the inset
     # that the native-inset spacer already injects.
     sign_in_as(@alice)
-    get calendar_weekly_path, headers: {"User-Agent" => "Ruby Native iOS"}
+    get calendar_weekly_path, headers: {"User-Agent" => "Hotwire Native iOS"}
     assert_response :success
     assert_match(/<main[^>]*padding-bottom:\s*8rem;/, response.body)
     assert_no_match(/<main[^>]*calc\(8rem \+ env\(safe-area-inset-bottom, 0px\)\)/, response.body)

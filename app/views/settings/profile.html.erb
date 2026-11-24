@@ -160,7 +160,6 @@
     </div>
 
     <%= form_with url: update_profile_settings_path, method: :patch, data: { turbo: false }, local: true do %>
-      <%= native_form_tag if native_app? %>
       <label class="block text-brand-primary text-13 font-medium mb-1.5"><%= t("settings.profile.new_email") %></label>
       <input type="email" name="email" value="<%= @user.email %>" required autocomplete="email"
              class="w-full bg-white border border-brand-divider rounded-xl p-4 text-base text-brand-primary box-border mb-3">
@@ -203,7 +202,6 @@
     <% end %>
 
     <%= form_with url: update_password_settings_path, method: :patch, data: { turbo: false }, local: true do %>
-      <%= native_form_tag if native_app? %>
       <label for="current_password_field" class="block text-brand-primary text-13 font-medium mb-1.5"><%= t("settings.profile.current_password") %></label>
       <div class="relative mb-3" data-controller="password-visibility">
         <input type="password" id="current_password_field" name="current_password" required autocomplete="current-password"
@@ -253,7 +251,6 @@
     </div>
 
     <%= form_with url: update_profile_settings_path, method: :patch, data: { turbo: false }, local: true do %>
-      <%= native_form_tag if native_app? %>
       <div class="mb-3">
         <label class="block text-brand-primary text-sm font-medium mb-1"><%= t("settings.profile.name_field") %></label>
         <input type="text" name="name" value="<%= @user.first_name %>" required autocomplete="name"

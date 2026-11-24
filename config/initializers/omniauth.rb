@@ -46,11 +46,10 @@ Rails.application.config.after_initialize do
 
     private
 
-    # Both native shells send a "Season Native" user-agent prefix. The old
-    # "Ruby Native" value is kept for already-installed builds.
+    # Both native shells send a "Season Native" user-agent prefix
+    # (Hotwire.config.applicationUserAgentPrefix in the iOS app).
     def native_request?
-      user_agent = request.env["HTTP_USER_AGENT"].to_s
-      user_agent.include?("Season Native") || user_agent.include?("Ruby Native")
+      request.env["HTTP_USER_AGENT"].to_s.include?("Season Native")
     end
   end
 end
