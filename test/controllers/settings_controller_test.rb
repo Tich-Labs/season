@@ -148,14 +148,23 @@ class SettingsControllerTest < ActionDispatch::IntegrationTest
     get calendar_settings_path
     assert_response :success
 
-    body = response.body
-    preferences_form = body.index('action="/settings/update_calendar"')
-    preferences_close = body.index("</form>", preferences_form)
-    icloud_form = body.index('action="/settings/connect_icloud_calendar"')
+    doc = Nokogiri::HTML(response.body)
 
-    assert preferences_form
-    assert icloud_form
-    assert_operator preferences_close, :<, icloud_form
+    assert doc.at_css('form[action="/settings/connect_icloud_calendar"]')
+    assert_empty doc.css("form form")
+  end
+
+  test "GET /settings/calendar keeps Google sync forms outside the preferences form" do
+    @alice.update!(google_access_token: "access", google_refresh_token: "refresh",
+      google_calendar_email: "user@gmail.com", calendar_sync_level: "one_way")
+
+    get calendar_settings_path
+
+    doc = Nokogiri::HTML(response.body)
+
+    assert doc.at_css('form[action="/settings/disconnect_google_calendar"]')
+    assert doc.at_css('form[action="/settings/sync_google_calendar"]')
+    assert_empty doc.css("form form")
   end
 
   test "GET /settings/calendar does not invite password manager autofill on iCloud fields" do

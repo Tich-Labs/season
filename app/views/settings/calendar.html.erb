@@ -52,8 +52,6 @@
       </script>
     <% end %>
 
-    <%= form_with url: update_calendar_settings_path, method: :patch, local: true, data: { controller: "calendar-toggle" }, class: "w-full" do %>
-
     <%# My Calendar title %>
     <div class="flex items-center gap-4 pt-5 pb-2">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#933a35" stroke-width="1.5" viewBox="0 0 24 24">
@@ -120,7 +118,6 @@
         <% end %>
         <%= render "settings/calendar_sync_sheet", provider: "google" %>
       </div>
-    <% end %>
 
       <%# Apple Calendar — native iOS connects via EventKit (a permission
            prompt, no password); web falls back to CalDAV with an Apple ID +
