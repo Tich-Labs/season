@@ -150,10 +150,13 @@ class SettingsController < ApplicationController
 
   def sync_google_calendar
     imported = GoogleCalendarImportService.call(user: current_user)
-    unless current_user.reload.google_calendar_connected?
+    user = current_user.reload
+    unless user.google_calendar_connected?
       redirect_to calendar_settings_path, alert: t("settings.calendar.google_reconnect_required", default: "Google Calendar needs to be reconnected")
       return
     end
+
+    enqueue_google_backfill(user) if user.google_calendar_push_allowed?
 
     redirect_to calendar_settings_path, notice: t("settings.calendar.google_synced", count: imported, default: "Synced #{imported} events from Google Calendar")
   end

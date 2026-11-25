@@ -1,7 +1,7 @@
 # Best-effort push of a Season-created/edited/deleted appointment to the
-# user's connected Google Calendar -- the other half of "Sync now" (which
-# only pulls Google -> Season, see SettingsController#sync_google_calendar).
-# Enqueued from CalendarEventsController#create/#update/#destroy.
+# user's connected Google Calendar. Enqueued from
+# CalendarEventsController#create/#update/#destroy and from
+# SettingsController#sync_google_calendar for push-enabled sync directions.
 #
 # Runs in the background deliberately: a Google-side failure (revoked
 # token, rate limit, network/SSL hiccup) must never block or roll back

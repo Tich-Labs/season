@@ -552,6 +552,42 @@ class SettingsControllerTest < ActionDispatch::IntegrationTest
     assert_match(/reconnect/i, flash[:alert])
   end
 
+  test "POST /settings/sync_google_calendar imports only for one-way sync" do
+    @alice.update!(
+      google_access_token: "access",
+      google_refresh_token: "refresh",
+      calendar_sync_level: "one_way"
+    )
+    @alice.calendar_events.create!(title: "Dentist", date: Date.current)
+
+    stub_class_method(GoogleCalendarImportService, :call, ->(user:) { 2 }) do
+      assert_no_enqueued_jobs(only: GoogleCalendarPushJob) do
+        post sync_google_calendar_settings_path
+      end
+    end
+
+    assert_redirected_to calendar_settings_path
+    assert_match(/2/, flash[:notice])
+  end
+
+  test "POST /settings/sync_google_calendar backfills Season events for two-way sync" do
+    @alice.update!(
+      google_access_token: "access",
+      google_refresh_token: "refresh",
+      calendar_sync_level: "two_way"
+    )
+    event = @alice.calendar_events.create!(title: "Dentist", date: Date.current)
+
+    stub_class_method(GoogleCalendarImportService, :call, ->(user:) { 2 }) do
+      assert_enqueued_with(job: GoogleCalendarPushJob, args: ["create", {user_id: @alice.id, calendar_event_id: event.id}]) do
+        post sync_google_calendar_settings_path
+      end
+    end
+
+    assert_redirected_to calendar_settings_path
+    assert_match(/2/, flash[:notice])
+  end
+
   test "GET /settings/google_calendar_callback imports events and backfills two-way sync" do
     event = @alice.calendar_events.create!(title: "Dentist", date: Date.current)
     get connect_google_calendar_settings_path, params: {direction: "two_way"}
