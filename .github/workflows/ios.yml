@@ -52,7 +52,8 @@ jobs:
           security set-key-partition-list -S apple-tool:,apple: -k temp123 build.keychain 2>/dev/null || true
           PROFILE_UUID=$(/usr/libexec/PlistBuddy -c 'Print :UUID' /dev/stdin <<< $(security cms -D -i /tmp/dist.mobileprovision))
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          cp /tmp/dist.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/$PROFILE_UUID.mobileprovision
+          PROFILE_PATH="$HOME/Library/MobileDevice/Provisioning Profiles/$PROFILE_UUID.mobileprovision"
+          cp /tmp/dist.mobileprovision "$PROFILE_PATH"
           echo "Provisioning profile UUID: $PROFILE_UUID"
 
       - name: Sign and export IPA
@@ -60,9 +61,10 @@ jobs:
           IDENTITY=$(security find-identity -v -p codesigning build.keychain | head -1 | awk '{print $2}')
           echo "Signing identity: $IDENTITY"
           APP_PATH=SeasonApp.xcarchive/Products/Applications/SeasonApp.app
-          PROFILE=$(ls ~/Library/MobileDevice/Provisioning\ Profiles/*.mobileprovision | head -1)
-          cp "$PROFILE" "$APP_PATH/embedded.mobileprovision"
-          security cms -D -i "$PROFILE" > /tmp/profile.plist
+          PROFILE_UUID=$(/usr/libexec/PlistBuddy -c 'Print :UUID' /dev/stdin <<< $(security cms -D -i /tmp/dist.mobileprovision))
+          PROFILE_PATH="$HOME/Library/MobileDevice/Provisioning Profiles/$PROFILE_UUID.mobileprovision"
+          cp "$PROFILE_PATH" "$APP_PATH/embedded.mobileprovision"
+          security cms -D -i "$PROFILE_PATH" > /tmp/profile.plist
           /usr/libexec/PlistBuddy -x -c 'Print :Entitlements' /tmp/profile.plist > /tmp/entitlements.plist
           /usr/bin/codesign --force --sign "$IDENTITY" --entitlements /tmp/entitlements.plist --timestamp=none "$APP_PATH" 2>&1
           mkdir Payload
