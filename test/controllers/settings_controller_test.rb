@@ -570,6 +570,21 @@ class SettingsControllerTest < ActionDispatch::IntegrationTest
     assert_match(/2/, flash[:notice])
   end
 
+  test "POST /settings/sync_google_calendar handles import failures without 500" do
+    @alice.update!(
+      google_access_token: "access",
+      google_refresh_token: "refresh",
+      calendar_sync_level: "one_way"
+    )
+
+    stub_class_method(GoogleCalendarImportService, :call, ->(user:) { raise "Google Calendar API down" }) do
+      post sync_google_calendar_settings_path
+    end
+
+    assert_redirected_to calendar_settings_path
+    assert_match(/failed/i, flash[:alert])
+  end
+
   test "POST /settings/sync_google_calendar backfills Season events for two-way sync" do
     @alice.update!(
       google_access_token: "access",
@@ -586,6 +601,37 @@ class SettingsControllerTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to calendar_settings_path
     assert_match(/2/, flash[:notice])
+  end
+
+  test "GET /settings/google_calendar_callback handles import failures without 500" do
+    get connect_google_calendar_settings_path, params: {direction: "two_way"}
+    state = google_oauth_state_from(response)
+
+    good_client = Object.new
+    good_client.define_singleton_method(:code=) { |_code| nil }
+    good_client.define_singleton_method(:redirect_uri=) { |_uri| nil }
+    good_client.define_singleton_method(:fetch_access_token!) { nil }
+    good_client.define_singleton_method(:access_token) { "access-token" }
+    good_client.define_singleton_method(:refresh_token) { "refresh-token" }
+    good_client.define_singleton_method(:expires_at) { 1.hour.from_now.to_i }
+
+    fake_response = Object.new
+    fake_response.define_singleton_method(:body) { {email: "alice@example.com"}.to_json }
+    fake_http = Object.new
+    fake_http.define_singleton_method(:use_ssl=) { |_value| nil }
+    fake_http.define_singleton_method(:request) { |_request| fake_response }
+
+    stub_class_method(Signet::OAuth2::Client, :new, ->(*_args, **_kwargs) { good_client }) do
+      stub_class_method(Net::HTTP, :new, ->(*_args) { fake_http }) do
+        stub_class_method(GoogleCalendarImportService, :call, ->(user:) { raise "Google Calendar API down" }) do
+          get google_calendar_callback_settings_path, params: {code: "good-code", state: state}
+        end
+      end
+    end
+
+    assert_redirected_to calendar_settings_path
+    assert_match(/failed/i, flash[:alert])
+    assert_equal "access-token", @alice.reload.google_access_token
   end
 
   test "GET /settings/google_calendar_callback imports events and backfills two-way sync" do

@@ -111,18 +111,25 @@ class SettingsController < ApplicationController
       return
     end
 
-    email = fetch_google_email(client.access_token)
-    direction = state_payload["direction"].presence_in(User::CALENDAR_SYNC_DIRECTIONS) || "one_way"
+    begin
+      email = fetch_google_email(client.access_token)
+      direction = state_payload["direction"].presence_in(User::CALENDAR_SYNC_DIRECTIONS) || "one_way"
 
-    oauth_user.update!(
-      google_access_token: client.access_token,
-      google_refresh_token: client.refresh_token.presence || oauth_user.google_refresh_token,
-      google_token_expires_at: client.expires_at ? Time.zone.at(client.expires_at) : nil,
-      google_calendar_email: email,
-      calendar_sync_level: direction
-    )
-    enqueue_google_backfill(oauth_user) if direction == "two_way"
-    imported = GoogleCalendarImportService.call(user: oauth_user)
+      oauth_user.update!(
+        google_access_token: client.access_token,
+        google_refresh_token: client.refresh_token.presence || oauth_user.google_refresh_token,
+        google_token_expires_at: client.expires_at ? Time.zone.at(client.expires_at) : nil,
+        google_calendar_email: email,
+        calendar_sync_level: direction
+      )
+      enqueue_google_backfill(oauth_user) if direction == "two_way"
+      imported = GoogleCalendarImportService.call(user: oauth_user)
+    rescue => e
+      Rails.logger.error("[GoogleCalendar] callback failed for user #{oauth_user.id}: #{e.class}: #{e.message}")
+      redirect_to calendar_settings_path, alert: t("settings.calendar.google_failed", default: "Failed to connect Google Calendar")
+      return
+    end
+
     unless oauth_user.reload.google_calendar_connected?
       redirect_to calendar_settings_path, alert: t("settings.calendar.google_reconnect_required", default: "Google Calendar needs to be reconnected")
       return
@@ -149,7 +156,15 @@ class SettingsController < ApplicationController
   end
 
   def sync_google_calendar
-    imported = GoogleCalendarImportService.call(user: current_user)
+    imported =
+      begin
+        GoogleCalendarImportService.call(user: current_user)
+      rescue => e
+        Rails.logger.error("[GoogleCalendar] sync failed for user #{current_user.id}: #{e.class}: #{e.message}")
+        redirect_to calendar_settings_path, alert: t("settings.calendar.google_failed", default: "Failed to connect Google Calendar")
+        return
+      end
+
     user = current_user.reload
     unless user.google_calendar_connected?
       redirect_to calendar_settings_path, alert: t("settings.calendar.google_reconnect_required", default: "Google Calendar needs to be reconnected")
