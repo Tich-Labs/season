@@ -63,11 +63,14 @@ android/build/
 android/app/build/
 android/.kotlin/
 android/local.properties
+android/keystore.properties
 android/gradlew.bat
 
 # iOS build artifacts
 ios/SeasonApp/build/
 ios/**/*.xcarchive
+*.jks
+*.pem
 
 # IDE / local tooling
 .idea/
@@ -98,7 +101,6 @@ docs/season-data-storage.svg
 /docs/M3-COUNTER-CHECK-2026-05-02.md
 /docs/NATIVE-PARITY-PLAN.md
 /docs/STAKEHOLDER-REPORT-2026-04-15.md
-/docs/STORE-DEPLOYMENT.md
 /docs/STYLING-AUDIT.md
 /docs/app_documentation.md
 /docs/audit_checklist.md

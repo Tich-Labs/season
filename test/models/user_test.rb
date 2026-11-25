@@ -25,6 +25,17 @@ class UserTest < ActiveSupport::TestCase
 
   # --- Instance methods ---
 
+  test "push to Google is allowed only for two-way sync" do
+    @alice.update!(google_access_token: "access", google_refresh_token: "refresh", calendar_sync_level: "two_way")
+    assert @alice.google_calendar_push_allowed?
+
+    @alice.update!(calendar_sync_level: "one_way")
+    assert_not @alice.google_calendar_push_allowed?
+
+    @alice.update!(calendar_sync_level: "off")
+    assert_not @alice.google_calendar_push_allowed?
+  end
+
   test "first_name returns first word of full name" do
     assert_equal "Alice", @alice.first_name
   end

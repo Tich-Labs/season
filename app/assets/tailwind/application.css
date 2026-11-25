@@ -456,6 +456,7 @@
   border: none;
   padding: 0;
   cursor: pointer;
+  @apply min-w-11 min-h-11 flex items-center justify-center;
 }
 .toggle-btn:disabled {
   cursor: not-allowed;

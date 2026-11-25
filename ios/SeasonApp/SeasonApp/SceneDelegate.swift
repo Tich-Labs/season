@@ -45,6 +45,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         navigator.rootViewController.navigationBar.isHidden = true
         navigator.start()
+
+        if let url = connectionOptions.userActivities.compactMap({ universalLinkURL($0) }).first {
+            routeUniversalLink(url)
+        }
+    }
+
+    func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
+        guard let url = universalLinkURL(userActivity) else { return }
+        routeUniversalLink(url)
     }
 
     // App Lock: only fires on genuine background entry, not on transient
@@ -73,6 +82,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         guard let visitable = navigator.rootViewController.visibleViewController as? Visitable else { return }
         navigator.route(visitable.currentVisitableURL, options: VisitOptions(action: .replace))
+    }
+
+    private func universalLinkURL(_ userActivity: NSUserActivity) -> URL? {
+        guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
+              let url = userActivity.webpageURL,
+              url.host == baseURL.host else { return nil }
+        return url
+    }
+
+    private func routeUniversalLink(_ url: URL) {
+        navigator.route(url, options: VisitOptions(action: .replace))
     }
 }
 

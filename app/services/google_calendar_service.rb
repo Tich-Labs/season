@@ -1,5 +1,6 @@
 class GoogleCalendarService
   SCOPES = ["https://www.googleapis.com/auth/calendar"].freeze
+  GOOGLE_AUTHORIZATION_ERRORS = [Google::Apis::AuthorizationError, Signet::AuthorizationError].freeze
 
   def initialize(user)
     @user = user
@@ -19,7 +20,8 @@ class GoogleCalendarService
       time_max: time_max
     )
     response.items
-  rescue Google::Apis::AuthorizationError
+  rescue *GOOGLE_AUTHORIZATION_ERRORS => e
+    handle_authorization_error(e)
     nil
   end
 
@@ -41,7 +43,8 @@ class GoogleCalendarService
       )
     )
     service.insert_event("primary", event)
-  rescue Google::Apis::AuthorizationError
+  rescue *GOOGLE_AUTHORIZATION_ERRORS => e
+    handle_authorization_error(e)
     nil
   end
 
@@ -63,7 +66,8 @@ class GoogleCalendarService
       )
     )
     service.update_event("primary", event_id, event)
-  rescue Google::Apis::AuthorizationError
+  rescue *GOOGLE_AUTHORIZATION_ERRORS => e
+    handle_authorization_error(e)
     nil
   rescue Google::Apis::ClientError => e
     # 404/410 -- the event was already deleted (or never existed) on the
@@ -79,7 +83,8 @@ class GoogleCalendarService
     service = build_service
     service.delete_event("primary", event_id)
     true
-  rescue Google::Apis::AuthorizationError
+  rescue *GOOGLE_AUTHORIZATION_ERRORS => e
+    handle_authorization_error(e)
     false
   rescue Google::Apis::ClientError => e
     # 404/410 -- already gone on the Google side. Treat as success: the
@@ -89,6 +94,14 @@ class GoogleCalendarService
   end
 
   private
+
+  # An invalid_grant means the stored credentials are no longer usable;
+  # keeping them makes every later sync fail the same way. Clear them so the
+  # settings page offers a fresh Connect instead of a stale "connected" state.
+  def handle_authorization_error(error)
+    Rails.logger.warn("[GoogleCalendarService] authorization failed for user #{@user.id}: #{error.class}: #{error.message}")
+    @user.clear_google_calendar_tokens!
+  end
 
   # google-apis-calendar_v3's representer only formats a real DateTime as
   # RFC3339 -- handed an ActiveSupport::TimeWithZone or plain Time (what

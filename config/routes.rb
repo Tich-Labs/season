@@ -148,6 +148,7 @@ Rails.application.routes.draw do
     patch :update_profile, on: :collection
     patch :update_password, on: :collection
     patch :update_calendar, on: :collection
+    patch :update_google_calendar_sync, on: :collection
     patch :update_notifications, on: :collection
     patch :save_morning_reminder, on: :collection
     patch :save_period_reminder, on: :collection
@@ -305,9 +306,12 @@ Rails.application.routes.draw do
   get "/terms", to: "legal#show", defaults: {type: "terms"}, as: :terms
   get "/privacy", to: "legal#show", defaults: {type: "privacy"}, as: :privacy
 
-  # Hotwire Native iOS configuration endpoint
+  # Hotwire Native configuration endpoints
   get "/configurations/ios_v1", to: "configurations#ios_v1", defaults: {format: :json}
   get "/configurations/android_v1", to: "configurations#android_v1", defaults: {format: :json}
+
+  get "/.well-known/apple-app-site-association", to: "app_links#apple_app_site_association", defaults: {format: :json}
+  get "/.well-known/assetlinks.json", to: "app_links#assetlinks", defaults: {format: :json}
 
   # Native device registration for APNs
   post "/native_devices/register", to: "native_devices#register", defaults: {format: :json}

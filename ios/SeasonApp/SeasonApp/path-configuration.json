@@ -17,6 +17,15 @@
     },
     {
       "patterns": [
+        "/users/password/*",
+        "/password/*"
+      ],
+      "properties": {
+        "presentation": "replace"
+      }
+    },
+    {
+      "patterns": [
         "/settings/*",
         "/account/*"
       ],

@@ -5,6 +5,7 @@ class User < ApplicationRecord
     :omniauthable, omniauth_providers: [:google_oauth2, :facebook, :apple]
 
   CALENDAR_SYNC_LEVELS = %w[off one_way export two_way].freeze
+  CALENDAR_SYNC_DIRECTIONS = %w[one_way two_way].freeze
   validates :calendar_sync_level, inclusion: {in: CALENDAR_SYNC_LEVELS}
 
   validates :name, presence: true, if: :onboarding_completed?
@@ -209,12 +210,11 @@ class User < ApplicationRecord
     google_access_token.present? && google_refresh_token.present?
   end
 
-  # Gate pushes behind export/two_way, but preserve existing behavior for
-  # users already connected before this policy change.
+  # One-way sync (import only) never pushes Season events back to Google.
+  # `export` is kept for users on that legacy level; new connections only
+  # ever choose one_way or two_way.
   def google_calendar_push_allowed?
-    return true if %w[export two_way].include?(calendar_sync_level)
-    # Legacy: if connected and still on default/off, keep current behavior
-    google_calendar_connected? && calendar_sync_level == "off"
+    google_calendar_connected? && %w[export two_way].include?(calendar_sync_level)
   end
 
   # Remove Google copies created by Season (source: season with google_event_id)
@@ -233,6 +233,17 @@ class User < ApplicationRecord
   rescue => e
     Rails.logger.warn("[GoogleCalendar] delete_google_copies_created_by_season! failed for user #{id}: #{e.message}")
     false
+  end
+
+  def clear_google_calendar_tokens!
+    update!(
+      google_access_token: nil,
+      google_refresh_token: nil,
+      google_token_expires_at: nil,
+      google_calendar_email: nil,
+      google_uid: nil,
+      calendar_sync_level: "off"
+    )
   end
 
   def revoke_google_token!

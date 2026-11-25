@@ -34,6 +34,20 @@ class ConfigurationsControllerTest < ActionDispatch::IntegrationTest
     assert_includes default_patterns, "/calendar/weekly"
   end
 
+  test "ios_v1 opens password reset links in the native app stack" do
+    get "/configurations/ios_v1"
+    json = response.parsed_body
+    rule = json["rules"].find { |r| r["patterns"].include?("/users/password/*") }
+    assert_equal "replace", rule.dig("properties", "presentation")
+  end
+
+  test "android_v1 opens password reset links in the native app stack" do
+    get "/configurations/android_v1"
+    json = response.parsed_body
+    rule = json["rules"].find { |r| r["patterns"].include?("/users/password/*") }
+    assert_equal "replace", rule.dig("properties", "presentation")
+  end
+
   test "ios_v1 returns JSON for authenticated user with PIN set and expired pin_verified_at" do
     @alice.set_pin("1234")
     sign_in_as(@alice)

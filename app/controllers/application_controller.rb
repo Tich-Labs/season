@@ -7,6 +7,7 @@ class ApplicationController < ActionController::Base
   before_action :set_sentry_user_context
   helper_method :safe_back_path
   helper_method :native_app?
+  helper_method :ios_native?
 
   # The iOS and Android apps are Hotwire Native shells. Their WKWebView sends a
   # "Hotwire Native iOS; Turbo Native iOS;" user-agent (composed by
@@ -15,6 +16,15 @@ class ApplicationController < ActionController::Base
   # install/update banners, native-inset safe-area padding, etc.).
   def native_app?
     request.user_agent.to_s.match?(/(Turbo Native|Hotwire Native)/)
+  end
+
+  # Apple Calendar connects via native EventKit (a permission prompt, no
+  # password) only on iOS. Android and the web have no EventKit, so they
+  # fall back to CalDAV (Apple ID + app-specific password). The iOS shell
+  # sends "Hotwire Native iOS"/"Turbo Native iOS"; Android sends an
+  # "Android" token instead.
+  def ios_native?
+    request.user_agent.to_s.match?(/(Turbo Native iOS|Hotwire Native iOS)/i)
   end
 
   # Not currently raised by anything a user can reach — every `authorize`

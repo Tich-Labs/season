@@ -1,5 +1,6 @@
 package com.seasonapp.android.activities
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
@@ -47,6 +48,12 @@ class MainActivity : HotwireActivity(), AuthGate {
         )
 
         delegate.setCurrentNavigator(mainNavigator)
+        routeAppLink(intent)
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        routeAppLink(intent)
     }
 
     // Tab configurations stay registered so the tab NavigatorHosts in the layout have
@@ -72,6 +79,15 @@ class MainActivity : HotwireActivity(), AuthGate {
             lazyLoadTabs = true
         )
         bottomNavigationController.load(mainTabs, 0)
+    }
+
+    private fun routeAppLink(intent: Intent?) {
+        val uri = intent?.data ?: return
+        val baseHost = Uri.parse(AppConfig.baseUrl).host ?: return
+        val path = uri.path ?: return
+        if (uri.host != baseHost) return
+        if (!path.startsWith("/users/password") && !path.startsWith("/password")) return
+        delegate.currentNavigator?.route(uri.toString())
     }
 
     private fun isAuthenticatedPath(path: String): Boolean {

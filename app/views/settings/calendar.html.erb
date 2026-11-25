@@ -79,105 +79,137 @@
     </div>
 
     <div>
-      <%# Google Calendar — fully functional %>
-      <div class="py-3">
+      <%# Google Calendar — connect flow opens the direction sheet; connected
+           state persists direction changes via the sync-direction controller. %>
+      <div data-controller="calendar-sync-sheet">
         <% if @user.google_calendar_connected? %>
-          <span class="text-brand-muted text-sm font-medium"><%= @user.google_calendar_email %></span>
-        <% else %>
-          <span class="text-brand-muted text-sm font-medium"><%= t("settings.calendar.not_connected") %></span>
-        <% end %>
-        <span class="block text-brand-primary/60 text-xs"><%= t("settings.calendar.google_calendar") %></span>
-      </div>
-      <div class="flex items-center justify-between py-2">
-        <% if @user.google_calendar_connected? %>
-          <div class="flex items-center gap-2">
-            <svg width="16" height="16" fill="none" stroke="#2E6B3E" stroke-width="2.5" viewBox="0 0 24 24">
-              <polyline points="20 6 9 17 4 12" />
-            </svg>
-            <span class="text-brand-primary/60 text-xs"><%= t("settings.calendar.connected") %></span>
-          </div>
-          <div class="flex items-center gap-3">
-            <%= button_to sync_google_calendar_settings_path, method: :post,
-                  class: "px-4 py-2 bg-brand-primary text-white text-xs font-semibold rounded-lg" do %>
-              <%= t("settings.calendar.sync_now") %>
-            <% end %>
+          <div class="flex items-center justify-between gap-3 py-3">
+            <div class="flex flex-col gap-0.5">
+              <span class="text-green-700 text-base font-semibold"><%= t("settings.calendar.connected") %></span>
+              <span class="text-brand-secondary text-sm"><%= t("settings.calendar.google_calendar") %> · <%= @user.google_calendar_email %></span>
+            </div>
             <%= button_to disconnect_google_calendar_settings_path, method: :post,
-                  class: "text-brand-muted text-xs underline" do %>
+                  class: "min-h-12 px-5 rounded-xl border-2 border-brand-primary bg-white text-brand-primary text-base font-semibold" do %>
               <%= t("settings.calendar.disconnect") %>
             <% end %>
           </div>
-        <% else %>
-          <span class="text-brand-primary/60 text-xs"><%= t("settings.calendar.google_calendar_sync") %></span>
-          <%= link_to connect_google_calendar_settings_path,
-                class: "px-4 py-2 bg-brand-primary text-white text-xs font-semibold rounded-lg no-underline" do %>
-            <%= t("settings.calendar.connect") %>
-          <% end %>
-        <% end %>
-      </div>
-
-      <%# Microsoft — grayed out, coming soon %>
-      <div class="opacity-40 pointer-events-none">
-        <div class="py-3 flex items-center gap-2">
-          <span class="text-brand-muted text-sm font-medium">user@outlook.com</span>
-          <span class="bg-brand-field rounded-full px-2 py-0.5 text-brand-primary text-xs"><%= t("settings.edit.coming_soon") %></span>
-        </div>
-        <div class="flex items-center justify-between py-2">
-          <span class="text-brand-primary/60 text-xs"><%= t("settings.calendar.microsoft_sync") %></span>
-          <div class="toggle-btn">
-            <div class="toggle-track"><div class="toggle-thumb"></div></div>
-          </div>
-        </div>
-      </div>
-
-      <%# iCloud — pull-only (no OAuth exists for CalDAV; the user supplies
-           an Apple ID + app-specific password instead of an OAuth redirect) %>
-      <div class="py-3">
-        <% if @user.icloud_connected? %>
-          <span class="text-brand-muted text-sm font-medium"><%= @user.icloud_email %></span>
-        <% else %>
-          <span class="text-brand-muted text-sm font-medium"><%= t("settings.calendar.not_connected") %></span>
-        <% end %>
-        <span class="block text-brand-primary/60 text-xs"><%= t("settings.calendar.icloud_sync") %></span>
-      </div>
-      <% if @user.icloud_connected? %>
-        <div class="flex items-center justify-between py-2">
-          <div class="flex items-center gap-2">
-            <svg width="16" height="16" fill="none" stroke="#2E6B3E" stroke-width="2.5" viewBox="0 0 24 24">
-              <polyline points="20 6 9 17 4 12" />
-            </svg>
-            <span class="text-brand-primary/60 text-xs"><%= t("settings.calendar.connected") %></span>
-          </div>
-          <div class="flex items-center gap-3">
-            <%= button_to sync_icloud_calendar_settings_path, method: :post,
-                  class: "px-4 py-2 bg-brand-primary text-white text-xs font-semibold rounded-lg" do %>
+          <div class="pt-1"
+               data-controller="calendar-sync-direction"
+               data-selected="<%= @user.calendar_sync_level == "two_way" ? "two_way" : "one_way" %>"
+               data-calendar-sync-direction-save-url="<%= update_google_calendar_sync_settings_path %>">
+            <div class="text-sm font-semibold text-brand-dark mb-3"><%= t("settings.calendar.sync_direction") %></div>
+            <%= render "settings/sync_direction_options" %>
+            <p class="text-xs text-brand-secondary mt-3"><%= t("settings.calendar.sync_direction_hint") %></p>
+            <%= button_to sync_google_calendar_settings_path, method: :post,
+                  class: "mt-2 min-h-11 px-2 rounded-xl border-0 bg-transparent text-brand-primary text-base font-semibold" do %>
               <%= t("settings.calendar.sync_now") %>
             <% end %>
-            <%= button_to disconnect_icloud_calendar_settings_path, method: :post,
-                  class: "text-brand-muted text-xs underline" do %>
-              <%= t("settings.calendar.disconnect") %>
-            <% end %>
           </div>
-        </div>
-      <% else %>
-        <%= form_with url: connect_icloud_calendar_settings_path, method: :post, class: "py-2 space-y-2" do %>
-          <input type="email" name="icloud_email" placeholder="<%= t("settings.calendar.icloud_email_placeholder") %>"
-                 required autocomplete="username" class="w-full bg-brand-field rounded-lg px-3 py-2 text-sm text-brand-dark placeholder:text-brand-primary/50">
-          <input type="password" name="icloud_app_password" placeholder="<%= t("settings.calendar.icloud_password_placeholder") %>"
-                 required autocomplete="off" class="w-full bg-brand-field rounded-lg px-3 py-2 text-sm text-brand-dark placeholder:text-brand-primary/50">
-          <div class="flex items-center justify-between gap-2">
-            <a href="https://appleid.apple.com" target="_blank" rel="noopener" class="text-brand-primary/60 text-xs underline">
-              <%= t("settings.calendar.icloud_get_password") %>
-            </a>
-            <button type="submit" class="px-4 py-2 bg-brand-primary text-white text-xs font-semibold rounded-lg shrink-0">
+        <% else %>
+          <div class="flex items-center justify-between gap-3 py-3">
+            <div class="flex flex-col gap-0.5">
+              <span class="text-brand-secondary text-base font-semibold"><%= t("settings.calendar.not_connected") %></span>
+              <span class="text-brand-secondary text-sm"><%= t("settings.calendar.google_calendar") %></span>
+            </div>
+            <button type="button"
+                    data-action="click->calendar-sync-sheet#open"
+                    class="min-h-12 px-5 rounded-xl bg-brand-primary text-white text-base font-semibold">
               <%= t("settings.calendar.connect") %>
             </button>
           </div>
         <% end %>
-      <% end %>
+        <%= render "settings/calendar_sync_sheet", provider: "google" %>
+      </div>
+    <% end %>
+
+      <%# Apple Calendar — native iOS connects via EventKit (a permission
+           prompt, no password); web falls back to CalDAV with an Apple ID +
+           app-specific password because Apple offers no calendar OAuth. %>
+      <div data-controller="calendar-sync-sheet">
+        <% if @user.icloud_connected? %>
+          <div class="py-3">
+            <div class="flex items-center justify-between gap-3">
+              <div class="flex flex-col gap-0.5">
+                <span class="text-green-700 text-base font-semibold"><%= t("settings.calendar.connected") %></span>
+                <span class="text-brand-secondary text-sm"><%= @user.icloud_email %> · <%= t("settings.calendar.icloud_sync") %></span>
+              </div>
+              <div class="flex items-center gap-2">
+                <%= button_to sync_icloud_calendar_settings_path, method: :post,
+                      class: "min-h-11 px-2 rounded-xl border-0 bg-transparent text-brand-primary text-base font-semibold" do %>
+                  <%= t("settings.calendar.sync_now") %>
+                <% end %>
+                <%= button_to disconnect_icloud_calendar_settings_path, method: :post,
+                      class: "min-h-11 px-2 rounded-xl border-0 bg-transparent text-brand-primary text-base font-semibold" do %>
+                  <%= t("settings.calendar.disconnect") %>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        <% elsif ios_native? %>
+          <div class="flex items-center justify-between gap-3 py-3">
+            <div class="flex flex-col gap-0.5">
+              <span class="text-brand-secondary text-base font-semibold"><%= t("settings.calendar.not_connected") %></span>
+              <span class="text-brand-secondary text-sm"><%= t("settings.calendar.icloud_sync") %></span>
+            </div>
+            <button type="button"
+                    data-action="click->calendar-sync-sheet#open"
+                    class="min-h-12 px-5 rounded-xl bg-brand-primary text-white text-base font-semibold">
+              <%= t("settings.calendar.connect") %>
+            </button>
+          </div>
+        <% else %>
+          <%= form_with url: connect_icloud_calendar_settings_path, method: :post, local: true,
+                html: {autocomplete: "off", data: {lpignore: "true", "1p-ignore": "true", "form-type": "other"}},
+                class: "py-3" do %>
+            <div class="flex items-center justify-between gap-3">
+              <div class="flex flex-col gap-0.5">
+                <span class="text-brand-secondary text-base font-semibold"><%= t("settings.calendar.not_connected") %></span>
+                <span class="text-brand-secondary text-sm"><%= t("settings.calendar.icloud_sync") %></span>
+              </div>
+              <button type="submit" class="min-h-12 px-5 rounded-xl bg-brand-primary text-white text-base font-semibold shrink-0">
+                <%= t("settings.calendar.connect") %>
+              </button>
+            </div>
+            <div class="mt-2 space-y-2">
+              <input type="email" name="icloud_email" placeholder="<%= t("settings.calendar.icloud_email_placeholder") %>"
+                     required autocomplete="off" spellcheck="false"
+                     data-lpignore="true" data-1p-ignore="true" data-form-type="other"
+                     class="w-full min-h-12 bg-brand-field rounded-xl px-4 text-base text-brand-dark placeholder:text-brand-primary/50">
+              <input type="password" name="icloud_app_password" placeholder="<%= t("settings.calendar.icloud_password_placeholder") %>"
+                     required autocomplete="new-password" spellcheck="false"
+                     data-lpignore="true" data-1p-ignore="true" data-form-type="other"
+                     class="w-full min-h-12 bg-brand-field rounded-xl px-4 text-base text-brand-dark placeholder:text-brand-primary/50">
+              <a href="https://appleid.apple.com" target="_blank" rel="noopener" class="inline-block text-brand-primary/60 text-xs underline">
+                <%= t("settings.calendar.icloud_get_password") %>
+              </a>
+            </div>
+          <% end %>
+        <% end %>
+        <% if ios_native? %>
+          <%= render "settings/calendar_sync_sheet", provider: "apple" %>
+        <% end %>
+      </div>
+
+      <%# Microsoft — grayed out, coming soon (below the supported providers) %>
+      <div class="py-3 opacity-40 pointer-events-none">
+        <div class="flex items-center justify-between gap-3">
+          <div class="flex flex-col gap-0.5">
+            <span class="text-brand-muted text-base font-semibold">user@outlook.com</span>
+            <span class="text-brand-secondary text-sm"><%= t("settings.calendar.microsoft_sync") %></span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="bg-brand-field rounded-full px-2.5 py-1 text-brand-primary text-xs font-semibold"><%= t("settings.edit.coming_soon") %></span>
+            <div class="toggle-btn">
+              <div class="toggle-track"><div class="toggle-thumb"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="border-b border-brand-divider my-2"></div>
 
+    <%= form_with url: update_calendar_settings_path, method: :patch, local: true, data: { controller: "calendar-toggle" }, class: "w-full" do %>
     <%# Show features title %>
     <div class="flex items-center gap-3 pt-5 pb-2">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#933a35" stroke-width="2" viewBox="0 0 24 24">
@@ -263,7 +295,7 @@
       <span class="text-brand-primary text-base font-medium"><%= t("settings.calendar.day_of_week") %></span>
     </div>
     <div class="py-3">
-      <select name="week_start_day" data-action="change->calendar-toggle#submitForm" class="w-full bg-brand-field rounded-xl px-4 py-3 text-brand-primary text-sm font-medium">
+      <select name="week_start_day" data-action="change->calendar-toggle#submitForm" class="w-full min-h-12 bg-brand-field rounded-xl px-4 text-base text-brand-primary font-medium">
         <option value="monday" <%= "selected" if @user.week_start_day == "monday" || @user.week_start_day.nil? %>><%= t("settings.calendar.monday") %></option>
         <option value="sunday" <%= "selected" if @user.week_start_day == "sunday" %>><%= t("settings.calendar.sunday") %></option>
         <option value="saturday" <%= "selected" if @user.week_start_day == "saturday" %>><%= t("settings.calendar.saturday") %></option>
@@ -284,7 +316,7 @@
       <span class="text-brand-primary text-base font-medium"><%= t("settings.calendar.timezone") %></span>
     </div>
     <div class="py-3">
-      <select name="timezone" class="w-full bg-brand-field rounded-xl px-4 py-3 text-brand-primary text-sm font-medium">
+      <select name="timezone" class="w-full min-h-12 bg-brand-field rounded-xl px-4 text-base text-brand-primary font-medium">
         <option value="UTC" selected><%= t("settings.calendar.timezone_utc") %></option>
         <option value="CET"><%= t("settings.calendar.timezone_cet") %></option>
         <option value="EST"><%= t("settings.calendar.timezone_est") %></option>

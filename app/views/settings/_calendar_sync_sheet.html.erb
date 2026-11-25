@@ -1,0 +1,43 @@
+<%# Choose sync direction before connecting a calendar provider. %>
+<% provider = local_assigns.fetch(:provider, "google") %>
+<div data-calendar-sync-sheet-target="sheet"
+     role="dialog"
+     aria-modal="true"
+     aria-labelledby="<%= provider %>-sync-sheet-title"
+     data-action="click->calendar-sync-sheet#clickOutside"
+     style="top: env(safe-area-inset-top, 0px);"
+     class="hidden fixed inset-0 z-[70] flex items-end justify-center bg-brand-overlay/55 p-0">
+
+  <div data-controller="calendar-sync-direction" data-selected="one_way"
+       class="bg-white rounded-t-3xl w-full max-w-app px-5 pt-3 relative max-h-[85dvh] overflow-y-auto" style="padding-bottom: calc(6rem + env(safe-area-inset-bottom, 0px));">
+    <div class="w-11 h-1.5 rounded-full bg-brand-warm mx-auto mb-4"></div>
+
+    <div class="flex flex-col gap-1.5 mb-4">
+      <h2 id="<%= provider %>-sync-sheet-title" class="text-brand-primary text-xl font-bold m-0"><%= t("settings.calendar.sync_sheet_title") %></h2>
+      <p class="text-brand-secondary text-sm leading-relaxed m-0"><%= t("settings.calendar.sync_sheet_description") %></p>
+    </div>
+
+    <%= render "settings/sync_direction_options", selected: "one_way", provider: provider %>
+
+    <div class="flex flex-col gap-2.5 mt-4">
+      <% if provider == "google" %>
+        <%= link_to connect_google_calendar_settings_path(direction: "one_way"),
+              data: {calendar_sync_direction_target: "connectLink"},
+              class: "min-h-12 flex items-center justify-center rounded-xl bg-brand-primary text-white text-base font-semibold no-underline" do %>
+          <%= t("settings.calendar.connect_with_google") %>
+        <% end %>
+      <% else %>
+        <button type="button"
+                data-action="click->calendar-sync-direction#connectApple"
+                class="min-h-12 flex items-center justify-center rounded-xl bg-brand-primary text-white text-base font-semibold">
+          <%= t("settings.calendar.connect_with_apple") %>
+        </button>
+      <% end %>
+      <button type="button"
+              data-action="click->calendar-sync-sheet#close"
+              class="min-h-12 rounded-xl border-0 bg-transparent text-brand-primary text-base font-semibold">
+        <%= t("settings.calendar.cancel") %>
+      </button>
+    </div>
+  </div>
+</div>

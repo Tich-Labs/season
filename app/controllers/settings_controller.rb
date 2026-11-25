@@ -71,6 +71,7 @@ class SettingsController < ApplicationController
     # OAuth "login/connect CSRF" gap).
     state = SecureRandom.hex(16)
     session[:google_oauth_state] = state
+    session[:google_calendar_sync_direction] = params[:direction].presence_in(User::CALENDAR_SYNC_DIRECTIONS) || "one_way"
 
     client = build_google_oauth_client
     auth_url = client.authorization_uri(
@@ -119,9 +120,18 @@ class SettingsController < ApplicationController
       google_access_token: client.access_token,
       google_refresh_token: client.refresh_token.presence || current_user.google_refresh_token,
       google_token_expires_at: client.expires_at ? Time.zone.at(client.expires_at) : nil,
-      google_calendar_email: email
+      google_calendar_email: email,
+      calendar_sync_level: session.delete(:google_calendar_sync_direction).presence_in(User::CALENDAR_SYNC_DIRECTIONS) || "one_way"
     )
-    redirect_to calendar_settings_path, notice: t("settings.calendar.google_connected", default: "Google Calendar connected")
+    enqueue_google_backfill if current_user.calendar_sync_level == "two_way"
+    imported = GoogleCalendarImportService.call(user: current_user)
+    unless current_user.reload.google_calendar_connected?
+      redirect_to calendar_settings_path, alert: t("settings.calendar.google_reconnect_required", default: "Google Calendar needs to be reconnected")
+      return
+    end
+
+    redirect_to calendar_settings_path,
+      notice: t("settings.calendar.google_connected_and_synced", count: imported, default: "Google Calendar connected — #{imported} events imported")
   end
 
   def disconnect_google_calendar
@@ -135,49 +145,34 @@ class SettingsController < ApplicationController
     rescue => e
       Rails.logger.warn("[GoogleCalendar] revoke during disconnect failed: #{e.message}")
     end
-    current_user.update!(
-      google_access_token: nil,
-      google_refresh_token: nil,
-      google_token_expires_at: nil,
-      google_calendar_email: nil,
-      google_uid: nil
-    )
+    current_user.clear_google_calendar_tokens!
+    session.delete(:google_calendar_sync_direction)
     redirect_to calendar_settings_path, notice: t("settings.calendar.google_disconnected", default: "Google Calendar disconnected")
   end
 
   def sync_google_calendar
-    service = GoogleCalendarService.new(current_user)
-    events = service.list_events(
-      time_min: 3.months.ago.iso8601,
-      time_max: 3.months.from_now.iso8601,
-      max_results: 250
-    )
-
-    imported = 0
-
-    (events || []).each do |event|
-      next if event.start.nil?
-      next if event.start.date_time.nil? && event.start.date.nil?
-      next if CalendarEvent.exists?(google_event_id: event.id)
-
-      start_time = event.start.date_time || event.start.date.to_time
-      end_time = event.end&.date_time || event.end&.date&.to_time
-
-      CalendarEvent.create!(
-        user: current_user,
-        google_event_id: event.id,
-        source: "google",
-        title: event.summary.presence || t("calendar.appointments.untitled"),
-        date: start_time.to_date,
-        start_time: start_time.respond_to?(:strftime) ? start_time.strftime("%H:%M") : nil,
-        end_time: end_time&.respond_to?(:strftime) ? end_time.strftime("%H:%M") : nil
-        # Import minimised: only title, date, times and category (category left nil).
-        # Attendees, descriptions/notes and locations are not imported.
-      )
-      imported += 1
+    imported = GoogleCalendarImportService.call(user: current_user)
+    unless current_user.reload.google_calendar_connected?
+      redirect_to calendar_settings_path, alert: t("settings.calendar.google_reconnect_required", default: "Google Calendar needs to be reconnected")
+      return
     end
 
     redirect_to calendar_settings_path, notice: t("settings.calendar.google_synced", count: imported, default: "Synced #{imported} events from Google Calendar")
+  end
+
+  def update_google_calendar_sync
+    direction = params[:direction].presence_in(User::CALENDAR_SYNC_DIRECTIONS)
+    if !current_user.google_calendar_connected? || direction.nil?
+      head :unprocessable_content
+      return
+    end
+
+    previous = current_user.calendar_sync_level
+    current_user.update!(calendar_sync_level: direction)
+
+    enqueue_google_backfill if direction == "two_way" && previous != "two_way"
+
+    head :ok
   end
 
   # No OAuth exists for iCloud Calendar -- this is a plain form submit
@@ -453,6 +448,12 @@ class SettingsController < ApplicationController
 
   private
 
+  def enqueue_google_backfill
+    current_user.calendar_events.from_season.where(google_event_id: nil).find_each do |event|
+      GoogleCalendarPushJob.perform_later("create", user_id: current_user.id, calendar_event_id: event.id)
+    end
+  end
+
   def save_single_reminder(type, default_time, redirect_path, notice_key)
     r = current_user.reminders.find_or_initialize_by(reminder_type: type)
     r.active = params[:enabled] == "1"
@@ -485,8 +486,10 @@ class SettingsController < ApplicationController
   # generate different request.base_url values, but Google only accepts the
   # redirect URI registered in the Cloud console.
   def google_calendar_callback_url
-    ENV["GOOGLE_CALENDAR_REDIRECT_URI"].presence ||
-      "#{request.base_url}/settings/google_calendar_callback"
+    canonical = "https://seasonv2.onrender.com/settings/google_calendar_callback"
+    return canonical if Rails.env.production?
+
+    ENV["GOOGLE_CALENDAR_REDIRECT_URI"].presence || canonical
   end
 
   def fetch_google_email(access_token)

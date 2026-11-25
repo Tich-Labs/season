@@ -1,0 +1,34 @@
+<% selected = local_assigns.fetch(:selected, "one_way") %>
+<% provider = local_assigns.fetch(:provider, "google") %>
+<% provider_label = t("settings.calendar.#{provider}") %>
+<% options = [
+  {key: "one_way", label: t("settings.calendar.import_only"), description: t("settings.calendar.import_only_description"), arrow: "M1 7h19M14 1l6 6-6 6", view_box: "0 0 22 14"},
+  {key: "two_way", label: t("settings.calendar.two_way_sync"), description: t("settings.calendar.two_way_description"), arrow: "M1 5h19M15 1l5 4-5 4M21 13H2M7 9l-5 4 5 4", view_box: "0 0 22 18"}
+] %>
+
+<div class="flex flex-col gap-3">
+  <% options.each do |option| %>
+    <% active = option[:key] == selected %>
+    <button type="button"
+            data-calendar-sync-direction-target="option"
+            data-action="click->calendar-sync-direction#select"
+            data-direction="<%= option[:key] %>"
+            aria-pressed="<%= active %>"
+            class="flex items-start gap-3 w-full p-4 rounded-2xl border-2 text-left <%= active ? "bg-brand-error border-brand-primary" : "bg-white border-brand-divider" %>">
+      <span data-dot class="shrink-0 size-[22px] rounded-full border-2 flex items-center justify-center mt-px <%= active ? "border-brand-primary" : "border-brand-secondary" %>">
+        <span data-dot-inner class="size-2.5 rounded-full bg-brand-primary <%= "hidden" unless active %>"></span>
+      </span>
+      <span class="flex-1 flex flex-col gap-2">
+        <span class="text-brand-primary-dark text-base font-semibold"><%= option[:label] %></span>
+        <span class="flex items-center gap-2">
+          <span class="px-2.5 py-1 rounded-full bg-brand-field text-brand-primary-dark text-xs font-semibold"><%= provider_label %></span>
+          <svg width="22" height="18" viewBox="<%= option[:view_box] %>" fill="none" stroke="#933a35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="<%= option[:arrow] %>" />
+          </svg>
+          <span class="px-2.5 py-1 rounded-full bg-brand-primary text-white text-xs font-semibold">Season</span>
+        </span>
+        <span class="text-brand-secondary text-sm leading-relaxed"><%= option[:description] %></span>
+      </span>
+    </button>
+  <% end %>
+</div>

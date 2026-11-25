@@ -129,6 +129,122 @@ class SettingsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "GET /settings/calendar orders Google, Apple iCloud, then Microsoft Outlook" do
+    get calendar_settings_path
+    assert_response :success
+
+    labels = [
+      I18n.t("settings.calendar.google_calendar"),
+      I18n.t("settings.calendar.icloud_sync"),
+      I18n.t("settings.calendar.microsoft_sync")
+    ]
+    positions = labels.map { |label| response.body.index(ERB::Util.html_escape(label)) }
+
+    assert positions.all?
+    assert_equal positions, positions.sort
+  end
+
+  test "GET /settings/calendar keeps the iCloud connect form outside the preferences form" do
+    get calendar_settings_path
+    assert_response :success
+
+    body = response.body
+    preferences_form = body.index('action="/settings/update_calendar"')
+    preferences_close = body.index("</form>", preferences_form)
+    icloud_form = body.index('action="/settings/connect_icloud_calendar"')
+
+    assert preferences_form
+    assert icloud_form
+    assert_operator preferences_close, :<, icloud_form
+  end
+
+  test "GET /settings/calendar does not invite password manager autofill on iCloud fields" do
+    get calendar_settings_path
+    assert_response :success
+
+    doc = Nokogiri::HTML(response.body)
+    email = doc.at_css('input[name="icloud_email"]')
+    password = doc.at_css('input[name="icloud_app_password"]')
+
+    assert_equal "off", email["autocomplete"]
+    assert_equal "new-password", password["autocomplete"]
+    assert_equal "true", email["data-lpignore"]
+    assert_equal "true", password["data-1p-ignore"]
+  end
+
+  test "GET /settings/calendar shows sync direction options when Google is connected" do
+    @alice.update!(google_access_token: "access", google_refresh_token: "refresh",
+      google_calendar_email: "user@gmail.com", calendar_sync_level: "two_way")
+
+    get calendar_settings_path
+
+    assert_response :success
+    assert_includes response.body, ERB::Util.html_escape(I18n.t("settings.calendar.sync_direction"))
+    assert_includes response.body, ERB::Util.html_escape(I18n.t("settings.calendar.two_way_sync"))
+    assert_includes response.body, "user@gmail.com"
+    assert_match(/data-calendar-sync-direction-target="option"/, response.body)
+  end
+
+  test "GET /settings/calendar renders the choose-direction sheet for Connect" do
+    get calendar_settings_path
+
+    assert_response :success
+    assert_includes response.body, ERB::Util.html_escape(I18n.t("settings.calendar.sync_sheet_title"))
+    assert_includes response.body, ERB::Util.html_escape(I18n.t("settings.calendar.connect_with_google"))
+    assert_match(/data-action="click->calendar-sync-sheet#open"/, response.body)
+  end
+
+  test "PATCH /settings/update_google_calendar_sync persists the chosen direction" do
+    @alice.update!(google_access_token: "access", google_refresh_token: "refresh", calendar_sync_level: "two_way")
+
+    patch update_google_calendar_sync_settings_path, params: {direction: "one_way"}
+
+    assert_response :success
+    assert_equal "one_way", @alice.reload.calendar_sync_level
+  end
+
+  test "PATCH /settings/update_google_calendar_sync pushes existing events when switching to two-way" do
+    @alice.update!(google_access_token: "access", google_refresh_token: "refresh", calendar_sync_level: "one_way")
+    event = @alice.calendar_events.create!(title: "Dentist", date: Date.current)
+
+    assert_enqueued_with(job: GoogleCalendarPushJob, args: ["create", {user_id: @alice.id, calendar_event_id: event.id}]) do
+      patch update_google_calendar_sync_settings_path, params: {direction: "two_way"}
+    end
+    assert_equal "two_way", @alice.reload.calendar_sync_level
+  end
+
+  test "PATCH /settings/update_google_calendar_sync rejects invalid directions" do
+    @alice.update!(google_access_token: "access", google_refresh_token: "refresh", calendar_sync_level: "two_way")
+
+    patch update_google_calendar_sync_settings_path, params: {direction: "export"}
+
+    assert_response :unprocessable_entity
+    assert_equal "two_way", @alice.reload.calendar_sync_level
+  end
+
+  test "PATCH /settings/update_google_calendar_sync rejects users without a Google connection" do
+    patch update_google_calendar_sync_settings_path, params: {direction: "two_way"}
+
+    assert_response :unprocessable_entity
+  end
+
+  test "POST /settings/disconnect_google_calendar clears tokens and resets direction" do
+    @alice.update!(google_access_token: "access", google_refresh_token: "refresh",
+      google_calendar_email: "user@gmail.com", calendar_sync_level: "two_way")
+    success = Net::HTTPSuccess.new("1.1", "200", "OK")
+    fake_http = Object.new
+    fake_http.define_singleton_method(:request) { |_request| success }
+    stub_class_method(Net::HTTP, :start, ->(*_args, **_kwargs, &block) { block.call(fake_http) }) do
+      post disconnect_google_calendar_settings_path
+    end
+
+    assert_redirected_to calendar_settings_path
+    @alice.reload
+    assert_nil @alice.google_access_token
+    assert_nil @alice.google_calendar_email
+    assert_equal "off", @alice.calendar_sync_level
+  end
+
   test "PATCH /settings/calendar saves show_tracked_days" do
     patch update_calendar_settings_path, params: {show_tracked_days: "0"}
     assert_redirected_to calendar_settings_path
@@ -276,7 +392,7 @@ class SettingsControllerTest < ActionDispatch::IntegrationTest
     with_env("GOOGLE_CLIENT_ID", "season-client-id") do
       with_env("GOOGLE_CLIENT_SECRET", "season-client-secret") do
         with_env("GOOGLE_CALENDAR_REDIRECT_URI", "https://seasonv2.onrender.com/settings/google_calendar_callback") do
-          get connect_google_calendar_settings_path
+          get connect_google_calendar_settings_path, params: {direction: "two_way"}
         end
       end
     end
@@ -291,6 +407,37 @@ class SettingsControllerTest < ActionDispatch::IntegrationTest
     assert_equal "offline", query["access_type"]
     assert_equal "consent", query["prompt"]
     assert_equal session[:google_oauth_state], query["state"]
+    assert_equal "two_way", session[:google_calendar_sync_direction]
+  end
+
+  test "GET /settings/connect_google_calendar uses the canonical redirect URI when env is missing" do
+    with_env("GOOGLE_CLIENT_ID", "season-client-id") do
+      with_env("GOOGLE_CLIENT_SECRET", "season-client-secret") do
+        with_env("GOOGLE_CALENDAR_REDIRECT_URI", nil) do
+          get connect_google_calendar_settings_path, headers: {"Host" => "127.0.0.1:3000"}
+        end
+      end
+    end
+
+    uri = URI(response.location)
+    query = Rack::Utils.parse_query(uri.query)
+    assert_equal "https://seasonv2.onrender.com/settings/google_calendar_callback", query["redirect_uri"]
+  end
+
+  test "GET /settings/connect_google_calendar ignores a localhost redirect_uri override in production" do
+    with_env("GOOGLE_CLIENT_ID", "season-client-id") do
+      with_env("GOOGLE_CLIENT_SECRET", "season-client-secret") do
+        with_env("GOOGLE_CALENDAR_REDIRECT_URI", "http://127.0.0.1:3000/settings/google_calendar_callback") do
+          env_class = Rails.env.class
+          stub_class_method(Rails, :env, -> { env_class.new("production") }) do
+            get connect_google_calendar_settings_path
+          end
+        end
+      end
+    end
+
+    query = Rack::Utils.parse_query(URI(response.location).query)
+    assert_equal "https://seasonv2.onrender.com/settings/google_calendar_callback", query["redirect_uri"]
   end
 
   test "GET /settings/connect_google_calendar fails gracefully without OAuth credentials" do
@@ -341,6 +488,63 @@ class SettingsControllerTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to calendar_settings_path
     assert_nil @alice.reload.google_access_token
+  end
+
+  test "POST /settings/sync_google_calendar asks for reconnect when the stored token is rejected" do
+    @alice.update!(
+      google_access_token: "stale-token",
+      google_refresh_token: "refresh-token",
+      google_token_expires_at: 1.hour.from_now,
+      calendar_sync_level: "two_way"
+    )
+
+    stub_class_method(GoogleCalendarImportService, :call, ->(user:) {
+      user.update!(google_access_token: nil, google_refresh_token: nil, google_token_expires_at: nil)
+      0
+    }) do
+      post sync_google_calendar_settings_path
+    end
+
+    assert_redirected_to calendar_settings_path
+    assert_match(/reconnect/i, flash[:alert])
+  end
+
+  test "GET /settings/google_calendar_callback imports events and backfills two-way sync" do
+    event = @alice.calendar_events.create!(title: "Dentist", date: Date.current)
+    get connect_google_calendar_settings_path, params: {direction: "two_way"}
+    state = session[:google_oauth_state]
+
+    good_client = Object.new
+    good_client.define_singleton_method(:code=) { |_code| nil }
+    good_client.define_singleton_method(:redirect_uri=) { |_uri| nil }
+    good_client.define_singleton_method(:fetch_access_token!) { nil }
+    good_client.define_singleton_method(:access_token) { "access-token" }
+    good_client.define_singleton_method(:refresh_token) { "refresh-token" }
+    good_client.define_singleton_method(:expires_at) { 1.hour.from_now.to_i }
+
+    fake_response = Object.new
+    fake_response.define_singleton_method(:body) { {email: "alice@example.com"}.to_json }
+    fake_http = Object.new
+    fake_http.define_singleton_method(:use_ssl=) { |_value| nil }
+    fake_http.define_singleton_method(:request) { |_request| fake_response }
+
+    assert_enqueued_with(job: GoogleCalendarPushJob, args: ["create", {user_id: @alice.id, calendar_event_id: event.id}]) do
+      stub_class_method(Signet::OAuth2::Client, :new, ->(*_args, **_kwargs) { good_client }) do
+        stub_class_method(Net::HTTP, :new, ->(*_args) { fake_http }) do
+          stub_class_method(GoogleCalendarImportService, :call, ->(user:) {
+            @imported_user_id = user.id
+            2
+          }) do
+            get google_calendar_callback_settings_path, params: {code: "good-code", state: state}
+          end
+        end
+      end
+    end
+
+    assert_equal @alice.id, @imported_user_id
+    assert_equal "access-token", @alice.reload.google_access_token
+    assert_equal "two_way", @alice.reload.calendar_sync_level
+    assert_match(/2/, flash[:notice])
   end
 
   # AUTH-04 follow-up: update_password re-issues login() so the device that

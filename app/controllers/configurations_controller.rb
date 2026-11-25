@@ -12,6 +12,12 @@ class ConfigurationsController < ApplicationController
           }
         },
         {
+          patterns: ["/users/password/*", "/password/*"],
+          properties: {
+            "presentation" => "replace"
+          }
+        },
+        {
           patterns: ["/settings/*", "/account/*"],
           properties: {
             "presentation" => "modal"
@@ -28,6 +34,12 @@ class ConfigurationsController < ApplicationController
           patterns: ["/calendar", "/calendar/appointments", "/calendar/weekly", "/tracking", "/daily/*", "/symptoms", "/superpowers"],
           properties: {
             "presentation" => "default"
+          }
+        },
+        {
+          patterns: ["/users/password/*", "/password/*"],
+          properties: {
+            "presentation" => "replace"
           }
         },
         {
