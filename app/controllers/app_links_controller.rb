@@ -3,7 +3,7 @@ class AppLinksController < ApplicationController
   allow_pin_bypass
 
   IOS_BUNDLE_ID = "com.onrender.seasonv2.rubynative"
-  ANDROID_PACKAGE_NAME = "com.seasonapp.android"
+  ANDROID_PACKAGE_NAME = "com.onrender.seasonv2.rubynative"
   ANDROID_SHA256_FINGERPRINT = "E3:52:3C:60:16:32:04:0F:00:0B:68:4D:75:22:EB:46:B0:DF:14:8C:AA:ED:FF:1D:40:16:E0:FC:F0:DF:96:C7"
 
   def apple_app_site_association

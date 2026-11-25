@@ -82,7 +82,7 @@ cd android
 
 ### Android release build
 
-Release AABs use Play package `com.seasonapp.android`. Create a gitignored `android/keystore.properties` with upload-key credentials, then:
+Release AABs use Play package `com.onrender.seasonv2.rubynative`. Create a gitignored `android/keystore.properties` with upload-key credentials, then:
 
 ```bash
 cd android

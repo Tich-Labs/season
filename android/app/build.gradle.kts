@@ -41,7 +41,7 @@ android {
             ?.removeSuffix("/")
             ?: "https://seasonv2.onrender.com"
 
-        applicationId = "com.seasonapp.android"
+        applicationId = "com.onrender.seasonv2.rubynative"
         minSdk = 28
         targetSdk = 34
         versionCode = ciVersionCode ?: 1

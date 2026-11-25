@@ -23,7 +23,7 @@ class GooglePlayClosedTestingServiceTest < ActiveSupport::TestCase
       token_uri: "https://oauth2.googleapis.com/token"
     }
     ENV["GOOGLE_PLAY_SERVICE_ACCOUNT_JSON"] = service_account.to_json
-    ENV["GOOGLE_PLAY_PACKAGE_NAME"] = "com.seasonapp.android"
+    ENV["GOOGLE_PLAY_PACKAGE_NAME"] = "com.onrender.seasonv2.rubynative"
     ENV["GOOGLE_PLAY_TRACK"] = "beta"
   end
 
@@ -72,7 +72,7 @@ class GooglePlayClosedTestingServiceTest < ActiveSupport::TestCase
     assert_equal 1, calls.length
     method, url, body = calls[0]
     assert_equal :post, method
-    assert_equal "https://androidpublisher.googleapis.com/androidpublisher/v3/applications/com.seasonapp.android/testers/beta", url
+    assert_equal "https://androidpublisher.googleapis.com/androidpublisher/v3/applications/com.onrender.seasonv2.rubynative/testers/beta", url
     assert_equal({"testers" => [{"emails" => ["alice@example.com"]}]}, JSON.parse(body))
   end
 

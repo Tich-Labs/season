@@ -13,14 +13,14 @@ class AppLinksControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "assetlinks points to the Android app" do
-    with_env("GOOGLE_PLAY_PACKAGE_NAME", "com.seasonapp.android") do
+    with_env("GOOGLE_PLAY_PACKAGE_NAME", "com.onrender.seasonv2.rubynative") do
       get "/.well-known/assetlinks.json"
     end
 
     assert_response :success
     target = response.parsed_body.dig(0, "target")
     assert_equal "android_app", target["namespace"]
-    assert_equal "com.seasonapp.android", target["package_name"]
+    assert_equal "com.onrender.seasonv2.rubynative", target["package_name"]
     assert_includes target["sha256_cert_fingerprints"].first, "E3:52:3C:60"
   end
 end

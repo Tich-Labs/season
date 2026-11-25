@@ -7,14 +7,20 @@ on:
 
 jobs:
   build:
-    runs-on: macos-15
+    runs-on: xcode-27
     steps:
       - uses: actions/checkout@v4
 
-      - name: Select latest Xcode
+      - name: Verify Xcode 27 SDK
         run: |
-          sudo xcode-select -s /Applications/Xcode_$(ls /Applications/ | grep Xcode | sort -V | tail -1 | sed 's/Xcode_//;s/.app//').app 2>/dev/null || true
           xcodebuild -version
+          SDK_VERSION=$(xcrun --sdk iphoneos --show-sdk-version)
+          SDK_MAJOR=${SDK_VERSION%%.*}
+          echo "iOS SDK: $SDK_VERSION"
+          if [ "$SDK_MAJOR" -lt 27 ]; then
+            echo "iOS 27 SDK or later is required"
+            exit 1
+          fi
 
       - name: Resolve SPM dependencies
         working-directory: ios/SeasonApp
