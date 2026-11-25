@@ -415,8 +415,9 @@ class SettingsControllerTest < ActionDispatch::IntegrationTest
     assert_equal "https://www.googleapis.com/auth/calendar", query["scope"]
     assert_equal "offline", query["access_type"]
     assert_equal "consent", query["prompt"]
-    assert_equal session[:google_oauth_state], query["state"]
-    assert_equal "two_way", session[:google_calendar_sync_direction]
+    assert query["state"].present?
+    assert_nil session[:google_oauth_state]
+    assert_nil session[:google_calendar_sync_direction]
   end
 
   test "GET /settings/connect_google_calendar uses the canonical redirect URI when env is missing" do
@@ -478,13 +479,46 @@ class SettingsControllerTest < ActionDispatch::IntegrationTest
     assert_nil @alice.reload.google_access_token
   end
 
+  test "GET /settings/google_calendar_callback works when the native browser loses the Rails session" do
+    get connect_google_calendar_settings_path, params: {direction: "one_way"}
+    state = google_oauth_state_from(response)
+
+    reset!
+
+    good_client = Object.new
+    good_client.define_singleton_method(:code=) { |_code| nil }
+    good_client.define_singleton_method(:redirect_uri=) { |_uri| nil }
+    good_client.define_singleton_method(:fetch_access_token!) { nil }
+    good_client.define_singleton_method(:access_token) { "access-token" }
+    good_client.define_singleton_method(:refresh_token) { "refresh-token" }
+    good_client.define_singleton_method(:expires_at) { 1.hour.from_now.to_i }
+
+    fake_response = Object.new
+    fake_response.define_singleton_method(:body) { {email: "alice@example.com"}.to_json }
+    fake_http = Object.new
+    fake_http.define_singleton_method(:use_ssl=) { |_value| nil }
+    fake_http.define_singleton_method(:request) { |_request| fake_response }
+
+    stub_class_method(Signet::OAuth2::Client, :new, ->(*_args, **_kwargs) { good_client }) do
+      stub_class_method(Net::HTTP, :new, ->(*_args) { fake_http }) do
+        stub_class_method(GoogleCalendarImportService, :call, ->(user:) { 0 }) do
+          get google_calendar_callback_settings_path, params: {code: "good-code", state: state}
+        end
+      end
+    end
+
+    assert_redirected_to calendar_settings_path
+    assert_equal "access-token", @alice.reload.google_access_token
+    assert_equal "one_way", @alice.calendar_sync_level
+  end
+
   # The token exchange (Google rejecting an expired/reused code, or a
   # redirect_uri mismatch) used to raise unhandled out of the callback and
   # surface as a raw 500. It must redirect back to the settings page with
   # the generic failure alert instead, and leave no token behind.
   test "GET /settings/google_calendar_callback redirects gracefully when the token exchange fails" do
     get connect_google_calendar_settings_path
-    state = session[:google_oauth_state]
+    state = google_oauth_state_from(response)
 
     bad_client = Object.new
     bad_client.define_singleton_method(:code=) { |_| nil }
@@ -521,7 +555,7 @@ class SettingsControllerTest < ActionDispatch::IntegrationTest
   test "GET /settings/google_calendar_callback imports events and backfills two-way sync" do
     event = @alice.calendar_events.create!(title: "Dentist", date: Date.current)
     get connect_google_calendar_settings_path, params: {direction: "two_way"}
-    state = session[:google_oauth_state]
+    state = google_oauth_state_from(response)
 
     good_client = Object.new
     good_client.define_singleton_method(:code=) { |_code| nil }
@@ -572,5 +606,11 @@ class SettingsControllerTest < ActionDispatch::IntegrationTest
       get tracking_index_path
       assert_response :success
     end
+  end
+
+  private
+
+  def google_oauth_state_from(response)
+    Rack::Utils.parse_query(URI(response.location).query).fetch("state")
   end
 end

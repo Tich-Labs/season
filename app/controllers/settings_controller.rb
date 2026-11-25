@@ -1,6 +1,12 @@
 class SettingsController < ApplicationController
+  GOOGLE_OAUTH_STATE_TTL = 10.minutes
+
   before_action :require_google_calendar_credentials,
     only: [:connect_google_calendar, :google_calendar_callback, :sync_google_calendar]
+
+  allow_unauthenticated_access only: :google_calendar_callback
+  skip_onboarding_requirement only: :google_calendar_callback
+  allow_pin_bypass only: :google_calendar_callback
 
   def edit
     @user = current_user
@@ -62,16 +68,8 @@ class SettingsController < ApplicationController
   end
 
   def connect_google_calendar
-    # Without this, anyone can start their own OAuth flow, capture the
-    # resulting code, and get a logged-in victim to visit
-    # /settings/google_calendar_callback?code=<attacker's code> — the
-    # callback below would exchange it and link the attacker's Google
-    # Calendar to the victim's Season account. Tying the redirect to a
-    # per-session value the callback must match closes that off (the classic
-    # OAuth "login/connect CSRF" gap).
-    state = SecureRandom.hex(16)
-    session[:google_oauth_state] = state
-    session[:google_calendar_sync_direction] = params[:direction].presence_in(User::CALENDAR_SYNC_DIRECTIONS) || "one_way"
+    direction = params[:direction].presence_in(User::CALENDAR_SYNC_DIRECTIONS) || "one_way"
+    state = google_oauth_state_for(user: current_user, direction: direction)
 
     client = build_google_oauth_client
     auth_url = client.authorization_uri(
@@ -85,11 +83,10 @@ class SettingsController < ApplicationController
   end
 
   def google_calendar_callback
-    expected_state = session.delete(:google_oauth_state)
-    state_ok = expected_state.present? && params[:state].present? &&
-      ActiveSupport::SecurityUtils.secure_compare(params[:state], expected_state)
+    state_payload = verified_google_oauth_state(params[:state])
+    oauth_user = state_payload && User.find_by(id: state_payload["user_id"])
 
-    unless params[:code].present? && state_ok
+    unless params[:code].present? && oauth_user
       redirect_to calendar_settings_path, alert: t("settings.calendar.google_failed", default: "Failed to connect Google Calendar")
       return
     end
@@ -115,17 +112,18 @@ class SettingsController < ApplicationController
     end
 
     email = fetch_google_email(client.access_token)
+    direction = state_payload["direction"].presence_in(User::CALENDAR_SYNC_DIRECTIONS) || "one_way"
 
-    current_user.update!(
+    oauth_user.update!(
       google_access_token: client.access_token,
-      google_refresh_token: client.refresh_token.presence || current_user.google_refresh_token,
+      google_refresh_token: client.refresh_token.presence || oauth_user.google_refresh_token,
       google_token_expires_at: client.expires_at ? Time.zone.at(client.expires_at) : nil,
       google_calendar_email: email,
-      calendar_sync_level: session.delete(:google_calendar_sync_direction).presence_in(User::CALENDAR_SYNC_DIRECTIONS) || "one_way"
+      calendar_sync_level: direction
     )
-    enqueue_google_backfill if current_user.calendar_sync_level == "two_way"
-    imported = GoogleCalendarImportService.call(user: current_user)
-    unless current_user.reload.google_calendar_connected?
+    enqueue_google_backfill(oauth_user) if direction == "two_way"
+    imported = GoogleCalendarImportService.call(user: oauth_user)
+    unless oauth_user.reload.google_calendar_connected?
       redirect_to calendar_settings_path, alert: t("settings.calendar.google_reconnect_required", default: "Google Calendar needs to be reconnected")
       return
     end
@@ -448,10 +446,37 @@ class SettingsController < ApplicationController
 
   private
 
-  def enqueue_google_backfill
-    current_user.calendar_events.from_season.where(google_event_id: nil).find_each do |event|
-      GoogleCalendarPushJob.perform_later("create", user_id: current_user.id, calendar_event_id: event.id)
+  def enqueue_google_backfill(user = current_user)
+    user.calendar_events.from_season.where(google_event_id: nil).find_each do |event|
+      GoogleCalendarPushJob.perform_later("create", user_id: user.id, calendar_event_id: event.id)
     end
+  end
+
+  def google_oauth_verifier
+    ActiveSupport::MessageVerifier.new(
+      Rails.application.key_generator.generate_key("google-calendar-oauth-state", 32),
+      digest: "SHA256",
+      serializer: JSON,
+      url_safe: true
+    )
+  end
+
+  def google_oauth_state_for(user:, direction:)
+    google_oauth_verifier.generate({
+      "user_id" => user.id,
+      "direction" => direction,
+      "expires_at" => GOOGLE_OAUTH_STATE_TTL.from_now.to_i
+    })
+  end
+
+  def verified_google_oauth_state(state)
+    payload = google_oauth_verifier.verified(state)
+    return unless payload.is_a?(Hash)
+    return if payload["expires_at"].to_i < Time.current.to_i
+
+    payload
+  rescue ActiveSupport::MessageVerifier::InvalidSignature
+    nil
   end
 
   def save_single_reminder(type, default_time, redirect_path, notice_key)

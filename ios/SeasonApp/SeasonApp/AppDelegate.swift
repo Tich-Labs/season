@@ -20,6 +20,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             NotificationTokenComponent.self
         ])
 
+        Hotwire.registerRouteDecisionHandlers([
+            AppNavigationRouteDecisionHandler(),
+            GoogleOAuthRouteDecisionHandler(),
+            SafariViewControllerRouteDecisionHandler(),
+            SystemNavigationRouteDecisionHandler()
+        ])
+
         return true
     }
 

@@ -25,6 +25,7 @@
                 <data android:host="seasonv2.onrender.com" />
                 <data android:pathPrefix="/users/password" />
                 <data android:pathPrefix="/password" />
+                <data android:pathPrefix="/settings/google_calendar_callback" />
             </intent-filter>
         </activity>
     </application>

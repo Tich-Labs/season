@@ -13,7 +13,7 @@ class AppLinksController < ApplicationController
         details: [
           {
             appID: "#{ENV.fetch("APPLE_TEAM_ID", "28NDQR5JC4")}.#{ENV.fetch("IOS_BUNDLE_ID", IOS_BUNDLE_ID)}",
-            paths: ["/users/password/*", "/password/*"]
+            paths: ["/users/password/*", "/password/*", "/settings/google_calendar_callback*"]
           }
         ]
       }

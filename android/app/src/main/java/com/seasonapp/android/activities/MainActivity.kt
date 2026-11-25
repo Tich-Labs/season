@@ -86,8 +86,14 @@ class MainActivity : HotwireActivity(), AuthGate {
         val baseHost = Uri.parse(AppConfig.baseUrl).host ?: return
         val path = uri.path ?: return
         if (uri.host != baseHost) return
-        if (!path.startsWith("/users/password") && !path.startsWith("/password")) return
+        if (!isAppLinkPath(path)) return
         delegate.currentNavigator?.route(uri.toString())
+    }
+
+    private fun isAppLinkPath(path: String): Boolean {
+        return path.startsWith("/users/password") ||
+            path.startsWith("/password") ||
+            path.startsWith("/settings/google_calendar_callback")
     }
 
     private fun isAuthenticatedPath(path: String): Boolean {
