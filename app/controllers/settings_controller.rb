@@ -2,11 +2,14 @@ class SettingsController < ApplicationController
   GOOGLE_OAUTH_STATE_TTL = 10.minutes
 
   before_action :require_google_calendar_credentials,
-    only: [:connect_google_calendar, :google_calendar_callback, :sync_google_calendar]
+    only: [:connect_google_calendar, :google_calendar_auth_url, :google_calendar_callback,
+      :google_calendar_callback_native, :sync_google_calendar]
 
-  allow_unauthenticated_access only: :google_calendar_callback
-  skip_onboarding_requirement only: :google_calendar_callback
-  allow_pin_bypass only: :google_calendar_callback
+  skip_forgery_protection only: :google_calendar_callback_native
+
+  allow_unauthenticated_access only: [:google_calendar_callback, :google_calendar_callback_native]
+  skip_onboarding_requirement only: [:google_calendar_callback, :google_calendar_callback_native]
+  allow_pin_bypass only: [:google_calendar_callback, :google_calendar_callback_native]
 
   def edit
     @user = current_user
@@ -68,18 +71,11 @@ class SettingsController < ApplicationController
   end
 
   def connect_google_calendar
-    direction = params[:direction].presence_in(User::CALENDAR_SYNC_DIRECTIONS) || "one_way"
-    state = google_oauth_state_for(user: current_user, direction: direction)
+    redirect_to google_authorization_url(user: current_user, direction: params[:direction]), allow_other_host: true
+  end
 
-    client = build_google_oauth_client
-    auth_url = client.authorization_uri(
-      scope: "https://www.googleapis.com/auth/calendar",
-      access_type: "offline",
-      prompt: "consent",
-      state: state,
-      redirect_uri: google_calendar_callback_url
-    ).to_s
-    redirect_to auth_url, allow_other_host: true
+  def google_calendar_auth_url
+    render json: {auth_url: google_authorization_url(user: current_user, direction: params[:direction])}
   end
 
   def google_calendar_callback
@@ -87,56 +83,36 @@ class SettingsController < ApplicationController
     oauth_user = state_payload && User.find_by(id: state_payload["user_id"])
 
     unless params[:code].present? && oauth_user
-      redirect_to calendar_settings_path, alert: t("settings.calendar.google_failed", default: "Failed to connect Google Calendar")
+      redirect_to calendar_settings_path, alert: google_calendar_failure_message
       return
     end
 
-    client = build_google_oauth_client
-    client.code = params[:code]
-    client.redirect_uri = google_calendar_callback_url
+    result = connect_google_calendar_for(user: oauth_user, code: params[:code], direction: state_payload["direction"])
 
-    begin
-      client.fetch_access_token!
-    rescue Signet::AuthorizationError => e
-      # invalid_grant / redirect_uri_mismatch / expired or reused code. The
-      # user already completed consent, so fail gracefully and log the real
-      # reason instead of a bare 500.
-      Rails.logger.warn("[GoogleCalendar] token exchange rejected: #{e.message}")
-      redirect_to calendar_settings_path, alert: t("settings.calendar.google_failed", default: "Failed to connect Google Calendar")
-      return
-    rescue => e
-      # Network/SSL/Google 5xx on the token request — same deal: never 500.
-      Rails.logger.error("[GoogleCalendar] token exchange failed: #{e.class}: #{e.message}")
-      redirect_to calendar_settings_path, alert: t("settings.calendar.google_failed", default: "Failed to connect Google Calendar")
-      return
-    end
-
-    begin
-      email = fetch_google_email(client.access_token)
-      direction = state_payload["direction"].presence_in(User::CALENDAR_SYNC_DIRECTIONS) || "one_way"
-
-      oauth_user.update!(
-        google_access_token: client.access_token,
-        google_refresh_token: client.refresh_token.presence || oauth_user.google_refresh_token,
-        google_token_expires_at: client.expires_at ? Time.zone.at(client.expires_at) : nil,
-        google_calendar_email: email,
-        calendar_sync_level: direction
-      )
-      enqueue_google_backfill(oauth_user) if direction == "two_way"
-      imported = GoogleCalendarImportService.call(user: oauth_user)
-    rescue => e
-      Rails.logger.error("[GoogleCalendar] callback failed for user #{oauth_user.id}: #{e.class}: #{e.message}")
-      redirect_to calendar_settings_path, alert: t("settings.calendar.google_failed", default: "Failed to connect Google Calendar")
-      return
-    end
-
-    unless oauth_user.reload.google_calendar_connected?
-      redirect_to calendar_settings_path, alert: t("settings.calendar.google_reconnect_required", default: "Google Calendar needs to be reconnected")
+    unless result.success? && oauth_user.reload.google_calendar_connected?
+      redirect_to calendar_settings_path, alert: google_calendar_failure_message
       return
     end
 
     redirect_to calendar_settings_path,
-      notice: t("settings.calendar.google_connected_and_synced", count: imported, default: "Google Calendar connected — #{imported} events imported")
+      notice: google_calendar_success_message(result.imported)
+  end
+
+  def google_calendar_callback_native
+    state_payload = verified_google_oauth_state(params[:state])
+    oauth_user = state_payload && User.find_by(id: state_payload["user_id"])
+
+    unless params[:code].present? && oauth_user
+      return render_native_callback_error
+    end
+
+    result = connect_google_calendar_for(user: oauth_user, code: params[:code], direction: state_payload["direction"])
+
+    unless result.success? && oauth_user.reload.google_calendar_connected?
+      return render_native_callback_error
+    end
+
+    render json: {status: "ok", path: calendar_settings_path, notice: google_calendar_success_message(result.imported)}
   end
 
   def disconnect_google_calendar
@@ -470,6 +446,41 @@ class SettingsController < ApplicationController
     end
   end
 
+  def google_authorization_url(user:, direction:)
+    direction = direction.presence_in(User::CALENDAR_SYNC_DIRECTIONS) || "one_way"
+    state = google_oauth_state_for(user: user, direction: direction)
+
+    build_google_oauth_client.authorization_uri(
+      scope: "https://www.googleapis.com/auth/calendar",
+      access_type: "offline",
+      prompt: "consent",
+      state: state,
+      redirect_uri: google_calendar_callback_url
+    ).to_s
+  end
+
+  def connect_google_calendar_for(user:, code:, direction:)
+    GoogleCalendarConnectService.call(
+      user: user,
+      code: code,
+      redirect_uri: google_calendar_callback_url,
+      direction: direction
+    )
+  end
+
+  def google_calendar_failure_message
+    t("settings.calendar.google_failed", default: "Failed to connect Google Calendar")
+  end
+
+  def google_calendar_success_message(imported)
+    t("settings.calendar.google_connected_and_synced", count: imported, default: "Google Calendar connected — #{imported} events imported")
+  end
+
+  def render_native_callback_error
+    render json: {status: "error", path: calendar_settings_path, alert: google_calendar_failure_message},
+      status: :unprocessable_content
+  end
+
   def google_oauth_verifier
     ActiveSupport::MessageVerifier.new(
       Rails.application.key_generator.generate_key("google-calendar-oauth-state", 32),
@@ -533,17 +544,5 @@ class SettingsController < ApplicationController
     return canonical if Rails.env.production?
 
     ENV["GOOGLE_CALENDAR_REDIRECT_URI"].presence || canonical
-  end
-
-  def fetch_google_email(access_token)
-    uri = URI("https://www.googleapis.com/oauth2/v3/userinfo")
-    http = Net::HTTP.new(uri.host, uri.port)
-    http.use_ssl = true
-    request = Net::HTTP::Get.new(uri)
-    request["Authorization"] = "Bearer #{access_token}"
-    response = http.request(request)
-    JSON.parse(response.body)["email"]
-  rescue
-    nil
   end
 end

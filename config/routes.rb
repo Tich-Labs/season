@@ -157,7 +157,9 @@ Rails.application.routes.draw do
     post :pin, on: :collection, action: :update_pin
     delete :pin, on: :collection, action: :remove_pin
     get :connect_google_calendar, on: :collection
+    get :google_calendar_auth_url, on: :collection
     get :google_calendar_callback, on: :collection
+    post :google_calendar_callback_native, on: :collection
     post :disconnect_google_calendar, on: :collection
     post :sync_google_calendar, on: :collection
     post :connect_icloud_calendar, on: :collection

@@ -21,8 +21,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         ])
 
         Hotwire.registerRouteDecisionHandlers([
-            AppNavigationRouteDecisionHandler(),
             GoogleOAuthRouteDecisionHandler(),
+            AppNavigationRouteDecisionHandler(),
             SafariViewControllerRouteDecisionHandler(),
             SystemNavigationRouteDecisionHandler()
         ])

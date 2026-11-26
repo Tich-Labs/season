@@ -461,6 +461,25 @@ class SettingsControllerTest < ActionDispatch::IntegrationTest
     assert_match(/Failed to connect Google Calendar/, flash[:alert])
   end
 
+  test "GET /settings/google_calendar_auth_url returns an authorization URL for native OAuth" do
+    with_env("GOOGLE_CLIENT_ID", "season-client-id") do
+      with_env("GOOGLE_CLIENT_SECRET", "season-client-secret") do
+        with_env("GOOGLE_CALENDAR_REDIRECT_URI", "https://seasonv2.onrender.com/settings/google_calendar_callback") do
+          get "/settings/google_calendar_auth_url", params: {direction: "two_way"}, as: :json
+        end
+      end
+    end
+
+    assert_response :success
+    auth_url = response.parsed_body.fetch("auth_url")
+    uri = URI(auth_url)
+    query = Rack::Utils.parse_query(uri.query)
+    assert_equal "accounts.google.com", uri.host
+    assert_equal "season-client-id", query["client_id"]
+    assert_equal "https://seasonv2.onrender.com/settings/google_calendar_callback", query["redirect_uri"]
+    assert query["state"].present?
+  end
+
   # google_calendar_callback — classic OAuth "connect CSRF": without a state
   # check, an attacker can capture their own authorization code and get a
   # logged-in victim to hit this URL, linking the attacker's Google account
@@ -530,6 +549,67 @@ class SettingsControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_redirected_to calendar_settings_path
+    assert_nil @alice.reload.google_access_token
+  end
+
+  test "POST /settings/google_calendar_callback_native stores tokens without a browser session" do
+    get "/settings/connect_google_calendar", params: {direction: "one_way"}
+    state = google_oauth_state_from(response)
+
+    reset!
+
+    good_client = Object.new
+    good_client.define_singleton_method(:code=) { |_code| nil }
+    good_client.define_singleton_method(:redirect_uri=) { |_uri| nil }
+    good_client.define_singleton_method(:fetch_access_token!) { nil }
+    good_client.define_singleton_method(:access_token) { "access-token" }
+    good_client.define_singleton_method(:refresh_token) { "refresh-token" }
+    good_client.define_singleton_method(:expires_at) { 1.hour.from_now.to_i }
+
+    fake_response = Object.new
+    fake_response.define_singleton_method(:body) { {email: "alice@example.com"}.to_json }
+    fake_http = Object.new
+    fake_http.define_singleton_method(:use_ssl=) { |_value| nil }
+    fake_http.define_singleton_method(:request) { |_request| fake_response }
+
+    stub_class_method(Signet::OAuth2::Client, :new, ->(*_args, **_kwargs) { good_client }) do
+      stub_class_method(Net::HTTP, :new, ->(*_args) { fake_http }) do
+        stub_class_method(GoogleCalendarImportService, :call, ->(user:) { 1 }) do
+          post "/settings/google_calendar_callback_native", params: {code: "good-code", state: state}, as: :json
+        end
+      end
+    end
+
+    assert_response :success
+    assert_equal "ok", response.parsed_body["status"]
+    assert_equal "/settings/calendar", response.parsed_body["path"]
+    assert_equal "access-token", @alice.reload.google_access_token
+    assert_equal "one_way", @alice.calendar_sync_level
+  end
+
+  test "POST /settings/google_calendar_callback_native rejects a mismatched state" do
+    post "/settings/google_calendar_callback_native", params: {code: "attacker-code", state: "wrong-state"}, as: :json
+
+    assert_response :unprocessable_content
+    assert_equal "error", response.parsed_body["status"]
+    assert_nil @alice.reload.google_access_token
+  end
+
+  test "POST /settings/google_calendar_callback_native fails gracefully when Google rejects the code" do
+    get "/settings/connect_google_calendar"
+    state = google_oauth_state_from(response)
+
+    bad_client = Object.new
+    bad_client.define_singleton_method(:code=) { |_| nil }
+    bad_client.define_singleton_method(:redirect_uri=) { |_| nil }
+    bad_client.define_singleton_method(:fetch_access_token!) { raise Signet::AuthorizationError, "invalid_grant" }
+
+    stub_class_method(Signet::OAuth2::Client, :new, ->(*_args, **_kwargs) { bad_client }) do
+      post "/settings/google_calendar_callback_native", params: {code: "good-code", state: state}, as: :json
+    end
+
+    assert_response :unprocessable_content
+    assert_equal "error", response.parsed_body["status"]
     assert_nil @alice.reload.google_access_token
   end
 

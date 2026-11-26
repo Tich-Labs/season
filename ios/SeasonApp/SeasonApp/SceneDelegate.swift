@@ -92,6 +92,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     private func routeUniversalLink(_ url: URL) {
+        // ASWebAuthenticationSession owns this callback. Routing it into the
+        // WebView would replay a single-use OAuth code.
+        guard !url.path.hasPrefix("/settings/google_calendar_callback") else { return }
         navigator.route(url, options: VisitOptions(action: .replace))
     }
 }

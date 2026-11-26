@@ -7,15 +7,20 @@ class AppLinksController < ApplicationController
   ANDROID_SHA256_FINGERPRINT = "E3:52:3C:60:16:32:04:0F:00:0B:68:4D:75:22:EB:46:B0:DF:14:8C:AA:ED:FF:1D:40:16:E0:FC:F0:DF:96:C7"
 
   def apple_app_site_association
+    app_id = "#{ENV.fetch("APPLE_TEAM_ID", "28NDQR5JC4")}.#{ENV.fetch("IOS_BUNDLE_ID", IOS_BUNDLE_ID)}"
+
     render json: {
       applinks: {
         apps: [],
         details: [
           {
-            appID: "#{ENV.fetch("APPLE_TEAM_ID", "28NDQR5JC4")}.#{ENV.fetch("IOS_BUNDLE_ID", IOS_BUNDLE_ID)}",
+            appID: app_id,
             paths: ["/users/password/*", "/password/*", "/settings/google_calendar_callback*"]
           }
         ]
+      },
+      webcredentials: {
+        apps: [app_id]
       }
     }
   end

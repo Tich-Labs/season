@@ -11,6 +11,7 @@ class AppLinksControllerTest < ActionDispatch::IntegrationTest
     assert_equal "TEAM123.com.onrender.seasonv2.rubynative", detail["appID"]
     assert_includes detail["paths"], "/users/password/*"
     assert_includes detail["paths"], "/settings/google_calendar_callback*"
+    assert_equal ["TEAM123.com.onrender.seasonv2.rubynative"], response.parsed_body.dig("webcredentials", "apps")
   end
 
   test "assetlinks points to the Android app" do
