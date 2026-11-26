@@ -161,6 +161,7 @@ Rails.application.routes.draw do
     get :google_calendar_callback, on: :collection
     post :google_calendar_callback_native, on: :collection
     post :disconnect_google_calendar, on: :collection
+    post :disconnect_google_calendar_native, on: :collection
     post :sync_google_calendar, on: :collection
     post :connect_icloud_calendar, on: :collection
     post :disconnect_icloud_calendar, on: :collection

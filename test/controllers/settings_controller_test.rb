@@ -144,6 +144,31 @@ class SettingsControllerTest < ActionDispatch::IntegrationTest
     assert_equal positions, positions.sort
   end
 
+  test "GET /settings/calendar uses the native-safe Google disconnect form in the iOS app" do
+    @alice.update!(google_access_token: "access", google_refresh_token: "refresh",
+      google_calendar_email: "user@gmail.com", calendar_sync_level: "one_way")
+
+    get calendar_settings_path, headers: {"User-Agent" => "Season Native/1.0 Hotwire Native iOS"}
+
+    doc = Nokogiri::HTML(response.body)
+    form = doc.at_css('form[action="/settings/disconnect_google_calendar_native"]')
+    assert form
+    assert_equal "false", form["data-turbo"]
+    assert_empty doc.css("form form")
+  end
+
+  test "GET /settings/calendar keeps connect buttons usable when native Stimulus events are lost" do
+    get calendar_settings_path, headers: {"User-Agent" => "Season Native/1.0 Hotwire Native iOS"}
+
+    doc = Nokogiri::HTML(response.body)
+    buttons = doc.css('button[data-action="click->calendar-sync-sheet#open"]')
+
+    assert_equal 2, buttons.size
+    buttons.each do |button|
+      assert_includes button["onclick"].to_s, "style.display='flex'"
+    end
+  end
+
   test "GET /settings/calendar keeps the iCloud connect form outside the preferences form" do
     get calendar_settings_path
     assert_response :success
@@ -252,6 +277,37 @@ class SettingsControllerTest < ActionDispatch::IntegrationTest
     assert_nil @alice.google_access_token
     assert_nil @alice.google_calendar_email
     assert_equal "off", @alice.calendar_sync_level
+  end
+
+  test "POST /settings/disconnect_google_calendar_native clears Google Calendar tokens in the native app" do
+    @alice.update!(google_access_token: "access", google_refresh_token: "refresh",
+      google_calendar_email: "user@gmail.com", calendar_sync_level: "two_way")
+    success = Net::HTTPSuccess.new("1.1", "200", "OK")
+    fake_http = Object.new
+    fake_http.define_singleton_method(:request) { |_request| success }
+
+    stub_class_method(Net::HTTP, :start, ->(*_args, **_kwargs, &block) { block.call(fake_http) }) do
+      post disconnect_google_calendar_native_settings_path,
+        headers: {"User-Agent" => "Season Native/1.0 Hotwire Native iOS"}
+    end
+
+    assert_redirected_to calendar_settings_path
+    @alice.reload
+    assert_nil @alice.google_access_token
+    assert_nil @alice.google_calendar_email
+    assert_equal "off", @alice.calendar_sync_level
+  end
+
+  test "POST /settings/disconnect_google_calendar_native rejects non-native requests" do
+    @alice.update!(google_access_token: "access", google_refresh_token: "refresh",
+      google_calendar_email: "user@gmail.com", calendar_sync_level: "two_way")
+
+    post disconnect_google_calendar_native_settings_path
+
+    assert_response :forbidden
+    @alice.reload
+    assert_equal "access", @alice.google_access_token
+    assert_equal "two_way", @alice.calendar_sync_level
   end
 
   test "PATCH /settings/calendar saves show_tracked_days" do

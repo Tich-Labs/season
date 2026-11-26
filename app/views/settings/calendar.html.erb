@@ -86,8 +86,10 @@
               <span class="text-green-700 text-base font-semibold"><%= t("settings.calendar.connected") %></span>
               <span class="text-brand-secondary text-sm"><%= t("settings.calendar.google_calendar") %> · <%= @user.google_calendar_email %></span>
             </div>
-            <%= button_to disconnect_google_calendar_settings_path, method: :post,
-                  class: "min-h-12 px-5 rounded-xl border-2 border-brand-primary bg-white text-brand-primary text-base font-semibold" do %>
+            <%= button_to(native_app? ? disconnect_google_calendar_native_settings_path : disconnect_google_calendar_settings_path,
+                  method: :post,
+                  form: native_app? ? { data: { turbo: false } } : {},
+                  class: "min-h-12 px-5 rounded-xl border-2 border-brand-primary bg-white text-brand-primary text-base font-semibold") do %>
               <%= t("settings.calendar.disconnect") %>
             <% end %>
           </div>
@@ -111,6 +113,7 @@
             </div>
             <button type="button"
                     data-action="click->calendar-sync-sheet#open"
+                    onclick="var sheet=this.closest('[data-controller=calendar-sync-sheet]').querySelector('[data-calendar-sync-sheet-target=sheet]'); if (sheet) { sheet.style.display='flex'; }; return false;"
                     class="min-h-12 px-5 rounded-xl bg-brand-primary text-white text-base font-semibold">
               <%= t("settings.calendar.connect") %>
             </button>
@@ -150,6 +153,7 @@
             </div>
             <button type="button"
                     data-action="click->calendar-sync-sheet#open"
+                    onclick="var sheet=this.closest('[data-controller=calendar-sync-sheet]').querySelector('[data-calendar-sync-sheet-target=sheet]'); if (sheet) { sheet.style.display='flex'; }; return false;"
                     class="min-h-12 px-5 rounded-xl bg-brand-primary text-white text-base font-semibold">
               <%= t("settings.calendar.connect") %>
             </button>

@@ -5,11 +5,12 @@ class SettingsController < ApplicationController
     only: [:connect_google_calendar, :google_calendar_auth_url, :google_calendar_callback,
       :google_calendar_callback_native, :sync_google_calendar]
 
-  skip_forgery_protection only: :google_calendar_callback_native
+  skip_forgery_protection only: [:google_calendar_callback_native, :disconnect_google_calendar_native]
 
   allow_unauthenticated_access only: [:google_calendar_callback, :google_calendar_callback_native]
   skip_onboarding_requirement only: [:google_calendar_callback, :google_calendar_callback_native]
-  allow_pin_bypass only: [:google_calendar_callback, :google_calendar_callback_native]
+  allow_pin_bypass only: [:google_calendar_callback, :google_calendar_callback_native,
+    :disconnect_google_calendar_native]
 
   def edit
     @user = current_user
@@ -116,19 +117,13 @@ class SettingsController < ApplicationController
   end
 
   def disconnect_google_calendar
-    begin
-      current_user.delete_google_copies_created_by_season!
-    rescue => e
-      Rails.logger.warn("[GoogleCalendar] delete season copies during disconnect failed: #{e.message}")
-    end
-    begin
-      current_user.revoke_google_token!
-    rescue => e
-      Rails.logger.warn("[GoogleCalendar] revoke during disconnect failed: #{e.message}")
-    end
-    current_user.clear_google_calendar_tokens!
-    session.delete(:google_calendar_sync_direction)
-    redirect_to calendar_settings_path, notice: t("settings.calendar.google_disconnected", default: "Google Calendar disconnected")
+    disconnect_google_calendar_for_current_user
+  end
+
+  def disconnect_google_calendar_native
+    return head :forbidden unless native_app?
+
+    disconnect_google_calendar_for_current_user
   end
 
   def sync_google_calendar
@@ -439,6 +434,22 @@ class SettingsController < ApplicationController
   end
 
   private
+
+  def disconnect_google_calendar_for_current_user
+    begin
+      current_user.delete_google_copies_created_by_season!
+    rescue => e
+      Rails.logger.warn("[GoogleCalendar] delete season copies during disconnect failed: #{e.message}")
+    end
+    begin
+      current_user.revoke_google_token!
+    rescue => e
+      Rails.logger.warn("[GoogleCalendar] revoke during disconnect failed: #{e.message}")
+    end
+    current_user.clear_google_calendar_tokens!
+    session.delete(:google_calendar_sync_direction)
+    redirect_to calendar_settings_path, notice: t("settings.calendar.google_disconnected", default: "Google Calendar disconnected")
+  end
 
   def enqueue_google_backfill(user = current_user)
     user.calendar_events.from_season.where(google_event_id: nil).find_each do |event|
