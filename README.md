@@ -103,10 +103,10 @@ https://seasonv2.onrender.com/settings/google_calendar_callback
 For local OAuth testing, set this in gitignored `.env`:
 
 ```text
-GOOGLE_CALENDAR_REDIRECT_URI=http://127.0.0.1:3000/settings/google_calendar_callback
+GOOGLE_CALENDAR_REDIRECT_URI=https://seasonv2.onrender.com/settings/google_calendar_callback
 ```
 
-The same Google OAuth client must include both the production and local callback URLs in **Authorized redirect URIs**. Restart `bin/dev` after changing `.env`.
+The same Google OAuth client must include this callback URL in **Authorized redirect URIs**. The iOS native OAuth flow uses this HTTPS callback even when Rails is running locally. Restart Rails after changing `.env`.
 
 ## Docs
 
